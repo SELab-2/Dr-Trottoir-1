@@ -12,3 +12,11 @@ Software Engineering Lab II (2022 - 2023)
 | Customer Relations Officer | TBA                                          | TBA                   |
 | Verslaggever               | TBA                                          | TBA                   |
 | Frontend beheerder         | TBA                                          | TBA                   |
+
+## Structuur van deze monorepo
+
+- `api`: RESTful API
+- `database`: Initialisatie- en migratiebestanden databank
+- `server`: Configuratiebestanden van servertoepassingen
+- `web`: Webapplicatie
+
