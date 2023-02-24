@@ -192,7 +192,7 @@ model Schedule {
     @@map("schedule")
 }
 
-enum ProgressPhotoType {
+enum ProgressImageType {
     ARRIVAL
     DEPARTURE
     GARBAGE
@@ -217,7 +217,7 @@ model Progress {
 
 model ProgressImage {
     id          Int                @id @default(autoincrement())
-    type        ProgressPhotoType?
+    type        ProgressImageType?
     description String
 
     image_id Int
@@ -226,5 +226,5 @@ model ProgressImage {
     progress_id Int
     progress    Progress @relation(fields: [progress_id], references: [id])
 
-    @@map("progress_photo")
+    @@map("progress_image")
 }
