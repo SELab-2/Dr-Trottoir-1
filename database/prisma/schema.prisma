@@ -1,0 +1,230 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Region {
+    id   Int    @id @default(autoincrement())
+    name String @unique
+
+    users UserRegion[]
+
+    @@map("region")
+}
+
+model User {
+    // Algemene info
+    id         Int      @id @default(autoincrement())
+    email      String   @unique
+    first_name String
+    last_name  String
+    date_added DateTime
+    last_login DateTime
+    phone      String
+
+    // Rollen
+    student       Boolean
+    super_student Boolean
+    admin         Boolean
+
+    // Relaties
+    regions  UserRegion[]
+    Syndicus Syndicus[]
+    schedule Schedule[]
+
+    @@map("user")
+}
+
+model UserRegion {
+    id Int @id @default(autoincrement())
+
+    user_id Int
+    user    User @relation(fields: [user_id], references: [id])
+
+    region_id Int
+    region    Region @relation(fields: [region_id], references: [id])
+
+    @@map("user_region")
+}
+
+model File {
+    id Int @id @default(autoincrement())
+
+    path      String
+    buildings Building[] // Vereist?
+
+    @@map("file")
+}
+
+model Image {
+    id   Int       @id @default(autoincrement())
+    time DateTime?
+
+    buildings BuildingImages[]
+    progress  ProgressImage[]
+
+    @@map("image")
+}
+
+model Address {
+    id Int @id @default(autoincrement())
+
+    street   String
+    number   Int
+    city     String
+    zip_code Int
+
+    latitude  Float
+    longitude Float
+
+    buildings Building[] // Vereist?
+
+    @@map("address")
+}
+
+model BuildingImages {
+    id Int @id @default(autoincrement())
+
+    building_id Int
+    building    Building @relation(fields: [building_id], references: [id])
+
+    image_id Int
+    image    Image @relation(fields: [image_id], references: [id])
+
+    @@map("building_image")
+}
+
+model Building {
+    id Int @id @default(autoincrement())
+
+    name     String
+    ivago_id String
+
+    syndicus_id Int
+    syndicus    Syndicus @relation(fields: [syndicus_id], references: [id])
+
+    address_id Int
+    address    Address @relation(fields: [address_id], references: [id])
+
+    manual_id Int
+    manual    File @relation(fields: [manual_id], references: [id])
+
+    images   BuildingImages[]
+    garbage  Garbage[]
+    rounds   RoundBuilding[]
+    progress Progress[]
+
+    @@map("building")
+}
+
+model Syndicus {
+    id Int @id @default(autoincrement())
+
+    user_id Int
+    user    User @relation(fields: [user_id], references: [id])
+
+    building Building[]
+
+    @@map("syndicus")
+}
+
+model Action {
+    id          Int    @id @default(autoincrement())
+    description String
+
+    garbage Garbage[]
+
+    @@map("action")
+}
+
+model Garbage {
+    id Int @id @default(autoincrement())
+
+    pickup_time DateTime
+
+    action_id Int
+    action    Action @relation(fields: [action_id], references: [id])
+
+    building_id Int
+    building    Building @relation(fields: [building_id], references: [id])
+
+    @@map("garbage")
+}
+
+model RoundBuilding {
+    id Int @id @default(autoincrement())
+
+    round_id Int
+    round    Round @relation(fields: [round_id], references: [id])
+
+    building_id Int
+    building    Building @relation(fields: [building_id], references: [id])
+
+    @@map("round_building")
+}
+
+model Round {
+    id   Int    @id @default(autoincrement())
+    name String
+
+    buildings RoundBuilding[]
+    schedule  Schedule[]
+
+    @@map("round")
+}
+
+model Schedule {
+    id  Int      @id @default(autoincrement())
+    day DateTime
+
+    user_id Int
+    user    User @relation(fields: [user_id], references: [id])
+
+    round_id Int
+    round    Round @relation(fields: [round_id], references: [id])
+
+    progress Progress[]
+
+    @@map("schedule")
+}
+
+enum ProgressPhotoType {
+    ARRIVAL
+    DEPARTURE
+    GARBAGE
+}
+
+model Progress {
+    id        Int      @id @default(autoincrement())
+    report    String
+    arrival   DateTime
+    departure DateTime
+
+    building_id Int
+    building    Building @relation(fields: [building_id], references: [id])
+
+    schedule_id Int
+    schedule    Schedule @relation(fields: [schedule_id], references: [id])
+
+    images ProgressImage[]
+
+    @@map("progress")
+}
+
+model ProgressImage {
+    id          Int                @id @default(autoincrement())
+    type        ProgressPhotoType?
+    description String
+
+    image_id Int
+    image    Image @relation(fields: [image_id], references: [id])
+
+    progress_id Int
+    progress    Progress @relation(fields: [progress_id], references: [id])
+
+    @@map("progress_photo")
+}
