@@ -102,9 +102,9 @@ services:
     environment:
       PGADMIN_LISTEN_PORT: 3001
     volumes:
-      - '/home/jens/volumes/staging/pgadmin:/var/lib/pgadmin'
+      - '~/volumes/pgadmin:/var/lib/pgadmin'
     networks:
-      web2022:
+      main:
         ipv4_address: 10.0.0.5
     env_file:
       - .env
