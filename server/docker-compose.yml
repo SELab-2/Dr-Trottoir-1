@@ -32,6 +32,12 @@ services:
     volumes:
       - "~/volumes/traefik:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    healthcheck:
+      test: ./traefik healtcheck --ping
+      interval: 10s
+      timeout: 1s
+      retries: 3
+      start_period: 10s
 
   postgres:
     container_name: postgres
