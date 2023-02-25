@@ -1,0 +1,97 @@
+version: '3.5'
+services:
+  traefik:
+    image: "traefik:latest"
+    container_name: "traefik"
+    command:
+      # Docker
+      - "--providers.docker.swarmMode=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=server_default"
+      # Configure entrypoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # HTTPS
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=jens.pots@ugent.be"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # Global HTTP -> HTTPS
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      # Disable dashboard
+      - "--api.dashboard=false"
+    ports:
+      - "443:443"
+      - "80:80"
+      # Dashboard: - "8080:8080"
+    networks:
+      main:
+        ipv4_address: 10.0.0.1
+    volumes:
+      - "~/volumes/traefik:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  postgres:
+    container_name: postgres
+    hostname: postgres
+    image: postgres
+    env_file:
+      - .env
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - '~/volumes/postgresql:/var/lib/postgresql/data'
+    restart: always
+    networks:
+      main:
+        ipv4_address: 10.0.0.2
+
+  imgproxy:
+    container_name: imgproxy
+    hostname: imgproxy
+    image: darthsim/imgproxy
+    environment:
+      IMGPROXY_LOCAL_FILESYSTEM_ROOT: /images/.
+      IMGPROXY_ALLOWED_SOURCES: local://
+      IMGPROXY_DEVELOPMENT_ERRORS_MODE: 'true'
+      IMGPROXY_MAX_SRC_RESOLUTION: 100
+      IMGPROXY_JPEG_PROGRESSIVE: 'true'
+    volumes:
+      -'~/volumes/imgproxy:/images:ro'
+    networks:
+      main:
+        ipv4_address: 10.0.0.3
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.imgproxy.rule=Host(`sel2-1.ugent.be`)"
+      - "traefik.http.routers.imgproxy.rule=PathPrefix(`/imgproxy/`)"
+      - "traefik.http.routers.imgproxy.entrypoints=websecure"
+      - "traefik.http.routers.imgproxy.tls.certresolver=letsencrypt"
+      - "traefik.http.services.imgproxy.loadbalancer.server.port=8080"
+
+  portainer:
+    container_name: portainer
+    image: 'portainer/portainer-ce'
+    restart: 'always'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '~/volumes/portainer:/data'
+    networks:
+      main:
+        ipv4_address: 10.0.0.4
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`sel2-1.ugent.be`)"
+      - "traefik.http.routers.portainer.rule=PathPrefix(`/portainer/`)"
+      - "traefik.http.routers.portainer.entrypoints=websecure"
+      - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+
+networks:
+  main:
+    name: main
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24
