@@ -26,6 +26,8 @@ Aangezien we met heel wat mensen samen werken in deze monorepository lijsten we 
 
 ## Git
 
+ - We maken gebruik van de [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) conventie
+
 ### Branches
 
 Gebruik gestructureerde branchnamen, bijvoorbeeld `web/feature/responsive-design` of `api/hotfix/issue-52`.
