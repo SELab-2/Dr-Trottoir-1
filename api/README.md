@@ -3,18 +3,12 @@
 ## Initialisatie
 
 ```shell
-# Download node modules
-npm install
-
-# Initialiseer Prisma
-npx prisma init
-
-# Stel databanklocatie in
+# Stel environment variables in
 cp example.env .env
 nvim .env
 
-# Verkrijg schema
-npx prisma db pull
+# Download node modules
+npm install
 
 # Genereer types
 npx prisma generate
