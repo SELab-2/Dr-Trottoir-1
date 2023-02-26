@@ -1,11 +1,11 @@
 <template>
   <v-app>
     <v-main>
-      <HelloWorld />
+      <SchedulingScreenStudents/>
     </v-main>
   </v-app>
 </template>
 
 <script setup lang="ts">
-  import HelloWorld from '@/components/HelloWorld.vue'
+  import SchedulingScreenStudents from '@/views/SchedulingScreenStudents.vue'
 </script>
