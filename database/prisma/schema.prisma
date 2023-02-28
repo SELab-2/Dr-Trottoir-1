@@ -7,6 +7,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// In dit model worden regio's/steden bijgehouden.
 model Region {
     id   Int    @id @default(autoincrement())
     name String @unique
@@ -16,6 +17,8 @@ model Region {
     @@map("region")
 }
 
+// Dit model bevat alle informatie over een gebruiker en houdt bij of deze een student,
+// super_student en/of admin is. De rol van syndicus wordt in een apart model bijgehouden.
 model User {
     // Algemene info
     id         Int      @id @default(autoincrement())
@@ -39,6 +42,8 @@ model User {
     @@map("user")
 }
 
+// Elke gebruiker (student) kan rondes uitvoeren in meerdere regio's.
+// Dit model houdt bij aan welke regio's de studenten toegewezen mogen worden.
 model UserRegion {
     id Int @id @default(autoincrement())
 
@@ -51,6 +56,7 @@ model UserRegion {
     @@map("user_region")
 }
 
+// Hier wordt het pad naar een bestand bijgehouden.
 model File {
     id Int @id @default(autoincrement())
 
@@ -60,6 +66,7 @@ model File {
     @@map("file")
 }
 
+// Bij een afbeelding kan de tijd optioneel opgeslagen worden waarop de foto genomen werd.
 model Image {
     id   Int       @id @default(autoincrement())
     time DateTime?
@@ -70,6 +77,8 @@ model Image {
     @@map("image")
 }
 
+// Het adres van een gebouw wordt in een apart model bijgehouden. Hierin wordt niet enkel de straat, huisnummer
+// en stad opgeslagen, maar ook de breedtegraad en lengtegraad.
 model Address {
     id Int @id @default(autoincrement())
 
@@ -86,6 +95,7 @@ model Address {
     @@map("address")
 }
 
+// Dit model houdt voor elk gebouw de foto's bij die er genomen zijn.
 model BuildingImages {
     id Int @id @default(autoincrement())
 
@@ -98,6 +108,8 @@ model BuildingImages {
     @@map("building_image")
 }
 
+// Dit model bevat enkel basisinformatie van een gebouw, namelijk de naam, klantnummer van Ivago, de syndicus en de handleiding.
+// De foto's, afvalophaling en overige informatie worden in andere modellen bijgehouden.
 model Building {
     id Int @id @default(autoincrement())
 
@@ -121,6 +133,7 @@ model Building {
     @@map("building")
 }
 
+// Dit model houdt alle gebruikers bij die de rol van syndicus hebben.
 model Syndicus {
     id Int @id @default(autoincrement())
 
@@ -132,6 +145,9 @@ model Syndicus {
     @@map("syndicus")
 }
 
+// Dit model houdt een lijst van speciale acties bij die gegeven kunnen worden bij de afvalophaling.
+// Voorbeelden hiervan zijn het afspuiten van containers, het aanvullen van PDM zakken ...
+// Bij de beschrijving moet ook altijd het type afval vermeld worden.
 model Action {
     id          Int    @id @default(autoincrement())
     description String
@@ -141,6 +157,8 @@ model Action {
     @@map("action")
 }
 
+// Dit model bevat een gebouw, het tijdstip dat het afval daar opgehaald wordt en
+// een (speciale) actie voor het afval (waarin ook het type afval vermeld staat).
 model Garbage {
     id Int @id @default(autoincrement())
 
@@ -155,6 +173,7 @@ model Garbage {
     @@map("garbage")
 }
 
+// Hier wordt voor elke ronde vermeld welke gebouwen ertoe behoren.
 model RoundBuilding {
     id Int @id @default(autoincrement())
 
@@ -167,6 +186,7 @@ model RoundBuilding {
     @@map("round_building")
 }
 
+// In dit model worden enkel de namen van de rondes bijgehouden.
 model Round {
     id   Int    @id @default(autoincrement())
     name String
@@ -177,6 +197,7 @@ model Round {
     @@map("round")
 }
 
+// Dit model geeft voor elke dag weer welke gebruikers (studenten) welke rondes toegewezen krijgen.
 model Schedule {
     id  Int      @id @default(autoincrement())
     day DateTime
@@ -192,12 +213,16 @@ model Schedule {
     @@map("schedule")
 }
 
+// Bij elk gebouw is de student verplicht om een foto te nemen van zijn aankomst, vertrek en van de berging.
+// De ProgressImageType zorgt ervoor dat dit makkelijk aangegeven kan worden.
 enum ProgressImageType {
     ARRIVAL
     DEPARTURE
     GARBAGE
 }
 
+// Dit model houdt de vooruitgang van een gebouw bij. Hierin wordt het tijdstip van aankomst en vertrek opgeslagen samen met
+// opmerkingen van de student. Dit wordt gelinkt aan een specifieke ronde en gebruiker op een specieke dag (via Schedule).
 model Progress {
     id        Int      @id @default(autoincrement())
     report    String
@@ -215,6 +240,8 @@ model Progress {
     @@map("progress")
 }
 
+// Per gebouw kunnen er per dagplanning verschillende afbeeldingen bijgehouden worden. Hierbij kan optioneel het type
+// foto vermeld worden (aankomst / berging / vertrek) en kan er een opmerking aan meegegeven worden.
 model ProgressImage {
     id          Int                @id @default(autoincrement())
     type        ProgressImageType?
