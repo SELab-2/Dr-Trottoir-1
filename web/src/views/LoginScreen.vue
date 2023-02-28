@@ -4,12 +4,7 @@
   </h1>
 </template>
 
-<script>
-export default {
-  name: "LoginScreen"
-}
+<script lang="ts" setup>
+
 </script>
 
-<style scoped>
-
-</style>
