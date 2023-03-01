@@ -28,7 +28,7 @@ services:
       # Dashboard: - "8080:8080"
     networks:
       main:
-        ipv4_address: 10.0.0.1
+        ipv4_address: 10.0.0.6
     volumes:
       - "~/volumes/traefik:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -64,6 +64,7 @@ services:
       IMGPROXY_DEVELOPMENT_ERRORS_MODE: 'true'
       IMGPROXY_MAX_SRC_RESOLUTION: 100
       IMGPROXY_JPEG_PROGRESSIVE: 'true'
+      IMGPROXY_BIND: ":8081"
     volumes:
       - '~/volumes/imgproxy:/images:ro'
     networks:
