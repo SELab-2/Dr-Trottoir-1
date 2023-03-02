@@ -29,6 +29,9 @@ model User {
     last_login DateTime
     phone      String
 
+    address_id Int
+    address    Address @relation(fields: [address_id], references: [id])
+
     // Rollen
     student       Boolean
     super_student Boolean
