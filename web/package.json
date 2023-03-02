@@ -8,6 +8,7 @@
     "lint": "eslint . --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "16": "^0.0.2",
     "@mdi/font": "7.0.96",
     "roboto-fontface": "*",
     "vue": "^3.2.38",
