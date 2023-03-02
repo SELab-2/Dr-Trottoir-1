@@ -2,7 +2,19 @@ name: learning
 run-name: ${{ github.actor}} is learning GitHub Actions
 on: [push]
 jobs:
-  ping:
-    runs-on: [self-hosted, linux]
+  lint:
+    runs-on: [self-hosted]
     steps:
-      - run: echo "Pong"
+      - uses: actions/checkout@v3
+      - name: "Run lint"
+        working-directory: ./web
+        run: npm ci && npm run lint
+  build:
+    needs: lint
+    runs-on: [self-hosted]
+    steps:
+      - name: "Build the code"
+        working-directory: ./web
+        run: npm ci && npm run build
+
+
