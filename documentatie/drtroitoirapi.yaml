@@ -1,0 +1,724 @@
+openapi: 3.0.3
+info:
+  title: Dr-Trottoir - OpenAPI 3.0
+  description: |-
+    Dit is API documentatie gemaakt door Team voor Dr-Trottoir
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@drtrottoir.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Info Dr-Troittoir
+  url: https://drtrottoir.be/
+servers:
+  - url: https://drtrottoir.io/api
+tags:
+  - name: user
+    description: Everything about users
+  - name: building
+    description: Everything about building
+  - name: round
+    description: Everything about round
+  - name: schedule
+    description: Everything about schedule
+  - name: progress
+    description: Everything about progress
+
+paths:
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create user
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users:  
+    get:
+      tags:
+        - user
+      summary: Get all users
+      operationId: getAllusers
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'          
+        '400':
+          description: Invalid
+  /users/region/{regionId}:
+    get:
+      tags:
+        - user
+      responses:
+    
+  /user/{userId}:
+    get:
+      tags:
+        - user
+      summary: Get user by userId
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+        '400':
+          description: Invalid userId supplied
+        '404':
+          description: UserId not found
+    put:
+      tags:
+        - user
+      summary: Update user
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+  
+  /building:
+    post:
+      tags:
+        - building
+      summary: Create building
+      operationId: createBuilding
+      requestBody:
+        description: Created building object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+  /building/{buildingId}:
+    get:
+      tags:
+        - building
+      summary: Get user by buildingId
+      operationId: getBuildingById
+      parameters:
+        - name: buildingId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'          
+        '400':
+          description: Invalid buildingId supplied
+        '404':
+          description: buidingId not found
+    put:
+      tags:
+        - building
+      summary: Update building
+      operationId: updateBuilding
+      parameters:
+        - name: buildingId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent building
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - building
+      summary: Delete building
+      operationId: deleteBuilding
+      parameters:
+        - name: buildingId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid buildingId supplied
+        '404':
+          description: buildingId not found
+          
+  /round:
+    post:
+      tags:
+        - round
+      summary: Create round
+      operationId: createRound
+      requestBody:
+        description: Created round object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Round'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Round'
+  /round/{roundId}:
+    get:
+      tags:
+        - round
+      summary: Get user by roundId
+      operationId: getRoundById
+      parameters:
+        - name: roundId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Round'          
+        '400':
+          description: Invalid roundId supplied
+        '404':
+          description: roundId not found
+    put:
+      tags:
+        - round
+      summary: Update round
+      operationId: updateRound
+      parameters:
+        - name: roundId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent round
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Round'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - round
+      summary: Delete round
+      operationId: deleteRound
+      parameters:
+        - name: roundId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid buildingId supplied
+        '404':
+          description: buildingId not found
+  
+  /schedule:
+    post:
+      tags:
+        - schedule
+      summary: Create schedule
+      operationId: createSchedule
+      requestBody:
+        description: Created schedule object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+  /schedule/{scheduleId}:
+    get:
+      tags:
+        - schedule
+      summary: Get user by ScheduleId
+      operationId: getScheduleById
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'          
+        '400':
+          description: Invalid scheduleId supplied
+        '404':
+          description: scheduleId not found
+    put:
+      tags:
+        - schedule
+      summary: Update schedule
+      operationId: updateSchedule
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent schedule
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - schedule
+      summary: Delete schedule
+      operationId: deleteSchedule
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid ScheduleId supplied
+        '404':
+          description: ScheduleId not found
+          
+  /progress:
+    post:
+      tags:
+        - progress
+      summary: Create progress
+      operationId: createProgress
+      requestBody:
+        description: Created project object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Progress'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Progress'
+  /progress/{date}:
+    get:
+      tags:
+        - progress
+      responses:
+  
+  /progress/{buildingId}:
+    get:
+      tags:
+        - progress
+      responses:
+  
+  /progress/{progressId}:
+    get:
+      tags:
+        - progress
+      summary: Get user by ProgressId
+      operationId: getProgressById
+      parameters:
+        - name: progressId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Progress'          
+        '400':
+          description: Invalid progressId supplied
+        '404':
+          description: progressId not found
+    put:
+      tags:
+        - progress
+      summary: Update progress
+      operationId: updateProgress
+      parameters:
+        - name: progressId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent progress
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Progress'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - progress
+      summary: Delete progress
+      operationId: deleteProgress
+      parameters:
+        - name: progressId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid progressId supplied
+        '404':
+          description: ProgressId not found
+  
+  
+  
+  
+  # /user/login:
+  #   get:
+  #     tags:
+  #       - user
+  #     summary: Logs user into the system
+  #     description: ''
+  #     operationId: loginUser
+  #     parameters:
+  #       - name: username
+  #         in: query
+  #         description: The user name for login
+  #         required: false
+  #         schema:
+  #           type: string
+  #       - name: password
+  #         in: query
+  #         description: The password for login in clear text
+  #         required: false
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: successful operation
+  #         headers:
+  #           X-Rate-Limit:
+  #             description: calls per hour allowed by the user
+  #             schema:
+  #               type: integer
+  #               format: int32
+  #           X-Expires-After:
+  #             description: date in UTC when token expires
+  #             schema:
+  #               type: string
+  #               format: date-time
+  #         content:
+  #           application/xml:
+  #             schema:
+  #               type: string
+  #           application/json:
+  #             schema:
+  #               type: string
+  #       '400':
+  #         description: Invalid username/password supplied
+  # /user/logout:
+  #   get:
+  #     tags:
+  #       - user
+  #     summary: Logs out current logged in user session
+  #     description: ''
+  #     operationId: logoutUser
+  #     parameters: []
+  #     responses:
+  #       default:
+  #         description: successful operation
+  
+components:
+  schemas:
+    #TODO: moet een gebruiker ook geen adres hebben?
+    User:
+      type: object
+      properties: 
+        id:
+          type: integer
+        email:
+          type: string
+        firstaname: 
+          type: string
+        lastname:
+          type: string
+        date_added: 
+          type : string
+          format: date-time
+        last_login:
+          type: string
+          format: date-time
+        phone: 
+          type: string
+        student:
+          type: boolean
+        super_student:
+          type: boolean
+        admin:
+          type: boolean
+    
+    Region:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          
+    UserRegion:
+      type: object
+      properties:
+        id:
+          type: integer
+        regionId:
+          #$ref: '#/components/schemas/Region'
+          type: integer
+        userId:
+          type: integer
+    
+    Round:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    
+    RoundBuilding:
+      type: object
+      properties:
+        id:
+          type: integer
+        roundId:
+          type: integer
+        buildingId:
+          type: integer
+          
+    Schedule:
+      type: object
+      properties:
+        id:
+          type: integer
+        day:
+          type: integer
+          format: date-time
+        roundId:
+          type: integer
+        userId:
+          type: integer
+    
+    Syndicus:
+      type: object
+      properties:
+        id:
+          type: integer
+        useIdr:
+          type: integer
+    
+    BuildingImages:
+      type: object
+      properties:
+        id:
+          type: integer
+        buildingId:
+          type: integer
+        imageId:
+          type: integer
+    
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+        time:
+          type: string
+          format: date-time
+    
+    File:
+      type: object
+      properties:
+        id:
+          type: integer
+        path:
+          type: string
+    
+    Building:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        ivago_id:
+          type: string
+        syndicusId:
+          type: integer
+        adresId:
+          type: integer
+        manualId:
+          type: integer
+          
+    Adress:
+      type: object
+      properties:
+        id:
+          type: integer
+        streed:
+          type: string
+        number:
+          type: integer
+        city:
+          type: string
+        zip_code:
+          type: integer
+        latitude:
+          type: number
+        longitude:
+          type: number
+    
+    Progress:
+      type: object
+      properties:
+        id:
+          type: integer
+        report:
+          type: string
+        arrival:
+          type: string
+          format: date-time
+        departure:
+          type: string
+          format: date-time
+        scheduleId:
+          type: integer
+        buildingId:
+          type: integer
+          
+    Garbage:
+      type: object
+      properties:
+        id:
+          type: integer
+        pickup-time:
+          type: string
+          format: date-time
+        buildingId:
+          type: integer
+        actionId:
+          type: integer
+          
+    Action:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+    
+    ProgressImage:
+    #TODO moet nog een FK in progress hebben
+      type: object
+      properties:
+        id:
+          type: integer
+        typeImage: 
+          type: string
+          enum:
+            - arrival
+            - departure
+            - garbage
+        description:
+          type: string
+        progressId:
+          type: integer
+        imageId:
+          type: integer
+          
