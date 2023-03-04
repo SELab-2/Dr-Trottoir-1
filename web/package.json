@@ -13,7 +13,8 @@
     "vue": "^3.2.38",
     "vue-router": "^4.0.0",
     "vuetify": "^3.0.0",
-    "webfontloader": "^1.0.0"
+    "webfontloader": "^1.0.0",
+    "sass": "^1.58.3"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
