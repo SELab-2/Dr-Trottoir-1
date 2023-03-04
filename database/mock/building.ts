@@ -54,3 +54,22 @@ export async function createBuilding() {
         }
     })
 }
+
+export async function createGarbage() {
+    const buildings = await prisma.building.findMany();
+    const maxBuilding = buildings.length-1;
+    const building = buildings[chance.integer({min: 0, max: maxBuilding})];
+    await prisma.garbage.create({
+        data: {
+            pickup_time: chance.date(),
+            building: {
+                connect: {id: building.id}
+            },
+            action: {
+                create: {
+                    description: chance.sentence()
+                }
+            }
+        }
+    })
+}
