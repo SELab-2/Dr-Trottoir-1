@@ -31,11 +31,6 @@ export default {
   data() {
     // test data
     return {
-      headers: [
-        { title: 'Name', align: 'start', sortable: false, key: 'name',},
-        { title: 'Address', sortable: false, key: 'address' },
-        { title: 'Deadline', key: 'deadline' },
-        { title: 'Info', key: 'info' },],
       days: {
         monday: {name: "monday", buildings: [
           {name: "gebouw1", address: "coolestraat 69", info: "meer info/opmerkingen"
