@@ -1,15 +1,14 @@
 import {prisma} from "../prisma";
 import express from "express";
 import {Prisma} from "@prisma/client";
+import {Routing} from "./abstract";
 
 const DEFAULT_PAGE_SIZE = 1024;
 
-export class UserRouting {
+export class UserRouting extends Routing {
     async getAll(req: express.Request, res: express.Response) {
-        if (!req.user?.super_student) {
-            res.status(403);
-            res.send("Unauthorized")
-            return;
+        if (!req.user?.super_student && !req.user?.admin) {
+            return res.status(401).json({message: "Unauthorized"});
         }
 
         const limit = Number(req.query['limit'] ?? DEFAULT_PAGE_SIZE);
@@ -19,7 +18,7 @@ export class UserRouting {
         const admin = req.query['admin'] == 'true' ? true : req.query['admin'] == 'false' ? false : undefined;
 
         if (Number.isNaN(limit) || Number.isNaN(offset)) {
-            // THROW ERROR
+            return res.status(400).json({message: "Bad Request"});
         }
 
         const result = await prisma.user.findMany({
@@ -44,13 +43,11 @@ export class UserRouting {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
-            // THROW EXCEPTION
+            return res.status(400).json({message: "Bad Request"});
         }
 
         if (id !== req.user?.id || !req.user.super_student || !req.user.admin) {
-            res.status(403);
-            res.send("Unauthorized")
-            return;
+            return res.status(401).json({message: "Unauthorized"});
         }
 
         const result = await prisma.user.findFirst({
@@ -69,23 +66,21 @@ export class UserRouting {
 
     async createOne(req: express.Request, res: express.Response) {
         if (!req.user?.super_student || !req.user?.admin) {
-            res.status(403);
-            res.send("Unauthorized")
-            return;
+            return res.status(401).json({message: "Unauthorized"});
         }
 
         const user = await prisma.user.create({
             data: req.body,
         });
 
-        return res.status(200).json(user);
+        return res.status(201).json(user);
     }
 
     async updateOne(req: express.Request, res: express.Response) {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
-            // THROW EXCEPTION
+            return res.status(400).json({message: "Bad Request"});
         }
 
         if (id !== req.user?.id && !req.user?.super_student && !req.user?.admin) {
@@ -142,15 +137,5 @@ export class UserRouting {
 
             return res.status(500).json({message: "Internal Server Error"});
         }
-    }
-
-    toRouter(): express.Router {
-        const router = express.Router();
-        router.get('/', this.getAll);
-        router.get('/:id', this.getOne);
-        router.post('/', this.createOne);
-        router.patch('/:id', this.updateOne);
-        router.delete('/:id', this.deleteOne);
-        return router;
     }
 }
