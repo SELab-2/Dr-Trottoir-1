@@ -4,6 +4,7 @@ import { APIError } from "./api_error";
 import { APIErrorCode } from "./api_error_code";
 
 export class ErrorHandler {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     static handle(err: Error, req: Request, res: Response, next: NextFunction) {
         if (err instanceof Prisma.PrismaClientKnownRequestError) {
             switch (err.code) {

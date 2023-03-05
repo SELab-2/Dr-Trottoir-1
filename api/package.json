@@ -3,7 +3,7 @@
     "prestart": "tsc",
     "start": "node ./dist/main.js",
     "serve": "nodemon ./src/main.ts",
-    "lint": "npx prettier --write ."
+    "lint": "npx prettier --write . && npx eslint src"
   },
   "dependencies": {
     "@prisma/client": "^4.10.1",
