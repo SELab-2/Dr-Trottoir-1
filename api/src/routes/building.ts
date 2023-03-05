@@ -3,15 +3,13 @@ import express from "express";
 import { Routing } from "./routing";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import { Auth } from "../auth/auth";
 
 const DEFAULT_PAGE_SIZE = 1024;
 
 export class BuildingRouting extends Routing {
+    @Auth.authorization({ student: true })
     async getAll(req: express.Request, res: express.Response) {
-        if (req.user === null) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
-        }
-
         const limit = Number(req.query["limit"] ?? DEFAULT_PAGE_SIZE);
         const offset = Number(req.query["offset"] ?? 0);
 
@@ -35,11 +33,8 @@ export class BuildingRouting extends Routing {
         return res.json(result);
     }
 
+    @Auth.authorization({ student: true })
     async getOne(req: express.Request, res: express.Response) {
-        if (req.user === null) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
-        }
-
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
@@ -63,11 +58,8 @@ export class BuildingRouting extends Routing {
         return res.json(result);
     }
 
+    @Auth.authorization({ superStudent: true })
     async createOne(req: express.Request, res: express.Response) {
-        if (!req.user?.admin) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
-        }
-
         const result = await prisma.building.create({
             data: req.body,
         });
@@ -75,15 +67,12 @@ export class BuildingRouting extends Routing {
         return res.status(201).json(result);
     }
 
+    @Auth.authorization({ superStudent: true })
     async updateOne(req: express.Request, res: express.Response) {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
-
-        if (!req.user?.admin) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
 
         const result = await prisma.building.update({
@@ -96,11 +85,8 @@ export class BuildingRouting extends Routing {
         return res.status(200).json(result);
     }
 
+    @Auth.authorization({ superStudent: true })
     async deleteOne(req: express.Request, res: express.Response) {
-        if (!req.user?.admin) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
-        }
-
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {

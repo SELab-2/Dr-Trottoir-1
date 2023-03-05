@@ -3,15 +3,13 @@ import express from "express";
 import { Routing } from "./routing";
 import { APIErrorCode } from "../errors/api_error_code";
 import { APIError } from "../errors/api_error";
+import { Auth } from "../auth/auth";
 
 const DEFAULT_PAGE_SIZE = 1024;
 
 export class UserRouting extends Routing {
+    @Auth.authorization({ superStudent: true })
     async getAll(req: express.Request, res: express.Response) {
-        if (!req.user?.super_student && !req.user?.admin) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
-        }
-
         const limit = Number(req.query["limit"] ?? DEFAULT_PAGE_SIZE);
         const offset = Number(req.query["offset"] ?? 0);
         const student =
@@ -55,6 +53,7 @@ export class UserRouting extends Routing {
         return res.json(result);
     }
 
+    @Auth.authorization({ student: true })
     async getOne(req: express.Request, res: express.Response) {
         const id = parseInt(req.params.id);
 
@@ -80,11 +79,8 @@ export class UserRouting extends Routing {
         return res.json(result);
     }
 
+    @Auth.authorization({ superStudent: true })
     async createOne(req: express.Request, res: express.Response) {
-        if (!req.user?.super_student || !req.user?.admin) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
-        }
-
         const user = await prisma.user.create({
             data: req.body,
         });
@@ -117,19 +113,12 @@ export class UserRouting extends Routing {
         return res.status(200).json(result);
     }
 
+    @Auth.authorization({ superStudent: true })
     async deleteOne(req: express.Request, res: express.Response) {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
             return res.status(400).send("Invalid Request");
-        }
-
-        if (
-            id !== req.user?.id &&
-            !req.user?.super_student &&
-            !req.user?.admin
-        ) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
 
         // TODO: delete cascade in the database!

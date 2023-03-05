@@ -6,7 +6,7 @@ import compression from "compression";
 import { BuildingRouting } from "./routes/building";
 import "express-async-errors";
 import { ErrorHandler } from "./errors/error_handler";
-import { AuthenticationHandler } from "./auth/authentication";
+import { Auth } from "./auth/auth";
 
 const PORT_NUMBER = 8080;
 
@@ -31,7 +31,7 @@ app.use(morgan("dev"));
 app.use(compression());
 
 // Use custom authentication
-app.use(AuthenticationHandler.handle);
+app.use(Auth.authentication);
 
 // Assign the appropriate routers
 app.use("/user", new UserRouting().toRouter());
