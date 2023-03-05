@@ -1,15 +1,15 @@
-import {prisma} from "../prisma";
+import { prisma } from "../prisma";
 import express from "express";
-import {Routing} from "./routing";
-import {APIError} from "../errors/api_error";
-import {APIErrorCode} from "../errors/api_error_code";
+import { Routing } from "./routing";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
 
 const DEFAULT_PAGE_SIZE = 1024;
 
 export class BuildingRouting extends Routing {
     async getAll(req: express.Request, res: express.Response) {
-        const limit = Number(req.query['limit'] ?? DEFAULT_PAGE_SIZE);
-        const offset = Number(req.query['offset'] ?? 0);
+        const limit = Number(req.query["limit"] ?? DEFAULT_PAGE_SIZE);
+        const offset = Number(req.query["offset"] ?? 0);
 
         if (Number.isNaN(limit) || Number.isNaN(offset)) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
@@ -22,10 +22,10 @@ export class BuildingRouting extends Routing {
                 address: true,
                 syndicus: {
                     include: {
-                        user: true
-                    }
-                }
-            }
+                        user: true,
+                    },
+                },
+            },
         });
 
         return res.json(result);
@@ -40,16 +40,16 @@ export class BuildingRouting extends Routing {
 
         const result = await prisma.building.findFirst({
             where: {
-                id: id
+                id: id,
             },
             include: {
                 address: true,
                 syndicus: {
                     include: {
-                        user: true
-                    }
-                }
-            }
+                        user: true,
+                    },
+                },
+            },
         });
 
         return res.json(result);
@@ -81,7 +81,7 @@ export class BuildingRouting extends Routing {
         const result = await prisma.building.update({
             data: req.body,
             where: {
-                id: id
+                id: id,
             },
         });
 
@@ -101,7 +101,7 @@ export class BuildingRouting extends Routing {
 
         const result = await prisma.building.delete({
             where: {
-                id: id
+                id: id,
             },
         });
 

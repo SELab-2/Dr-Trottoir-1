@@ -13,11 +13,11 @@ export abstract class Routing {
 
     toRouter(): express.Router {
         const router = express.Router();
-        router.get('/', this.getAll);
-        router.get('/:id', this.getOne);
-        router.post('/', this.createOne);
-        router.patch('/:id', this.updateOne);
-        router.delete('/:id', this.deleteOne);
+        router.get("/", this.getAll);
+        router.get("/:id", this.getOne);
+        router.post("/", this.createOne);
+        router.patch("/:id", this.updateOne);
+        router.delete("/:id", this.deleteOne);
         return router;
     }
 }

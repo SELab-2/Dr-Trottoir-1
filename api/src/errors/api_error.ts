@@ -1,7 +1,7 @@
-import {APIErrorCode} from "./api_error_code";
+import { APIErrorCode } from "./api_error_code";
 
 export class APIError extends Error {
-    code = APIErrorCode.INTERNAL_SERVER_ERROR
+    code = APIErrorCode.INTERNAL_SERVER_ERROR;
 
     constructor(code: APIErrorCode) {
         super();
