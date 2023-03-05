@@ -1,7 +1,8 @@
 import {prisma} from "../prisma";
 import express from "express";
-import {Prisma} from "@prisma/client";
-import {Routing} from "./abstract";
+import {Routing} from "./routing";
+import {APIError} from "../errors/api_error";
+import {APIErrorCode} from "../errors/api_error_code";
 
 const DEFAULT_PAGE_SIZE = 1024;
 
@@ -11,7 +12,7 @@ export class BuildingRouting extends Routing {
         const offset = Number(req.query['offset'] ?? 0);
 
         if (Number.isNaN(limit) || Number.isNaN(offset)) {
-            return res.status(400).json({message: "Bad Request"});
+            throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
         const result = await prisma.building.findMany({
@@ -34,7 +35,7 @@ export class BuildingRouting extends Routing {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
-            return res.status(400).json({message: "Bad Request"});
+            throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
         const result = await prisma.building.findFirst({
@@ -56,7 +57,7 @@ export class BuildingRouting extends Routing {
 
     async createOne(req: express.Request, res: express.Response) {
         if (!req.user?.admin) {
-            return res.status(401).json({message: "Unauthorized"});
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
 
         const result = await prisma.building.create({
@@ -70,13 +71,11 @@ export class BuildingRouting extends Routing {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
-            return res.status(400).json({message: "Bad Request"});
+            throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
         if (!req.user?.admin) {
-            res.status(403);
-            res.send("Unauthorized")
-            return;
+            throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
         const result = await prisma.building.update({
@@ -93,32 +92,19 @@ export class BuildingRouting extends Routing {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
-            return res.status(400).send("Invalid Request");
+            throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
         if (!req.user?.admin) {
-            res.status(403);
-            res.send("Unauthorized")
-            return;
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
 
-        try {
-            const result = await prisma.building.delete({
-                where: {
-                    id: id
-                },
-            });
+        const result = await prisma.building.delete({
+            where: {
+                id: id
+            },
+        });
 
-            return res.status(200).json(result);
-        } catch (e) {
-            if (e instanceof Prisma.PrismaClientKnownRequestError) {
-                switch (e.code) {
-                    case 'P2025':
-                        return res.status(404).json({message: "Not Found"})
-                }
-            }
-
-            return res.status(500).json({message: "Internal Server Error"});
-        }
+        return res.status(200).json(result);
     }
 }

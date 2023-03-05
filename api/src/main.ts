@@ -5,6 +5,8 @@ import helmet from "helmet";
 import compression from "compression";
 import {prisma} from "./prisma";
 import {BuildingRouting} from "./routes/building";
+import 'express-async-errors';
+import {ErrorHandler} from "./errors/error_handler";
 
 const PORT_NUMBER = 8080;
 
@@ -59,12 +61,13 @@ app.use(async (req, res, next) => {
 
 // Placeholder responsive for the root of the server
 app.get('/', function (req, res) {
-  res.send('Hello, world!')
+  throw Error("Oops");
 });
 
-// Assign the appropriate subrouters
+// Assign the appropriate routers
 app.use('/user', new UserRouting().toRouter());
 app.use('/building', new BuildingRouting().toRouter());
+app.use(ErrorHandler.handle);
 
 app.listen(PORT_NUMBER, () => {
     console.log(`Listening on port: ${PORT_NUMBER}.`)

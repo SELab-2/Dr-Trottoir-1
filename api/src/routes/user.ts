@@ -1,14 +1,15 @@
 import {prisma} from "../prisma";
 import express from "express";
-import {Prisma} from "@prisma/client";
-import {Routing} from "./abstract";
+import {Routing} from "./routing";
+import {APIErrorCode} from "../errors/api_error_code";
+import {APIError} from "../errors/api_error";
 
 const DEFAULT_PAGE_SIZE = 1024;
 
 export class UserRouting extends Routing {
     async getAll(req: express.Request, res: express.Response) {
         if (!req.user?.super_student && !req.user?.admin) {
-            return res.status(401).json({message: "Unauthorized"});
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
 
         const limit = Number(req.query['limit'] ?? DEFAULT_PAGE_SIZE);
@@ -18,7 +19,7 @@ export class UserRouting extends Routing {
         const admin = req.query['admin'] == 'true' ? true : req.query['admin'] == 'false' ? false : undefined;
 
         if (Number.isNaN(limit) || Number.isNaN(offset)) {
-            return res.status(400).json({message: "Bad Request"});
+            throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
         const result = await prisma.user.findMany({
@@ -43,11 +44,11 @@ export class UserRouting extends Routing {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
-            return res.status(400).json({message: "Bad Request"});
+            throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
         if (id !== req.user?.id || !req.user.super_student || !req.user.admin) {
-            return res.status(401).json({message: "Unauthorized"});
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
 
         const result = await prisma.user.findFirst({
@@ -66,7 +67,7 @@ export class UserRouting extends Routing {
 
     async createOne(req: express.Request, res: express.Response) {
         if (!req.user?.super_student || !req.user?.admin) {
-            return res.status(401).json({message: "Unauthorized"});
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
 
         const user = await prisma.user.create({
@@ -84,9 +85,7 @@ export class UserRouting extends Routing {
         }
 
         if (id !== req.user?.id && !req.user?.super_student && !req.user?.admin) {
-            res.status(403);
-            res.send("Unauthorized")
-            return;
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
 
         const result = await prisma.user.update({
@@ -107,9 +106,7 @@ export class UserRouting extends Routing {
         }
 
         if (id !== req.user?.id && !req.user?.super_student && !req.user?.admin) {
-            res.status(403);
-            res.send("Unauthorized")
-            return;
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
 
         // TODO: delete cascade in the database!
@@ -119,23 +116,12 @@ export class UserRouting extends Routing {
             },
         })
 
-        try {
-            const result = await prisma.user.delete({
-                where: {
-                    id: id
-                },
-            });
+        const result = await prisma.user.delete({
+            where: {
+                id: id
+            },
+        });
 
-            return res.status(200).json(result);
-        } catch (e) {
-            if (e instanceof Prisma.PrismaClientKnownRequestError) {
-                switch (e.code) {
-                    case 'P2025':
-                        return res.status(404).json({message: "Not Found"})
-                }
-            }
-
-            return res.status(500).json({message: "Internal Server Error"});
-        }
+        return res.status(200).json(result);
     }
 }
