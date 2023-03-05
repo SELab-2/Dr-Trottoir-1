@@ -79,3 +79,65 @@ Een student.
 
 #### Gedetailleerde beschrijving van de stappen
 De student selecteert de ronde die hij/zij wilt beëindigen.
+
+
+### Superstudent maakt een nieuwe ronde
+
+#### Korte beschrijving
+De superstudent wil een nieuwe ronde aanmaken.
+
+#### Precondities
+De superstudent moet ingelogd zijn op het platform.
+
+#### Postcondities
+De superstudent heeft een nieuwe ronde aangemaakt.
+
+#### Actoren
+Een superstudent.
+
+#### Gedetailleerde beschrijving van de stappen
+De superstudent drukt op de knop om een nieuwe ronde aan te maken. Deze komt op het scherm waar hij/zij een overzicht krijgt van gebouwen. Deze kan hij/zij in een lijst zetten die de ronde voorstelt die de superstudent aan het aanmaken is. Deze ronde krijgt op het einde een naam en wanneer de superstudent de ronde wilt aanmaken duwt deze op de hiervoor voorziene knop.
+
+#### Alternatieve flow 1
+De superstudent wilt geen nieuwe ronde aanmaken of wilt nog even wachten met deze aan te maken. Dan kan hij/zij op de knop duwen die het scherm voor een ronde te maken afsluit.
+
+
+
+### Superstudent wijzigt een bestaande ronde
+
+#### Korte beschrijving
+De superstudent wil een ronde wijzigen.
+
+#### Precondities
+De superstudent moet ingelogd zijn op het platform en er moet een ronde die hij kan beheren bestaan.
+
+#### Postcondities
+De superstudent heeft een ronde gewijzigd.
+
+#### Actoren
+Een superstudent.
+
+#### Gedetailleerde beschrijving van de stappen
+De superstudent drukt op de knop om een bestaande ronde te wijzigen. De superstudent komt op het scherm om een ronde te wijzigen waar hij/zij gebouwen aan de ronde kan toevoegen en/of verwijderen. Als hij/zij klaar is dan kan de student de gewijzigde ronde opslaan.
+
+#### Alternatieve flow 1
+De superstudent wilt de ronde niet wijzigen of wilt hier toch nog even mee wachten. Dan kan hij/zij op de knop duwen die het scherm voor een ronde te maken afsluit.
+
+
+### Superstudent wijst een student toe aan een ronde
+
+#### Korte beschrijving
+De superstudent wil een student toevoegen aan een bestaande ronde.
+
+#### Precondities
+De superstudent moet ingelogd zijn op het platform, er moet een ronde die hij kan beheren bestaan en hij moet studenten onder zich hebben die hij ook kan beheren.
+
+#### Postcondities
+De superstudent heeft een student toegevoegd aan een ronde.
+
+#### Actoren
+Een superstudent.
+
+#### Gedetailleerde beschrijving van de stappen
+De superstudent kan de ronde waaraan hij een student wilt toevoegen selecteren en krijgt dan een overzicht te zien van alle studenten die nog geen ronde voor zich hebben. Uit dit overzicht kan hij/zij een student kiezen en deze wijziging opslaan.
+
