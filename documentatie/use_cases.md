@@ -80,6 +80,7 @@ Een student.
 #### Gedetailleerde beschrijving van de stappen
 De student selecteert de ronde die hij/zij wilt beëindigen.
 
+## Superstudent
 
 ### Superstudent maakt een nieuwe ronde
 
@@ -140,4 +141,49 @@ Een superstudent.
 
 #### Gedetailleerde beschrijving van de stappen
 De superstudent kan de ronde waaraan hij een student wilt toevoegen selecteren en krijgt dan een overzicht te zien van alle studenten die nog geen ronde voor zich hebben. Uit dit overzicht kan hij/zij een student kiezen en deze wijziging opslaan.
+
+
+## Syndicus
+
+### Syndicus voegt een gebouw toe
+
+#### Korte beschrijving
+De syndicus wilt zijn/haar gebouw toevoegen op de website.
+
+#### Precondities
+De syndicus moet ingelogd zijn op het platform.
+
+#### Postcondities
+De syndicus heeft een nieuw gebouw toegevoegd op de website.
+
+#### Actoren
+Een syndicus.
+
+#### Gedetailleerde beschrijving van de stappen
+De syndicus duwt op de knop om een gebouw toe te voegen. Hierna komt de syndicus op een scherm voor een gebouw toe te voegen waar hij/zij informatie over het gebouw moet invullen. Eenmaal klaar kan de syndicus het gebouw opslaan door op de daarvoor bedoelde knop te drukken.
+
+#### Alternatieve flow 1
+Als de syndicus foute informatie invult of wilt stoppen met een gebouw toe te voegen dan kan deze op de knop drukken om het process te annuleren.
+
+
+### Syndicus wijzigt informatie over een gebouw
+
+#### Korte beschrijving
+De syndicus wilt informatie over zijn/haar gebouw wijzigen en opslaan op de site.
+
+#### Precondities
+De syndicus moet ingelogd zijn op het platform en er moet een gebouw zijn dat hij/zij al reeds beheerd.
+
+#### Postcondities
+De syndicus heeft de nieuwe informatie over dit gebouw toegevoegd op de website.
+
+#### Actoren
+Een syndicus.
+
+#### Gedetailleerde beschrijving van de stappen
+De syndicus duwt op het gebouw dat hij/zij wenst te wijzigen komt op een venster waar de al reeds bestaande informatie te zien is over dit gebouw. Hierin kan hij deze reeds bestaande informatie wijzigen/verwijderen. Eens de syndicus klaar is slaat hij/zij deze informatie op door op de daarvoor voorziene knop te drukken.
+
+#### Alternatieve flow 1
+Als de syndicus toch de informatie over het gebouw niet wilt wijzigen, kan deze het process op elk moment stoppen door op de annuleer-knop te drukken.
+
 
