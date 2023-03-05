@@ -1,0 +1,250 @@
+{
+    "/file/{fileId}": {
+        "requestTypes": [
+            "get",
+            "put",
+            "delete"
+        ],
+        "name": "file",
+        "requestTypeFunctionName": [
+            "getFilesById",
+            "updateFileById",
+            "deleteFileById"
+        ],
+        "requestTypesSummary": [
+            "get files",
+            "update file",
+            "delete file"
+        ],
+        "responseType": "object",
+        "parameters": [
+            "fileId",
+            "path",
+            "true",
+            "integer"
+        ]
+    },
+    "/file": {
+        "requestTypes": [
+            "post"
+        ],
+        "name": "file",
+        "requestTypeFunctionName": [
+            "postFile"
+        ],
+        "requestTypesSummary": [
+            "make new File"
+        ],
+        "responseType": "object",
+        "parameters": []
+    },
+    "/files": {
+        "requestTypes": [
+            "get"
+        ],
+        "name": "file",
+        "requestTypeFunctionName": [
+            "getFiles"
+        ],
+        "requestTypesSummary": [
+            "get all files"
+        ],
+        "responseType": "array",
+        "parameters": []
+    },
+    "/user/syndici": {
+        "requestTypes": [
+            "get"
+        ],
+        "name": "syndicus",
+        "requestTypeFunctionName": [
+            "getSyndici"
+        ],
+        "requestTypesSummary": [
+            "get all syndici"
+        ],
+        "responseType": "array",
+        "parameters": []
+    },
+    "/user/syndicus/{syndicusId}": {
+        "requestTypes": [
+            "get",
+            "put",
+            "delete"
+        ],
+        "name": "syndicus",
+        "requestTypeFunctionName": [
+            "getSyndicusById",
+            "updateSyndicusById",
+            "deleteSyndicusById"
+        ],
+        "requestTypesSummary": [
+            "get syndicus",
+            "update syndicus",
+            "delete syndicus"
+        ],
+        "responseType": "object",
+        "parameters": [
+            "syndicusId",
+            "path",
+            "true",
+            "integer"
+        ]
+    },
+    "/building/images": {
+        "requestTypes": [
+            "get"
+        ],
+        "name": "BuildingImage",
+        "requestTypeFunctionName": [
+            "getBuildingImages"
+        ],
+        "requestTypesSummary": [
+            "get images of every building"
+        ],
+        "responseType": "array",
+        "parameters": []
+    },
+    "/building/image/{buildingImageId}": {
+        "requestTypes": [
+            "get",
+            "put",
+            "delete"
+        ],
+        "name": "buildingImage",
+        "requestTypeFunctionName": [
+            "getBuildingImageById",
+            "updateBuildingImageById",
+            "deleteBuildingImageById"
+        ],
+        "requestTypesSummary": [
+            "get Building Image",
+            "update Building Image",
+            "delete Building Image"
+        ],
+        "responseType": "object",
+        "parameters": [
+            "buildingImageId",
+            "path",
+            "true",
+            "integer"
+        ]
+    },
+    "/garbages": {
+        "requestTypes": [
+            "get"
+        ],
+        "name": "garbage",
+        "requestTypeFunctionName": [
+            "getGarbage"
+        ],
+        "requestTypesSummary": [
+            "get garbages"
+        ],
+        "responseType": "array",
+        "parameters": []
+    },
+    "garbage/{garbageId}": {
+        "requestTypes": [
+            "get",
+            "put",
+            "delete"
+        ],
+        "name": "garbage",
+        "requestTypeFunctionName": [
+            "getGarbageById",
+            "updateGarbageById",
+            "deleteGarbageById"
+        ],
+        "requestTypesSummary": [
+            "get garbage",
+            "update garbage",
+            "delete garbage"
+        ],
+        "responseType": "object",
+        "parameters": [
+            "garbageId",
+            "path",
+            "true",
+            "integer"
+        ]
+    },
+    "/garbage/actions": {
+        "requestTypes": [
+            "get"
+        ],
+        "name": "action",
+        "requestTypeFunctionName": [
+            "getActions"
+        ],
+        "requestTypesSummary": [
+            "get all actions"
+        ],
+        "responseType": "array",
+        "parameters": []
+    },
+    "/garbage/action/{actionId}": {
+        "requestTypes": [
+            "get",
+            "put",
+            "delete"
+        ],
+        "name": "action",
+        "requestTypeFunctionName": [
+            "getActionById",
+            "updateActionById",
+            "deleteActionById"
+        ],
+        "requestTypesSummary": [
+            "get action",
+            "update action",
+            "delete action"
+        ],
+        "responseType": "object",
+        "parameters": [
+            "actionId",
+            "path",
+            "true",
+            "integer"
+        ]
+    },
+    "/progress/images": {
+        "requestTypes": [
+            "get"
+        ],
+        "name": "progressImage",
+        "requestTypeFunctionName": [
+            "getProgressImage"
+        ],
+        "requestTypesSummary": [
+            "get Progress Images"
+        ],
+        "responseType": "array",
+        "parameters": []
+    },
+    "/progress/image/{progressImageId}": {
+        "requestTypes": [
+            "get",
+            "put",
+            "delete"
+        ],
+        "name": "progressImage",
+        "requestTypeFunctionName": [
+            "getProgressImageById",
+            "updateProgressImageById",
+            "deleteProgressImageById"
+        ],
+        "requestTypesSummary": [
+            "get progress image",
+            "update progress image",
+            "delete progress image"
+        ],
+        "responseType": "object",
+        "parameters": [
+            "progressImageId",
+            "path",
+            "true",
+            "integer"
+        ]
+    }
+}
