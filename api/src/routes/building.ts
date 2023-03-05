@@ -8,6 +8,10 @@ const DEFAULT_PAGE_SIZE = 1024;
 
 export class BuildingRouting extends Routing {
     async getAll(req: express.Request, res: express.Response) {
+        if (req.user === null) {
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
+        }
+
         const limit = Number(req.query["limit"] ?? DEFAULT_PAGE_SIZE);
         const offset = Number(req.query["offset"] ?? 0);
 
@@ -32,6 +36,10 @@ export class BuildingRouting extends Routing {
     }
 
     async getOne(req: express.Request, res: express.Response) {
+        if (req.user === null) {
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
+        }
+
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
@@ -75,7 +83,7 @@ export class BuildingRouting extends Routing {
         }
 
         if (!req.user?.admin) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
 
         const result = await prisma.building.update({
@@ -89,14 +97,14 @@ export class BuildingRouting extends Routing {
     }
 
     async deleteOne(req: express.Request, res: express.Response) {
+        if (!req.user?.admin) {
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
+        }
+
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
-
-        if (!req.user?.admin) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
 
         const result = await prisma.building.delete({
