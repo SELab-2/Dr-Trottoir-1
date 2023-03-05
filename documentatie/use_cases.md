@@ -186,4 +186,24 @@ De syndicus duwt op het gebouw dat hij/zij wenst te wijzigen komt op een venster
 #### Alternatieve flow 1
 Als de syndicus toch de informatie over het gebouw niet wilt wijzigen, kan deze het process op elk moment stoppen door op de annuleer-knop te drukken.
 
+## Admin
 
+### Admin voegt een nieuwe gebruiker toe
+
+#### Korte beschrijving
+De admin voegt een nieuwe gebruiker toe op de website.
+
+#### Precondities
+De admin is ingelogd op de website.
+
+#### Postcondities
+De admin heeft een nieuwe gebruiker toegevoegd.
+
+#### Actoren
+Een admin.
+
+#### Gedetailleerde beschrijving van de stappen
+De admin kan een gebruiker toevoegen door op de hiervoor voorziene knop te drukken. De admin komt op een scherm waar hij informatie (email, naam etc..) kan invullen over de nieuwe gebruiker. Ook kiest de admin op deze pagina de rol voor deze nieuwe gebruiker. Eenmaal de admin klaar is kan hij deze gebruiker opslaan door op de hiervoor voorziene knop te drukken.
+
+#### Alternatieve flow 1
+Als de admin wilt stoppen met een gebruiker toe te voegen dan kan deze op de knop drukken om het process te annuleren.
