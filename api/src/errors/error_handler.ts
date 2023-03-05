@@ -8,11 +8,9 @@ export class ErrorHandler {
         if (err instanceof Prisma.PrismaClientKnownRequestError) {
             switch (err.code) {
                 case "P2002":
-                    return res
-                        .status(409)
-                        .json({
-                            message: "Conflict: unique constraint failed",
-                        });
+                    return res.status(409).json({
+                        message: "Conflict: unique constraint failed",
+                    });
                 case "P2025":
                     return res.status(404).json({ message: "Not Found" });
             }

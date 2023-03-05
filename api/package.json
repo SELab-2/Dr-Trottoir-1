@@ -2,7 +2,8 @@
   "scripts": {
     "prestart": "tsc",
     "start": "node ./dist/main.js",
-    "serve": "nodemon ./src/main.ts"
+    "serve": "nodemon ./src/main.ts",
+    "lint": "npx prettier --write ."
   },
   "dependencies": {
     "@prisma/client": "^4.10.1",
@@ -23,6 +24,7 @@
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
     "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.6.0",
     "prettier": "2.8.4",
     "prisma": "^4.10.1",
     "typescript": "^4.9.5"
