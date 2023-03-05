@@ -4,6 +4,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
 import {prisma} from "./prisma";
+import {BuildingRouting} from "./routes/building";
 
 const PORT_NUMBER = 8080;
 
@@ -63,6 +64,7 @@ app.get('/', function (req, res) {
 
 // Assign the appropriate subrouters
 app.use('/user', new UserRouting().toRouter());
+app.use('/building', new BuildingRouting().toRouter());
 
 app.listen(PORT_NUMBER, () => {
     console.log(`Listening on port: ${PORT_NUMBER}.`)
