@@ -93,7 +93,8 @@ model Address {
     latitude  Float
     longitude Float
 
-    buildings Building[] // Vereist?
+    buildings Building[]
+    User      User[]
 
     @@map("address")
 }
