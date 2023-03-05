@@ -66,17 +66,18 @@
             multiple
             v-model="roles"
         ></v-select>
-        <div>
+        <div v-if="roles.includes('Syndicus')">
             Extra input velden nodig voor Syndicus.
         </div>
+        <v-btn>
+            Maak Account
+        </v-btn>
 
     </div>
 </template>
 
 <script lang="ts">
-
-
-
+import { def } from '@vue/shared';
 
 export default{
     data() {
@@ -88,7 +89,13 @@ export default{
             password1: '',
             showPsswd1: false,
             password2: '',
-            roles: []
+            roles: [] as String[]
+        }
+    },
+    methods:{
+        handleCreation(){
+            console.log('create new account')
+
         }
     }
 }
