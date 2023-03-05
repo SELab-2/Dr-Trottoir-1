@@ -35,6 +35,7 @@
             type="text"
             required    
         ></v-text-field>
+
         <!-- Text input field for the password-->
         <v-text-field
             v-model="password1"
@@ -45,14 +46,15 @@
             @click:append-inner="showPsswd1 = !showPsswd1"
             bg
         ></v-text-field>
+
         <!-- Text input field for the password confirmation-->
         <v-text-field
             v-model="password2"
             :prepend-inner-icon="'mdi-lock'"
-            :append-inner-icon="showPsswd2 ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPsswd2 ? 'text' : 'password'"
+            :append-inner-icon="showPsswd1 ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPsswd1 ? 'text' : 'password'"
             label="Bevestig wachtwoord"
-            @click:append-inner="showPsswd2 = !showPsswd2"
+            @click:append-inner="showPsswd1 = !showPsswd1"
             bg
         ></v-text-field>
 
@@ -62,11 +64,20 @@
             label="Rol"
             :items="['Student', 'Superstudent', 'Syndicus', 'Admin']"
             multiple
+            v-model="roles"
         ></v-select>
+        <div>
+            Extra input velden nodig voor Syndicus.
+        </div>
 
     </div>
 </template>
+
 <script lang="ts">
+
+
+
+
 export default{
     data() {
         return{
@@ -77,18 +88,12 @@ export default{
             password1: '',
             showPsswd1: false,
             password2: '',
-            showPsswd2: false
-        }
-    },
-    methods: {
-        handleSubmit(){
-            console.log('submited');
+            roles: []
         }
     }
 }
-
-
 </script>
+
 <style lang="sass">
 
 </style>
