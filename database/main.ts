@@ -1,6 +1,7 @@
 import { createUser, createRegion, createUserRegion } from "./mock/user";
-import { createBuilding, createGarbage } from "./mock/building";
+import { createBuilding, createGarbage, createBuildingImages } from "./mock/building";
 import { createRound, createRoundBuilding } from "./mock/round";
+import { createSchedule } from "./mock/schedule";
 
 async function main() {
     //await createUser();
@@ -9,7 +10,9 @@ async function main() {
     //await createUserRegion();
     //await createGarbage();
     //await createRound();
-    await createRoundBuilding()
+    await createRoundBuilding();
+    await createSchedule();
+    await createBuildingImages();
 }
 
 // Actually call main
