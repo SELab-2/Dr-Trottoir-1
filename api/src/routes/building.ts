@@ -5,26 +5,36 @@ import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 
 export class BuildingRouting extends Routing {
+    // This specific function is used since the syndicus join gets quite ugly
+    // otherwise
+    static joins(req: CustomRequest): any {
+        const joins = Parser.stringArray(req.query.join);
+        const result: any = {};
+
+        if (joins?.includes("address")) {
+            result["address"] = true;
+        }
+
+        if (joins?.includes("syndicus")) {
+            result["syndicus"] = {
+                include: {
+                    user: true,
+                },
+            };
+        }
+
+        return result;
+    }
+
     @Auth.authorization({ student: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join);
-
         const result = await prisma.building.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
                 name: req.query["name"],
             },
-            include: {
-                address: joins?.includes("address"),
-                syndicus: joins?.includes("syndicus")
-                    ? {
-                          include: {
-                              user: true,
-                          },
-                      }
-                    : undefined,
-            },
+            include: BuildingRouting.joins(req),
         });
 
         return res.json(result);
@@ -32,22 +42,11 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join);
-
         const result = await prisma.building.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            include: {
-                address: joins?.includes("address"),
-                syndicus: joins?.includes("syndicus")
-                    ? {
-                          include: {
-                              user: true,
-                          },
-                      }
-                    : undefined,
-            },
+            include: BuildingRouting.joins(req),
         });
 
         return res.json(result);

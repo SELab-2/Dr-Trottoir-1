@@ -22,8 +22,6 @@ export type CustomRequest = express.Request<any, any, any, any, any>;
  * You are free to add any other function and overwrite Routing::toRouter.
  */
 export abstract class Routing {
-    DEFAULT_PAGE_SIZE = 1024;
-
     getAll(req: CustomRequest, res: express.Response): void {
         throw new APIError(APIErrorCode.NOT_FOUND);
     }
