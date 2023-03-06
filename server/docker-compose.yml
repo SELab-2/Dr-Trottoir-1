@@ -53,6 +53,8 @@ services:
     networks:
       main:
         ipv4_address: 10.0.0.2
+    ports:
+      - "2002:5432"
 
   imgproxy:
     container_name: imgproxy
@@ -64,7 +66,7 @@ services:
       IMGPROXY_DEVELOPMENT_ERRORS_MODE: 'true'
       IMGPROXY_MAX_SRC_RESOLUTION: 100
       IMGPROXY_JPEG_PROGRESSIVE: 'true'
-      IMGPROXY_BIND: ":8081"
+      IMGPROXY_BIND: ":8080"
     volumes:
       - '~/volumes/imgproxy:/images:ro'
     networks:
@@ -77,45 +79,7 @@ services:
       - "traefik.http.routers.imgproxy.entrypoints=websecure"
       - "traefik.http.routers.imgproxy.tls.certresolver=letsencrypt"
       - "traefik.http.services.imgproxy.loadbalancer.server.port=8080"
-
-  portainer:
-    container_name: portainer
-    image: 'portainer/portainer-ce'
-    restart: 'always'
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock'
-      - '~/volumes/portainer:/data'
-    networks:
-      main:
-        ipv4_address: 10.0.0.4
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=Host(`sel2-1.ugent.be`)"
-      - "traefik.http.routers.portainer.rule=PathPrefix(`/portainer/`)"
-      - "traefik.http.routers.portainer.entrypoints=websecure"
-      - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    hostname: pgadmin
-    environment:
-      PGADMIN_LISTEN_PORT: 3001
-    volumes:
-      - '~/volumes/pgadmin:/var/lib/pgadmin'
-    networks:
-      main:
-        ipv4_address: 10.0.0.5
-    env_file:
-      - .env
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.pgadmin.rule=Host(`sel2-1.ugent.be`)"
-      - "traefik.http.routers.pgadmin.rule=PathPrefix(`/pgadmin/`)"
-      - "traefik.http.routers.pgadmin.entrypoints=websecure"
-      - "traefik.http.routers.pgadmin.tls.certresolver=letsencrypt"
-      - "traefik.http.services.pgadmin.loadbalancer.server.port=3001"
+      - "traefik.http.middlewares.imgproxy.stripprefix.prefixes=/imgproxy/"
 
 networks:
   main:
