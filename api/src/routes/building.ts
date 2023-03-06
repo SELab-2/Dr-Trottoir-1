@@ -10,18 +10,20 @@ export class BuildingRouting extends Routing {
         const joins = Parser.stringArray(req.query.join);
 
         const result = await prisma.building.findMany({
-            take: Parser.number(req.query['take'], 1024),
-            skip: Parser.number(req.query['skip'], 0),
+            take: Parser.number(req.query["take"], 1024),
+            skip: Parser.number(req.query["skip"], 0),
             where: {
-                name: req.query['name'],
+                name: req.query["name"],
             },
             include: {
                 address: joins?.includes("address"),
-                syndicus: joins?.includes("syndicus") ? {
-                    include: {
-                        user: true,
-                    },
-                } : undefined,
+                syndicus: joins?.includes("syndicus")
+                    ? {
+                          include: {
+                              user: true,
+                          },
+                      }
+                    : undefined,
             },
         });
 
@@ -34,15 +36,17 @@ export class BuildingRouting extends Routing {
 
         const result = await prisma.building.findUniqueOrThrow({
             where: {
-                id: Parser.number(req.params['id']),
+                id: Parser.number(req.params["id"]),
             },
             include: {
                 address: joins?.includes("address"),
-                syndicus: joins?.includes("syndicus") ? {
-                    include: {
-                        user: true,
-                    },
-                } : undefined,
+                syndicus: joins?.includes("syndicus")
+                    ? {
+                          include: {
+                              user: true,
+                          },
+                      }
+                    : undefined,
             },
         });
 
@@ -63,7 +67,7 @@ export class BuildingRouting extends Routing {
         const result = await prisma.building.update({
             data: req.body,
             where: {
-                id: Parser.number(req.params['id']),
+                id: Parser.number(req.params["id"]),
             },
         });
 
@@ -74,7 +78,7 @@ export class BuildingRouting extends Routing {
     async deleteOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.building.delete({
             where: {
-                id: Parser.number(req.params['id']),
+                id: Parser.number(req.params["id"]),
             },
         });
 

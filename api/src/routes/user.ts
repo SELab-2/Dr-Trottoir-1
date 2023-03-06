@@ -10,12 +10,12 @@ export class UserRouting extends Routing {
         const joins = Parser.stringArray(req.query.join);
 
         const result = await prisma.user.findMany({
-            take: Parser.number(req.query['take'], 1024),
-            skip: Parser.number(req.query['skip'], 0),
+            take: Parser.number(req.query["take"], 1024),
+            skip: Parser.number(req.query["skip"], 0),
             where: {
                 student: Parser.bool(req.query["student"]),
                 super_student: Parser.bool(req.query["super_student"]),
-                admin: Parser.bool(req.query["admin"])
+                admin: Parser.bool(req.query["admin"]),
             },
             include: {
                 address: joins?.includes("address"),
@@ -33,7 +33,7 @@ export class UserRouting extends Routing {
 
         const result = await prisma.user.findUniqueOrThrow({
             where: {
-                id: Parser.number(req.params['id']),
+                id: Parser.number(req.params["id"]),
             },
             include: {
                 address: joins?.includes("address"),
@@ -59,7 +59,7 @@ export class UserRouting extends Routing {
         const result = await prisma.user.update({
             data: req.body,
             where: {
-                id: Parser.number(req.params['id']),
+                id: Parser.number(req.params["id"]),
             },
         });
 
@@ -71,13 +71,13 @@ export class UserRouting extends Routing {
         // TODO: delete cascade in the database!
         await prisma.userRegion.deleteMany({
             where: {
-                user_id: Parser.number(req.params['id']),
+                user_id: Parser.number(req.params["id"]),
             },
         });
 
         const result = await prisma.user.delete({
             where: {
-                id: Parser.number(req.params['id']),
+                id: Parser.number(req.params["id"]),
             },
         });
 
