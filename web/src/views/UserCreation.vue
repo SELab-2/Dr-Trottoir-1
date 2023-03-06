@@ -40,10 +40,10 @@
         <v-text-field
             v-model="password1"
             :prepend-inner-icon="'mdi-lock'"
-            :append-inner-icon="showPsswd1 ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPsswd1 ? 'text' : 'password'"
+            :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPsswd ? 'text' : 'password'"
             label="Wachtwoord"
-            @click:append-inner="showPsswd1 = !showPsswd1"
+            @click:append-inner="showPsswd = !showPsswd"
             bg
         ></v-text-field>
 
@@ -51,10 +51,10 @@
         <v-text-field
             v-model="password2"
             :prepend-inner-icon="'mdi-lock'"
-            :append-inner-icon="showPsswd1 ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPsswd1 ? 'text' : 'password'"
+            :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPsswd ? 'text' : 'password'"
             label="Bevestig wachtwoord"
-            @click:append-inner="showPsswd1 = !showPsswd1"
+            @click:append-inner="showPsswd = !showPsswd"
             bg
         ></v-text-field>
 
@@ -76,29 +76,33 @@
     </div>
 </template>
 
-<script lang="ts">
-import { def } from '@vue/shared';
+<script lang="ts" setup>
+import { ref, Ref } from 'vue';
 
-export default{
-    data() {
-        return{
-            first_name: '',
-            last_name: '',
-            phone_number: '',
-            email: '',
-            password1: '',
-            showPsswd1: false,
-            password2: '',
-            roles: [] as String[]
-        }
-    },
-    methods:{
-        handleCreation(){
-            console.log('create new account')
+// reactive first name state
+const first_name: string = ''
 
-        }
-    }
-}
+// reactive last name state
+const last_name = ref('')
+
+// reactive phone numeber state
+const phone_number = ref('')
+
+// reactive email state
+const email = ref('')
+
+// reactive psswd1 state
+const password1 = ref('')
+
+// reactive password confirmation state
+const password2 = ref('')
+
+// reactive state to know if you must show both password fields or not
+const showPsswd = ref(false) 
+
+// reactive array keeping track of all the roles for this new user
+const roles: Ref<String[]> = ref([])
+
 </script>
 
 <style lang="sass">
