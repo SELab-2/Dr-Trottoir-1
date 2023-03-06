@@ -207,3 +207,25 @@ De admin kan een gebruiker toevoegen door op de hiervoor voorziene knop te drukk
 
 #### Alternatieve flow 1
 Als de admin wilt stoppen met een gebruiker toe te voegen dan kan deze op de knop drukken om het process te annuleren.
+
+### Admin wijzigt info/rol of verwijdert een (super)student
+
+#### Korte beschrijving
+De admin kan almgene informatie van een gebruiker wijzigen (bvb wanneer de gebruiker een nieuw telefoonnummer heeft).
+De admin kan studenten promoveren tot superstudent, of superstudenten degraderen tot student.
+De admin kan studenten verwijderen.
+
+#### Precondities
+De admin is ingelogd op de website.
+
+#### Postcondities
+De admin heeft een gebruiker gewijzigd/verwijderd.
+
+#### Actoren
+Een admin.
+
+#### Gedetailleerde beschrijving van de stappen
+De admin kan een gebruiker aanpassen door op de voorziene knop te drukken waarna hij/zij op een scherm komt met de gekende informatie van de gebruiker. Vervolgens kan de admin deze informatie aanpassen en de wijzigingen doorvoeren door op opslaan te klikken. De admin kan er ook voor kiezen om de gebruiker te verwijderen door eerst op de wijzig knop te drukken en daarna op de verwijder knop. Nu verschijnt er een pop-up op het scherm waarop de admin moet aanduiden dat hij/zij zeker is dat hij/zij de gebruiker in kwestie wilt verwijderen.
+
+#### Alternatieve flow 1
+De admin kan op elk moment de gemaakte wijzigingen die nog niet doorgevoerd werden annuleren.
