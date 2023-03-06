@@ -1,26 +1,27 @@
-import { prisma } from "../prisma";
-import express from "express";
 import { CustomRequest, Routing } from "./routing";
 import { Auth } from "../auth/auth";
+import express from "express";
 import { Parser } from "../parser";
+import { prisma } from "../prisma";
 
-export class UserRouting extends Routing {
+export class ScheduleRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
         const joins = Parser.stringArray(req.query.join, []);
 
-        const result = await prisma.user.findMany({
+        const result = await prisma.schedule.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                student: Parser.bool(req.query["student"]),
-                super_student: Parser.bool(req.query["super_student"]),
-                admin: Parser.bool(req.query["admin"]),
+                day: {
+                    lte: Parser.date(req.query["before"]),
+                    gte: Parser.date(req.query["after"]),
+                },
             },
             include: {
-                address: joins?.includes("address"),
-                regions: joins?.includes("regions"),
-                schedule: joins?.includes("schedule"),
+                user: joins?.includes("user"),
+                round: joins?.includes("round"),
+                progress: joins?.includes("progress"),
             },
         });
 
@@ -31,14 +32,14 @@ export class UserRouting extends Routing {
     async getOne(req: CustomRequest, res: express.Response) {
         const joins = Parser.stringArray(req.query.join, []);
 
-        const result = await prisma.user.findUniqueOrThrow({
+        const result = await prisma.schedule.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
             include: {
-                address: joins?.includes("address"),
-                regions: joins?.includes("regions"),
-                schedule: joins?.includes("schedule"),
+                user: joins?.includes("user"),
+                round: joins?.includes("round"),
+                progress: joins?.includes("progress"),
             },
         });
 
@@ -47,7 +48,7 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        const user = await prisma.user.create({
+        const user = await prisma.schedule.create({
             data: req.body,
         });
 
@@ -56,7 +57,7 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.user.update({
+        const result = await prisma.schedule.update({
             data: req.body,
             where: {
                 id: Parser.number(req.params["id"]),
@@ -68,14 +69,7 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        // TODO: delete cascade in the database!
-        await prisma.userRegion.deleteMany({
-            where: {
-                user_id: Parser.number(req.params["id"]),
-            },
-        });
-
-        const result = await prisma.user.delete({
+        const result = await prisma.schedule.delete({
             where: {
                 id: Parser.number(req.params["id"]),
             },

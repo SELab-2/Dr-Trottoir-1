@@ -7,6 +7,7 @@ import { BuildingRouting } from "./routes/building";
 import "express-async-errors";
 import { ErrorHandler } from "./errors/error_handler";
 import { Auth } from "./auth/auth";
+import { ScheduleRouting } from "./routes/schedule";
 
 const PORT_NUMBER = 8080;
 
@@ -36,6 +37,7 @@ app.use(Auth.authentication);
 // Assign the appropriate routers
 app.use("/user", new UserRouting().toRouter());
 app.use("/building", new BuildingRouting().toRouter());
+app.use("/schedule", new ScheduleRouting().toRouter());
 
 // Finally, an error handler
 app.use(ErrorHandler.handle);

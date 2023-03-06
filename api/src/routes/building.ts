@@ -8,7 +8,7 @@ export class BuildingRouting extends Routing {
     // This specific function is used since the syndicus join gets quite ugly
     // otherwise
     static joins(req: CustomRequest): any {
-        const joins = Parser.stringArray(req.query.join);
+        const joins = Parser.stringArray(req.query.join, []);
         const result: any = {};
 
         if (joins?.includes("address")) {

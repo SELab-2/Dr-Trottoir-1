@@ -45,4 +45,16 @@ export class Parser {
     ): string[] | undefined {
         return input?.split(",") ?? otherwise;
     }
+
+    static date(
+        input: string | undefined,
+        otherwise: Date | undefined = undefined,
+    ): Date | undefined {
+        if (!input) {
+            return otherwise;
+        }
+
+        const result = new Date(input);
+        return result.toString() !== "Invalid Date" ? result : otherwise;
+    }
 }
