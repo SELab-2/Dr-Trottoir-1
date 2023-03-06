@@ -1,15 +1,16 @@
 import { createUser, createRegion, createUserRegion } from "./mock/user";
-import { createBuilding, createGarbage, createBuildingImages } from "./mock/building";
+import { createBuilding, createAction, createGarbage, createBuildingImages } from "./mock/building";
 import { createRound, createRoundBuilding } from "./mock/round";
 import { createSchedule, createProgress, createProgressImage } from "./mock/schedule";
 
 async function main() {
-    //await createUser();
-    //await createRegion();
+    await createUser();
+    await createRegion();
     await createBuilding();
-    //await createUserRegion();
-    //await createGarbage();
-    //await createRound();
+    await createUserRegion();
+    await createAction();
+    await createGarbage();
+    await createRound();
     await createRoundBuilding();
     await createSchedule();
     await createBuildingImages();
