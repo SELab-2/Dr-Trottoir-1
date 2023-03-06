@@ -4,6 +4,11 @@ import { Chance } from "chance";
 const prisma = new PrismaClient()
 const chance = new Chance();
 
+/*
+Bij het aanmaken van een nieuw gebouw worden ook nieuwe waarden toegevoegd aan de databank in de tabellen van
+syndicus, adres en bestand. Deze tabellen kunnen enkel via deze functie gevuld worden en dus niet via een aparte
+create-functie. De tabel van adres kan echter wel nog aangevuld worden via de functie createUser in het bestand user.ts.
+ */
 export async function createBuilding() {
     await prisma.building.create({
         data: {
@@ -63,6 +68,10 @@ export async function createAction() {
     })
 }
 
+/*
+Deze functie maakt nieuwe data aan voor de tabel "garbage". Hiervoor neemt het willekeurig een bestaand gebouw
+uit de tabel "building" en een bestaande actie uit de tabel "action".
+ */
 export async function createGarbage() {
     const buildings = await prisma.building.findMany();
     const actions = await prisma.action.findMany();
@@ -83,6 +92,10 @@ export async function createGarbage() {
     })
 }
 
+/*
+Om een waarde toe te voegen aan de tabel "buildingImage" wordt een bestaand gebouw gebruikt (willekeurig gekozen)
+en wordt een nieuwe afbeelding aangemaakt. Een afbeelding kan niet via een aparte create-functie gemaakt worden.
+ */
 export async function createBuildingImages() {
     const buildings = await prisma.building.findMany();
     const maxBuilding = buildings.length - 1;

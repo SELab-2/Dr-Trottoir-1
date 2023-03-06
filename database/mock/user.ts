@@ -4,6 +4,10 @@ import { Chance } from "chance";
 const prisma = new PrismaClient()
 const chance = new Chance();
 
+/*
+Bij het toevoegen van een nieuwe gebruiker aan de databank wordt ook een nieuw adres aangemaakt. Een nieuw adres kan
+enkel via deze functie of via de functie createBuilding in de databank geplaatst worden, dus niet via een aparte functie.
+ */
 export async function createUser() {
     await prisma.user.create({
         data: {
@@ -38,6 +42,9 @@ export async function createRegion() {
     })
 }
 
+/*
+Om een gebruiker te koppelen aan een regio worden willekeurig bestaande waarden genomen uit de tabellen "user" en "region".
+ */
 export async function createUserRegion() {
     const users = await prisma.user.findMany();
     const regions = await prisma.region.findMany();

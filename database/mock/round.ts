@@ -12,13 +12,17 @@ export async function createRound() {
     })
 }
 
+/*
+Bij het koppelen van een gebouw aan een ronde worden bestaande gebouwen en rondes gebruikt. Deze worden willekeurig
+gekozen uit de tabellen.
+ */
 export async function createRoundBuilding() {
     const buildings = await prisma.building.findMany();
     const rounds = await prisma.round.findMany();
-    const maxBuilding = buildings.length-1;
-    const maxRounds = rounds.length-1;
+    const maxBuilding = buildings.length - 1;
+    const maxRound = rounds.length - 1;
     const building = buildings[chance.integer({min: 0, max: maxBuilding})];
-    const round = rounds[chance.integer({min: 0, max: maxRounds})];
+    const round = rounds[chance.integer({min: 0, max: maxRound})];
     await prisma.roundBuilding.create({
         data: {
             round: {
