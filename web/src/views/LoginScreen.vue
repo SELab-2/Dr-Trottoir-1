@@ -68,26 +68,26 @@
     </v-snackbar>
 </template>
 
-<script lang="ts">
-export default{
-    data() {
-        return{
-            // property containing the inputed email value
-            email: '',
-            // property containing the inputed password value
-            password: '',
-            // propery keeping track if the password should be displayed in plain text or not
-            showPsswd: false,
-            // property keeping track if the snackbar should be shown or not
-            snackbar: false
-        }
-    },
-    methods: {
-        // Function that handels the login event
-        handleSubmit(){
-            console.log('submited');
-        }
-    }
+<script lang="ts" setup>
+
+import {ref} from 'vue'
+
+// reactive email state
+const email = ref('')
+
+// reactive password state
+const password = ref('')
+
+// reactive state to check if the psswd must be shown or not
+const showPsswd = ref(false)
+
+// reactive state to check if the snackbar must be shown or not
+const snackbar = ref(false)
+
+
+// function that handels the login event
+function handleSubmit(){
+    console.log('Logging in...')
 }
 
 </script>
