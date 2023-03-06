@@ -20,5 +20,12 @@ jobs:
                 working-directory: ./api
         steps:
             - uses: actions/checkout@v3
-            - run: npm ci
+            - name: Use Node.js 19
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 19
+                  cache: 'npm'
+                  cache-dependency-path: 'api/package-lock.json'
+            - run: npm install eslint
+            - run: npm install prettier
             - run: npm test
