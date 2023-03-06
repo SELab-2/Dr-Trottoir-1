@@ -15,6 +15,9 @@ on:
 jobs:
     lint:
         runs-on: [self-hosted]
+        env:
+          PRISMA_SKIP_POSTINSTALL_GENERATE: true
+          OUTPUT_DIRECTORY: ./api/prisma
         defaults:
             run:
                 working-directory: ./api
