@@ -12,7 +12,6 @@ import { errorMessagePrismaClient } from "./prisma_error";
  * constraint not met" when POSTing new data.
  */
 export class ErrorHandler {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     static handle(err: Error, req: Request, res: Response, next: NextFunction) {
         // If a PrismaORM error occurs, we send a more detailed message.
         if (err instanceof Prisma.PrismaClientKnownRequestError) {

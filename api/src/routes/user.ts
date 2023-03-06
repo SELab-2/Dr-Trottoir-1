@@ -1,112 +1,44 @@
 import { prisma } from "../prisma";
 import express from "express";
-import { Routing } from "./routing";
-import { APIErrorCode } from "../errors/api_error_code";
-import { APIError } from "../errors/api_error";
+import { CustomRequest, Routing } from "./routing";
 import { Auth } from "../auth/auth";
-
-const DEFAULT_PAGE_SIZE = 1024;
+import { Parser } from "../parser";
 
 export class UserRouting extends Routing {
     @Auth.authorization({ superStudent: true })
-    async getAll(req: express.Request, res: express.Response) {
-        const limit = Number(req.query["limit"] ?? DEFAULT_PAGE_SIZE);
-        const offset = Number(req.query["offset"] ?? 0);
-        const student =
-            req.query["student"] == "true"
-                ? true
-                : req.query["student"] == "false"
-                ? false
-                : undefined;
-        const superStudent =
-            req.query["super_student"] == "true"
-                ? true
-                : req.query["super_student"] == "false"
-                ? false
-                : undefined;
-        const admin =
-            req.query["admin"] == "true"
-                ? true
-                : req.query["admin"] == "false"
-                ? false
-                : undefined;
-
-        if (Number.isNaN(limit) || Number.isNaN(offset)) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
+    async getAll(req: CustomRequest, res: express.Response) {
+        const joins = Parser.stringArray(req.query.join);
 
         const result = await prisma.user.findMany({
-            take: limit,
-            skip: offset,
+            take: Parser.number(req.query['take'], 1024),
+            skip: Parser.number(req.query['skip'], 0),
             where: {
-                student: student,
-                super_student: superStudent,
-                admin: admin,
+                student: Parser.bool(req.query["student"]),
+                super_student: Parser.bool(req.query["super_student"]),
+                admin: Parser.bool(req.query["admin"])
             },
             include: {
-                address: true,
-                regions: true,
-                schedule: true,
+                address: joins?.includes("address"),
+                regions: joins?.includes("regions"),
+                schedule: joins?.includes("schedule"),
             },
         });
 
-        return res.json(result);
+        return res.status(200).json(result);
     }
 
     @Auth.authorization({ student: true })
-    async getOne(req: express.Request, res: express.Response) {
-        const id = parseInt(req.params.id);
+    async getOne(req: CustomRequest, res: express.Response) {
+        const joins = Parser.stringArray(req.query.join);
 
-        if (isNaN(id)) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
-
-        if (id !== req.user?.id || !req.user.super_student || !req.user.admin) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
-        }
-
-        const result = await prisma.user.findFirst({
+        const result = await prisma.user.findUniqueOrThrow({
             where: {
-                id: id,
+                id: Parser.number(req.params['id']),
             },
             include: {
-                address: true,
-                regions: true,
-                schedule: true,
-            },
-        });
-
-        return res.json(result);
-    }
-
-    @Auth.authorization({ superStudent: true })
-    async createOne(req: express.Request, res: express.Response) {
-        const user = await prisma.user.create({
-            data: req.body,
-        });
-
-        return res.status(201).json(user);
-    }
-
-    async updateOne(req: express.Request, res: express.Response) {
-        const id = parseInt(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(400).json({ message: "Bad Request" });
-        }
-
-        if (
-            id !== req.user?.id &&
-            !req.user?.super_student &&
-            !req.user?.admin
-        ) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
-        }
-
-        const result = await prisma.user.update({
-            data: req.body,
-            where: {
-                id: id,
+                address: joins?.includes("address"),
+                regions: joins?.includes("regions"),
+                schedule: joins?.includes("schedule"),
             },
         });
 
@@ -114,23 +46,38 @@ export class UserRouting extends Routing {
     }
 
     @Auth.authorization({ superStudent: true })
-    async deleteOne(req: express.Request, res: express.Response) {
-        const id = parseInt(req.params.id);
+    async createOne(req: CustomRequest, res: express.Response) {
+        const user = await prisma.user.create({
+            data: req.body,
+        });
 
-        if (isNaN(id)) {
-            return res.status(400).send("Invalid Request");
-        }
+        return res.status(201).json(user);
+    }
 
+    @Auth.authorization({ superStudent: true })
+    async updateOne(req: CustomRequest, res: express.Response) {
+        const result = await prisma.user.update({
+            data: req.body,
+            where: {
+                id: Parser.number(req.params['id']),
+            },
+        });
+
+        return res.status(200).json(result);
+    }
+
+    @Auth.authorization({ superStudent: true })
+    async deleteOne(req: CustomRequest, res: express.Response) {
         // TODO: delete cascade in the database!
         await prisma.userRegion.deleteMany({
             where: {
-                user_id: id,
+                user_id: Parser.number(req.params['id']),
             },
         });
 
         const result = await prisma.user.delete({
             where: {
-                id: id,
+                id: Parser.number(req.params['id']),
             },
         });
 

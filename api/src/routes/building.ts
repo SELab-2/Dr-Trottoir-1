@@ -1,32 +1,27 @@
 import { prisma } from "../prisma";
 import express from "express";
-import { Routing } from "./routing";
-import { APIError } from "../errors/api_error";
-import { APIErrorCode } from "../errors/api_error_code";
+import { CustomRequest, Routing } from "./routing";
 import { Auth } from "../auth/auth";
-
-const DEFAULT_PAGE_SIZE = 1024;
+import { Parser } from "../parser";
 
 export class BuildingRouting extends Routing {
     @Auth.authorization({ student: true })
-    async getAll(req: express.Request, res: express.Response) {
-        const limit = Number(req.query["limit"] ?? DEFAULT_PAGE_SIZE);
-        const offset = Number(req.query["offset"] ?? 0);
-
-        if (Number.isNaN(limit) || Number.isNaN(offset)) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
+    async getAll(req: CustomRequest, res: express.Response) {
+        const joins = Parser.stringArray(req.query.join);
 
         const result = await prisma.building.findMany({
-            take: limit,
-            skip: offset,
+            take: Parser.number(req.query['take'], 1024),
+            skip: Parser.number(req.query['skip'], 0),
+            where: {
+                name: req.query['name'],
+            },
             include: {
-                address: true,
-                syndicus: {
+                address: joins?.includes("address"),
+                syndicus: joins?.includes("syndicus") ? {
                     include: {
                         user: true,
                     },
-                },
+                } : undefined,
             },
         });
 
@@ -34,24 +29,20 @@ export class BuildingRouting extends Routing {
     }
 
     @Auth.authorization({ student: true })
-    async getOne(req: express.Request, res: express.Response) {
-        const id = parseInt(req.params.id);
+    async getOne(req: CustomRequest, res: express.Response) {
+        const joins = Parser.stringArray(req.query.join);
 
-        if (isNaN(id)) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
-
-        const result = await prisma.building.findFirst({
+        const result = await prisma.building.findUniqueOrThrow({
             where: {
-                id: id,
+                id: Parser.number(req.params['id']),
             },
             include: {
-                address: true,
-                syndicus: {
+                address: joins?.includes("address"),
+                syndicus: joins?.includes("syndicus") ? {
                     include: {
                         user: true,
                     },
-                },
+                } : undefined,
             },
         });
 
@@ -59,7 +50,7 @@ export class BuildingRouting extends Routing {
     }
 
     @Auth.authorization({ superStudent: true })
-    async createOne(req: express.Request, res: express.Response) {
+    async createOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.building.create({
             data: req.body,
         });
@@ -68,17 +59,11 @@ export class BuildingRouting extends Routing {
     }
 
     @Auth.authorization({ superStudent: true })
-    async updateOne(req: express.Request, res: express.Response) {
-        const id = parseInt(req.params.id);
-
-        if (isNaN(id)) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
-
+    async updateOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.building.update({
             data: req.body,
             where: {
-                id: id,
+                id: Parser.number(req.params['id']),
             },
         });
 
@@ -86,16 +71,10 @@ export class BuildingRouting extends Routing {
     }
 
     @Auth.authorization({ superStudent: true })
-    async deleteOne(req: express.Request, res: express.Response) {
-        const id = parseInt(req.params.id);
-
-        if (isNaN(id)) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
-
+    async deleteOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.building.delete({
             where: {
-                id: id,
+                id: Parser.number(req.params['id']),
             },
         });
 
