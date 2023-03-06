@@ -16,6 +16,22 @@ export class UserRouting extends Routing {
                 student: Parser.bool(req.query["student"]),
                 super_student: Parser.bool(req.query["super_student"]),
                 admin: Parser.bool(req.query["admin"]),
+                last_login: {
+                    gte: Parser.date(req.query["login_before"]),
+                    lte: Parser.date(req.query["login_after"]),
+                },
+                date_added: {
+                    gte: Parser.date(req.query["added_before"]),
+                    lte: Parser.date(req.query["added_after"]),
+                },
+                OR: {
+                    first_name: {
+                        contains: req.query["name"],
+                    },
+                    last_name: {
+                        contains: req.query["name"],
+                    },
+                },
             },
             include: {
                 address: joins?.includes("address"),

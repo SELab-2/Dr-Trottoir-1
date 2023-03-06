@@ -17,6 +17,8 @@ export class ScheduleRouting extends Routing {
                     lte: Parser.date(req.query["before"]),
                     gte: Parser.date(req.query["after"]),
                 },
+                user_id: Parser.number(req.query["user"]),
+                round_id: Parser.number(req.query["round"]),
             },
             include: {
                 user: joins?.includes("user"),

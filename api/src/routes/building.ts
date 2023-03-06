@@ -5,27 +5,6 @@ import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 
 export class BuildingRouting extends Routing {
-    // This specific function is used since the syndicus join gets quite ugly
-    // otherwise
-    static joins(req: CustomRequest): any {
-        const joins = Parser.stringArray(req.query.join, []);
-        const result: any = {};
-
-        if (joins?.includes("address")) {
-            result["address"] = true;
-        }
-
-        if (joins?.includes("syndicus")) {
-            result["syndicus"] = {
-                include: {
-                    user: true,
-                },
-            };
-        }
-
-        return result;
-    }
-
     @Auth.authorization({ student: true })
     async getAll(req: CustomRequest, res: express.Response) {
         const result = await prisma.building.findMany({
@@ -34,7 +13,10 @@ export class BuildingRouting extends Routing {
             where: {
                 name: req.query["name"],
             },
-            include: BuildingRouting.joins(req),
+            include: {
+                address: Parser.bool(req.query["address"]),
+                syndicus: Parser.bool(req.query["syndicus"]),
+            },
         });
 
         return res.json(result);
@@ -46,7 +28,10 @@ export class BuildingRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            include: BuildingRouting.joins(req),
+            include: {
+                address: Parser.bool(req.query["address"]),
+                syndicus: Parser.bool(req.query["syndicus"]),
+            },
         });
 
         return res.json(result);
