@@ -55,6 +55,11 @@ export class Parser {
         }
 
         const result = new Date(input);
-        return result.toString() !== "Invalid Date" ? result : otherwise;
+
+        if (result.toString() === "Invalid Date") {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
+        return result;
     }
 }
