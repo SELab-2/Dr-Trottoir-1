@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginScreen from "@/views/LoginScreen.vue";
+import DashBoard from "@/views/DashBoard.vue";
+import Todo from "@/views/Todo.vue"
 
 const routes = [
   {
@@ -10,6 +12,14 @@ const routes = [
     path: '/login',
     component: LoginScreen,
   },
+  {
+    path: '/dashboard',
+    component: DashBoard
+  },
+  {
+    path: '/todo',
+    component: Todo
+  }
 ]
 
 const router = createRouter({
