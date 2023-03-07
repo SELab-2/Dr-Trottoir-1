@@ -16,6 +16,7 @@ export class Auth {
         if (value === undefined) {
             req.user = null;
             next();
+            return;
         }
 
         if (Number.isNaN(id)) {
