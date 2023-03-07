@@ -14,6 +14,8 @@
 
 import { auth } from '@/scripts/auth'
 
+// Functions to set these roles right now
+// TODO: these should be replaced by propper authentication in the future
 function setStudent() {
   auth.isLoggedin = true;
   auth.roles.superstudent = false;
