@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginScreen from "@/views/LoginScreen.vue";
-import App from "@App.vue";
 
 const routes = [
   {
