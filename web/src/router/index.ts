@@ -1,10 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginScreen from "@/views/LoginScreen.vue";
+import BuildingSceen from "@/views/BuildingScreen.vue";
 
 const routes = [
   {
     path: '/login',
     component: LoginScreen,
+  },
+  {
+    path: '/building/:id',
+    name: 'Building',
+    component: BuildingSceen,
   },
 ]
 
