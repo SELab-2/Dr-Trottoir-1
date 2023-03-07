@@ -13,10 +13,12 @@ const routes = [
     component: LoginScreen,
   },
   {
+    // This is a temporary path
     path: '/dashboard',
     component: DashBoard
   },
   {
+    // This is a temporary path
     path: '/todo',
     component: Todo
   }
