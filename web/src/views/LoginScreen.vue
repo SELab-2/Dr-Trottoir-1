@@ -71,6 +71,10 @@
 <script lang="ts" setup>
 
 import {ref} from 'vue'
+import { useRouter } from 'vue-router';
+import { auth } from '@/scripts/auth';
+
+const route = useRouter()
 
 // reactive email state
 const email = ref('')
@@ -86,8 +90,11 @@ const snackbar = ref(false)
 
 
 // function that handels the login event
-function handleSubmit(){
-    console.log('Logging in...')
+function handleSubmit(this: any) {
+    //TODO: remove this, this is here for the mockup fase of the project
+    auth.isLoggedin = true;
+    //TODO: for the mockup this just refers to a different webpage
+    route.push({path: '/dashboard'});
 }
 
 </script>
