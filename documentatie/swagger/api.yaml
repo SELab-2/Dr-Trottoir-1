@@ -1,0 +1,1337 @@
+openapi: 3.0.3
+info:
+  title: Dr-Trottoir - OpenAPI 3.0
+  description: Dit is API documentatie gemaakt door Team voor Dr-Trottoir
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@drtrottoir.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Info Dr-Troittoir
+  url: https://drtrottoir.be/
+servers:
+  - url: https://drtrottoir.io/api
+tags:
+  - name: user
+    description: Everything about users
+  - name: building
+    description: Everything about building
+  - name: round
+    description: Everything about round
+  - name: schedule
+    description: Everything about schedule
+  - name: progress
+    description: Everything about progress
+  - name: region
+    description: Everything about region
+  - name: file
+    description: Everything about file
+  - name: syndicus
+    description: Everything about syndicus
+  - name: buildingImage
+    description: Everything about buildingImage
+  - name: garbage
+    description: Everything about garbage
+  - name: action
+    description: Everything about action
+  - name: progressImage
+    description: Everything about progressImage
+paths:
+  /users:
+    get:
+      tags:
+        - user
+      summary: get users (query)
+      operationId: getUsers
+      parameters:
+        - name: region
+          in: query
+          description: region to filter by
+          required: false
+          explode: false
+          schema:
+            type: string
+        - name: access
+          in: query
+          description: filter by different users
+          required: false
+          explode: false
+          schema:
+            type: string
+            enum:
+              - student
+              - super-student
+              - admin
+              - syndicus
+        - name: date
+          in: query
+          description: filer by users who worked on date
+          required: false
+          explode: false
+          schema:
+            type: string
+            format: date-time
+        - name: name
+          in: query
+          description: filter users by name
+          required: false
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create user
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /user/{userId}:
+    get:
+      tags:
+        - user
+      summary: Get user by userId
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid userId supplied
+        '404':
+          description: UserId not found
+    put:
+      tags:
+        - user
+      summary: Update user
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+  /user/{userId}/schedule:
+    get:
+      tags:
+        - user
+      summary: Get schedule by userId
+      operationId: getScheduleByUserId
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid userId supplied
+        '404':
+          description: UserId not found
+  /buildings:
+    get:
+      tags:
+        - building
+      summary: Get buildings
+      operationId: getBuildings
+      parameters:
+        - name: syndicusId
+          in: query
+          required: false
+          explode: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Building'
+        '400':
+          description: Invalid
+  /building:
+    post:
+      tags:
+        - building
+      summary: Create building
+      operationId: createBuilding
+      requestBody:
+        description: Created building object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+  /building/{buildingId}:
+    get:
+      tags:
+        - building
+      summary: Get building by buildingId
+      operationId: getBuildingById
+      parameters:
+        - in: path
+          name: buildingId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+        '400':
+          description: Invalid buildingId supplied
+        '404':
+          description: buidingId not found
+    put:
+      tags:
+        - building
+      summary: Update building
+      operationId: updateBuilding
+      parameters:
+        - name: buildingId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent building
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - building
+      summary: Delete building
+      operationId: deleteBuilding
+      parameters:
+        - name: buildingId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid buildingId supplied
+        '404':
+          description: buildingId not found
+  /rounds:
+    get:
+      tags:
+        - round
+      summary: Get rounds
+      operationId: getRounds
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Round'
+        '400':
+          description: Invalid
+  /round:
+    post:
+      tags:
+        - round
+      summary: Create round
+      operationId: createRound
+      requestBody:
+        description: Created round object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Round'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Round'
+  /round/{roundId}:
+    get:
+      tags:
+        - round
+      summary: Get round by roundId
+      operationId: getRoundById
+      parameters:
+        - name: roundId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Round'
+        '400':
+          description: Invalid roundId supplied
+        '404':
+          description: roundId not found
+    put:
+      tags:
+        - round
+      summary: Update round
+      operationId: updateRound
+      parameters:
+        - name: roundId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent round
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Round'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - round
+      summary: Delete round
+      operationId: deleteRound
+      parameters:
+        - name: roundId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid buildingId supplied
+        '404':
+          description: buildingId not found
+  /schedule:
+    post:
+      tags:
+        - schedule
+      summary: Create schedule
+      operationId: createSchedule
+      requestBody:
+        description: Created schedule object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+  /schedule/{scheduleId}:
+    get:
+      tags:
+        - schedule
+      summary: Get schedule by ScheduleId
+      operationId: getScheduleById
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '400':
+          description: Invalid scheduleId supplied
+        '404':
+          description: scheduleId not found
+    put:
+      tags:
+        - schedule
+      summary: Update schedule
+      operationId: updateSchedule
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent schedule
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - schedule
+      summary: Delete schedule
+      operationId: deleteSchedule
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid ScheduleId supplied
+        '404':
+          description: ScheduleId not found
+  /progress:
+    post:
+      tags:
+        - progress
+      summary: Create progress
+      operationId: createProgress
+      requestBody:
+        description: Created project object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Progress'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Progress'
+  # /progress/{date}:
+  #   get:
+  #     tags:
+  #       - progress
+  #     responses: null
+  # /progress/{buildingId}:
+  #   get:
+  #     tags:
+  #       - progress
+  #     responses: null
+  /progress/{progressId}:
+    get:
+      tags:
+        - progress
+      summary: Get progress by ProgressId
+      operationId: getProgressById
+      parameters:
+        - name: progressId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Progress'
+        '400':
+          description: Invalid progressId supplied
+        '404':
+          description: progressId not found
+    put:
+      tags:
+        - progress
+      summary: Update progress
+      operationId: updateProgress
+      parameters:
+        - name: progressId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent progress
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Progress'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - progress
+      summary: Delete progress
+      operationId: deleteProgress
+      parameters:
+        - name: progressId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid progressId supplied
+        '404':
+          description: ProgressId not found
+  /regions:
+    get:
+      tags:
+        - region
+      summary: Get regions
+      operationId: getRegions
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Building'
+        '400':
+          description: Invalid
+  /region:
+    post:
+      tags:
+        - region
+      summary: Create region
+      operationId: createRegion
+      requestBody:
+        description: Created region object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Region'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Region'
+  /region/{regionId}:
+    get:
+      tags:
+        - region
+      summary: Get region by  RegionId
+      operationId: getRegionById
+      parameters:
+        - name: regionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Region'
+        '400':
+          description: Invalid regionId supplied
+        '404':
+          description: regionId not found
+    put:
+      tags:
+        - region
+      summary: Update region
+      operationId: updateRegion
+      parameters:
+        - name: regionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update a existent region
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Region'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - region
+      summary: Delete region
+      operationId: deleteRegion
+      parameters:
+        - name: regionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid regionId supplied
+        '404':
+          description: regionId not found
+
+  /building/image/{buildingImageId}:
+    delete:
+      operationId: deleteBuildingImageById
+      parameters:
+      - in: path
+        name: buildingImageId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '400':
+          description: Invalid buildingImageId supplied
+        '404':
+          description: buildingImageId not found
+      summary: delete Building Image
+      tags:
+      - buildingImage
+    get:
+      operationId: getBuildingImageById
+      parameters:
+      - in: path
+        name: buildingImageId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildingImage'
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: buildingImage not found
+      summary: get Building Image
+      tags:
+      - buildingImage
+    put:
+      operationId: updateBuildingImageById
+      parameters:
+      - in: path
+        name: buildingImageId
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildingImage'
+        description: Update an existent file
+      responses:
+        default:
+          description: successful operation
+      summary: update Building Image
+      tags:
+      - buildingImage
+  /building/images:
+    get:
+      operationId: getBuildingImages
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BuildingImage'
+                type: array
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: BuildingImage not found
+      summary: get images of every building
+      tags:
+      - BuildingImage
+  /file:
+    post:
+      operationId: postFile
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+        description: Update an existent file
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+          description: successful operation
+      summary: make new File
+      tags:
+      - file
+  /file/{fileId}:
+    delete:
+      operationId: deleteFileById
+      parameters:
+      - in: path
+        name: fileId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '400':
+          description: Invalid fileId supplied
+        '404':
+          description: fileId not found
+      summary: delete file
+      tags:
+      - file
+    get:
+      operationId: getFilesById
+      parameters:
+      - in: path
+        name: fileId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: file not found
+      summary: get files
+      tags:
+      - file
+    put:
+      operationId: updateFileById
+      parameters:
+      - in: path
+        name: fileId
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+        description: Update an existent file
+      responses:
+        default:
+          description: successful operation
+      summary: update file
+      tags:
+      - file
+  /files:
+    get:
+      operationId: getFiles
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/File'
+                type: array
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: file not found
+      summary: get all files
+      tags:
+      - file
+  /garbage/action/{actionId}:
+    delete:
+      operationId: deleteActionById
+      parameters:
+      - in: path
+        name: actionId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '400':
+          description: Invalid actionId supplied
+        '404':
+          description: actionId not found
+      summary: delete action
+      tags:
+      - action
+    get:
+      operationId: getActionById
+      parameters:
+      - in: path
+        name: actionId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Action'
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: action not found
+      summary: get action
+      tags:
+      - action
+    put:
+      operationId: updateActionById
+      parameters:
+      - in: path
+        name: actionId
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Action'
+        description: Update an existent file
+      responses:
+        default:
+          description: successful operation
+      summary: update action
+      tags:
+      - action
+  /garbage/actions:
+    get:
+      operationId: getActions
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Action'
+                type: array
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: action not found
+      summary: get all actions
+      tags:
+      - action
+  /garbages:
+    get:
+      operationId: getGarbage
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Garbage'
+                type: array
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: garbage not found
+      summary: get garbages
+      tags:
+      - garbage
+  /progress/image/{progressImageId}:
+    delete:
+      operationId: deleteProgressImageById
+      parameters:
+      - in: path
+        name: progressImageId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '400':
+          description: Invalid progressImageId supplied
+        '404':
+          description: progressImageId not found
+      summary: delete progress image
+      tags:
+      - progressImage
+    get:
+      operationId: getProgressImageById
+      parameters:
+      - in: path
+        name: progressImageId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgressImage'
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: progressImage not found
+      summary: get progress image
+      tags:
+      - progressImage
+    put:
+      operationId: updateProgressImageById
+      parameters:
+      - in: path
+        name: progressImageId
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProgressImage'
+        description: Update an existent file
+      responses:
+        default:
+          description: successful operation
+      summary: update progress image
+      tags:
+      - progressImage
+  /progress/images:
+    get:
+      operationId: getProgressImage
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ProgressImage'
+                type: array
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: progressImage not found
+      summary: get Progress Images
+      tags:
+      - progressImage
+  /user/syndici:
+    get:
+      operationId: getSyndici
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Syndicus'
+                type: array
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: syndicus not found
+      summary: get all syndici
+      tags:
+      - syndicus
+  /user/syndicus/{syndicusId}:
+    delete:
+      operationId: deleteSyndicusById
+      parameters:
+      - in: path
+        name: syndicusId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '400':
+          description: Invalid syndicusId supplied
+        '404':
+          description: syndicusId not found
+      summary: delete syndicus
+      tags:
+      - syndicus
+    get:
+      operationId: getSyndicusById
+      parameters:
+      - in: path
+        name: syndicusId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Syndicus'
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: syndicus not found
+      summary: get syndicus
+      tags:
+      - syndicus
+    put:
+      operationId: updateSyndicusById
+      parameters:
+      - in: path
+        name: syndicusId
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Syndicus'
+        description: Update an existent file
+      responses:
+        default:
+          description: successful operation
+      summary: update syndicus
+      tags:
+      - syndicus
+  /garbage/{garbageId}:
+    delete:
+      operationId: deleteGarbageById
+      parameters:
+      - in: path
+        name: garbageId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '400':
+          description: Invalid garbageId supplied
+        '404':
+          description: garbageId not found
+      summary: delete garbage
+      tags:
+      - garbage
+    get:
+      operationId: getGarbageById
+      parameters:
+      - in: path
+        name: garbageId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Garbage'
+          description: successful operation
+        '400':
+          description: Invalid
+        '404':
+          description: garbage not found
+      summary: get garbage
+      tags:
+      - garbage
+    put:
+      operationId: updateGarbageById
+      parameters:
+      - in: path
+        name: garbageId
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Garbage'
+        description: Update an existent file
+      responses:
+        default:
+          description: successful operation
+      summary: update garbage
+      tags:
+      - garbage
+
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        firstaname:
+          type: string
+        lastname:
+          type: string
+        date_added:
+          type: string
+          format: date-time
+        last_login:
+          type: string
+          format: date-time
+        phone:
+          type: string
+        student:
+          type: boolean
+        super_student:
+          type: boolean
+        admin:
+          type: boolean
+    Region:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    UserRegion:
+      type: object
+      properties:
+        id:
+          type: integer
+        regionId:
+          type: integer
+        userId:
+          type: integer
+    Round:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    RoundBuilding:
+      type: object
+      properties:
+        id:
+          type: integer
+        roundId:
+          type: integer
+        buildingId:
+          type: integer
+    Schedule:
+      type: object
+      properties:
+        id:
+          type: integer
+        day:
+          type: integer
+          format: date-time
+        roundId:
+          type: integer
+        userId:
+          type: integer
+    Syndicus:
+      type: object
+      properties:
+        id:
+          type: integer
+        useIdr:
+          type: integer
+    BuildingImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        buildingId:
+          type: integer
+        imageId:
+          type: integer
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+        time:
+          type: string
+          format: date-time
+    File:
+      type: object
+      properties:
+        id:
+          type: integer
+        path:
+          type: string
+    Building:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        ivago_id:
+          type: string
+        syndicusId:
+          type: integer
+        adresId:
+          type: integer
+        manualId:
+          type: integer
+    Adress:
+      type: object
+      properties:
+        id:
+          type: integer
+        streed:
+          type: string
+        number:
+          type: integer
+        city:
+          type: string
+        zip_code:
+          type: integer
+        latitude:
+          type: number
+        longitude:
+          type: number
+    Progress:
+      type: object
+      properties:
+        id:
+          type: integer
+        report:
+          type: string
+        arrival:
+          type: string
+          format: date-time
+        departure:
+          type: string
+          format: date-time
+        scheduleId:
+          type: integer
+        buildingId:
+          type: integer
+    Garbage:
+      type: object
+      properties:
+        id:
+          type: integer
+        pickup-time:
+          type: string
+          format: date-time
+        buildingId:
+          type: integer
+        actionId:
+          type: integer
+    Action:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+    ProgressImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        typeImage:
+          type: string
+          enum:
+            - arrival
+            - departure
+            - garbage
+        description:
+          type: string
+        progressId:
+          type: integer
+        imageId:
+          type: integer
