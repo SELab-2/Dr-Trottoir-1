@@ -12,11 +12,15 @@ import passport from "passport";
 import crypto from "crypto";
 import session from "express-session";
 import { initializePassport } from "./passport";
+import dotenv from "dotenv";
 
 const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
 
 const app = express();
+
+// Parse environment file.
+dotenv.config();
 
 // JSON API support
 app.use(
@@ -59,6 +63,12 @@ app.use("/schedule", new ScheduleRouting().toRouter());
 // Finally, an error handler
 app.use(ErrorHandler.handle);
 
+// If the authorization process is bypassed, print a big red warning
+if (process.env.DISABLE_AUTH === "true") {
+    console.log("\x1b[41mDANGER: AUTHORIZATION BYPASSED\x1b[0m")
+}
+
+// Actually start the server, we're done!
 app.listen(PORT_NUMBER, () => {
-    console.log(`Listening on port: ${PORT_NUMBER}.`);
+    console.log(`API AVAILABLE AT: https://localhost:${PORT_NUMBER}`);
 });

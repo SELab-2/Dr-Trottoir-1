@@ -7,7 +7,7 @@ import { prisma } from "../prisma";
 export class ScheduleRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
+        const joins = Parser.stringArray(req.query["join"], []);
 
         const result = await prisma.schedule.findMany({
             take: Parser.number(req.query["take"], 1024),
