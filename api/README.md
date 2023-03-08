@@ -4,7 +4,7 @@
 
 ## Environments
 
-We maken gebruik van een *environment file*, namelijk `.env`. Hier vul je enkele variabelen in zoals de URL van de database. Een template wordt gegeven door `example.env`. `.env` zit bewust in je `.gitignore`, ga deze dus niet committen naar GitHub!
+We maken gebruik van een _environment file_, namelijk `.env`. Hier vul je enkele variabelen in zoals de URL van de database. Een template wordt gegeven door `example.env`. `.env` zit bewust in je `.gitignore`, ga deze dus niet committen naar GitHub!
 
 Doorgaans heb je geen VPN verbinding nodig om met de database op `sel2-1.ugent.be` op poort `2002` te verbinden, maar probeer echter toch via het UGent netwerk te verbinden indien je problemen ondervindt. De database kan mogelijks niet online zijn, dus aarzel niet om de systeembeheerder te contacteren.
 
@@ -34,14 +34,14 @@ We maken gebruik van `passport.js` voor authenticatie in combinatie met het manu
 
 ### Authorization
 
-In `/api/auth` vind je de *decorator* `Auth.authorization` waarmee je heel eenvoudig een route kan beveiligen. Merk echter op dat deze geen nuance toelaten; je kan alleen toegang geven tot alle studenten, alle superstudenten, etc. Wil je een regel toevoegen zoals "indien de ID van de resource overeenkomt met de huidige gebruiker", dan dien je dit nog steeds manueel te implementeren. Geen decorator komt overeen met geen authorisatie. Administratoren hebben rechten voor alle routes.
+In `/api/auth` vind je de _decorator_ `Auth.authorization` waarmee je heel eenvoudig een route kan beveiligen. Merk echter op dat deze geen nuance toelaten; je kan alleen toegang geven tot alle studenten, alle superstudenten, etc. Wil je een regel toevoegen zoals "indien de ID van de resource overeenkomt met de huidige gebruiker", dan dien je dit nog steeds manueel te implementeren. Geen decorator komt overeen met geen authorisatie. Administratoren hebben rechten voor alle routes.
 
 ```typescript
 export class BuildingRouting extends Routing {
-  @Auth.authorization({ student: true })
-  async getOne(req: CustomRequest, res: express.Response) {
-    // Alleen studenten mogen deze route bezoeken
-  }
+    @Auth.authorization({ student: true })
+    async getOne(req: CustomRequest, res: express.Response) {
+        // Alleen studenten mogen deze route bezoeken
+    }
 }
 ```
 
@@ -58,7 +58,7 @@ Om je aan te melden stuur je een POST request naar `http://localhost:8080/auth/l
 }
 ```
 
-Je verkrijgt een HTTP Cookie waarmee je je requests kan *authenticaten*. Indien je software gebruikt met ondersteuning voor sessions (zie hieronder) hoef je deze cookie niet manueel te verwerken en te versturen.
+Je verkrijgt een HTTP Cookie waarmee je je requests kan _authenticaten_. Indien je software gebruikt met ondersteuning voor sessions (zie hieronder) hoef je deze cookie niet manueel te verwerken en te versturen.
 
 ### Session voorbeeld
 
@@ -96,7 +96,7 @@ Wil je een generieke HTTP error opgooien, bijvoorbeeld `404: Not Found`, dan doe
 new APIError(APIErrorCode.NOT_FOUND);
 ```
 
-Ook Prisma errors worden opgevangen. Hoe deze vertaald worden naar een HTTP error vind je in `/api/errors/prisma_error.ts`. De vertaling gebeurt  op basis van de Prisma error code. Merk op dat je mogelijks een error genereert die nog niet toegevoegd is aan deze file, en dat je deze gerust zelf kan toevoegen.
+Ook Prisma errors worden opgevangen. Hoe deze vertaald worden naar een HTTP error vind je in `/api/errors/prisma_error.ts`. De vertaling gebeurt op basis van de Prisma error code. Merk op dat je mogelijks een error genereert die nog niet toegevoegd is aan deze file, en dat je deze gerust zelf kan toevoegen.
 
 ```typescript
 switch (err.code) {
@@ -117,30 +117,30 @@ Stel dat je alle gebruikers wilt opvragen die aangemaakt zijn na een bepaalde da
 
 ```typescript
 export class Parser {
-  static date(
-    input: string | undefined,
-    otherwise: Date | undefined = undefined,
-  ): Date | undefined {
-    if (!input) {
-      return otherwise;
+    static date(
+        input: string | undefined,
+        otherwise: Date | undefined = undefined,
+    ): Date | undefined {
+        if (!input) {
+            return otherwise;
+        }
+
+        const result = new Date(input);
+
+        if (result.toString() === "Invalid Date") {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
+        return result;
     }
-
-    const result = new Date(input);
-
-    if (result.toString() === "Invalid Date") {
-      throw new APIError(APIErrorCode.BAD_REQUEST);
-    }
-
-    return result;
-  }
 }
 ```
 
 Deze functie neemt twee parameters aan, namelijk `input` dat altijd de `string` is zoals letterlijk gegeven in de HTTP request of `undefined`, en een `otherwise` waarde die oftewel een `Date` is of `undefined`. Er kunnen nu drie scenario's voorvallen:
 
-- `input` kan omgezet worden in een geldige `Date`, geef deze resulterende `Date` terug.
-- `input` is undefined, geef `otherwise` terug.
-- `input` is gegeven, maar kan niet omgezet worden naar een `Date` object. Gooi een `HTTP: Bad request` error op.
+-   `input` kan omgezet worden in een geldige `Date`, geef deze resulterende `Date` terug.
+-   `input` is undefined, geef `otherwise` terug.
+-   `input` is gegeven, maar kan niet omgezet worden naar een `Date` object. Gooi een `HTTP: Bad request` error op.
 
 Het is nu bijzonder eenvoudig om parameters uit de HTTP request onmiddelijk door de parser te jagen en ze in de PrismaORM query te voegen. Bevat je PrismaORM query namelijk `undefined` als waarde, dan wordt dat deel van de query in essentie niet in beschouwing genomen.
 
@@ -155,7 +155,7 @@ const result = await prisma.user.findMany({
 };
 ```
 
-Wordt in het bovenstaande voorbeeld `added_before` opgegeven in de URL van de HTTP request, dan zal de deze waarde  oftewel correct omgezet worden naar een `Date` object door de Parser, of zal een `Bad Request` error opgegooid worden indien de datum niet geldig is. Indien `added_before` helemaal niet opgegeven is (en dus `undefined` is), dan geeft de parser opnieuw `undefined` terug en zal PrismaORM er geen rekening mee houden.
+Wordt in het bovenstaande voorbeeld `added_before` opgegeven in de URL van de HTTP request, dan zal de deze waarde oftewel correct omgezet worden naar een `Date` object door de Parser, of zal een `Bad Request` error opgegooid worden indien de datum niet geldig is. Indien `added_before` helemaal niet opgegeven is (en dus `undefined` is), dan geeft de parser opnieuw `undefined` terug en zal PrismaORM er geen rekening mee houden.
 
 Joins zijn iets complexer. Neem de route `/schedule` waarbij we mogelijks al de `user` en `round` velden willen inlinen. Onze request neemt de vorm `/schedule?join=user,round`. We passen hier `Parser.stringArray` toe en gaan als volgt te werk.
 
@@ -173,10 +173,10 @@ const result = await prisma.schedule.findMany({
 return res.status(200).json(result);
 ```
 
-Een laatse voorbeeld is de `take` parameter, waarbij we het maximum aantal resultaten opgeven. Hier willen we echter al een *default value* toepassen, namelijk `1024`. We zullen nu oftewel een getal ontvangen van de gebruiker en dit toepassen (vb. `/user?take=5`), of we ontvangen een ongeldig getal en gooien een `HTTP: Bad Request` error (vb. `/user?take=a`) of we ontvangen geen parameter en passen de standaardwaarde `1024` toe.
+Een laatse voorbeeld is de `take` parameter, waarbij we het maximum aantal resultaten opgeven. Hier willen we echter al een _default value_ toepassen, namelijk `1024`. We zullen nu oftewel een getal ontvangen van de gebruiker en dit toepassen (vb. `/user?take=5`), of we ontvangen een ongeldig getal en gooien een `HTTP: Bad Request` error (vb. `/user?take=a`) of we ontvangen geen parameter en passen de standaardwaarde `1024` toe.
 
 ```typescript
 const result = await prisma.schedule.findMany({
-  take: Parser.number(req.query["take"], 1024),
+    take: Parser.number(req.query["take"], 1024),
 });
 ```

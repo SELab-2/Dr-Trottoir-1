@@ -65,7 +65,7 @@ app.use(ErrorHandler.handle);
 
 // If the authorization process is bypassed, print a big red warning
 if (process.env.DISABLE_AUTH === "true") {
-    console.log("\x1b[41mDANGER: AUTHORIZATION BYPASSED\x1b[0m")
+    console.log("\x1b[41mDANGER: AUTHORIZATION BYPASSED\x1b[0m");
 }
 
 // Actually start the server, we're done!
