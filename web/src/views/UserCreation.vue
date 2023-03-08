@@ -1,6 +1,12 @@
 <template>
 
     <div>
+        <AddressVue
+            @onUpdate="(newStreet) => address.street = newStreet"
+        ></AddressVue>
+
+
+
         <!-- Text input field for the first name -->
         <v-text-field
             v-model="first_name"
@@ -72,12 +78,15 @@
         <v-btn>
             Maak Account
         </v-btn>
+        {{ address.street }}
 
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, Ref } from 'vue';
+import Address from '@/components/models/Address';
+import AddressVue from '@/components/Address.vue';
 
 // reactive first name state
 const first_name: string = ''
@@ -90,6 +99,11 @@ const phone_number = ref('')
 
 // reactive email state
 const email = ref('')
+
+// user address
+const address = ref<Address>({
+    street: 0
+});
 
 // reactive psswd1 state
 const password1 = ref('')
