@@ -24,4 +24,4 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: "Check for linting and errors"
-              run: npm ci && npx prisma generate && npm run test
+              run: npm ci && echo . && npx prisma generate && npx run prettier --write . && npm run test

@@ -43,7 +43,7 @@ export class ScheduleRouting extends Routing {
                 round: {
                     include: {
                         buildings: true,
-                    }
+                    },
                 },
                 progress: joins?.includes("progress"),
             },
