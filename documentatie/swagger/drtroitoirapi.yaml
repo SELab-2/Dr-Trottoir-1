@@ -40,7 +40,7 @@ tags:
   - name: progressImage
     description: Everything about progressImage
 paths:
-  /users:
+  /user:
     get:
       tags:
         - user
@@ -92,7 +92,6 @@ paths:
                   $ref: '#/components/schemas/User'
         '400':
           description: Invalid
-  /user:
     post:
       tags:
         - user
@@ -193,7 +192,7 @@ paths:
           description: Invalid userId supplied
         '404':
           description: UserId not found
-  /buildings:
+  /building:
     get:
       tags:
         - building
@@ -217,7 +216,6 @@ paths:
                   $ref: '#/components/schemas/Building'
         '400':
           description: Invalid
-  /building:
     post:
       tags:
         - building
@@ -295,7 +293,7 @@ paths:
           description: Invalid buildingId supplied
         '404':
           description: buildingId not found
-  /rounds:
+  /round:
     get:
       tags:
         - round
@@ -312,7 +310,6 @@ paths:
                   $ref: '#/components/schemas/Round'
         '400':
           description: Invalid
-  /round:
     post:
       tags:
         - round
@@ -469,6 +466,7 @@ paths:
         '404':
           description: ScheduleId not found
   /progress:
+  #TODO: get 
     post:
       tags:
         - progress
@@ -556,7 +554,7 @@ paths:
           description: Invalid progressId supplied
         '404':
           description: ProgressId not found
-  /regions:
+  /region:
     get:
       tags:
         - region
@@ -573,7 +571,6 @@ paths:
                   $ref: '#/components/schemas/Building'
         '400':
           description: Invalid
-  /region:
     post:
       tags:
         - region
@@ -711,7 +708,8 @@ paths:
       summary: update Building Image
       tags:
       - buildingImage
-  /building/images:
+  /building/image:
+  #TODO: post
     get:
       operationId: getBuildingImages
       parameters: []
@@ -730,27 +728,7 @@ paths:
           description: BuildingImage not found
       summary: get images of every building
       tags:
-      - BuildingImage
-  /file:
-    post:
-      operationId: postFile
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/File'
-        description: Update an existent file
-      responses:
-        default:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/File'
-          description: successful operation
-      summary: make new File
-      tags:
-      - file
+      - buildingImage
   /file/{fileId}:
     delete:
       operationId: deleteFileById
@@ -810,7 +788,7 @@ paths:
       summary: update file
       tags:
       - file
-  /files:
+  /file:
     get:
       operationId: getFiles
       parameters: []
@@ -828,6 +806,25 @@ paths:
         '404':
           description: file not found
       summary: get all files
+      tags:
+      - file
+    post:
+      operationId: postFile
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+        description: Update an existent file
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+          description: successful operation
+      summary: make new File
       tags:
       - file
   /garbage/action/{actionId}:
@@ -889,7 +886,8 @@ paths:
       summary: update action
       tags:
       - action
-  /garbage/actions:
+  /garbage/action:
+  #TODO: post
     get:
       operationId: getActions
       parameters: []
@@ -909,26 +907,7 @@ paths:
       summary: get all actions
       tags:
       - action
-  /garbages:
-    get:
-      operationId: getGarbage
-      parameters: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/Garbage'
-                type: array
-          description: successful operation
-        '400':
-          description: Invalid
-        '404':
-          description: garbage not found
-      summary: get garbages
-      tags:
-      - garbage
+    
   /progress/image/{progressImageId}:
     delete:
       operationId: deleteProgressImageById
@@ -988,7 +967,8 @@ paths:
       summary: update progress image
       tags:
       - progressImage
-  /progress/images:
+  /progress/image:
+  #TODO: post
     get:
       operationId: getProgressImage
       parameters: []
@@ -1009,6 +989,7 @@ paths:
       tags:
       - progressImage
   /user/syndici:
+  #TODO: post
     get:
       operationId: getSyndici
       parameters: []
@@ -1087,6 +1068,27 @@ paths:
       summary: update syndicus
       tags:
       - syndicus
+  /garbage:
+  #TODO: nog post maken
+    get:
+        operationId: getGarbage
+        parameters: []
+        responses:
+          '200':
+            content:
+              application/json:
+                schema:
+                  items:
+                    $ref: '#/components/schemas/Garbage'
+                  type: array
+            description: successful operation
+          '400':
+            description: Invalid
+          '404':
+            description: garbage not found
+        summary: get garbages
+        tags:
+        - garbage
   /garbage/{garbageId}:
     delete:
       operationId: deleteGarbageById
