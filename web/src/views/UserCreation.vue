@@ -39,10 +39,7 @@
 
         <!-- Address input form of the user -->
         <AddressForm
-            @street="(newStreet) => address.street = newStreet"
-            @number="(newNumber) => address.number = newNumber"
-            @city="(newCity) => address.city = newCity"
-            @zip_code="(newZip_code) => address.zip_code = newZip_code"
+            @onUpdate="(newAddress) => address = newAddress"
         ></AddressForm>
 
         <!-- Text input field for the password-->
