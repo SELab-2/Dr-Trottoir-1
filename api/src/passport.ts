@@ -5,6 +5,7 @@ import { pbkdf2Async } from "./crypto";
 import crypto from "crypto";
 import { User } from "@prisma/client";
 
+// TODO: these constants are very very dangerous!
 const CRYPTO_EXAMPLE_PASSWORD = "password";
 const CRYPTO_SALT_UNSAFE = "salt_unsafe";
 

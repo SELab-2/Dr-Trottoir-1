@@ -23,23 +23,23 @@ export type CustomRequest = express.Request<any, any, any, any, any>;
  */
 export abstract class Routing {
     getAll(req: CustomRequest, res: express.Response): void {
-        throw new APIError(APIErrorCode.NOT_FOUND);
+        throw new APIError(APIErrorCode.METHOD_NOT_ALLOWED);
     }
 
     getOne(req: CustomRequest, res: express.Response): void {
-        throw new APIError(APIErrorCode.NOT_FOUND);
+        throw new APIError(APIErrorCode.METHOD_NOT_ALLOWED);
     }
 
     createOne(req: CustomRequest, res: express.Response): void {
-        throw new APIError(APIErrorCode.NOT_FOUND);
+        throw new APIError(APIErrorCode.METHOD_NOT_ALLOWED);
     }
 
     updateOne(req: CustomRequest, res: express.Response): void {
-        throw new APIError(APIErrorCode.NOT_FOUND);
+        throw new APIError(APIErrorCode.METHOD_NOT_ALLOWED);
     }
 
     deleteOne(req: CustomRequest, res: express.Response): void {
-        throw new APIError(APIErrorCode.NOT_FOUND);
+        throw new APIError(APIErrorCode.METHOD_NOT_ALLOWED);
     }
 
     /**

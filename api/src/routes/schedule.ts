@@ -32,7 +32,7 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
+        const joins = Parser.stringArray(req.query["join"], []);
 
         const result = await prisma.schedule.findUniqueOrThrow({
             where: {
@@ -40,7 +40,11 @@ export class ScheduleRouting extends Routing {
             },
             include: {
                 user: joins?.includes("user"),
-                round: joins?.includes("round"),
+                round: {
+                    include: {
+                        buildings: true,
+                    }
+                },
                 progress: joins?.includes("progress"),
             },
         });

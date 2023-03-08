@@ -1,6 +1,10 @@
 import { APIError } from "./errors/api_error";
 import { APIErrorCode } from "./errors/api_error_code";
 
+/**
+ * Exports a bunch of serializers which will read a value and either parse it
+ * correctly or return an `otherwise` object (which is undefined by default).
+ */
 export class Parser {
     static bool(
         input: string | undefined,
