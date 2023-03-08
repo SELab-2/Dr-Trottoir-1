@@ -73,12 +73,14 @@
             v-model="roles"
         ></v-select>
         <div v-if="roles.includes('Syndicus')">
-            Extra input velden nodig voor Syndicus.
+            <BuildingForm
+                @onUpdate="(newBuilding) => building = newBuilding"
+            >
+            </BuildingForm>
         </div>
         <v-btn>
             Maak Account
         </v-btn>
-
     </div>
 </template>
 
@@ -86,6 +88,8 @@
 import { ref, Ref } from 'vue';
 import Address from '@/components/models/Address';
 import AddressForm from '@/components/AddressForm.vue';
+import BuildingForm from '@/components/BuildingForm.vue';
+import Building from '@/components/models/Building';
 
 // reactive first name state
 const first_name: string = ''
@@ -105,6 +109,18 @@ const address = ref<Address>({
     number: 0,
     city: '',
     zip_code: 0
+});
+
+// reactive building state
+const building = ref<Building>({
+    name: '',
+    ivago_id: '',
+    address: {
+        street: '',
+        number: 0,
+        city: '',
+        zip_code: 0
+    }
 });
 
 // reactive psswd1 state
