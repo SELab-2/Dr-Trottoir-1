@@ -46,6 +46,19 @@ export class Parser {
         return input?.split(",") ?? otherwise;
     }
 
+    static string(
+        input: string | undefined,
+        otherwise: string | undefined = undefined,
+    ): string | undefined {
+        if (!input) {
+            return otherwise;
+        } else if (input.length > 0) {
+            return input;
+        } else {
+            return otherwise;
+        }
+    }
+
     static date(
         input: string | undefined,
         otherwise: Date | undefined = undefined,

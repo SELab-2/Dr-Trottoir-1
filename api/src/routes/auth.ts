@@ -14,12 +14,16 @@ export class AuthRouting {
             } else {
                 throw new APIError(APIErrorCode.UNAUTHORIZED);
             }
-        })
+        });
 
-        router.post("/login", passport.authenticate('local', {
-            successRedirect: '/',
-            failureRedirect: '/login'
-        }))
+        router.post(
+            "/login",
+            passport.authenticate("local", {
+                session: true,
+                authInfo: true,
+                successRedirect: "/auth",
+            }),
+        );
 
         return router;
     }

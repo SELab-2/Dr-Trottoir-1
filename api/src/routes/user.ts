@@ -26,10 +26,10 @@ export class UserRouting extends Routing {
                 },
                 OR: {
                     first_name: {
-                        contains: req.query["name"],
+                        contains: Parser.string(req.query["name"], ""),
                     },
                     last_name: {
-                        contains: req.query["name"],
+                        contains: Parser.string(req.query["name"], ""),
                     },
                 },
             },

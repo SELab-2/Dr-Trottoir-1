@@ -10,6 +10,6 @@ declare global {
             user: PrismaUser | null;
         }
 
-        export type User = PrismaUser
+        export type User = PrismaUser;
     }
 }
