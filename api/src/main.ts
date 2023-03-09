@@ -1,18 +1,19 @@
 import express from "express";
-import { UserRouting } from "./routes/user";
+import {UserRouting} from "./routes/user";
 import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
-import { BuildingRouting } from "./routes/building";
+import {BuildingRouting} from "./routes/building";
 import "express-async-errors";
-import { ErrorHandler } from "./errors/error_handler";
-import { ScheduleRouting } from "./routes/schedule";
-import { AuthRouting } from "./routes/auth";
+import {ErrorHandler} from "./errors/error_handler";
+import {ScheduleRouting} from "./routes/schedule";
+import {AuthRouting} from "./routes/auth";
 import passport from "passport";
 import crypto from "crypto";
 import session from "express-session";
-import { initializePassport } from "./passport";
+import {initializePassport} from "./passport";
 import dotenv from "dotenv";
+import {GarbageRouting} from "./routes/garbage";
 
 const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
@@ -59,6 +60,7 @@ app.use("/auth", new AuthRouting().toRouter());
 app.use("/user", new UserRouting().toRouter());
 app.use("/building", new BuildingRouting().toRouter());
 app.use("/schedule", new ScheduleRouting().toRouter());
+app.use("/garbage", new GarbageRouting().toRouter);
 
 // Finally, an error handler
 app.use(ErrorHandler.handle);
