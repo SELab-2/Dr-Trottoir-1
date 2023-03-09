@@ -3,7 +3,7 @@
         <!-- Text input field for the building name -->
         <v-text-field
             v-model="building.name"
-            label="Naam"
+            label="Naam gebouw"
             type="text"
             required
             @update:model-value="$emit('onUpdate', building)"
