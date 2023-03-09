@@ -2,6 +2,13 @@
 
     <div class="background">
         <div class="form">
+            <div
+                class="text-h2 mb-1"
+            >Aanmaak gebruiker</div>
+            <v-divider 
+                :thickness="2"
+                class="border-opacity-50 mb-3"
+            ></v-divider>
             <v-row class="py-0 my-0">
                 <v-col
                 cols="1"
@@ -86,7 +93,10 @@
                 multiple
                 v-model="roles"
             ></v-select>
-            <div v-if="roles.includes('Syndicus')">
+            <div v-if="roles.includes('Syndicus')" class="optional mb-2">
+                <div
+                    class="text-h4 mb-2"
+                >Gebouw syndicus</div>
                 <BuildingForm
                     @onUpdate="(newBuilding) => building = newBuilding"
                 >
@@ -153,6 +163,7 @@ const roles: Ref<String[]> = ref([])
 </script>
 
 <style lang="scss">
+    @import "@/assets/styles/base.scss";
 
     .background{
         height: 100%;
@@ -168,6 +179,17 @@ const roles: Ref<String[]> = ref([])
         max-width: 90%;
         padding: 10px;
         align-content: center;
+    }
+
+    .optional{
+        border-color: $secondary;
+        border-width: 2px;
+        border-radius: 3px;
+        border-style: solid;
+        padding-top: 1%;
+        padding-left: 1%;
+        padding-right: 1%;
+        padding-bottom: 0%;
     }
 
 </style>
