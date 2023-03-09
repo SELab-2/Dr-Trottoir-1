@@ -8,7 +8,7 @@ import "express-async-errors";
 import { ErrorHandler } from "./errors/error_handler";
 import { ScheduleRouting } from "./routes/schedule";
 import { AuthRouting } from "./routes/auth";
-import {ActionRouting} from "./routes/action";
+import { ActionRouting } from "./routes/action";
 import passport from "passport";
 import crypto from "crypto";
 import session from "express-session";
