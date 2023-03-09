@@ -66,6 +66,7 @@ Je kan gebruik maken van GUI programma's zoals Postman en dergelijke, of simpelw
 
 ```python
 import requests
+import json
 
 # Maak een nieuwe sessie
 s = requests.session()
