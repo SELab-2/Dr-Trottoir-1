@@ -5,6 +5,7 @@ import {Parser} from "../parser";
 import {Auth} from "../auth/auth";
 
 export class GarbageRouting extends Routing {
+    @Auth.authorization({student: true})
     async getAll(req: CustomRequest, res: express.Response) {
         const joins = Parser.stringArray(req.query.join, [])
         const result = await prisma.garbage.findMany({
@@ -21,6 +22,7 @@ export class GarbageRouting extends Routing {
     }
 
     async getOne(req: CustomRequest, res: express.Response) {
+        Auth.authorization({student: true})
         const joins = Parser.stringArray(req.query.join, [])
         const result = await prisma.garbage.findUniqueOrThrow({
             where: {
