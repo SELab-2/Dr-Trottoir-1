@@ -16,9 +16,9 @@
   <v-table>
     <thead>
     <tr>
-      <th class="text-left">Date</th>
+      <th class="text-left">Datum</th>
       <th class="text-left">Student</th>
-      <th class="text-left">Time</th>
+      <th class="text-left">Duur</th>
     </tr>
     </thead>
     <tbody>
