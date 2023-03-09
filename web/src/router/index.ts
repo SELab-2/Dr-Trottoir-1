@@ -1,16 +1,27 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginScreen from "@/views/LoginScreen.vue";
 import UserCreation from "@/views/UserCreation.vue";
-
+import MainLayout from "@/layouts/MainLayout.vue";
+import HelloWorld from "@/views/HelloWorld.vue";
 
 const routes = [
   {
-    path: '/login',
+    path: '/',
     component: LoginScreen,
   },
   {
-    path: '/usercreation',
-    component: UserCreation,
+    path: '/dashboard',
+    component: MainLayout,
+    children: [
+      {
+        path: 'example',
+        component: MainLayout,
+      },
+      {
+        path: '/usercreation',
+        component: UserCreation,
+      }
+    ]
   }
 ]
 
