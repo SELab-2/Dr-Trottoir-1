@@ -13,6 +13,7 @@ import crypto from "crypto";
 import session from "express-session";
 import { initializePassport } from "./passport";
 import dotenv from "dotenv";
+import {RegionRouting} from "./routes/region";
 
 const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
@@ -59,6 +60,7 @@ app.use("/auth", new AuthRouting().toRouter());
 app.use("/user", new UserRouting().toRouter());
 app.use("/building", new BuildingRouting().toRouter());
 app.use("/schedule", new ScheduleRouting().toRouter());
+app.use("/region", new RegionRouting().toRouter())
 
 // Finally, an error handler
 app.use(ErrorHandler.handle);
