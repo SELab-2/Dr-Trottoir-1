@@ -2,6 +2,7 @@
 
     <div class="background">
         <div class="form">
+            <!-- Titel -->
             <div
                 class="text-h2 mb-1"
             >Aanmaak gebruiker</div>
@@ -85,7 +86,7 @@
                 bg
             ></v-text-field>
 
-            <!-- Selection box to determine the roles-->
+            <!-- Selection box to determine the roles -->
             <v-select
                 chips
                 label="Rol"
@@ -93,6 +94,7 @@
                 multiple
                 v-model="roles"
             ></v-select>
+            <!-- Optional field for the syndicus building, appearse when the role syndicus is selected -->
             <div v-if="roles.includes('Syndicus')" class="optional mb-2">
                 <div
                     class="text-h4 mb-2"
@@ -102,6 +104,7 @@
                 >
                 </BuildingForm>
             </div>
+            <!-- Account creation button -->
             <v-btn>
                 Maak Account
             </v-btn>
