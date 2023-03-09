@@ -60,7 +60,7 @@ app.use("/auth", new AuthRouting().toRouter());
 app.use("/user", new UserRouting().toRouter());
 app.use("/building", new BuildingRouting().toRouter());
 app.use("/schedule", new ScheduleRouting().toRouter());
-app.use("/garbage", new GarbageRouting().toRouter);
+app.use("/garbage", new GarbageRouting().toRouter());
 
 // Finally, an error handler
 app.use(ErrorHandler.handle);
