@@ -13,11 +13,11 @@ export class ActionRouting extends Routing {
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                description: Parser.string(req.query["description"])
+                description: Parser.string(req.query["description"]),
             },
             include: {
-                garbage: joins?.includes("garbage")
-            }
+                garbage: joins?.includes("garbage"),
+            },
         });
 
         return res.status(200).json(result);
@@ -32,8 +32,8 @@ export class ActionRouting extends Routing {
                 id: Parser.number(req.params["id"]),
             },
             include: {
-                garbage: joins?.includes("garbage")
-            }
+                garbage: joins?.includes("garbage"),
+            },
         });
 
         return res.status(200).json(result);
@@ -43,7 +43,7 @@ export class ActionRouting extends Routing {
     async createOne(req: CustomRequest, res: express.Response) {
         const action = await prisma.action.create({
             data: req.body,
-        })
+        });
 
         return res.status(201).json(action);
     }
@@ -64,14 +64,14 @@ export class ActionRouting extends Routing {
     async deleteOne(req: CustomRequest, res: express.Response) {
         await prisma.garbage.deleteMany({
             where: {
-                action_id: Parser.number(req.params["id"])
-            }
+                action_id: Parser.number(req.params["id"]),
+            },
         });
 
         const result = await prisma.action.delete({
             where: {
-                id: Parser.number(req.params["id"])
-            }
+                id: Parser.number(req.params["id"]),
+            },
         });
 
         return res.status(200).json(result);
