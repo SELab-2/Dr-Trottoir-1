@@ -20,7 +20,7 @@
         </v-btn>
       </div>
 
-      <v-btn @click="logout" to="/login">Logout</v-btn>
+      <v-btn @click="logout" to="/login">Log uit</v-btn>
     </v-app-bar>
 
     <!-- Here will the page be displayed that's loaded in by the router -->
