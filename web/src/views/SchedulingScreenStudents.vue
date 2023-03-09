@@ -1,13 +1,13 @@
 <template>
   <h1>Planningsoverzicht</h1>
   <v-list>
-    <v-list-item v-for="day in days" :key="day.name">
+    <v-list-item v-for="day in sorted" :key="day.name">
       <v-card v-text="day.name"></v-card>
       <v-table>
         <thead>
         <tr>
-          <th class="text-left">Building</th>
-          <th class="text-left">Address</th>
+          <th class="text-left">Gebouw</th>
+          <th class="text-left">Adres</th>
           <th class="text-left">Deadline</th>
           <th class="text-left">Info</th>
         </tr>
@@ -32,7 +32,7 @@ export default {
     // test data
     return {
       days: {
-        monday: {name: "monday", buildings: [
+        monday: {name: "maandag", buildings: [
           {name: "gebouw1", address: "coolestraat 69", info: "meer info/opmerkingen"
               , deadline: new Date(2023, 0O2, 0O6, 19, 0)},
             {name: "gebouw2", address: "anderestraat 420", info: "wegens werken dient de achteringang genomen te worden"
@@ -41,7 +41,7 @@ export default {
               , deadline: new Date(2023, 0O2, 0O6, 21, 0)},
             {name: "gebouw4", address: "geeninspiratiestraat 13", info: "meer info/opmerkingen"
               , deadline: new Date(2023, 0O2, 0O6, 19, 30)}]},
-        tuesday: {name: "tuesday", buildings: [
+        tuesday: {name: "dinsdag", buildings: [
           {name: "gebouw1", address: "coolestraat 69", info: "meer info/opmerkingen"
               , deadline: new Date(2023, 0O2, 0O6, 19, 30)},
             {name: "gebouw2", address: "anderestraat 420", info: "wegens werken dient de achteringang genomen te worden"
@@ -50,7 +50,7 @@ export default {
               , deadline: new Date(2023, 0O2, 0O6, 22, 0)},
             {name: "gebouw4", address: "geeninspiratiestraat 13", info: "meer info/opmerkingen"
               , deadline: new Date(2023, 0O2, 0O6, 19, 0)}]},
-        wednesday: {name: "wednesday", buildings: [
+        wednesday: {name: "woensdag", buildings: [
           {name: "gebouw1", address: "coolestraat 69", info: "meer info/opmerkingen"
               , deadline: new Date(2023, 0O2, 0O6, 21, 30)},
             {name: "gebouw2", address: "anderestraat 420", info: "wegens werken dient de achteringang genomen te worden"
@@ -62,6 +62,16 @@ export default {
       },
     }
   },
+  computed: {
+    sorted(){
+      let sortedDays =  {}
+      for(const [key, value] of Object.entries(this.days)){
+        sortedDays[key] = value
+        sortedDays[key].buildings = value.buildings.sort((x, y) => { return x["deadline"] - y["deadline"] });
+      }
+      return sortedDays
+    },
+  }
 }
 </script>
 
