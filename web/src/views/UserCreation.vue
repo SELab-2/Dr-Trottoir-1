@@ -2,14 +2,6 @@
 
     <div class="background">
         <div class="form">
-            <!-- Titel -->
-            <div
-                class="text-h2 mb-1"
-            >Aanmaak gebruiker</div>
-            <v-divider 
-                :thickness="2"
-                class="border-opacity-50 mb-3"
-            ></v-divider>
             <v-row class="py-0 my-0">
                 <v-col
                 cols="1"
@@ -95,14 +87,18 @@
                 v-model="roles"
             ></v-select>
             <!-- Optional field for the syndicus building, appearse when the role syndicus is selected -->
-            <div v-if="roles.includes('Syndicus')" class="optional mb-2">
-                <div
-                    class="text-h4 mb-2"
-                >Gebouw syndicus</div>
-                <BuildingForm
-                    @onUpdate="(newBuilding) => building = newBuilding"
+            <div v-if="roles.includes('Syndicus')" class="mb-2">
+                <v-card
+                    prepend-icon="mdi-office-building"
+                    class="px-3"
                 >
-                </BuildingForm>
+                    <template v-slot:title> Gebouw Syndicus </template>
+                    <BuildingForm
+                        @onUpdate="(newBuilding) => building = newBuilding"
+                    >
+                    </BuildingForm>
+                </v-card>
+                
             </div>
             <!-- Account creation button -->
             <v-btn>
@@ -182,17 +178,6 @@ const roles: Ref<String[]> = ref([])
         max-width: 90%;
         padding: 10px;
         align-content: center;
-    }
-
-    .optional{
-        border-color: $secondary;
-        border-width: 2px;
-        border-radius: 3px;
-        border-style: solid;
-        padding-top: 1%;
-        padding-left: 1%;
-        padding-right: 1%;
-        padding-bottom: 0%;
     }
 
 </style>

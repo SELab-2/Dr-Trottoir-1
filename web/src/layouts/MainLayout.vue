@@ -84,6 +84,11 @@ const drawer = ref(true)
           <router-link to="/dashboard">
             <v-list-item prepend-icon="mdi-map-legend" title="Routes" value="routes"></v-list-item>
           </router-link>
+          
+          <!-- TODO: conditional rendering -->
+          <router-link to="/usercreation">
+            <v-list-item prepend-icon="mdi-account-plus" title="Maak account aan" value="routes"></v-list-item>
+          </router-link>
         </v-list>
 
         <template v-slot:append>

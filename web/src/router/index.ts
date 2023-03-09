@@ -13,10 +13,6 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: 'example',
-        component: MainLayout,
-      },
-      {
         path: '/usercreation',
         component: UserCreation,
       }
