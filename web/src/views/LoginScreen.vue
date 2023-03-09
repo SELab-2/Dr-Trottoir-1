@@ -42,7 +42,7 @@
                 <!-- Login button -->
                 <v-btn 
                     class="float-r"
-                    @click="handleSubmit"
+                    @click="login"
                 >
                     Login            
                 </v-btn> 
@@ -71,6 +71,7 @@
 <script lang="ts" setup>
 
 import {ref} from 'vue'
+import { useRouter } from 'vue-router';
 
 // reactive email state
 const email = ref('')
@@ -84,10 +85,12 @@ const showPsswd = ref(false)
 // reactive state to check if the snackbar must be shown or not
 const snackbar = ref(false)
 
+// get the router object 
+const router = useRouter()
 
 // function that handels the login event
-function handleSubmit(){
-    console.log('Logging in...')
+const login = () => {
+    router.push('/dashboard')
 }
 
 </script>
