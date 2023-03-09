@@ -1,4 +1,15 @@
 <script lang="ts">
+  export default {
+    data: () => ({
+      drawer: true,
+      group: null,
+    }),
+    watch: {
+      group () {
+        this.drawer = true
+      },
+    },
+  }
 </script>
 
 <template>
@@ -7,6 +18,8 @@
       <v-navigation-drawer
         permanent
         location="left"
+        v-model="drawer"
+
       >
         <v-list density="compact" nav>
           <v-list-item
@@ -55,6 +68,23 @@
           <p class="text-center text-caption pa-4">SELab 2 - Groep 1 (v0.0.1)</p>
         </template>
       </v-navigation-drawer>
+      <v-app-bar
+        prominent
+        elevation="0"
+      >
+        <div class="px-4">
+          <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        </div>
+
+        <v-toolbar-title class="font-weight-medium">Accountbeheer</v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <v-btn variant="text" icon="mdi-magnify"></v-btn>
+
+        <v-btn variant="text" icon="mdi-filter"></v-btn>
+      </v-app-bar>
+
       <router-view></router-view>
     </v-main>
   </v-app>
