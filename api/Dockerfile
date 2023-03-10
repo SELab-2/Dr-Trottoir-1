@@ -17,6 +17,9 @@ COPY --from=build /build/dist ./dist/
 COPY package*.json ./
 RUN npm ci --omit=dev
 
+ENV PRISMA_SKIP_POSTINSTALL_GENERATE=true
+COPY prisma prisma
+RUN npx prisma generate
 EXPOSE 8080
 
-ENTRYPOINT npm start
+ENTRYPOINT ["npm", "run", "start"]
