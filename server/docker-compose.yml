@@ -102,6 +102,27 @@ services:
     ports:
       - "8080:8080"
 
+  frontend:
+    container_name: frontend
+    hostname: frontend
+    build: ../web/
+    networks:
+      main:
+        ipv4_address: 10.0.0.6
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`sel2-1.ugent.be`)"
+      - "traefik.http.routers.api.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.api.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.api.stripprefix.prefixes=/"
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - "3000:3000"
+
 networks:
   main:
     name: main
