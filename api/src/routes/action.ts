@@ -13,7 +13,9 @@ export class ActionRouting extends Routing {
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                description: Parser.string(req.query["description"]),
+                description: {
+                    contains: Parser.string(req.query["description"], ""),
+                },
             },
             include: {
                 garbage: joins?.includes("garbage"),
