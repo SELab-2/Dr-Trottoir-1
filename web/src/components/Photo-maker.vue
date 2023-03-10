@@ -1,17 +1,23 @@
 <template>
   <v-container>
-    <v-file-input
-      label="Select Image"
-      v-model="image"
-      accept="image/*"
-      @change="previewImage"
-    ></v-file-input>
+    <v-form @submit.prevent="onSubmit">
+      <v-file-input
+        label="Select Image"
+        v-model="image"
+        accept="image/*"
+        @change="previewImage"
+      ></v-file-input>
 
-    <div class="d-flex justify-center align-center">
-      <v-img v-if="preview" :src="preview" width="200" height="200"></v-img>
-    </div>
-    <v-textarea label="Comments" v-model="comments"></v-textarea>
-    <v-text-field label="Image Label" v-model="label"></v-text-field>
+      <div class="d-flex justify-center align-center">
+        <v-img v-if="preview" :src="preview" width="200" height="200"></v-img>
+      </div>
+      <v-textarea label="Comments" v-model="comments"></v-textarea>
+      <v-text-field label="Image Label" v-model="label"></v-text-field>
+
+      <div class="d-flex justify-center align-center">
+        <v-btn type="submit" color="primary">Submit</v-btn>
+      </div>
+    </v-form>
   </v-container>
 </template>
 
@@ -34,6 +40,29 @@ export default {
         this.preview = reader.result;
       };
       reader.readAsDataURL(file);
+    },
+
+    async onSubmit() {
+      try {
+        const formData = new FormData();
+        formData.append("image", this.file);
+        formData.append("label", this.label);
+        formData.append("comment", this.comments);
+        console.log("verzonden");
+        for (const value of formData.values()) {
+          console.log(value);
+        }
+        //const response = await axios.post("/images", formData);
+        //console.log(response.data);
+
+        // reset form after submit
+        this.file = null;
+        this.preview = null;
+        this.label = "";
+        this.comments = "";
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
