@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <div>
     <v-container>
       <v-form>
         <v-row>
@@ -9,8 +9,6 @@
               :src="preview"
               lazySrc="../assets/images/defaultImage.png"
               v-model="preview"
-              width="350"
-              height="350"
             ></v-img>
           </v-col>
           <v-col>
@@ -31,7 +29,7 @@
         </div>
       </v-form>
     </v-container>
-  </v-card>
+  </div>
 </template>
 
 <script>
@@ -39,7 +37,7 @@ import { ref } from "vue";
 import pic from "../assets/images/defaultImage.png";
 
 export default {
-  setup() {
+  setup({ emit }) {
     const preview = ref(pic);
     const image = ref(null);
     const label = ref("");
@@ -62,6 +60,7 @@ export default {
         for (const value of formData.values()) {
           console.log(value);
         }
+        emit("form-submitted", formData);
         //const response = await axios.post("/images", formData);
         //console.log(response.data);
 
