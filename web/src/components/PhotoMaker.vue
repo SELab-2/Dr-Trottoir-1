@@ -1,13 +1,13 @@
 <template>
   <v-card>
     <v-container>
-      <v-form @submit.prevent="onSubmit">
+      <v-form>
         <v-row>
           <v-col cols="3">
             <v-img
               v-if="preview"
               :src="preview"
-              lazySrc="@/assets/images/defaultImage.png"
+              lazySrc="../assets/images/defaultImage.png"
               v-model="preview"
               width="350"
               height="350"
@@ -19,15 +19,15 @@
               v-model="image"
               label="Select Image"
               accept="image/*"
-              @change="previewImage"
               prepend-icon="mdi-image"
+              @change="previewImage"
             ></v-file-input>
             <v-textarea label="Comments" v-model="comments"></v-textarea>
             <v-text-field label="Image Label" v-model="label"></v-text-field>
           </v-col>
         </v-row>
         <div class="d-flex justify-center align-center">
-          <v-btn type="submit" color="primary">Submit</v-btn>
+          <v-btn @click="submit" color="primary">Submit</v-btn>
         </div>
       </v-form>
     </v-container>
@@ -35,34 +35,29 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import pic from "../assets/images/defaultImage.png";
+
 export default {
-  data() {
-    return {
-      image: null,
-      preview: "@/assets/images/defaultImage.png",
-      label: "",
-      comments: "",
-    };
-  },
-  methods: {
-    previewImage(event) {
-      //const file = event.target.files[0];
-      //console.log(file);
-      //console.log(this.image[0]);
-      //this.image = file;
+  setup() {
+    const preview = ref(pic);
+    const image = ref(null);
+    const label = ref("");
+    const comments = ref("");
+
+    const previewImage = () => {
       const reader = new FileReader();
       reader.onload = () => {
-        this.preview = reader.result;
+        preview.value = reader.result;
       };
-      reader.readAsDataURL(this.image[0]);
-    },
-
-    async onSubmit() {
+      reader.readAsDataURL(image.value[0]);
+    };
+    const submit = () => {
       try {
         const formData = new FormData();
-        formData.append("image", this.file);
-        formData.append("label", this.label);
-        formData.append("comment", this.comments);
+        formData.append("image", image.value);
+        formData.append("label", label.value);
+        formData.append("comment", comments.value);
         console.log("verzonden");
         for (const value of formData.values()) {
           console.log(value);
@@ -71,15 +66,24 @@ export default {
         //console.log(response.data);
 
         // reset form after submit
-        this.file = null;
-        this.preview = "@/assets/images/defaultImage.png";
-        this.label = "";
-        this.comments = "";
-        this.image = null;
+        //file.value = null;
+        preview.value = pic;
+        label.value = "";
+        comments.value = "";
+        image.value = null;
       } catch (error) {
         console.log(error);
       }
-    },
+    };
+
+    return {
+      preview,
+      image,
+      label,
+      comments,
+      previewImage,
+      submit,
+    };
   },
 };
 </script>
