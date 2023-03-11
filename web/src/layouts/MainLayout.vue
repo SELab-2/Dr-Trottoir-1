@@ -1,9 +1,8 @@
-<script lang="ts">
-export default {
-  data: () => ({
-    drawer: true,
-  }),
-}
+<script lang="ts" setup>
+import { ref } from 'vue';
+
+// reactive state to show the drawer or not
+const drawer = ref(true)
 </script>
 
 <template>
@@ -96,7 +95,7 @@ export default {
         elevation="0"
       >
         <div class="px-4">
-          <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+          <v-app-bar-nav-icon variant="text" @click="drawer = !drawer"></v-app-bar-nav-icon>
         </div>
 
         <v-toolbar-title class="font-weight-medium">Accountbeheer</v-toolbar-title>
