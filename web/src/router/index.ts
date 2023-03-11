@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import HelloWorld from "@/views/HelloWorld.vue";
+import BuildingMaker from "@/views/BuildingMaker.vue"
 
 const routes = [
   {
@@ -17,6 +18,10 @@ const routes = [
         component: MainLayout,
       },
     ]
+  },
+  {
+    path: '/addBuilding',
+    component: BuildingMaker,
   }
 ]
 
