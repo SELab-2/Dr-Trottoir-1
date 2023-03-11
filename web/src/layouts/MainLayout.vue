@@ -28,7 +28,7 @@ const route = useRoute();
             <v-list-item prepend-icon="mdi-account-cancel" title="Afmelden" value="logout"></v-list-item>
           </router-link>
 
-          <router-link to="/dashboard">
+          <router-link to="/account">
             <v-list-item prepend-icon="mdi-cog" title="Account" value="account"></v-list-item>
           </router-link>
 
