@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 // reactive state to show the drawer or not
 const drawer = ref(true)
+
+// get the route object, needed to show the title
+const route = useRoute();
 </script>
 
 <template>
@@ -98,7 +102,7 @@ const drawer = ref(true)
           <v-app-bar-nav-icon variant="text" @click="drawer = !drawer"></v-app-bar-nav-icon>
         </div>
 
-        <v-toolbar-title class="font-weight-medium">Accountbeheer</v-toolbar-title>
+        <v-toolbar-title class="font-weight-medium">{{ route.name }}</v-toolbar-title>
 
         <v-spacer></v-spacer>
 
