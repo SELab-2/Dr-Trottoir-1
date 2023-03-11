@@ -14,6 +14,8 @@ export class BuildingRouting extends Routing {
             skip: Parser.number(req.query["skip"], 0),
             where: {
                 name: req.query["name"],
+                ivago_id: req.query["ivago_id"],
+                syndicus_id: Parser.number(req.query["syndicus_id"]),
             },
             include: {
                 address: joins?.includes("address"),
