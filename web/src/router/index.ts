@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
-import HelloWorld from "@/views/HelloWorld.vue";
+import AccountSettings from "@/views/AccountSettings.vue";
 
 const routes = [
   {
@@ -15,6 +15,10 @@ const routes = [
       {
         path: 'example',
         component: MainLayout,
+      },
+      {
+        path: '/account',
+        component: AccountSettings,
       },
     ]
   }
