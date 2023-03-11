@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import HelloWorld from "@/views/HelloWorld.vue";
-import Photo_Maker from "@/components/Photo-maker.vue";
+import PhotoMaker from "@/components/PhotoMaker.vue";
 
 const routes = [
   {
@@ -20,8 +20,8 @@ const routes = [
     ]
   },
   {
-    path: '/photo-maker',
-    component: Photo_Maker,
+    path: '/photoMaker',
+    component: PhotoMaker,
   }
 ]
 
