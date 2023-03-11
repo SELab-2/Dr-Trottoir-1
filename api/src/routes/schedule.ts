@@ -17,8 +17,21 @@ export class ScheduleRouting extends Routing {
                     lte: Parser.date(req.query["before"]),
                     gte: Parser.date(req.query["after"]),
                 },
-                user_id: Parser.number(req.query["user"]),
-                round_id: Parser.number(req.query["round"]),
+                user_id: Parser.number(req.query["user_id"]),
+                round_id: Parser.number(req.query["round_id"]),
+                user: {
+                    OR: {
+                        first_name: {
+                            contains: Parser.string(req.query["user_name"], ""),
+                        },
+                        last_name: {
+                            contains: Parser.string(req.query["user_name"], ""),
+                        },
+                    },
+                },
+                round: {
+                    name: req.query["round"],
+                },
             },
             include: {
                 user: joins?.includes("user"),
@@ -42,7 +55,11 @@ export class ScheduleRouting extends Routing {
                 user: joins?.includes("user"),
                 round: {
                     include: {
-                        buildings: true,
+                        buildings: {
+                            select: {
+                                building: true,
+                            }
+                        },
                     },
                 },
                 progress: joins?.includes("progress"),
