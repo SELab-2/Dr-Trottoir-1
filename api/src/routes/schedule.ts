@@ -58,7 +58,7 @@ export class ScheduleRouting extends Routing {
                         buildings: {
                             select: {
                                 building: true,
-                            }
+                            },
                         },
                     },
                 },
