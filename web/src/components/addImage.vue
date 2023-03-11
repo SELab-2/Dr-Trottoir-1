@@ -9,8 +9,6 @@
               :src="preview"
               lazySrc="../assets/images/defaultImage.png"
               v-model="preview"
-              width="350"
-              height="350"
             ></v-img>
           </v-col>
           <v-col>
@@ -19,15 +17,20 @@
               v-model="image"
               label="Select Image"
               accept="image/*"
-              prepend-icon="mdi-image"
+              prepend-inner-icon="mdi-image"
+              prepend-icon=""
               @change="previewImage"
             ></v-file-input>
-            <v-textarea label="Comments" v-model="comments"></v-textarea>
+            <v-textarea
+              label="Comments"
+              rows="3"
+              v-model="comments"
+            ></v-textarea>
             <v-text-field label="Image Label" v-model="label"></v-text-field>
           </v-col>
         </v-row>
-        <div class="d-flex justify-center align-center">
-          <v-btn @click="submit" color="primary">Submit</v-btn>
+        <div class="d-flex justify-end">
+          <v-btn @click="submit">Afbeelding toevoegen</v-btn>
         </div>
       </v-form>
     </v-container>
@@ -38,7 +41,7 @@
 import { ref } from "vue";
 import pic from "../assets/images/defaultImage.png";
 export default {
-  setup() {
+  setup({ emit }) {
     const preview = ref(pic);
     const image = ref(null);
     const label = ref("");
@@ -60,6 +63,7 @@ export default {
         for (const value of formData.values()) {
           console.log(value);
         }
+        emit("form-submitted", formData);
         //const response = await axios.post("/images", formData);
         //console.log(response.data);
         // reset form after submit
