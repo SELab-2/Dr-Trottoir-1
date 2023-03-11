@@ -3,6 +3,7 @@ import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 
+
 const routes = [
   {
     path: '/',
@@ -10,14 +11,17 @@ const routes = [
   },
   {
     path: '/dashboard',
+    name: 'dashboard',
     component: MainLayout,
     children: [
       {
         path: 'example',
+        name: 'exampleTitle',
         component: MainLayout,
       },
       {
         path: '/account',
+        name: 'Account instellingen',
         component: AccountSettings,
       },
     ]
