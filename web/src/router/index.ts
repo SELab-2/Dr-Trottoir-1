@@ -15,11 +15,6 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: 'example',
-        name: 'exampleTitle',
-        component: MainLayout,
-      },
-      {
         path: '/account',
         name: 'Account instellingen',
         component: AccountSettings,
