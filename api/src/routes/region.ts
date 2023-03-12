@@ -49,22 +49,20 @@ export class RegionRouting extends Routing {
 
     @Auth.authorization({superStudent: true})
     async createOne(req: CustomRequest, res: express.Response) {
-        const connectedUsers = req.body["users"].map((id: string) => {
-            return {
-                user: {
-                    connect: {
-                        id: id
-                    }
-                }
+
+        let users;
+        if (req.body["users"]) {
+            users = {
+                create: await getUsersForCreate(req)
             }
-        });
+        } else {
+            users = {}
+        }
 
         const result = await prisma.region.create({
             data: {
                 name: req.body["name"],
-                users: {
-                    create: connectedUsers
-                }
+                users: users
             }
         });
 
@@ -73,8 +71,27 @@ export class RegionRouting extends Routing {
 
     @Auth.authorization({superStudent: true})
     async updateOne(req: CustomRequest, res: express.Response) {
+        // PUT /region/id?users={users}
+
+        let usersObject;
+        if (req.body["users"]) {
+            usersObject = {
+                // remove all entries related to the region and add new entries according to the list provided
+                deleteMany: {},
+                create: await getUsersForCreate(req)
+            }
+        } else {
+            // don't delete previous
+            usersObject = {}
+        }
+
+        console.log(req.body)
+
         const result = await prisma.region.update({
-            data: req.body,
+            data: {
+                name: req.body["name"],
+                users: usersObject
+            },
             where: {
                 id: Parser.number(req.params["id"]),
             },
@@ -93,4 +110,16 @@ export class RegionRouting extends Routing {
 
         return res.status(200).json(result);
     }
+}
+
+const getUsersForCreate = async (req: CustomRequest) => {
+    return req.body["users"].map((id: string) => {
+        return {
+            user: {
+                connect: {
+                    id: id
+                }
+            }
+        }
+    });
 }
