@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
+import RoundFollowup from "@/views/RoundFollowup"
 
 const routes = [
   {
@@ -13,11 +14,11 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "example",
-        name: "exampleTitle",
-        component: MainLayout,
+        path: '/opvolging-rondes',
+        name: 'Opvolgen van rondes',
+        component: RoundFollowup,
       },
-    ],
+    ]
   },
 ];
 
