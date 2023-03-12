@@ -73,8 +73,8 @@ export default {
 
           <p class="pa-2 font-weight-medium text-caption">Administratie</p>
 
-          <router-link to="/dashboard">
-            <v-list-item prepend-icon="mdi-account-supervisor" title="Studenten" value="students"></v-list-item>
+          <router-link to="/dashboard/users">
+            <v-list-item prepend-icon="mdi-account-supervisor" title="Gebruikers" value="users"></v-list-item>
           </router-link>
 
           <router-link to="/dashboard">
@@ -108,9 +108,7 @@ export default {
         <v-btn variant="text" icon="mdi-filter"></v-btn>
       </v-app-bar>
 
-      <div class="pa-8">
-        <router-view></router-view>
-      </div>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>

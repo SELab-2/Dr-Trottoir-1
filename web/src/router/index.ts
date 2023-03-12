@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import HelloWorld from "@/views/HelloWorld.vue";
+import UserTable from "@/views/UserTable.vue";
 
 const routes = [
   {
@@ -13,8 +14,8 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: 'example',
-        component: MainLayout,
+        path: 'users',
+        component: UserTable,
       },
     ]
   }
