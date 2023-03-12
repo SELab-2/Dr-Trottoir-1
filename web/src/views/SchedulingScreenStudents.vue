@@ -12,7 +12,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="building in day.buildings" :key="building.name">
+          <tr v-for="building in day.buildings" :key="building.name" class="position-relative">
             <td>{{ building.address }}</td>
             <td>
               {{ building.deadline.getHours() }}:{{
@@ -20,7 +20,7 @@
               }}
             </td>
             <td>
-              <router-link to="/dashboard" class="float-r">{{
+              <router-link class="stretched-link" to="/dashboard" >{{
                   building.name
                 }}</router-link>
             </td>
@@ -149,6 +149,22 @@ export default {
 
 .v-card{
   background-color: $accent;
+}
+
+.stretched-link::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: auto;
+  content: "";
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.position-relative {
+  position: relative;
 }
 
 </style>
