@@ -112,7 +112,7 @@
       <AddImage @form-submitted="handleFormSubmitted"> </AddImage>
       <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
       <div class="d-flex justify-center">
-        <v-btn type="submit">Submit gebouw</v-btn>
+        <v-btn @click="submit" type="submit">Submit gebouw</v-btn>
       </div>
       <!--image id, adress inline , meerdere afbeeldigen met commetns
       onder elkaar als er 1 gemaakt is kunnen er meerdere bij
@@ -152,6 +152,20 @@ const building = ref<Building>({
   }),
   manual: null,
 });
+
+const submit = () => {
+  try {
+    //alle data zit in building
+    //const response = await axios.post("", );
+    //console.log(response.data);
+
+    // reset form after submit
+    previewBuildingImage.value = ref(null);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const previewBuildingImage = ref(null);
 const buildingImage = ref(null);
 </script>
