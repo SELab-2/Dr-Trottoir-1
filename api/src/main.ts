@@ -9,6 +9,7 @@ import { ErrorHandler } from "./errors/error_handler";
 import { ScheduleRouting } from "./routes/schedule";
 import { AuthRouting } from "./routes/auth";
 import { ActionRouting } from "./routes/action";
+import { SyndicusRouting } from "./routes/syndicus";
 import { RoundRouting } from "./routes/round";
 import passport from "passport";
 import crypto from "crypto";
@@ -62,6 +63,7 @@ app.use("/user", new UserRouting().toRouter());
 app.use("/building", new BuildingRouting().toRouter());
 app.use("/schedule", new ScheduleRouting().toRouter());
 app.use("/action", new ActionRouting().toRouter());
+app.use("/syndicus", new SyndicusRouting().toRouter());
 app.use("/round", new RoundRouting().toRouter());
 
 // Finally, an error handler
