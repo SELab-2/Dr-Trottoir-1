@@ -33,22 +33,14 @@
             <template v-slot:title>
             Contact
             </template>
-            <v-list density="compact" class="mx-10">
-                <v-text-field
-                prepend-inner-icon="mdi-phone"
-                    label="Telefoon nummer"
-                    v-model="gsm"
-                    :variant="edit ?  'filled' : 'plain'"
-                    :readonly="!edit"
-                ></v-text-field>
-                <v-text-field
-                    prepend-inner-icon="mdi-email"
-                    label="e-mail"
-                    v-model="email"
-                    :variant="edit ?  'filled' : 'plain'"
-                    :readonly="!edit"
-                ></v-text-field>
-            </v-list>
+            <ContacForm
+                class="mx-10"
+                :readonly="!edit"
+                phone='+32 412 34 56 78'
+                email='jens.pots@example.com'
+                @onUpdate="(newContact) => contact = newContact"
+            >
+            </ContacForm>
         </v-card>
 
         <!-- Section with the adress -->
@@ -138,14 +130,17 @@
     </div>
 </template>
 <script lang="ts" setup>
+import ContacForm from '@/components/ContactForm.vue';
+import Contact from '@/components/models/Contact';
 import { ref } from 'vue';
 
 // reactive state to keep track if we are edeting or not
 const edit = ref(false)
 
-const email = ref('jens.pots@example.com')
-
-const gsm = ref('+32 412 34 56 78')
+const contact = ref<Contact>({
+            phone: '',
+            email: ''
+        });
 
 // reactive states for the new password
 const password1 = ref('')
