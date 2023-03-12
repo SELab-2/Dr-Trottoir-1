@@ -19,10 +19,6 @@ const routes = [
       },
     ]
   },
-  {
-    path: '/photoMaker',
-    component: PhotoMaker,
-  }
 ]
 
 
