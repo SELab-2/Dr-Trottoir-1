@@ -12,9 +12,24 @@ export class GarbageRouting extends Routing {
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
+                // get all garbage within a certain time period: YYYY-MM-DD
                 pickup_time: {
                     lte: Parser.date(req.query["before"]),
                     gte: Parser.date(req.query["after"]),
+                },
+                // get all garbage for a certain building
+                building_id: Parser.number(req.query["building_id"]),
+                // get all garbage where a certain action needs to be executed
+                action_id: Parser.number(req.query["action_id"]),
+                // get garbage for all buildings belonging to a certain syndicus
+                building: {
+                    syndicus_id: Parser.number(req.query["syndicus_id"]),
+                    // get garbage for all buildings belonging to a certain round
+                    rounds: {
+                        some: {
+                            round_id: Parser.number(req.query["round_id"]),
+                        },
+                    },
                 },
             },
             include: {
