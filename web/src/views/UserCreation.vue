@@ -86,20 +86,6 @@
                 multiple
                 v-model="roles"
             ></v-select>
-            <!-- Optional field for the syndicus building, appearse when the role syndicus is selected -->
-            <div v-if="roles.includes('Syndicus')" class="mb-2">
-                <v-card
-                    prepend-icon="mdi-office-building"
-                    class="px-3"
-                >
-                    <template v-slot:title> Gebouw Syndicus </template>
-                    <BuildingForm
-                        @onUpdate="(newBuilding) => building = newBuilding"
-                    >
-                    </BuildingForm>
-                </v-card>
-                
-            </div>
             <!-- Account creation button -->
             <v-btn>
                 Maak Account
@@ -112,8 +98,6 @@
 import { ref, Ref } from 'vue';
 import Address from '@/components/models/Address';
 import AddressForm from '@/components/AddressForm.vue';
-import BuildingForm from '@/components/BuildingForm.vue';
-import Building from '@/components/models/Building';
 
 // reactive first name state
 const first_name: string = ''
@@ -133,18 +117,6 @@ const address = ref<Address>({
     number: 0,
     city: '',
     zip_code: 0
-});
-
-// reactive building state
-const building = ref<Building>({
-    name: '',
-    ivago_id: '',
-    address: {
-        street: '',
-        number: 0,
-        city: '',
-        zip_code: 0
-    }
 });
 
 // reactive psswd1 state
