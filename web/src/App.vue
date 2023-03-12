@@ -1,11 +1,11 @@
+<script lang="ts"></script>
+
 <template>
   <v-app>
     <v-main>
-      <SchedulingScreenStudents/>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
 
-<script setup lang="ts">
-  import SchedulingScreenStudents from '@/views/SchedulingScreenStudents.vue'
-</script>
+<style lang="sass" scoped></style>

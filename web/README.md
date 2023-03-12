@@ -1,44 +1,35 @@
-# default
+# Web
 
-## Project setup
+Voor uniformiteit maken we enkel gebruik van npm.
 
-```
-# yarn
-yarn
+### Installeren van de node modules
 
-# npm
+```bash
 npm install
-
-# pnpm
-pnpm install
 ```
 
-### Compiles and hot-reloads for development
+### Compileer en hot-herlaad voor development
 
-```
-# yarn
-yarn dev
-
-# npm
+```bash
 npm run dev
-
-# pnpm
-pnpm dev
 ```
 
-### Compiles and minifies for production
+### Compileer voor productie
 
-```
-# yarn
-yarn build
-
-# npm
+```bash
+# compileer voor productie
 npm run build
 
-# pnpm
-pnpm build
+# voer gecompileerde code uit
+npm run preview
 ```
 
-### Customize configuration
+### Linting
 
-See [Configuration Reference](https://vitejs.dev/config/).
+```bash
+npm run lint
+```
+
+### Configuratie documentatie
+
+Zie [Configuratie documentatie](https://vitejs.dev/config/).

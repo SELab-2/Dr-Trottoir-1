@@ -1,0 +1,262 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = env("OUTPUT_DIRECTORY")
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// In dit model worden regio's/steden bijgehouden.
+model Region {
+    id   Int    @id @default(autoincrement())
+    name String @unique
+
+    users UserRegion[]
+
+    @@map("region")
+}
+
+// Dit model bevat alle informatie over een gebruiker en houdt bij of deze een student,
+// super_student en/of admin is. De rol van syndicus wordt in een apart model bijgehouden.
+model User {
+    // Algemene info
+    id         Int      @id @default(autoincrement())
+    email      String   @unique
+    first_name String
+    last_name  String
+    date_added DateTime
+    last_login DateTime
+    phone      String
+
+    address_id Int
+    address    Address @relation(fields: [address_id], references: [id])
+
+    // Rollen
+    student       Boolean
+    super_student Boolean
+    admin         Boolean
+
+    // Relaties
+    regions  UserRegion[]
+    Syndicus Syndicus[]
+    schedule Schedule[]
+
+    @@map("user")
+}
+
+// Elke gebruiker (student) kan rondes uitvoeren in meerdere regio's.
+// Dit model houdt bij aan welke regio's de studenten toegewezen mogen worden.
+model UserRegion {
+    id Int @id @default(autoincrement())
+
+    user_id Int
+    user    User @relation(fields: [user_id], references: [id])
+
+    region_id Int
+    region    Region @relation(fields: [region_id], references: [id])
+
+    @@map("user_region")
+}
+
+// Hier wordt het pad naar een bestand bijgehouden.
+model File {
+    id Int @id @default(autoincrement())
+
+    path      String
+    buildings Building[] // Vereist?
+
+    @@map("file")
+}
+
+// Bij een afbeelding kan de tijd optioneel opgeslagen worden waarop de foto genomen werd.
+model Image {
+    id   Int       @id @default(autoincrement())
+    time DateTime?
+
+    buildings BuildingImages[]
+    progress  ProgressImage[]
+
+    @@map("image")
+}
+
+// Het adres van een gebouw wordt in een apart model bijgehouden. Hierin wordt niet enkel de straat, huisnummer
+// en stad opgeslagen, maar ook de breedtegraad en lengtegraad.
+model Address {
+    id Int @id @default(autoincrement())
+
+    street   String
+    number   Int
+    city     String
+    zip_code Int
+
+    latitude  Float
+    longitude Float
+
+    buildings Building[]
+    user      User[]
+
+    @@map("address")
+}
+
+// Dit model houdt voor elk gebouw de foto's bij die er genomen zijn.
+model BuildingImages {
+    id Int @id @default(autoincrement())
+
+    building_id Int
+    building    Building @relation(fields: [building_id], references: [id])
+
+    image_id Int
+    image    Image @relation(fields: [image_id], references: [id])
+
+    @@map("building_image")
+}
+
+// Dit model bevat enkel basisinformatie van een gebouw, namelijk de naam, klantnummer van Ivago, de syndicus en de handleiding.
+// De foto's, afvalophaling en overige informatie worden in andere modellen bijgehouden.
+model Building {
+    id Int @id @default(autoincrement())
+
+    name     String
+    ivago_id String
+
+    syndicus_id Int
+    syndicus    Syndicus @relation(fields: [syndicus_id], references: [id])
+
+    address_id Int
+    address    Address @relation(fields: [address_id], references: [id])
+
+    manual_id Int
+    manual    File @relation(fields: [manual_id], references: [id])
+
+    images   BuildingImages[]
+    garbage  Garbage[]
+    rounds   RoundBuilding[]
+    progress Progress[]
+
+    @@map("building")
+}
+
+// Dit model houdt alle gebruikers bij die de rol van syndicus hebben.
+model Syndicus {
+    id Int @id @default(autoincrement())
+
+    user_id Int
+    user    User @relation(fields: [user_id], references: [id])
+
+    building Building[]
+
+    @@map("syndicus")
+}
+
+// Dit model houdt een lijst van speciale acties bij die gegeven kunnen worden bij de afvalophaling.
+// Voorbeelden hiervan zijn het afspuiten van containers, het aanvullen van PDM zakken ...
+// Bij de beschrijving moet ook altijd het type afval vermeld worden.
+model Action {
+    id          Int    @id @default(autoincrement())
+    description String
+
+    garbage Garbage[]
+
+    @@map("action")
+}
+
+// Dit model bevat een gebouw, het tijdstip dat het afval daar opgehaald wordt en
+// een (speciale) actie voor het afval (waarin ook het type afval vermeld staat).
+model Garbage {
+    id Int @id @default(autoincrement())
+
+    pickup_time DateTime
+
+    action_id Int
+    action    Action @relation(fields: [action_id], references: [id])
+
+    building_id Int
+    building    Building @relation(fields: [building_id], references: [id])
+
+    @@map("garbage")
+}
+
+// Hier wordt voor elke ronde vermeld welke gebouwen ertoe behoren.
+model RoundBuilding {
+    id Int @id @default(autoincrement())
+
+    round_id Int
+    round    Round @relation(fields: [round_id], references: [id])
+
+    building_id Int
+    building    Building @relation(fields: [building_id], references: [id])
+
+    @@map("round_building")
+}
+
+// In dit model worden enkel de namen van de rondes bijgehouden.
+model Round {
+    id   Int    @id @default(autoincrement())
+    name String
+
+    buildings RoundBuilding[]
+    schedule  Schedule[]
+
+    @@map("round")
+}
+
+// Dit model geeft voor elke dag weer welke gebruikers (studenten) welke rondes toegewezen krijgen.
+model Schedule {
+    id  Int      @id @default(autoincrement())
+    day DateTime
+
+    user_id Int
+    user    User @relation(fields: [user_id], references: [id])
+
+    round_id Int
+    round    Round @relation(fields: [round_id], references: [id])
+
+    progress Progress[]
+
+    @@map("schedule")
+}
+
+// Bij elk gebouw is de student verplicht om een foto te nemen van zijn aankomst, vertrek en van de berging.
+// De ProgressImageType zorgt ervoor dat dit makkelijk aangegeven kan worden.
+enum ProgressImageType {
+    ARRIVAL
+    DEPARTURE
+    GARBAGE
+}
+
+// Dit model houdt de vooruitgang van een gebouw bij. Hierin wordt het tijdstip van aankomst en vertrek opgeslagen samen met
+// opmerkingen van de student. Dit wordt gelinkt aan een specifieke ronde en gebruiker op een specieke dag (via Schedule).
+model Progress {
+    id        Int      @id @default(autoincrement())
+    report    String
+    arrival   DateTime
+    departure DateTime
+
+    building_id Int
+    building    Building @relation(fields: [building_id], references: [id])
+
+    schedule_id Int
+    schedule    Schedule @relation(fields: [schedule_id], references: [id])
+
+    images ProgressImage[]
+
+    @@map("progress")
+}
+
+// Per gebouw kunnen er per dagplanning verschillende afbeeldingen bijgehouden worden. Hierbij kan optioneel het type
+// foto vermeld worden (aankomst / berging / vertrek) en kan er een opmerking aan meegegeven worden.
+model ProgressImage {
+    id          Int                @id @default(autoincrement())
+    type        ProgressImageType?
+    description String
+
+    image_id Int
+    image    Image @relation(fields: [image_id], references: [id])
+
+    progress_id Int
+    progress    Progress @relation(fields: [progress_id], references: [id])
+
+    @@map("progress_image")
+}
