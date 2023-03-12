@@ -5,16 +5,19 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore"
+    "lint": "npx prettier --write . && npx eslint src",
+    "pretest": "npx prettier --check . && npx eslint src --max-warnings 0",
+    "test": "echo 'API: no test available'"
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
+    "prettier": "^2.8.4",
     "roboto-fontface": "*",
+    "sass": "^1.58.3",
     "vue": "^3.2.38",
     "vue-router": "^4.0.0",
     "vuetify": "^3.0.0",
-    "webfontloader": "^1.0.0",
-    "sass": "^1.58.3"
+    "webfontloader": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
