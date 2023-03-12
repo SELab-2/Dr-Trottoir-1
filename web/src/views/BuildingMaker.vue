@@ -6,7 +6,7 @@
       <div class="text-h3">Gebouw info</div>
       <v-row>
         <v-col cols="3">
-          <v-img src="@/assets/images/defaultImage.png"></v-img>
+          <v-img cover src="@/assets/images/defaultImage.png"></v-img>
         </v-col>
         <v-col>
           <v-file-input
@@ -18,14 +18,7 @@
           <v-text-field label="Ivago id"></v-text-field>
           <v-select
             label="Syndicus"
-            :items="[
-              'California',
-              'Colorado',
-              'Florida',
-              'Georgia',
-              'Texas',
-              'Wyoming',
-            ]"
+            :items="['Jeff', 'Elon', 'Tim', 'Bill', 'Warren', 'Steve']"
           ></v-select>
         </v-col>
       </v-row>

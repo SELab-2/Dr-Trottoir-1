@@ -5,6 +5,7 @@
         <v-row>
           <v-col cols="3">
             <v-img
+              cover
               v-if="preview"
               :src="preview"
               lazySrc="../assets/images/defaultImage.png"
@@ -63,7 +64,6 @@ export default {
         for (const value of formData.values()) {
           console.log(value);
         }
-        emit("form-submitted", formData);
         //const response = await axios.post("/images", formData);
         //console.log(response.data);
         // reset form after submit
@@ -72,6 +72,7 @@ export default {
         label.value = "";
         comments.value = "";
         image.value = null;
+        emit("form-submitted", formData);
       } catch (error) {
         console.log(error);
       }
