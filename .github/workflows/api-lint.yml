@@ -3,12 +3,12 @@ name: API Linter
 on:
     push:
         branches:
-            - 'development'
+            - 'develop'
             - 'main'
             - 'api/**'
     pull_request:
         branches:
-            - 'development'
+            - 'develop'
             - 'main'
             - 'api/**'
 

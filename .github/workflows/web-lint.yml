@@ -4,12 +4,12 @@ on:
     workflow_dispatch:
     push:
         branches:
-            - 'development'
+            - 'develop'
             - 'main'
             - 'web/**'
     pull_request:
         branches:
-            - 'development'
+            - 'develop'
             - 'main'
             - 'web/**'
 
