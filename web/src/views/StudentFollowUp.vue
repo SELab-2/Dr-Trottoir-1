@@ -22,14 +22,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="student in selectedRound.students" :key="student.name" class="position-relative">
+      <tr
+        v-for="student in selectedRound.students"
+        :key="student.name"
+        class="position-relative"
+      >
         <td>
           {{ ("0" + student.date.getDate()).slice(-2) }}-{{
             ("0" + (student.date.getMonth() + 1)).slice(-2)
           }}-{{ student.date.getFullYear() }}
         </td>
         <td>
-          <router-link class="stretched-link" to="/dashboard" >{{
+          <router-link class="stretched-link" to="/dashboard">{{
             student.name
           }}</router-link>
         </td>
@@ -119,7 +123,7 @@ tbody tr:hover {
   background-color: $accent;
 }
 
-.stretched-link{
+.stretched-link {
   position: absolute;
 }
 
