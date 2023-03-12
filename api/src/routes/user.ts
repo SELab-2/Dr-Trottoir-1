@@ -17,12 +17,12 @@ export class UserRouting extends Routing {
                 super_student: Parser.bool(req.query["super_student"]),
                 admin: Parser.bool(req.query["admin"]),
                 last_login: {
-                    gte: Parser.date(req.query["login_before"]),
-                    lte: Parser.date(req.query["login_after"]),
+                    lte: Parser.date(req.query["login_before"]),
+                    gte: Parser.date(req.query["login_after"]),
                 },
                 date_added: {
-                    gte: Parser.date(req.query["added_before"]),
-                    lte: Parser.date(req.query["added_after"]),
+                    lte: Parser.date(req.query["added_before"]),
+                    gte: Parser.date(req.query["added_after"]),
                 },
                 OR: {
                     first_name: {
@@ -34,7 +34,7 @@ export class UserRouting extends Routing {
                 },
             },
             include: {
-                address: joins?.includes("address"),
+                address: true,
                 regions: joins?.includes("regions"),
                 schedule: joins?.includes("schedule"),
             },
@@ -52,7 +52,7 @@ export class UserRouting extends Routing {
                 id: Parser.number(req.params["id"]),
             },
             include: {
-                address: joins?.includes("address"),
+                address: true,
                 regions: joins?.includes("regions"),
                 schedule: joins?.includes("schedule"),
             },
