@@ -123,7 +123,7 @@ tbody tr:hover {
   background-color: $accent;
 }
 
-.stretched-link {
+.stretched-link::after{
   position: absolute;
 }
 
