@@ -4,7 +4,7 @@
     :hint="`${selectedRound.name}`"
     :items="rounds"
     item-title="name"
-    label="select"
+    label="selecteer ronde"
     return-object
     v-on:input="changeRound(`${selectedRound}`)"
   ></v-select>
@@ -13,7 +13,7 @@
     <v-btn class="button" @click="sortedByTime">duur</v-btn>
     <v-btn class="button" @click="sortedByDate">datum</v-btn>
   </div>
-  <v-table hover striped>
+  <v-table hover:background-color="$accent" striped>
     <thead>
       <tr>
         <th>Datum</th>
@@ -109,5 +109,13 @@ export default {
   padding: 10px;
   margin-left: 10px;
   background-color: lightgray;
+}
+
+.button:hover {
+  background-color: $accent;
+}
+
+tbody tr:hover {
+  background-color: $accent;
 }
 </style>

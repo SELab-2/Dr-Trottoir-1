@@ -34,10 +34,7 @@
           </span>
         </p>
         <!-- Login button -->
-        <!-- <v-btn class="float-r" @click="handleSubmit"> Login </v-btn> -->
-        <router-link to="/dashboard" class="float-r">
-          <v-btn prepend-icon="mdi-login">Login</v-btn>
-        </router-link>
+        <v-btn class="float-r" @click="handleSubmit"> Login </v-btn>
       </div>
     </div>
   </div>
