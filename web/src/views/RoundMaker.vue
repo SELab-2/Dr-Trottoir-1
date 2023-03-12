@@ -83,90 +83,77 @@
   </v-row>
 </template>
 
-<script lang="ts">
-import { reactive, Ref } from "vue";
+<script lang="ts" setup>
+import { reactive } from "vue";
 
-export default {
-  setup() {
-    /*
-     * TODO: Building should be populated via a api/backend call
-     * For now it's just mockdata
-     * Reactive so the lists on screen update in real time
-     */
-    const buildings: { name: string; adress: string }[] = reactive([
-      { adress: "10841 Sutter CircleSutter Creek95685", name: "Lee" },
-      { adress: "915 Sacramento StreetBakersfield93305", name: "Lartigue" },
-      { adress: "1383 Purdue StreetSan Leandro94579", name: "Anderson" },
-      { adress: "553 South Arlington RoadOrange92869", name: "Campbell" },
-      { adress: "450 C StreetHayward94541", name: "Kahn" },
-      { adress: "915 Sacramento StreetBakersfield93305", name: "Amezaga" },
-      { adress: "800 California 116Sebastopol95472", name: "Petersen" },
-      { adress: "7725 Ney AvenueOakland94605", name: "Hof" },
-      { adress: "3777 Mowry AvenueFremont94538", name: "Johnson" },
-      { adress: "1011 San Jose StreetSan Leandro94577", name: "Rodriguez" },
-    ]);
+/*
+ * TODO: Building should be populated via a api/backend call
+ * For now it's just mockdata
+ * Reactive so the lists on screen update in real time
+ */
+const buildings: { name: string; adress: string }[] = reactive([
+  { adress: "10841 Sutter CircleSutter Creek95685", name: "Lee" },
+  { adress: "915 Sacramento StreetBakersfield93305", name: "Lartigue" },
+  { adress: "1383 Purdue StreetSan Leandro94579", name: "Anderson" },
+  { adress: "553 South Arlington RoadOrange92869", name: "Campbell" },
+  { adress: "450 C StreetHayward94541", name: "Kahn" },
+  { adress: "915 Sacramento StreetBakersfield93305", name: "Amezaga" },
+  { adress: "800 California 116Sebastopol95472", name: "Petersen" },
+  { adress: "7725 Ney AvenueOakland94605", name: "Hof" },
+  { adress: "3777 Mowry AvenueFremont94538", name: "Johnson" },
+  { adress: "1011 San Jose StreetSan Leandro94577", name: "Rodriguez" },
+]);
 
-    /*
-     * Round is the list that will be populated by the user
-     * Should always start as an empty list
-     *
-     */
-    const round: { name: string; adress: string }[] = reactive([]);
+/*
+ * Round is the list that will be populated by the user
+ * Should always start as an empty list
+ *
+ */
+const round: { name: string; adress: string }[] = reactive([]);
 
-    /*
-     * Next 2 functions handle switching buildings from one list to another
-     * This one handles switching one from round to all the buildings
-     */
-    function deleteBuildingFromAvailable(
-      index: number,
-      building: { adress: string; name: string },
-    ) {
-      buildings.splice(index, 1);
-      round.push(building);
-    }
+/*
+ * Next 2 functions handle switching buildings from one list to another
+ * This one handles switching one from round to all the buildings
+ */
+function deleteBuildingFromAvailable(
+  index: number,
+  building: { adress: string; name: string },
+) {
+  buildings.splice(index, 1);
+  round.push(building);
+}
 
-    /*
-     * Switches a building from all available buildings to round
-     */
-    function deleteBuildingFromRound(
-      index: number,
-      building: { adress: string; name: string },
-    ) {
-      round.splice(index, 1);
-      buildings.push(building);
-    }
+/*
+ * Switches a building from all available buildings to round
+ */
+function deleteBuildingFromRound(
+  index: number,
+  building: { adress: string; name: string },
+) {
+  round.splice(index, 1);
+  buildings.push(building);
+}
 
-    /*
-     * Next 2 functions handle switching buildings within the roundlist
-     * Move a building up in the list
-     */
-    function moveBuildingUp(index: number) {
-      if (index > 0) {
-        let temp = round[index];
-        round[index] = round[index - 1];
-        round[index - 1] = temp;
-      }
-    }
+/*
+ * Next 2 functions handle switching buildings within the roundlist
+ * Move a building up in the list
+ */
+function moveBuildingUp(index: number) {
+  if (index > 0) {
+    let temp = round[index];
+    round[index] = round[index - 1];
+    round[index - 1] = temp;
+  }
+}
 
-    /*
-     * Move a building down in the list
-     */
-    function moveBuildingDown(index: number) {
-      if (round.length - 1 > index) {
-        let temp = round[index];
-        round[index] = round[index + 1];
-        round[index + 1] = temp;
-      }
-    }
-
-    return {
-      buildings,
-      round,
-      deleteBuildingFromAvailable,
-      deleteBuildingFromRound,
-      moveBuildingUp,
-      moveBuildingDown,
-    };
-  },
-};
+/*
+ * Move a building down in the list
+ */
+function moveBuildingDown(index: number) {
+  if (round.length - 1 > index) {
+    let temp = round[index];
+    round[index] = round[index + 1];
+    round[index + 1] = temp;
+  }
+}
 </script>
