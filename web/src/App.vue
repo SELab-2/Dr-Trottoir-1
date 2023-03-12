@@ -1,5 +1,4 @@
-<script lang="ts">
-</script>
+<script lang="ts"></script>
 
 <template>
   <v-app>
@@ -9,5 +8,4 @@
   </v-app>
 </template>
 
-<style lang="sass" scoped>
-</style>
+<style lang="sass" scoped></style>

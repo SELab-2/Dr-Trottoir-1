@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import Users from "@/views/dashboard/Users.vue";
@@ -7,32 +7,35 @@ import Routes from "@/views/dashboard/Routes.vue";
 
 const routes = [
   {
-    path: '/',
+    path: "/",
     component: LoginScreen,
   },
   {
-    path: '/dashboard',
+    path: "/dashboard",
+    name: "dashboard",
     component: MainLayout,
     children: [
       {
         path: '/dashboard/gebruikers',
         component: Users,
+        name: "Gebruikers",
       },
       {
         path: '/dashboard/gebouwen',
         component: Buildings,
+        name: "Gebouwen",
       },
       {
         path: '/dashboard/routes',
         component: Routes,
       },
-    ]
-  }
-]
+    ],
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-})
+});
 
-export default router
+export default router;
