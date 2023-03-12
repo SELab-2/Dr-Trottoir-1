@@ -32,6 +32,12 @@ export class UserRouting extends Routing {
                         contains: Parser.string(req.query["name"], ""),
                     },
                 },
+                // get all users assigned to a certain region
+                regions: {
+                    some: {
+                        region_id: Parser.number(req.query["region_id"]),
+                    },
+                },
             },
             include: {
                 address: true,
