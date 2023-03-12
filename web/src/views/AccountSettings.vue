@@ -24,7 +24,6 @@
                 color="error"
             >Verwijder aanpassingen</v-btn>
         </div>
-
         <!-- Section with the contact info -->
         <v-card
             class="mt-4"
@@ -36,8 +35,8 @@
             <ContacForm
                 class="mx-10"
                 :readonly="!edit"
-                phone='+32 412 34 56 78'
-                email='jens.pots@example.com'
+                :phone=default_phone
+                :email=default_email
                 @onUpdate="(newContact) => contact = newContact"
             >
             </ContacForm>
@@ -137,9 +136,12 @@ import { ref } from 'vue';
 // reactive state to keep track if we are edeting or not
 const edit = ref(false)
 
+// contact data
+const default_phone = '+32 4123 34 56 78'
+const default_email = 'jenst.pots@example.com'
 const contact = ref<Contact>({
-            phone: '',
-            email: ''
+            phone: default_phone,
+            email: default_email
         });
 
 // reactive states for the new password
