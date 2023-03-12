@@ -10,10 +10,12 @@ const routes = [
   },
   {
     path: '/dashboard',
+    name: 'dashboard',
     component: MainLayout,
     children: [
       {
         path: '/usercreation',
+        name: 'Aanmaak gebruiker',
         component: UserCreation,
       }
     ]
