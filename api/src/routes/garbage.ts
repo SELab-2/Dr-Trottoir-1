@@ -33,8 +33,8 @@ export class GarbageRouting extends Routing {
                 },
             },
             include: {
-                action: joins?.includes("action"),
-                building: joins?.includes("building"),
+                action: true,
+                building: true,
             },
         });
 
