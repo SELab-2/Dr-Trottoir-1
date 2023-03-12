@@ -1,11 +1,11 @@
+<script lang="ts"></script>
+
 <template>
   <v-app>
     <v-main>
-      <StudentFollowUP/>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
 
-<script setup lang="ts">
-  import StudentFollowUP from '@/views/StudentFollowUp.vue'
-</script>
+<style lang="sass" scoped></style>

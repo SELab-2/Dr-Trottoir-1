@@ -20,3 +20,5 @@ Software Engineering Lab II (2022 - 2023)
 - `server`: Configuratiebestanden van servertoepassingen
 - `web`: Webapplicatie
 
+## Documentatie
+De documentatie van deze monorepo is beschikbaar in de bijhorende [wiki](https://github.com/SELab-2/Dr-Trottoir-1/wiki).
