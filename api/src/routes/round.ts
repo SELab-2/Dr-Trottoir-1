@@ -24,7 +24,7 @@ export class RoundRouting extends Routing {
         return res.json(result);
     }
 
-    //@Auth.authorization({ student: true })
+    @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
         const joins = Parser.stringArray(req.query.join, []);
 
@@ -43,7 +43,6 @@ export class RoundRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        console.log("body: " + JSON.stringify(req.body));
         const round = await prisma.round.create({
             data: req.body,
         });
@@ -65,6 +64,7 @@ export class RoundRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
+        // TODO: delete cascade in the database! Temporary fix.
         await prisma.roundBuilding.deleteMany({
             where: {
                 round_id: Parser.number(req.params["id"]),
