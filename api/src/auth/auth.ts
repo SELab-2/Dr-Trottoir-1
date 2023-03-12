@@ -18,9 +18,6 @@ export class Auth {
                 req: express.Request,
                 res: express.Response,
             ) {
-                if (process.env.DISABLE_AUTH === "true") {
-                    return original.apply(this, [req, res]);
-                }
 
                 // Administrators are authorized to do and see anything
                 if (req.user?.admin) {
