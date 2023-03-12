@@ -78,3 +78,5 @@ if (process.env.DISABLE_AUTH === "true") {
 app.listen(PORT_NUMBER, () => {
     console.log(`API AVAILABLE AT: https://localhost:${PORT_NUMBER}`);
 });
+
+export default app;
