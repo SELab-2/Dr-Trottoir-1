@@ -54,13 +54,19 @@
     <!-- Right hand side of the screen -->
     <v-col class="pa-2 ma-2">
       <v-card width="100%">
-        <v-card-title> Beschikbare gebouwen </v-card-title>
+        <v-card-title>
+          <v-text-field
+            label="Zoeken op naam van bestaande gebouwen"
+            variant="solo"
+            v-model="searchquery"
+          ></v-text-field>
+        </v-card-title>
         <v-divider></v-divider>
         <v-layout>
           <v-list width="100%">
             <v-list-item
-              v-for="(building, i) in buildings"
-              :key="i"
+              v-for="building in filterlist()"
+              :key="building.listid"
               :value="building"
               fluid
             >
@@ -72,7 +78,9 @@
                 <!-- Button for manipulating the building list -->
                 <v-icon
                   icon="mdi-arrow-left-bold"
-                  @click="deleteBuildingFromAvailable(i, building)"
+                  @click="
+                    deleteBuildingFromAvailable(building.listid, building)
+                  "
                 ></v-icon>
               </template>
             </v-list-item>
@@ -84,7 +92,10 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { reactive, ref, Ref } from "vue";
+
+// The query that will be used to filter all available buildings
+const searchquery: Ref<string> = ref("");
 
 /*
  * TODO: Building should be populated via a api/backend call
@@ -107,9 +118,25 @@ const buildings: { name: string; adress: string }[] = reactive([
 /*
  * Round is the list that will be populated by the user
  * Should always start as an empty list
- *
  */
 const round: { name: string; adress: string }[] = reactive([]);
+
+
+// This function will give back the buildings which match the string given by the user
+function filterlist(): { name: string; adress: string; listid: number }[] {
+
+  let filteredlist: { name: string; adress: string; listid: number }[] = [];
+  buildings.forEach((building, index) => {
+    if (building.name.toLowerCase().includes(searchquery.value.toLowerCase())) {
+      filteredlist.push({
+        name: building.name,
+        adress: building.adress,
+        listid: index,
+      });
+    }
+  });
+  return filteredlist;
+}
 
 /*
  * Next 2 functions handle switching buildings from one list to another
