@@ -1,34 +1,33 @@
-import {CustomRequest, Routing} from "./routing";
+import { CustomRequest, Routing } from "./routing";
 import express from "express";
-import {Parser} from "../parser";
-import {prisma} from "../prisma";
-import {Auth} from "../auth/auth";
+import { Parser } from "../parser";
+import { prisma } from "../prisma";
+import { Auth } from "../auth/auth";
 
 export class RegionRouting extends Routing {
-    @Auth.authorization({superStudent: true})
+    @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
         const joins = Parser.stringArray(req.query.join, []);
-        console.log(req.query)
         const result = await prisma.region.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
                 id: Parser.number(req.query["id"]),
-                name: Parser.string(req.query["name"])
+                name: Parser.string(req.query["name"]),
             },
             include: {
                 users: {
                     include: {
-                        user: joins?.includes("user")
-                    }
-                }
+                        user: joins?.includes("user"),
+                    },
+                },
             },
         });
 
         return res.json(result);
     }
 
-    @Auth.authorization({student: true})
+    @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
         const joins = Parser.stringArray(req.query.join, []);
         const result = await prisma.region.findUniqueOrThrow({
@@ -38,8 +37,8 @@ export class RegionRouting extends Routing {
             include: {
                 users: {
                     include: {
-                        user: joins?.includes("user")
-                    }
+                        user: joins?.includes("user"),
+                    },
                 },
             },
         });
@@ -47,50 +46,46 @@ export class RegionRouting extends Routing {
         return res.json(result);
     }
 
-    @Auth.authorization({superStudent: true})
+    @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-
         let users;
         if (req.body["users"]) {
             users = {
-                create: await getUsersForCreate(req)
-            }
+                create: await getUsersForCreate(req),
+            };
         } else {
-            users = {}
+            users = {};
         }
 
         const result = await prisma.region.create({
             data: {
                 name: req.body["name"],
-                users: users
-            }
+                users: users,
+            },
         });
 
         return res.status(201).json(result);
     }
 
-    @Auth.authorization({superStudent: true})
+    @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        // PUT /region/id?users={users}
-
+        // PATCH /region/id?users={users}
         let usersObject;
         if (req.body["users"]) {
             usersObject = {
                 // remove all entries related to the region and add new entries according to the list provided
                 deleteMany: {},
-                create: await getUsersForCreate(req)
-            }
+                create: await getUsersForCreate(req),
+            };
         } else {
-            // don't delete previous
-            usersObject = {}
+            // don't delete already present users
+            usersObject = {};
         }
-
-        console.log(req.body)
 
         const result = await prisma.region.update({
             data: {
                 name: req.body["name"],
-                users: usersObject
+                users: usersObject,
             },
             where: {
                 id: Parser.number(req.params["id"]),
@@ -100,13 +95,22 @@ export class RegionRouting extends Routing {
         return res.status(200).json(result);
     }
 
-    @Auth.authorization({superStudent: true})
+    @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.region.delete({
-            where: {
-                id: Parser.number(req.params["id"]),
-            },
-        });
+        // when deleting a region, delete all entries in user_region as well
+        // temporary code while waiting for implementation of cascade in DB
+        const [_, result] = await prisma.$transaction([
+            prisma.userRegion.deleteMany({
+                where: {
+                    region_id: Parser.number(req.params["id"]),
+                },
+            }),
+            prisma.region.delete({
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            }),
+        ]);
 
         return res.status(200).json(result);
     }
@@ -117,9 +121,9 @@ const getUsersForCreate = async (req: CustomRequest) => {
         return {
             user: {
                 connect: {
-                    id: id
-                }
-            }
-        }
+                    id: id,
+                },
+            },
+        };
     });
-}
+};
