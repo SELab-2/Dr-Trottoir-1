@@ -126,7 +126,7 @@
                 ></v-text-field>
 
                 <v-btn
-                    prepend-icon="mdi-login"
+                    prepend-icon="mdi-check"
                     @click="edit = !edit"
                     color="success"
                     class="ma-3"
