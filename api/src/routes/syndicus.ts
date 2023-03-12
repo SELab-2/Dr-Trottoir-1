@@ -13,27 +13,25 @@ export class SyndicusRouting extends Routing {
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                OR: {
-                    user: {
-                        last_login: {
-                            lte: Parser.date(req.query["login_before"]),
-                            gte: Parser.date(req.query["login_after"]),
+                user: {
+                    last_login: {
+                        lte: Parser.date(req.query["login_before"]),
+                        gte: Parser.date(req.query["login_after"]),
+                    },
+                    date_added: {
+                        lte: Parser.date(req.query["added_before"]),
+                        gte: Parser.date(req.query["added_after"]),
+                    },
+                    OR: {
+                        first_name: {
+                            contains: Parser.string(req.query["name"], ""),
                         },
-                        date_added: {
-                            lte: Parser.date(req.query["added_before"]),
-                            gte: Parser.date(req.query["added_after"]),
-                        },
-                        OR: {
-                            first_name: {
-                                contains: Parser.string(req.query["name"], ""),
-                            },
-                            last_name: {
-                                contains: Parser.string(req.query["name"], ""),
-                            },
+                        last_name: {
+                            contains: Parser.string(req.query["name"], ""),
                         },
                     },
-                    user_id: Parser.number(req.query["user"]),
                 },
+                user_id: Parser.number(req.query["user"]),
             },
             include: {
                 user: {
