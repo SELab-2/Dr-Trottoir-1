@@ -1,7 +1,7 @@
 <template>
   <v-list>
     <v-list-item v-for="day in sorted" :key="day.name">
-      <v-card>{{day.name}}</v-card>
+      <v-card>{{ day.name }}</v-card>
       <v-table>
         <thead>
           <tr>
@@ -12,7 +12,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="building in day.buildings" :key="building.name" class="position-relative">
+          <tr
+            v-for="building in day.buildings"
+            :key="building.name"
+            class="position-relative"
+          >
             <td>{{ building.address }}</td>
             <td>
               {{ building.deadline.getHours() }}:{{
@@ -20,9 +24,9 @@
               }}
             </td>
             <td>
-              <router-link class="stretched-link" to="/dashboard" >{{
-                  building.name
-                }}</router-link>
+              <router-link class="stretched-link" to="/dashboard">{{
+                building.name
+              }}</router-link>
             </td>
             <td>{{ building.info }}</td>
           </tr>
@@ -147,7 +151,7 @@ export default {
 <style scoped lang="scss">
 @import "src/assets/styles/base";
 
-.v-card{
+.v-card {
   background-color: $accent;
 }
 
@@ -166,5 +170,4 @@ export default {
 .position-relative {
   position: relative;
 }
-
 </style>

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
-import SchedulingScreenStudent from "@/views/SchedulingScreenStudents.vue"
+import SchedulingScreenStudent from "@/views/SchedulingScreenStudents.vue";
 
 const routes = [
   {
