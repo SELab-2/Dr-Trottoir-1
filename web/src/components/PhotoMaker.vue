@@ -63,7 +63,7 @@ export default {
         for (const value of formData.values()) {
           console.log(value);
         }
-        emit("form-submitted", formData);
+
         //const response = await axios.post("/images", formData);
         //console.log(response.data);
 
@@ -73,6 +73,7 @@ export default {
         label.value = "";
         comments.value = "";
         image.value = null;
+        emit("form-submitted", formData);
       } catch (error) {
         console.log(error);
       }
