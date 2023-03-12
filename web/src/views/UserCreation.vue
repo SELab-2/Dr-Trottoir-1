@@ -2,6 +2,7 @@
 
     <div class="background">
         <div class="form">
+            <h4 class="py-2">Persoonlijke gegevens</h4>
             <v-row class="py-0 my-0">
                 <v-col
                 cols="1"
@@ -13,10 +14,10 @@
                         v-model="first_name"
                         label="Voornaam"
                         type="text"
-                        required    
+                        required
                     ></v-text-field>
                 </v-col>
-                
+
                 <v-col
                 cols="1"
                 style="min-width: 100px; max-width: 100%;"
@@ -27,18 +28,18 @@
                         v-model="last_name"
                         label="Achternaam"
                         type="text"
-                        required    
+                        required
                     ></v-text-field>
                 </v-col>
             </v-row>
-            
+
             <!-- Text input field for the phone number -->
             <v-text-field
                 v-model="phone_number"
                 :prepend-inner-icon="'mdi-phone'"
                 label="Telefoon nummer"
                 type="text"
-                required    
+                required
             ></v-text-field>
 
 
@@ -48,15 +49,17 @@
                 :prepend-inner-icon="'mdi-email'"
                 label="E-mail"
                 type="text"
-                required    
+                required
             ></v-text-field>
 
             <!-- Address input form of the user -->
+            <h4 class="py-2">Adres</h4>
             <AddressForm
                 @onUpdate="(newAddress) => address = newAddress"
             ></AddressForm>
 
             <!-- Text input field for the password-->
+            <h4 class="py-2">Wachtwoord</h4>
             <v-text-field
                 v-model="password1"
                 :prepend-inner-icon="'mdi-lock'"
@@ -79,6 +82,7 @@
             ></v-text-field>
 
             <!-- Selection box to determine the roles -->
+            <h4 class="py-2">Rollen</h4>
             <v-select
                 chips
                 label="Rol"
@@ -126,7 +130,7 @@ const password1 = ref('')
 const password2 = ref('')
 
 // reactive state to know if you must show both password fields or not
-const showPsswd = ref(false) 
+const showPsswd = ref(false)
 
 // reactive array keeping track of all the roles for this new user
 const roles: Ref<String[]> = ref([])

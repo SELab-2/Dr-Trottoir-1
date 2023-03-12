@@ -14,8 +14,8 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: '/usercreation',
-        name: 'Aanmaak gebruiker',
+        path: '/dashboard/users/create',
+        name: 'Nieuwe gebruiker toevoegen',
         component: UserCreation,
       }
     ]
