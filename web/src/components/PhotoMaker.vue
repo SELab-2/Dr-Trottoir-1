@@ -2,28 +2,31 @@
   <div>
     <v-container>
       <v-form>
-        <v-row>
-          <v-col cols="3">
-            <v-img
-              v-if="preview"
-              :src="preview"
-              lazySrc="../assets/images/defaultImage.png"
-              v-model="preview"
-            ></v-img>
-          </v-col>
-          <v-col>
-            <v-file-input
-              single
-              v-model="image"
-              label="Select Image"
-              accept="image/*"
-              prepend-icon="mdi-image"
-              @change="previewImage"
-            ></v-file-input>
-            <v-textarea label="Comments" v-model="comments"></v-textarea>
-            <v-text-field label="Image Label" v-model="label"></v-text-field>
-          </v-col>
-        </v-row>
+        <v-img
+          v-if="preview"
+          :src="preview"
+          lazySrc="../assets/images/defaultImage.png"
+          v-model="preview"
+          aspect-ratio="1/1"
+        ></v-img>
+        <div class="d-flex justify-center align-center pad">
+          <v-btn block variant="outlined" @click="submit">
+            Afbeelding toevoegen</v-btn
+          >
+        </div>
+
+        <v-file-input
+          class="pa-md-4 mx-lg-auto"
+          single
+          v-model="image"
+          label="Select Image"
+          accept="image/*"
+          prepend-icon=""
+          prepend-inner-icon="mdi-image"
+          @change="previewImage"
+        ></v-file-input>
+        <v-textarea label="Comments" rows="3" v-model="comments"></v-textarea>
+        <v-text-field label="Image Label" v-model="label"></v-text-field>
         <div class="d-flex justify-center align-center">
           <v-btn @click="submit" color="primary">Submit</v-btn>
         </div>
@@ -96,5 +99,8 @@ export default {
 }
 .align-center {
   align-items: center;
+}
+.pad {
+  padding: 15px;
 }
 </style>
