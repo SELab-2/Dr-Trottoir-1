@@ -51,6 +51,14 @@ const route = useRoute();
             ></v-list-item>
           </router-link>
 
+          <router-link to="/schedulingscreen">
+            <v-list-item
+              prepend-icon="mdi-calendar"
+              title="Plannning"
+              value="schedule"
+            ></v-list-item>
+          </router-link>
+
           <div class="py-2">
             <v-divider></v-divider>
           </div>

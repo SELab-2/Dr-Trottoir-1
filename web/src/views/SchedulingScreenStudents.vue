@@ -1,8 +1,7 @@
 <template>
-  <h1>Planningsoverzicht</h1>
   <v-list>
     <v-list-item v-for="day in sorted" :key="day.name">
-      <v-card text="{{day.name}}"></v-card>
+      <v-card>{{day.name}}</v-card>
       <v-table>
         <thead>
           <tr>
@@ -14,7 +13,11 @@
         </thead>
         <tbody>
           <tr v-for="building in day.buildings" :key="building.name">
-            <td>{{ building.name }}</td>
+            <td>
+              <router-link to="/dashboard" class="float-r">{{
+                  building.name
+                }}</router-link>
+            </td>
             <td>{{ building.address }}</td>
             <td>
               {{ building.deadline.getHours() }}:{{
@@ -141,8 +144,11 @@ export default {
 };
 </script>
 
-<style scoped>
-h1 {
-  text-align: center;
+<style scoped lang="scss">
+@import "src/assets/styles/base";
+
+.v-card{
+  background-color: $accent;
 }
+
 </style>
