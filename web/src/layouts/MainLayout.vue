@@ -73,6 +73,14 @@ const route = useRoute();
             ></v-list-item>
           </router-link>
 
+          <router-link to="/studentfollowup">
+            <v-list-item
+              prepend-icon="mdi-chart-areaspline"
+              title="Statistieken"
+              value="statistics"
+            ></v-list-item>
+          </router-link>
+
           <div class="py-2">
             <v-divider></v-divider>
           </div>

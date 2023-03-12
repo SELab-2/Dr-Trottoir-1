@@ -1,5 +1,4 @@
 <template>
-  <h1>Opvolging studenten</h1>
   <v-select
     v-model="selectedRound"
     :hint="`${selectedRound.name}`"
@@ -9,24 +8,39 @@
     return-object
     v-on:input="changeRound(`${selectedRound}`)"
   ></v-select>
-  <div>Sorteer op dalende:
-    <v-btn @click="sortedByTime">duur</v-btn>
-    <v-btn @click="sortedDate">datum</v-btn>
+  <div>
+    Sorteer volgens dalende:
+    <v-btn class="button" @click="sortedByTime">duur</v-btn>
+    <v-btn class="button" @click="sortedByDate">datum</v-btn>
   </div>
-  <v-table>
+  <v-table hover striped>
     <thead>
-    <tr>
-      <th class="text-left">Datum</th>
-      <th class="text-left">Student</th>
-      <th class="text-left">Duur</th>
-    </tr>
+      <tr>
+        <th>Datum</th>
+        <th>Student</th>
+        <th>Duur</th>
+      </tr>
     </thead>
     <tbody>
-    <tr v-for="student in selectedRound.students" :key="student.name">
-      <td>{{ ('0'+student.date.getDate()).slice(-2) }}-{{ ('0'+(student.date.getMonth()+1)).slice(-2) }}-{{ student.date.getFullYear()}}</td>
-      <td>{{ student.name }}</td>
-      <td>{{ Math.floor((student.time/60000)/60) + ':' + ('0'+Math.floor((student.time/60000)%60)).slice(-2) }}</td>
-    </tr>
+      <tr v-for="student in selectedRound.students" :key="student.name">
+        <td>
+          {{ ("0" + student.date.getDate()).slice(-2) }}-{{
+            ("0" + (student.date.getMonth() + 1)).slice(-2)
+          }}-{{ student.date.getFullYear() }}
+        </td>
+        <td>
+          <router-link to="/dashboard" class="float-r">{{
+            student.name
+          }}</router-link>
+        </td>
+        <td>
+          {{
+            Math.floor(student.time / 60000 / 60) +
+            ":" +
+            ("0" + Math.floor((student.time / 60000) % 60)).slice(-2)
+          }}
+        </td>
+      </tr>
     </tbody>
   </v-table>
 </template>
@@ -35,36 +49,65 @@
 export default {
   name: "StudentFollowUp",
   data() {
-    // test data
     return {
-      // tijd is het aantal milliseconden, want wanneer je het verschil neemt tussen twee date elementen bekom je het
-      // aantal milliseconden verschil
-      selectedRound: {name: "ronde 1", students: [{name: "Student 1", date: new Date(), time: 9000000},
-          {name: "Student 2", date: new Date(2023, 0O2, 0O6), time: 18000000},
-          {name: "Student 4", date: new Date(2023, 0O2, 0O7), time: 12000000}]},
-      rounds: [{name: "ronde 1", students: [{name: "Student 1", date: new Date(), time: 9000000},
-          {name: "Student 2", date: new Date(2023, 0O2, 0O6), time: 18000000},
-          {name: "Student 4", date: new Date(), time: 12000000}]},
-        {name: "ronde 2", students: [{name: "Student 3", date: new Date(), time: 8100000}]}]
-    }
+      // time field is in milliseconds, because if you take the difference of two times, you get a value in milliseconds
+      selectedRound: {
+        name: "ronde 1",
+        students: [
+          { name: "Student 1", date: new Date(), time: 9000000 },
+          { name: "Student 2", date: new Date(2023, 0o2, 0o6), time: 18000000 },
+          { name: "Student 4", date: new Date(2023, 0o2, 0o7), time: 12000000 },
+        ],
+      },
+      rounds: [
+        {
+          name: "ronde 1",
+          students: [
+            { name: "Student 1", date: new Date(), time: 9000000 },
+            {
+              name: "Student 2",
+              date: new Date(2023, 0o2, 0o6),
+              time: 18000000,
+            },
+            { name: "Student 4", date: new Date(), time: 12000000 },
+          ],
+        },
+        {
+          name: "ronde 2",
+          students: [{ name: "Student 3", date: new Date(), time: 8100000 }],
+        },
+      ],
+    };
   },
   methods: {
     changeRound(a) {
       this.selectedRound = a;
     },
     sortedByTime() {
-      this.selectedRound["students"] = this.selectedRound.students.sort((x, y) => { return y["time"] - x["time"] });
+      this.selectedRound["students"] = this.selectedRound.students.sort(
+        (x, y) => {
+          return y["time"] - x["time"];
+        },
+      );
       console.log(this.selectedRound);
     },
-    sortedDate(){
-      this.selectedRound["students"]= this.selectedRound.students.sort((x, y) => { return y["date"] - x["date"] });
+    sortedByDate() {
+      this.selectedRound["students"] = this.selectedRound.students.sort(
+        (x, y) => {
+          return y["date"] - x["date"];
+        },
+      );
     },
   },
-}
+};
 </script>
 
-<style scoped>
-h1{
-  text-align: center;
+<style scoped lang="scss">
+@import "src/assets/styles/base";
+
+.button {
+  padding: 10px;
+  margin-left: 10px;
+  background-color: lightgray;
 }
 </style>

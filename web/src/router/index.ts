@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
+import StudentFollowUp from "@/views/StudentFollowUp.vue";
 
 const routes = [
   {
@@ -13,9 +14,9 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "example",
-        name: "exampleTitle",
-        component: MainLayout,
+        path: "/studentfollowup",
+        name: "Opvolging studenten",
+        component: StudentFollowUp,
       },
     ],
   },
