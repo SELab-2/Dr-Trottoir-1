@@ -49,8 +49,8 @@ export class GarbageRouting extends Routing {
                 id: Parser.number(req.params["id"]),
             },
             include: {
-                action: joins?.includes("action"),
-                building: joins?.includes("building"),
+                action: true,
+                building: true,
             },
         });
 
