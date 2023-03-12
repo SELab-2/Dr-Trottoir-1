@@ -49,75 +49,70 @@
         </div>
     </div>
 
-    <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
-    <v-snackbar
-        v-model="snackbar"
-    >
-        <h1>Help</h1>
-        <p>
-            TODO: textje voor accountaanmaak en vragen verwijs door  
-            naar exaple@drtrottoir.be
-        </p>
-        <v-btn
-            @click="snackbar = false"
-        >
-            Close
-        </v-btn>
-    </v-snackbar>
+  <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
+  <v-snackbar v-model="snackbar">
+    <h1>Help</h1>
+    <p>
+      TODO: textje voor accountaanmaak en vragen verwijs door naar
+      exaple@drtrottoir.be
+    </p>
+    <v-btn @click="snackbar = false"> Close </v-btn>
+  </v-snackbar>
 </template>
 
 <script lang="ts" setup>
-
 import {ref} from 'vue'
 import { useRouter } from 'vue-router';
 
 // reactive email state
-const email = ref('')
+const email = ref("");
 
 // reactive password state
-const password = ref('')
+const password = ref("");
 
 // reactive state to check if the psswd must be shown or not
-const showPsswd = ref(false)
+const showPsswd = ref(false);
 
 // reactive state to check if the snackbar must be shown or not
-const snackbar = ref(false)
+const snackbar = ref(false);
 
+// function that handels the login event
+function handleSubmit() {
+  console.log("Logging in...");
+}
 </script>
 <style lang="scss">
-    
-    // backgroud div. Nedded to center form div
-    .background{
-        height: 100%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+// backgroud div. Nedded to center form div
+.background {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    // div with input fields. Needed for responsive design
-    .form {
-        width: 600px;
-        max-width: 90%;
-        padding: 10px;
-        align-content: center;
-    }
+// div with input fields. Needed for responsive design
+.form {
+  width: 600px;
+  max-width: 90%;
+  padding: 10px;
+  align-content: center;
+}
 
-    // makes the info text look like it's clickable
-    .clickable-text{
-        text-decoration: underline;
-        cursor: pointer;
-        color: #069;
-    }
+// makes the info text look like it's clickable
+.clickable-text {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #069;
+}
 
-    // let component live left in it's parent
-    .float-l{
-        float: left;
-    }
+// let component live left in it's parent
+.float-l {
+  float: left;
+}
 
-    // let component live right in it's parent
-    .float-r{
-        float: right;
-    }
-
+// let component live right in it's parent
+.float-r {
+  float: right;
+}
 </style>
