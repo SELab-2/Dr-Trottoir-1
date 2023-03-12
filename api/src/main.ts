@@ -5,16 +5,10 @@ import helmet from "helmet";
 import compression from "compression";
 import {BuildingRouting} from "./routes/building";
 import "express-async-errors";
-<<<<<<< HEAD
-import {ErrorHandler} from "./errors/error_handler";
-import {ScheduleRouting} from "./routes/schedule";
-import {AuthRouting} from "./routes/auth";
-=======
 import { ErrorHandler } from "./errors/error_handler";
 import { ScheduleRouting } from "./routes/schedule";
 import { AuthRouting } from "./routes/auth";
 import { ActionRouting } from "./routes/action";
->>>>>>> develop
 import passport from "passport";
 import crypto from "crypto";
 import session from "express-session";
@@ -69,7 +63,7 @@ app.use("/building", new BuildingRouting().toRouter());
 app.use("/schedule", new ScheduleRouting().toRouter());
 app.use("/garbage", new GarbageRouting().toRouter());
 app.use("/action", new ActionRouting().toRouter());
-git
+
 // Finally, an error handler
 app.use(ErrorHandler.handle);
 
