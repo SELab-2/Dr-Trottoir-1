@@ -14,12 +14,14 @@
             <v-btn
                 v-if="!edit"
                 prepend-icon="mdi-pencil"     
-                @click="edit = !edit"           
+                @click="edit = !edit"     
+                color="primary"      
             >Bewerk Account</v-btn>
             <v-btn
                 v-else
                 prepend-icon="mdi-delete"
                 @click="edit = !edit"
+                color="error"
             >Verwijder aanpassingen</v-btn>
         </div>
 
@@ -102,6 +104,36 @@
         </v-card>
 
         <!-- Section that allows to save the settings -->
+        <v-card
+            v-if="edit"
+            class="mt-4"
+            prepend-icon="mdi-check"
+        >
+            <template v-slot:title>
+            Sla bewerkingen op
+            </template>
+            <div class="d-flex">
+
+                <v-text-field
+                    class="mx-10 me-auto"
+                    v-model="confirm_psswd"
+                    :prepend-inner-icon="'mdi-lock'"
+                    :append-inner-icon="show_confirm ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="show_confirm ? 'text' : 'password'"
+                    label="Huidig wachtwoord"
+                    @click:append-inner="show_confirm = !show_confirm"
+                    bg
+                ></v-text-field>
+
+                <v-btn
+                    prepend-icon="mdi-login"
+                    @click="edit = !edit"
+                    color="success"
+                    class="ma-3"
+                >Sla op</v-btn>
+            </div>
+            
+        </v-card>
 
     </div>
 </template>
@@ -120,5 +152,8 @@ const password1 = ref('')
 const password2 = ref('')
 const showPsswd = ref(false)
 
+// reactive state for the submission
+const confirm_psswd = ref('')
+const show_confirm = ref(false)
 
 </script>
