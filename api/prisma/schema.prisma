@@ -38,6 +38,10 @@ model User {
     super_student Boolean
     admin         Boolean
 
+    // Authenticatie
+    hash String
+    salt String
+
     // Relaties
     regions  UserRegion[]
     Syndicus Syndicus[]
