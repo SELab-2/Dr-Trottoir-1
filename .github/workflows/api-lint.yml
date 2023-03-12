@@ -2,11 +2,6 @@ name: API Linter
 
 on:
     workflow_dispatch:
-    push:
-        branches:
-            - 'develop'
-            - 'main'
-            - 'api/**'
     pull_request:
         branches:
             - 'develop'
