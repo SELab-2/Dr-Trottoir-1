@@ -90,7 +90,7 @@ const route = useRoute();
           </router-link>
           
           <!-- TODO: conditional rendering -->
-          <router-link to="/usercreation">
+          <router-link to="/dashboard/users/create">
             <v-list-item prepend-icon="mdi-account-plus" title="Maak account aan" value="routes"></v-list-item>
           </router-link>
         </v-list>
