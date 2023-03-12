@@ -14,6 +14,12 @@ export class RegionRouting extends Routing {
             where: {
                 id: Parser.number(req.query["id"]),
                 name: Parser.string(req.query["name"]),
+                // find all regions where a certain user id is assigned
+                users: {
+                    some: {
+                        user_id: Parser.number(req.query["user_id"]),
+                    },
+                },
             },
             include: {
                 users: {
@@ -69,7 +75,6 @@ export class RegionRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        // PATCH /region/id?users={users}
         let usersObject;
         if (req.body["users"]) {
             usersObject = {
