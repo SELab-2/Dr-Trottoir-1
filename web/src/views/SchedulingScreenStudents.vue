@@ -2,7 +2,7 @@
   <v-list>
     <v-list-item v-for="day in sorted" :key="day.name">
       <v-card>{{ day.name }}</v-card>
-      <v-table>
+      <v-table hover:background-color="$accent">
         <thead>
           <tr>
             <th class="text-left">Adres</th>
@@ -152,6 +152,10 @@ export default {
 @import "src/assets/styles/base";
 
 .v-card {
+  background-color: $accent;
+}
+
+tbody tr:hover {
   background-color: $accent;
 }
 
