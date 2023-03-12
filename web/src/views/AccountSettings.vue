@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!-- Top section with profile picture and  edit button-->
+        <!-- Top section with profile picture and edit button-->
         <div
             class="d-flex"
         >
@@ -18,11 +18,12 @@
             >Bewerk Account</v-btn>
             <v-btn
                 v-else
+                prepend-icon="mdi-delete"
                 @click="edit = !edit"
-            >Sla aanpassingen op</v-btn>
+            >Verwijder aanpassingen</v-btn>
         </div>
 
-        <!-- Sectie met de contact gegevens -->
+        <!-- Section with the contact info -->
         <v-card
             class="mt-4"
             prepend-icon="mdi-account-details"
@@ -48,7 +49,7 @@
             </v-list>
         </v-card>
 
-        <!-- Sectie met het adress -->
+        <!-- Section with the adress -->
         <v-card
             class="mt-4"
             prepend-icon="mdi-map-marker"
@@ -68,6 +69,40 @@
             Krijgslaan 281 - 9000 Gent
             </v-card-text>
         </v-card>
+
+        <!-- Section to set new password -->
+        <v-card
+            v-if="edit"
+            class="mt-4"
+            prepend-icon="mdi-lock"
+        >
+            <template v-slot:title>
+            Nieuw wachtwoord
+            </template>
+            <v-list density="compact" class="mx-10">
+                <v-text-field
+                    v-model="password1"
+                    :prepend-inner-icon="'mdi-lock'"
+                    :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="showPsswd ? 'text' : 'password'"
+                    label="Nieuw wachtwoord"
+                    @click:append-inner="showPsswd = !showPsswd"
+                    bg
+                ></v-text-field>
+                <v-text-field
+                    v-model="password2"
+                    :prepend-inner-icon="'mdi-lock'"
+                    :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="showPsswd ? 'text' : 'password'"
+                    label="Bevestig nieuw wachtwoord"
+                    @click:append-inner="showPsswd = !showPsswd"
+                    bg
+                ></v-text-field>
+            </v-list>
+        </v-card>
+
+        <!-- Section that allows to save the settings -->
+
     </div>
 </template>
 <script lang="ts" setup>
@@ -79,6 +114,11 @@ const edit = ref(false)
 const email = ref('jens.pots@example.com')
 
 const gsm = ref('+32 412 34 56 78')
+
+// reactive states for the new password
+const password1 = ref('')
+const password2 = ref('')
+const showPsswd = ref(false)
 
 
 </script>

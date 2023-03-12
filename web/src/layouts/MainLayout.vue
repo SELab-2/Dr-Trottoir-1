@@ -24,7 +24,7 @@ const route = useRoute();
             subtitle="Superstudent"
           ></v-list-item>
 
-          <router-link to="/dashboard">
+          <router-link to="/">
             <v-list-item prepend-icon="mdi-account-cancel" title="Afmelden" value="logout"></v-list-item>
           </router-link>
 
