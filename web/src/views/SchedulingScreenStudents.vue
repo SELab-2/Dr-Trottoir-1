@@ -1,37 +1,30 @@
 <template>
   <v-list>
     <v-list-item v-for="day in sorted" :key="day.name">
-      <v-card>{{ day.name }}</v-card>
-      <v-table hover:background-color="$accent">
-        <thead>
-          <tr>
-            <th class="text-left">Adres</th>
-            <th class="text-left">Deadline</th>
-            <th class="text-left">Gebouw</th>
-            <th class="text-left">Info</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="building in day.buildings"
-            :key="building.name"
-            class="position-relative"
-          >
-            <td>{{ building.address }}</td>
-            <td>
-              {{ building.deadline.getHours() }}:{{
-                ("0" + building.deadline.getUTCMinutes()).slice(-2)
-              }}
-            </td>
-            <td>
-              <router-link class="stretched-link" to="/dashboard">{{
-                building.name
-              }}</router-link>
-            </td>
-            <td>{{ building.info }}</td>
-          </tr>
-        </tbody>
-      </v-table>
+      <v-card class="dayCard">
+        <v-card-item>
+          <v-card-title>{{ day.name }}</v-card-title>
+        </v-card-item>
+        <v-list>
+          <v-list-item v-for="building in day.buildings" :key="building.name">
+            <v-card-item class="buildingCard">
+              <v-card-title>
+                <router-link to="/dashboard">{{
+                  building.name
+                }}</router-link></v-card-title
+              >
+              <v-card-subtitle>{{ building.address }} </v-card-subtitle>
+              <v-card-title
+                >{{ building.deadline.getHours() }}:{{
+                  ("0" + building.deadline.getUTCMinutes()).slice(-2)
+                }}</v-card-title
+              >
+              {{ building.info }}
+            </v-card-item>
+            <v-divider></v-divider>
+          </v-list-item>
+        </v-list>
+      </v-card>
     </v-list-item>
   </v-list>
 </template>
@@ -151,19 +144,11 @@ export default {
 <style scoped lang="scss">
 @import "src/assets/styles/base";
 
-.v-card {
+.dayCard {
   background-color: $accent;
 }
 
-tbody tr:hover {
+.buildingCard:hover {
   background-color: $accent;
-}
-
-.stretched-link::after {
-  position: absolute;
-}
-
-.position-relative {
-  position: relative;
 }
 </style>
