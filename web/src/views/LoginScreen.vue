@@ -1,53 +1,45 @@
 <template>
-    <div class="background">
-        <div class="form">
-            <!-- Display the Dr. troittoir logo above the login form -->
-            <v-img
-                contain
-                src="@/assets/images/drtroittoir_logo.png"
-            ></v-img>
-            <br>
+  <div class="background">
+    <div class="form">
+      <!-- Display the Dr. troittoir logo above the login form -->
+      <v-img contain src="@/assets/images/drtroittoir_logo.png"></v-img>
+      <br />
 
-            <!-- The input field for the e-mail -->
-            <v-text-field
-                v-model="email"
-                :prepend-inner-icon="'mdi-email'"
-                label="E-mail"
-                type="text"
-                required    
-            ></v-text-field>
+      <!-- The input field for the e-mail -->
+      <v-text-field
+        v-model="email"
+        :prepend-inner-icon="'mdi-email'"
+        label="E-mail"
+        type="text"
+        required
+      ></v-text-field>
 
-            <!-- The input field for the password -->
-            <v-text-field
-                v-model="password"
-                :prepend-inner-icon="'mdi-lock'"
-                :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPsswd ? 'text' : 'password'"
-                label="Wachtwoord"
-                @click:append-inner="showPsswd = !showPsswd"
-                bg
-            ></v-text-field>
-            <!-- Div with help text and login button -->
-            <div>
-                <!-- Help text for people who don't have an account yet -->
-                <p class="float-l">
-                Nog geen account? 
-                    <span 
-                        @click="snackbar = true"
-                        class="clickable-text"
-                    >
-                        Contacteer ons
-                    </span>
-                </p>
-                <!-- Login button -->
-                <router-link to="/dashboard" class="float-r">
-                    <v-btn prepend-icon="mdi-login">Login</v-btn>
-                </router-link>
-                
-            </div>
-             
-        </div>
+      <!-- The input field for the password -->
+      <v-text-field
+        v-model="password"
+        :prepend-inner-icon="'mdi-lock'"
+        :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
+        :type="showPsswd ? 'text' : 'password'"
+        label="Wachtwoord"
+        @click:append-inner="showPsswd = !showPsswd"
+        bg
+      ></v-text-field>
+      <!-- Div with help text and login button -->
+      <div>
+        <!-- Help text for people who don't have an account yet -->
+        <p class="float-l">
+          Nog geen account?
+          <span @click="snackbar = true" class="clickable-text">
+            Contacteer ons
+          </span>
+        </p>
+        <!-- Login button -->
+        <router-link to="/dashboard" class="float-r">
+          <v-btn prepend-icon="mdi-login">Login</v-btn>
+        </router-link>
+      </div>
     </div>
+  </div>
 
   <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
   <v-snackbar v-model="snackbar">
@@ -61,8 +53,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
-import { useRouter } from 'vue-router';
+import { ref } from "vue";
 
 // reactive email state
 const email = ref("");
@@ -75,11 +66,6 @@ const showPsswd = ref(false);
 
 // reactive state to check if the snackbar must be shown or not
 const snackbar = ref(false);
-
-// function that handels the login event
-function handleSubmit() {
-  console.log("Logging in...");
-}
 </script>
 <style lang="scss">
 // backgroud div. Nedded to center form div

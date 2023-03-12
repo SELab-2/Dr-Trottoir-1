@@ -14,12 +14,12 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: '/dashboard/gebruikers/nieuw',
-        name: 'Nieuwe gebruiker toevoegen',
+        path: "/dashboard/gebruikers/nieuw",
+        name: "Nieuwe gebruiker toevoegen",
         component: UserCreation,
-      }
-    ]
-  }
+      },
+    ],
+  },
 ];
 
 const router = createRouter({

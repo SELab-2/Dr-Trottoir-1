@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
-
 // reactive state to show the drawer or not
 const drawer = ref(true);
 
@@ -128,7 +127,11 @@ const route = useRoute();
 
           <!-- TODO: conditional rendering -->
           <router-link to="/dashboard/gebruikers/nieuw">
-            <v-list-item prepend-icon="mdi-account-plus" title="Maak account aan" value="routes"></v-list-item>
+            <v-list-item
+              prepend-icon="mdi-account-plus"
+              title="Maak account aan"
+              value="routes"
+            ></v-list-item>
           </router-link>
         </v-list>
 
