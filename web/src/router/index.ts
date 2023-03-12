@@ -1,28 +1,29 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
-import HelloWorld from "@/views/HelloWorld.vue";
 
 const routes = [
   {
-    path: '/',
+    path: "/",
     component: LoginScreen,
   },
   {
-    path: '/dashboard',
+    path: "/dashboard",
+    name: "dashboard",
     component: MainLayout,
     children: [
       {
-        path: 'example',
+        path: "example",
+        name: "exampleTitle",
         component: MainLayout,
       },
-    ]
-  }
-]
+    ],
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-})
+});
 
-export default router
+export default router;
