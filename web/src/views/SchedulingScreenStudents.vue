@@ -5,24 +5,24 @@
       <v-table>
         <thead>
           <tr>
-            <th class="text-left">Gebouw</th>
             <th class="text-left">Adres</th>
             <th class="text-left">Deadline</th>
+            <th class="text-left">Gebouw</th>
             <th class="text-left">Info</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="building in day.buildings" :key="building.name">
-            <td>
-              <router-link to="/dashboard" class="float-r">{{
-                  building.name
-                }}</router-link>
-            </td>
             <td>{{ building.address }}</td>
             <td>
               {{ building.deadline.getHours() }}:{{
                 ("0" + building.deadline.getUTCMinutes()).slice(-2)
               }}
+            </td>
+            <td>
+              <router-link to="/dashboard" class="float-r">{{
+                  building.name
+                }}</router-link>
             </td>
             <td>{{ building.info }}</td>
           </tr>
