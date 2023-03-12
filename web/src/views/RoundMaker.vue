@@ -23,10 +23,8 @@
               :value="building"
               fluid
             >
-              <v-list-item-title v-text="building.name"></v-list-item-title>
-              <v-list-item-subtitle
-                v-text="building.adress"
-              ></v-list-item-subtitle>
+              <v-list-item-title>{{ building.name }}</v-list-item-title>
+              <v-list-item-subtitle>{{ building.adress }}</v-list-item-subtitle>
               <v-list-item-subtitle class="text-right align-self-start"
                 >Vuilnistype</v-list-item-subtitle
               >
@@ -70,10 +68,8 @@
               :value="building"
               fluid
             >
-              <v-list-item-title v-text="building.name"></v-list-item-title>
-              <v-list-item-subtitle
-                v-text="building.adress"
-              ></v-list-item-subtitle>
+              <v-list-item-title>{{ building.name }}</v-list-item-title>
+              <v-list-item-subtitle>{{ building.adress }}</v-list-item-subtitle>
               <template v-slot:prepend>
                 <!-- Button for manipulating the building list -->
                 <v-icon
@@ -121,10 +117,8 @@ const buildings: { name: string; adress: string }[] = reactive([
  */
 const round: { name: string; adress: string }[] = reactive([]);
 
-
 // This function will give back the buildings which match the string given by the user
 function filterlist(): { name: string; adress: string; listid: number }[] {
-
   let filteredlist: { name: string; adress: string; listid: number }[] = [];
   buildings.forEach((building, index) => {
     if (building.name.toLowerCase().includes(searchquery.value.toLowerCase())) {

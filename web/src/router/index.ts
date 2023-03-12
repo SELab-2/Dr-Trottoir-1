@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
-import RoundMaker from "@/views/RoundMaker.vue"
+import RoundMaker from "@/views/RoundMaker.vue";
 
 const routes = [
   {
