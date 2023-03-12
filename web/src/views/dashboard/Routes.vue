@@ -1,5 +1,8 @@
 <template>
-  <Table v-bind:entries="Routes.random()" v-bind:headers="Routes.headers()"></Table>
+  <Table
+    v-bind:entries="Routes.random()"
+    v-bind:headers="Routes.headers()"
+  ></Table>
 </template>
 
 <script setup lang="ts">

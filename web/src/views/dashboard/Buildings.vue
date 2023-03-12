@@ -1,5 +1,8 @@
 <template>
-  <Table v-bind:entries="Building.random()" v-bind:headers="Building.headers()"></Table>
+  <Table
+    v-bind:entries="Building.random()"
+    v-bind:headers="Building.headers()"
+  ></Table>
 </template>
 
 <script setup lang="ts">

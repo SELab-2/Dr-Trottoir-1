@@ -16,17 +16,17 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: '/dashboard/gebruikers',
+        path: "/dashboard/gebruikers",
         component: Users,
         name: "Gebruikers",
       },
       {
-        path: '/dashboard/gebouwen',
+        path: "/dashboard/gebouwen",
         component: Buildings,
         name: "Gebouwen",
       },
       {
-        path: '/dashboard/routes',
+        path: "/dashboard/routes",
         component: Routes,
       },
     ],
