@@ -73,15 +73,15 @@ export default {
 
           <p class="pa-2 font-weight-medium text-caption">Administratie</p>
 
-          <router-link to="/dashboard/users">
+          <router-link to="/dashboard/gebruikers">
             <v-list-item prepend-icon="mdi-account-supervisor" title="Gebruikers" value="users"></v-list-item>
           </router-link>
 
-          <router-link to="/dashboard">
-            <v-list-item prepend-icon="mdi-office-building-outline" title="Gebouwen" value="buidlings"></v-list-item>
+          <router-link to="/dashboard/gebouwen">
+            <v-list-item prepend-icon="mdi-office-building-outline" title="Gebouwen" value="buildings"></v-list-item>
           </router-link>
 
-          <router-link to="/dashboard">
+          <router-link to="/dashboard/routes">
             <v-list-item prepend-icon="mdi-map-legend" title="Routes" value="routes"></v-list-item>
           </router-link>
         </v-list>
