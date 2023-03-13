@@ -22,11 +22,19 @@ const route = useRoute();
           ></v-list-item>
 
           <router-link to="/">
-            <v-list-item prepend-icon="mdi-account-cancel" title="Afmelden" value="logout"></v-list-item>
+            <v-list-item
+              prepend-icon="mdi-account-cancel"
+              title="Afmelden"
+              value="logout"
+            ></v-list-item>
           </router-link>
 
           <router-link to="/account">
-            <v-list-item prepend-icon="mdi-cog" title="Account" value="account"></v-list-item>
+            <v-list-item
+              prepend-icon="mdi-cog"
+              title="Account"
+              value="account"
+            ></v-list-item>
           </router-link>
 
           <div class="py-2">
