@@ -1,28 +1,26 @@
 <template xmlns='http://www.w3.org/1999/html'>
-  <div class='building-schedule'>
-    <v-card :title='"Planning voor gebouw " + id'>
-      <v-table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Maandag</th>
-            <th>Dinsdag</th>
-            <th>Woensdag</th>
-            <th>Donderdag</th>
-            <th>Vrijdag</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for='name in ["test1", "test2", "test3"]' :key='name'>
-            <th>{{name}}</th>
-            <td v-for='getal in [...Array(5).keys()]' :key='name+getal'>
-              {{randomAfval()}}
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
-    </v-card>
-  </div>
+  <v-card class='building-schedule' :title='"Planning voor gebouw " + id'>
+    <v-table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Maandag</th>
+          <th>Dinsdag</th>
+          <th>Woensdag</th>
+          <th>Donderdag</th>
+          <th>Vrijdag</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for='name in ["test1", "test2", "test3"]' :key='name'>
+          <th>{{name}}</th>
+          <td v-for='getal in [...Array(5).keys()]' :key='name+getal'>
+            {{randomAfval()}}
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
+  </v-card>
 </template>
 
 <script>
@@ -42,8 +40,4 @@ export default {
 
 <style scoped lang="scss">
   @import 'src/assets/styles/base';
-
-  .building-schedule{
-    margin: 20px;
-  }
 </style>

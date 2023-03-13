@@ -1,5 +1,5 @@
 <template>
-  <v-card class='building-photos' title='Photo progress'>
+  <v-card class='building-photos' title="Opvolg foto's">
     <div class='building-photos'>
       <v-btn class='building-photo' prepend-icon='mdi-camera'>foto aankomst</v-btn>
       <v-btn class='building-photo' prepend-icon='mdi-camera'>foto afval</v-btn>
@@ -22,11 +22,6 @@ export default {
 <style scoped lang="scss">
   @import 'src/assets/styles/base';
 
-  .building-photos{
-    margin: 20px;
-    position: relative;
-  }
-
   .big-actions {
     display: flex;
     width: 60%;
@@ -43,5 +38,4 @@ export default {
     background-color: $secondary;
     color: $primary;
   }
-
 </style>

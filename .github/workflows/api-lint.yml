@@ -1,0 +1,23 @@
+name: API Linter
+
+on:
+    workflow_dispatch:
+    pull_request:
+        branches:
+            - 'develop'
+            - 'main'
+            - 'api/**'
+
+jobs:
+    lint:
+        runs-on: [self-hosted]
+        env:
+          PRISMA_SKIP_POSTINSTALL_GENERATE: true
+          OUTPUT_DIRECTORY: ./api/prisma
+        defaults:
+            run:
+                working-directory: ./api
+        steps:
+            - uses: actions/checkout@v3
+            - name: "Check for linting and errors"
+              run: npm ci && npx prisma generate && npm run test

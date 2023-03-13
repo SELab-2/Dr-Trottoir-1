@@ -1,6 +1,6 @@
 <template>
   <div class='building-screen'>
-    <div class='heading-image'>
+     <div class='heading-image'>
       <v-img cover src='https://source.unsplash.com/featured/1920x1080'></v-img>
     </div>
     <v-sheet rounded class='building-info'>
@@ -33,6 +33,10 @@ export default {
       id: this.$route.params.id
     }
   },
+  created() {
+    console.log("hey")
+    this.$route.name = "Fantastisch gebouw"
+  }
 }
 </script>
 
@@ -48,58 +52,26 @@ export default {
 
   // the image of the building displayed in the top bar.
   .heading-image{
-    height: 25%;
-    //max-height: 300px;
+    height: 25vh;
+    position: absolute;
     width: 100%;
     top: 0;
+    left: 0;
   }
 
   // the container for all the building text, should be in the center of the screen.
   .building-info{
-    width: 1200px;
-    max-width: 90%;
-    padding: 20px;
-    position: absolute;
-    color: $primary;
-    background-color: rgba($secondary, 0.9);
-    top: 15%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.5vh;
-  }
-
-  // the title at the top of the page.
-  .building-name{
-    font-size: 7vh;
-    text-align: center;
-    margin: 0;
-  }
-
-  // a detailed description of the building just beneath the title.
-  .building-description{
-    width: 80%;
-    margin-left: 10%;
-    margin-bottom: 20px;
-    font-size: 1.5vh;
-  }
-
-  // container for the buttons under the description.
-  .building-actions{
-    display: flex;
-    margin: 10px;
+    margin: calc(25vh - 89px) auto auto;
   }
 
   // the buttons under the description.
   .building-action-button{
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 10px 10px 10px 0;
+    width: calc(50% - 10px);
   }
 
-  .building-comments {
-    margin: 20px;
+  .v-card{
+    margin: 10px 10px 10px 0;
   }
 
-  .building-comment {
-    margin-left: 30px;
-  }
 </style>
