@@ -4,7 +4,6 @@ import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 
-
 const routes = [
   {
     path: "/",
@@ -16,9 +15,9 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: '/account',
-        name: 'Account instellingen',
-        component: AccountSettings
+        path: "/account",
+        name: "Account instellingen",
+        component: AccountSettings,
       },
       {
         path: "/dashboard/gebruikers/nieuw",
