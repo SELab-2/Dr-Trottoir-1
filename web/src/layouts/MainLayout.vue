@@ -73,6 +73,14 @@ const route = useRoute();
             ></v-list-item>
           </router-link>
 
+          <router-link to="/gebouwen">
+            <v-list-item
+              prepend-icon=" mdi-domain"
+              title="Gebouwen"
+              value="gebouwen"
+            ></v-list-item>
+          </router-link>
+
           <div class="py-2">
             <v-divider></v-divider>
           </div>

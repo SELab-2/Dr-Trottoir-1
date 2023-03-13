@@ -15,7 +15,7 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "building-followup",
+        path: "/gebouwen",
         name: "Opvolgen van gebouwen",
         component: BuildingFollowup,
       },
