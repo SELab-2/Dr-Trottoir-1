@@ -1,30 +1,34 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
+import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
-import HelloWorld from "@/views/HelloWorld.vue";
-import PhotoMaker from "@/components/PhotoMaker.vue";
+
 
 const routes = [
   {
-    path: '/',
+    path: "/",
     component: LoginScreen,
   },
   {
-    path: '/dashboard',
+    path: "/dashboard",
+    name: "dashboard",
     component: MainLayout,
     children: [
       {
-        path: 'example',
-        component: MainLayout,
+        path: "/dashboard/gebruikers/nieuw",
+        name: "Nieuwe gebruiker toevoegen",
+        component: UserCreation,
       },
-    ]
+
+    ],
   },
-]
+];
+
 
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-})
+});
 
-export default router
+export default router;
