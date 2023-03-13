@@ -69,6 +69,21 @@
       ></AddressFrom>
     </v-card>
 
+    <!-- Section to pick the roles -->
+    <v-card v-if="isAdmin" class="mt-4" prepend-icon="mdi-account-multiple">
+      <template v-slot:title> Rollen </template>
+      <v-select
+        class="mx-10"
+        chips
+        label="Rollen"
+        :items="['Student', 'Superstudent', 'Syndicus', 'Admin']"
+        multiple
+        :variant="!edit ? 'plain' : 'filled'"
+        :readonly="!edit"
+        v-model="roles"
+      ></v-select>
+    </v-card>
+
     <!-- Section to set new password -->
     <v-card v-if="edit" class="mt-4" prepend-icon="mdi-lock">
       <template v-slot:title> Nieuw wachtwoord </template>
@@ -92,21 +107,6 @@
           bg
         ></v-text-field>
       </v-list>
-    </v-card>
-
-    <!-- Section to pick the roles -->
-    <v-card v-if="isAdmin" class="mt-4" prepend-icon="mdi-account-multiple">
-      <template v-slot:title> Rollen </template>
-      <v-select
-        class="mx-10"
-        chips
-        label="Rollen"
-        :items="['Student', 'Superstudent', 'Syndicus', 'Admin']"
-        multiple
-        :variant="!edit ? 'plain' : 'filled'"
-        :readonly="!edit"
-        v-model="roles"
-      ></v-select>
     </v-card>
 
     <!-- Section that allows to save the settings -->
