@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
+import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import BuildingFollowup from "@/views/BuildingFollowup.vue";
@@ -20,9 +21,13 @@ const routes = [
         component: BuildingFollowup,
       },
       {
-        path: "opvolging-rondes",
+        path: "/opvolging-rondes",
         name: "Opvolgen van rondes",
         component: RoundFollowup,
+      },
+        path: "/dashboard/gebruikers/nieuw",
+        name: "Nieuwe gebruiker toevoegen",
+        component: UserCreation,
       },
     ],
   },
