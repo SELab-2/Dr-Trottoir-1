@@ -1,146 +1,182 @@
-<script lang="ts" setup>
-import { ref } from "vue";
-import { useRoute } from "vue-router";
-
-// reactive state to show the drawer or not
-const drawer = ref(true);
-
-// get the route object, needed to show the title
-const route = useRoute();
-</script>
-
 <template>
   <v-app>
     <v-main>
-      <v-navigation-drawer permanent v-model="drawer">
+      <v-navigation-drawer
+        :temporary="!permanentDrawer"
+        :permanent="permanentDrawer"
+        v-model="drawer"
+      >
         <v-list density="compact" nav>
           <v-list-item
             lines="two"
             prepend-avatar="https://avatars.githubusercontent.com/u/38297449?v=4"
-            title="Jens Pots"
-            subtitle="Superstudent"
-          ></v-list-item>
+            @click="showAccount = !showAccount"
+          >
+            <div class="flex">
+              <div class="text">
+                <v-list-item-title>{{ studentName }}</v-list-item-title>
+                <v-list-item-subtitle>{{ roles() }}</v-list-item-subtitle>
+              </div>
+              <v-btn
+                v-if="!showAccount"
+                variant="plain"
+                icon="mdi-chevron-down"
+                size="small"
+              />
+              <v-btn
+                v-else
+                variant="plain"
+                icon="mdi-chevron-up"
+                size="small"
+              />
+            </div>
+          </v-list-item>
 
-          <router-link to="/dashboard">
-            <v-list-item
-              prepend-icon="mdi-account-cancel"
-              title="Afmelden"
-              value="logout"
-            ></v-list-item>
-          </router-link>
+          <div v-if="showAccount">
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-account-cancel"
+                title="Afmelden"
+                value="logout"
+              />
+            </router-link>
 
-          <router-link to="/dashboard">
-            <v-list-item
-              prepend-icon="mdi-cog"
-              title="Account"
-              value="account"
-            ></v-list-item>
-          </router-link>
-
-          <div class="py-2">
-            <v-divider></v-divider>
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-cog"
+                title="Account"
+                value="account"
+              />
+            </router-link>
           </div>
 
-          <p class="pa-2 font-weight-medium text-caption">Overzicht</p>
-
-          <router-link to="/dashboard">
-            <v-list-item
-              prepend-icon="mdi-calendar"
-              title="Kalender"
-              value="calendar"
-            ></v-list-item>
-          </router-link>
-
           <div class="py-2">
-            <v-divider></v-divider>
+            <v-divider />
           </div>
 
-          <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
+          <div v-if="isStudent">
+            <p class="pa-2 font-weight-medium text-caption">Overzicht</p>
 
-          <router-link to="/dashboard">
-            <v-list-item
-              prepend-icon="mdi-calendar-edit"
-              title="Planning"
-              value="schedule"
-            ></v-list-item>
-          </router-link>
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-calendar-edit"
+                title="Planning"
+                value="schedule"
+              />
+            </router-link>
 
-          <router-link to="/dashboard">
-            <v-list-item
-              prepend-icon="mdi-message-fast"
-              title="Communicatie"
-              value="communication"
-            ></v-list-item>
-          </router-link>
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-calendar"
+                title="Kalender"
+                value="calendar"
+              />
+            </router-link>
 
-          <router-link to="/gebouwen">
-            <v-list-item
-              prepend-icon=" mdi-domain"
-              title="Gebouwen"
-              value="gebouwen"
-            ></v-list-item>
-          </router-link>
-
-          <div class="py-2">
-            <v-divider></v-divider>
+            <div class="py-2">
+              <v-divider />
+            </div>
           </div>
 
-          <p class="pa-2 font-weight-medium text-caption">Gebouwbeheer</p>
+          <div v-if="isSuperStudent">
+            <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
 
-          <router-link to="/dashboard">
-            <v-list-item
-              prepend-icon="mdi-file-cabinet"
-              title="Geschiedenis"
-              value="history"
-            />
-          </router-link>
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-account-school"
+                title="Studenten"
+                value="studenten"
+              />
+            </router-link>
 
-          <router-link to="/dashboard">
-            <v-list-item
-              prepend-icon="mdi-cog"
-              title="Instellingen"
-              value="settings"
-            ></v-list-item>
-          </router-link>
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-transit-detour"
+                title="Rondes"
+                value="rondes"
+              />
+            </router-link>
 
-          <div class="py-2">
-            <v-divider></v-divider>
+            <router-link to="/gebouwen">
+              <v-list-item
+                prepend-icon="mdi-domain"
+                title="Gebouwen"
+                value="gebouwen"
+              />
+            </router-link>
+
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-message-fast"
+                title="Communicatie"
+                value="communication"
+              />
+            </router-link>
+
+            <div class="py-2">
+              <v-divider />
+            </div>
           </div>
 
-          <p class="pa-2 font-weight-medium text-caption">Administratie</p>
+          <div v-if="isSyndicus">
+            <p class="pa-2 font-weight-medium text-caption">Gebouwbeheer</p>
 
-          <router-link to="/dashboard">
-            <v-list-item
-              prepend-icon="mdi-account-supervisor"
-              title="Studenten"
-              value="students"
-            ></v-list-item>
-          </router-link>
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-file-cabinet"
+                title="Geschiedenis"
+                value="history"
+              />
+            </router-link>
 
-          <router-link to="/dashboard">
-            <v-list-item
-              prepend-icon="mdi-office-building-outline"
-              title="Gebouwen"
-              value="buidlings"
-            ></v-list-item>
-          </router-link>
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-cog"
+                title="Instellingen"
+                value="settings"
+              />
+            </router-link>
 
-          <router-link to="/dashboard">
-            <v-list-item
-              prepend-icon="mdi-map-legend"
-              title="Routes"
-              value="routes"
-            ></v-list-item>
-          </router-link>
+            <div class="py-2">
+              <v-divider />
+            </div>
+          </div>
 
-          <!-- TODO: conditional rendering -->
-          <router-link to="/dashboard/gebruikers/nieuw">
-            <v-list-item
-              prepend-icon="mdi-account-plus"
-              title="Maak account aan"
-              value="routes"
-            ></v-list-item>
-          </router-link>
+          <div v-if="isAdmin">
+            <p class="pa-2 font-weight-medium text-caption">Administratie</p>
+
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-account-supervisor"
+                title="Studenten"
+                value="students"
+              />
+            </router-link>
+
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-office-building-outline"
+                title="Gebouwen"
+                value="buidlings"
+              />
+            </router-link>
+
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-map-legend"
+                title="Routes"
+                value="routes"
+              />
+            </router-link>
+
+            <router-link to="/dashboard/gebruikers/nieuw">
+              <v-list-item
+                prepend-icon="mdi-account-plus"
+                title="Maak account aan"
+                value="routes"
+              />
+            </router-link>
+          </div>
         </v-list>
 
         <template v-slot:append>
@@ -152,32 +188,82 @@ const route = useRoute();
 
       <v-app-bar prominent elevation="0">
         <div class="px-4">
-          <v-app-bar-nav-icon
-            variant="text"
-            @click="drawer = !drawer"
-          ></v-app-bar-nav-icon>
+          <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
         </div>
 
-        <v-toolbar-title class="font-weight-medium">{{
-          route.name
-        }}</v-toolbar-title>
+        <v-toolbar-title class="font-weight-medium">
+          {{ route.name }}
+        </v-toolbar-title>
 
-        <v-spacer></v-spacer>
+        <v-spacer />
 
-        <v-btn variant="text" icon="mdi-magnify"></v-btn>
-
-        <v-btn variant="text" icon="mdi-filter"></v-btn>
+        <v-btn variant="text" icon="mdi-magnify" />
       </v-app-bar>
 
       <div class="pa-8">
-        <router-view></router-view>
+        <router-view />
       </div>
     </v-main>
   </v-app>
 </template>
 
-<style lang="sass" scoped>
-a
-  text-decoration: none
-  color: black
+<script lang="ts" setup>
+import { ref } from "vue";
+import { useRoute } from "vue-router";
+
+// reactive state to show the drawer or not
+const drawer = ref(true);
+
+// get the route object, needed to show the title
+const route = useRoute();
+
+// roles to know what to show
+const isStudent = ref(true);
+const isSuperStudent = ref(true);
+const isSyndicus = ref(true);
+const isAdmin = ref(true);
+
+// show account settings
+const showAccount = ref(false);
+
+// account display settings
+const studentName: String = "Jens Pots";
+function roles(): String {
+  let str = "";
+  if (isStudent.value) {
+    str += "student ";
+  }
+  if (isSuperStudent.value) {
+    str += "superstudent ";
+  }
+  if (isSyndicus.value) {
+    str += "syndicus ";
+  }
+  if (isAdmin.value) {
+    str += "admin ";
+  }
+  return str;
+}
+
+// permanentdrawer
+const permanentDrawer = ref<Boolean>(window.innerWidth > 600);
+function onResize() {
+  permanentDrawer.value = window.innerWidth > 600;
+}
+window.addEventListener("resize", onResize);
+</script>
+
+<style lang="scss" scoped>
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.text {
+  width: 80%;
+}
+
+.flex {
+  display: flex;
+}
 </style>
