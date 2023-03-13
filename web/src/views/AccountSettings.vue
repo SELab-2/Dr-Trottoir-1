@@ -94,6 +94,21 @@
       </v-list>
     </v-card>
 
+    <!-- Section to pick the roles -->
+    <v-card v-if="isAdmin" class="mt-4" prepend-icon="mdi-account-multiple">
+      <template v-slot:title> Rollen </template>
+      <v-select
+        class="mx-10"
+        chips
+        label="Rollen"
+        :items="['Student', 'Superstudent', 'Syndicus', 'Admin']"
+        multiple
+        :variant="!edit ? 'plain' : 'filled'"
+        :readonly="!edit"
+        v-model="roles"
+      ></v-select>
+    </v-card>
+
     <!-- Section that allows to save the settings -->
     <v-card v-if="edit" class="mt-4" prepend-icon="mdi-check">
       <template v-slot:title> Sla bewerkingen op </template>
@@ -104,7 +119,7 @@
           :prepend-inner-icon="'mdi-lock'"
           :append-inner-icon="show_confirm ? 'mdi-eye' : 'mdi-eye-off'"
           :type="show_confirm ? 'text' : 'password'"
-          label="Huidig wachtwoord"
+          :label="isAdmin ? 'Jouw admin wachtwoord' : 'Huidig wachtwoord'"
           @click:append-inner="show_confirm = !show_confirm"
           bg
         ></v-text-field>
@@ -135,11 +150,14 @@ const isAdmin = ref<Boolean>(props.isadmin === 'true')
 const firstname = ref('Jens')
 const lastname= ref('Pots')
 
+// reactive state for the roles
+const roles = ref<String[]>(['Student', 'Superstudent']);
+
 // reactive state to keep track if we are edeting or not
 const edit = ref(false);
 
 // contact data
-const default_phone = "+32 4123 34 56 78";
+const default_phone = "+32 412 34 56 78";
 const default_email = "jenst.pots@example.com";
 const contact = ref<Contact>({
   phone: default_phone,
