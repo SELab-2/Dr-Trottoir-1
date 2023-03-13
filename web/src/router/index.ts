@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
+import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 
@@ -17,7 +18,12 @@ const routes = [
       {
         path: '/account',
         name: 'Account instellingen',
-        component: AccountSettings,
+        component: AccountSettings
+      },
+      {
+        path: "/dashboard/gebruikers/nieuw",
+        name: "Nieuwe gebruiker toevoegen",
+        component: UserCreation,
       },
     ],
   },
