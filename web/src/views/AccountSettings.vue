@@ -103,7 +103,7 @@ import ContacForm from "@/components/ContactForm.vue";
 import Contact from "@/components/models/Contact";
 import { ref } from "vue";
 
-const props = defineProps(['userid', 'isadmin'])
+const props = defineProps(['gebruikerid', 'isadmin'])
 
 // reactive state to keep track if we are edeting or not
 const edit = ref(false);
