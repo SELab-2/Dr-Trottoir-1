@@ -20,55 +20,7 @@
       <h2 v-if="get(selectedBuilding, format(selectedDate)) === null">
         geen data
       </h2>
-      <div v-else>
-        <div class="photos" title="Foto's">
-          <v-card class="photo" cover>
-            <v-img
-              class="photo-image"
-              cover
-              src="https://source.unsplash.com/featured/340x340"
-            />
-            <div>
-              <v-card-title>Foto aankomst</v-card-title>
-              <v-card-subtitle>18u30</v-card-subtitle>
-            </div>
-          </v-card>
-          <v-card class="photo" cover>
-            <v-img
-              class="photo-image"
-              cover
-              src="https://source.unsplash.com/featured/350x350"
-            />
-            <div>
-              <v-card-title>Foto afval</v-card-title>
-              <v-card-subtitle>18u40</v-card-subtitle>
-            </div>
-          </v-card>
-          <v-card class="photo" cover>
-            <v-img
-              class="photo-image"
-              cover
-              src="https://source.unsplash.com/featured/360x360"
-            />
-            <div>
-              <v-card-title>Foto vertrek</v-card-title>
-              <v-card-subtitle>18u45</v-card-subtitle>
-            </div>
-          </v-card>
-        </div>
-        <v-card class="comments" title="Opmerkingen">
-          <v-list>
-            <v-list-item
-              v-for="comment of get(selectedBuilding, format(selectedDate))
-                .comments"
-              :key="comment.title"
-              class="comment"
-              :title="comment.title"
-              :subtitle="comment.comment"
-            ></v-list-item>
-          </v-list>
-        </v-card>
-      </div>
+      <BuildingData v-else :building='get(selectedBuilding, format(selectedDate))' />
     </div>
   </v-container>
 </template>
@@ -76,13 +28,15 @@
 <script lang="ts" setup>
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+
 import { ref } from "vue";
+import BuildingData from '@/components/BuildingData.vue'
 
 // reactive component which will store the current user
 const selectedBuilding = ref<String>("");
-const selectedDate = ref<Date>(ref(new Date()));
+const selectedDate = ref<Date>(new Date());
 
-const format = (date) => {
+const format = (date: Date) => {
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
@@ -90,7 +44,7 @@ const format = (date) => {
   return `${day}/${month}/${year}`;
 };
 
-function get(buildingName, buildingDate) {
+function get(buildingName: String, buildingDate: String) {
   for (let building of mockbuildingdata) {
     if (building.name === buildingName && building.date === buildingDate) {
       return building;
@@ -160,20 +114,5 @@ const mockbuildingdata: any[] = [
 .date-select {
   margin-left: 10%;
   width: 20%;
-}
-
-.v-card {
-  margin: 10px 10px 10px 0;
-}
-
-.photo {
-  display: flex;
-}
-
-.photo-image {
-  height: inherit;
-  width: inherit;
-  max-height: 200px;
-  max-width: 200px;
 }
 </style>
