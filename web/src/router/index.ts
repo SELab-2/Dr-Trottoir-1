@@ -4,10 +4,9 @@ import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 
 import HelloWorld from "@/views/HelloWorld.vue";
-import BuildingMaker from "@/views/BuildingMaker.vue"
-import addImage from "@/components/addImage.vue"
-import multiAddImage from "@/components/multiAddImage.vue"
-
+import BuildingMaker from "@/views/BuildingMaker.vue";
+import addImage from "@/components/addImage.vue";
+import multiAddImage from "@/components/multiAddImage.vue";
 
 const routes = [
   {
@@ -25,13 +24,12 @@ const routes = [
         component: UserCreation,
       },
       {
-        path: '/gebouw/toevoegen',
+        path: "/gebouw/toevoegen",
         component: BuildingMaker,
-
       },
-    ]
+    ],
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
