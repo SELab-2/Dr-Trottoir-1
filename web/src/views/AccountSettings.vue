@@ -24,9 +24,27 @@
         >Verwijder aanpassingen</v-btn
       >
     </div>
+
     <!-- Section with the contact info -->
     <v-card class="mt-4" prepend-icon="mdi-account-details">
-      <template v-slot:title> Contact </template>
+      <template v-slot:title> Persoonlijke gegevens </template>
+      <!-- Name, only shows when the admin wants to edit -->
+      <div v-if="isAdmin && edit" class="mx-10">
+        <!-- Text input field for the first name -->
+        <v-text-field
+            v-model="firstname"
+            label="Voornaam"
+            type="text"
+            required
+          ></v-text-field>
+          <!-- Text input field for the last name -->
+        <v-text-field
+            v-model="lastname"
+            label="Voornaam"
+            type="text"
+            required
+          ></v-text-field>
+      </div>
       <ContacForm
         class="mx-10"
         :readonly="!edit"
@@ -109,7 +127,13 @@ import AddressFrom from "@/components/AddressForm.vue"
 import Contact from "@/components/models/Contact";
 import { ref } from "vue";
 
-const props = defineProps(['gebruikerid', 'isadmin'])
+
+const props = defineProps(['gebruikerid', 'isadmin']);
+const isAdmin = ref<Boolean>(props.isadmin === 'true')
+
+// reactive state for name
+const firstname = ref('Jens')
+const lastname= ref('Pots')
 
 // reactive state to keep track if we are edeting or not
 const edit = ref(false);
