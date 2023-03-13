@@ -1,5 +1,5 @@
-<template xmlns='http://www.w3.org/1999/html'>
-  <v-card class='building-schedule' :title='"Planning voor gebouw " + id'>
+<template>
+  <v-card class="building-schedule" :title="'Planning voor gebouw ' + id">
     <v-table>
       <thead>
         <tr>
@@ -12,10 +12,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for='name in ["test1", "test2", "test3"]' :key='name'>
-          <th>{{name}}</th>
-          <td v-for='getal in [...Array(5).keys()]' :key='name+getal'>
-            {{randomAfval()}}
+        <tr v-for="name in ['test1', 'test2', 'test3']" :key="name">
+          <th>{{ name }}</th>
+          <td v-for="getal in [...Array(5).keys()]" :key="name + getal">
+            {{ randomAfval() }}
           </td>
         </tr>
       </tbody>
@@ -23,21 +23,13 @@
   </v-card>
 </template>
 
-<script>
-export default {
-  name: 'BuildingSchedule',
-  props: {
-    id: String
-  },
-  methods: {
-    randomAfval(){
-      const afvalSoorten = ["PMD", "REST", "GFT", "PAPIER", "GLAS", "", "", "", ""];
-      return afvalSoorten[Math.floor(Math.random()*afvalSoorten.length)];
-    }
-  }
+<script lang="ts" setup>
+function randomAfval(): String {
+  const afvalSoorten = ["PMD", "REST", "GFT", "PAPIER", "GLAS", "", "", "", ""];
+  return afvalSoorten[Math.floor(Math.random() * afvalSoorten.length)];
 }
 </script>
 
 <style scoped lang="scss">
-  @import 'src/assets/styles/base';
+@import "src/assets/styles/base";
 </style>

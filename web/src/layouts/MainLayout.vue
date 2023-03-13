@@ -141,9 +141,9 @@ const route = useRoute();
           ></v-app-bar-nav-icon>
         </div>
 
-        <v-toolbar-title class="font-weight-medium">{{
-          route.name
-        }}</v-toolbar-title>
+        <v-toolbar-title class="font-weight-medium" :key="route.name">
+          {{ route.name }}
+        </v-toolbar-title>
 
         <v-spacer></v-spacer>
 
