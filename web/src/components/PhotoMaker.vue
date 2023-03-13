@@ -3,20 +3,21 @@
     <v-container>
       <v-form>
         <v-img
-          v-if="preview"
+          cover
+          lazy-src=null
           :src="preview"
-          lazySrc="../assets/images/defaultImage.png"
+          lazySrc="../assets/images/blanc.png"
           v-model="preview"
           aspect-ratio="1/1"
+          :with="300"
         ></v-img>
-        <div class="d-flex justify-center align-center pad">
+        <div class="d-flex justify-center align-center py-5">
           <v-btn block variant="outlined" @click="submit">
             Afbeelding toevoegen</v-btn
           >
         </div>
 
         <v-file-input
-          class="pa-md-4 mx-lg-auto"
           single
           v-model="image"
           label="Select Image"
@@ -37,11 +38,10 @@
 
 <script>
 import { ref } from "vue";
-import pic from "../assets/images/defaultImage.png";
 
 export default {
   setup({ emit }) {
-    const preview = ref(pic);
+    const preview = ref(null);
     const image = ref(null);
     const label = ref("");
     const comments = ref("");
