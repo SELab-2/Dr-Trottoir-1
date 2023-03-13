@@ -10,10 +10,27 @@
           <v-list-item
             lines="two"
             prepend-avatar="https://avatars.githubusercontent.com/u/38297449?v=4"
-            title="Jens Pots"
-            subtitle="Superstudent"
             @click="showAccount = !showAccount"
-          />
+          >
+            <div class="flex">
+              <div class="text">
+                <v-list-item-title>{{ studentName }}</v-list-item-title>
+                <v-list-item-subtitle>{{ roles() }}</v-list-item-subtitle>
+              </div>
+              <v-btn
+                v-if="!showAccount"
+                variant="plain"
+                icon="mdi-chevron-down"
+                size="small"
+              />
+              <v-btn
+                v-else
+                variant="plain"
+                icon="mdi-chevron-up"
+                size="small"
+              />
+            </div>
+          </v-list-item>
 
           <div v-if="showAccount">
             <router-link to="/dashboard">
@@ -209,6 +226,25 @@ const isAdmin = ref(true);
 // show account settings
 const showAccount = ref(false);
 
+// account display settings
+const studentName: String = "Jens Pots";
+function roles(): String {
+  let str = "";
+  if (isStudent.value) {
+    str += "student ";
+  }
+  if (isSuperStudent.value) {
+    str += "superstudent ";
+  }
+  if (isSyndicus.value) {
+    str += "syndicus ";
+  }
+  if (isAdmin.value) {
+    str += "admin ";
+  }
+  return str;
+}
+
 // permanentdrawer
 const permanentDrawer = ref<Boolean>(window.innerWidth > 600);
 function onResize() {
@@ -221,5 +257,13 @@ window.addEventListener("resize", onResize);
 a {
   text-decoration: none;
   color: black;
+}
+
+.text {
+  width: 80%;
+}
+
+.flex {
+  display: flex;
 }
 </style>
