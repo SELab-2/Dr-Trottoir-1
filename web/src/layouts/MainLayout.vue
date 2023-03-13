@@ -124,6 +124,15 @@ const route = useRoute();
               value="routes"
             ></v-list-item>
           </router-link>
+
+          <!-- TODO: conditional rendering -->
+          <router-link to="/dashboard/gebruikers/nieuw">
+            <v-list-item
+              prepend-icon="mdi-account-plus"
+              title="Maak account aan"
+              value="routes"
+            ></v-list-item>
+          </router-link>
         </v-list>
 
         <template v-slot:append>

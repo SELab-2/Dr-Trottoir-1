@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
 import BuildingSceen from "@/views/BuildingScreen.vue";
+import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 
 const routes = [
@@ -14,9 +15,14 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "building/:id",
+        path: "/gebouw/:id",
         name: "Gebouw",
         component: BuildingSceen,
+      },
+      {
+        path: "/dashboard/gebruikers/nieuw",
+        name: "Nieuwe gebruiker toevoegen",
+        component: UserCreation,
       },
     ],
   },
