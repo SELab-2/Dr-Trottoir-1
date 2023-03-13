@@ -18,7 +18,7 @@ const routes = [
         path: "/account/:gebruikerid/:isadmin",
         name: "Account instellingen",
         component: AccountSettings,
-        props:true
+        props: true,
       },
       {
         path: "/dashboard/gebruikers/nieuw",

@@ -32,18 +32,18 @@
       <div v-if="isAdmin && edit" class="mx-10">
         <!-- Text input field for the first name -->
         <v-text-field
-            v-model="firstname"
-            label="Voornaam"
-            type="text"
-            required
-          ></v-text-field>
-          <!-- Text input field for the last name -->
+          v-model="firstname"
+          label="Voornaam"
+          type="text"
+          required
+        ></v-text-field>
+        <!-- Text input field for the last name -->
         <v-text-field
-            v-model="lastname"
-            label="Voornaam"
-            type="text"
-            required
-          ></v-text-field>
+          v-model="lastname"
+          label="Voornaam"
+          type="text"
+          required
+        ></v-text-field>
       </div>
       <ContacForm
         class="mx-10"
@@ -65,7 +65,7 @@
         :city="default_city"
         :number="default_number"
         :zip_code="default_zip_code"
-        @onUpdate="(newAddress) => address = newAddress"
+        @onUpdate="(newAddress) => (address = newAddress)"
       ></AddressFrom>
     </v-card>
 
@@ -138,20 +138,19 @@
 <script lang="ts" setup>
 import ContacForm from "@/components/ContactForm.vue";
 import Address from "@/components/models/Address";
-import AddressFrom from "@/components/AddressForm.vue"
+import AddressFrom from "@/components/AddressForm.vue";
 import Contact from "@/components/models/Contact";
 import { ref } from "vue";
 
-
-const props = defineProps(['gebruikerid', 'isadmin']);
-const isAdmin = ref<Boolean>(props.isadmin === 'true')
+const props = defineProps(["gebruikerid", "isadmin"]);
+const isAdmin = ref<Boolean>(props.isadmin === "true");
 
 // reactive state for name
-const firstname = ref('Jens')
-const lastname= ref('Pots')
+const firstname = ref("Jens");
+const lastname = ref("Pots");
 
 // reactive state for the roles
-const roles = ref<String[]>(['Student', 'Superstudent']);
+const roles = ref<String[]>(["Student", "Superstudent"]);
 
 // reactive state to keep track if we are edeting or not
 const edit = ref(false);
@@ -168,7 +167,7 @@ const contact = ref<Contact>({
 const default_street = "Krijgslaan";
 const default_number = 281;
 const default_city = "Gent";
-const default_zip_code= 9000;
+const default_zip_code = 9000;
 
 const address = ref<Address>({
   street: default_street,
