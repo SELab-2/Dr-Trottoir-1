@@ -1,7 +1,6 @@
 import app from "../../src/main";
 import request from "supertest";
 
-
 describe("Server.ts tests", () => {
     test("Math test", () => {
         expect(2 + 2).toBe(4);
@@ -19,7 +18,9 @@ describe("Test ActionRouting", () => {
         const session = await request(app);
 
         // Eerst moet er ingelogd worden om autorisatie te krijgen. TODO: fixen: na inloggen krijg ik geen autorisatie
-        const resultLogin = await session.post('/auth/login').send({'username': 'jens.pots@ugent.be', 'password': 'password'});
+        const resultLogin = await session
+            .post("/auth/login")
+            .send({ username: "jens.pots@ugent.be", password: "password" });
         expect(resultLogin.status).toBe(302);
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 
@@ -27,7 +28,8 @@ describe("Test ActionRouting", () => {
 
         // Nieuwe action toevoegen
         const resultAdd = await session
-            .post("/action").send({"description": "new action for testing"})
+            .post("/action")
+            .send({ description: "new action for testing" })
             .set("Cookie", [cookies]);
         expect(resultAdd.status).toEqual(201);
         expect(resultAdd.body["description"]).toEqual("new action for testing");
@@ -43,7 +45,9 @@ describe("Test ActionRouting", () => {
         const session = await request(app);
 
         // Eerst moet er ingelogd worden om autorisatie te krijgen.
-        const resultLogin = await session.post('/auth/login').send({'username': 'jens.pots@ugent.be', 'password': 'password'});
+        const resultLogin = await session
+            .post("/auth/login")
+            .send({ username: "jens.pots@ugent.be", password: "password" });
         expect(resultLogin.status).toEqual(302);
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 
@@ -51,7 +55,8 @@ describe("Test ActionRouting", () => {
 
         // Nieuwe action toevoegen
         const resultAdd = await session
-            .post("/action").send({"description": "new action for testing"})
+            .post("/action")
+            .send({ description: "new action for testing" })
             .set("Cookie", [cookies]);
         expect(resultAdd.status).toEqual(201);
         expect(resultAdd.body["description"]).toEqual("new action for testing");
@@ -67,7 +72,9 @@ describe("Test ActionRouting", () => {
         const session = await request(app);
 
         // Eerst moet er ingelogd worden om autorisatie te krijgen.
-        const resultLogin = await session.post('/auth/login').send({'username': 'jens.pots@ugent.be', 'password': 'password'});
+        const resultLogin = await session
+            .post("/auth/login")
+            .send({ username: "jens.pots@ugent.be", password: "password" });
         expect(resultLogin.status).toBe(302);
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 
@@ -75,7 +82,8 @@ describe("Test ActionRouting", () => {
 
         // Nieuwe action toevoegen
         const resultAdd = await session
-            .post("/action").send({description: "new action for testing"})
+            .post("/action")
+            .send({ description: "new action for testing" })
             .set("Cookie", [cookies]);
         expect(resultAdd.status).toEqual(201);
         expect(resultAdd.body["description"]).toEqual("new action for testing");
@@ -97,7 +105,9 @@ describe("Test ActionRouting", () => {
         const session = await request(app);
 
         // Eerst moet er ingelogd worden om autorisatie te krijgen.
-        const resultLogin = await session.post('/auth/login').send({username: 'jens.pots@ugent.be', 'password': 'password'});
+        const resultLogin = await session
+            .post("/auth/login")
+            .send({ username: "jens.pots@ugent.be", password: "password" });
         expect(resultLogin.status).toBe(302);
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 
@@ -105,7 +115,8 @@ describe("Test ActionRouting", () => {
 
         // Nieuwe action toevoegen
         const resultAdd = await session
-            .post("/action").send({"description": "new action for testing"})
+            .post("/action")
+            .send({ description: "new action for testing" })
             .set("Cookie", [cookies]);
         expect(resultAdd.status).toEqual(201);
         expect(resultAdd.body["description"]).toEqual("new action for testing");
@@ -125,4 +136,3 @@ describe("Test ActionRouting", () => {
         expect(resultDelete.status).toEqual(200);
     });
 });
-
