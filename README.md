@@ -1,5 +1,8 @@
 # Dr Trottoir
 
+[![API Linter](https://github.com/SELab-2/Dr-Trottoir-1/actions/workflows/api-lint.yml/badge.svg)](https://github.com/SELab-2/Dr-Trottoir-1/actions/workflows/api-lint.yml)
+[![Web Linter](https://github.com/SELab-2/Dr-Trottoir-1/actions/workflows/web-lint.yml/badge.svg)](https://github.com/SELab-2/Dr-Trottoir-1/actions/workflows/web-lint.yml)
+
 Software Engineering Lab II (2022 - 2023)
 
 | Rol                        | Student                                            | E-mailadres                 |
@@ -20,3 +23,5 @@ Software Engineering Lab II (2022 - 2023)
 - `server`: Configuratiebestanden van servertoepassingen
 - `web`: Webapplicatie
 
+## Documentatie
+De documentatie van deze monorepo is beschikbaar in de bijhorende [wiki](https://github.com/SELab-2/Dr-Trottoir-1/wiki).
