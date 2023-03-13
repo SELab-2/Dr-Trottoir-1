@@ -1,4 +1,5 @@
 <template>
+  <h2>uitgevoerd door {{ student }}</h2>
   <v-card class="comments" title="Opmerkingen">
     <v-list>
       <v-list-item
@@ -52,6 +53,8 @@
 const props = defineProps({
   building: Object,
 });
+
+const student = "Julius Caesar";
 </script>
 
 <style lang="scss" scoped>
