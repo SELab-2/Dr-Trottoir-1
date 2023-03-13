@@ -48,24 +48,25 @@
 </template>
 
 <script lang="ts" setup>
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps({
-  building: Object
+  building: Object,
 });
 </script>
 
-<style lang='scss' scoped>
-  .v-card {
-    margin: 10px 10px 10px 0;
-  }
+<style lang="scss" scoped>
+.v-card {
+  margin: 10px 10px 10px 0;
+}
 
-  .photo {
-    display: flex;
-  }
+.photo {
+  display: flex;
+}
 
-  .photo-image {
-    height: inherit;
-    width: inherit;
-    max-height: 200px;
-    max-width: 200px;
-  }
+.photo-image {
+  height: inherit;
+  width: inherit;
+  max-height: 200px;
+  max-width: 200px;
+}
 </style>

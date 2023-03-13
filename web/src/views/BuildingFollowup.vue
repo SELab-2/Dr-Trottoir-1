@@ -20,7 +20,10 @@
       <h2 v-if="get(selectedBuilding, format(selectedDate)) === null">
         geen data
       </h2>
-      <BuildingData v-else :building='get(selectedBuilding, format(selectedDate))' />
+      <BuildingData
+        v-else
+        :building="get(selectedBuilding, format(selectedDate))"
+      />
     </div>
   </v-container>
 </template>
@@ -30,7 +33,7 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 import { ref } from "vue";
-import BuildingData from '@/components/BuildingData.vue'
+import BuildingData from "@/components/BuildingData.vue";
 
 // reactive component which will store the current user
 const selectedBuilding = ref<String>("");

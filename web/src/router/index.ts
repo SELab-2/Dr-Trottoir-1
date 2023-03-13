@@ -25,6 +25,7 @@ const routes = [
         name: "Opvolgen van rondes",
         component: RoundFollowup,
       },
+      {
         path: "/dashboard/gebruikers/nieuw",
         name: "Nieuwe gebruiker toevoegen",
         component: UserCreation,
