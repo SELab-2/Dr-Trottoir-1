@@ -29,9 +29,11 @@
             <v-text-field label="Image Label" v-model="label"></v-text-field>
           </v-col>
         </v-row>
+        <!--
         <div class="d-flex justify-end">
           <v-btn @click="submit">Afbeelding toevoegen</v-btn>
         </div>
+        -->
       </v-form>
     </v-container>
   </div>

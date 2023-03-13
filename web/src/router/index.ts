@@ -19,20 +19,13 @@ const routes = [
         path: 'example',
         component: MainLayout,
       },
+      {
+        path: '/gebouw/toevoegen',
+        component: BuildingMaker,
+
+      },
     ]
   },
-  {
-    path: '/addBuilding',
-    component: BuildingMaker,
-  },
-  {
-    path: '/addImage',
-    component: addImage
-  },
-  {
-    path: '/multiAddImage',
-    component: multiAddImage
-  }
 ]
 
 const router = createRouter({
