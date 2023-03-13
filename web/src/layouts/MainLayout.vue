@@ -1,17 +1,21 @@
 <template>
   <v-app>
     <v-main>
-      <v-navigation-drawer permanent v-model="drawer">
+      <v-navigation-drawer
+        :temporary="!permanentDrawer"
+        :permanent="permanentDrawer"
+        v-model="drawer"
+      >
         <v-list density="compact" nav>
           <v-list-item
             lines="two"
             prepend-avatar="https://avatars.githubusercontent.com/u/38297449?v=4"
             title="Jens Pots"
             subtitle="Superstudent"
-            @click='showAccount = !showAccount'
+            @click="showAccount = !showAccount"
           />
 
-          <div v-if='showAccount'>
+          <div v-if="showAccount">
             <router-link to="/dashboard">
               <v-list-item
                 prepend-icon="mdi-account-cancel"
@@ -30,10 +34,10 @@
           </div>
 
           <div class="py-2">
-            <v-divider/>
+            <v-divider />
           </div>
 
-          <div v-if='isStudent'>
+          <div v-if="isStudent">
             <p class="pa-2 font-weight-medium text-caption">Overzicht</p>
 
             <router-link to="/dashboard">
@@ -53,11 +57,11 @@
             </router-link>
 
             <div class="py-2">
-              <v-divider/>
+              <v-divider />
             </div>
           </div>
 
-          <div v-if='isSuperStudent'>
+          <div v-if="isSuperStudent">
             <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
 
             <router-link to="/dashboard">
@@ -93,11 +97,11 @@
             </router-link>
 
             <div class="py-2">
-              <v-divider/>
+              <v-divider />
             </div>
           </div>
 
-          <div v-if='isSyndicus'>
+          <div v-if="isSyndicus">
             <p class="pa-2 font-weight-medium text-caption">Gebouwbeheer</p>
 
             <router-link to="/dashboard">
@@ -117,11 +121,11 @@
             </router-link>
 
             <div class="py-2">
-              <v-divider/>
+              <v-divider />
             </div>
           </div>
 
-          <div v-if='isAdmin'>
+          <div v-if="isAdmin">
             <p class="pa-2 font-weight-medium text-caption">Administratie</p>
 
             <router-link to="/dashboard">
@@ -166,22 +170,17 @@
       </v-navigation-drawer>
 
       <v-app-bar prominent elevation="0">
-
         <div class="px-4">
-          <v-app-bar-nav-icon
-            variant="text"
-            @click="drawer = !drawer"
-          />
+          <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
         </div>
 
         <v-toolbar-title class="font-weight-medium">
           {{ route.name }}
         </v-toolbar-title>
 
-        <v-spacer/>
+        <v-spacer />
 
-        <v-btn variant="text" icon="mdi-magnify"/>
-
+        <v-btn variant="text" icon="mdi-magnify" />
       </v-app-bar>
 
       <div class="pa-8">
@@ -207,12 +206,20 @@ const isSuperStudent = ref(true);
 const isSyndicus = ref(true);
 const isAdmin = ref(true);
 
-//show account settings
+// show account settings
 const showAccount = ref(false);
+
+// permanentdrawer
+const permanentDrawer = ref<Boolean>(window.innerWidth > 600);
+function onResize() {
+  permanentDrawer.value = window.innerWidth > 600;
+}
+window.addEventListener("resize", onResize);
 </script>
 
-<style lang="sass" scoped>
-a
-  text-decoration: none
-  color: black
+<style lang="scss" scoped>
+a {
+  text-decoration: none;
+  color: black;
+}
 </style>
