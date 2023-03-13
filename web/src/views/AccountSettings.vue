@@ -73,6 +73,7 @@
     <v-card v-if="isAdmin" class="mt-4" prepend-icon="mdi-account-multiple">
       <template v-slot:title> Rollen </template>
       <v-select
+        v-if="edit"
         class="mx-10"
         chips
         label="Rollen"
@@ -82,6 +83,12 @@
         :readonly="!edit"
         v-model="roles"
       ></v-select>
+      <v-list lines="one" density="compact" v-if="!edit" class="mx-10">
+        <v-list-item
+          v-for="role in roles"
+          :title='"- " + String(role)'
+        ></v-list-item>
+      </v-list>
     </v-card>
 
     <!-- Section to set new password -->
