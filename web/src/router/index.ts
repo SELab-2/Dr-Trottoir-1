@@ -15,9 +15,10 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "/account",
+        path: "/account/:userid/:isadmin",
         name: "Account instellingen",
         component: AccountSettings,
+        props:true
       },
       {
         path: "/dashboard/gebruikers/nieuw",
