@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
+import { reactive } from "vue";
 import AddImage from "../components/addImage.vue";
 
 const images = reactive([1]);

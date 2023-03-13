@@ -139,7 +139,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, defineAsyncComponent, createApp } from "vue";
+import { ref } from "vue";
 import MultiAddImage from "../components/multiAddImage.vue";
 import Address from "../models/Address";
 import Building from "../models/Building";
