@@ -5,17 +5,30 @@ import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 
 export class BuildingRouting extends Routing {
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        const joins = Parser.stringArray(req.query.join, []);
+
         const result = await prisma.building.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
                 name: req.query["name"],
+                ivago_id: req.query["ivago_id"],
+                syndicus_id: Parser.number(req.query["syndicus_id"]),
             },
             include: {
-                address: Parser.bool(req.query["address"]),
-                syndicus: Parser.bool(req.query["syndicus"]),
+                address: joins?.includes("address"),
+                syndicus: {
+                    include: {
+                        user: joins?.includes("syndicus"),
+                    },
+                },
+                manual: joins?.includes("manual"),
+                garbage: joins?.includes("garbage"),
+                progress: joins?.includes("progress"),
+                rounds: joins?.includes("rounds"),
+                images: joins?.includes("images"),
             },
         });
 
@@ -24,13 +37,24 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
+        const joins = Parser.stringArray(req.query.join, []);
+
         const result = await prisma.building.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
             include: {
-                address: Parser.bool(req.query["address"]),
-                syndicus: Parser.bool(req.query["syndicus"]),
+                address: joins?.includes("address"),
+                syndicus: {
+                    include: {
+                        user: joins?.includes("syndicus"),
+                    },
+                },
+                manual: joins?.includes("manual"),
+                garbage: joins?.includes("garbage"),
+                progress: joins?.includes("progress"),
+                rounds: joins?.includes("rounds"),
+                images: joins?.includes("images"),
             },
         });
 
