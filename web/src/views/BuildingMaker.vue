@@ -109,7 +109,8 @@
       </v-row>
       <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
       <div class="text-h3">Extra afbeeldigen</div>
-      <AddImage @form-submitted="handleFormSubmitted"> </AddImage>
+      <MultiAddImage @form-submitted="handleFormSubmitted"> </MultiAddImage>
+      <div ref="container"></div>
       <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
       <div class="d-flex justify-center">
         <v-btn @click="submit" type="submit">Submit gebouw</v-btn>
@@ -122,8 +123,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import AddImage from "../components/addImage.vue";
+import { ref, onMounted, defineAsyncComponent, createApp } from "vue";
+import MultiAddImage from "../components/multiAddImage.vue";
 import Address from "../models/Address";
 import Building from "../models/Building";
 //import defaultImg from "../assets/images/defaultImage.png";

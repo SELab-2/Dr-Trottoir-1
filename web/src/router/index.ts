@@ -3,6 +3,8 @@ import LoginScreen from "@/views/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import HelloWorld from "@/views/HelloWorld.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue"
+import addImage from "@/components/addImage.vue"
+import multiAddImage from "@/components/multiAddImage.vue"
 
 const routes = [
   {
@@ -22,6 +24,14 @@ const routes = [
   {
     path: '/addBuilding',
     component: BuildingMaker,
+  },
+  {
+    path: '/addImage',
+    component: addImage
+  },
+  {
+    path: '/multiAddImage',
+    component: multiAddImage
   }
 ]
 
