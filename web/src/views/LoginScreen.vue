@@ -66,11 +66,9 @@ const showPsswd = ref(false);
 const snackbar = ref(false);
 
 // function that handels the login event
-/*
 function handleSubmit() {
   console.log("Logging in...");
 }
- */
 </script>
 <style lang="scss">
 // backgroud div. Nedded to center form div

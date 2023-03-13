@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
+import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import StudentFollowUp from "@/views/StudentFollowUp.vue";
 
@@ -14,9 +15,14 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "/studentfollowup",
+        path: "/opvolging/studenten",
         name: "Opvolging studenten",
         component: StudentFollowUp,
+      },
+      {
+        path: "/dashboard/gebruikers/nieuw",
+        name: "Nieuwe gebruiker toevoegen",
+        component: UserCreation,
       },
     ],
   },
