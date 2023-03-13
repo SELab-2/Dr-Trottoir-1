@@ -29,7 +29,7 @@ const route = useRoute();
             ></v-list-item>
           </router-link>
 
-          <router-link to="/account/0/false">
+          <router-link to="/account/0/true">
             <v-list-item
               prepend-icon="mdi-cog"
               title="Account"
