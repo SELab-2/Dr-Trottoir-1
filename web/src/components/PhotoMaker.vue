@@ -36,59 +36,49 @@
   </div>
 </template>
 
-<script>
-import { ref } from "vue";
+<script lang="ts" setup>
+import { ref,emit } from "vue";
 
-export default {
-  setup({ emit }) {
-    const preview = ref(null);
-    const image = ref(null);
-    const label = ref("");
-    const comments = ref("");
+const preview = ref(null);
+const image = ref(null);
+const label = ref("");
+const comments = ref("");
 
-    const previewImage = () => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        preview.value = reader.result;
-      };
-      reader.readAsDataURL(image.value[0]);
-    };
-    const submit = () => {
-      try {
-        const formData = new FormData();
-        formData.append("image", image.value);
-        formData.append("label", label.value);
-        formData.append("comment", comments.value);
-        console.log("verzonden");
-        for (const value of formData.values()) {
-          console.log(value);
-        }
-
-        //const response = await axios.post("/images", formData);
-        //console.log(response.data);
-
-        // reset form after submit
-        //file.value = null;
-        preview.value = pic;
-        label.value = "";
-        comments.value = "";
-        image.value = null;
-        emit("form-submitted", formData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    return {
-      preview,
-      image,
-      label,
-      comments,
-      previewImage,
-      submit,
-    };
-  },
+const previewImage = () => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    preview.value = reader.result;
+  };
+  reader.readAsDataURL(image.value[0]);
 };
+const submit = () => {
+  try {
+    const formData = new FormData();
+    formData.append("image", image.value);
+    formData.append("label", label.value);
+    formData.append("comment", comments.value);
+    console.log("verzonden");
+    for (const value of formData.values()) {
+      console.log(value);
+    }
+
+    //const response = await axios.post("/images", formData);
+    //console.log(response.data);
+
+    // reset form after submit
+    //file.value = null;
+    preview.value = null;
+    label.value = "";
+    comments.value = "";
+    image.value = null;
+    emit("form-submitted", formData);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+    
+
 </script>
 
 <style scoped>
