@@ -3,6 +3,7 @@
 Voor uniformiteit maken we enkel gebruik van npm.
 
 ### Installeren van de node modules
+
 ```bash
 npm install
 ```
@@ -24,6 +25,7 @@ npm run preview
 ```
 
 ### Linting
+
 ```bash
 npm run lint
 ```
