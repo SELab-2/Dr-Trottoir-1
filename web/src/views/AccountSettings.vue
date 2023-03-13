@@ -40,11 +40,15 @@
     <!-- Section with the adress -->
     <v-card class="mt-4" prepend-icon="mdi-map-marker">
       <template v-slot:title> Adres </template>
-
-      <v-card-text v-if="edit">
-        Hier komt address input component zodra PR #36 approved wordt.
-      </v-card-text>
-      <v-card-text v-else> Krijgslaan 281 - 9000 Gent </v-card-text>
+      <AddressFrom
+        class="mx-10"
+        :readonly="!edit"
+        :street="default_street"
+        :city="default_city"
+        :number="default_number"
+        :zip_code="default_zip_code"
+        @onUpdate="(newAddress) => address = newAddress"
+      ></AddressFrom>
     </v-card>
 
     <!-- Section to set new password -->
@@ -100,6 +104,8 @@
 </template>
 <script lang="ts" setup>
 import ContacForm from "@/components/ContactForm.vue";
+import Address from "@/components/models/Address";
+import AddressFrom from "@/components/AddressForm.vue"
 import Contact from "@/components/models/Contact";
 import { ref } from "vue";
 
@@ -114,6 +120,19 @@ const default_email = "jenst.pots@example.com";
 const contact = ref<Contact>({
   phone: default_phone,
   email: default_email,
+});
+
+// address data
+const default_street = "Krijgslaan";
+const default_number = 281;
+const default_city = "Gent";
+const default_zip_code= 9000;
+
+const address = ref<Address>({
+  street: default_street,
+  number: default_number,
+  city: default_city,
+  zip_code: default_zip_code,
 });
 
 // reactive states for the new password
