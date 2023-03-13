@@ -4,7 +4,7 @@
       <v-form>
         <v-img
           cover
-          lazy-src=null
+          lazy-src="null"
           :src="preview"
           lazySrc="../assets/images/blanc.png"
           v-model="preview"
@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref,emit } from "vue";
+import { ref, emit } from "vue";
 
 const preview = ref(null);
 const image = ref(null);
@@ -76,9 +76,6 @@ const submit = () => {
     console.log(error);
   }
 };
-
-    
-
 </script>
 
 <style scoped>

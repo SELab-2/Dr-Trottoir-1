@@ -3,7 +3,6 @@ import LoginScreen from "@/views/LoginScreen.vue";
 import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 
-
 const routes = [
   {
     path: "/",
@@ -19,12 +18,9 @@ const routes = [
         name: "Nieuwe gebruiker toevoegen",
         component: UserCreation,
       },
-
     ],
   },
 ];
-
-
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
