@@ -1,26 +1,29 @@
-// Composables
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
+import LoginScreen from "@/views/LoginScreen.vue";
+import MainLayout from "@/layouts/MainLayout.vue";
 
 const routes = [
   {
-    path: '/',
-    component: () => import('@/layouts/default/Default.vue'),
+    path: "/",
+    component: LoginScreen,
+  },
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    component: MainLayout,
     children: [
       {
-        path: '',
-        name: 'Home',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+        path: "example",
+        name: "exampleTitle",
+        component: MainLayout,
       },
     ],
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-})
+});
 
-export default router
+export default router;

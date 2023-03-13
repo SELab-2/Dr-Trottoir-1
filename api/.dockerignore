@@ -1,0 +1,9 @@
+dist
+node_modules
+.env
+.gitignore
+.eslintrc.json
+.prettierrc.json
+README.md
+.prettierignore
+example.env
