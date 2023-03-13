@@ -19,7 +19,6 @@
           >handleiding</v-btn
         >
       </div>
-      <building-schedule :id="id" />
       <v-card class="building-comments" title="Opmerkingen">
         <v-list>
           <v-list-item
@@ -34,6 +33,7 @@
           ></v-list-item>
         </v-list>
       </v-card>
+      <building-schedule :id="id" />
       <building-photos :id="id" />
     </v-sheet>
   </div>

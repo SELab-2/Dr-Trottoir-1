@@ -24,6 +24,11 @@
 </template>
 
 <script lang="ts" setup>
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const props = defineProps({
+  id: String,
+});
+
 function randomAfval(): String {
   const afvalSoorten = ["PMD", "REST", "GFT", "PAPIER", "GLAS", "", "", "", ""];
   return afvalSoorten[Math.floor(Math.random() * afvalSoorten.length)];
