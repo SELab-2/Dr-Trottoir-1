@@ -14,7 +14,7 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "/opvolging-rondes",
+        path: "/rondes/opvolgen",
         name: "Opvolgen van rondes",
         component: RoundFollowup,
       },
