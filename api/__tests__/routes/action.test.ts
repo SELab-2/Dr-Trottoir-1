@@ -7,16 +7,14 @@ describe("Server.ts tests", () => {
     });
 });
 
-
 /*
-Deze testen controleren dat de route de juiste statuscodes geeft bij het uivoeren van een geldig request
+Deze testen controleren dat de route de juiste statuscodes geeft bij het uitvoeren van een geldig request
 (met autorisatie).
 Bij elke test wordt een nieuwe action toegevoegd aan de databank. Op deze manier kunnen er geen fouten ontstaan
 door entries die uit de databank verwijderd zijn. De data waarmee gewerkt wordt, zal dus sowieso in de databank
 aanwezig zijn. Deze data wordt op het einde van de test weer verwijderd uit de databank.
  */
 describe("Test ActionRouting successful requests", () => {
-
     test("Test creating and deleting new action", async () => {
         const session = await request(app);
 
@@ -27,6 +25,7 @@ describe("Test ActionRouting successful requests", () => {
         expect(resultLogin.status).toBe(302);
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 
+        // Deze constante zorgt ervoor dat de ingelogde gebruiker behouden blijft en dus autorisatie heeft.
         const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
 
         // Nieuwe action toevoegen
@@ -121,8 +120,6 @@ describe("Test ActionRouting successful requests", () => {
         expect(resultDelete.status).toEqual(200);
     });
 });
-
-
 
 // De volgende testen controleren dat de route de juiste foutcode meegeeft, wanneer een fout request wordt gestuurd.
 describe("Test ActionRouting unsuccessful requests", () => {
