@@ -16,6 +16,10 @@ export class Routes implements TableEntity<Routes> {
     return Routes.headers();
   }
 
+  detailPageUrl(): string {
+    return "/";
+  }
+
   static headers(): Array<Header<Routes>> {
     return [
       {

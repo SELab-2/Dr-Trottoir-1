@@ -37,13 +37,13 @@ const routes = [
         name: "Rondes",
       },
       {
-        path: "/gebouw/:id",
+        path: "/dashboard/gebouwen/:id",
         name: "Gebouw",
         component: BuildingSceen,
         props: true,
       },
       {
-        path: "/gebouw",
+        path: "/gebouwen",
         name: "Opvolgen van gebouwen",
         component: BuildingFollowup,
       },

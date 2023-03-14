@@ -16,6 +16,10 @@ export class Building implements TableEntity<Building> {
     return Building.headers();
   }
 
+  detailPageUrl(): string {
+    return `/dashboard/gebouwen/${this.id}`;
+  }
+
   static headers(): Array<Header<Building>> {
     return [
       {

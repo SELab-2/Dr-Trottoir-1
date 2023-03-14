@@ -28,22 +28,24 @@
           v-for="header in headers"
           :class="{ fit: header.fit }"
         >
-          <div
-            v-if="header.type === RowType.IMAGE"
-            style="display: flex; align-items: center"
-          >
-            <img v-bind:src="item.portrait" class="image" alt="Portrait" />
-          </div>
-          <div v-if="header.type === RowType.BOOLEAN">
-            <input type="checkbox" v-model="item.student" />
-          </div>
-          <v-btn
-            v-if="header.type === RowType.ICON"
-            variant="plain"
-            v-bind:icon="header.get(item)"
-            size="small"
-          ></v-btn>
-          <p v-if="header.type === RowType.TEXT">{{ header.get(item) }}</p>
+          <router-link :to="item.detailPageUrl()">
+            <div
+              v-if="header.type === RowType.IMAGE"
+              style="display: flex; align-items: center"
+            >
+              <img v-bind:src="item.portrait" class="image" alt="Portrait" />
+            </div>
+            <div v-if="header.type === RowType.BOOLEAN">
+              <input type="checkbox" v-model="item.student" />
+            </div>
+            <v-btn
+              v-if="header.type === RowType.ICON"
+              variant="plain"
+              v-bind:icon="header.get(item)"
+              size="small"
+            ></v-btn>
+            <p v-if="header.type === RowType.TEXT">{{ header.get(item) }}</p>
+          </router-link>
         </td>
       </tr>
     </tbody>
@@ -79,4 +81,8 @@ td
   height: 40px
   object-fit: cover
   border-radius: 40px
+
+a
+  text-decoration: none
+  color: black
 </style>

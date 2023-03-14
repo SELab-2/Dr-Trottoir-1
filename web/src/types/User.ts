@@ -20,6 +20,10 @@ export class User implements TableEntity<User> {
     return User.headers();
   }
 
+  detailPageUrl(): string {
+    return "/";
+  }
+
   static headers(): Array<Header<User>> {
     return [
       {
