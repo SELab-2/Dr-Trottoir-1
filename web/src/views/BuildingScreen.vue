@@ -74,10 +74,10 @@
       <div class="image-grid" style="margin-top: 10px">
         <div
           v-for="image in images"
-          v-bind:key="image.url"
+          :key="String(image.url)"
           style="position: relative"
         >
-          <img class="image" :src="image.url" />
+          <img alt="opvolgfoto" class="image" :src="String(image.url)" />
           <div style="position: absolute; bottom: 20px; right: 10px">
             <RoundedButton icon="mdi-pencil" value="Bewerken"></RoundedButton>
           </div>

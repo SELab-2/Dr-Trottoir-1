@@ -3,7 +3,7 @@
     <v-main>
       <v-navigation-drawer
         :temporary="!permanentDrawer"
-        :permanent="permanentDrawer"
+        :permanent="!!permanentDrawer"
         v-model="drawer"
       >
         <v-list density="compact" nav>
