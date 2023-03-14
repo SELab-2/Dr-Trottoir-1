@@ -111,8 +111,8 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import MultiAddImage from "../components/multiAddImage.vue";
-import Address from "../models/Address";
-import Building from "../models/Building";
+import Address2 from "@/components/models/Address2";
+import Building from "@/components/models/Building";
 import AddressForm from "../components/AddressForm.vue";
 //import defaultImg from "../assets/images/defaultImage.png";
 
@@ -131,30 +131,30 @@ const building = ref<Building>({
   name: "",
   ivagoId: "",
   syndicus: "",
-  address: ref<Address>({
-    street: "",
-    number: null,
-    city: "",
-    zip_code: null,
-    latitude: null,
-    longitude: null,
+  address: ref<Address2>({
+   street: "",
+   number: 0,
+   city: "",
+   zip_code: 0,
+   latitude: 0,
+   longitude: 0,
   }),
   manual: null,
 });
 
 //later use
-const submit = () => {
-  try {
-    //alle data zit in building
-    //const response = await axios.post("", );
-    //console.log(response.data);
+// const submit = () => {
+//   try {
+//     //alle data zit in building
+//     //const response = await axios.post("", );
+//     //console.log(response.data);
 
-    // reset form after submit
-    previewBuildingImage.value = ref(null);
-  } catch (error) {
-    console.log(error);
-  }
-};
+//     // reset form after submit
+//     previewBuildingImage.value = ref(null);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 const previewBuildingImage = ref(null);
 const buildingImage = ref(null);
