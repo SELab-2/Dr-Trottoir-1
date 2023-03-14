@@ -3,53 +3,12 @@
     <!-- Top section with profile picture and edit button-->
     <div class="d-flex">
       <v-list-item
-        v-if="!isAdmin"
         class="me-auto"
         lines="two"
         prepend-avatar="https://avatars.githubusercontent.com/u/38297449?v=4"
         title="Jens Pots"
         subtitle="Superstudent"
       ></v-list-item>
-      <v-menu
-        v-if="isAdmin"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            size="xx-large"
-            class="me-auto"
-            append-icon="mdi-menu-down"
-          >
-            <v-list-item
-              v-bind="props"
-              
-              lines="two"
-              prepend-avatar="https://avatars.githubusercontent.com/u/38297449?v=4"
-              title="Jens Pots"
-              subtitle="Superstudent"
-            ></v-list-item>
-          </v-btn>
-          
-        </template>
-
-        <v-list>
-          <router-link to="/account/0/false">
-            <v-list-item
-              prepend-avatar="https://avatars.githubusercontent.com/u/38297449?v=4"
-              title="Een student"
-              subtitle="Student"
-            ></v-list-item>
-          </router-link>
-          <router-link to="/account/0/true">
-            <v-list-item
-              lines="two"
-              prepend-avatar="https://avatars.githubusercontent.com/u/38297449?v=4"
-              title="Een admin"
-              subtitle="Admin"
-            ></v-list-item>
-          </router-link>
-          
-        </v-list>
-      </v-menu>
       <v-btn
         v-if="!edit"
         prepend-icon="mdi-pencil"
