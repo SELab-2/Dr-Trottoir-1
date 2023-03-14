@@ -1,7 +1,7 @@
 <template>
   <h2>uitgevoerd door {{ student }}</h2>
   <v-card class="comments" title="Opmerkingen">
-    <v-list>
+    <v-list v-if="building">
       <v-list-item
         v-for="comment of building.comments"
         :key="comment.title"

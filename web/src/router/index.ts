@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
+import BuildingSceen from "@/views/BuildingScreen.vue";
 import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import BuildingFollowup from "@/views/BuildingFollowup.vue";
@@ -18,7 +19,13 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "/gebouwen",
+        path: "/gebouw/:id",
+        name: "Gebouw",
+        component: BuildingSceen,
+        props: true,
+      },
+      {
+        path: "/gebouw",
         name: "Opvolgen van gebouwen",
         component: BuildingFollowup,
       },
