@@ -1,8 +1,8 @@
 <template>
-  <v-btn id="button">
+  <button id="button">
     <v-icon color="#333333" :icon="props.icon" size="small" />
     <p>{{ props.value }}</p>
-  </v-btn>
+  </button>
 </template>
 
 <style lang="scss" scoped>
