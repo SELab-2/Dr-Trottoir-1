@@ -200,9 +200,7 @@
         <v-btn variant="text" icon="mdi-magnify" />
       </v-app-bar>
 
-      <div class="pa-8">
-        <router-view />
-      </div>
+      <router-view />
     </v-main>
   </v-app>
 </template>
