@@ -3,9 +3,13 @@ FROM node:19-alpine3.16 AS build
 WORKDIR /build
 
 COPY package*.json /build/
-RUN ["npm", "install"]
-RUN ["npm", "run", "build"]
-ENTRYPOINT ["npm", "run", "preview"]
+RUN npm install
+COPY . .
+RUN npm run build
+
+EXPOSE 12000
+
+CMD ["npm", "run", "preview"]
 
 
 # run it in production
