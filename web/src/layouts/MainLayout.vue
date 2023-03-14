@@ -245,10 +245,11 @@ function roles(): String {
   return str;
 }
 
+const threasholdWidth: Number = 750;
 // permanentdrawer
-const permanentDrawer = ref<Boolean>(window.innerWidth > 600);
+const permanentDrawer = ref<Boolean>(window.innerWidth > threasholdWidth);
 function onResize() {
-  permanentDrawer.value = window.innerWidth > 600;
+  permanentDrawer.value = window.innerWidth > threasholdWidth;
 }
 window.addEventListener("resize", onResize);
 </script>
