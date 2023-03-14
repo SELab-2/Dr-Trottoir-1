@@ -3,6 +3,7 @@ import LoginScreen from "@/views/LoginScreen.vue";
 import BuildingSceen from "@/views/BuildingScreen.vue";
 import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
+import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
@@ -21,6 +22,12 @@ const routes = [
         path: "/gebouw/:id",
         name: "Gebouw",
         component: BuildingSceen,
+        props: true,
+      },
+      {
+        path: "/gebouwen",
+        name: "Opvolgen van gebouwen",
+        component: BuildingFollowup,
       },
       {
         path: "/rondes/opvolgen",

@@ -17,6 +17,13 @@
   </v-card>
 </template>
 
+<script lang="ts" setup>
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const props = defineProps({
+  id: String,
+});
+</script>
+
 <style scoped lang="scss">
 @import "src/assets/styles/base";
 

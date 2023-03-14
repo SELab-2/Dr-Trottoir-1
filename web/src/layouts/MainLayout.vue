@@ -3,7 +3,7 @@
     <v-main>
       <v-navigation-drawer
         :temporary="!permanentDrawer"
-        :permanent="permanentDrawer"
+        :permanent="!!permanentDrawer"
         v-model="drawer"
       >
         <v-list density="compact" nav>
@@ -191,7 +191,7 @@
           <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
         </div>
 
-        <v-toolbar-title class="font-weight-medium" :key="route.name">
+        <v-toolbar-title class="font-weight-medium">
           {{ route.name }}
         </v-toolbar-title>
 

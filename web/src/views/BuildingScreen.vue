@@ -40,17 +40,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import { useRoute } from "vue-router";
-
-import BuildingSchedule from "@/components/BuildingSchedule";
-import BuildingPhotos from "@/components/buildingPhotos";
-
-// get the route object, needed to show the title
-const route = useRoute();
+import BuildingSchedule from "@/components/BuildingSchedule.vue";
+import BuildingPhotos from "@/components/buildingPhotos.vue";
 
 // reactive state to show the drawer or not
-const id = ref(route.params.id);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const props = defineProps({
+  id: String,
+});
 </script>
 
 <style scoped lang="scss">
