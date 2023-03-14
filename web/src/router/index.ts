@@ -3,6 +3,7 @@ import LoginScreen from "@/views/LoginScreen.vue";
 import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import RoundFollowup from "@/views/RoundFollowup";
+import AccountSettings from "@/views/AccountSettings.vue";
 
 const routes = [
   {
@@ -18,6 +19,12 @@ const routes = [
         path: "/rondes/opvolgen",
         name: "Opvolgen van rondes",
         component: RoundFollowup,
+      },
+      {
+        path: "/account/:gebruikerid/:isadmin",
+        name: "Account instellingen",
+        component: AccountSettings,
+        props: true,
       },
       {
         path: "/dashboard/gebruikers/nieuw",
