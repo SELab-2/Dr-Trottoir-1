@@ -9,10 +9,13 @@ door entries die uit de databank verwijderd zijn. De data waarmee gewerkt wordt,
 aanwezig zijn. Deze data wordt op het einde van de test weer verwijderd uit de databank.
  */
 describe("Test ActionRouting successful requests", () => {
-    test("Test creating and deleting new action", async () => {
-        const session = await request(app);
+    let session: any;
+    let cookies: string;
 
-        // Eerst moet er ingelogd worden om autorisatie te krijgen.
+    // Voor elke test wordt een sessie gestart, wordt er ingelogd om autorisatie te krijgen en
+    // worden de cookies bewaard.
+    beforeEach(async () => {
+        session = request(app);
         const resultLogin = await session
             .post("/auth/login")
             .send({ username: "jens.pots@ugent.be", password: "password" });
@@ -20,8 +23,10 @@ describe("Test ActionRouting successful requests", () => {
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 
         // Deze constante zorgt ervoor dat de ingelogde gebruiker behouden blijft en dus autorisatie heeft.
-        const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
+        cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
+    });
 
+    test("Test creating and deleting new action", async () => {
         // Nieuwe action toevoegen
         const resultAdd = await session
             .post("/action")
@@ -38,17 +43,6 @@ describe("Test ActionRouting successful requests", () => {
     });
 
     test("Test searching existing action", async () => {
-        const session = await request(app);
-
-        // Eerst moet er ingelogd worden om autorisatie te krijgen.
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
-        expect(resultLogin.status).toBe(302);
-        expect(resultLogin.headers).toHaveProperty("set-cookie");
-
-        const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
-
         // Nieuwe action toevoegen
         const resultAdd = await session
             .post("/action")
@@ -71,17 +65,6 @@ describe("Test ActionRouting successful requests", () => {
     });
 
     test("Test updating existing action", async () => {
-        const session = await request(app);
-
-        // Eerst moet er ingelogd worden om autorisatie te krijgen.
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
-        expect(resultLogin.status).toBe(302);
-        expect(resultLogin.headers).toHaveProperty("set-cookie");
-
-        const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
-
         // Nieuwe waarde toevoegen
         const resultAdd = await session
             .post("/action")
