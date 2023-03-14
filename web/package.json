@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview --port 12000",
+    "preview": "vite preview --port 3000 --host",
     "lint": "npx prettier --write . && npx eslint src",
     "pretest": "npx prettier --check . && npx eslint src --max-warnings 0",
     "test": "echo 'API: no test available'"
