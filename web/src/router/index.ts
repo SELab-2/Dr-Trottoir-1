@@ -3,6 +3,9 @@ import LoginScreen from "@/views/LoginScreen.vue";
 import BuildingSceen from "@/views/BuildingScreen.vue";
 import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
+import RoundFollowup from "@/views/RoundFollowup.vue";
+import RoundMaker from "@/views/RoundMaker.vue";
+import AccountSettings from "@/views/AccountSettings.vue";
 
 const routes = [
   {
@@ -18,6 +21,22 @@ const routes = [
         path: "/gebouw/:id",
         name: "Gebouw",
         component: BuildingSceen,
+      },
+      {
+        path: "/rondes/opvolgen",
+        name: "Opvolgen van rondes",
+        component: RoundFollowup,
+      },
+      {
+        path: "/ronde-maken",
+        name: "Ronde aanmaken",
+        component: RoundMaker,
+      },
+      {
+        path: "/account/:gebruikerid/:isadmin",
+        name: "Account instellingen",
+        component: AccountSettings,
+        props: true,
       },
       {
         path: "/dashboard/gebruikers/nieuw",

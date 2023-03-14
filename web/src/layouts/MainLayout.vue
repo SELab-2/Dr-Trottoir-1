@@ -33,7 +33,7 @@
           </v-list-item>
 
           <div v-if="showAccount">
-            <router-link to="/dashboard">
+            <router-link to="/">
               <v-list-item
                 prepend-icon="mdi-account-cancel"
                 title="Afmelden"
@@ -41,7 +41,7 @@
               />
             </router-link>
 
-            <router-link to="/dashboard">
+            <router-link to="/account/0/true">
               <v-list-item
                 prepend-icon="mdi-cog"
                 title="Account"
@@ -245,10 +245,11 @@ function roles(): String {
   return str;
 }
 
+const threasholdWidth: Number = 750;
 // permanentdrawer
-const permanentDrawer = ref<Boolean>(window.innerWidth > 600);
+const permanentDrawer = ref<Boolean>(window.innerWidth > threasholdWidth);
 function onResize() {
-  permanentDrawer.value = window.innerWidth > 600;
+  permanentDrawer.value = window.innerWidth > threasholdWidth;
 }
 window.addEventListener("resize", onResize);
 </script>
