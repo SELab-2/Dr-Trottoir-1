@@ -1,5 +1,6 @@
 <template>
   <div>
+  <!-- list to show all images -->
     <v-list v-for="image in images" :key="image">
       <v-card>
         <v-card-item>
@@ -24,11 +25,13 @@ import { reactive } from "vue";
 import AddImage from "../components/addImage.vue";
 
 const images = reactive([1]);
+
+//add image
 const addMore = () => {
-  console.log("hier");
   images.push(1);
 };
 
+//remove image
 const remove = (index) => {
   images.splice(index, 1);
 };

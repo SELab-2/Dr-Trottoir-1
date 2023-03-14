@@ -4,6 +4,7 @@
       <v-form>
         <v-row>
           <v-col cols="3">
+            <!-- preview image -->
             <v-img
               cover
               :src="preview"
@@ -12,6 +13,7 @@
             ></v-img>
           </v-col>
           <v-col>
+            <!-- ask image -->
             <v-file-input
               single
               v-model="image"
@@ -49,6 +51,7 @@ const preview = ref(null);
 const image = ref(null);
 const label = ref("");
 const comments = ref("");
+// function to preview image
 const previewImage = () => {
   const reader = new FileReader();
   reader.onload = () => {
@@ -56,6 +59,7 @@ const previewImage = () => {
   };
   reader.readAsDataURL(image.value[0]);
 };
+// code voor later
 // const submit = () => {
 //   try {
 //     const formData = new FormData();

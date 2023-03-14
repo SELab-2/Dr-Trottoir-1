@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <v-form>
+      <!-- card met alle info over het gebouw -->
       <v-card prepend-icon="mdi-home">
         <template v-slot:title> Gebouw info </template>
         <v-card-item>
@@ -51,6 +52,7 @@
       </v-card>
       <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
       <v-card prepend-icon="mdi-access-point">
+      <!-- card met alle info over de locatie -->
         <template v-slot:title> Locatie info </template>
         <v-card-item>
           <v-row>
@@ -60,7 +62,6 @@
                 v-model="dummyMap"
               ></v-img>
             </v-col>
-            <!-- TODO: vervagen door adress forum component -->
             <v-col>
               <v-row>
                 <v-col>
@@ -80,48 +81,17 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    required
-                    type="text"
-                    v-model="building.address.street"
-                    label="Straat"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="3">
-                  <v-text-field
-                    required
-                    type="number"
-                    v-model="building.address.number"
-                    label="Huisnummer"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    required
-                    type="text"
-                    v-model="building.address.city"
-                    label="Stad"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="3">
-                  <v-text-field
-                    required
-                    type="number"
-                    v-model="building.address.zip_code"
-                    label="Post code"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
+              <!-- addres forum gebruiken --> 
+              <AddressForm
+                      @onUpdate="(newAddress) => parentAddress = newAddress"
+                  ></AddressForm>
             </v-col>
           </v-row>
         </v-card-item>
       </v-card>
       <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
       <v-card prepend-icon="mdi-image">
+        <!-- v-card met alle extra afbeeldingen --> 
         <template v-slot:title> Extra afbeeldigen </template>
         <v-card-item>
           <MultiAddImage @form-submitted="handleFormSubmitted"> </MultiAddImage>
@@ -143,10 +113,12 @@ import { ref } from "vue";
 import MultiAddImage from "../components/multiAddImage.vue";
 import Address from "../models/Address";
 import Building from "../models/Building";
+import AddressForm from "../components/AddressForm.vue"
 //import defaultImg from "../assets/images/defaultImage.png";
 
 const dummyMap = ref(null);
 
+//func for preview image
 const previewImage = () => {
   const reader = new FileReader();
   reader.onload = () => {
@@ -170,6 +142,7 @@ const building = ref<Building>({
   manual: null,
 });
 
+//later use
 const submit = () => {
   try {
     //alle data zit in building
