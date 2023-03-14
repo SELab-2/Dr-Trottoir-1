@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
+import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import RoundFollowup from "@/views/RoundFollowup";
 
@@ -17,6 +18,11 @@ const routes = [
         path: "/rondes/opvolgen",
         name: "Opvolgen van rondes",
         component: RoundFollowup,
+      },
+      {
+        path: "/dashboard/gebruikers/nieuw",
+        name: "Nieuwe gebruiker toevoegen",
+        component: UserCreation,
       },
     ],
   },
