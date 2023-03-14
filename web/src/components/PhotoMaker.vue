@@ -4,32 +4,31 @@
       <v-form>
         <v-img
           cover
-          lazy-src="null"
-          :src="preview"
-          lazySrc="../assets/images/blanc.png"
-          v-model="preview"
+          v-if="imageUrl"
+          :src="imageUrl"
           aspect-ratio="1/1"
           :with="300"
         ></v-img>
         <div class="d-flex justify-center align-center py-5">
-          <v-btn block variant="outlined" @click="submit">
+          <v-btn block variant="outlined">
             Afbeelding toevoegen</v-btn
           >
         </div>
 
         <v-file-input
           single
-          v-model="image"
+          v-model="photo.image"
           label="Select Image"
           accept="image/*"
           prepend-icon=""
           prepend-inner-icon="mdi-image"
           @change="previewImage"
+          @update:model-value="$emit('onUpdate', photo)"
         ></v-file-input>
-        <v-textarea label="Comments" rows="3" v-model="comments"></v-textarea>
-        <v-text-field label="Image Label" v-model="label"></v-text-field>
+        <v-textarea @update:model-value="$emit('onUpdate', photo)" label="Comments" rows="3" v-model="photo.comments"></v-textarea>
+        <v-text-field @update:model-value="$emit('onUpdate', photo)" label="Image Label" v-model="photo.label"></v-text-field>
         <div class="d-flex justify-center align-center">
-          <v-btn @click="submit" color="primary">Submit</v-btn>
+          <v-btn color="primary">Submit</v-btn>
         </div>
       </v-form>
     </v-container>
@@ -37,45 +36,55 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, emit } from "vue";
+import { ref } from "vue";
+import Photo from "@/components/models/Photo";
 
-const preview = ref(null);
-const image = ref(null);
-const label = ref("");
-const comments = ref("");
+const photo = ref<Photo>({
+  image: [],
+  comments: "",
+  label: "",
 
-const previewImage = () => {
+});
+
+const imageUrl = ref(null);
+
+const previewImage = event => {
+  const file = event.target.files[0];
   const reader = new FileReader();
-  reader.onload = () => {
-    preview.value = reader.result;
+
+  reader.onload = e => {
+    imageUrl.value = e.target.result;
   };
-  reader.readAsDataURL(image.value[0]);
-};
-const submit = () => {
-  try {
-    const formData = new FormData();
-    formData.append("image", image.value);
-    formData.append("label", label.value);
-    formData.append("comment", comments.value);
-    console.log("verzonden");
-    for (const value of formData.values()) {
-      console.log(value);
-    }
 
-    //const response = await axios.post("/images", formData);
-    //console.log(response.data);
-
-    // reset form after submit
-    //file.value = null;
-    preview.value = null;
-    label.value = "";
-    comments.value = "";
-    image.value = null;
-    emit("form-submitted", formData);
-  } catch (error) {
-    console.log(error);
-  }
+  reader.readAsDataURL(file);
 };
+
+// later voor het submit van afbeelding 
+//const submit = () => {
+//   try {
+//     const formData = new FormData();
+//     formData.append("image", photo.image.value);
+//     formData.append("label", label.value);
+//     formData.append("comment", comments.value);
+//     console.log("verzonden");
+//     for (const value of formData.values()) {
+//       console.log(value);
+//     }
+
+//     //const response = await axios.post("/images", formData);
+//     //console.log(response.data);
+
+//     // reset form after submit
+//     //file.value = null;
+//     preview.value = null;
+//     label.value = "";
+//     comments.value = "";
+//     image.value = null;
+//     //emit("form-submitted", formData);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 </script>
 
 <style scoped>
