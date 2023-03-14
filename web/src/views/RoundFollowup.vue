@@ -1,4 +1,5 @@
 <template>
+  <!-- Simple vlist that uses the custom component RoundCard -->
   <v-list v-for="round in mockrounds">
     <RoundCard
       :round_name="round.name"

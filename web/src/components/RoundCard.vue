@@ -1,11 +1,9 @@
 <template>
+  <!-- TODO: Container around the card to show the edges a bit more, should be removed in the future -->
   <v-container style="background: ##fafafa">
     <v-card class="d-flex align-center justify-center mb-6" height="160px">
-      <v-card></v-card>
-      <v-card></v-card>
-      <v-card></v-card>
-
       <v-list class="ma-2 pa-2 me-auto">
+        <!-- All the basic information of a round, used v-card titles and subtitles -->
         <v-card-title
           >{{ round_name }}
           <v-icon end v-if="round_comments" class="">mdi-comment-alert</v-icon>
@@ -26,6 +24,7 @@
         </v-card-subtitle>
       </v-list>
 
+      <!-- The progress bar at the right hand side of the screen -->
       <v-progress-circular
         class="ma-2 pa-2"
         :rotate="360"
@@ -43,6 +42,8 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
+// TODO: maybe too much props to give to a component, could be changed to an object in the future
+// Default props for this component
 const props = defineProps({
   round_name: String,
   round_start: String,
@@ -54,10 +55,12 @@ const props = defineProps({
   round_comments: { type: Boolean, default: false },
 });
 
+// Value which calculates the percentage that will be shown in the progressbar
 const progress = ref(
   Math.round((props.building_index / props.total_buildings) * 100),
 );
 
+// The description of the timeslot will be calculated inside this value
 const time_description = ref(
   props.round_started
     ? `Begonnen om ${props.round_start}`
