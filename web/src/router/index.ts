@@ -5,6 +5,7 @@ import MainLayout from "@/layouts/MainLayout.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
+import RoundDetail from "@/views/RoundDetail.vue"
 
 const routes = [
   {
@@ -22,7 +23,7 @@ const routes = [
         component: RoundFollowup,
       },
       {
-        path: "/ronde-maken",
+        path: "/rondes/maken",
         name: "Ronde aanmaken",
         component: RoundMaker,
       },
@@ -36,6 +37,11 @@ const routes = [
         path: "/dashboard/gebruikers/nieuw",
         name: "Nieuwe gebruiker toevoegen",
         component: UserCreation,
+      },
+      {
+        path: "/rondes/detail",
+        name: "Detail van ronde",
+        component: RoundDetail,
       },
     ],
   },
