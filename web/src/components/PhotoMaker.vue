@@ -10,9 +10,7 @@
           :with="300"
         ></v-img>
         <div class="d-flex justify-center align-center py-5">
-          <v-btn block variant="outlined">
-            Afbeelding toevoegen</v-btn
-          >
+          <v-btn block variant="outlined"> Afbeelding toevoegen</v-btn>
         </div>
 
         <v-file-input
@@ -25,8 +23,17 @@
           @change="previewImage"
           @update:model-value="$emit('onUpdate', photo)"
         ></v-file-input>
-        <v-textarea @update:model-value="$emit('onUpdate', photo)" label="Comments" rows="3" v-model="photo.comments"></v-textarea>
-        <v-text-field @update:model-value="$emit('onUpdate', photo)" label="Image Label" v-model="photo.label"></v-text-field>
+        <v-textarea
+          @update:model-value="$emit('onUpdate', photo)"
+          label="Comments"
+          rows="3"
+          v-model="photo.comments"
+        ></v-textarea>
+        <v-text-field
+          @update:model-value="$emit('onUpdate', photo)"
+          label="Image Label"
+          v-model="photo.label"
+        ></v-text-field>
         <div class="d-flex justify-center align-center">
           <v-btn color="primary">Submit</v-btn>
         </div>
@@ -43,23 +50,24 @@ const photo = ref<Photo>({
   image: [],
   comments: "",
   label: "",
-
 });
 
 const imageUrl = ref(null);
 
-const previewImage = event => {
+const previewImage = (event) => {
   const file = event.target.files[0];
   const reader = new FileReader();
 
-  reader.onload = e => {
-    imageUrl.value = e.target.result;
+  reader.onload = (e) => {
+    if (e.target != null) {
+      imageUrl.value = e.target.result;
+    }
   };
 
   reader.readAsDataURL(file);
 };
 
-// later voor het submit van afbeelding 
+// later voor het submit van afbeelding
 //const submit = () => {
 //   try {
 //     const formData = new FormData();
