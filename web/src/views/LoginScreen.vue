@@ -34,7 +34,9 @@
           </span>
         </p>
         <!-- Login button -->
-        <v-btn class="float-r" @click="handleSubmit"> Login </v-btn>
+        <router-link to="/dashboard" class="float-r">
+          <v-btn prepend-icon="mdi-login">Login</v-btn>
+        </router-link>
       </div>
     </div>
   </div>
@@ -64,11 +66,6 @@ const showPsswd = ref(false);
 
 // reactive state to check if the snackbar must be shown or not
 const snackbar = ref(false);
-
-// function that handels the login event
-function handleSubmit() {
-  console.log("Logging in...");
-}
 </script>
 <style lang="scss">
 // backgroud div. Nedded to center form div

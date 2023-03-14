@@ -12,6 +12,7 @@
   "dependencies": {
     "@mdi/font": "7.0.96",
     "chance": "^1.1.11",
+    "@vuepic/vue-datepicker": "^4.2.0",
     "prettier": "^2.8.4",
     "roboto-fontface": "*",
     "sass": "^1.58.3",
