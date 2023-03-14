@@ -2,7 +2,7 @@
   <v-list density="compact">
     <v-text-field
       prepend-inner-icon="mdi-phone"
-      label="Telefoon nummer"
+      label="Telefoonnummer"
       v-model="contact.phone"
       :variant="readonly ? 'plain' : 'filled'"
       :readonly="readonly"
