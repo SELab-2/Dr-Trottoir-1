@@ -1,6 +1,6 @@
 <template>
   <div>
-  <!-- list to show all images -->
+    <!-- list to show all images -->
     <v-list v-for="image in images" :key="image">
       <v-card>
         <v-card-item>

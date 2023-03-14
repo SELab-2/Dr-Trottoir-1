@@ -52,7 +52,7 @@
       </v-card>
       <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
       <v-card prepend-icon="mdi-access-point">
-      <!-- card met alle info over de locatie -->
+        <!-- card met alle info over de locatie -->
         <template v-slot:title> Locatie info </template>
         <v-card-item>
           <v-row>
@@ -81,17 +81,17 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              <!-- addres forum gebruiken --> 
+              <!-- addres forum gebruiken -->
               <AddressForm
-                      @onUpdate="(newAddress) => parentAddress = newAddress"
-                  ></AddressForm>
+                @onUpdate="(newAddress) => (parentAddress = newAddress)"
+              ></AddressForm>
             </v-col>
           </v-row>
         </v-card-item>
       </v-card>
       <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
       <v-card prepend-icon="mdi-image">
-        <!-- v-card met alle extra afbeeldingen --> 
+        <!-- v-card met alle extra afbeeldingen -->
         <template v-slot:title> Extra afbeeldigen </template>
         <v-card-item>
           <MultiAddImage @form-submitted="handleFormSubmitted"> </MultiAddImage>
@@ -113,7 +113,7 @@ import { ref } from "vue";
 import MultiAddImage from "../components/multiAddImage.vue";
 import Address from "../models/Address";
 import Building from "../models/Building";
-import AddressForm from "../components/AddressForm.vue"
+import AddressForm from "../components/AddressForm.vue";
 //import defaultImg from "../assets/images/defaultImage.png";
 
 const dummyMap = ref(null);
