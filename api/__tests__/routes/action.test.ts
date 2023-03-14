@@ -1,12 +1,6 @@
 import app from "../../src/main";
 import request from "supertest";
 
-describe("Server.ts tests", () => {
-    test("Math test", () => {
-        expect(2 + 2).toBe(4);
-    });
-});
-
 /*
 Deze testen controleren dat de route de juiste statuscodes geeft bij het uitvoeren van een geldig request
 (met autorisatie).
