@@ -86,7 +86,8 @@
       <v-list lines="one" density="compact" v-if="!edit" class="mx-10">
         <v-list-item
           v-for="role in roles"
-          :title='"- " + String(role)'
+          :key="String(role)"
+          :title="'- ' + String(role)"
         ></v-list-item>
       </v-list>
     </v-card>
