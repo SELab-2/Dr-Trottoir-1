@@ -183,7 +183,7 @@ const edit = ref(false);
 
 // contact data
 const default_phone = "+32 412 34 56 78";
-const default_email = "jenst.pots@example.com";
+const default_email = "mats.vanbelle@example.com";
 const contact = ref<Contact>({
   phone: default_phone,
   email: default_email,
