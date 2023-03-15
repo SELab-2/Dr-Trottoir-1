@@ -98,7 +98,7 @@
     </v-card>
     
     <!-- Account creation button -->
-    <div class="d-flex flex-row-reverse mt-3">
+    <div class="d-flex flex-row-reverse my-3">
       <v-btn color="success" prepend-icon="mdi-check"> Maak account</v-btn>
     </div>
     

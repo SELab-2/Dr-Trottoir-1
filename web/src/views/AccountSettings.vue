@@ -132,7 +132,7 @@
     </v-card>
 
     <!-- Section that allows to save the settings -->
-    <v-card v-if="edit" class="mt-4" prepend-icon="mdi-check">
+    <v-card v-if="edit" class="my-4" prepend-icon="mdi-check">
       <template v-slot:title> Sla bewerkingen op </template>
       <div class="d-flex">
         <v-text-field
