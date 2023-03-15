@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mx-4">
     <!-- Top section with profile picture and edit button-->
     <div class="d-flex">
       <v-list-item
