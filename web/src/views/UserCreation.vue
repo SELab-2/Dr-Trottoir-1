@@ -41,7 +41,6 @@
       </ContactForm>
     </v-card>
 
-
     <!-- Address input form of the user -->
     <!-- Section with the adress -->
     <v-card class="mt-4" prepend-icon="mdi-map-marker">
@@ -82,7 +81,6 @@
         ></v-text-field>
       </v-list>
     </v-card>
-  
 
     <!-- Selection box to determine the roles -->
     <v-card class="mt-4" prepend-icon="mdi-account-multiple">
@@ -96,12 +94,11 @@
         v-model="roles"
       ></v-select>
     </v-card>
-    
+
     <!-- Account creation button -->
     <div class="d-flex flex-row-reverse my-3">
       <v-btn color="success" prepend-icon="mdi-check"> Maak account</v-btn>
     </div>
-    
   </div>
 </template>
 
@@ -113,7 +110,7 @@ import Contact from "@/components/models/Contact";
 import ContactForm from "@/components/ContactForm.vue";
 
 // define the spacing for the input fields
-const spacing: String = 'mx-5'
+const spacing: String = "mx-5";
 
 // reactive first name state
 const first_name: string = "";
@@ -126,7 +123,6 @@ const contact = ref<Contact>({
   phone: "",
   email: "",
 });
-
 
 // user address
 const address = ref<Address>({

@@ -166,7 +166,7 @@ import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
 
 // define the spacing for the input fields
-const spacing: String = 'mx-5'
+const spacing: String = "mx-5";
 
 const props = defineProps(["gebruikerid", "isadmin"]);
 const isAdmin = ref<Boolean>(props.isadmin === "true");
