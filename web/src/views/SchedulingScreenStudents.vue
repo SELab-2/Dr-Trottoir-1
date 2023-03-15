@@ -18,14 +18,10 @@
         :subtitle="building.address"
         prepend-icon="mdi-office-building-outline"
       >
-        <template v-slot:append >
-          <v-checkbox
-            v-on:click.prevent
-            v-model="building.done"
-          ></v-checkbox>
-          
+        <template v-slot:append>
+          <v-checkbox v-on:click.prevent v-model="building.done"></v-checkbox>
         </template>
-        
+
         <!-- hour -->
         <v-chip
           prepend-icon="mdi-clock-time-ten-outline"
@@ -76,8 +72,6 @@
 
 <script>
 export default {
-
-
   name: "SchedulingScreenStudents",
   data() {
     // test data
