@@ -43,7 +43,7 @@ const routes = [
         name: "Rondes",
       },
       {
-        path: "/dashboard/gebouwen/:id",
+        path: "/gebouw/:id",
         name: "Gebouw",
         component: BuildingSceen,
         props: true,
