@@ -17,7 +17,7 @@ export class Building implements TableEntity<Building> {
   }
 
   detailPageUrl(): string {
-    return `/dashboard/gebouwen/${this.id}`;
+    return `/gebouw/${this.id}`;
   }
 
   static headers(): Array<Header<Building>> {
