@@ -1,7 +1,7 @@
 <template>
   <!-- Day cards -->
   <v-card
-    v-for="day in sorted"
+    v-for="day in days"
     :key="day.name"
     class="mx-4 mt-4"
     :title="day.name"
@@ -70,49 +70,44 @@
   </v-card>
 </template>
 
-<script>
-export default {
-  name: "SchedulingScreenStudents",
-  data() {
-    // test data
-    return {
-      days: {
+<script lang="ts" setup>
+const days = {
         monday: {
           name: "Maandag",
           buildings: [
             {
-              name: "gebouw1",
-              address: "coolestraat 69",
+              name: "Upkot",
+              address: "Herentalsebaan 427",
               info: "meer info/opmerkingen",
-              deadline: new Date(2023, 0o2, 0o6, 19, 0),
-              garbage: ["PMD", "REST"],
+              deadline: new Date(2023, 0o2, 0o6, 21, 30),
+              garbage: ["PMD", "PAPIER"],
               showinfo: false,
               done: true,
             },
             {
-              name: "gebouw2",
-              address: "anderestraat 420",
+              name: "Leftkot",
+              address: "Rue Dielhère 403",
               info: "wegens werken dient de achteringang genomen te worden",
-              deadline: new Date(2023, 0o2, 0o6, 20, 30),
-              garbage: ["GLAS"],
+              deadline: new Date(2023, 0o2, 0o6, 19, 45),
+              garbage: ["REST", "PAPIER"],
               showinfo: false,
               done: true,
             },
             {
-              name: "gebouw3",
-              address: "teamstraat 1",
+              name: "Home Johannes",
+              address: "Kerkstraat 122",
               info: "meer info/opmerkingen",
-              deadline: new Date(2023, 0o2, 0o6, 21, 0),
-              garbage: ["REST"],
+              deadline: new Date(2023, 0o2, 0o6, 20, 0),
+              garbage: ["PMD", "REST"],
               showinfo: false,
               done: false,
             },
             {
-              name: "gebouw4",
-              address: "geeninspiratiestraat 13",
+              name: "Appartmentblok 2.3",
+              address: "Aven Ackers 193",
               info: "meer info/opmerkingen",
-              deadline: new Date(2023, 0o2, 0o6, 19, 30),
-              garbage: ["PMD", "PAPIER"],
+              deadline: new Date(2023, 0o2, 0o6, 20, 30),
+              garbage: ["PMD", "REST", "GLAS", "PAPIER"],
               showinfo: false,
               done: false,
             },
@@ -122,38 +117,38 @@ export default {
           name: "Dinsdag",
           buildings: [
             {
-              name: "gebouw1",
-              address: "coolestraat 69",
+              name: "Upkot",
+              address: "Herentalsebaan 427",
               info: "meer info/opmerkingen",
-              deadline: new Date(2023, 0o2, 0o6, 19, 30),
-              garbage: ["PMD", "REST", "GLAS"],
+              deadline: new Date(2023, 0o2, 0o6, 21, 30),
+              garbage: ["PMD", "PAPIER"],
               showinfo: false,
               done: false,
             },
             {
-              name: "gebouw2",
-              address: "anderestraat 420",
+              name: "Leftkot",
+              address: "Rue Dielhère 403",
               info: "wegens werken dient de achteringang genomen te worden",
-              deadline: new Date(2023, 0o2, 0o6, 19, 0),
+              deadline: new Date(2023, 0o2, 0o6, 19, 45),
+              garbage: ["REST", "PAPIER"],
+              showinfo: false,
+              done: false,
+            },
+            {
+              name: "Home Johannes",
+              address: "Kerkstraat 122",
+              info: "meer info/opmerkingen",
+              deadline: new Date(2023, 0o2, 0o6, 20, 0),
               garbage: ["PMD", "REST"],
               showinfo: false,
               done: false,
             },
             {
-              name: "gebouw3",
-              address: "teamstraat 1",
+              name: "Appartmentblok 2.3",
+              address: "Aven Ackers 193",
               info: "meer info/opmerkingen",
-              deadline: new Date(2023, 0o2, 0o6, 22, 0),
-              garbage: ["REST"],
-              showinfo: false,
-              done: false,
-            },
-            {
-              name: "gebouw4",
-              address: "geeninspiratiestraat 13",
-              info: "meer info/opmerkingen",
-              deadline: new Date(2023, 0o2, 0o6, 19, 0),
-              garbage: ["PAPIER"],
+              deadline: new Date(2023, 0o2, 0o6, 20, 30),
+              garbage: ["PMD", "REST", "GLAS", "PAPIER"],
               showinfo: false,
               done: false,
             },
@@ -163,8 +158,8 @@ export default {
           name: "Woensdag",
           buildings: [
             {
-              name: "gebouw1",
-              address: "coolestraat 69",
+              name: "Upkot",
+              address: "Herentalsebaan 427",
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 21, 30),
               garbage: ["PMD", "PAPIER"],
@@ -172,8 +167,8 @@ export default {
               done: false,
             },
             {
-              name: "gebouw2",
-              address: "anderestraat 420",
+              name: "Leftkot",
+              address: "Rue Dielhère 403",
               info: "wegens werken dient de achteringang genomen te worden",
               deadline: new Date(2023, 0o2, 0o6, 19, 45),
               garbage: ["REST", "PAPIER"],
@@ -181,8 +176,8 @@ export default {
               done: false,
             },
             {
-              name: "gebouw3",
-              address: "teamstraat 1",
+              name: "Home Johannes",
+              address: "Kerkstraat 122",
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 20, 0),
               garbage: ["PMD", "REST"],
@@ -190,8 +185,8 @@ export default {
               done: false,
             },
             {
-              name: "gebouw4",
-              address: "geeninspiratiestraat 13",
+              name: "Appartmentblok 2.3",
+              address: "Aven Ackers 193",
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 20, 30),
               garbage: ["PMD", "REST", "GLAS", "PAPIER"],
@@ -200,47 +195,5 @@ export default {
             },
           ],
         },
-      },
-    };
-  },
-  computed: {
-    sorted() {
-      let sortedDays = {};
-      for (const [key, value] of Object.entries(this.days)) {
-        sortedDays[key] = value;
-        sortedDays[key].buildings = value.buildings.sort((x, y) => {
-          return x["deadline"] - y["deadline"];
-        });
-      }
-      return sortedDays;
-    },
-  },
-};
+}
 </script>
-
-<style scoped lang="scss">
-@import "src/assets/styles/base";
-
-.flexbox {
-  margin-right: 15px;
-}
-
-.dayCard {
-  border: 1px solid lightgray;
-}
-
-.buildingCard {
-  width: 250px;
-}
-
-/*
-style can still be changed
-.dayCard {
-  background-color: $accent;
-}
-
-.buildingCard:hover {
-  background-color: $accent;
-}
-*/
-</style>
