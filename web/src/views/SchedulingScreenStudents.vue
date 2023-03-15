@@ -12,7 +12,7 @@
               <v-sheet>
                 <v-card-item class="buildingCard">
                   <v-card-title>
-                    <router-link to="/dashboard">{{
+                    <router-link to="/gebouw/1">{{
                       building.name
                     }}</router-link></v-card-title
                   >
