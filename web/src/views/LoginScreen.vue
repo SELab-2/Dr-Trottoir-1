@@ -46,15 +46,12 @@
     <v-card prepend-icon="mdi-help">
       <template v-slot:title> Help </template>
       <p class="mx-3">
-        Indien je nog geen account hebt en graag lid wilt worden van DR. Trottoir
-        neem dan contact op met ons via exaple@drtrottoir.be
+        Indien je nog geen account hebt en graag lid wilt worden van DR.
+        Trottoir neem dan contact op met ons via exaple@drtrottoir.be
       </p>
       <div class="d-flex flex-row-reverse ma-3">
-        <v-btn 
-          @click="snackbar = false"
-          color="primary"
-        > Close </v-btn>
-      </div>        
+        <v-btn @click="snackbar = false" color="primary"> Close </v-btn>
+      </div>
     </v-card>
   </v-snackbar>
 </template>
