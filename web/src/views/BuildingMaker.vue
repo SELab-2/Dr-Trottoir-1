@@ -9,8 +9,7 @@
             <v-col cols="3">
               <v-img
                 cover
-                :src="previewBuildingImage"
-                v-model="previewBuildingImage"
+                :src="preview"
                 lazy-src="@/assets/images/defaultImage.png"
               ></v-img>
             </v-col>
@@ -100,7 +99,7 @@
       </v-card>
       <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
       <div class="d-flex justify-center">
-        <v-btn block variant="outlined" type="submit"
+        <v-btn @click="submit" block variant="outlined" type="submit"
           >Submit gebouw</v-btn
         >
       </div>
@@ -125,7 +124,7 @@ const address2 = ref<Address2>({
   zip_code: 0,
   latitude: 0,
   longitude: 0,
-}),
+});
 
 const building = ref<Building>({
   name: "",
@@ -135,33 +134,28 @@ const building = ref<Building>({
 });
 
 //TODO: handle multi image
-const handleMultiImages = () => {
-
-}
-
-const previewBuildingImage = ref("");
-
-// TODO: fix typing here
-const previewImage = (event) => {
-  const file = event.target.files[0];
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    if (e.target != null) {
-      previewBuildingImage.value = e.target.result;
-    }
-  };
-
+const handleMultiImages = () => {};
 //TODO: api request
 const submit = () => {
   try {
     //alle data zit in building
     //const response = await axios.post("", );
     //console.log(response.data);
-
     // reset form after submit
     //previewBuildingImage.value = ref(null);
   } catch (error) {
     console.log(error);
   }
+};
+
+const preview = ref("");
+
+// TODO: fix typing here
+const previewImage = () => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    preview.value = reader.result;
+  };
+  reader.readAsDataURL(buildingImage.value[0]);
 };
 </script>

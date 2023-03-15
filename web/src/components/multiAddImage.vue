@@ -32,7 +32,7 @@ const addMore = () => {
 };
 
 //remove image
-const remove = (index:number) => {
+const remove = (index: number) => {
   images.splice(index, 1);
 };
 </script>
