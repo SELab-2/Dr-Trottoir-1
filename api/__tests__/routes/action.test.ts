@@ -1,4 +1,5 @@
 import app from "../../src/main";
+// @ts-ignore
 import request from "supertest";
 
 /*
@@ -191,3 +192,6 @@ describe("Test ActionRouting unsuccessful requests", () => {
         expect(resultDelete.badRequest).toEqual(true);
     });
 });
+
+// close the server after test suite is done
+app.close();

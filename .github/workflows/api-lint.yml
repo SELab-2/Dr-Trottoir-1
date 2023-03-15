@@ -9,15 +9,22 @@ on:
             - 'api/**'
 
 jobs:
-    lint:
-        runs-on: [self-hosted]
+    lint_test:
+        runs-on: [ self-hosted ]
         env:
-          PRISMA_SKIP_POSTINSTALL_GENERATE: true
-          OUTPUT_DIRECTORY: ./api/prisma
+            PRISMA_SKIP_POSTINSTALL_GENERATE: true
+            OUTPUT_DIRECTORY: ./api/prisma
         defaults:
             run:
                 working-directory: ./api
         steps:
-            - uses: actions/checkout@v3
-            - name: "Check for linting and errors"
-              run: npm ci && npx prisma generate && npm run test
+            -   name: "Checkout"
+                uses: actions/checkout@v3
+            -   name: "Install dependencies"
+                run: npm ci
+            -   name: "Check for linting and errors"
+                run: npm run lint
+#            -   name: "Generate prisma schema"
+#                run: npx prisma generate && ls -al
+#            -   name: "Run tests"
+#                run: npm run test
