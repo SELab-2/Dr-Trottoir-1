@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- list to show all images -->
-    <v-list v-for="image in images" :key="image">
+    <v-list v-for="index in images" :key="index">
       <v-card>
         <v-card-item>
           <AddImage> </AddImage>
@@ -32,7 +32,7 @@ const addMore = () => {
 };
 
 //remove image
-const remove = (index) => {
+const remove = (index:number) => {
   images.splice(index, 1);
 };
 </script>

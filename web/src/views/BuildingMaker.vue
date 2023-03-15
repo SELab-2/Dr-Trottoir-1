@@ -117,6 +117,8 @@ import AddressForm from "../components/AddressForm.vue";
 //import defaultImg from "../assets/images/defaultImage.png";
 
 const dummyMap = ref(null);
+const previewBuildingImage = "";
+const buildingImage = ref(null);
 
 //func for preview image
 const previewImage = () => {
@@ -143,19 +145,16 @@ const building = ref<Building>({
 });
 
 //later use
-// const submit = () => {
-//   try {
-//     //alle data zit in building
-//     //const response = await axios.post("", );
-//     //console.log(response.data);
+const submit = () => {
+  try {
+    //alle data zit in building
+    //const response = await axios.post("", );
+    //console.log(response.data);
 
-//     // reset form after submit
-//     previewBuildingImage.value = ref(null);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-const previewBuildingImage = ref(null);
-const buildingImage = ref(null);
+    // reset form after submit
+    //previewBuildingImage.value = ref(null);
+  } catch (error) {
+    console.log(error);
+  }
+};
 </script>
