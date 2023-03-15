@@ -21,7 +21,7 @@ export class User implements TableEntity<User> {
   }
 
   detailPageUrl(): string {
-    return "/";
+    return "/account/0/false";
   }
 
   static headers(): Array<Header<User>> {

@@ -172,7 +172,7 @@
               <v-list-item
                 prepend-icon="mdi-account-plus"
                 title="Maak account aan"
-                value="routes"
+                value="accountCreation"
               />
             </router-link>
           </div>
