@@ -10,6 +10,7 @@ import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
+import RoundPlanner from "@/views/RoundPlanner.vue"
 
 const routes = [
   {
@@ -67,6 +68,11 @@ const routes = [
         path: "/dashboard/gebruikers/nieuw",
         name: "Nieuwe gebruiker toevoegen",
         component: UserCreation,
+      },
+      {
+        path: "/dashboard/round/planner",
+        name: "Ronde Planner",
+        component: RoundPlanner
       },
     ],
   },
