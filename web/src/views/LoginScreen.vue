@@ -25,30 +25,37 @@
         bg
       ></v-text-field>
       <!-- Div with help text and login button -->
-      <div>
+      <div class="d-flex">
         <!-- Help text for people who don't have an account yet -->
-        <p class="float-l">
+        <p class="me-auto">
           Nog geen account?
           <span @click="snackbar = true" class="clickable-text">
             Contacteer ons
           </span>
         </p>
         <!-- Login button -->
-        <router-link to="/dashboard" class="float-r">
-          <v-btn prepend-icon="mdi-login">Login</v-btn>
+        <router-link to="/dashboard">
+          <v-btn prepend-icon="mdi-login" color="success">Login</v-btn>
         </router-link>
       </div>
     </div>
   </div>
 
   <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
-  <v-snackbar v-model="snackbar">
-    <h1>Help</h1>
-    <p>
-      TODO: textje voor accountaanmaak en vragen verwijs door naar
-      exaple@drtrottoir.be
-    </p>
-    <v-btn @click="snackbar = false"> Close </v-btn>
+  <v-snackbar v-model="snackbar" timeout="-1">
+    <v-card prepend-icon="mdi-help">
+      <template v-slot:title> Help </template>
+      <p class="mx-3">
+        Indien je nog geen account hebt en graag lid wilt worden van DR. Trottoir
+        neem dan contact op met ons via exaple@drtrottoir.be
+      </p>
+      <div class="d-flex flex-row-reverse ma-3">
+        <v-btn 
+          @click="snackbar = false"
+          color="primary"
+        > Close </v-btn>
+      </div>        
+    </v-card>
   </v-snackbar>
 </template>
 
@@ -90,15 +97,5 @@ const snackbar = ref(false);
   text-decoration: underline;
   cursor: pointer;
   color: #069;
-}
-
-// let component live left in it's parent
-.float-l {
-  float: left;
-}
-
-// let component live right in it's parent
-.float-r {
-  float: right;
 }
 </style>
