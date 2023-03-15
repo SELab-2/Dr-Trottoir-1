@@ -10,7 +10,7 @@ import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
-import RoundPlanner from "@/views/RoundPlanner.vue"
+import RoundPlanner from "@/views/RoundPlanner.vue";
 
 const routes = [
   {
@@ -72,7 +72,7 @@ const routes = [
       {
         path: "/dashboard/round/planner",
         name: "Ronde Planner",
-        component: RoundPlanner
+        component: RoundPlanner,
       },
     ],
   },
