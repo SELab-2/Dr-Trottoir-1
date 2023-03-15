@@ -3,6 +3,7 @@ import LoginScreen from "@/views/LoginScreen.vue";
 import BuildingSceen from "@/views/BuildingScreen.vue";
 import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
+import SchedulingScreenStudent from "@/views/SchedulingScreenStudents.vue";
 import Users from "@/views/dashboard/Users.vue";
 import Buildings from "@/views/dashboard/Buildings.vue";
 import Routes from "@/views/dashboard/Routes.vue";
@@ -21,6 +22,11 @@ const routes = [
     name: "dashboard",
     component: MainLayout,
     children: [
+      {
+        path: "/planningsoverzicht",
+        name: "Planningsoverzicht",
+        component: SchedulingScreenStudent,
+      },
       {
         path: "/dashboard/gebruikers",
         component: Users,

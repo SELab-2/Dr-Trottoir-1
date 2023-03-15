@@ -1,49 +1,53 @@
 <template>
   <BuildingData :id="id" />
   <div id="building-screen" class="px-4">
-    <div class="schedule" v-bind:key="item" v-for="item in schedule">
-      <h2>{{ item }}</h2>
-
-      <div class="schedule-grid">
-        <div class="schedule-action">
-          <div>
-            <p style="font-weight: 500; font-size: 22px">GFT</p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod
-            </p>
-          </div>
+    <v-container class="schedule">
+      <v-row>
+        <v-col class="schedule-date" cols="3">
+          <h2>Woe</h2>
+          <h1>15</h1>
+        </v-col>
+        <v-col class="schedule-action">
+          <p style="font-weight: 500; font-size: 22px">GFT</p>
           <p>07u30</p>
-        </div>
-        <div class="schedule-action">
-          <div>
-            <p style="font-weight: 500; font-size: 22px">REST</p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod
-            </p>
-          </div>
-          <p>10u00</p>
-        </div>
-        <div class="schedule-action">
-          <div>
-            <p style="font-weight: 500; font-size: 22px">Grof huisvuil</p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod
-            </p>
-          </div>
-          <p>14u15</p>
-        </div>
-        <div
-          class="schedule-action"
-          style="justify-content: center; align-items: center"
-        >
-          <v-icon color="#333333" icon="mdi-plus"></v-icon>
-          <p style="font-weight: bolder">TOEVOEGEN</p>
-        </div>
-      </div>
-    </div>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="schedule-date" cols="3" />
+        <v-col class="schedule-action">
+          <p style="font-weight: 500; font-size: 22px">REST</p>
+          <p>07u45</p>
+        </v-col>
+      </v-row>
+      <v-row class="py-4"><v-divider /></v-row>
+      <v-row>
+        <v-col class="schedule-date" cols="3">
+          <h2>Dond</h2>
+          <h1>16</h1>
+        </v-col>
+        <v-col class="schedule-action">
+          <p style="font-weight: 500; font-size: 22px">GLAS</p>
+          <p>08u10</p>
+        </v-col>
+      </v-row>
+      <v-row class="py-4"><v-divider /></v-row>
+      <v-row>
+        <v-col class="schedule-date" cols="3">
+          <h2>Vrij</h2>
+          <h1>17</h1>
+        </v-col>
+        <v-col class="schedule-action">
+          <p style="font-weight: 500; font-size: 22px">PMD</p>
+          <p>09u40</p>
+        </v-col>
+      </v-row>
+      <v-row class="py-4">
+        <RoundedButton
+          style="margin: auto"
+          icon="mdi-chevron-down"
+        ></RoundedButton>
+      </v-row>
+    </v-container>
 
     <div>
       <h2>Huidig bezoek</h2>
@@ -68,6 +72,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import BuildingData from "@/components/BuildingData.vue";
+import RoundedButton from "@/components/RoundedButton.vue";
 import ImageCard from "@/components/ImageCard.vue";
 
 // reactive state to show the drawer or not
@@ -75,8 +80,6 @@ import ImageCard from "@/components/ImageCard.vue";
 const props = defineProps({
   id: String,
 });
-
-const schedule = ref<string[]>(["Vandaag", "Morgen"]);
 
 const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
   {
@@ -124,25 +127,6 @@ ul {
   }
 }
 
-.schedule-grid {
-  display: grid;
-  gap: 12px;
-
-  @media (min-width: 600px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-}
-
-.schedule {
-  & > * {
-    margin: 10px 0;
-  }
-}
-
 .schedule-action {
   display: flex;
   padding: 20px;
@@ -150,6 +134,13 @@ ul {
   border-radius: 5px;
   border: 2px solid #f1f1f1;
   background: #fafafa;
+  width: 90%;
+  margin: 4px;
+}
+
+.schedule-date {
+  height: 90px;
+  padding-top: 0;
 }
 
 .image-grid {
