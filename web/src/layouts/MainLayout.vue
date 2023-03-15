@@ -96,7 +96,7 @@
               />
             </router-link>
 
-            <router-link to="/gebouw">
+            <router-link to="/gebouwen">
               <v-list-item
                 prepend-icon="mdi-domain"
                 title="Gebouwen"
