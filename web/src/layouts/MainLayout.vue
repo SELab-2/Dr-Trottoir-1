@@ -56,7 +56,7 @@
           <div v-if="isStudent">
             <p class="pa-2 font-weight-medium text-caption">Overzicht</p>
 
-            <router-link to="/dashboard">
+            <router-link to="/planningsoverzicht">
               <v-list-item
                 prepend-icon="mdi-calendar-edit"
                 title="Planning"

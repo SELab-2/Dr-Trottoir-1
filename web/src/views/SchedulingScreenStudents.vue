@@ -1,51 +1,65 @@
 <template>
-  <v-list class="list">
-    <v-list-item v-for="day in sorted" :key="day.name">
-      <v-card class="dayCard">
-        <v-card-item>
-          <v-card-title>{{ day.name }}</v-card-title>
-        </v-card-item>
-        <v-divider></v-divider>
-        <v-list>
-          <v-list-item v-for="building in day.buildings" :key="building.name">
-            <div class="d-flex">
-              <v-sheet>
-                <v-card-item class="buildingCard">
-                  <v-card-title>
-                    <router-link to="/dashboard">{{
-                      building.name
-                    }}</router-link></v-card-title
-                  >
-                  <v-card-subtitle>{{ building.address }} </v-card-subtitle>
-                  <v-card-title
-                    >{{ building.deadline.getHours() }}:{{
-                      ("0" + building.deadline.getUTCMinutes()).slice(-2)
-                    }}</v-card-title
-                  >
-                  <div>
-                    <v-sheet class="d-flex">
-                      <v-sheet
-                        v-for="gb in building.garbage"
-                        :key="gb"
-                        class="flexbox"
-                      >
-                        {{ gb }}
-                      </v-sheet>
-                    </v-sheet>
-                  </div>
-                  {{ building.info }}
-                </v-card-item>
-              </v-sheet>
-              <v-sheet>
-                <v-checkbox></v-checkbox>
-              </v-sheet>
-            </div>
+  <!-- Day cards -->
+  <v-card v-for="day in sorted" :key="day.name" class="mx-4 mt-4" :title="day.name">
+    <!-- Building cards -->
+    <router-link
+      v-for="building in day.buildings" 
+      :key="building.name"
+      to="/gebouwen"
+    >
+      <v-card
+        
+        class="ma-3"
+        :title="building.name"
+        :subtitle="building.address"
+        prepend-icon="mdi-office-building-outline"
+        @click=""
+      >
+        <template v-slot:append>
+          <v-checkbox></v-checkbox>
+        </template>
+
+        <!-- hour -->
+        <v-chip
+          prepend-icon="mdi-clock-time-ten-outline"
+          label
+          color="primary"
+          class="ml-5"
+        >
+        {{ building.deadline.getHours() }}:{{ ("0" + building.deadline.getUTCMinutes()).slice(-2) }}
+        </v-chip>
+        
+        <!-- Trash types -->
+        <v-chip
+          prepend-icon="mdi-recycle"
+          label
+          color="success"
+          v-for="gb in building.garbage"
+          :key="gb"
+          class="ml-2"
+        >
+          {{ gb }}
+        </v-chip>
+
+
+        <v-card-actions>
+          <v-btn
+            :prepend-icon="building.showinfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+            @click="building.showinfo = !building.showinfo"
+          >Opmerkingen</v-btn>
+        </v-card-actions>
+        
+        <v-expand-transition>
+          <div v-show="building.showinfo">
             <v-divider></v-divider>
-          </v-list-item>
-        </v-list>
+            <v-card-text>
+              {{ building.info }}
+            </v-card-text>
+          </div>
+        </v-expand-transition>
       </v-card>
-    </v-list-item>
-  </v-list>
+    </router-link>
+  </v-card>
 </template>
 
 <script>
@@ -56,7 +70,7 @@ export default {
     return {
       days: {
         monday: {
-          name: "maandag",
+          name: "Maandag",
           buildings: [
             {
               name: "gebouw1",
@@ -64,6 +78,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 19, 0),
               garbage: ["PMD", "REST"],
+              showinfo: false
             },
             {
               name: "gebouw2",
@@ -71,6 +86,7 @@ export default {
               info: "wegens werken dient de achteringang genomen te worden",
               deadline: new Date(2023, 0o2, 0o6, 20, 30),
               garbage: ["GLAS"],
+              showinfo: false
             },
             {
               name: "gebouw3",
@@ -78,6 +94,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 21, 0),
               garbage: ["REST"],
+              showinfo: false
             },
             {
               name: "gebouw4",
@@ -85,11 +102,12 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 19, 30),
               garbage: ["PMD", "PAPIER"],
+              showinfo: false
             },
           ],
         },
         tuesday: {
-          name: "dinsdag",
+          name: "Dinsdag",
           buildings: [
             {
               name: "gebouw1",
@@ -97,6 +115,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 19, 30),
               garbage: ["PMD", "REST", "GLAS"],
+              showinfo: false
             },
             {
               name: "gebouw2",
@@ -104,6 +123,7 @@ export default {
               info: "wegens werken dient de achteringang genomen te worden",
               deadline: new Date(2023, 0o2, 0o6, 19, 0),
               garbage: ["PMD", "REST"],
+              showinfo: false
             },
             {
               name: "gebouw3",
@@ -111,6 +131,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 22, 0),
               garbage: ["REST"],
+              showinfo: false
             },
             {
               name: "gebouw4",
@@ -118,11 +139,12 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 19, 0),
               garbage: ["PAPIER"],
+              showinfo: false
             },
           ],
         },
         wednesday: {
-          name: "woensdag",
+          name: "Woensdag",
           buildings: [
             {
               name: "gebouw1",
@@ -130,6 +152,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 21, 30),
               garbage: ["PMD", "PAPIER"],
+              showinfo: false
             },
             {
               name: "gebouw2",
@@ -137,6 +160,7 @@ export default {
               info: "wegens werken dient de achteringang genomen te worden",
               deadline: new Date(2023, 0o2, 0o6, 19, 45),
               garbage: ["REST", "PAPIER"],
+              showinfo: false
             },
             {
               name: "gebouw3",
@@ -144,6 +168,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 20, 0),
               garbage: ["PMD", "REST"],
+              showinfo: false
             },
             {
               name: "gebouw4",
@@ -151,6 +176,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 20, 30),
               garbage: ["PMD", "REST", "GLAS", "PAPIER"],
+              showinfo: false
             },
           ],
         },
