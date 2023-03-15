@@ -21,12 +21,13 @@
     return-object
     v-on:input="changeRound(`${selectedRound}`)"
   ></v-select>
+
   <div>
     Sorteer volgens dalende:
     <v-btn class="button" @click="sortedByTime">duur</v-btn>
     <v-btn class="button" @click="sortedByDate">datum</v-btn>
   </div>
-  <v-table hover:background-color="$accent" striped>
+  <v-table>
     <thead>
       <tr>
         <th>Datum</th>
@@ -46,16 +47,41 @@
           }}-{{ student.date.getFullYear() }}
         </td>
         <td>
-          <router-link class="stretched-link" to="/dashboard">{{
-            student.name
-          }}</router-link>
+          <router-link to="/dashboard">{{ student.name }}</router-link>
         </td>
         <td>
-          {{
-            Math.floor(student.time / 60000 / 60) +
-            ":" +
-            ("0" + Math.floor((student.time / 60000) % 60)).slice(-2)
-          }}
+          <v-expansion-panels>
+            <v-expansion-panel>
+              <v-expansion-panel-title>{{
+                Math.floor(student.time / 60000 / 60) +
+                ":" +
+                ("0" + Math.floor((student.time / 60000) % 60)).slice(-2)
+              }}</v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <v-timeline direction="horizontal">
+                  <v-timeline-item
+                    v-for="detail in student.details"
+                    :key="detail"
+                  >
+                    <template v-slot:opposite>
+                      <div v-text="detail.building"></div>
+                      <div>
+                        {{
+                          detail.start.getHours() +
+                          ":" +
+                          ("0" + detail.start.getMinutes()).slice(-2) +
+                          " - " +
+                          detail.end.getHours() +
+                          ":" +
+                          ("0" + detail.end.getMinutes()).slice(-2)
+                        }}
+                      </div>
+                    </template>
+                  </v-timeline-item>
+                </v-timeline>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
         </td>
       </tr>
     </tbody>
@@ -79,23 +105,43 @@ export default {
                   name: "Student 1",
                   date: new Date(2023, 2, 7),
                   time: 9000000,
+                  details: [
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                  ],
                 },
                 {
                   name: "Student 2",
                   date: new Date(2023, 2, 6),
                   time: 18000000,
+                  details: [
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                  ],
                 },
                 {
                   name: "Student 4",
                   date: new Date(2023, 2, 8),
                   time: 12000000,
+                  details: [
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                  ],
                 },
               ],
             },
             {
               name: "ronde 2",
               students: [
-                { name: "Student 3", date: new Date(), time: 8100000 },
+                {
+                  name: "Student 3",
+                  date: new Date(),
+                  time: 8100000,
+                  details: [
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                  ],
+                },
               ],
             },
           ],
@@ -106,13 +152,39 @@ export default {
             {
               name: "ronde 1",
               students: [
-                { name: "Student 1", date: new Date(), time: 9000000 },
+                {
+                  name: "Student 1",
+                  date: new Date(),
+                  time: 9000000,
+                  details: [
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                  ],
+                },
                 {
                   name: "Student 2",
                   date: new Date(2023, 2, 13),
                   time: 18000000,
+                  details: [
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                  ],
                 },
-                { name: "Student 4", date: new Date(), time: 12000000 },
+                {
+                  name: "Student 4",
+                  date: new Date(),
+                  time: 12000000,
+                  details: [
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                  ],
+                },
               ],
             },
             {
@@ -122,11 +194,19 @@ export default {
                   name: "Student 3",
                   date: new Date(2023, 3, 17),
                   time: 8100000,
+                  details: [
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                  ],
                 },
                 {
                   name: "Student 4",
                   date: new Date(2023, 3, 18),
                   time: 8000000,
+                  details: [
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                    { building: "gebouw", start: new Date(), end: new Date() },
+                  ],
                 },
               ],
             },
@@ -144,26 +224,68 @@ export default {
                 name: "Student 2",
                 date: new Date(2023, 2, 6),
                 time: 18000000,
+                details: [
+                  { building: "gebouw", start: new Date(), end: new Date() },
+                  { building: "gebouw", start: new Date(), end: new Date() },
+                ],
               },
-              { name: "Student 4", date: new Date(2023, 2, 8), time: 12000000 },
+              {
+                name: "Student 4",
+                date: new Date(2023, 2, 8),
+                time: 12000000,
+                details: [
+                  { building: "gebouw", start: new Date(), end: new Date() },
+                  { building: "gebouw", start: new Date(), end: new Date() },
+                ],
+              },
             ],
           },
           {
             name: "ronde 2",
-            students: [{ name: "Student 3", date: new Date(), time: 8100000 }],
+            students: [
+              {
+                name: "Student 3",
+                date: new Date(),
+                time: 8100000,
+                details: [
+                  { building: "gebouw", start: new Date(), end: new Date() },
+                  { building: "gebouw", start: new Date(), end: new Date() },
+                ],
+              },
+            ],
           },
         ],
       },
       selectedRound: {
         name: "ronde 1",
         students: [
-          { name: "Student 1", date: new Date(2023, 2, 7), time: 9000000 },
+          {
+            name: "Student 1",
+            date: new Date(2023, 2, 7),
+            time: 9000000,
+            details: [
+              { building: "gebouw", start: new Date(), end: new Date() },
+              { building: "gebouw", start: new Date(), end: new Date() },
+            ],
+          },
           {
             name: "Student 2",
             date: new Date(2023, 2, 6),
             time: 18000000,
+            details: [
+              { building: "gebouw", start: new Date(), end: new Date() },
+              { building: "gebouw", start: new Date(), end: new Date() },
+            ],
           },
-          { name: "Student 4", date: new Date(2023, 2, 8), time: 12000000 },
+          {
+            name: "Student 4",
+            date: new Date(2023, 2, 8),
+            time: 12000000,
+            details: [
+              { building: "gebouw", start: new Date(), end: new Date() },
+              { building: "gebouw", start: new Date(), end: new Date() },
+            ],
+          },
         ],
       },
     };
@@ -207,7 +329,16 @@ export default {
   background-color: $accent;
 }
 
+/*
+
+hover:background-color="$accent" in table header
+
 tbody tr:hover {
   background-color: $accent;
 }
+
+.v-expansion-panel:hover{
+  background-color: $accent;
+}
+*/
 </style>

@@ -23,7 +23,7 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "/opvolging/studenten",
+        path: "/studenten",
         name: "Opvolging studenten",
         component: StudentFollowUp,
       },
