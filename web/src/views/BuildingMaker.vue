@@ -68,7 +68,7 @@
                   <v-text-field
                     required
                     type="number"
-                    v-model="building.address.longitude"
+                    v-model="address2.longitude"
                     label="Longitude"
                   ></v-text-field>
                 </v-col>
@@ -76,14 +76,14 @@
                   <v-text-field
                     required
                     type="number"
-                    v-model="building.address.latitude"
+                    v-model="address2.latitude"
                     label="Latitude"
                   ></v-text-field>
                 </v-col>
               </v-row>
               <!-- addres forum gebruiken -->
               <AddressForm
-                @onUpdate="(newAddress) => (parentAddress = newAddress)"
+                @onUpdate="(newAddress) => (address2 = newAddress)"
               ></AddressForm>
             </v-col>
           </v-row>
@@ -94,13 +94,13 @@
         <!-- v-card met alle extra afbeeldingen -->
         <template v-slot:title> Extra afbeeldigen </template>
         <v-card-item>
-          <MultiAddImage @form-submitted="handleFormSubmitted"> </MultiAddImage>
+          <MultiAddImage @form-submitted="handleMultiImages"> </MultiAddImage>
           <div ref="container"></div>
         </v-card-item>
       </v-card>
       <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
       <div class="d-flex justify-center">
-        <v-btn @click="submit" block variant="outlined" type="submit"
+        <v-btn block variant="outlined" type="submit"
           >Submit gebouw</v-btn
         >
       </div>
@@ -117,34 +117,41 @@ import AddressForm from "../components/AddressForm.vue";
 //import defaultImg from "../assets/images/defaultImage.png";
 
 const dummyMap = ref(null);
-const previewBuildingImage = "";
-const buildingImage = ref(null);
-
-//func for preview image
-const previewImage = () => {
-  const reader = new FileReader();
-  reader.onload = () => {
-    previewBuildingImage.value = reader.result;
-  };
-  reader.readAsDataURL(buildingImage.value[0]);
-};
+const buildingImage = ref([]);
+const address2 = ref<Address2>({
+  street: "",
+  number: 0,
+  city: "",
+  zip_code: 0,
+  latitude: 0,
+  longitude: 0,
+}),
 
 const building = ref<Building>({
   name: "",
   ivagoId: "",
   syndicus: "",
-  address: ref<Address2>({
-   street: "",
-   number: 0,
-   city: "",
-   zip_code: 0,
-   latitude: 0,
-   longitude: 0,
-  }),
-  manual: null,
+  manual: [],
 });
 
-//later use
+//TODO: handle multi image
+const handleMultiImages = () => {
+
+}
+
+const previewBuildingImage = ref("");
+
+// TODO: fix typing here
+const previewImage = (event) => {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    if (e.target != null) {
+      previewBuildingImage.value = e.target.result;
+    }
+  };
+
+//TODO: api request
 const submit = () => {
   try {
     //alle data zit in building
