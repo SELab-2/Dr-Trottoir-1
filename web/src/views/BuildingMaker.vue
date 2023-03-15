@@ -109,7 +109,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import MultiAddImage from "../components/multiAddImage.vue";
+import MultiAddImage from "@/components/MultiAddImage.vue";
 import Address2 from "@/components/models/Address2";
 import Building from "@/components/models/Building";
 import AddressForm from "../components/AddressForm.vue";

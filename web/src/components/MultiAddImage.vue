@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import { reactive } from "vue";
-import AddImage from "../components/addImage.vue";
+import AddImage from "./AddImage.vue";
 
 const images = reactive([1]);
 
