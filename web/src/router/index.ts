@@ -28,7 +28,6 @@ const routes = [
         component: SchedulingScreenStudent,
       },
       {
-
         path: "/dashboard/gebruikers",
         component: Users,
         name: "Gebruikers",

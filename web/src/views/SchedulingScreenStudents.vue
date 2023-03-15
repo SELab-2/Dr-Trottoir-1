@@ -1,19 +1,22 @@
 <template>
   <!-- Day cards -->
-  <v-card v-for="day in sorted" :key="day.name" class="mx-4 mt-4" :title="day.name">
+  <v-card
+    v-for="day in sorted"
+    :key="day.name"
+    class="mx-4 mt-4"
+    :title="day.name"
+  >
     <!-- Building cards -->
     <router-link
-      v-for="building in day.buildings" 
+      v-for="building in day.buildings"
       :key="building.name"
       to="/gebouwen"
     >
       <v-card
-        
         class="ma-3"
         :title="building.name"
         :subtitle="building.address"
         prepend-icon="mdi-office-building-outline"
-        @click=""
       >
         <template v-slot:append>
           <v-checkbox></v-checkbox>
@@ -26,9 +29,11 @@
           color="primary"
           class="ml-5"
         >
-        {{ building.deadline.getHours() }}:{{ ("0" + building.deadline.getUTCMinutes()).slice(-2) }}
+          {{ building.deadline.getHours() }}:{{
+            ("0" + building.deadline.getUTCMinutes()).slice(-2)
+          }}
         </v-chip>
-        
+
         <!-- Trash types -->
         <v-chip
           prepend-icon="mdi-recycle"
@@ -41,14 +46,16 @@
           {{ gb }}
         </v-chip>
 
-
         <v-card-actions>
           <v-btn
-            :prepend-icon="building.showinfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+            :prepend-icon="
+              building.showinfo ? 'mdi-chevron-up' : 'mdi-chevron-down'
+            "
             @click="building.showinfo = !building.showinfo"
-          >Opmerkingen</v-btn>
+            >Opmerkingen</v-btn
+          >
         </v-card-actions>
-        
+
         <v-expand-transition>
           <div v-show="building.showinfo">
             <v-divider></v-divider>
@@ -78,7 +85,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 19, 0),
               garbage: ["PMD", "REST"],
-              showinfo: false
+              showinfo: false,
             },
             {
               name: "gebouw2",
@@ -86,7 +93,7 @@ export default {
               info: "wegens werken dient de achteringang genomen te worden",
               deadline: new Date(2023, 0o2, 0o6, 20, 30),
               garbage: ["GLAS"],
-              showinfo: false
+              showinfo: false,
             },
             {
               name: "gebouw3",
@@ -94,7 +101,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 21, 0),
               garbage: ["REST"],
-              showinfo: false
+              showinfo: false,
             },
             {
               name: "gebouw4",
@@ -102,7 +109,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 19, 30),
               garbage: ["PMD", "PAPIER"],
-              showinfo: false
+              showinfo: false,
             },
           ],
         },
@@ -115,7 +122,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 19, 30),
               garbage: ["PMD", "REST", "GLAS"],
-              showinfo: false
+              showinfo: false,
             },
             {
               name: "gebouw2",
@@ -123,7 +130,7 @@ export default {
               info: "wegens werken dient de achteringang genomen te worden",
               deadline: new Date(2023, 0o2, 0o6, 19, 0),
               garbage: ["PMD", "REST"],
-              showinfo: false
+              showinfo: false,
             },
             {
               name: "gebouw3",
@@ -131,7 +138,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 22, 0),
               garbage: ["REST"],
-              showinfo: false
+              showinfo: false,
             },
             {
               name: "gebouw4",
@@ -139,7 +146,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 19, 0),
               garbage: ["PAPIER"],
-              showinfo: false
+              showinfo: false,
             },
           ],
         },
@@ -152,7 +159,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 21, 30),
               garbage: ["PMD", "PAPIER"],
-              showinfo: false
+              showinfo: false,
             },
             {
               name: "gebouw2",
@@ -160,7 +167,7 @@ export default {
               info: "wegens werken dient de achteringang genomen te worden",
               deadline: new Date(2023, 0o2, 0o6, 19, 45),
               garbage: ["REST", "PAPIER"],
-              showinfo: false
+              showinfo: false,
             },
             {
               name: "gebouw3",
@@ -168,7 +175,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 20, 0),
               garbage: ["PMD", "REST"],
-              showinfo: false
+              showinfo: false,
             },
             {
               name: "gebouw4",
@@ -176,7 +183,7 @@ export default {
               info: "meer info/opmerkingen",
               deadline: new Date(2023, 0o2, 0o6, 20, 30),
               garbage: ["PMD", "REST", "GLAS", "PAPIER"],
-              showinfo: false
+              showinfo: false,
             },
           ],
         },
