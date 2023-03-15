@@ -23,7 +23,7 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "/planningsoverzicht",
+        path: "/planning",
         name: "Planningsoverzicht",
         component: SchedulingScreenStudent,
       },
@@ -38,7 +38,7 @@ const routes = [
         name: "Gebouwen",
       },
       {
-        path: "/dashboard/routes",
+        path: "/dashboard/rondes",
         component: Routes,
         name: "Rondes",
       },
@@ -48,21 +48,27 @@ const routes = [
         component: BuildingSceen,
         props: true,
       },
+      //{
+      //  path: "/ronde/:id",
+      //  name: "Ronde",
+      //  component: TODO detailpagina ronde,
+      //  props: true,
+      //},
       {
-        path: "/gebouw",
+        path: "/gebouwen",
         name: "Opvolgen van gebouwen",
         component: BuildingFollowup,
       },
       {
-        path: "/rondes/opvolgen",
+        path: "/rondes",
         name: "Opvolgen van rondes",
         component: RoundFollowup,
       },
-      {
-        path: "/ronde-maken",
-        name: "Ronde aanmaken",
-        component: RoundMaker,
-      },
+      //{
+      //  path: "/studenten",
+      //  name: "Opvolgen van studenten",
+      //  component: TODO opvolgpagina student,
+      //},
       {
         path: "/account/:gebruikerid/:isadmin",
         name: "Account instellingen",
@@ -70,8 +76,18 @@ const routes = [
         props: true,
       },
       {
+        path: "/dashboard/rondes/nieuw",
+        name: "Nieuwe ronde",
+        component: RoundMaker,
+      },
+      //{
+      //  path: "/dashboard/gebouwen/nieuw",
+      //  name: "Nieuw gebouw",
+      //  component: TODO creatiepagina gebouw,
+      //},
+      {
         path: "/dashboard/gebruikers/nieuw",
-        name: "Nieuwe gebruiker toevoegen",
+        name: "Nieuwe gebruiker",
         component: UserCreation,
       },
     ],

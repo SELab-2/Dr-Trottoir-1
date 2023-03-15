@@ -10,7 +10,7 @@
     <router-link
       v-for="building in day.buildings"
       :key="building.name"
-      to="/gebouwen"
+      to="/gebouw/0"
     >
       <v-card
         class="ma-3"
