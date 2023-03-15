@@ -18,10 +18,14 @@
         :subtitle="building.address"
         prepend-icon="mdi-office-building-outline"
       >
-        <template v-slot:append>
-          <v-checkbox></v-checkbox>
+        <template v-slot:append >
+          <v-checkbox
+            v-on:click.prevent
+            v-model="building.done"
+          ></v-checkbox>
+          
         </template>
-
+        
         <!-- hour -->
         <v-chip
           prepend-icon="mdi-clock-time-ten-outline"
@@ -48,6 +52,7 @@
 
         <v-card-actions>
           <v-btn
+            v-on:click.prevent
             :prepend-icon="
               building.showinfo ? 'mdi-chevron-up' : 'mdi-chevron-down'
             "
@@ -71,6 +76,8 @@
 
 <script>
 export default {
+
+
   name: "SchedulingScreenStudents",
   data() {
     // test data
@@ -86,6 +93,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 19, 0),
               garbage: ["PMD", "REST"],
               showinfo: false,
+              done: true,
             },
             {
               name: "gebouw2",
@@ -94,6 +102,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 20, 30),
               garbage: ["GLAS"],
               showinfo: false,
+              done: true,
             },
             {
               name: "gebouw3",
@@ -102,6 +111,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 21, 0),
               garbage: ["REST"],
               showinfo: false,
+              done: false,
             },
             {
               name: "gebouw4",
@@ -110,6 +120,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 19, 30),
               garbage: ["PMD", "PAPIER"],
               showinfo: false,
+              done: false,
             },
           ],
         },
@@ -123,6 +134,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 19, 30),
               garbage: ["PMD", "REST", "GLAS"],
               showinfo: false,
+              done: false,
             },
             {
               name: "gebouw2",
@@ -131,6 +143,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 19, 0),
               garbage: ["PMD", "REST"],
               showinfo: false,
+              done: false,
             },
             {
               name: "gebouw3",
@@ -139,6 +152,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 22, 0),
               garbage: ["REST"],
               showinfo: false,
+              done: false,
             },
             {
               name: "gebouw4",
@@ -147,6 +161,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 19, 0),
               garbage: ["PAPIER"],
               showinfo: false,
+              done: false,
             },
           ],
         },
@@ -160,6 +175,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 21, 30),
               garbage: ["PMD", "PAPIER"],
               showinfo: false,
+              done: false,
             },
             {
               name: "gebouw2",
@@ -168,6 +184,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 19, 45),
               garbage: ["REST", "PAPIER"],
               showinfo: false,
+              done: false,
             },
             {
               name: "gebouw3",
@@ -176,6 +193,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 20, 0),
               garbage: ["PMD", "REST"],
               showinfo: false,
+              done: false,
             },
             {
               name: "gebouw4",
@@ -184,6 +202,7 @@ export default {
               deadline: new Date(2023, 0o2, 0o6, 20, 30),
               garbage: ["PMD", "REST", "GLAS", "PAPIER"],
               showinfo: false,
+              done: false,
             },
           ],
         },
