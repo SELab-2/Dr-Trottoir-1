@@ -76,7 +76,7 @@ import ImageCard from "@/components/ImageCard.vue";
 import Avatar from "@/components/Avatar.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { formatDate } from "@/assets/scripts/format.ts";
+import { formatDate } from "@/assets/scripts/format";
 import { ref } from "vue";
 import router from "@/router";
 
