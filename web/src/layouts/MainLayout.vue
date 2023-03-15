@@ -7,11 +7,10 @@
         v-model="drawer"
       >
         <v-list density="compact" nav>
-          <v-list-item
-            lines="two"
-            prepend-avatar="https://avatars.githubusercontent.com/u/38297449?v=4"
-            @click="showAccount = !showAccount"
-          >
+          <v-list-item lines="two" @click="showAccount = !showAccount">
+            <template v-slot:prepend>
+              <Avatar :name="studentName" />
+            </template>
             <div class="flex">
               <div class="text">
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
@@ -97,7 +96,7 @@
               />
             </router-link>
 
-            <router-link to="/gebouwen">
+            <router-link to="/gebouw">
               <v-list-item
                 prepend-icon="mdi-domain"
                 title="Gebouwen"
@@ -206,6 +205,8 @@
 </template>
 
 <script lang="ts" setup>
+import Avatar from "@/components/Avatar.vue";
+
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -225,8 +226,8 @@ const isAdmin = ref(true);
 const showAccount = ref(false);
 
 // account display settings
-const studentName: String = "Jens Pots";
-function roles(): String {
+const studentName: string = "Jens Pots";
+function roles(): string {
   let str = "";
   if (isStudent.value) {
     str += "student ";

@@ -5,10 +5,13 @@
       <v-list-item
         class="me-auto"
         lines="two"
-        prepend-avatar="https://avatars.githubusercontent.com/u/38297449?v=4"
-        title="Jens Pots"
+        :title="`${firstname} ${lastname}`"
         subtitle="Superstudent"
-      ></v-list-item>
+      >
+        <template v-slot:prepend>
+          <Avatar :name="`${firstname} ${lastname}`" />
+        </template>
+      </v-list-item>
       <v-btn
         v-if="!edit"
         prepend-icon="mdi-pencil"
@@ -148,14 +151,15 @@ import ContacForm from "@/components/ContactForm.vue";
 import Address from "@/components/models/Address";
 import AddressFrom from "@/components/AddressForm.vue";
 import Contact from "@/components/models/Contact";
+import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
 
 const props = defineProps(["gebruikerid", "isadmin"]);
 const isAdmin = ref<Boolean>(props.isadmin === "true");
 
 // reactive state for name
-const firstname = ref("Jens");
-const lastname = ref("Pots");
+const firstname = ref("Mats");
+const lastname = ref("Van Belle");
 
 // reactive state for the roles
 const roles = ref<String[]>(["Student", "Superstudent"]);
