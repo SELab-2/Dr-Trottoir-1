@@ -1,0 +1,164 @@
+<template>
+  <!-- Simple vlist that uses the custom component RoundCard -->
+  <v-list>
+    <RoundCard
+      v-for="(round, i) in mockrounds"
+      :key="i"
+      :round_name="round.name"
+      :round_start="round.start"
+      :round_end="round.end"
+      :round_started="round.started"
+      :student_name="round.student"
+      :building_index="round.current_building"
+      :total_buildings="round.buildings.length"
+      :round_comments="round.comments"
+    ></RoundCard>
+    <v-spacer></v-spacer>
+  </v-list>
+</template>
+
+<script lang="ts" setup>
+import RoundCard from "@/components/RoundCard.vue";
+
+// TODO: mockdata for rounds, remove in future
+const mockrounds = [
+  {
+    name: "Grote Markt",
+    start: "13:30",
+    end: "14:00",
+    started: true,
+    student: "Emma",
+    comments: true,
+    current_building: 5,
+    buildings: [
+      {
+        name: "Smith",
+        address: "Gent, Belgium",
+        deltatime: "10 min",
+        comments: "yes",
+        amount_of_pics: "5",
+      },
+      {
+        name: "Johnson",
+        address: "Brussels, Belgium",
+        deltatime: "35 min",
+        comments: "no",
+        amount_of_pics: "2",
+      },
+      {
+        name: "Smith",
+        address: "Gent, Belgium",
+        deltatime: "10 min",
+        comments: "yes",
+        amount_of_pics: "5",
+      },
+      {
+        name: "Johnson",
+        address: "Brussels, Belgium",
+        deltatime: "35 min",
+        comments: "no",
+        amount_of_pics: "2",
+      },
+      {
+        name: "Brown",
+        address: "Antwerp, Belgium",
+        deltatime: "25 min",
+        comments: "yes",
+        amount_of_pics: "4",
+      },
+    ],
+  },
+  {
+    name: "Vrijdagmarkt",
+    start: "16:00",
+    end: "",
+    started: true,
+    student: "Sophie",
+    comments: false,
+    current_building: 1,
+    buildings: [
+      {
+        name: "Garcia",
+        address: "Bruges, Belgium",
+        deltatime: "15 min",
+        comments: "no",
+        amount_of_pics: "3",
+      },
+      {
+        name: "Miller",
+        address: "Leuven, Belgium",
+        deltatime: "20 min",
+        comments: "no",
+        amount_of_pics: "2",
+      },
+      {
+        name: "Clark",
+        address: "Ostend, Belgium",
+        deltatime: "30 min",
+        comments: "no",
+        amount_of_pics: "4",
+      },
+      {
+        name: "Miller",
+        address: "Leuven, Belgium",
+        deltatime: "20 min",
+        comments: "no",
+        amount_of_pics: "2",
+      },
+      {
+        name: "Clark",
+        address: "Ostend, Belgium",
+        deltatime: "30 min",
+        comments: "no",
+        amount_of_pics: "4",
+      },
+      {
+        name: "Miller",
+        address: "Leuven, Belgium",
+        deltatime: "20 min",
+        comments: "no",
+        amount_of_pics: "2",
+      },
+      {
+        name: "Clark",
+        address: "Ostend, Belgium",
+        deltatime: "30 min",
+        comments: "no",
+        amount_of_pics: "4",
+      },
+    ],
+  },
+  {
+    name: "Korenmarkt",
+    start: "16:15",
+    end: "",
+    student: "Alex",
+    started: false,
+    comments: false,
+    current_building: 0,
+    buildings: [
+      {
+        name: "Wilson",
+        address: "Veldstraat, Belgium",
+        deltatime: "5 min",
+        comments: "no",
+        amount_of_pics: "3",
+      },
+      {
+        name: "Moore",
+        address: "Liege, Belgium",
+        deltatime: "45 min",
+        comments: "no",
+        amount_of_pics: "5",
+      },
+      {
+        name: "Anderson",
+        address: "Mons, Belgium",
+        deltatime: "30 min",
+        comments: "no",
+        amount_of_pics: "2",
+      },
+    ],
+  },
+];
+</script>
