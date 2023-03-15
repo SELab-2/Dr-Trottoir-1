@@ -1,7 +1,7 @@
 <template>
   <button id="button">
-    <v-icon v-if='icon' color="#333333" :icon="icon" size="small" />
-    <p v-if='value'>{{ value }}</p>
+    <v-icon v-if="icon" color="#333333" :icon="icon" size="small" />
+    <p v-if="value">{{ value }}</p>
   </button>
 </template>
 
