@@ -52,17 +52,10 @@
   </v-table>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { RowType } from "@/components/table/RowType";
-
-export default {
-  props: ["entries", "headers"],
-  data() {
-    return {
-      RowType,
-    };
-  },
-};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const props = defineProps(["entries", "headers"]);
 </script>
 
 <style lang="sass">
