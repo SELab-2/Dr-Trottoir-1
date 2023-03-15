@@ -59,7 +59,7 @@
             btn-text="Bewerken"
           />
         </div>
-        <ImageCard text="TOEVOEGEN" textIcon="mdi-plus" />
+        <ImageCard title="TOEVOEGEN" title-icon="mdi-plus" />
       </div>
     </div>
   </div>

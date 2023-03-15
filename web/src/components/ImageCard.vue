@@ -2,10 +2,13 @@
   <img v-if="img" alt="imagecard" class="image" :src="img" />
   <v-container v-else class="textcard image">
     <div>
-      <h2 v-if="title">{{ title }}</h2>
+      <div style="display: flex; justify-content: center">
+        <v-icon v-if="titleIcon" color="#333333" :icon="titleIcon"></v-icon>
+        <h3 v-if="title">{{ title }}</h3>
+      </div>
       <div style="display: flex; justify-content: center">
         <v-icon v-if="textIcon" color="#333333" :icon="textIcon"></v-icon>
-        <p v-if="text" style="font-weight: bolder">{{ text }}</p>
+        <p v-if="text">{{ text }}</p>
       </div>
     </div>
   </v-container>
@@ -20,6 +23,7 @@ import RoundedButton from "@/components/RoundedButton.vue";
 defineProps({
   img: String,
   title: String,
+  titleIcon: String,
   text: String,
   textIcon: String,
   btnIcon: String,
@@ -43,5 +47,6 @@ defineProps({
   background: #fafafa;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 </style>

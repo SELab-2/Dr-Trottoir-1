@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="selector">
+  <div class="selector px-4">
     <v-select
       class="building-select"
       label="Gebouw"
@@ -13,48 +13,56 @@
       input-class-name="v-field__input"
       :format="formatDate"
     ></VueDatePicker>
-  </v-container>
+  </div>
   <div class="building-info" v-if="selectedDate && selectedBuilding">
     <div
       v-if="get(selectedBuilding, formatDate(selectedDate)) === null"
-      class="centre"
+      class="centre text-center"
     >
+      <v-icon icon="mdi-alert-circle" size="x-large" />
       <h2>Geen data voor dit gebouw op {{ formatDate(selectedDate) }}.</h2>
       <p>Selecteer een ander gebouw of kies een andere datum.</p>
     </div>
     <div v-else>
       <BuildingData id="1" />
-      <div class="centre">
-        <div>
-          <h2>
-            Bezoek van {{ formatDate(selectedDate) }} door
-            {{ get(selectedBuilding, formatDate(selectedDate)).student }}
-          </h2>
-          <div class="image-grid" style="margin-top: 10px">
-            <div
-              v-for="image in images"
-              :key="String(image.url)"
-              style="position: relative"
-            >
-              <ImageCard
-                :img="String(image.url)"
-                btn-icon="mdi-email-arrow-right"
-                btn-text="Send report"
-              />
-            </div>
-            <div
-              v-for="comment in get(selectedBuilding, formatDate(selectedDate))
-                .comments"
-              :key="comment.title"
-              style="position: relative"
-            >
-              <ImageCard
-                :title="comment.title"
-                :text="comment.comment"
-                btn-icon="mdi-email-arrow-right"
-                btn-text="Send report"
-              />
-            </div>
+      <div class="centre px-4 mb-4">
+        <h2>Bezoek ({{ formatDate(selectedDate) }})</h2>
+        <button @click="router.push('/account/2/false')">
+          <Avatar
+            :name="get(selectedBuilding, formatDate(selectedDate)).student"
+            size="40"
+          />
+          {{ get(selectedBuilding, formatDate(selectedDate)).student }}
+        </button>
+        <div class="image-grid" style="margin-top: 10px">
+          <div
+            v-for="image in images"
+            :key="String(image.url)"
+            style="position: relative"
+          >
+            <ImageCard
+              :img="String(image.url)"
+              btn-icon="mdi-email-arrow-right"
+              btn-text="Send report"
+            />
+          </div>
+        </div>
+        <h3 v-if="get(selectedBuilding, formatDate(selectedDate)).comments">
+          Opmerkingen
+        </h3>
+        <div class="image-grid" style="margin-top: 10px">
+          <div
+            v-for="comment in get(selectedBuilding, formatDate(selectedDate))
+              .comments"
+            :key="comment.title"
+            style="position: relative"
+          >
+            <ImageCard
+              :title="comment.title"
+              :text="comment.comment"
+              btn-icon="mdi-email-arrow-right"
+              btn-text="Send report"
+            />
           </div>
         </div>
       </div>
@@ -65,10 +73,12 @@
 <script lang="ts" setup>
 import BuildingData from "@/components/BuildingData.vue";
 import ImageCard from "@/components/ImageCard.vue";
+import Avatar from "@/components/Avatar.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { formatDate } from "@/assets/scripts/format.ts";
 import { ref } from "vue";
+import router from "@/router";
 
 // reactive component which will store the current user
 const selectedBuilding = ref<String>("");
@@ -101,21 +111,27 @@ const mockbuildingdata: any[] = [
     student: "Mats Van Belle",
     comments: [
       {
-        title: "ambetant gebouw",
+        title: "Ambetant gebouw",
         comment: "geen leuk gebouw",
       },
       {
-        title: "lange code",
+        title: "Lange code",
         comment: "12 karakters is te lang",
       },
       {
-        title: "ver",
-        comment: "zeer ver van de andere gebouwen in de route",
+        title: "Ver",
+        comment: "Zeer ver van de andere gebouwen in de ronde",
       },
     ],
   },
   {
     id: "1",
+    name: "Piramide",
+    date: "15/3/2023",
+    student: "Brent Matthys",
+  },
+  {
+    id: "2",
     name: "Atomium",
     date: "13/3/2023",
     student: "Jens Pots",
@@ -172,13 +188,16 @@ const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
 }
 
 .date-select {
-  margin-left: 10%;
   width: 20%;
+  min-width: 140px;
 }
 
 .centre {
   max-width: 800px;
   margin: auto;
+}
+
+.text-center {
   text-align: center;
 }
 
