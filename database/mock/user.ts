@@ -11,7 +11,7 @@ enkel via deze functie of via de functie createBuilding in de databank geplaatst
  */
 export async function createUser() {
     const password = "password";
-    const salt = chance.string();
+    const salt = crypto.randomBytes(32).toString();
     await prisma.user.create({
         data: {
             first_name: chance.first(),

@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { Chance } from "chance";
+import crypto from "crypto";
 
 const prisma = new PrismaClient()
 const chance = new Chance();
@@ -10,6 +11,8 @@ syndicus, adres en bestand. Deze tabellen kunnen enkel via deze functie gevuld w
 create-functie. De tabel van adres kan echter wel nog aangevuld worden via de functie createUser in het bestand user.ts.
  */
 export async function createBuilding() {
+    const password = "password";
+    const salt = crypto.randomBytes(32).toString();
     await prisma.building.create({
         data: {
             name: chance.company(),
@@ -27,6 +30,8 @@ export async function createBuilding() {
                             last_login: chance.date(),
                             date_added: chance.date(),
                             email: chance.email(),
+                            salt: salt,
+                            hash: crypto.createHash('sha256').update(password+salt).digest('hex'),
                             address: {
                                 create: {
                                     city: "Gent",
