@@ -5,7 +5,7 @@
     "serve": "nodemon ./src/main.ts",
     "lint": "npx prettier --write . && npx eslint src",
     "pretest": "npx prettier --check . && npx eslint src --max-warnings 0",
-    "test": "echo 'API: no test available'"
+    "test": "jest"
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",

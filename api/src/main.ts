@@ -75,8 +75,9 @@ if (process.env.DISABLE_AUTH === "true") {
 }
 
 // Actually start the server, we're done!
-app.listen(PORT_NUMBER, () => {
+const server = app.listen(PORT_NUMBER, () => {
     console.log(`API AVAILABLE AT: https://localhost:${PORT_NUMBER}`);
 });
 
-export default app;
+// export the server for testing
+export default server;
