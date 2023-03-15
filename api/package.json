@@ -1,6 +1,10 @@
 {
-  "name": "@dr-trottoir-1/api",
+  "name": "@SELab-2/dr_trottoir_1_api",
   "repository": "https://github.com/SELab-2/Dr-Trottoir-1.git",
+  "version": "0.0.1",
+  "publishConfig": {
+	"registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "start": "node ./dist/main.js",
     "serve": "nodemon ./src/main.ts",
