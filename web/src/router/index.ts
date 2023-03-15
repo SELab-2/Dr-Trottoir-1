@@ -42,6 +42,7 @@ const routes = [
         path: "/rondes/detail",
         name: "Detail van ronde",
         component: RoundDetail,
+        props : true,
       },
     ],
   },
