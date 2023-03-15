@@ -1,8 +1,26 @@
-import { prisma } from "../prisma";
+import {prisma} from "../prisma";
 import express from "express";
-import { CustomRequest, Routing } from "./routing";
-import { Auth } from "../auth/auth";
-import { Parser } from "../parser";
+import {CustomRequest, Routing} from "./routing";
+import {Auth} from "../auth/auth";
+import {Parser} from "../parser";
+
+function includeUser(include: boolean|undefined) {
+    return {
+        id: include,
+        email: include,
+        first_name: include,
+        last_name: include,
+        last_login: include,
+        date_added: include,
+        phone: include,
+        address_id: include,
+        student: include,
+        super_student: include,
+        admin: include,
+        hash: false,
+        salt: false
+    };
+}
 
 export class BuildingRouting extends Routing {
     @Auth.authorization({ superStudent: true })
@@ -21,7 +39,9 @@ export class BuildingRouting extends Routing {
                 address: joins?.includes("address"),
                 syndicus: {
                     include: {
-                        user: joins?.includes("syndicus"),
+                        user: {
+                            select: includeUser(joins?.includes("syndicus")),
+                        },
                     },
                 },
                 manual: joins?.includes("manual"),
@@ -47,7 +67,9 @@ export class BuildingRouting extends Routing {
                 address: joins?.includes("address"),
                 syndicus: {
                     include: {
-                        user: joins?.includes("syndicus"),
+                        user: {
+                            select: includeUser(joins?.includes("syndicus")),
+                        },
                     },
                 },
                 manual: joins?.includes("manual"),
