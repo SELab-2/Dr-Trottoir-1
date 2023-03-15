@@ -216,6 +216,7 @@ ul {
 
 .image {
   width: 100%;
+  height: fit-content;
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 5px;
