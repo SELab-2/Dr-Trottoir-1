@@ -49,7 +49,7 @@ const photo = ref<Photo>({
   label: "",
 });
 
-const imageUrl = ref('');
+const imageUrl = ref("");
 
 // TODO: fix typing here
 const previewImage = (event) => {
