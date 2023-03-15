@@ -10,13 +10,13 @@
           :with="300"
         ></v-img>
         <div class="d-flex justify-center align-center py-5">
-          <v-btn block variant="outlined"> Afbeelding toevoegen</v-btn>
+          <v-btn block variant="outlined"> Maak foto</v-btn>
         </div>
 
         <v-file-input
           single
           v-model="photo.image"
-          label="Select Image"
+          label="Selecteer afbeelding"
           accept="image/*"
           prepend-icon=""
           prepend-inner-icon="mdi-image"
@@ -25,18 +25,15 @@
         ></v-file-input>
         <v-textarea
           @update:model-value="$emit('onUpdate', photo)"
-          label="Comments"
+          label="Commentaar"
           rows="3"
           v-model="photo.comments"
         ></v-textarea>
         <v-text-field
           @update:model-value="$emit('onUpdate', photo)"
-          label="Image Label"
+          label="Foto label"
           v-model="photo.label"
         ></v-text-field>
-        <div class="d-flex justify-center align-center">
-          <v-btn color="primary">Submit</v-btn>
-        </div>
       </v-form>
     </v-container>
   </div>
@@ -52,8 +49,9 @@ const photo = ref<Photo>({
   label: "",
 });
 
-const imageUrl = ref(null);
+const imageUrl = ref('');
 
+// TODO: fix typing here
 const previewImage = (event) => {
   const file = event.target.files[0];
   const reader = new FileReader();
