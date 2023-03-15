@@ -65,7 +65,7 @@ const routes = [
       },
       {
         path: "/dashboard/gebruikers/nieuw",
-        name: "Nieuwe gebruiker toevoegen",
+        name: "Nieuwe gebruiker aanmaken",
         component: UserCreation,
       },
     ],

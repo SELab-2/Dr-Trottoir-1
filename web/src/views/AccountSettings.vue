@@ -32,42 +32,55 @@
     <v-card class="mt-4" prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
       <!-- Name, only shows when the admin wants to edit -->
-      <div v-if="isAdmin && edit" class="mx-10">
-        <!-- Text input field for the first name -->
-        <v-text-field
-          v-model="firstname"
-          label="Voornaam"
-          type="text"
-          required
-        ></v-text-field>
-        <!-- Text input field for the last name -->
-        <v-text-field
-          v-model="lastname"
-          label="Voornaam"
-          type="text"
-          required
-        ></v-text-field>
-      </div>
-      <ContacForm
-        class="mx-10"
+      <v-row class="py-0 my-0" v-if="isAdmin && edit">
+        <v-col
+          cols="1"
+          style="min-width: 100px; max-width: 100%"
+          class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
+        >
+          <!-- Text input field for the first name -->
+          <v-text-field
+            v-model="firstname"
+            label="Voornaam"
+            type="text"
+            required
+          ></v-text-field>
+        </v-col>
+
+        <v-col
+          cols="1"
+          style="min-width: 100px; max-width: 100%"
+          class="flex-grow-1 flex-shrink-0 py-0 my-0 mr-5"
+        >
+          <!-- Text input field for the last name -->
+          <v-text-field
+            v-model="lastname"
+            label="Achternaam"
+            type="text"
+            required
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <ContactForm
+        :class="edit ? spacing : 'mx-10'"
         :readonly="!edit"
-        :phone="default_phone"
-        :email="default_email"
+        :phone="String(contact.phone)"
+        :email="String(contact.email)"
         @onUpdate="(newContact) => (contact = newContact)"
       >
-      </ContacForm>
+      </ContactForm>
     </v-card>
 
     <!-- Section with the adress -->
     <v-card class="mt-4" prepend-icon="mdi-map-marker">
       <template v-slot:title> Adres </template>
       <AddressFrom
-        class="mx-10"
+        :class="edit ? spacing : 'mx-10'"
         :readonly="!edit"
-        :street="default_street"
-        :city="default_city"
-        :number="default_number"
-        :zip_code="default_zip_code"
+        :street="String(address.street)"
+        :city="String(address.city)"
+        :number="address.number"
+        :zip_code="address.zip_code"
         @onUpdate="(newAddress) => (address = newAddress)"
       ></AddressFrom>
     </v-card>
@@ -77,13 +90,11 @@
       <template v-slot:title> Rollen </template>
       <v-select
         v-if="edit"
-        class="mx-10"
+        :class="spacing"
         chips
         label="Rollen"
         :items="['Student', 'Superstudent', 'Syndicus', 'Admin']"
         multiple
-        :variant="!edit ? 'plain' : 'filled'"
-        :readonly="!edit"
         v-model="roles"
       ></v-select>
       <v-list lines="one" density="compact" v-if="!edit" class="mx-10">
@@ -98,7 +109,7 @@
     <!-- Section to set new password -->
     <v-card v-if="edit" class="mt-4" prepend-icon="mdi-lock">
       <template v-slot:title> Nieuw wachtwoord </template>
-      <v-list density="compact" class="mx-10">
+      <v-list density="compact" :class="spacing">
         <v-text-field
           v-model="password1"
           :prepend-inner-icon="'mdi-lock'"
@@ -125,7 +136,7 @@
       <template v-slot:title> Sla bewerkingen op </template>
       <div class="d-flex">
         <v-text-field
-          class="mx-10 me-auto"
+          class="mx-5 me-auto"
           v-model="confirm_psswd"
           :prepend-inner-icon="'mdi-lock'"
           :append-inner-icon="show_confirm ? 'mdi-eye' : 'mdi-eye-off'"
@@ -139,7 +150,7 @@
           prepend-icon="mdi-check"
           @click="edit = !edit"
           color="success"
-          class="ma-3"
+          class="mx-5 my-3"
           >Sla op</v-btn
         >
       </div>
@@ -147,12 +158,15 @@
   </div>
 </template>
 <script lang="ts" setup>
-import ContacForm from "@/components/ContactForm.vue";
+import ContactForm from "@/components/ContactForm.vue";
 import Address from "@/components/models/Address";
 import AddressFrom from "@/components/AddressForm.vue";
 import Contact from "@/components/models/Contact";
 import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
+
+// define the spacing for the input fields
+const spacing: String = 'mx-5'
 
 const props = defineProps(["gebruikerid", "isadmin"]);
 const isAdmin = ref<Boolean>(props.isadmin === "true");
@@ -176,16 +190,11 @@ const contact = ref<Contact>({
 });
 
 // address data
-const default_street = "Krijgslaan";
-const default_number = 281;
-const default_city = "Gent";
-const default_zip_code = 9000;
-
 const address = ref<Address>({
-  street: default_street,
-  number: default_number,
-  city: default_city,
-  zip_code: default_zip_code,
+  street: "Krijgslaan",
+  number: 281,
+  city: "Gent",
+  zip_code: 9000,
 });
 
 // reactive states for the new password

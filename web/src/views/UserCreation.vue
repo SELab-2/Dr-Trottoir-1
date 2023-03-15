@@ -1,12 +1,12 @@
 <template>
-  <div class="background">
-    <div class="form">
-      <h4 class="py-2">Persoonlijke gegevens</h4>
+  <div class="mx-4">
+    <v-card class="mt-4" prepend-icon="mdi-account-details">
+      <template v-slot:title> Persoonlijke gegevens </template>
       <v-row class="py-0 my-0">
         <v-col
           cols="1"
           style="min-width: 100px; max-width: 100%"
-          class="flex-grow-1 flex-shrink-0 py-0 my-0"
+          class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
         >
           <!-- Text input field for the first name -->
           <v-text-field
@@ -20,7 +20,7 @@
         <v-col
           cols="1"
           style="min-width: 100px; max-width: 100%"
-          class="flex-grow-1 flex-shrink-0 py-0 my-0"
+          class="flex-grow-1 flex-shrink-0 py-0 my-0 mr-5"
         >
           <!-- Text input field for the last name -->
           <v-text-field
@@ -32,65 +32,76 @@
         </v-col>
       </v-row>
 
-      <!-- Text input field for the phone number -->
-      <v-text-field
-        v-model="phone_number"
-        :prepend-inner-icon="'mdi-phone'"
-        label="Telefoon nummer"
-        type="text"
-        required
-      ></v-text-field>
+      <ContactForm
+        :class="spacing"
+        :phone="String(contact.phone)"
+        :email="String(contact.email)"
+        @onUpdate="(newContact) => (contact = newContact)"
+      >
+      </ContactForm>
+    </v-card>
 
-      <!-- Text input field for the email -->
-      <v-text-field
-        v-model="email"
-        :prepend-inner-icon="'mdi-email'"
-        label="E-mail"
-        type="text"
-        required
-      ></v-text-field>
 
-      <!-- Address input form of the user -->
-      <h4 class="py-2">Adres</h4>
+    <!-- Address input form of the user -->
+    <!-- Section with the adress -->
+    <v-card class="mt-4" prepend-icon="mdi-map-marker">
+      <template v-slot:title> Adres </template>
       <AddressForm
+        :class="spacing"
+        :street="String(address.street)"
+        :city="String(address.city)"
+        :number="address.number"
+        :zip_code="address.zip_code"
         @onUpdate="(newAddress) => (address = newAddress)"
       ></AddressForm>
+    </v-card>
 
-      <!-- Text input field for the password-->
-      <h4 class="py-2">Wachtwoord</h4>
-      <v-text-field
-        v-model="password1"
-        :prepend-inner-icon="'mdi-lock'"
-        :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="showPsswd ? 'text' : 'password'"
-        label="Wachtwoord"
-        @click:append-inner="showPsswd = !showPsswd"
-        bg
-      ></v-text-field>
+    <!-- Text input field for the password-->
+    <v-card class="mt-4" prepend-icon="mdi-lock">
+      <template v-slot:title> Wachtwoord </template>
+      <v-list density="compact" :class="spacing">
+        <v-text-field
+          v-model="password1"
+          :prepend-inner-icon="'mdi-lock'"
+          :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="showPsswd ? 'text' : 'password'"
+          label="Wachtwoord"
+          @click:append-inner="showPsswd = !showPsswd"
+          bg
+        ></v-text-field>
 
-      <!-- Text input field for the password confirmation-->
-      <v-text-field
-        v-model="password2"
-        :prepend-inner-icon="'mdi-lock'"
-        :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="showPsswd ? 'text' : 'password'"
-        label="Bevestig wachtwoord"
-        @click:append-inner="showPsswd = !showPsswd"
-        bg
-      ></v-text-field>
+        <!-- Text input field for the password confirmation-->
+        <v-text-field
+          v-model="password2"
+          :prepend-inner-icon="'mdi-lock'"
+          :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="showPsswd ? 'text' : 'password'"
+          label="Bevestig wachtwoord"
+          @click:append-inner="showPsswd = !showPsswd"
+          bg
+        ></v-text-field>
+      </v-list>
+    </v-card>
+  
 
-      <!-- Selection box to determine the roles -->
-      <h4 class="py-2">Rollen</h4>
+    <!-- Selection box to determine the roles -->
+    <v-card class="mt-4" prepend-icon="mdi-account-multiple">
+      <template v-slot:title> Rollen </template>
       <v-select
+        :class="spacing"
         chips
-        label="Rol"
+        label="Rollen"
         :items="['Student', 'Superstudent', 'Syndicus', 'Admin']"
         multiple
         v-model="roles"
       ></v-select>
-      <!-- Account creation button -->
-      <v-btn> Maak Account </v-btn>
+    </v-card>
+    
+    <!-- Account creation button -->
+    <div class="d-flex flex-row-reverse mt-3">
+      <v-btn color="success" prepend-icon="mdi-check"> Maak account</v-btn>
     </div>
+    
   </div>
 </template>
 
@@ -98,6 +109,11 @@
 import { ref, Ref } from "vue";
 import Address from "@/components/models/Address";
 import AddressForm from "@/components/AddressForm.vue";
+import Contact from "@/components/models/Contact";
+import ContactForm from "@/components/ContactForm.vue";
+
+// define the spacing for the input fields
+const spacing: String = 'mx-5'
 
 // reactive first name state
 const first_name: string = "";
@@ -105,11 +121,12 @@ const first_name: string = "";
 // reactive last name state
 const last_name = ref("");
 
-// reactive phone numeber state
-const phone_number = ref("");
+// contact data
+const contact = ref<Contact>({
+  phone: "",
+  email: "",
+});
 
-// reactive email state
-const email = ref("");
 
 // user address
 const address = ref<Address>({
@@ -131,22 +148,3 @@ const showPsswd = ref(false);
 // reactive array keeping track of all the roles for this new user
 const roles: Ref<String[]> = ref([]);
 </script>
-
-<style lang="scss">
-@import "@/assets/styles/base.scss";
-
-.background {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.form {
-  width: 720px;
-  max-width: 90%;
-  padding: 10px;
-  align-content: center;
-}
-</style>
