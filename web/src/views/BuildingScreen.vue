@@ -1,30 +1,6 @@
 <template>
-  <img
-    id="banner"
-    src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
-  />
-
+  <BuildingData :id="id" />
   <div id="building-screen" class="px-4">
-    <div class="general-info-main">
-      <h1 class="building-name">El Paradisio</h1>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor
-        sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-        ut labore et dolore magna aliqua.
-      </p>
-      <div style="display: flex; gap: 12px; flex-wrap: wrap">
-        <RoundedButton icon="mdi-map-search" value="Kaarten"></RoundedButton>
-        <RoundedButton
-          icon="mdi-file-pdf-box"
-          value="Handleiding"
-        ></RoundedButton>
-        <RoundedButton icon="mdi-phone" value="0471234567"></RoundedButton>
-        <RoundedButton icon="mdi-mail" value="E-mail"></RoundedButton>
-        <RoundedButton icon="mdi-lock" value="3142"></RoundedButton>
-      </div>
-    </div>
-
     <div class="schedule" v-bind:key="item" v-for="item in schedule">
       <h2>{{ item }}</h2>
 
@@ -77,18 +53,13 @@
           :key="String(image.url)"
           style="position: relative"
         >
-          <img alt="opvolgfoto" class="image" :src="String(image.url)" />
-          <div style="position: absolute; bottom: 20px; right: 10px">
-            <RoundedButton icon="mdi-pencil" value="Bewerken"></RoundedButton>
-          </div>
+          <ImageCard
+            :img="String(image.url)"
+            btn-icon="mdi-pencil"
+            btn-text="Bewerken"
+          />
         </div>
-        <div
-          class="schedule-action"
-          style="justify-content: center; align-items: center"
-        >
-          <v-icon color="#333333" icon="mdi-plus"></v-icon>
-          <p style="font-weight: bolder">TOEVOEGEN</p>
-        </div>
+        <ImageCard text="TOEVOEGEN" textIcon="mdi-plus" />
       </div>
     </div>
   </div>
@@ -96,7 +67,8 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import RoundedButton from "@/components/RoundedButton.vue";
+import BuildingData from "@/components/BuildingData.vue";
+import ImageCard from "@/components/ImageCard.vue";
 
 // reactive state to show the drawer or not
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -152,18 +124,6 @@ ul {
   }
 }
 
-#banner {
-  width: 100%;
-  max-height: 34vh;
-  object-fit: cover;
-}
-
-.general-info-main {
-  & > * {
-    margin: 10px 0;
-  }
-}
-
 .schedule-grid {
   display: grid;
   gap: 12px;
@@ -192,11 +152,6 @@ ul {
   background: #fafafa;
 }
 
-.image-card {
-  border-radius: 5px;
-  background: #f1f1f1;
-}
-
 .image-grid {
   display: grid;
   gap: 10px;
@@ -212,18 +167,5 @@ ul {
   @media (max-width: 500px) {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
-}
-
-.image {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-.image-about {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
 }
 </style>
