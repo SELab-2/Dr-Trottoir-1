@@ -23,6 +23,11 @@ const routes = [
     component: MainLayout,
     children: [
       {
+        path: "/planningsoverzicht",
+        name: "Planningsoverzicht",
+        component: SchedulingScreenStudent,
+      },
+      {
         path: "/dashboard/gebruikers",
         component: Users,
         name: "Gebruikers",
@@ -38,15 +43,10 @@ const routes = [
         name: "Rondes",
       },
       {
-        path: "/gebouw/:id",
+        path: "/dashboard/gebouwen/:id",
         name: "Gebouw",
         component: BuildingSceen,
         props: true,
-      },
-      {
-        path: "/planning",
-        name: "Planningsoverzicht",
-        component: SchedulingScreenStudent,
       },
       {
         path: "/gebouwen",

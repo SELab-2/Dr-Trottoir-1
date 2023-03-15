@@ -175,12 +175,6 @@ export default {
 <style scoped lang="scss">
 @import "src/assets/styles/base";
 
-.list {
-  margin-top: -35px;
-  margin-left: -35px;
-  margin-right: -35px;
-}
-
 .flexbox {
   margin-right: 15px;
 }
