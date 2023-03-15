@@ -1,4 +1,5 @@
 import app from "../../src/main";
+// @ts-ignore
 import request from "supertest";
 
 /*
