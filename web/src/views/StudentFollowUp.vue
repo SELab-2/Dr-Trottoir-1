@@ -1,8 +1,21 @@
 <template>
   <v-select
+    v-model="selectedWeek"
+    :hint="`${selectedWeek.name}`"
+    :items="weeks"
+    item-title="name"
+    label="selecteer week"
+    return-object
+    v-on:input="
+      changeWeek(`${selectedWeek}`);
+      changeRound(`${selectedWeek.rounds[0]}`);
+    "
+  ></v-select>
+
+  <v-select
     v-model="selectedRound"
     :hint="`${selectedRound.name}`"
-    :items="rounds"
+    :items="selectedWeek.rounds"
     item-title="name"
     label="selecteer ronde"
     return-object
@@ -55,37 +68,112 @@ export default {
   data() {
     return {
       // time field is in milliseconds, because if you take the difference of two times, you get a value in milliseconds
-      selectedRound: {
-        name: "ronde 1",
-        students: [
-          { name: "Student 1", date: new Date(), time: 9000000 },
-          { name: "Student 2", date: new Date(2023, 0o2, 0o6), time: 18000000 },
-          { name: "Student 4", date: new Date(2023, 0o2, 0o7), time: 12000000 },
-        ],
-      },
-      rounds: [
+      weeks: [
         {
-          name: "ronde 1",
-          students: [
-            { name: "Student 1", date: new Date(), time: 9000000 },
+          name: "week 1",
+          rounds: [
             {
-              name: "Student 2",
-              date: new Date(2023, 0o2, 0o6),
-              time: 18000000,
+              name: "ronde 1",
+              students: [
+                {
+                  name: "Student 1",
+                  date: new Date(2023, 2, 7),
+                  time: 9000000,
+                },
+                {
+                  name: "Student 2",
+                  date: new Date(2023, 2, 6),
+                  time: 18000000,
+                },
+                {
+                  name: "Student 4",
+                  date: new Date(2023, 2, 8),
+                  time: 12000000,
+                },
+              ],
             },
-            { name: "Student 4", date: new Date(), time: 12000000 },
+            {
+              name: "ronde 2",
+              students: [
+                { name: "Student 3", date: new Date(), time: 8100000 },
+              ],
+            },
           ],
         },
         {
-          name: "ronde 2",
-          students: [{ name: "Student 3", date: new Date(), time: 8100000 }],
+          name: "week 2",
+          rounds: [
+            {
+              name: "ronde 1",
+              students: [
+                { name: "Student 1", date: new Date(), time: 9000000 },
+                {
+                  name: "Student 2",
+                  date: new Date(2023, 2, 13),
+                  time: 18000000,
+                },
+                { name: "Student 4", date: new Date(), time: 12000000 },
+              ],
+            },
+            {
+              name: "ronde 2",
+              students: [
+                {
+                  name: "Student 3",
+                  date: new Date(2023, 3, 17),
+                  time: 8100000,
+                },
+                {
+                  name: "Student 4",
+                  date: new Date(2023, 3, 18),
+                  time: 8000000,
+                },
+              ],
+            },
+          ],
         },
       ],
+      selectedWeek: {
+        name: "week 1",
+        rounds: [
+          {
+            name: "ronde 1",
+            students: [
+              { name: "Student 1", date: new Date(2023, 2, 7), time: 9000000 },
+              {
+                name: "Student 2",
+                date: new Date(2023, 2, 6),
+                time: 18000000,
+              },
+              { name: "Student 4", date: new Date(2023, 2, 8), time: 12000000 },
+            ],
+          },
+          {
+            name: "ronde 2",
+            students: [{ name: "Student 3", date: new Date(), time: 8100000 }],
+          },
+        ],
+      },
+      selectedRound: {
+        name: "ronde 1",
+        students: [
+          { name: "Student 1", date: new Date(2023, 2, 7), time: 9000000 },
+          {
+            name: "Student 2",
+            date: new Date(2023, 2, 6),
+            time: 18000000,
+          },
+          { name: "Student 4", date: new Date(2023, 2, 8), time: 12000000 },
+        ],
+      },
     };
   },
   methods: {
-    changeRound(a) {
-      this.selectedRound = a;
+    changeWeek(week) {
+      this.selectedWeek = week;
+    },
+    changeRound(round) {
+      this.selectedRound = round;
     },
     sortedByTime() {
       this.selectedRound["students"] = this.selectedRound.students.sort(
@@ -121,13 +209,5 @@ export default {
 
 tbody tr:hover {
   background-color: $accent;
-}
-
-.stretched-link::after {
-  position: absolute;
-}
-
-.position-relative {
-  position: relative;
 }
 </style>
