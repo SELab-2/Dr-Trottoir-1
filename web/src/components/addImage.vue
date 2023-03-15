@@ -47,11 +47,12 @@
 // };
 import { ref } from "vue";
 
-const preview = ref(null);
-const image = ref(null);
+const preview = ref("");
+const image = ref([]);
 const label = ref("");
 const comments = ref("");
 // function to preview image
+//TODO: type warning
 const previewImage = () => {
   const reader = new FileReader();
   reader.onload = () => {
