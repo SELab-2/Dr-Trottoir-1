@@ -113,15 +113,15 @@ describe("Test UserRouting successful requests", () => {
             super_student: true,
             admin: true,
             id: user.id,
-        }
+        };
 
         const result = await session
             .patch("/user/" + user.id)
-            .send({email: updatedUser.email, super_student: true})
+            .send({ email: updatedUser.email, super_student: true })
             .set("Cookie", [cookies]);
         expect(result.status).toEqual(200);
         expect(result.body).toEqual(updatedUser);
-    })
+    });
 });
 
 describe("Test UserRouting unsuccessful requests", () => {
@@ -167,15 +167,13 @@ describe("Test UserRouting unsuccessful requests", () => {
 
         await session.get("/user/" + user.id).expect(403);
 
-        const resultAdd = await session
-            .post("/user")
-            .send(userToCreate);
+        const resultAdd = await session.post("/user").send(userToCreate);
         expect(resultAdd.status).toEqual(403);
         expect(resultAdd.forbidden).toEqual(true);
 
         const resultUpdate = await session
             .patch("/user/" + user.id)
-            .send({student: true});
+            .send({ student: true });
         expect(resultUpdate.status).toEqual(403);
         expect(resultUpdate.forbidden).toEqual(true);
 
@@ -191,29 +189,29 @@ describe("Test UserRouting unsuccessful requests", () => {
             .send(userToCreate)
             .set("Cookie", [cookies]);
         expect(result.status).toEqual(409);
-        expect(result.text).toEqual("{\"message\":\"Conflict\",\"detail\":\"Unique constraint failed\"}");
+        expect(result.text).toEqual(
+            '{"message":"Conflict","detail":"Unique constraint failed"}',
+        );
     });
 
     // Deze test probeert het address_id van de gebruiker aan te passen naar een onbestaand address_id
-    test("Test changing address_id to unexisting id", async () =>  {
+    test("Test changing address_id to unexisting id", async () => {
         const result = await session
             .patch("/user/" + user.id)
-            .send({address_id: 0})
+            .send({ address_id: 0 })
             .set("Cookie", [cookies]);
         expect(result.status).toEqual(500);
     });
 
     // Deze test probeert requests uit te voeren op een onbestaande gebruiker
     test("Test using an unexisting user", async () => {
-        const resultGet = await session
-            .get("/user/0")
-            .set("Cookie", [cookies]);
+        const resultGet = await session.get("/user/0").set("Cookie", [cookies]);
         expect(resultGet.status).toEqual(404);
         expect(resultGet.notFound).toEqual(true);
 
         const resultUpdate = await session
             .patch("/user/0")
-            .send({student: true})
+            .send({ student: true })
             .set("Cookie", [cookies]);
         expect(resultUpdate.status).toBe(404);
         expect(resultUpdate.notFound).toEqual(true);
@@ -223,5 +221,36 @@ describe("Test UserRouting unsuccessful requests", () => {
             .set("Cookie", [cookies]);
         expect(resultDelete.status).toEqual(404);
         expect(resultDelete.notFound).toEqual(true);
-    })
-})
+    });
+
+    // Deze test gebruikt foute types bij het toevoegen/ aanpassen van een gebruiker
+    test("Test using wrong type", async () => {
+        // String in plaats van boolean
+        const result1 = await session
+            .patch("/user/" + user.id)
+            .send({ student: "fout type" })
+            .set("Cookie", [cookies]);
+        expect(result1.status).toEqual(500);
+
+        // String in plaats van datum
+        const result2 = await session
+            .patch("/user/" + user.id)
+            .send({ last_login: "string in plaats van datum" })
+            .set("Cookie", [cookies]);
+        expect(result2.status).toEqual(500);
+
+        // Getal in plaats van string
+        const result3 = await session
+            .patch("/user/" + user.id)
+            .send({ first_name: 5 })
+            .set("Cookie", [cookies]);
+        expect(result3.status).toEqual(500);
+
+        // Boolean in plaats van string
+        const result4 = await session
+            .patch("/user/" + user.id)
+            .send({ first_name: true })
+            .set("Cookie", [cookies]);
+        expect(result4.status).toEqual(500);
+    });
+});
