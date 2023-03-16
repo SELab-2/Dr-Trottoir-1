@@ -15,8 +15,8 @@
       <v-col>
         <v-select
           label="selecteer week"
-          :items="['Week1', 'Week2', 'Week3']"   
-          v-model="mockDefaultWeek" 
+          :items="['Week1', 'Week2', 'Week3']"
+          v-model="mockDefaultWeek"
           variant="solo"
         ></v-select>
       </v-col>
@@ -38,85 +38,76 @@
     class="ma-3"
   >
     <template v-slot:prepend>
-        <Avatar :name="`${student.firstname} ${student.lastname}`" />
+      <Avatar :name="`${student.firstname} ${student.lastname}`" />
     </template>
     <template v-slot:subtitle>
-        <v-chip
-            label
-            color="primary"
-            class="mr-2"
-        >
+      <v-chip label color="primary" class="mr-2">
         <v-icon start icon="mdi-clock-time-ten-outline"></v-icon>
-            {{ ("0" + student.date.getDate()).slice(-2) }}-{{
-            ("0" + (student.date.getMonth() + 1)).slice(-2)
-          }}-{{ student.date.getFullYear() }}
-        </v-chip>
+        {{ ("0" + student.date.getDate()).slice(-2) }}-{{
+          ("0" + (student.date.getMonth() + 1)).slice(-2)
+        }}-{{ student.date.getFullYear() }}
+      </v-chip>
 
-        <v-chip
-            label
-            :color="student.done ? 'success': 'error'"
-        >
-        <v-icon start :icon="student.done ? 'mdi-check': 'mdi-exclamation'"></v-icon>
-            {{ student.done ? 'Klaar': 'Niet klaar' }}
-        </v-chip>
-        
+      <v-chip label :color="student.done ? 'success' : 'error'">
+        <v-icon
+          start
+          :icon="student.done ? 'mdi-check' : 'mdi-exclamation'"
+        ></v-icon>
+        {{ student.done ? "Klaar" : "Niet klaar" }}
+      </v-chip>
     </template>
     <template v-slot:append>
-        <v-btn
-            prepend-icon="mdi-file-eye"
-            color="primary"
-        >Details</v-btn>
+      <v-btn prepend-icon="mdi-file-eye" color="primary">Details</v-btn>
     </template>
-
   </v-card>
-
-  
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
-import Avatar from '@/components/Avatar.vue';
+import { ref } from "vue";
+import Avatar from "@/components/Avatar.vue";
 
-const mockDefaultSort = ref('Datum');
-const mockDefaultWeek = ref('Week 1');
-const mockDefaultRound = ref('Ronde 1');
+const mockDefaultSort = ref("Datum");
+const mockDefaultWeek = ref("Week 1");
+const mockDefaultRound = ref("Ronde 1");
 
 const mockdata = ref({
-    name: "Week 1",
-    rounds: [{
-        name: "ronde 1",
-        students: [
+  name: "Week 1",
+  rounds: [
+    {
+      name: "ronde 1",
+      students: [
         {
-            firstname: "Jef",
-            lastname: "Janssens",
-            date: new Date(2023, 2, 6),
-            done: true
+          firstname: "Jef",
+          lastname: "Janssens",
+          date: new Date(2023, 2, 6),
+          done: true,
         },
         {
-            firstname: "Guust",
-            lastname: "Flater",
-            date: new Date(2023, 2, 7),
-            done: true
+          firstname: "Guust",
+          lastname: "Flater",
+          date: new Date(2023, 2, 7),
+          done: true,
         },
         {
-            firstname: "Jan",
-            lastname: "Jaap",
-            date: new Date(2023, 2, 8),
-            done: false
+          firstname: "Jan",
+          lastname: "Jaap",
+          date: new Date(2023, 2, 8),
+          done: false,
         },
-        ],
+      ],
     },
     {
-        name: "ronde 2",
-        students: [
+      name: "ronde 2",
+      students: [
         {
-            firstname: "Jef",
-            lastname: "Janssens",
-            date: new Date(2023, 2, 7),
-            done: true
+          firstname: "Jef",
+          lastname: "Janssens",
+          date: new Date(2023, 2, 7),
+          done: true,
         },
-        ],
-    }]
+      ],
+    },
+  ],
 });
 </script>
 
