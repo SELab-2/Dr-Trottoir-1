@@ -51,8 +51,8 @@
             </router-link>
           </v-timeline-item>
           <v-timeline-item dot-color="red" icon="mdi-close" size="small">
-            <v-card class="mx-4 mt-4">
-              <v-card-title> End {{ mockround.start }} </v-card-title>
+            <v-card>
+              <v-card-title> Einde {{ mockround.start }} </v-card-title>
             </v-card>
           </v-timeline-item>
         </v-timeline>
