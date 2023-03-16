@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-card :title="mockround.name" :subtitle="date">
+    <v-card :title="mockround.name" :subtitle="date" variant="flat">
       <v-card-subtitle>
         <v-icon icon="mdi-account"> </v-icon>{{ mockround.student }}
       </v-card-subtitle>
