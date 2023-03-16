@@ -1,231 +1,161 @@
-# User case
+***
+# Use cases
+# Student
 
-## Student
+## Student start met een ronde
+* **Korte beschrijving**: De student begint aan een ronde.
+* **Precondities**: De student moet ingelogd zijn op het platform en moet een ronde toegewezen hebben door een superstudent.
+* **Postcondities**: De student is gestart met zijn/haar ronde.
+* **Actoren**: Een student.
+* **Gedetailleerde beschrijving van de stappen**: De student selecteert de ronde waaraan hij/zij wilt starten en klikt op de knop die deze start.
 
-### Student start met een ronde
+## Student bezoekt een gebouw tijdens de ronde
 
-#### Korte beschrijving
-De student begint aan een ronde.
+* **Korte beschrijving**: De student bezoekt een gebouw op zijn/haar ronde om voor dit gebouw zijn/haar taken te voltooien.
 
-#### Precondities
-De student moet ingelogd zijn op het platform en moet een ronde toegewezen hebben door een superstudent.
+* **Precondities**: De student moet ingelogd zijn op het platform en moet gestart zijn met een ronde die hij/zij aangewezen kreeg door een superstudent.
 
-#### Postcondities
-De student is gestart met zijn/haar ronde.
+* **Postcondities**: De student is klaar met de taken voor dit gebouw en kan naar het volgende gebouw of de ronde beëindigen.
 
-#### Actoren
-Een student.
+* **Actoren**: Een student.
 
-#### Gedetailleerde beschrijving van de stappen
-De student selecteert de ronde waaraan hij/zij wilt starten en klikt op de knop die deze start.
+* **Gedetailleerde beschrijving van de stappen**: De student komt aan bij het gebouw en neemt hier een foto zodat de superstudent weet dat hij/zij aangekomen is. In de afvalruimte zet hij/zij het juiste afvaltype binnen en/of buiten. Dit afvaltype is af te lezen op de website. Eenmaal klaar worden er foto's genomen als bewijs en kan de student door naar het volgende gebouw of zijn/haar ronde beëindigen.
 
+* **Alternatieve flow 1**: De student merkt iets op in en/of buiten de afvalruimte waarvan de superstudent en of syndicus op de hoogte van moet zijn. Hier kan de student een foto nemen en/of een opmerking schrijven en deze achterlaten in de ruimte hiervoor voorzien op de website.
 
 
 
-### Student bezoekt een gebouw tijdens de ronde
+## Student beëindigt een ronde
 
-#### Korte beschrijving
-De student bezoekt een gebouw op zijn/haar ronde om voor dit gebouw zijn/haar taken te voltooien.
+* **Korte beschrijving**: De student is klaar met zijn/haar ronde.
 
-#### Precondities
-De student moet ingelogd zijn op het platform en moet gestart zijn met een ronde die hij/zij aangewezen kreeg door een superstudent.
+* **Precondities**: De student moet ingelogd zijn op het platform en moet gestart zijn met een ronde die hij/zij aangewezen kreeg door een superstudent.
 
-#### Postcondities
-De student is klaar met de taken voor dit gebouw en kan naar het volgende gebouw of de ronde beëindigen.
+* **Postcondities**: De student is klaar met de taken voor alle gebouwen en de ronde is beëindigd.
 
-#### Actoren
-Een student.
+* **Actoren**:  student.
 
-#### Gedetailleerde beschrijving van de stappen
-De student komt aan bij het gebouw en neemt hier een foto zodat de superstudent weet dat hij/zij aangekomen is. In de afvalruimte zet hij/zij het juiste afvaltype binnen en/of buiten. Dit afvaltype is af te lezen op de website. Eenmaal klaar worden er foto's genomen als bewijs en kan de student door naar het volgende gebouw of zijn/haar ronde beëindigen.
+* **Gedetailleerde beschrijving van de stappen**: De student selecteert de ronde die hij/zij wilt beëindigen.
 
-#### Alternatieve flow 1
-De student merkt iets op in en/of buiten de afvalruimte waarvan de superstudent en of syndicus op de hoogte van moet zijn. Hier kan de student een foto nemen en/of een opmerking schrijven en deze achterlaten in de ruimte hiervoor voorzien op de website.
 
 
+## Student beëindigt een ronde
 
-### Student beëindigt een ronde
+* **Korte beschrijving**: De student is klaar met zijn/haar ronde.
 
-#### Korte beschrijving
-De student is klaar met zijn/haar ronde.
+* **Precondities**: De student moet ingelogd zijn op het platform en moet gestart zijn met een ronde die hij/zij aangewezen kreeg door een superstudent.
 
-#### Precondities
-De student moet ingelogd zijn op het platform en moet gestart zijn met een ronde die hij/zij aangewezen kreeg door een superstudent.
+* **Postcondities**: De student is klaar met de taken voor alle gebouwen en de ronde is beëindigd.
 
-#### Postcondities
-De student is klaar met de taken voor alle gebouwen en de ronde is beëindigd.
+* **Actoren**: Een student.
 
-#### Actoren
-Een student.
+* **Gedetailleerde beschrijving van de stappen**: De student selecteert de ronde die hij/zij wilt beëindigen.
 
-#### Gedetailleerde beschrijving van de stappen
-De student selecteert de ronde die hij/zij wilt beëindigen.
+# Superstudent
 
+## Superstudent maakt een nieuwe ronde
 
+* **Korte beschrijving**: De superstudent wil een nieuwe ronde aanmaken.
 
-### Student beëindigt een ronde
+* **Precondities**: De superstudent moet ingelogd zijn op het platform.
 
-#### Korte beschrijving
-De student is klaar met zijn/haar ronde.
+* **Postcondities**: De superstudent heeft een nieuwe ronde aangemaakt.
 
-#### Precondities
-De student moet ingelogd zijn op het platform en moet gestart zijn met een ronde die hij/zij aangewezen kreeg door een superstudent.
+* **Actoren**: Een superstudent.
 
-#### Postcondities
-De student is klaar met de taken voor alle gebouwen en de ronde is beëindigd.
+* **Gedetailleerde beschrijving van de stappen**: De superstudent drukt op de knop om een nieuwe ronde aan te maken. Deze komt op het scherm waar hij/zij een overzicht krijgt van gebouwen. Deze kan hij/zij in een lijst zetten die de ronde voorstelt die de superstudent aan het aanmaken is. Deze ronde krijgt op het einde een naam en wanneer de superstudent de ronde wilt aanmaken duwt deze op de hiervoor voorziene knop.
 
-#### Actoren
-Een student.
+* **Alternatieve flow 1**: De superstudent wilt geen nieuwe ronde aanmaken of wilt nog even wachten met deze aan te maken. Dan kan hij/zij op de knop duwen die het scherm voor een ronde te maken afsluit.
 
-#### Gedetailleerde beschrijving van de stappen
-De student selecteert de ronde die hij/zij wilt beëindigen.
 
-## Superstudent
 
-### Superstudent maakt een nieuwe ronde
+## Superstudent wijzigt een bestaande ronde
 
-#### Korte beschrijving
-De superstudent wil een nieuwe ronde aanmaken.
+* **Korte beschrijving**: De superstudent wil een ronde wijzigen.
 
-#### Precondities
-De superstudent moet ingelogd zijn op het platform.
+* **Precondities**: De superstudent moet ingelogd zijn op het platform en er moet een ronde die hij kan beheren bestaan.
 
-#### Postcondities
-De superstudent heeft een nieuwe ronde aangemaakt.
+* **Postcondities**: De superstudent heeft een ronde gewijzigd.
 
-#### Actoren
-Een superstudent.
+* **Actoren**: Een superstudent.
 
-#### Gedetailleerde beschrijving van de stappen
-De superstudent drukt op de knop om een nieuwe ronde aan te maken. Deze komt op het scherm waar hij/zij een overzicht krijgt van gebouwen. Deze kan hij/zij in een lijst zetten die de ronde voorstelt die de superstudent aan het aanmaken is. Deze ronde krijgt op het einde een naam en wanneer de superstudent de ronde wilt aanmaken duwt deze op de hiervoor voorziene knop.
+* **Gedetailleerde beschrijving van de stappen**: De superstudent drukt op de knop om een bestaande ronde te wijzigen. De superstudent komt op het scherm om een ronde te wijzigen waar hij/zij gebouwen aan de ronde kan toevoegen en/of verwijderen. Als hij/zij klaar is dan kan de student de gewijzigde ronde opslaan.
 
-#### Alternatieve flow 1
-De superstudent wilt geen nieuwe ronde aanmaken of wilt nog even wachten met deze aan te maken. Dan kan hij/zij op de knop duwen die het scherm voor een ronde te maken afsluit.
+* **Alternatieve flow 1**: De superstudent wilt de ronde niet wijzigen of wilt hier toch nog even mee wachten. Dan kan hij/zij op de knop duwen die het scherm voor een ronde te maken afsluit.
 
 
+## Superstudent wijst een student toe aan een ronde
 
-### Superstudent wijzigt een bestaande ronde
+* **Korte beschrijving**: De superstudent wil een student toevoegen aan een bestaande ronde.
 
-#### Korte beschrijving
-De superstudent wil een ronde wijzigen.
+* **Precondities**: De superstudent moet ingelogd zijn op het platform, er moet een ronde die hij kan beheren bestaan en hij moet studenten onder zich hebben die hij ook kan beheren.
 
-#### Precondities
-De superstudent moet ingelogd zijn op het platform en er moet een ronde die hij kan beheren bestaan.
+* **Postcondities**: De superstudent heeft een student toegevoegd aan een ronde.
 
-#### Postcondities
-De superstudent heeft een ronde gewijzigd.
+* **Actoren**: Een superstudent.
 
-#### Actoren
-Een superstudent.
+* **Gedetailleerde beschrijving van de stappen**: De superstudent kan de ronde waaraan hij een student wilt toevoegen selecteren en krijgt dan een overzicht te zien van alle studenten die nog geen ronde voor zich hebben. Uit dit overzicht kan hij/zij een student kiezen en deze wijziging opslaan.
 
-#### Gedetailleerde beschrijving van de stappen
-De superstudent drukt op de knop om een bestaande ronde te wijzigen. De superstudent komt op het scherm om een ronde te wijzigen waar hij/zij gebouwen aan de ronde kan toevoegen en/of verwijderen. Als hij/zij klaar is dan kan de student de gewijzigde ronde opslaan.
 
-#### Alternatieve flow 1
-De superstudent wilt de ronde niet wijzigen of wilt hier toch nog even mee wachten. Dan kan hij/zij op de knop duwen die het scherm voor een ronde te maken afsluit.
+# Syndicus
 
+## Syndicus voegt een gebouw toe
 
-### Superstudent wijst een student toe aan een ronde
+* **Korte beschrijving**: De syndicus wilt zijn/haar gebouw toevoegen op de website.
 
-#### Korte beschrijving
-De superstudent wil een student toevoegen aan een bestaande ronde.
+* **Precondities**: De syndicus moet ingelogd zijn op het platform.
 
-#### Precondities
-De superstudent moet ingelogd zijn op het platform, er moet een ronde die hij kan beheren bestaan en hij moet studenten onder zich hebben die hij ook kan beheren.
+* **Postcondities**: De syndicus heeft een nieuw gebouw toegevoegd op de website.
 
-#### Postcondities
-De superstudent heeft een student toegevoegd aan een ronde.
+* **Actoren**: Een syndicus.
 
-#### Actoren
-Een superstudent.
+* **Gedetailleerde beschrijving van de stappen**: De syndicus duwt op de knop om een gebouw toe te voegen. Hierna komt de syndicus op een scherm voor een gebouw toe te voegen waar hij/zij informatie over het gebouw moet invullen. Eenmaal klaar kan de syndicus het gebouw opslaan door op de daarvoor bedoelde knop te drukken.
 
-#### Gedetailleerde beschrijving van de stappen
-De superstudent kan de ronde waaraan hij een student wilt toevoegen selecteren en krijgt dan een overzicht te zien van alle studenten die nog geen ronde voor zich hebben. Uit dit overzicht kan hij/zij een student kiezen en deze wijziging opslaan.
+* **Alternatieve flow 1**: Als de syndicus foute informatie invult of wilt stoppen met een gebouw toe te voegen dan kan deze op de knop drukken om het process te annuleren.
 
 
-## Syndicus
+## Syndicus wijzigt informatie over een gebouw
 
-### Syndicus voegt een gebouw toe
+* **Korte beschrijving**: De syndicus wilt informatie over zijn/haar gebouw wijzigen en opslaan op de site.
 
-#### Korte beschrijving
-De syndicus wilt zijn/haar gebouw toevoegen op de website.
+* **Precondities**: De syndicus moet ingelogd zijn op het platform en er moet een gebouw zijn dat hij/zij al reeds beheerd.
 
-#### Precondities
-De syndicus moet ingelogd zijn op het platform.
+* **Postcondities**: De syndicus heeft de nieuwe informatie over dit gebouw toegevoegd op de website.
 
-#### Postcondities
-De syndicus heeft een nieuw gebouw toegevoegd op de website.
+* **Actoren**: Een syndicus.
 
-#### Actoren
-Een syndicus.
+* **Gedetailleerde beschrijving van de stappen**: De syndicus duwt op het gebouw dat hij/zij wenst te wijzigen komt op een venster waar de al reeds bestaande informatie te zien is over dit gebouw. Hierin kan hij deze reeds bestaande informatie wijzigen/verwijderen. Eens de syndicus klaar is slaat hij/zij deze informatie op door op de daarvoor voorziene knop te drukken.
 
-#### Gedetailleerde beschrijving van de stappen
-De syndicus duwt op de knop om een gebouw toe te voegen. Hierna komt de syndicus op een scherm voor een gebouw toe te voegen waar hij/zij informatie over het gebouw moet invullen. Eenmaal klaar kan de syndicus het gebouw opslaan door op de daarvoor bedoelde knop te drukken.
+* **Alternatieve flow 1**: Als de syndicus toch de informatie over het gebouw niet wilt wijzigen, kan deze het process op elk moment stoppen door op de annuleer-knop te drukken.
 
-#### Alternatieve flow 1
-Als de syndicus foute informatie invult of wilt stoppen met een gebouw toe te voegen dan kan deze op de knop drukken om het process te annuleren.
+# Admin
 
+## Admin voegt een nieuwe gebruiker toe
 
-### Syndicus wijzigt informatie over een gebouw
+* **Korte beschrijving**: De admin voegt een nieuwe gebruiker toe op de website.
 
-#### Korte beschrijving
-De syndicus wilt informatie over zijn/haar gebouw wijzigen en opslaan op de site.
+* **Precondities**: De admin is ingelogd op de website.
 
-#### Precondities
-De syndicus moet ingelogd zijn op het platform en er moet een gebouw zijn dat hij/zij al reeds beheerd.
+* **Postcondities**: De admin heeft een nieuwe gebruiker toegevoegd.
 
-#### Postcondities
-De syndicus heeft de nieuwe informatie over dit gebouw toegevoegd op de website.
+* **Actoren**: Een admin.
 
-#### Actoren
-Een syndicus.
+* **Gedetailleerde beschrijving van de stappen**: De admin kan een gebruiker toevoegen door op de hiervoor voorziene knop te drukken. De admin komt op een scherm waar hij informatie (email, naam etc..) kan invullen over de nieuwe gebruiker. Ook kiest de admin op deze pagina de rol voor deze nieuwe gebruiker. Eenmaal de admin klaar is kan hij deze gebruiker opslaan door op de hiervoor voorziene knop te drukken.
 
-#### Gedetailleerde beschrijving van de stappen
-De syndicus duwt op het gebouw dat hij/zij wenst te wijzigen komt op een venster waar de al reeds bestaande informatie te zien is over dit gebouw. Hierin kan hij deze reeds bestaande informatie wijzigen/verwijderen. Eens de syndicus klaar is slaat hij/zij deze informatie op door op de daarvoor voorziene knop te drukken.
+* **Alternatieve flow 1**: Als de admin wilt stoppen met een gebruiker toe te voegen dan kan deze op de knop drukken om het process te annuleren.
 
-#### Alternatieve flow 1
-Als de syndicus toch de informatie over het gebouw niet wilt wijzigen, kan deze het process op elk moment stoppen door op de annuleer-knop te drukken.
+## Admin wijzigt info/rol of verwijdert een (super)student
 
-## Admin
-
-### Admin voegt een nieuwe gebruiker toe
-
-#### Korte beschrijving
-De admin voegt een nieuwe gebruiker toe op de website.
-
-#### Precondities
-De admin is ingelogd op de website.
-
-#### Postcondities
-De admin heeft een nieuwe gebruiker toegevoegd.
-
-#### Actoren
-Een admin.
-
-#### Gedetailleerde beschrijving van de stappen
-De admin kan een gebruiker toevoegen door op de hiervoor voorziene knop te drukken. De admin komt op een scherm waar hij informatie (email, naam etc..) kan invullen over de nieuwe gebruiker. Ook kiest de admin op deze pagina de rol voor deze nieuwe gebruiker. Eenmaal de admin klaar is kan hij deze gebruiker opslaan door op de hiervoor voorziene knop te drukken.
-
-#### Alternatieve flow 1
-Als de admin wilt stoppen met een gebruiker toe te voegen dan kan deze op de knop drukken om het process te annuleren.
-
-### Admin wijzigt info/rol of verwijdert een (super)student
-
-#### Korte beschrijving
-De admin kan almgene informatie van een gebruiker wijzigen (bvb wanneer de gebruiker een nieuw telefoonnummer heeft).
+* **Korte beschrijving**: De admin kan almgene informatie van een gebruiker wijzigen (bvb wanneer de gebruiker een nieuw telefoonnummer heeft).
 De admin kan studenten promoveren tot superstudent, of superstudenten degraderen tot student.
 De admin kan studenten verwijderen.
 
-#### Precondities
-De admin is ingelogd op de website.
+* **Precondities**: De admin is ingelogd op de website.
 
-#### Postcondities
-De admin heeft een gebruiker gewijzigd/verwijderd.
+* **Postcondities**: De admin heeft een gebruiker gewijzigd/verwijderd.
 
-#### Actoren
-Een admin.
+* **Actoren**: Een admin.
 
-#### Gedetailleerde beschrijving van de stappen
-De admin kan een gebruiker aanpassen door op de voorziene knop te drukken waarna hij/zij op een scherm komt met de gekende informatie van de gebruiker. Vervolgens kan de admin deze informatie aanpassen en de wijzigingen doorvoeren door op opslaan te klikken. De admin kan er ook voor kiezen om de gebruiker te verwijderen door eerst op de wijzig knop te drukken en daarna op de verwijder knop. Nu verschijnt er een pop-up op het scherm waarop de admin moet aanduiden dat hij/zij zeker is dat hij/zij de gebruiker in kwestie wilt verwijderen.
+* **Gedetailleerde beschrijving van de stappen**: De admin kan een gebruiker aanpassen door op de voorziene knop te drukken waarna hij/zij op een scherm komt met de gekende informatie van de gebruiker. Vervolgens kan de admin deze informatie aanpassen en de wijzigingen doorvoeren door op opslaan te klikken. De admin kan er ook voor kiezen om de gebruiker te verwijderen door eerst op de wijzig knop te drukken en daarna op de verwijder knop. Nu verschijnt er een pop-up op het scherm waarop de admin moet aanduiden dat hij/zij zeker is dat hij/zij de gebruiker in kwestie wilt verwijderen.
 
-#### Alternatieve flow 1
-De admin kan op elk moment de gemaakte wijzigingen die nog niet doorgevoerd werden annuleren.
+* **Alternatieve flow 1**: Admin kan op elk moment de gemaakte wijzigingen die nog niet doorgevoerd werden annuleren.
