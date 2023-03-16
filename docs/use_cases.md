@@ -1,5 +1,7 @@
+
 ***
 # Use cases
+
 # Student
 
 ## Student start met een ronde
@@ -159,3 +161,4 @@ De admin kan studenten verwijderen.
 * **Gedetailleerde beschrijving van de stappen**: De admin kan een gebruiker aanpassen door op de voorziene knop te drukken waarna hij/zij op een scherm komt met de gekende informatie van de gebruiker. Vervolgens kan de admin deze informatie aanpassen en de wijzigingen doorvoeren door op opslaan te klikken. De admin kan er ook voor kiezen om de gebruiker te verwijderen door eerst op de wijzig knop te drukken en daarna op de verwijder knop. Nu verschijnt er een pop-up op het scherm waarop de admin moet aanduiden dat hij/zij zeker is dat hij/zij de gebruiker in kwestie wilt verwijderen.
 
 * **Alternatieve flow 1**: Admin kan op elk moment de gemaakte wijzigingen die nog niet doorgevoerd werden annuleren.
+
