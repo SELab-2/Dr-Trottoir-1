@@ -4,7 +4,7 @@
       <v-card-subtitle>
         <v-icon icon="mdi-account"> </v-icon>{{ mockround.student }}
       </v-card-subtitle>
-      <v-container>
+      <v-container fluid>
         <v-timeline truncate-line="both" side="end" density="compact">
           <v-timeline-item dot-color="green" icon="mdi-check">
             <v-card>
@@ -64,7 +64,7 @@
 <script lang="ts" setup>
 import Round from "@/components/models/Round";
 
-const date = '13/03/2023'
+const date = "13/03/2023";
 
 //TODO remove after mockpresentation
 const mockdata = [
