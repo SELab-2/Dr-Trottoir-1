@@ -34,6 +34,8 @@
             color="primary"
             @click="snackbar = !snackbar"
             v-on:click.prevent
+            :variant="(round.name == 'Sterre' || round.name == 'Korenmarkt') ? 'flat' : 'elevated'"
+            :disabled="round.name == 'Sterre' || round.name == 'Korenmarkt'"
           >
             Start ronde</v-btn
           >
@@ -125,7 +127,7 @@ const days = ref({
     name: "Maandag",
     rounds: [
       {
-        name: "Overpoort",
+        name: "Sterre",
         deadline: new Date(2023, 0o2, 0o6, 15, 30),
         buildings: 5,
         buildings_done: 0,
