@@ -97,7 +97,6 @@ const routes = [
         name: "Nieuwe gebruiker",
         component: UserCreation,
       },
-      
     ],
   },
 ];
