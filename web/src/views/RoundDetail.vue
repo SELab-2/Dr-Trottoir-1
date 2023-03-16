@@ -4,8 +4,8 @@
       <v-card-subtitle>
         <v-icon icon="mdi-account"> </v-icon>{{ mockround.student }}
       </v-card-subtitle>
-      <v-container class="d-flex">
-        <v-timeline truncate-line="both" side="end">
+      <v-container>
+        <v-timeline truncate-line="both" side="end" density="compact">
           <v-timeline-item dot-color="green" icon="mdi-check">
             <v-card>
               <v-card-title> Start {{ mockround.start }} </v-card-title>
