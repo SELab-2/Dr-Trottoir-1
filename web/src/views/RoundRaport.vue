@@ -67,9 +67,7 @@
       </v-container>
       <v-card-actions class="d-flex">
         <v-spacer></v-spacer>
-        <v-btn prepend-icon="mdi-close" color="error"
-          >Niet afsluiten</v-btn
-        >
+        <v-btn prepend-icon="mdi-close" color="error">Niet afsluiten</v-btn>
         <v-btn prepend-icon="mdi-check" color="primary">Afsluiten</v-btn>
       </v-card-actions>
     </v-card>
