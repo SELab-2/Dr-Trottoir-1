@@ -3,15 +3,14 @@
     <v-main>
       <v-navigation-drawer
         :temporary="!permanentDrawer"
-        :permanent="permanentDrawer"
+        :permanent="!!permanentDrawer"
         v-model="drawer"
       >
         <v-list density="compact" nav>
-          <v-list-item
-            lines="two"
-            prepend-avatar="https://avatars.githubusercontent.com/u/38297449?v=4"
-            @click="showAccount = !showAccount"
-          >
+          <v-list-item lines="two" @click="showAccount = !showAccount">
+            <template v-slot:prepend>
+              <Avatar :name="studentName" />
+            </template>
             <div class="flex">
               <div class="text">
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
@@ -57,7 +56,7 @@
           <div v-if="isStudent">
             <p class="pa-2 font-weight-medium text-caption">Overzicht</p>
 
-            <router-link to="/dashboard">
+            <router-link to="/planningsoverzicht">
               <v-list-item
                 prepend-icon="mdi-calendar-edit"
                 title="Planning"
@@ -70,7 +69,7 @@
                 prepend-icon="mdi-calendar"
                 title="Kalender"
                 value="calendar"
-              />
+              ></v-list-item>
             </router-link>
 
             <div class="py-2">
@@ -145,28 +144,28 @@
           <div v-if="isAdmin">
             <p class="pa-2 font-weight-medium text-caption">Administratie</p>
 
-            <router-link to="/dashboard">
+            <router-link to="/dashboard/gebruikers">
               <v-list-item
                 prepend-icon="mdi-account-supervisor"
-                title="Studenten"
-                value="students"
-              />
+                title="Gebruikers"
+                value="users"
+              ></v-list-item>
             </router-link>
 
-            <router-link to="/dashboard">
+            <router-link to="/dashboard/gebouwen">
               <v-list-item
                 prepend-icon="mdi-office-building-outline"
                 title="Gebouwen"
-                value="buidlings"
-              />
+                value="buildings"
+              ></v-list-item>
             </router-link>
 
-            <router-link to="/dashboard">
+            <router-link to="/dashboard/routes">
               <v-list-item
                 prepend-icon="mdi-map-legend"
                 title="Routes"
                 value="routes"
-              />
+              ></v-list-item>
             </router-link>
 
             <router-link to="/dashboard/gebruikers/nieuw">
@@ -200,14 +199,14 @@
         <v-btn variant="text" icon="mdi-magnify" />
       </v-app-bar>
 
-      <div class="pa-8">
-        <router-view />
-      </div>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
+import Avatar from "@/components/Avatar.vue";
+
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -227,8 +226,8 @@ const isAdmin = ref(true);
 const showAccount = ref(false);
 
 // account display settings
-const studentName: String = "Jens Pots";
-function roles(): String {
+const studentName: string = "Jens Pots";
+function roles(): string {
   let str = "";
   if (isStudent.value) {
     str += "student ";

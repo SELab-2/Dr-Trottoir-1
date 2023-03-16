@@ -28,7 +28,7 @@ services:
       # Dashboard: - "8080:8080"
     networks:
       main:
-        ipv4_address: 10.0.0.6
+        ipv4_address: 10.0.0.2
     volumes:
       - "~/volumes/traefik:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -52,7 +52,7 @@ services:
     restart: always
     networks:
       main:
-        ipv4_address: 10.0.0.2
+        ipv4_address: 10.0.0.3
     ports:
       - "2002:5432"
 
@@ -66,20 +66,62 @@ services:
       IMGPROXY_DEVELOPMENT_ERRORS_MODE: 'true'
       IMGPROXY_MAX_SRC_RESOLUTION: 100
       IMGPROXY_JPEG_PROGRESSIVE: 'true'
-      IMGPROXY_BIND: ":8080"
+      IMGPROXY_BIND: ":8081"
     volumes:
       - '~/volumes/imgproxy:/images:ro'
     networks:
       main:
-        ipv4_address: 10.0.0.3
+        ipv4_address: 10.0.0.4
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.imgproxy.rule=Host(`sel2-1.ugent.be`)"
       - "traefik.http.routers.imgproxy.rule=PathPrefix(`/imgproxy/`)"
       - "traefik.http.routers.imgproxy.entrypoints=websecure"
       - "traefik.http.routers.imgproxy.tls.certresolver=letsencrypt"
-      - "traefik.http.services.imgproxy.loadbalancer.server.port=8080"
+      - "traefik.http.services.imgproxy.loadbalancer.server.port=8081"
       - "traefik.http.middlewares.imgproxy.stripprefix.prefixes=/imgproxy/"
+
+  api:
+    container_name: api
+    hostname: api
+    build: ../api/
+    networks:
+      main:
+        ipv4_address: 10.0.0.5
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`sel2-1.ugent.be`)"
+      - "traefik.http.routers.api.rule=PathPrefix(`/api/`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.api.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.api.stripprefix.prefixes=/api/"
+    env_file:
+        - .env
+    restart: always
+    ports:
+      - "8080:8080"
+
+  frontend:
+    container_name: frontend
+    hostname: frontend
+    build: ../web/
+    networks:
+      main:
+        ipv4_address: 10.0.0.6
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`sel2-1.ugent.be`)"
+      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.frontend.stripprefix.prefixes=/"
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - "3000:3000"
 
 networks:
   main:
