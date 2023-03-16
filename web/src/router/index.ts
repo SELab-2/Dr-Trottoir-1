@@ -59,7 +59,7 @@ const routes = [
         component: RoundFollowup,
       },
       {
-        path: "/ronde-maken",
+        path: "/rondes/maken",
         name: "Ronde aanmaken",
         component: RoundMaker,
       },
