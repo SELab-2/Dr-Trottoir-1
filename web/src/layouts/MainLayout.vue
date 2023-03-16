@@ -104,14 +104,6 @@
               />
             </router-link>
 
-            <router-link to="/dashboard">
-              <v-list-item
-                prepend-icon="mdi-message-fast"
-                title="Communicatie"
-                value="communication"
-              />
-            </router-link>
-
             <div class="py-2">
               <v-divider />
             </div>
