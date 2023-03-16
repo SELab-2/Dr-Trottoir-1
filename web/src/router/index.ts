@@ -11,6 +11,7 @@ import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
+import StudentFollowUp from "@/views/StudentFollowUp.vue";
 
 import BuildingMaker from "@/views/BuildingMaker.vue";
 
@@ -24,6 +25,11 @@ const routes = [
     name: "dashboard",
     component: MainLayout,
     children: [
+      {
+        path: "/studenten",
+        name: "Opvolging studenten",
+        component: StudentFollowUp,
+      },
       {
         path: "/planning",
         name: "Planningsoverzicht",
