@@ -11,7 +11,7 @@ import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
-import RoundRaport from "@/views/RoundRaport.vue"
+import RoundRaport from "@/views/RoundRaport.vue";
 
 const routes = [
   {
