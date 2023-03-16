@@ -1,4 +1,4 @@
-import { CustomRequest, Routing } from "./routing";
+import { CustomRequest, includeUser, Routing } from "./routing";
 import { Auth } from "../auth/auth";
 import express from "express";
 import { Parser } from "../parser";
@@ -34,7 +34,7 @@ export class ScheduleRouting extends Routing {
                 },
             },
             include: {
-                user: joins?.includes("user"),
+                user: includeUser(joins?.includes("user"), false),
                 round: joins?.includes("round"),
                 progress: joins?.includes("progress"),
             },
@@ -52,7 +52,7 @@ export class ScheduleRouting extends Routing {
                 id: Parser.number(req.params["id"]),
             },
             include: {
-                user: joins?.includes("user"),
+                user: includeUser(joins?.includes("user"), false),
                 round: {
                     include: {
                         buildings: {
