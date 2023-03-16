@@ -4,6 +4,12 @@
 
 We bieden een REST API aan op basis van JSON documenten geschreven in TypeScript. We maken hier gebruik van de Express.js bibliotheek inclusief middleware van derden. De interactie met de database wordt voorzien in door PrismaORM, een TypeScript-native ORM voor onder andere PostgreSQL. Authenticatie wordt voorzien door Node.js's crypto bibliotheek en Passport.js. We definiëren autorisatieregels oftewel door gebruik van een TypeScript decorator, of binnenin een endpoint zelf.
 
+## Postman
+
+Postman is een interactieve GUI client om RESTful APIs te beschrijven, testen en te verkennen. We voorzien in `postman.json` dergelijke documentatie voor onze API. 
+
+> Merk op dat de nog niet de volledige API gedocumenteerd is in Postman.
+
 ## Environments
 
 We maken gebruik van een _environment file_, namelijk `.env`. Hier vul je enkele variabelen in zoals de URL van de database. Een template wordt gegeven door `example.env`. `.env` zit bewust in je `.gitignore`, ga deze dus niet committen naar GitHub!

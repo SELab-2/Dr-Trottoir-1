@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { Chance } from "chance";
+import crypto from "crypto";
 
 const prisma = new PrismaClient()
 const chance = new Chance();
@@ -9,6 +10,8 @@ Bij het toevoegen van een nieuwe gebruiker aan de databank wordt ook een nieuw a
 enkel via deze functie of via de functie createBuilding in de databank geplaatst worden, dus niet via een aparte functie.
  */
 export async function createUser() {
+    const password = "password";
+    const salt = crypto.randomBytes(32).toString();
     await prisma.user.create({
         data: {
             first_name: chance.first(),
@@ -20,6 +23,8 @@ export async function createUser() {
             last_login: chance.date(),
             date_added: chance.date(),
             email: chance.email(),
+            salt: salt,
+            hash: crypto.createHash('sha256').update(password+salt).digest('hex'),
             address: {
                 create: {
                     city: "Gent",

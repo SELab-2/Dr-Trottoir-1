@@ -24,4 +24,5 @@ Software Engineering Lab II (2022 - 2023)
 - `web`: Webapplicatie
 
 ## Documentatie
-De documentatie van deze monorepo is beschikbaar in de bijhorende [wiki](https://github.com/SELab-2/Dr-Trottoir-1/wiki).
+
+Er is documentatie te vinden op [GitHub Wiki](https://github.com/SELab-2/Dr-Trottoir-1/wiki), alsook in [`/api/README.md`](https://github.com/SELab-2/Dr-Trottoir-1/api/README.md) en [`./server/README.md`](https://github.com/SELab-2/Dr-Trottoir-1/server/README.md).

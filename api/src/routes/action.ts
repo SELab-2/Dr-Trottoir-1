@@ -52,7 +52,7 @@ export class ActionRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.user.update({
+        const result = await prisma.action.update({
             data: req.body,
             where: {
                 id: Parser.number(req.params["id"]),
