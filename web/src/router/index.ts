@@ -13,6 +13,8 @@ import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 import StudentFollowUp from "@/views/StudentFollowUp.vue";
 
+import BuildingMaker from "@/views/BuildingMaker.vue";
+
 const routes = [
   {
     path: "/",
@@ -44,7 +46,7 @@ const routes = [
         name: "Gebouwen",
       },
       {
-        path: "/dashboard/routes",
+        path: "/dashboard/rondes",
         component: Routes,
         name: "Rondes",
       },
@@ -54,18 +56,24 @@ const routes = [
         component: BuildingSceen,
         props: true,
       },
+      //{
+      //  path: "/ronde/:id",
+      //  name: "Ronde",
+      //  component: TODO detailpagina ronde,
+      //  props: true,
+      //},
       {
-        path: "/gebouw",
+        path: "/gebouwen",
         name: "Opvolgen van gebouwen",
         component: BuildingFollowup,
       },
       {
-        path: "/rondes/opvolgen",
+        path: "/rondes",
         name: "Opvolgen van rondes",
         component: RoundFollowup,
       },
       {
-        path: "/ronde-maken",
+        path: "/rondes/maken",
         name: "Ronde aanmaken",
         component: RoundMaker,
       },
@@ -76,9 +84,23 @@ const routes = [
         props: true,
       },
       {
+        path: "/dashboard/rondes/nieuw",
+        name: "Nieuwe ronde",
+        component: RoundMaker,
+      },
+      //{
+      //  path: "/dashboard/gebouwen/nieuw",
+      //  name: "Nieuw gebouw",
+      //  component: TODO creatiepagina gebouw,
+      //},
+      {
         path: "/dashboard/gebruikers/nieuw",
-        name: "Nieuwe gebruiker toevoegen",
+        name: "Nieuwe gebruiker",
         component: UserCreation,
+      },
+      {
+        path: "/gebouw/toevoegen",
+        component: BuildingMaker,
       },
     ],
   },

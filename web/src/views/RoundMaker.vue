@@ -25,9 +25,6 @@
             >
               <v-list-item-title>{{ building.name }}</v-list-item-title>
               <v-list-item-subtitle>{{ building.adress }}</v-list-item-subtitle>
-              <v-list-item-subtitle class="text-right align-self-start"
-                >Vuilnistype</v-list-item-subtitle
-              >
 
               <!-- Buttons for manipulating the round list -->
               <template v-slot:prepend>

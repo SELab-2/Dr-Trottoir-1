@@ -20,7 +20,6 @@
           accept="image/*"
           prepend-icon=""
           prepend-inner-icon="mdi-image"
-          @change="previewImage"
           @update:model-value="$emit('onUpdate', photo)"
         ></v-file-input>
         <v-textarea
@@ -51,7 +50,10 @@ const photo = ref<Photo>({
 
 const imageUrl = ref("");
 
-// TODO: fix typing here
+/*TODO: fix typing here, commented this for deadline 1
+  Should be added in <v-file-input> 
+    @change="previewImage"
+
 const previewImage = (event) => {
   const file = event.target.files[0];
   const reader = new FileReader();
@@ -64,6 +66,7 @@ const previewImage = (event) => {
 
   reader.readAsDataURL(file);
 };
+*/
 
 // later voor het submit van afbeelding
 //const submit = () => {
