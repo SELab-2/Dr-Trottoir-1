@@ -106,8 +106,8 @@ const routes = [
         component: UserCreation,
       },
       {
-        path: "/dashboard/ronde/raport",
-        name: "Ronde Raport",
+        path: "/dashboard/ronde/rapport",
+        name: "Ronde rapport",
         component: RoundReport,
       },
       {
