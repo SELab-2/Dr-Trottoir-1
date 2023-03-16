@@ -1,6 +1,5 @@
 <template>
   <!-- TODO: Container around the card to show the edges a bit more, should be removed in the future -->
-  <v-container style="background: ##fafafa">
     <v-card class="d-flex align-center justify-center mb-6" height="160px">
       <v-list class="ma-2 pa-2 me-auto">
         <!-- All the basic information of a round, used v-card titles and subtitles -->
@@ -36,7 +35,6 @@
         {{ building_index }}/{{ total_buildings }}
       </v-progress-circular>
     </v-card>
-  </v-container>
 </template>
 
 <script lang="ts" setup>

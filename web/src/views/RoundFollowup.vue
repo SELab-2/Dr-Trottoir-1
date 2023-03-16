@@ -12,7 +12,8 @@
       :building_index="round.current_building"
       :total_buildings="round.buildings.length"
       :round_comments="round.comments"
-      @click="redirect_to_detail(round)"
+      @click="redirect_to_detail()"
+      style="cursor: pointer"
     ></RoundCard>
     <v-spacer></v-spacer>
   </v-list>
@@ -25,8 +26,8 @@ import { useRouter } from "vue-router";
 
 const router = useRouter()
 
-function redirect_to_detail(round : Round){
-  router.push({path : '/rondes/opvolging', params : round})
+function redirect_to_detail(){
+  router.push({path : '/rondes/detail'})
 
 }
 
