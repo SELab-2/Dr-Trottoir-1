@@ -57,6 +57,15 @@
           </v-timeline-item>
         </v-timeline>
       </v-container>
+      <v-card-actions class="d-flex">
+        <v-spacer></v-spacer>
+        <v-btn
+          to="/dashboard/rondes/rapport"
+          prepend-icon="mdi-check"
+          color="primary"
+          >Ronde stoppen</v-btn
+        >
+      </v-card-actions>
     </v-card>
   </v-container>
 </template>

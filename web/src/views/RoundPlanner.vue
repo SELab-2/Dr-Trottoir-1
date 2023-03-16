@@ -35,7 +35,7 @@
               :items="rounds"
             ></v-select>
             <v-spacer></v-spacer>
-            <router-link to="/rondes/maken">
+            <router-link to="/dashboard/rondes/nieuw">
               <v-btn
                 v-if="selectedRound"
                 prepend-icon="mdi-pencil"

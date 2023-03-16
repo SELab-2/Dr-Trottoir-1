@@ -1,6 +1,7 @@
 <template>
   <!-- Simple vlist that uses the custom component RoundCard -->
-  <v-list>
+  <v-list class="mx-3">
+    <v-card-title>Rondes van vandaag</v-card-title>
     <RoundCard
       v-for="(round, i) in mockrounds"
       :key="i"
