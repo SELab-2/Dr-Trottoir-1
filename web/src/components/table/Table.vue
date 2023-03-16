@@ -65,7 +65,7 @@ import { RowType } from "@/components/table/RowType";
 const props = defineProps(["entries", "headers"]);
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 tr:nth-child(even)
   background-color: #f8f8f8
 

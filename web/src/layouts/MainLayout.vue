@@ -219,7 +219,7 @@ function onResize() {
 window.addEventListener("resize", onResize);
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 a {
   text-decoration: none;
   color: black;
