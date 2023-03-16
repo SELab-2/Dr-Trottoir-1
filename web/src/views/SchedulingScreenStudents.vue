@@ -8,43 +8,51 @@
   >
     <!-- Building cards -->
     <router-link
-      v-for="building in day.buildings"
-      :key="building.name"
-      to="/gebouw/0"
+      v-for="round in day.rounds"
+      :key="round.name"
+      to="/rondes/detail"
     >
       <v-card
         class="ma-3"
-        :title="building.name"
-        :subtitle="building.address"
-        prepend-icon="mdi-office-building-outline"
+        :title="round.name"
+
+        prepend-icon="mdi-transit-detour"
       >
-        <template v-slot:append>
-          <v-checkbox v-on:click.prevent v-model="building.done"></v-checkbox>
+        <v-progress-linear
+          v-if="calculateProgress(round.buildings_done, round.buildings) !== 0"
+          absolute
+          bottom
+          :color="calculateProgress(round.buildings_done, round.buildings) === 100 ? 'success' : 'warning'"
+          :model-value="calculateProgress(round.buildings_done, round.buildings)"
+        ></v-progress-linear>
+        <template v-slot:subtitle>
+          {{ round.deadline.getHours() }}:{{
+            ("0" + round.deadline.getUTCMinutes()).slice(-2)
+          }}
+          <v-icon icon="mdi-clock-time-ten-outline"></v-icon>
         </template>
 
-        <!-- hour -->
-        <v-chip
-          prepend-icon="mdi-clock-time-ten-outline"
-          label
-          color="primary"
-          class="ml-5 mb-3"
-        >
-          {{ building.deadline.getHours() }}:{{
-            ("0" + building.deadline.getUTCMinutes()).slice(-2)
-          }}
-        </v-chip>
-
-        <!-- Trash types -->
-        <v-chip
-          prepend-icon="mdi-recycle"
-          label
-          color="success"
-          v-for="gb in building.garbage"
-          :key="gb"
-          class="ml-2 mb-3"
-        >
-          {{ gb }}
-        </v-chip>
+        <template v-slot:append>
+          <v-btn
+            v-if="calculateProgress(round.buildings_done, round.buildings) === 0"
+            color="primary"
+          > Start ronde</v-btn>
+          <v-chip
+            v-else-if="calculateProgress(round.buildings_done, round.buildings) === 100"
+            label
+            color="success"
+          >
+            <v-icon icon="mdi-check"></v-icon>
+            Klaar
+          </v-chip>
+          <v-chip
+            v-else
+            label
+            color="warning"
+          >
+            Bezig {{ round.buildings_done }}/{{ round.buildings }}
+          </v-chip>
+        </template>
       </v-card>
     </router-link>
   </v-card>
@@ -53,128 +61,54 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
+const calculateProgress = (done: number, toDo: number) => {
+  return Math.round((done/toDo)*100)
+}
+
 const days = ref({
   monday: {
-    name: "Maandag",
-    buildings: [
+    name: "Vandaag",
+    rounds: [
       {
-        name: "Upkot",
-        address: "Herentalsebaan 427",
-        info: "meer info/opmerkingen",
-        deadline: new Date(2023, 0o2, 0o6, 21, 30),
-        garbage: ["PMD", "PAPIER"],
-        showinfo: false,
-        done: true,
+        name: "Grote Markt",
+        deadline: new Date(2023, 0o2, 0o6, 10, 30),
+        buildings: 5,
+        buildings_done: 5,
       },
       {
-        name: "Leftkot",
-        address: "Rue Dielhère 403",
-        info: "wegens werken dient de achteringang genomen te worden",
-        deadline: new Date(2023, 0o2, 0o6, 19, 45),
-        garbage: ["REST", "PAPIER"],
-        showinfo: false,
-        done: true,
+        name: "Vrijdagsmarkt",
+        deadline: new Date(2023, 0o2, 0o6, 12, 45),
+        buildings: 5,
+        buildings_done: 3,
       },
       {
-        name: "Home Johannes",
-        address: "Kerkstraat 122",
-        info: "meer info/opmerkingen",
-        deadline: new Date(2023, 0o2, 0o6, 20, 0),
-        garbage: ["PMD", "REST"],
-        showinfo: false,
-        done: false,
-      },
-      {
-        name: "Appartmentblok 2.3",
-        address: "Aven Ackers 193",
-        info: "meer info/opmerkingen",
-        deadline: new Date(2023, 0o2, 0o6, 20, 30),
-        garbage: ["PMD", "REST", "GLAS", "PAPIER"],
-        showinfo: false,
-        done: false,
-      },
+        name: "Overpoort",
+        deadline: new Date(2023, 0o2, 0o6, 15, 30),
+        buildings: 5,
+        buildings_done: 0,
+      }
     ],
   },
   tuesday: {
-    name: "Dinsdag",
-    buildings: [
+    name: "Morgen",
+    rounds: [
       {
-        name: "Upkot",
-        address: "Herentalsebaan 427",
-        info: "meer info/opmerkingen",
-        deadline: new Date(2023, 0o2, 0o6, 21, 30),
-        garbage: ["PMD", "PAPIER"],
-        showinfo: false,
-        done: false,
-      },
-      {
-        name: "Leftkot",
-        address: "Rue Dielhère 403",
-        info: "wegens werken dient de achteringang genomen te worden",
-        deadline: new Date(2023, 0o2, 0o6, 19, 45),
-        garbage: ["REST", "PAPIER"],
-        showinfo: false,
-        done: false,
-      },
-      {
-        name: "Home Johannes",
-        address: "Kerkstraat 122",
-        info: "meer info/opmerkingen",
-        deadline: new Date(2023, 0o2, 0o6, 20, 0),
-        garbage: ["PMD", "REST"],
-        showinfo: false,
-        done: false,
-      },
-      {
-        name: "Appartmentblok 2.3",
-        address: "Aven Ackers 193",
-        info: "meer info/opmerkingen",
-        deadline: new Date(2023, 0o2, 0o6, 20, 30),
-        garbage: ["PMD", "REST", "GLAS", "PAPIER"],
-        showinfo: false,
-        done: false,
-      },
+        name: "Korenmarkt",
+        deadline: new Date(2023, 0o2, 0o6, 10, 0),
+        buildings: 5,
+        buildings_done: 0,
+      }
     ],
   },
   wednesday: {
-    name: "Woensdag",
-    buildings: [
+    name: "Maandag",
+    rounds: [
       {
-        name: "Upkot",
-        address: "Herentalsebaan 427",
-        info: "meer info/opmerkingen",
-        deadline: new Date(2023, 0o2, 0o6, 21, 30),
-        garbage: ["PMD", "PAPIER"],
-        showinfo: false,
-        done: false,
-      },
-      {
-        name: "Leftkot",
-        address: "Rue Dielhère 403",
-        info: "wegens werken dient de achteringang genomen te worden",
-        deadline: new Date(2023, 0o2, 0o6, 19, 45),
-        garbage: ["REST", "PAPIER"],
-        showinfo: false,
-        done: false,
-      },
-      {
-        name: "Home Johannes",
-        address: "Kerkstraat 122",
-        info: "meer info/opmerkingen",
-        deadline: new Date(2023, 0o2, 0o6, 20, 0),
-        garbage: ["PMD", "REST"],
-        showinfo: false,
-        done: false,
-      },
-      {
-        name: "Appartmentblok 2.3",
-        address: "Aven Ackers 193",
-        info: "meer info/opmerkingen",
-        deadline: new Date(2023, 0o2, 0o6, 20, 30),
-        garbage: ["PMD", "REST", "GLAS", "PAPIER"],
-        showinfo: false,
-        done: false,
-      },
+        name: "Overpoort",
+        deadline: new Date(2023, 0o2, 0o6, 15, 30),
+        buildings: 5,
+        buildings_done: 0,
+      }
     ],
   },
 });
