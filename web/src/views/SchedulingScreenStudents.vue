@@ -34,7 +34,11 @@
             color="primary"
             @click="snackbar = !snackbar"
             v-on:click.prevent
-            :variant="(round.name == 'Sterre' || round.name == 'Korenmarkt') ? 'flat' : 'elevated'"
+            :variant="
+              round.name == 'Sterre' || round.name == 'Korenmarkt'
+                ? 'flat'
+                : 'elevated'
+            "
             :disabled="round.name == 'Sterre' || round.name == 'Korenmarkt'"
           >
             Start ronde</v-btn
