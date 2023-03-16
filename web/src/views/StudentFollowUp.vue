@@ -58,7 +58,7 @@
       </v-chip>
     </template>
     <template v-slot:append>
-      <v-btn prepend-icon="mdi-file-eye" color="primary">Details</v-btn>
+      <v-btn to="/dashboard/ronde/rapport" prepend-icon="mdi-file-eye" color="primary">Details</v-btn>
     </template>
   </v-card>
 </template>
