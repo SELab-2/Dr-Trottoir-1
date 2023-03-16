@@ -80,7 +80,7 @@
           <div v-if="isSuperStudent">
             <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
 
-            <router-link to="/dashboard">
+            <router-link to="/studenten">
               <v-list-item
                 prepend-icon="mdi-account-school"
                 title="Studenten"
