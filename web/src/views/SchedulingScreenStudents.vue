@@ -27,7 +27,7 @@
           prepend-icon="mdi-clock-time-ten-outline"
           label
           color="primary"
-          class="ml-5"
+          class="ml-5 mb-3"
         >
           {{ building.deadline.getHours() }}:{{
             ("0" + building.deadline.getUTCMinutes()).slice(-2)
@@ -41,31 +41,14 @@
           color="success"
           v-for="gb in building.garbage"
           :key="gb"
-          class="ml-2"
+          class="ml-2 mb-3"
         >
           {{ gb }}
         </v-chip>
-
-        <v-card-actions>
-          <v-btn
-            v-on:click.prevent
-            :prepend-icon="
-              building.showinfo ? 'mdi-chevron-up' : 'mdi-chevron-down'
-            "
-            @click="building.showinfo = !building.showinfo"
-            >Opmerkingen</v-btn
-          >
-        </v-card-actions>
-
-        <v-expand-transition>
-          <div v-show="building.showinfo">
-            <v-divider></v-divider>
-            <v-card-text v-if="building.info">
-              {{ building.info }}
-            </v-card-text>
-            <v-card-text v-else>Geen opmerkingen.</v-card-text>
-          </div>
-        </v-expand-transition>
+        <v-divider v-if="building.info"></v-divider>
+        <v-card-text v-if="building.info">
+          {{ building.info }}
+        </v-card-text>
       </v-card>
     </router-link>
   </v-card>
