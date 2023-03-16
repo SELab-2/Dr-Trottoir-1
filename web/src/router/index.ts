@@ -84,9 +84,9 @@ const routes = [
         component: RoundMaker,
       },
       {
-       path: "/dashboard/gebouwen/nieuw",
-       name: "Nieuw gebouw",
-       component: BuildingMaker,
+        path: "/dashboard/gebouwen/nieuw",
+        name: "Nieuw gebouw",
+        component: BuildingMaker,
       },
       {
         path: "/dashboard/gebruikers/nieuw",
