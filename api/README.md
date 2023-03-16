@@ -1,6 +1,8 @@
 # API
 
-> BELANGRIJK: momenteel ondersteunt onze database nog geen wachtwoord hashes en salts. In `/api/passport.ts` vind je de constanten `CRYPTO_EXAMPLE_PASSWORD` en `CRYPTO_SALT_UNSAFE`. Het is dan ook dit wachtwoord die je momenteel dient ge gebruiken om je aan te melden als een willekeurige gebruiker.
+## Abstract
+
+We bieden een REST API aan op basis van JSON documenten geschreven in TypeScript. We maken hier gebruik van de Express.js bibliotheek inclusief middleware van derden. De interactie met de database wordt voorzien in door PrismaORM, een TypeScript-native ORM voor onder andere PostgreSQL. Authenticatie wordt voorzien door Node.js's crypto bibliotheek en Passport.js. We definiëren autorisatieregels oftewel door gebruik van een TypeScript decorator, of binnenin een endpoint zelf.
 
 ## Environments
 
@@ -10,13 +12,23 @@ Doorgaans heb je geen VPN verbinding nodig om met de database op `sel2-1.ugent.b
 
 ### Production
 
-TODO
+Wens je de applicatie in te zetten op een eigen server, dan kan je gebruik maken van de documentatie die te vinden is in `/database/README.md`. We focussen ons hier voornamelijk op ontwikkelingsomgeving.
 
 ### Development
 
 #### Initialisatie
 
+We gaan er hier van uit dat je reeds een (lokale) PostgreSQL database hebt voorzien.
+
 ```shell
+# Verkrijg de broncode indien je deze nog niet hebt.
+git clone git@github.com:SELab-2/Dr-Trottoir-1.git dr-trottoir
+cd dr-trottoir/api
+
+# Stel de environment variables in.
+cp example.env .env
+$EDITOR .env
+
 # Download node modules
 npm install
 
@@ -26,15 +38,15 @@ npx prisma generate
 
 #### Hot-reload en TypeScript compilatie
 
-Om je de API te testen tijdens het ontwikkelen maak je gebruik van het `npm start serve` commando. Deze zal automatisch TypeScript files compileren naar `/api/dist`, de webserver starten en herstarten wanneer de broncode gewijzigd wordt. Dat laatste kan wel een seconde of twee in beslag nemen, waarbij je een `Connection refused` foutmelding kan ontvangen bij je client.
+Om de API te testen tijdens het ontwikkelen maak je gebruik van het `npm start serve` commando. Deze zal automatisch TypeScript files compileren naar `/api/dist`, alsook de webserver starten en herstarten wanneer de broncode gewijzigd wordt. Dat laatste kan wel een seconde of twee in beslag nemen, waarbij je een `Connection refused` foutmelding kan ontvangen bij je client.
 
-## Authentication
+## Authenticatie, autorisatie
 
 We maken gebruik van `passport.js` voor authenticatie in combinatie met het manueel bijhouden van hashes en salts in onze database.
 
 ### Authorization
 
-In `/api/auth` vind je de _decorator_ `Auth.authorization` waarmee je heel eenvoudig een route kan beveiligen. Merk echter op dat deze geen nuance toelaten; je kan alleen toegang geven tot alle studenten, alle superstudenten, etc. Wil je een regel toevoegen zoals "indien de ID van de resource overeenkomt met de huidige gebruiker", dan dien je dit nog steeds manueel te implementeren. Geen decorator komt overeen met geen authorisatie. Administratoren hebben rechten voor alle routes.
+In `/api/auth` vind je de _decorator_ `Auth.authorization` waarmee je heel eenvoudig een route kan beveiligen. Merk echter op dat deze geen nuance toelaat; je kan alleen toegang geven tot alle studenten, alle superstudenten, enzvoort, en niet bijvoorbeeld degene met specifieke *identifiers*. Wil je dus een regel toevoegen als "indien de ID van de resource overeenkomt met de huidige gebruiker", dan dien je dit nog steeds manueel te implementeren. Geen decorator gebruiken komt in essentie overeen met geen autorisatie. Administratoren hebben rechten voor alle routes.
 
 ```typescript
 export class BuildingRouting extends Routing {
@@ -45,7 +57,7 @@ export class BuildingRouting extends Routing {
 }
 ```
 
-Het `express.Request` object bevat het extra veld `user` dat oftewel de huidig aangemelde gebruiker is in de vorm van een Prisma `User` object, of `null` indien er geen gebruiker aangemeld is. Zie `/api/types/index.d.ts`. Dit veld wordt ingevuld door passport.js.
+Het `express.Request` object bevat het extra veld `user` dat oftewel de huidig aangemelde gebruiker is in de vorm van een Prisma `User` object, of `null` indien er geen gebruiker aangemeld is. Zie `/api/types/index.d.ts`. Dit veld wordt ingevuld door Passport.js.
 
 ### Gebruik
 
@@ -137,7 +149,7 @@ export class Parser {
 }
 ```
 
-Deze functie neemt twee parameters aan, namelijk `input` dat altijd de `string` is zoals letterlijk gegeven in de HTTP request of `undefined`, en een `otherwise` waarde die oftewel een `Date` is of `undefined`. Er kunnen nu drie scenario's voorvallen:
+Deze functie neemt twee parameters aan, namelijk `input`, wat altijd de `string` is zoals letterlijk gegeven in de HTTP request, of `undefined`. We geven ook een parameter `otherwise` mee die oftewel een `Date` is of `undefined`. Er kunnen nu drie scenario's voorvallen:
 
 -   `input` kan omgezet worden in een geldige `Date`, geef deze resulterende `Date` terug.
 -   `input` is undefined, geef `otherwise` terug.
@@ -156,28 +168,8 @@ const result = await prisma.user.findMany({
 };
 ```
 
-Wordt in het bovenstaande voorbeeld `added_before` opgegeven in de URL van de HTTP request, dan zal de deze waarde oftewel correct omgezet worden naar een `Date` object door de Parser, of zal een `Bad Request` error opgegooid worden indien de datum niet geldig is. Indien `added_before` helemaal niet opgegeven is (en dus `undefined` is), dan geeft de parser opnieuw `undefined` terug en zal PrismaORM er geen rekening mee houden.
+Wordt in het bovenstaande voorbeeld `added_before` opgegeven in de URL van de HTTP request, dan zal de deze waarde oftewel correct omgezet worden naar een `Date` object door de Parser, of zal een `Bad Request` error opgegooid worden indien de datum niet geldig is. Indien `added_before` helemaal niet opgegeven is (en dus `undefined` is), dan geeft de parser opnieuw `undefined` 
 
-Joins zijn iets complexer. Neem de route `/schedule` waarbij we mogelijks al de `user` en `round` velden willen inlinen. Onze request neemt de vorm `/schedule?join=user,round`. We passen hier `Parser.stringArray` toe en gaan als volgt te werk.
+## Slot
 
-```typescript
-const joins = Parser.stringArray(req.query["join"], []);
-
-const result = await prisma.schedule.findMany({
-    include: {
-        user: joins?.includes("user"),
-        round: joins?.includes("round"),
-        progress: joins?.includes("progress"),
-    },
-});
-
-return res.status(200).json(result);
-```
-
-Een laatse voorbeeld is de `take` parameter, waarbij we het maximum aantal resultaten opgeven. Hier willen we echter al een _default value_ toepassen, namelijk `1024`. We zullen nu oftewel een getal ontvangen van de gebruiker en dit toepassen (vb. `/user?take=5`), of we ontvangen een ongeldig getal en gooien een `HTTP: Bad Request` error (vb. `/user?take=a`) of we ontvangen geen parameter en passen de standaardwaarde `1024` toe.
-
-```typescript
-const result = await prisma.schedule.findMany({
-    take: Parser.number(req.query["take"], 1024),
-});
-```
+We bespraken de meest prominente onderdelen van onze API. Merk echter op doorheen de broncode zelf ook nog uitleg gegeven is, en we hier slechts een *high-level overview* gegeven hebben. De werkelijke definities van de verschillende endpoints kunnen nog wijzigen. Zo zullen wij eventueel routes, parameters, en queries toevoegen indien vereist.
