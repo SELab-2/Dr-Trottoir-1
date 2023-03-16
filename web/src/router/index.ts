@@ -83,11 +83,11 @@ const routes = [
         name: "Nieuwe ronde",
         component: RoundMaker,
       },
-      //{
-      //  path: "/dashboard/gebouwen/nieuw",
-      //  name: "Nieuw gebouw",
-      //  component: TODO creatiepagina gebouw,
-      //},
+      {
+       path: "/dashboard/gebouwen/nieuw",
+       name: "Nieuw gebouw",
+       component: BuildingMaker,
+      },
       {
         path: "/dashboard/gebruikers/nieuw",
         name: "Nieuwe gebruiker",
