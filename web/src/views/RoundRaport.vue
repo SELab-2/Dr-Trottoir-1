@@ -59,7 +59,7 @@
             </router-link>
           </v-timeline-item>
           <v-timeline-item dot-color="green" icon="mdi-check">
-            <v-card class="mx-4 mt-4">
+            <v-card>
               <v-card-title>Einde {{ end }} </v-card-title>
             </v-card>
           </v-timeline-item>
