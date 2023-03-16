@@ -111,14 +111,6 @@ const mockbuildingdata: any[] = [
     student: "Mats Van Belle",
     comments: [
       {
-        title: "Ambetant gebouw",
-        comment: "geen leuk gebouw",
-      },
-      {
-        title: "Lange code",
-        comment: "12 karakters is te lang",
-      },
-      {
         title: "Ver",
         comment: "Zeer ver van de andere gebouwen in de ronde",
       },
