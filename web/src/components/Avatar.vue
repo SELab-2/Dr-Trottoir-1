@@ -1,5 +1,5 @@
 <template>
-  <v-avatar :color="color" size="large">
+  <v-avatar :color="color" :size="size">
     {{ initials }}
   </v-avatar>
 </template>
@@ -7,6 +7,10 @@
 <script lang="ts" setup>
 const props = defineProps({
   name: String,
+  size: {
+    type: String,
+    default: "large",
+  },
 });
 
 // very basic hash function, not secure
