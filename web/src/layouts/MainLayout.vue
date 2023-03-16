@@ -56,20 +56,12 @@
           <div v-if="isStudent">
             <p class="pa-2 font-weight-medium text-caption">Overzicht</p>
 
-            <router-link to="/planningsoverzicht">
+            <router-link to="/planning">
               <v-list-item
                 prepend-icon="mdi-calendar-edit"
                 title="Planning"
                 value="schedule"
               />
-            </router-link>
-
-            <router-link to="/dashboard">
-              <v-list-item
-                prepend-icon="mdi-calendar"
-                title="Kalender"
-                value="calendar"
-              ></v-list-item>
             </router-link>
 
             <div class="py-2">
@@ -80,7 +72,7 @@
           <div v-if="isSuperStudent">
             <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
 
-            <router-link to="/dashboard">
+            <router-link to="/studenten">
               <v-list-item
                 prepend-icon="mdi-account-school"
                 title="Studenten"
@@ -88,7 +80,7 @@
               />
             </router-link>
 
-            <router-link to="/dashboard">
+            <router-link to="/rondes">
               <v-list-item
                 prepend-icon="mdi-transit-detour"
                 title="Rondes"
@@ -112,19 +104,11 @@
           <div v-if="isSyndicus">
             <p class="pa-2 font-weight-medium text-caption">Gebouwbeheer</p>
 
-            <router-link to="/dashboard">
+            <router-link to="/gebouwen">
               <v-list-item
                 prepend-icon="mdi-file-cabinet"
-                title="Geschiedenis"
-                value="history"
-              />
-            </router-link>
-
-            <router-link to="/dashboard">
-              <v-list-item
-                prepend-icon="mdi-cog"
-                title="Instellingen"
-                value="settings"
+                title="Mijn Gebouwen"
+                value="gebouwen"
               />
             </router-link>
 
@@ -152,20 +136,12 @@
               ></v-list-item>
             </router-link>
 
-            <router-link to="/dashboard/routes">
+            <router-link to="/dashboard/rondes">
               <v-list-item
                 prepend-icon="mdi-map-legend"
                 title="Routes"
                 value="routes"
               ></v-list-item>
-            </router-link>
-
-            <router-link to="/dashboard/gebruikers/nieuw">
-              <v-list-item
-                prepend-icon="mdi-account-plus"
-                title="Maak account aan"
-                value="accountCreation"
-              />
             </router-link>
           </div>
         </v-list>

@@ -5,7 +5,6 @@ import chance from "chance";
 
 export class User implements TableEntity<User> {
   id: number;
-  portrait: string;
   first_name: string;
   last_name: string;
   student: boolean;
@@ -21,7 +20,7 @@ export class User implements TableEntity<User> {
   }
 
   detailPageUrl(): string {
-    return "/account/0/false";
+    return `/account/${this.id}/false`;
   }
 
   static headers(): Array<Header<User>> {
@@ -30,8 +29,8 @@ export class User implements TableEntity<User> {
         id: 0,
         name: "Portret",
         fit: true,
-        get: (e: User) => e.portrait,
-        type: RowType.IMAGE,
+        get: (e: User) => e.first_name + " " + e.last_name,
+        type: RowType.AVATAR,
         sortable: false,
       },
       {
@@ -89,7 +88,6 @@ export class User implements TableEntity<User> {
     return [...Array(100).keys()].map(() => {
       return new User({
         id: chance().integer(),
-        portrait: `https://avatars.githubusercontent.com/u/38297449?v=4`,
         first_name: chance().first(),
         last_name: chance().last(),
         student: chance().bool(),
