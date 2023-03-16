@@ -44,10 +44,8 @@
               <template v-slot:prepend>
                 <v-icon icon="mdi-office-building"></v-icon>
               </template>
-              <v-list-item-title >{{building.name}}</v-list-item-title>
-              <v-list-item-subtitle
-                
-              >{{building.adress}}</v-list-item-subtitle>
+              <v-list-item-title>{{ building.name }}</v-list-item-title>
+              <v-list-item-subtitle>{{ building.adress }}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </v-card>
