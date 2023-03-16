@@ -3,6 +3,7 @@
 De client side van dit project is een applicatie geschreven in het [Vue](https://vuejs.org/) framework. We hebben ervoor gekozen om [Typescript](https://www.typescriptlang.org/) te gebruiken zodat onze code getypeerd is. Hiernaast maken we gebruik van [Vuetify](https://vuetifyjs.com/en/) zodat de UI uniform is. Tot slot gebruiken we het CSS framework [Sass](https://sass-lang.com/) voor de grafische vormgeving waar vuetify niet in staat tot zou zijn.
 
 # Uitvoeren
+
 [Npm](https://www.npmjs.com/) wordt gebruikt voor het compileren en uitvoeren van de code.
 
 ## Node modules
