@@ -1,55 +1,96 @@
 <template>
-  <v-card>
-    <v-select
-      label="Select Week"
-      :items="['Even', 'Oneven']"
-      v-model="week"
-    ></v-select>
-    <v-table>
-      <thead>
-        <tr>
-          <th class="text-center">Naam</th>
-          <th class="text-center">datum</th>
-          <th class="text-center">Aantal gebouwen</th>
-          <th class="text-center">Student</th>
-        </tr>
-      </thead>
-      <tbody style="text-align: center">
-        <tr v-for="item in rounds" :key="item.name">
-          <td>{{ item.name }}</td>
-          <td>{{ item.date }}</td>
+  <v-container fluid>
+    <v-card min-height="450px">
+      <v-card-actions>
+        <v-select
+          label="Selecteer type week"
+          :items="['Even', 'Oneven']"
+        ></v-select>
+        <v-spacer></v-spacer>
+        <v-select
+          label="Selecteer student"
+          :items="['Jonathan', 'Oscar', 'Pol', 'Annemie']"
+        ></v-select>
+        <v-spacer></v-spacer>
+        <VueDatePicker
+          class="date-select"
+          v-model="selectedDate"
+          :enable-time-picker="false"
+          input-class-name="v-field__input"
+          :format="format"
+        ></VueDatePicker>
+      </v-card-actions>
 
-          <td>{{ item.aantalGebouwen }}</td>
-
-          <td>
+      <v-container fluid>
+        <v-card title="Rondes">
+          <v-card-actions>
             <v-select
-              label="Select Student"
-              density="compact"
-              :items="[
-                'California',
-                'Colorado',
-                'Florida',
-                'Georgia',
-                'Texas',
-                'Wyoming',
-              ]"
+              v-model="selectedRound"
+              label="Aangemaakte rondes"
+              :items="rounds"
             ></v-select>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
-  </v-card>
+            <v-spacer></v-spacer>
+            <v-btn
+              v-if="selectedRound"
+              prepend-icon="mdi-pencil"
+              color="primary"
+              >Bewerk ronde</v-btn
+            >
+          </v-card-actions>
+          <v-list v-if="selectedRound">
+            <v-list-item v-for="building in buildings">
+              <template v-slot:prepend>
+                <v-icon icon="mdi-office-building"></v-icon>
+              </template>
+              <v-list-item-title v-text="building.name"></v-list-item-title>
+              <v-list-item-subtitle
+                v-text="building.adress"
+              ></v-list-item-subtitle>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-container>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn prepend-icon="mdi-cancel" color="error">Annuleren</v-btn>
+        <v-btn prepend-icon="mdi-check" color="primary">Ronde opslaan</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-container>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import VueDatePicker from "@vuepic/vue-datepicker";
 
-const week = ref("Even");
-const rounds = ref([
-  { name: "Vooruit", date: "01/01/2022", aantalGebouwen: 5 },
-  { name: "Station", date: "02/02/2022", aantalGebouwen: 6 },
-  { name: "Koremarkt", date: "03/03/2022", aantalGebouwen: 9 },
+const selectedDate = ref("");
+const selectedRound = ref("");
+
+const format = (date: Date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+
+const rounds = ref(["Gent Zuid", "Station", "Koremarkt"]);
+
+const buildings = ref([
+  { adress: "Lange Violettestraat 50", name: "Upkot" },
+  { adress: "Vlaanderenstraat 4", name: "Appartement 21" },
+  { adress: "Zuidstraat 2", name: "Shopping Gent Zuid" },
+  { adress: "Krookstraat 345", name: "De krook" },
 ]);
+
+function getRoundNames() {
+  return rounds;
+}
 </script>
 
-<style></style>
+<style>
+.date-select {
+  margin-left: 10%;
+  width: 20%;
+}
+</style>
