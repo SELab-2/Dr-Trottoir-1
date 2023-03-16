@@ -56,7 +56,7 @@ const comments = ref("");
 const previewImage = () => {
   const reader = new FileReader();
   reader.onload = () => {
-    preview.value = reader.result;
+    preview.value = String(reader.result);
   };
   reader.readAsDataURL(image.value[0]);
 };

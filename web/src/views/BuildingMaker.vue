@@ -98,8 +98,8 @@
         </v-card-item>
       </v-card>
       <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
-      <div class="d-flex justify-center">
-        <v-btn @click="submit" block variant="outlined" type="submit"
+      <div class="d-flex flex-row-reverse">
+        <v-btn @click="submit" type="submit" color="primary"
           >Submit gebouw</v-btn
         >
       </div>
@@ -154,7 +154,7 @@ const preview = ref("");
 const previewImage = () => {
   const reader = new FileReader();
   reader.onload = () => {
-    preview.value = reader.result;
+    preview.value = String(reader.result);
   };
   reader.readAsDataURL(buildingImage.value[0]);
 };

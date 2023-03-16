@@ -1,23 +1,32 @@
 <template>
-  <div>
+  <v-card variant="">
     <!-- list to show all images -->
-    <v-list v-for="index in images" :key="index">
-      <v-card>
-        <v-card-item>
-          <AddImage> </AddImage>
-          <div class="d-flex justify-end">
-            <button type="button" @click="remove(index)" v-show="index != 0">
-              Remove
-            </button>
-          </div>
-        </v-card-item>
+      <v-card v-for="index in images" :key="index" class="ma-1">
+        <AddImage> </AddImage>
+        <v-card-actions>
+          <v-btn 
+            @click="remove(index)" v-show="index != 0" 
+            color="error"
+            prepend-icon="mdi-delete"
+            >
+            Verwijder afbeelding
+          </v-btn>
+        </v-card-actions>
+        
       </v-card>
-    </v-list>
-
-    <v-btn block variant="outlined" @click="addMore">
+  <v-card-actions>
+    <v-btn 
+      block
+      @click="addMore"
+      prepend-icon="mdi-plus"
+      color="success"
+      variant="elevated"
+      >
       afbeelding toevoegen
     </v-btn>
-  </div>
+  </v-card-actions>
+    
+  </v-card>
 </template>
 
 <script lang="ts" setup>
