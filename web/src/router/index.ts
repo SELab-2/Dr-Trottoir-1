@@ -66,11 +66,11 @@ const routes = [
         name: "Opvolgen van rondes",
         component: RoundFollowup,
       },
-      //{
-      //  path: "/studenten",
-      //  name: "Opvolgen van studenten",
-      //  component: TODO opvolgpagina student,
-      //},
+      {
+        path: "/rondes/maken",
+        name: "Ronde aanmaken",
+        component: RoundMaker,
+      },
       {
         path: "/account/:gebruikerid/:isadmin",
         name: "Account instellingen",
