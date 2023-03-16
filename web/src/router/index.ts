@@ -4,6 +4,7 @@ import BuildingSceen from "@/views/BuildingScreen.vue";
 import UserCreation from "@/views/UserCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import StudentFollowUp from "@/views/StudentFollowUp.vue";
+import SchedulingScreenStudent from "@/views/SchedulingScreenStudents.vue";
 import Users from "@/views/dashboard/Users.vue";
 import Buildings from "@/views/dashboard/Buildings.vue";
 import Routes from "@/views/dashboard/Routes.vue";
@@ -28,6 +29,11 @@ const routes = [
         component: StudentFollowUp,
       },
       {
+        path: "/planningsoverzicht",
+        name: "Planningsoverzicht",
+        component: SchedulingScreenStudent,
+      },
+      {
         path: "/dashboard/gebruikers",
         component: Users,
         name: "Gebruikers",
@@ -43,13 +49,13 @@ const routes = [
         name: "Rondes",
       },
       {
-        path: "/dashboard/gebouwen/:id",
+        path: "/gebouw/:id",
         name: "Gebouw",
         component: BuildingSceen,
         props: true,
       },
       {
-        path: "/gebouwen",
+        path: "/gebouw",
         name: "Opvolgen van gebouwen",
         component: BuildingFollowup,
       },

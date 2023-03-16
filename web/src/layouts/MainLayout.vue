@@ -56,7 +56,7 @@
           <div v-if="isStudent">
             <p class="pa-2 font-weight-medium text-caption">Overzicht</p>
 
-            <router-link to="/dashboard">
+            <router-link to="/planningsoverzicht">
               <v-list-item
                 prepend-icon="mdi-calendar-edit"
                 title="Planning"
@@ -69,15 +69,80 @@
                 prepend-icon="mdi-calendar"
                 title="Kalender"
                 value="calendar"
-              />
+              ></v-list-item>
             </router-link>
 
             <router-link to="/studentfollowup">
               <v-list-item
-                prepend-icon="mdi-chart-areaspline"
-                title="Statistieken"
-                value="statistics"
-              ></v-list-item>
+                prepend-icon="mdi-account-school"
+                title="Studenten"
+                value="studenten"
+              />
+            </router-link>
+
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-transit-detour"
+                title="Rondes"
+                value="rondes"
+              />
+            </router-link>
+
+            <router-link to="/gebouwen">
+              <v-list-item
+                prepend-icon="mdi-domain"
+                title="Gebouwen"
+                value="gebouwen"
+              />
+            </router-link>
+
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-message-fast"
+                title="Communicatie"
+                value="communication"
+              />
+            </router-link>
+
+            <div class="py-2">
+              <v-divider />
+            </div>
+          </div>
+
+          <div v-if="isSyndicus">
+            <p class="pa-2 font-weight-medium text-caption">Gebouwbeheer</p>
+
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-file-cabinet"
+                title="Geschiedenis"
+                value="history"
+              />
+            </router-link>
+
+            <router-link to="/dashboard">
+              <v-list-item
+                prepend-icon="mdi-cog"
+                title="Instellingen"
+                value="settings"
+              />
+            </router-link>
+
+            <div class="py-2">
+              <v-divider />
+            </div>
+          </div>
+
+          <div v-if="isAdmin">
+            <p class="pa-2 font-weight-medium text-caption">Administratie</p>
+
+            <router-link to="/dashboard/gebruikers">
+              <v-list-item
+                prepend-icon="mdi-account-supervisor"
+                title="Gebruikers"
+                value="users"
+                >>>>>>> origin/develop ></v-list-item
+              >
             </router-link>
 
             <div class="py-2">
