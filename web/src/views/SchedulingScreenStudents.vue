@@ -60,9 +60,10 @@
         <v-expand-transition>
           <div v-show="building.showinfo">
             <v-divider></v-divider>
-            <v-card-text>
+            <v-card-text v-if="building.info">
               {{ building.info }}
             </v-card-text>
+            <v-card-text v-else>Geen opmerkingen.</v-card-text>
           </div>
         </v-expand-transition>
       </v-card>
@@ -80,7 +81,7 @@ const days = ref({
       {
         name: "Upkot",
         address: "Herentalsebaan 427",
-        info: "meer info/opmerkingen",
+        info: "",
         deadline: new Date(2023, 0o2, 0o6, 21, 30),
         garbage: ["PMD", "PAPIER"],
         showinfo: false,
