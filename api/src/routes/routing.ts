@@ -55,3 +55,25 @@ export abstract class Routing {
         return router;
     }
 }
+export function includeUser(include: boolean|undefined) {
+    if (include) {
+        return {
+            select: {
+                id: true,
+                email: true,
+                first_name: true,
+                last_name: true,
+                last_login: true,
+                date_added: true,
+                phone: true,
+                address_id: true,
+                student: true,
+                super_student: true,
+                admin: true,
+                hash: false,
+                salt: false
+            }
+        }
+    }
+    return false;
+}
