@@ -2,13 +2,14 @@
   <!-- Card that lets you select the round -->
   <v-card title="Kies ronde" prepend-icon="mdi-transit-detour" class="ma-3">
     <template v-slot:append>
-      <v-select
-        prepend-inner-icon="mdi-filter"
-        label="Sorteer"
-        :items="['Datum', 'Naam']"
-        v-model="mockDefaultSort"
-        variant="solo"
-      ></v-select>
+      <v-card-actions>
+        <router-link to="/rondes/plannen">
+          <v-btn color="primary"> Ronde plannen </v-btn>
+        </router-link>
+        <router-link to="/dashboard/rondes/nieuw">
+          <v-btn color="primary"> Ronde aanmaken </v-btn>
+        </router-link>
+      </v-card-actions>
     </template>
 
     <v-row class="py-0 my-0 mx-1">
