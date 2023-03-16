@@ -3,12 +3,14 @@
     <v-card min-height="450px">
       <v-card-actions>
         <v-select
+          variant="solo"
           label="Selecteer type week"
           v-model="selectedWeek"
           :items="['Even', 'Oneven']"
         ></v-select>
         <v-spacer></v-spacer>
         <v-select
+          variant="solo"
           label="Selecteer student"
           v-model="selectedStudent"
           :items="['Jonathan', 'Oscar', 'Pol', 'Annemie']"
@@ -27,6 +29,7 @@
         <v-card title="Rondes">
           <v-card-actions>
             <v-select
+              variant="solo"
               v-model="selectedRound"
               label="Aangemaakte rondes"
               :items="rounds"
