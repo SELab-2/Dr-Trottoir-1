@@ -11,7 +11,7 @@ import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
-import StudentFollowUp from "@/views/StudentFollowUp.vue"
+import StudentFollowUp from "@/views/StudentFollowUp.vue";
 
 const routes = [
   {
@@ -26,7 +26,7 @@ const routes = [
       {
         path: "/studenten",
         name: "Opvolging studenten",
-        component: StudentFollowUp
+        component: StudentFollowUp,
       },
       {
         path: "/planningsoverzicht",
