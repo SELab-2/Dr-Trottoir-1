@@ -83,9 +83,6 @@ const buildings = ref([
   { adress: "Krookstraat 345", name: "De krook" },
 ]);
 
-function getRoundNames() {
-  return rounds;
-}
 </script>
 
 <style>
