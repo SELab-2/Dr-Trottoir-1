@@ -52,7 +52,7 @@
             :prepend-icon="
               building.showinfo ? 'mdi-chevron-up' : 'mdi-chevron-down'
             "
-            @click="building.showinfo = !(building.showinfo)"
+            @click="building.showinfo = !building.showinfo"
             >Opmerkingen</v-btn
           >
         </v-card-actions>
@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
 const days = ref({
   monday: {
