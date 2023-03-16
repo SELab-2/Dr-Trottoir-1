@@ -65,6 +65,13 @@
           </v-timeline-item>
         </v-timeline>
       </v-container>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn prepend-icon="mdi-close" color="error"
+          >Ronde niet afsluiten</v-btn
+        >
+        <v-btn prepend-icon="mdi-check" color="primary">Ronde afsluiten</v-btn>
+      </v-card-actions>
     </v-card>
   </v-container>
 </template>
