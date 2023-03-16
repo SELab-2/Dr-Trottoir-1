@@ -34,7 +34,7 @@
           </span>
         </p>
         <!-- Login button -->
-        <router-link to="/dashboard">
+        <router-link to="/planning">
           <v-btn prepend-icon="mdi-login" color="success">Login</v-btn>
         </router-link>
       </div>
