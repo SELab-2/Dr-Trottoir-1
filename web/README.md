@@ -1,16 +1,8 @@
 # Frameworks en bibliotheken
 
-De client side van dit project is een applicatie geschreven in het [Vue](https://vuejs.org/) framework. We hebben ervoor gekozen om [typescript](https://www.typescriptlang.org/) te gebruiken zodat onze code getypeerd is. Hiernaast maken we gebruik van [vuetify](https://vuetifyjs.com/en/) zodat de UI uniform is. Tot slot gebruiken we [sass](https://sass-lang.com/) voor de grafische vormgeving waar vuetify niet in staat tot zou zijn.
+De client side van dit project is een applicatie geschreven in het [Vue](https://vuejs.org/) framework. We hebben ervoor gekozen om [Typescript](https://www.typescriptlang.org/) te gebruiken zodat onze code getypeerd is. Hiernaast maken we gebruik van [Vuetify](https://vuetifyjs.com/en/) zodat de UI uniform is. Tot slot gebruiken we het CSS framework [Sass](https://sass-lang.com/) voor de grafische vormgeving waar vuetify niet in staat tot zou zijn.
 
 # Uitvoeren
-
-Alle comando's uit deze sectie moeten uitgevoerd worden vanuit de `/web` map.
-Men kan hier als volgt naartoe gaan.
-
-```bash
-cd /web
-```
-
 [Npm](https://www.npmjs.com/) wordt gebruikt voor het compileren en uitvoeren van de code.
 
 ## Node modules
@@ -36,20 +28,8 @@ Eenmaal de node modules geïnstalleerd zijn kan men de applicatie compileren en 
 npm run dev
 ```
 
-Dit start normaal een [Vite](https://vitejs.dev/) server op op het lokaal address [http://localhost:3001/](http://localhost:3000/).
+Dit start normaal een [Vite](https://vitejs.dev/) server op op het lokaal address [http://localhost:3000/](http://localhost:3000/).
 De vite server zorgt ervoor dat de applicatie uitgevoerd wordt.
-
-## Compileren en uitvoeren voor productie
-
-De applicatie kan als volgt voor productie beschikbaar gemaakt worden
-
-```bash
-# compileer voor productie
-npm run build
-
-# voer gecompileerde code uit
-npm run preview
-```
 
 ## Linting
 
@@ -67,10 +47,10 @@ Verdere documentatie over het gebruik van vite met npm kan men [hier](https://vi
 
 Alle code voor de client applicatie is terug te vinden in de `/web` map. De code die de pagina's en routing van de applicatie definiëren zijn beschikbaar in de `/web/src` map. De belangrijkste mappen hierin zijn.
 
-- `/components`: Bevat losse herbruikbare vue componenten.
-- `/views`: Bevat alle pagina's.
-- `/layouts`: Bevat algemene layouts die terugkomen in bijna elk scherm.
-- `/router`: Bevat de nodige code om de router correct te doen werken.
+- `/web/src/components`: Bevat losse herbruikbare vue componenten.
+- `/web/src/views`: Bevat alle pagina's.
+- `/web/src/layouts`: Bevat algemene layouts die terugkomen in bijna elk scherm.
+- `/web/src/router`: Bevat de nodige code om de router correct te doen werken.
 
 ## Router
 
