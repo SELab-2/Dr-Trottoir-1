@@ -12,6 +12,8 @@ import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 
+import BuildingMaker from "@/views/BuildingMaker.vue";
+
 const routes = [
   {
     path: "/",
@@ -89,6 +91,10 @@ const routes = [
         path: "/dashboard/gebruikers/nieuw",
         name: "Nieuwe gebruiker",
         component: UserCreation,
+      },
+      {
+        path: "/gebouw/toevoegen",
+        component: BuildingMaker,
       },
     ],
   },
