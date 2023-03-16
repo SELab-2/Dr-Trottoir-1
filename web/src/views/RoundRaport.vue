@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-card title="Copure Gent" subtitle="13/03/2023">
+    <v-card title="Copure Gent" subtitle="13/03/2023" variant="flat">
       <template v-slot:append>
         <v-card-title>{{ start }} - {{ end }}</v-card-title>
         <v-card-subtitle class="text-right">5:00 uur</v-card-subtitle>
