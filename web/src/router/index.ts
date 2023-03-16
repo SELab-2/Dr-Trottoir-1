@@ -11,9 +11,9 @@ import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
+import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
 import StudentFollowUp from "@/views/StudentFollowUp.vue";
-
 import BuildingMaker from "@/views/BuildingMaker.vue";
 
 const routes = [
@@ -79,9 +79,9 @@ const routes = [
         component: RoundFollowup,
       },
       {
-        path: "/rondes/maken",
-        name: "Ronde aanmaken",
-        component: RoundMaker,
+        path: "/rondes/plannen",
+        name: "Ronde plannen",
+        component: RoundPlanner,
       },
       {
         path: "/account/:gebruikerid/:isadmin",
@@ -103,6 +103,12 @@ const routes = [
         path: "/dashboard/gebruikers/nieuw",
         name: "Nieuwe gebruiker",
         component: UserCreation,
+      },
+      {
+        path: "/rondes/detail",
+        name: "Detail van ronde",
+        component: RoundDetail,
+        props: true,
       },
       {
         path: "/dashboard/rondes/plannen",
