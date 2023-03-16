@@ -12,6 +12,8 @@ import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 
+import BuildingMaker from "@/views/BuildingMaker.vue";
+
 const routes = [
   {
     path: "/",
@@ -23,7 +25,7 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "/planningsoverzicht",
+        path: "/planning",
         name: "Planningsoverzicht",
         component: SchedulingScreenStudent,
       },
@@ -38,7 +40,7 @@ const routes = [
         name: "Gebouwen",
       },
       {
-        path: "/dashboard/routes",
+        path: "/dashboard/rondes",
         component: Routes,
         name: "Rondes",
       },
@@ -48,13 +50,19 @@ const routes = [
         component: BuildingSceen,
         props: true,
       },
+      //{
+      //  path: "/ronde/:id",
+      //  name: "Ronde",
+      //  component: TODO detailpagina ronde,
+      //  props: true,
+      //},
       {
-        path: "/gebouw",
+        path: "/gebouwen",
         name: "Opvolgen van gebouwen",
         component: BuildingFollowup,
       },
       {
-        path: "/rondes/opvolgen",
+        path: "/rondes",
         name: "Opvolgen van rondes",
         component: RoundFollowup,
       },
@@ -70,9 +78,23 @@ const routes = [
         props: true,
       },
       {
+        path: "/dashboard/rondes/nieuw",
+        name: "Nieuwe ronde",
+        component: RoundMaker,
+      },
+      //{
+      //  path: "/dashboard/gebouwen/nieuw",
+      //  name: "Nieuw gebouw",
+      //  component: TODO creatiepagina gebouw,
+      //},
+      {
         path: "/dashboard/gebruikers/nieuw",
-        name: "Nieuwe gebruiker toevoegen",
+        name: "Nieuwe gebruiker",
         component: UserCreation,
+      },
+      {
+        path: "/gebouw/toevoegen",
+        component: BuildingMaker,
       },
     ],
   },

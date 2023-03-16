@@ -33,7 +33,13 @@
               v-if="header.type === RowType.IMAGE"
               style="display: flex; align-items: center"
             >
-              <img v-bind:src="item.portrait" class="image" alt="Portrait" />
+              <img :src="header.get(item)" class="image" alt="Portrait" />
+            </div>
+            <div
+              v-if="header.type === RowType.AVATAR"
+              style="display: flex; align-items: center"
+            >
+              <Avatar :name="header.get(item)" />
             </div>
             <div v-if="header.type === RowType.BOOLEAN">
               <input type="checkbox" v-model="item.student" />
@@ -53,6 +59,7 @@
 </template>
 
 <script lang="ts" setup>
+import Avatar from "@/components/Avatar.vue";
 import { RowType } from "@/components/table/RowType";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps(["entries", "headers"]);
