@@ -55,7 +55,10 @@ export abstract class Routing {
         return router;
     }
 }
-export function includeUser(include: boolean|undefined) {
+export function includeUser(
+    include: boolean | undefined,
+    includeAddress: boolean,
+) {
     if (include) {
         return {
             select: {
@@ -67,13 +70,14 @@ export function includeUser(include: boolean|undefined) {
                 date_added: true,
                 phone: true,
                 address_id: true,
+                address: includeAddress,
                 student: true,
                 super_student: true,
                 admin: true,
                 hash: false,
-                salt: false
-            }
-        }
+                salt: false,
+            },
+        };
     }
     return false;
 }

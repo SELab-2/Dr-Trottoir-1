@@ -1,8 +1,8 @@
-import {prisma} from "../prisma";
+import { prisma } from "../prisma";
 import express from "express";
-import {CustomRequest, Routing, includeUser} from "./routing";
-import {Auth} from "../auth/auth";
-import {Parser} from "../parser";
+import { CustomRequest, Routing, includeUser } from "./routing";
+import { Auth } from "../auth/auth";
+import { Parser } from "../parser";
 
 export class BuildingRouting extends Routing {
     @Auth.authorization({ superStudent: true })
@@ -21,7 +21,7 @@ export class BuildingRouting extends Routing {
                 address: joins?.includes("address"),
                 syndicus: {
                     include: {
-                        user: includeUser(joins?.includes("syndicus")),
+                        user: includeUser(joins?.includes("syndicus"), false),
                     },
                 },
                 manual: joins?.includes("manual"),
@@ -47,7 +47,7 @@ export class BuildingRouting extends Routing {
                 address: joins?.includes("address"),
                 syndicus: {
                     include: {
-                        user: includeUser(joins?.includes("syndicus")),
+                        user: includeUser(joins?.includes("syndicus"), false),
                     },
                 },
                 manual: joins?.includes("manual"),
