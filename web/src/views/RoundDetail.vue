@@ -22,6 +22,7 @@
         :icon="mockdata[id].icon"
         icon-color="white"
       >
+      <router-link to="/gebouw/3">
         <v-card
           width="100%"
           :title="building.name" 
@@ -49,6 +50,7 @@
           Opmerkingen beschikbaar
         </v-chip>
         </v-card>
+      </router-link>
       </v-timeline-item>
       <v-timeline-item dot-color="red" icon="mdi-close" size="small">
         <v-card class="mx-4 mt-4">
