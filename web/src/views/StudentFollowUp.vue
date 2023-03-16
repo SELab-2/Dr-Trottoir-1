@@ -72,7 +72,6 @@
 import { ref } from "vue";
 import Avatar from "@/components/Avatar.vue";
 
-const mockDefaultSort = ref("Datum");
 const mockDefaultWeek = ref("Week 1");
 const mockDefaultRound = ref("Ronde 1");
 
