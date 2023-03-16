@@ -1,7 +1,7 @@
 FROM node:19-alpine3.16 AS build
 WORKDIR /build
 
-ENV PRISMA_SKIP_POSTINSTALL_GENERATE=true
+ENV OUTPUT_DIRECTORY="node_modules/.prisma/client"
 
 COPY package*.json /build/
 RUN npm ci
@@ -12,14 +12,9 @@ RUN npx tsc
 
 FROM node:19-alpine3.16 AS production
 WORKDIR /app
-COPY --from=build /build/dist ./dist/
+COPY --from=build /build/dist .
 
-COPY package*.json ./
-RUN npm ci --omit=dev
+COPY package*.json .
+RUN npm ci --production
 
-ENV PRISMA_SKIP_POSTINSTALL_GENERATE=true
-COPY prisma prisma
-RUN npx prisma generate
-EXPOSE 8080
-
-ENTRYPOINT ["npm", "run", "start"]
+ENTRYPOINT npm start
