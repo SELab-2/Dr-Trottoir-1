@@ -31,7 +31,7 @@ const routes = [
         component: StudentFollowUp,
       },
       {
-        path: "/planningsoverzicht",
+        path: "/planning",
         name: "Planningsoverzicht",
         component: SchedulingScreenStudent,
       },
