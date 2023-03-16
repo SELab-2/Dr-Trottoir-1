@@ -40,14 +40,14 @@
             >
           </v-card-actions>
           <v-list v-if="selectedRound">
-            <v-list-item v-for="building in buildings">
+            <v-list-item v-for="building in buildings" :key="building.name">
               <template v-slot:prepend>
                 <v-icon icon="mdi-office-building"></v-icon>
               </template>
-              <v-list-item-title v-text="building.name"></v-list-item-title>
+              <v-list-item-title >{{building.name}}</v-list-item-title>
               <v-list-item-subtitle
-                v-text="building.adress"
-              ></v-list-item-subtitle>
+                
+              >{{building.adress}}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </v-card>
