@@ -7,6 +7,7 @@
         label="Sorteer"
         :items="['Datum', 'Naam']"
         v-model="mockDefaultSort"
+        variant="solo"
       ></v-select>
     </template>
 
@@ -16,6 +17,7 @@
           label="selecteer week"
           :items="['Week1', 'Week2', 'Week3']"   
           v-model="mockDefaultWeek" 
+          variant="solo"
         ></v-select>
       </v-col>
       <v-col>
@@ -23,6 +25,7 @@
           label="selecteer ronde"
           :items="['Ronde 1', 'Ronde 2']"
           v-model="mockDefaultRound"
+          variant="solo"
         ></v-select>
       </v-col>
     </v-row>
@@ -38,9 +41,25 @@
         <Avatar :name="`${student.firstname} ${student.lastname}`" />
     </template>
     <template v-slot:subtitle>
-        {{ ("0" + student.date.getDate()).slice(-2) }}-{{
+        <v-chip
+            label
+            color="primary"
+            class="mr-2"
+        >
+        <v-icon start icon="mdi-clock-time-ten-outline"></v-icon>
+            {{ ("0" + student.date.getDate()).slice(-2) }}-{{
             ("0" + (student.date.getMonth() + 1)).slice(-2)
           }}-{{ student.date.getFullYear() }}
+        </v-chip>
+
+        <v-chip
+            label
+            :color="student.done ? 'success': 'error'"
+        >
+        <v-icon start :icon="student.done ? 'mdi-check': 'mdi-exclamation'"></v-icon>
+            {{ student.done ? 'Klaar': 'Niet klaar' }}
+        </v-chip>
+        
     </template>
     <template v-slot:append>
         <v-btn
@@ -71,16 +90,19 @@ const mockdata = ref({
             firstname: "Jef",
             lastname: "Janssens",
             date: new Date(2023, 2, 6),
+            done: true
         },
         {
             firstname: "Guust",
             lastname: "Flater",
             date: new Date(2023, 2, 7),
+            done: true
         },
         {
             firstname: "Jan",
             lastname: "Jaap",
             date: new Date(2023, 2, 8),
+            done: false
         },
         ],
     },
@@ -91,6 +113,7 @@ const mockdata = ref({
             firstname: "Jef",
             lastname: "Janssens",
             date: new Date(2023, 2, 7),
+            done: true
         },
         ],
     }]
