@@ -8,8 +8,8 @@
       <v-card-subtitle>
         <v-icon icon="mdi-account"> </v-icon>{{ student }}
       </v-card-subtitle>
-      <v-container class="d-flex" fluid>
-        <v-timeline truncate-line="both" side="end">
+      <v-container fluid>
+        <v-timeline truncate-line="both" side="end" density="compact">
           <v-timeline-item dot-color="green" icon="mdi-check">
             <v-card>
               <v-card-title> Start {{ start }} </v-card-title>
