@@ -17,7 +17,7 @@ export class Routes implements TableEntity<Routes> {
   }
 
   detailPageUrl(): string {
-    return "/";
+    return `/ronde/${this.id}`;
   }
 
   static headers(): Array<Header<Routes>> {
