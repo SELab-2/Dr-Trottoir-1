@@ -4,11 +4,13 @@
       <v-card-actions>
         <v-select
           label="Selecteer type week"
+          v-model="selectedWeek"
           :items="['Even', 'Oneven']"
         ></v-select>
         <v-spacer></v-spacer>
         <v-select
           label="Selecteer student"
+          v-model="selectedStudent"
           :items="['Jonathan', 'Oscar', 'Pol', 'Annemie']"
         ></v-select>
         <v-spacer></v-spacer>
@@ -50,7 +52,8 @@
           </v-list>
         </v-card>
       </v-container>
-      <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-card-actions class="">
         <v-spacer></v-spacer>
         <v-btn prepend-icon="mdi-cancel" color="error">Annuleren</v-btn>
         <v-btn prepend-icon="mdi-check" color="primary">Ronde opslaan</v-btn>
@@ -63,6 +66,8 @@
 import { ref } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 
+const selectedWeek = ref("");
+const selectedStudent = ref("");
 const selectedDate = ref("");
 const selectedRound = ref("");
 
@@ -82,7 +87,6 @@ const buildings = ref([
   { adress: "Zuidstraat 2", name: "Shopping Gent Zuid" },
   { adress: "Krookstraat 345", name: "De krook" },
 ]);
-
 </script>
 
 <style>
