@@ -15,7 +15,6 @@
       <v-card
         class="ma-3"
         :title="round.name"
-
         prepend-icon="mdi-transit-detour"
       >
         <!-- Progress bar -->
@@ -23,8 +22,14 @@
           v-if="calculateProgress(round.buildings_done, round.buildings) !== 0"
           absolute
           bottom
-          :color="calculateProgress(round.buildings_done, round.buildings) === 100 ? 'success' : 'warning'"
-          :model-value="calculateProgress(round.buildings_done, round.buildings)"
+          :color="
+            calculateProgress(round.buildings_done, round.buildings) === 100
+              ? 'success'
+              : 'warning'
+          "
+          :model-value="
+            calculateProgress(round.buildings_done, round.buildings)
+          "
         ></v-progress-linear>
 
         <!-- Time -->
@@ -38,24 +43,26 @@
         <!-- Status -->
         <template v-slot:append>
           <v-btn
-            v-if="calculateProgress(round.buildings_done, round.buildings) === 0"
+            v-if="
+              calculateProgress(round.buildings_done, round.buildings) === 0
+            "
             color="primary"
             @click="snackbar = !snackbar"
             v-on:click.prevent
-          > Start ronde</v-btn>
+          >
+            Start ronde</v-btn
+          >
           <v-chip
-            v-else-if="calculateProgress(round.buildings_done, round.buildings) === 100"
+            v-else-if="
+              calculateProgress(round.buildings_done, round.buildings) === 100
+            "
             label
             color="success"
           >
             <v-icon icon="mdi-check"></v-icon>
             Klaar
           </v-chip>
-          <v-chip
-            v-else
-            label
-            color="warning"
-          >
+          <v-chip v-else label color="warning">
             Bezig {{ round.buildings_done }}/{{ round.buildings }}
           </v-chip>
         </template>
@@ -67,17 +74,18 @@
       <v-card prepend-icon="mdi-exclamation" variant="flat">
         <template v-slot:title> Start ronde </template>
         <p class="mx-3">
-          Je staat op het punt een ronde te starten. Het huidige tijdstip zal opgeslagen worden als start tijdstip.
-          Ben je zeker dat je de ronde wilt starten?
+          Je staat op het punt een ronde te starten. Het huidige tijdstip zal
+          opgeslagen worden als start tijdstip. Ben je zeker dat je de ronde
+          wilt starten?
         </p>
         <div class="d-flex flex-row-reverse ma-3">
-          <router-link
-            to="/rondes/detail"
-          >
+          <router-link to="/rondes/detail">
             <v-btn color="success"> Start ronde </v-btn>
           </router-link>
-          
-          <v-btn @click="snackbar = false" color="error" class="mr-3"> Annuleer </v-btn>
+
+          <v-btn @click="snackbar = false" color="error" class="mr-3">
+            Annuleer
+          </v-btn>
         </div>
       </v-card>
     </v-snackbar>
@@ -90,8 +98,8 @@ import { ref } from "vue";
 const snackbar = ref(false);
 
 const calculateProgress = (done: number, toDo: number) => {
-  return Math.round((done/toDo)*100)
-}
+  return Math.round((done / toDo) * 100);
+};
 
 const days = ref({
   monday: {
@@ -114,7 +122,7 @@ const days = ref({
         deadline: new Date(2023, 0o2, 0o6, 15, 30),
         buildings: 5,
         buildings_done: 0,
-      }
+      },
     ],
   },
   tuesday: {
@@ -125,7 +133,7 @@ const days = ref({
         deadline: new Date(2023, 0o2, 0o6, 10, 0),
         buildings: 5,
         buildings_done: 0,
-      }
+      },
     ],
   },
   wednesday: {
@@ -136,7 +144,7 @@ const days = ref({
         deadline: new Date(2023, 0o2, 0o6, 15, 30),
         buildings: 5,
         buildings_done: 0,
-      }
+      },
     ],
   },
 });
