@@ -11,6 +11,7 @@ import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
+import RoundPlanner from "@/views/RoundPlanner.vue";
 import StudentFollowUp from "@/views/StudentFollowUp.vue";
 
 import BuildingMaker from "@/views/BuildingMaker.vue";
@@ -93,15 +94,20 @@ const routes = [
         name: "Nieuwe ronde",
         component: RoundMaker,
       },
-      //{
-      //  path: "/dashboard/gebouwen/nieuw",
-      //  name: "Nieuw gebouw",
-      //  component: TODO creatiepagina gebouw,
-      //},
+      {
+        path: "/dashboard/gebouwen/nieuw",
+        name: "Nieuw gebouw",
+        component: BuildingMaker,
+      },
       {
         path: "/dashboard/gebruikers/nieuw",
         name: "Nieuwe gebruiker",
         component: UserCreation,
+      },
+      {
+        path: "/dashboard/rondes/plannen",
+        name: "Ronde Planner",
+        component: RoundPlanner,
       },
     ],
   },
