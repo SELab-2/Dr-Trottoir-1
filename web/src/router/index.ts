@@ -11,7 +11,7 @@ import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
-import RoundDetail from "@/views/RoundDetail.vue"
+import RoundDetail from "@/views/RoundDetail.vue";
 
 const routes = [
   {
@@ -79,7 +79,7 @@ const routes = [
         path: "/rondes/detail",
         name: "Detail van ronde",
         component: RoundDetail,
-        props : true,
+        props: true,
       },
     ],
   },

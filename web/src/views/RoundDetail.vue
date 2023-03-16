@@ -1,66 +1,67 @@
 <template>
-<v-container fluid>
-  <v-card>
-    <v-card-title>
-      {{ mockround.name }}
-    </v-card-title>
-    <v-card-subtitle>
-      <v-icon icon="mdi-account"> </v-icon>{{ mockround.student }}
-    </v-card-subtitle>
-    <v-container class="d-flex" fluid>
-    <v-timeline truncate-line="both" side="end">
-      <v-timeline-item dot-color="green" icon="mdi-check">
-        <v-card>
-          <v-card-title> Start {{ mockround.start }} </v-card-title>
-        </v-card>
-      </v-timeline-item>
-      <v-timeline-item width="100%"
-        v-for="(building, id) in mockround.buildings"
-        :key="id"
-        :dot-color="mockdata[id].color"
-        :size="mockdata[id].color != 'red' ? 'default' : 'small'"
-        :icon="mockdata[id].icon"
-        icon-color="white"
-      >
-      <router-link to="/gebouw/3">
-        <v-card
-          width="100%"
-          :title="building.name" 
-          :subtitle="building.address"
-        >
-          <template v-slot:append>
-            <v-card-title>{{ cleanup_time_data(id) }}</v-card-title>
-          </template>
-          <v-chip
-          prepend-icon="mdi-camera"
-          label
-          color="success"
-          class="pa-2 ma-2"
-          v-if="id < 2"
-        >
-          {{ building.amount_of_pics }} foto's geupload
-        </v-chip>
-        <v-chip
-          prepend-icon="mdi-comment"
-          label
-          color="red"
-          class="pa-2 ma-2"
-          v-if="building.comments"
-        >
-          Opmerkingen beschikbaar
-        </v-chip>
-        </v-card>
-      </router-link>
-      </v-timeline-item>
-      <v-timeline-item dot-color="red" icon="mdi-close" size="small">
-        <v-card class="mx-4 mt-4">
-          <v-card-title> End {{ mockround.start }} </v-card-title>
-        </v-card>
-      </v-timeline-item>
-    </v-timeline>
+  <v-container fluid>
+    <v-card>
+      <v-card-title>
+        {{ mockround.name }}
+      </v-card-title>
+      <v-card-subtitle>
+        <v-icon icon="mdi-account"> </v-icon>{{ mockround.student }}
+      </v-card-subtitle>
+      <v-container class="d-flex" fluid>
+        <v-timeline truncate-line="both" side="end">
+          <v-timeline-item dot-color="green" icon="mdi-check">
+            <v-card>
+              <v-card-title> Start {{ mockround.start }} </v-card-title>
+            </v-card>
+          </v-timeline-item>
+          <v-timeline-item
+            width="100%"
+            v-for="(building, id) in mockround.buildings"
+            :key="id"
+            :dot-color="mockdata[id].color"
+            :size="mockdata[id].color != 'red' ? 'default' : 'small'"
+            :icon="mockdata[id].icon"
+            icon-color="white"
+          >
+            <router-link to="/gebouw/3">
+              <v-card
+                width="100%"
+                :title="building.name"
+                :subtitle="building.address"
+              >
+                <template v-slot:append>
+                  <v-card-title>{{ cleanup_time_data(id) }}</v-card-title>
+                </template>
+                <v-chip
+                  prepend-icon="mdi-camera"
+                  label
+                  color="success"
+                  class="pa-2 ma-2"
+                  v-if="id < 2"
+                >
+                  {{ building.amount_of_pics }} foto's geupload
+                </v-chip>
+                <v-chip
+                  prepend-icon="mdi-comment"
+                  label
+                  color="red"
+                  class="pa-2 ma-2"
+                  v-if="building.comments"
+                >
+                  Opmerkingen beschikbaar
+                </v-chip>
+              </v-card>
+            </router-link>
+          </v-timeline-item>
+          <v-timeline-item dot-color="red" icon="mdi-close" size="small">
+            <v-card class="mx-4 mt-4">
+              <v-card-title> End {{ mockround.start }} </v-card-title>
+            </v-card>
+          </v-timeline-item>
+        </v-timeline>
+      </v-container>
+    </v-card>
   </v-container>
-  </v-card>
-</v-container>
 </template>
 
 <script lang="ts" setup>

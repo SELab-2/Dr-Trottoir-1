@@ -24,15 +24,14 @@ import Round from "@/components/models/Round";
 import RoundCard from "@/components/RoundCard.vue";
 import { useRouter } from "vue-router";
 
-const router = useRouter()
+const router = useRouter();
 
-function redirect_to_detail(){
-  router.push({path : '/rondes/detail'})
-
+function redirect_to_detail() {
+  router.push({ path: "/rondes/detail" });
 }
 
 // TODO: mockdata for rounds, remove in future
-const mockrounds : Round[] = [
+const mockrounds: Round[] = [
   {
     name: "Grote Markt",
     start: "13:30",
