@@ -17,21 +17,6 @@
         :title="round.name"
         prepend-icon="mdi-transit-detour"
       >
-        <!-- Progress bar -->
-        <v-progress-linear
-          v-if="calculateProgress(round.buildings_done, round.buildings) !== 0"
-          absolute
-          bottom
-          :color="
-            calculateProgress(round.buildings_done, round.buildings) === 100
-              ? 'success'
-              : 'warning'
-          "
-          :model-value="
-            calculateProgress(round.buildings_done, round.buildings)
-          "
-        ></v-progress-linear>
-
         <!-- Time -->
         <template v-slot:subtitle>
           {{ round.deadline.getHours() }}:{{
