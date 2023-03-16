@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-card title="Copure Gent">
+    <v-card title="Copure Gent" subtitle="13/03/2023">
       <template v-slot:append>
         <v-card-title>{{ start }} - {{ end }}</v-card-title>
         <v-card-subtitle class="text-right">5:00 uur</v-card-subtitle>
@@ -65,12 +65,12 @@
           </v-timeline-item>
         </v-timeline>
       </v-container>
-      <v-card-actions>
+      <v-card-actions class="d-flex">
         <v-spacer></v-spacer>
         <v-btn prepend-icon="mdi-close" color="error"
-          >Ronde niet afsluiten</v-btn
+          >Niet afsluiten</v-btn
         >
-        <v-btn prepend-icon="mdi-check" color="primary">Ronde afsluiten</v-btn>
+        <v-btn prepend-icon="mdi-check" color="primary">Afsluiten</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
