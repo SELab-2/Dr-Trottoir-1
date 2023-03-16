@@ -12,16 +12,26 @@
       :building_index="round.current_building"
       :total_buildings="round.buildings.length"
       :round_comments="round.comments"
+      @click="redirect_to_detail()"
+      style="cursor: pointer"
     ></RoundCard>
     <v-spacer></v-spacer>
   </v-list>
 </template>
 
 <script lang="ts" setup>
+import Round from "@/components/models/Round";
 import RoundCard from "@/components/RoundCard.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+function redirect_to_detail() {
+  router.push({ path: "/rondes/detail" });
+}
 
 // TODO: mockdata for rounds, remove in future
-const mockrounds = [
+const mockrounds: Round[] = [
   {
     name: "Grote Markt",
     start: "13:30",
@@ -35,36 +45,36 @@ const mockrounds = [
         name: "Smith",
         address: "Gent, Belgium",
         deltatime: "10 min",
-        comments: "yes",
-        amount_of_pics: "5",
+        comments: true,
+        amount_of_pics: 5,
       },
       {
         name: "Johnson",
         address: "Brussels, Belgium",
         deltatime: "35 min",
-        comments: "no",
-        amount_of_pics: "2",
+        comments: false,
+        amount_of_pics: 2,
       },
       {
         name: "Smith",
         address: "Gent, Belgium",
         deltatime: "10 min",
-        comments: "yes",
-        amount_of_pics: "5",
+        comments: true,
+        amount_of_pics: 5,
       },
       {
         name: "Johnson",
         address: "Brussels, Belgium",
         deltatime: "35 min",
-        comments: "no",
-        amount_of_pics: "2",
+        comments: false,
+        amount_of_pics: 2,
       },
       {
         name: "Brown",
         address: "Antwerp, Belgium",
         deltatime: "25 min",
-        comments: "yes",
-        amount_of_pics: "4",
+        comments: true,
+        amount_of_pics: 4,
       },
     ],
   },
@@ -81,50 +91,50 @@ const mockrounds = [
         name: "Garcia",
         address: "Bruges, Belgium",
         deltatime: "15 min",
-        comments: "no",
-        amount_of_pics: "3",
+        comments: false,
+        amount_of_pics: 3,
       },
       {
         name: "Miller",
         address: "Leuven, Belgium",
         deltatime: "20 min",
-        comments: "no",
-        amount_of_pics: "2",
+        comments: false,
+        amount_of_pics: 2,
       },
       {
         name: "Clark",
         address: "Ostend, Belgium",
         deltatime: "30 min",
-        comments: "no",
-        amount_of_pics: "4",
+        comments: false,
+        amount_of_pics: 4,
       },
       {
         name: "Miller",
         address: "Leuven, Belgium",
         deltatime: "20 min",
-        comments: "no",
-        amount_of_pics: "2",
+        comments: false,
+        amount_of_pics: 2,
       },
       {
         name: "Clark",
         address: "Ostend, Belgium",
         deltatime: "30 min",
-        comments: "no",
-        amount_of_pics: "4",
+        comments: false,
+        amount_of_pics: 4,
       },
       {
         name: "Miller",
         address: "Leuven, Belgium",
         deltatime: "20 min",
-        comments: "no",
-        amount_of_pics: "2",
+        comments: false,
+        amount_of_pics: 2,
       },
       {
         name: "Clark",
         address: "Ostend, Belgium",
         deltatime: "30 min",
-        comments: "no",
-        amount_of_pics: "4",
+        comments: false,
+        amount_of_pics: 4,
       },
     ],
   },
@@ -141,22 +151,22 @@ const mockrounds = [
         name: "Wilson",
         address: "Veldstraat, Belgium",
         deltatime: "5 min",
-        comments: "no",
-        amount_of_pics: "3",
+        comments: false,
+        amount_of_pics: 3,
       },
       {
         name: "Moore",
         address: "Liege, Belgium",
         deltatime: "45 min",
-        comments: "no",
-        amount_of_pics: "5",
+        comments: false,
+        amount_of_pics: 5,
       },
       {
         name: "Anderson",
         address: "Mons, Belgium",
         deltatime: "30 min",
-        comments: "no",
-        amount_of_pics: "2",
+        comments: false,
+        amount_of_pics: 2,
       },
     ],
   },

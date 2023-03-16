@@ -12,7 +12,9 @@ import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 import RoundRaport from "@/views/RoundRaport.vue";
-
+import RoundDetail from "@/views/RoundDetail.vue";
+import RoundPlanner from "@/views/RoundPlanner.vue";
+import StudentFollowUp from "@/views/StudentFollowUp.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue";
 
 const routes = [
@@ -25,6 +27,11 @@ const routes = [
     name: "dashboard",
     component: MainLayout,
     children: [
+      {
+        path: "/studenten",
+        name: "Opvolging studenten",
+        component: StudentFollowUp,
+      },
       {
         path: "/planning",
         name: "Planningsoverzicht",
@@ -51,6 +58,11 @@ const routes = [
         component: BuildingSceen,
         props: true,
       },
+      {
+        path: "/dashboard/gebouwen/nieuw",
+        name: "Gebouw aanmaken",
+        component: BuildingMaker,
+      },
       //{
       //  path: "/ronde/:id",
       //  name: "Ronde",
@@ -68,9 +80,9 @@ const routes = [
         component: RoundFollowup,
       },
       {
-        path: "/rondes/maken",
-        name: "Ronde aanmaken",
-        component: RoundMaker,
+        path: "/rondes/plannen",
+        name: "Ronde plannen",
+        component: RoundPlanner,
       },
       {
         path: "/account/:gebruikerid/:isadmin",
@@ -97,6 +109,17 @@ const routes = [
         path: "/dashboard/ronde/raport",
         name: "Ronde Raport",
         component: RoundRaport,
+      },
+      {
+        path: "/rondes/detail",
+        name: "Detail van ronde",
+        component: RoundDetail,
+        props: true,
+      },
+      {
+        path: "/dashboard/rondes/plannen",
+        name: "Ronde Planner",
+        component: RoundPlanner,
       },
     ],
   },
