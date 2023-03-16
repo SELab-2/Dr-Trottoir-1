@@ -11,7 +11,7 @@ import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
-import RoundRaport from "@/views/RoundRaport.vue";
+import RoundReport from "@/views/RoundReport.vue";
 import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
 import StudentFollowUp from "@/views/StudentFollowUp.vue";
@@ -108,7 +108,7 @@ const routes = [
       {
         path: "/dashboard/ronde/raport",
         name: "Ronde Raport",
-        component: RoundRaport,
+        component: RoundReport,
       },
       {
         path: "/rondes/detail",
