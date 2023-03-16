@@ -12,6 +12,9 @@ import RoundFollowup from "@/views/RoundFollowup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 import RoundDetail from "@/views/RoundDetail.vue";
+import RoundPlanner from "@/views/RoundPlanner.vue";
+import StudentFollowUp from "@/views/StudentFollowUp.vue";
+import BuildingMaker from "@/views/BuildingMaker.vue";
 
 const routes = [
   {
@@ -24,7 +27,12 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "/planningsoverzicht",
+        path: "/studenten",
+        name: "Opvolging studenten",
+        component: StudentFollowUp,
+      },
+      {
+        path: "/planning",
         name: "Planningsoverzicht",
         component: SchedulingScreenStudent,
       },
@@ -39,7 +47,7 @@ const routes = [
         name: "Gebouwen",
       },
       {
-        path: "/dashboard/routes",
+        path: "/dashboard/rondes",
         component: Routes,
         name: "Rondes",
       },
@@ -50,19 +58,30 @@ const routes = [
         props: true,
       },
       {
-        path: "/gebouw",
+        path: "/dashboard/gebouwen/nieuw",
+        name: "Gebouw aanmaken",
+        component: BuildingMaker,
+      },
+      //{
+      //  path: "/ronde/:id",
+      //  name: "Ronde",
+      //  component: TODO detailpagina ronde,
+      //  props: true,
+      //},
+      {
+        path: "/gebouwen",
         name: "Opvolgen van gebouwen",
         component: BuildingFollowup,
       },
       {
-        path: "/rondes/opvolgen",
+        path: "/rondes",
         name: "Opvolgen van rondes",
         component: RoundFollowup,
       },
       {
-        path: "/rondes/maken",
-        name: "Ronde aanmaken",
-        component: RoundMaker,
+        path: "/rondes/plannen",
+        name: "Ronde plannen",
+        component: RoundPlanner,
       },
       {
         path: "/account/:gebruikerid/:isadmin",
@@ -71,15 +90,31 @@ const routes = [
         props: true,
       },
       {
+        path: "/dashboard/rondes/nieuw",
+        name: "Nieuwe ronde",
+        component: RoundMaker,
+      },
+      {
+        path: "/dashboard/gebouwen/nieuw",
+        name: "Nieuw gebouw",
+        component: BuildingMaker,
+      },
+      {
         path: "/dashboard/gebruikers/nieuw",
-        name: "Nieuwe gebruiker toevoegen",
+        name: "Nieuwe gebruiker",
         component: UserCreation,
       },
       {
+<<<<<<< HEAD
         path: "/rondes/detail",
         name: "Detail van ronde",
         component: RoundDetail,
         props: true,
+=======
+        path: "/dashboard/rondes/plannen",
+        name: "Ronde Planner",
+        component: RoundPlanner,
+>>>>>>> develop
       },
     ],
   },

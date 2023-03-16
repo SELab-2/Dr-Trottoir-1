@@ -6,4 +6,5 @@ export enum RowType {
   TEXT,
   BOOLEAN,
   ICON,
+  AVATAR,
 }

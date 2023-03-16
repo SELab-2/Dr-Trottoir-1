@@ -10,7 +10,7 @@
     <router-link
       v-for="building in day.buildings"
       :key="building.name"
-      to="/gebouwen"
+      to="/gebouw/0"
     >
       <v-card
         class="ma-3"
@@ -71,7 +71,9 @@
 </template>
 
 <script lang="ts" setup>
-const days = {
+import { ref } from "vue";
+
+const days = ref({
   monday: {
     name: "Maandag",
     buildings: [
@@ -195,5 +197,5 @@ const days = {
       },
     ],
   },
-};
+});
 </script>

@@ -1,4 +1,4 @@
-import Building from "./Building";
+import Building from "./RoundBuilding";
 
 export default interface Round {
   name: string;
