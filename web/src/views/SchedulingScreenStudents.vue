@@ -3,7 +3,7 @@
   <v-card
     v-for="day in days"
     :key="day.name"
-    class="mx-4 mt-4"
+    class="mx-4 mt-1 mb-3"
     :title="day.name"
   >
     <!-- Building cards -->
