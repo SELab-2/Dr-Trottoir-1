@@ -195,8 +195,6 @@
         </v-toolbar-title>
 
         <v-spacer />
-
-        <v-btn variant="text" icon="mdi-magnify" />
       </v-app-bar>
 
       <router-view></router-view>
