@@ -105,16 +105,15 @@ const routes = [
         component: UserCreation,
       },
       {
-<<<<<<< HEAD
         path: "/rondes/detail",
         name: "Detail van ronde",
         component: RoundDetail,
         props: true,
-=======
+      },
+      {
         path: "/dashboard/rondes/plannen",
         name: "Ronde Planner",
         component: RoundPlanner,
->>>>>>> develop
       },
     ],
   },
