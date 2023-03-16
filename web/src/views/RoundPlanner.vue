@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-card min-height="450px">
+    <v-card>
       <v-card-actions>
         <v-select
           variant="solo"
@@ -35,12 +35,14 @@
               :items="rounds"
             ></v-select>
             <v-spacer></v-spacer>
-            <v-btn
-              v-if="selectedRound"
-              prepend-icon="mdi-pencil"
-              color="primary"
-              >Bewerk ronde</v-btn
-            >
+            <router-link to="/rondes/maken">
+              <v-btn
+                v-if="selectedRound"
+                prepend-icon="mdi-pencil"
+                color="primary"
+                >Bewerk ronde</v-btn
+              >
+            </router-link>
           </v-card-actions>
           <v-list v-if="selectedRound">
             <v-list-item v-for="building in buildings" :key="building.name">

@@ -1,5 +1,5 @@
 <template>
-  <v-card variant="">
+  <v-card>
     <!-- list to show all images -->
     <v-card v-for="index in images" :key="index" class="ma-1">
       <AddImage> </AddImage>

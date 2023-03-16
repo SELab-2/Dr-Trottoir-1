@@ -57,6 +57,11 @@ const routes = [
         component: BuildingSceen,
         props: true,
       },
+      {
+        path: "/dashboard/gebouwen/nieuw",
+        name: "Gebouw aanmaken",
+        component: BuildingMaker,
+      },
       //{
       //  path: "/ronde/:id",
       //  name: "Ronde",
@@ -100,7 +105,7 @@ const routes = [
         component: UserCreation,
       },
       {
-        path: "/dashboard/round/planner",
+        path: "/dashboard/rondes/plannen",
         name: "Ronde Planner",
         component: RoundPlanner,
       },
