@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@selab-2/groep-1-orm'
 import { Chance } from "chance";
 import crypto from "crypto";
 
