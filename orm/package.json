@@ -2,7 +2,8 @@
   "name": "@selab-2/groep-1-orm",
   "version": "1.0.0",
   "description": "Package containing the PrismaORM types of our database schema.",
-  "types": "./node_modules/.prisma/client/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "test": "echo \"Warning: no tests specified. Continuing.\" && exit 0",
     "prepare": "npx prisma generate"
