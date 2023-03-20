@@ -86,12 +86,6 @@ export class SyndicusRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        await prisma.building.deleteMany({
-            where: {
-                syndicus_id: Parser.number(req.params["id"]),
-            },
-        });
-
         const result = await prisma.syndicus.delete({
             where: {
                 id: Parser.number(req.params["id"]),

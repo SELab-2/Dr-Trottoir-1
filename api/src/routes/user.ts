@@ -136,13 +136,6 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        // TODO: delete cascade in the database!
-        await prisma.userRegion.deleteMany({
-            where: {
-                user_id: Parser.number(req.params["id"]),
-            },
-        });
-
         const result = await prisma.user.delete({
             where: {
                 id: Parser.number(req.params["id"]),

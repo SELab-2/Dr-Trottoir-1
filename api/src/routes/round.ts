@@ -64,19 +64,6 @@ export class RoundRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        // TODO: delete cascade in the database! Temporary fix.
-        await prisma.roundBuilding.deleteMany({
-            where: {
-                round_id: Parser.number(req.params["id"]),
-            },
-        });
-
-        await prisma.schedule.deleteMany({
-            where: {
-                round_id: Parser.number(req.params["id"]),
-            },
-        });
-
         const result = prisma.round.delete({
             where: {
                 id: Parser.number(req.params["id"]),

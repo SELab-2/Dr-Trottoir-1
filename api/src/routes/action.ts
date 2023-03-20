@@ -64,12 +64,6 @@ export class ActionRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        await prisma.garbage.deleteMany({
-            where: {
-                action_id: Parser.number(req.params["id"]),
-            },
-        });
-
         const result = await prisma.action.delete({
             where: {
                 id: Parser.number(req.params["id"]),
