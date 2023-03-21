@@ -1,4 +1,35 @@
 <template>
+  <!-- Card that lets you select the round -->
+  <v-card title="Kies ronde" prepend-icon="mdi-transit-detour" class="ma-3">
+    <template v-slot:append>
+      <v-card-actions>
+        <router-link to="/rondes/plannen">
+          <v-btn color="primary"> Ronde plannen </v-btn>
+        </router-link>
+        <router-link to="/dashboard/rondes/nieuw">
+          <v-btn color="primary"> Ronde aanmaken </v-btn>
+        </router-link>
+      </v-card-actions>
+    </template>
+
+    <v-row class="py-0 my-0 mx-1">
+      <v-col>
+        <v-select
+          label="selecteer week"
+          :items="['Week1', 'Week2', 'Week3']"
+          variant="solo"
+        ></v-select>
+      </v-col>
+      <v-col>
+        <v-select
+          label="selecteer ronde"
+          :items="['Ronde 1', 'Ronde 2']"
+          variant="solo"
+        ></v-select>
+      </v-col>
+    </v-row>
+  </v-card>
+
   <!-- Simple vlist that uses the custom component RoundCard -->
   <v-list class="mx-3">
     <v-card-title>Rondes van vandaag</v-card-title>
