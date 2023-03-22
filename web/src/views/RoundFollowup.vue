@@ -38,40 +38,38 @@ import Round from "@/components/models/Round";
 import RoundCard from "@/components/RoundCard.vue";
 import LargeFilter from "@/components/LargeFilter.vue";
 import { useRouter } from "vue-router";
-import { sort } from "semver";
 
 ///////////////////////////////////////////////
 /// Section that handles all filter options ///
 ///////////////////////////////////////////////
 
-function on_query_update(query: string){
+function on_query_update(query: string) {
   console.log(query);
 }
 
-function on_search_label_update(label: string){
+function on_search_label_update(label: string) {
   console.log(label);
 }
 
-function on_filters_update(filters: string[]){
+function on_filters_update(filters: string[]) {
   console.log(filters);
 }
 
-function on_sort_update(sort: string){
+function on_sort_update(sort: string) {
   console.log(sort);
 }
 
-function on_start_date_update(date: Date){
-  console.log("startdate: "+date);
+function on_start_date_update(date: Date) {
+  console.log("startdate: " + date);
 }
 
-function on_end_date_update(date: Date){
-  console.log("enddate: "+date);
+function on_end_date_update(date: Date) {
+  console.log("enddate: " + date);
 }
 
 //////////////////////////////////
 /// End filter options section ///
 //////////////////////////////////
-
 
 const router = useRouter();
 
