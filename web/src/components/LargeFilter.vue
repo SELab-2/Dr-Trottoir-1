@@ -29,6 +29,7 @@
         <v-row class="mx-0">
           <v-col>
             <v-text-field
+              label="Eerste dag"
               type="date"
               variant="solo"
               v-model="start_day"
@@ -39,6 +40,7 @@
           </v-col>
           <v-col>
             <v-text-field
+              label="Laatste dag"
               type="date"
               variant="solo"
               v-model="end_day"
@@ -115,9 +117,12 @@ const props = defineProps({
   search_by_labels: { type: Array<string>, default: [] },
 
   // All the filter options
-  // By default they are all selected
-  // The list of selected filters is emitted with 'filter'
   filter_items: { type: Array<string>, default: [] },
+
+  // The inital selected filters
+  // The list of selected filters is emitted with 'filter'
+  selected_filters: { type: Array<string>, default: [] },
+
 
   // All the search options
   // The first option will be the default
@@ -160,8 +165,10 @@ const sort_by = ref<string>(props.sort_items[0]);
 
 // The currently selected filters
 // This is emitted with 'filters'
-const filters = ref<string[]>(props.filter_items);
+const filters = ref<string[]>(props.selected_filters);
 
+// The start and end date
+// These are emitted with 'startDate' and 'endDate'
 const start_day = ref<string>(props.start_date);
 const end_day = ref<string>(props.end_date);
 
