@@ -1,240 +1,211 @@
 {
-	"info": {
-		"_postman_id": "9ecf1452-d125-4712-8876-a5394160b20e",
-		"name": "API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "16524797"
-	},
-	"item": [
-		{
-			"name": "Building",
-			"item": [
-				{
-					"name": "Retrieve all buildings",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{SERVER}}/building?take=1&skip=0&join=syndicus,manual,address",
-							"host": [
-								"{{SERVER}}"
-							],
-							"path": [
-								"building"
-							],
-							"query": [
-								{
-									"key": "take",
-									"value": "1"
-								},
-								{
-									"key": "skip",
-									"value": "0"
-								},
-								{
-									"key": "join",
-									"value": "syndicus,manual,address"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Retrieve building by id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{SERVER}}/building/:id",
-							"host": [
-								"{{SERVER}}"
-							],
-							"path": [
-								"building",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Schedule",
-			"item": [
-				{
-					"name": "Retrieve all schedule items",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{SERVER}}/schedule?take=1&skip=0&join=round,user",
-							"host": [
-								"{{SERVER}}"
-							],
-							"path": [
-								"schedule"
-							],
-							"query": [
-								{
-									"key": "take",
-									"value": "1"
-								},
-								{
-									"key": "skip",
-									"value": "0"
-								},
-								{
-									"key": "join",
-									"value": "round,user"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Retrieve schedule item by id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{SERVER}}/schedule/:id",
-							"host": [
-								"{{SERVER}}"
-							],
-							"path": [
-								"schedule",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "User",
-			"item": [
-				{
-					"name": "Retrieve all users",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{SERVER}}/user?take=1024&skip=0&student=&super_student=&admin=&added_before&added_after&name=&login_before&login_after",
-							"host": [
-								"{{SERVER}}"
-							],
-							"path": [
-								"user"
-							],
-							"query": [
-								{
-									"key": "take",
-									"value": "1024",
-									"description": "Integer\nAmount of results"
-								},
-								{
-									"key": "skip",
-									"value": "0",
-									"description": "Integer\nSkip over a given amount of results"
-								},
-								{
-									"key": "student",
-									"value": "",
-									"description": "Boolean\nShow only (non) students"
-								},
-								{
-									"key": "super_student",
-									"value": "",
-									"description": "Boolean\nShow only (non) super students"
-								},
-								{
-									"key": "admin",
-									"value": "",
-									"description": "Boolean\nShow only (non) administrators"
-								},
-								{
-									"key": "added_before",
-									"value": null,
-									"description": "Date\nAccount has been created prior to date"
-								},
-								{
-									"key": "added_after",
-									"value": null,
-									"description": "Date\nAccount has been created after given date"
-								},
-								{
-									"key": "name",
-									"value": "",
-									"description": "String \nFilter on first and last name\n"
-								},
-								{
-									"key": "login_before",
-									"value": null,
-									"description": "Date\nUser's last login was before given date"
-								},
-								{
-									"key": "login_after",
-									"value": null,
-									"description": "Date\nUser's last login was after given date"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Retrieve user by id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{SERVER}}/user/:id",
-							"host": [
-								"{{SERVER}}"
-							],
-							"path": [
-								"user",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1",
-									"description": "Identificatie"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	]
+    "info": {
+        "_postman_id": "9ecf1452-d125-4712-8876-a5394160b20e",
+        "name": "API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "16524797"
+    },
+    "item": [
+        {
+            "name": "Building",
+            "item": [
+                {
+                    "name": "Retrieve all buildings",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{SERVER}}/building?take=1&skip=0&join=syndicus,manual,address",
+                            "host": ["{{SERVER}}"],
+                            "path": ["building"],
+                            "query": [
+                                {
+                                    "key": "take",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "skip",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "join",
+                                    "value": "syndicus,manual,address"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Retrieve building by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{SERVER}}/building/:id",
+                            "host": ["{{SERVER}}"],
+                            "path": ["building", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Schedule",
+            "item": [
+                {
+                    "name": "Retrieve all schedule items",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{SERVER}}/schedule?take=1&skip=0&join=round,user",
+                            "host": ["{{SERVER}}"],
+                            "path": ["schedule"],
+                            "query": [
+                                {
+                                    "key": "take",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "skip",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "join",
+                                    "value": "round,user"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Retrieve schedule item by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{SERVER}}/schedule/:id",
+                            "host": ["{{SERVER}}"],
+                            "path": ["schedule", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "User",
+            "item": [
+                {
+                    "name": "Retrieve all users",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [""],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{SERVER}}/user?take=1024&skip=0&student=&super_student=&admin=&added_before&added_after&name=&login_before&login_after",
+                            "host": ["{{SERVER}}"],
+                            "path": ["user"],
+                            "query": [
+                                {
+                                    "key": "take",
+                                    "value": "1024",
+                                    "description": "Integer\nAmount of results"
+                                },
+                                {
+                                    "key": "skip",
+                                    "value": "0",
+                                    "description": "Integer\nSkip over a given amount of results"
+                                },
+                                {
+                                    "key": "student",
+                                    "value": "",
+                                    "description": "Boolean\nShow only (non) students"
+                                },
+                                {
+                                    "key": "super_student",
+                                    "value": "",
+                                    "description": "Boolean\nShow only (non) super students"
+                                },
+                                {
+                                    "key": "admin",
+                                    "value": "",
+                                    "description": "Boolean\nShow only (non) administrators"
+                                },
+                                {
+                                    "key": "added_before",
+                                    "value": null,
+                                    "description": "Date\nAccount has been created prior to date"
+                                },
+                                {
+                                    "key": "added_after",
+                                    "value": null,
+                                    "description": "Date\nAccount has been created after given date"
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "",
+                                    "description": "String \nFilter on first and last name\n"
+                                },
+                                {
+                                    "key": "login_before",
+                                    "value": null,
+                                    "description": "Date\nUser's last login was before given date"
+                                },
+                                {
+                                    "key": "login_after",
+                                    "value": null,
+                                    "description": "Date\nUser's last login was after given date"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Retrieve user by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{SERVER}}/user/:id",
+                            "host": ["{{SERVER}}"],
+                            "path": ["user", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "Identificatie"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
 }

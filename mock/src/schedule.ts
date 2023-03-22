@@ -1,4 +1,4 @@
-import {PrismaClient, ProgressImageType} from '@prisma/client'
+import { PrismaClient, ProgressImageType } from '@selab-2/groep-1-orm'
 import { Chance } from "chance";
 
 const prisma = new PrismaClient()
