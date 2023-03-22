@@ -84,8 +84,24 @@
             >
               <v-label class="mb-2">
                 <v-icon icon="mdi-sort" class="mr-2" />
-                Sorteer volgens
+                Sorteer
               </v-label>
+              <v-btn-toggle
+                color="primary"
+                variant="tonal"
+                density="compact"
+                v-model="sort_ascending"
+                @update:model-value="$emit('sortAscending', sort_ascending)"
+                mandatory
+              >
+                <v-btn :value="true" prepend-icon="mdi-arrow-up-thin">
+                  Stijgend
+                </v-btn>
+
+                <v-btn :value="false" append-icon="mdi-arrow-down-thin">
+                  Dalend
+                </v-btn>
+              </v-btn-toggle>
               <v-radio
                 v-for="option in sort_items"
                 :key="option"
@@ -166,4 +182,10 @@ const filters = ref<string[]>(props.selected_filters);
 // These are emitted with 'startDate' and 'endDate'
 const start_day = ref<string>(props.start_date);
 const end_day = ref<string>(props.end_date);
+
+const sort_ascending = ref<boolean>(true);
+
+function help(thing: any){
+  console.log(thing);
+}
 </script>

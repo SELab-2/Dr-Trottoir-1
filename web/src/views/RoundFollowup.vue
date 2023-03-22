@@ -2,21 +2,22 @@
   <LargeFilter
     :search_by_labels="['Ronde', 'Persoon']"
     :sort_items="['Tijd', 'Gebouwen', 'Voortgang']"
-    :filter_items="['Klaar', 'Bezig', 'Niet begonnen']"
+    :filter_items="['Klaar', 'Bezig', 'Niet begonnen', 'Opmerkingen']"
     class="ma-3"
-    @onSearch="(query: string) => on_query_update(query)"
-    @searchLabel="(label: string) => on_search_label_update(label)"
-    @filters="(filters: string[]) => on_filters_update(filters)"
-    @sortBy="(sort: string) => on_sort_update(sort)"
-    @startDate="(date: Date) => on_start_date_update(date)"
-    @endDate="(date: Date) => on_end_date_update(date)"
+    @onSearch="(q: string) => query = q"
+    @searchLabel="(l: string) => label = l"
+    @filters="(f: string[]) => filters = f"
+    @sortBy="(s: string) => sort = s"
+    @startDate="(sd: Date) => start_date = sd"
+    @endDate="(ed: Date) => end_date = ed"
+    @sortAscending="(a: boolean) => sort_ascending = a"
   />
 
   <!-- Simple vlist that uses the custom component RoundCard -->
   <v-list class="mx-3">
     <v-card-title>Rondes van vandaag</v-card-title>
     <RoundCard
-      v-for="(round, i) in mockrounds"
+      v-for="(round, i) in filtered_data()"
       :key="i"
       :round_name="round.name"
       :round_start="round.start"
@@ -38,38 +39,7 @@ import Round from "@/components/models/Round";
 import RoundCard from "@/components/RoundCard.vue";
 import LargeFilter from "@/components/LargeFilter.vue";
 import { useRouter } from "vue-router";
-
-///////////////////////////////////////////////
-/// Section that handles all filter options ///
-///////////////////////////////////////////////
-
-function on_query_update(query: string) {
-  console.log(query);
-}
-
-function on_search_label_update(label: string) {
-  console.log(label);
-}
-
-function on_filters_update(filters: string[]) {
-  console.log(filters);
-}
-
-function on_sort_update(sort: string) {
-  console.log(sort);
-}
-
-function on_start_date_update(date: Date) {
-  console.log("startdate: " + date);
-}
-
-function on_end_date_update(date: Date) {
-  console.log("enddate: " + date);
-}
-
-//////////////////////////////////
-/// End filter options section ///
-//////////////////////////////////
+import { ref } from "vue";
 
 const router = useRouter();
 
@@ -218,4 +188,20 @@ const mockrounds: Round[] = [
     ],
   },
 ];
+
+
+// All the filter options
+const query = ref<string>('');
+const label = ref<string>('');
+const filters = ref<string[]>([]);
+const sort = ref<string>('');
+const start_date = ref<Date>(new Date());
+const end_date = ref<Date>(new Date());
+const sort_ascending = ref<boolean>(true);
+
+// The list of data after filtering
+function filtered_data() : Round[]  {
+  // TODO: sorting
+  return mockrounds;
+}
 </script>
