@@ -10,8 +10,8 @@
             v-model="search_querry"
             @update:model-value="$emit('onSearch', search_querry)"
             variant="underlined"
-        >
-        </v-text-field>
+            clearable
+        />
     </template>
     <template v-slot:append>
         <v-btn
@@ -25,10 +25,14 @@
     </template>
     <v-expand-transition>
       <div v-show="dropdown">
-        <v-divider></v-divider>
-        <v-card-text>
-            Placeholder
-        </v-card-text>
+        <v-divider/>
+        <v-select
+        variant="solo"
+        label="Zoekcategorie"
+        :items="search_by_labels"
+        v-model="serach_label"
+        @update:model-value="$emit('seachLabel', serach_label)"
+        />
       </div>
     </v-expand-transition>
   </v-card>
@@ -59,6 +63,6 @@ const search_querry = ref<string>("");
 const serach_label = ref<string>(props.search_by_labels[0]);
 
 const search_placeholder = () => {
-    return 'Zoek per ' + serach_label.value;
+    return 'Zoek per ' + serach_label.value.toLowerCase();
 }
 </script>
