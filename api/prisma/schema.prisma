@@ -12,6 +12,9 @@ model Region {
     id   Int    @id @default(autoincrement())
     name String @unique
 
+    // Soft delete
+    deleted Boolean @default(false)
+
     users UserRegion[]
 
     @@map("region")
@@ -41,6 +44,9 @@ model User {
     hash String
     salt String
 
+    // Soft delete
+    deleted Boolean @default(false)
+
     // Relaties
     regions  UserRegion[]
     Syndicus Syndicus[]
@@ -60,6 +66,8 @@ model UserRegion {
     region_id Int
     region    Region @relation(fields: [region_id], references: [id], onDelete: Cascade)
 
+    deleted Boolean @default(false)
+
     @@map("user_region")
 }
 
@@ -70,6 +78,8 @@ model File {
     path      String
     buildings Building[] // Vereist?
 
+    deleted Boolean @default(false)
+
     @@map("file")
 }
 
@@ -77,6 +87,8 @@ model File {
 model Image {
     id   Int       @id @default(autoincrement())
     time DateTime?
+
+    deleted Boolean @default(false)
 
     buildings BuildingImages[]
     progress  ProgressImage[]
@@ -97,6 +109,8 @@ model Address {
     latitude  Float
     longitude Float
 
+    deleted Boolean @default(false)
+
     buildings Building[]
     user      User[]
 
@@ -112,6 +126,8 @@ model BuildingImages {
 
     image_id Int
     image    Image @relation(fields: [image_id], references: [id], onDelete: Cascade)
+
+    deleted Boolean @default(false)
 
     @@map("building_image")
 }
@@ -133,6 +149,8 @@ model Building {
     manual_id Int?
     manual    File? @relation(fields: [manual_id], references: [id], onDelete: SetNull)
 
+    deleted Boolean @default(false)
+
     images   BuildingImages[]
     garbage  Garbage[]
     rounds   RoundBuilding[]
@@ -148,6 +166,8 @@ model Syndicus {
     user_id Int
     user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
+    deleted Boolean @default(false)
+
     building Building[]
 
     @@map("syndicus")
@@ -159,6 +179,8 @@ model Syndicus {
 model Action {
     id          Int    @id @default(autoincrement())
     description String
+
+    deleted Boolean @default(false)
 
     garbage Garbage[]
 
@@ -178,6 +200,8 @@ model Garbage {
     building_id Int
     building    Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
 
+    deleted Boolean @default(false)
+
     @@map("garbage")
 }
 
@@ -191,6 +215,8 @@ model RoundBuilding {
     building_id Int
     building    Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
 
+    deleted Boolean @default(false)
+
     @@map("round_building")
 }
 
@@ -198,6 +224,8 @@ model RoundBuilding {
 model Round {
     id   Int    @id @default(autoincrement())
     name String
+
+    deleted Boolean @default(false)
 
     buildings RoundBuilding[]
     schedule  Schedule[]
@@ -215,6 +243,8 @@ model Schedule {
 
     round_id Int
     round    Round @relation(fields: [round_id], references: [id], onDelete: Cascade)
+
+    deleted Boolean @default(false)
 
     progress Progress[]
 
@@ -243,6 +273,8 @@ model Progress {
     schedule_id Int?
     schedule    Schedule? @relation(fields: [schedule_id], references: [id], onDelete: SetNull)
 
+    deleted Boolean @default(false)
+
     images ProgressImage[]
 
     @@map("progress")
@@ -260,6 +292,8 @@ model ProgressImage {
 
     progress_id Int
     progress    Progress @relation(fields: [progress_id], references: [id], onDelete: Cascade)
+
+    deleted Boolean @default(false)
 
     @@map("progress_image")
 }
