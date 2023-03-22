@@ -69,13 +69,13 @@
             </v-label>
             <v-checkbox
               v-for="item in filter_items"
-              :key="item"
+
               :label="item"
               color="primary"
               v-model="filters"
               :value="item"
               density="compact"
-              @update:model-value="$emit('filters', filters)"
+              @update:model-value="$emit('filters', $event)"
             />
           </v-col>
           <!-- Search order column -->
