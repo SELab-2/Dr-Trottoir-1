@@ -33,9 +33,7 @@
               type="date"
               variant="solo"
               v-model="start_day"
-              @update:model-value="
-                $emit('startDate', new Date(start_day))
-              "
+              @update:model-value="$emit('startDate', new Date(start_day))"
             />
           </v-col>
           <v-col>
@@ -44,9 +42,7 @@
               type="date"
               variant="solo"
               v-model="end_day"
-              @update:model-value="
-                $emit('endDate', new Date(end_day))
-              "
+              @update:model-value="$emit('endDate', new Date(end_day))"
             />
           </v-col>
           <v-col>
@@ -69,12 +65,13 @@
             </v-label>
             <v-checkbox
               v-for="item in filter_items"
-
+              :key="item"
               :label="item"
-              color="primary"
-              v-model="filters"
               :value="item"
+              v-model="filters"
+              color="primary"
               density="compact"
+              hide-details
               @update:model-value="$emit('filters', $event)"
             />
           </v-col>
@@ -121,7 +118,6 @@ const props = defineProps({
   // The inital selected filters
   // The list of selected filters is emitted with 'filter'
   selected_filters: { type: Array<string>, default: [] },
-
 
   // All the search options
   // The first option will be the default
