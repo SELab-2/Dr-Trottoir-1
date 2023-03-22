@@ -14,7 +14,7 @@ export class RegionRouting extends Routing {
             where: {
                 id: Parser.number(req.query["id"]),
                 name: Parser.string(req.query["name"]),
-                // find all regions where a certain user id is assigned
+                // vind alle regios waar een bepaalde user is toegekend
                 users: {
                     some: {
                         user_id: Parser.number(req.query["user_id"]),
@@ -78,9 +78,7 @@ export class RegionRouting extends Routing {
         let usersObject;
         if (req.body["users"]) {
             usersObject = {
-                // remove all entries related to the region and add new entries according to the list provided
-                deleteMany: {},
-                create: await getUsersForCreate(req),
+                update: await getUsersForCreate(req),
             };
         } else {
             // don't delete already present users
