@@ -6,7 +6,7 @@
     class="ma-3"
     @onSearch="(query: string) => on_query_update(query)"
     @searchLabel="(label: string) => on_search_label_update(label)"
-    @filter="(filters: string[]) => on_filters_update(filters)"
+    @filters="(filters: string[]) => on_filters_update(filters)"
     @sortBy="(sort: string) => on_sort_update(sort)"
     @startDate="(date: Date) => on_start_date_update(date)"
     @endDate="(date: Date) => on_end_date_update(date)"
