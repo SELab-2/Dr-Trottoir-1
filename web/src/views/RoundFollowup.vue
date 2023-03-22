@@ -1,34 +1,16 @@
 <template>
-  <!-- Card that lets you select the round -->
-  <v-card title="Kies ronde" prepend-icon="mdi-transit-detour" class="ma-3">
-    <template v-slot:append>
-      <v-card-actions>
-        <router-link to="/rondes/plannen">
-          <v-btn color="primary"> Ronde plannen </v-btn>
-        </router-link>
-        <router-link to="/dashboard/rondes/nieuw">
-          <v-btn color="primary"> Ronde aanmaken </v-btn>
-        </router-link>
-      </v-card-actions>
-    </template>
-
-    <v-row class="py-0 my-0 mx-1">
-      <v-col>
-        <v-select
-          label="selecteer week"
-          :items="['Week1', 'Week2', 'Week3']"
-          variant="solo"
-        ></v-select>
-      </v-col>
-      <v-col>
-        <v-select
-          label="selecteer ronde"
-          :items="['Ronde 1', 'Ronde 2']"
-          variant="solo"
-        ></v-select>
-      </v-col>
-    </v-row>
-  </v-card>
+  <LargeFilter
+    :search_by_labels="['Ronde', 'Persoon']"
+    :sort_items="['Tijd', 'Gebouwen', 'Voortgang']"
+    :filter_items="['Klaar', 'Bezig', 'Niet begonnen']"
+    class="ma-3"
+    @onSearch="(query: string) => on_query_update(query)"
+    @searchLabel="(label: string) => on_search_label_update(label)"
+    @filter="(filters: string[]) => on_filters_update(filters)"
+    @sortBy="(sort: string) => on_sort_update(sort)"
+    @startDate="(date: Date) => on_start_date_update(date)"
+    @endDate="(date: Date) => on_end_date_update(date)"
+  />
 
   <!-- Simple vlist that uses the custom component RoundCard -->
   <v-list class="mx-3">
@@ -54,7 +36,42 @@
 <script lang="ts" setup>
 import Round from "@/components/models/Round";
 import RoundCard from "@/components/RoundCard.vue";
+import LargeFilter from "@/components/LargeFilter.vue";
 import { useRouter } from "vue-router";
+import { sort } from "semver";
+
+///////////////////////////////////////////////
+/// Section that handles all filter options ///
+///////////////////////////////////////////////
+
+function on_query_update(query: string){
+  console.log(query);
+}
+
+function on_search_label_update(label: string){
+  console.log(label);
+}
+
+function on_filters_update(filters: string[]){
+  console.log(filters);
+}
+
+function on_sort_update(sort: string){
+  console.log(sort);
+}
+
+function on_start_date_update(date: Date){
+  console.log("startdate: "+date);
+}
+
+function on_end_date_update(date: Date){
+  console.log("enddate: "+date);
+}
+
+//////////////////////////////////
+/// End filter options section ///
+//////////////////////////////////
+
 
 const router = useRouter();
 
