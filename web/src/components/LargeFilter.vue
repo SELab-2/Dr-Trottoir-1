@@ -45,7 +45,7 @@
               variant="solo"
               v-model="end_day"
               @update:model-value="
-                $emit('startDate', date_string_to_date(end_day))
+                $emit('endDate', date_string_to_date(end_day))
               "
             />
           </v-col>
@@ -55,7 +55,7 @@
               label="Zoekcategorie"
               :items="search_by_labels"
               v-model="search_label"
-              @update:model-value="$emit('seachLabel', search_label)"
+              @update:model-value="$emit('searchLabel', search_label)"
             />
           </v-col>
         </v-row>
@@ -113,7 +113,7 @@ const props = defineProps({
   // 1 elem: search bar, no selection to search by other values
   // more elems: search bar, selection box to select the value to search by (name, place, etc)
   // the search querry is emitted with 'onSearch'
-  // the updated label is emitted with 'seachLabel'
+  // the updated label is emitted with 'searchLabel'
   search_by_labels: { type: Array<string>, default: [] },
 
   // All the filter options
@@ -152,7 +152,7 @@ const dropdown = ref<boolean>(false);
 const search_querry = ref<string>("");
 
 // The selcted value to seach by
-// This is emitted with 'seachLabel'
+// This is emitted with 'searchLabel'
 const search_label = ref<string>(props.search_by_labels[0]);
 
 const search_placeholder = () => {
