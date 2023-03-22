@@ -34,7 +34,7 @@
               variant="solo"
               v-model="start_day"
               @update:model-value="
-                $emit('startDate', date_string_to_date(start_day))
+                $emit('startDate', new Date(start_day))
               "
             />
           </v-col>
@@ -45,7 +45,7 @@
               variant="solo"
               v-model="end_day"
               @update:model-value="
-                $emit('endDate', date_string_to_date(end_day))
+                $emit('endDate', new Date(end_day))
               "
             />
           </v-col>
@@ -67,7 +67,6 @@
               <v-icon icon="mdi-filter" class="mr-2" />
               Filter opties
             </v-label>
-            <!-- the density option is kind of broken, but an invalid string gives the correct result -->
             <v-checkbox
               v-for="item in filter_items"
               :key="item"
@@ -75,7 +74,7 @@
               color="primary"
               v-model="filters"
               :value="item"
-              density=""
+              density="compact"
               @update:model-value="$emit('filters', filters)"
             />
           </v-col>
@@ -171,9 +170,4 @@ const filters = ref<string[]>(props.selected_filters);
 // These are emitted with 'startDate' and 'endDate'
 const start_day = ref<string>(props.start_date);
 const end_day = ref<string>(props.end_date);
-
-const date_string_to_date = (date_string: string) => {
-  const date_list: string[] = date_string.split("/");
-  return new Date(date_list[2], date_list[1], date_list[0]);
-};
 </script>
