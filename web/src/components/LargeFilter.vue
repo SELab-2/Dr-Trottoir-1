@@ -25,20 +25,45 @@
     </template>
     <v-expand-transition>
       <div v-show="dropdown">
-        <v-divider />
-        <v-select
-          variant="solo"
-          label="Zoekcategorie"
-          :items="search_by_labels"
-          v-model="search_label"
-          @update:model-value="$emit('seachLabel', search_label)"
-        />
+        <v-divider class="mb-3" />
+        <v-row class="mx-0">
+          <v-col>
+            <v-text-field
+              type="date"
+              variant="solo"
+              v-model="start_day"
+              @update:model-value="
+                $emit('startDate', date_string_to_date(start_day))
+              "
+            />
+          </v-col>
+          <v-col>
+            <v-text-field
+              type="date"
+              variant="solo"
+              v-model="end_day"
+              @update:model-value="
+                $emit('startDate', date_string_to_date(end_day))
+              "
+            />
+          </v-col>
+          <v-col>
+            <v-select
+              variant="solo"
+              label="Zoekcategorie"
+              :items="search_by_labels"
+              v-model="search_label"
+              @update:model-value="$emit('seachLabel', search_label)"
+            />
+          </v-col>
+        </v-row>
+
         <v-row class="ml-2">
           <!-- Filter column -->
-          <v-col v-if="filter_items.length != 0"> 
+          <v-col v-if="filter_items.length != 0">
             <v-label class="mb-2">
-                <v-icon icon="mdi-filter" class="mr-2"/>
-                Filter opties
+              <v-icon icon="mdi-filter" class="mr-2" />
+              Filter opties
             </v-label>
             <!-- the density option is kind of broken, but an invalid string gives the correct result -->
             <v-checkbox
@@ -54,13 +79,13 @@
           </v-col>
           <!-- Search order column -->
           <v-col v-if="sort_items.length != 0">
-            <v-radio-group 
+            <v-radio-group
               v-model="sort_by"
               color="primary"
               @update:model-value="$emit('sortBy', sort_by)"
             >
               <v-label class="mb-2">
-                <v-icon icon="mdi-sort" class="mr-2"/>
+                <v-icon icon="mdi-sort" class="mr-2" />
                 Sorteer volgens
               </v-label>
               <v-radio
@@ -98,6 +123,20 @@ const props = defineProps({
   // The first option will be the default
   // The updated option is emitted with 'sortBy'
   sort_items: { type: Array<string>, default: [] },
+
+  // The start and end date, current time as default
+  // Option to show it or not
+  // The updated dates will be emitted with 'startDate' and 'endDate'
+  start_date: {
+    type: String,
+    default: new Date().toISOString().substring(0, 10),
+  },
+  enable_start_date: { type: Boolean, default: true },
+  end_date: {
+    type: String,
+    default: new Date().toISOString().substring(0, 10),
+  },
+  enable_end_date: { type: Boolean, default: true },
 });
 
 // State to show or don't show the extra filter options
@@ -121,5 +160,13 @@ const sort_by = ref<string>(props.sort_items[0]);
 
 // The currently selected filters
 // This is emitted with 'filters'
-const filters = ref<string[]>(props.filter_items)
+const filters = ref<string[]>(props.filter_items);
+
+const start_day = ref<string>(props.start_date);
+const end_day = ref<string>(props.end_date);
+
+const date_string_to_date = (date_string: string) => {
+  const date_list: string[] = date_string.split("/");
+  return new Date(date_list[2], date_list[1], date_list[0]);
+};
 </script>
