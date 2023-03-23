@@ -7,8 +7,8 @@
     <template v-slot:title v-if="search_by_labels.length != 0">
       <v-text-field
         :label="search_placeholder()"
-        v-model="search_querry"
-        @update:model-value="$emit('onSearch', search_querry)"
+        v-model="search_query"
+        @update:model-value="$emit('onSearch', search_query === null ? '' : search_query)"
         variant="underlined"
         clearable
       />
@@ -160,7 +160,7 @@ const dropdown = ref<boolean>(false);
 
 // The search querry in the main search bar
 // This is emitted with 'onSearch'
-const search_querry = ref<string>("");
+const search_query = ref<string>("");
 
 // The selcted value to seach by
 // This is emitted with 'searchLabel'
