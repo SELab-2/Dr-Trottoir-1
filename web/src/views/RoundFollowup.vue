@@ -1,8 +1,8 @@
 <template>
   <LargeFilter
-    :search_by_labels="['Ronde', 'Persoon']"
-    :sort_items="['Tijd', 'Gebouwen', 'Voortgang']"
-    :filter_items="['Klaar', 'Bezig', 'Niet begonnen', 'Opmerkingen']"
+    :search_by_labels="query_labels"
+    :sort_items="sort_items"
+    :filter_items="filter_options"
     class="ma-3"
     @onSearch="(q: string) => query = q"
     @searchLabel="(l: string) => label = l"
@@ -189,19 +189,49 @@ const mockrounds: Round[] = [
   },
 ];
 
+// filter props to pass to largefilter component
+const query_labels = ['Ronde', 'Persoon'];
+const filter_options = ['Klaar', 'Bezig', 'Niet begonnen', 'Opmerkingen'];
+const sort_items= ['Tijd', 'Gebouwen', 'Voortgang'];
+
 
 // All the filter options
 const query = ref<string>('');
-const label = ref<string>('');
+const label = ref<string>(query_labels[0]);
 const filters = ref<string[]>([]);
 const sort = ref<string>('');
 const start_date = ref<Date>(new Date());
 const end_date = ref<Date>(new Date());
 const sort_ascending = ref<boolean>(true);
 
+function filter_query(round: Round): boolean {
+  let search_by: string = "";
+  switch(label.value){
+    case query_labels[0]:
+      search_by = round.name.toLowerCase();
+      break;
+    case query_labels[1]:
+      search_by = round.student.toLowerCase();
+      break;
+  }
+  return search_by.includes(query.value.toLowerCase()) ||
+      query.value.length == 0
+}
+
 // The list of data after filtering
 function filtered_data() : Round[]  {
-  // TODO: sorting
-  return mockrounds;
+  const result: Round[] = [];
+  // filtering
+  mockrounds.forEach(elem =>{
+    let can_add = true;
+
+    // filter on query input
+    can_add = can_add && filter_query(elem);
+
+    if(can_add){
+      result.push(elem)
+    }
+  });
+  return result;
 }
 </script>
