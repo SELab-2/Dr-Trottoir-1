@@ -14,8 +14,7 @@
   />
 
   <!-- Simple vlist that uses the custom component RoundCard -->
-  <v-list class="mx-3">
-    <v-card-title>Rondes van vandaag</v-card-title>
+  <v-list class="mx-2">
     <RoundCard
       v-for="(round, i) in filtered_data()"
       :key="i"
@@ -192,14 +191,14 @@ const mockrounds: Round[] = [
 // filter props to pass to largefilter component
 const query_labels = ['Ronde', 'Persoon'];
 const filter_options = ['Klaar', 'Bezig', 'Niet begonnen', 'Opmerkingen'];
-const sort_items= ['Tijd', 'Gebouwen', 'Voortgang'];
+const sort_items= ['Voortgang', 'Gebouwen'];
 
 
 // All the filter options
 const query = ref<string>('');
 const label = ref<string>(query_labels[0]);
 const filters = ref<string[]>([]);
-const sort = ref<string>('');
+const sort = ref<string>(sort_items[0]);
 const start_date = ref<Date>(new Date());
 const end_date = ref<Date>(new Date());
 const sort_ascending = ref<boolean>(true);
@@ -218,6 +217,43 @@ function filter_query(round: Round): boolean {
       query.value.length == 0
 }
 
+function filter_date(): boolean {
+  // TODO: fix when rounds actually have dates
+  return true;
+}
+
+function filter_filters(round: Round): boolean {
+  if(filters.value.length == 0){
+    return true;
+  }
+  let result: boolean = false;
+  for(const option of filters.value){
+    switch(option){
+      case 'Klaar':
+        result = round.current_building == round.buildings.length;
+        break;
+      case 'Bezig':
+        result = 0 < round.current_building && 
+          round.current_building < round.buildings.length;
+        break;
+      case 'Niet begonnen':
+        result = round.current_building == 0;
+        break;
+      case 'Opmerkingen':
+        result = round.comments;
+        break;
+    }
+    if(result){
+      return result;
+    }
+  }
+  return result;
+}
+
+function progress(done: number, total: number): number{
+  return Math.round((done / total) * 100);
+}
+
 // The list of data after filtering
 function filtered_data() : Round[]  {
   const result: Round[] = [];
@@ -227,11 +263,29 @@ function filtered_data() : Round[]  {
 
     // filter on query input
     can_add = can_add && filter_query(elem);
+    // apply filter options
+    can_add = can_add && filter_filters(elem);
 
     if(can_add){
-      result.push(elem)
+      result.push(elem);
     }
   });
+
+  // sort the results
+  result.sort((a,b) => {
+    if(sort.value == 'Gebouwen'){
+      return (a.buildings.length > b.buildings.length ? 1 : -1);
+    }else{
+      const ap = progress(a.current_building, a.buildings.length);
+      const bp = progress(b.current_building, b.buildings.length);
+      return (ap > bp ? 1 : -1);
+    }
+  }
+  )
+  // set sorting order
+  if(!sort_ascending.value){
+    result.reverse()
+  }
   return result;
 }
 </script>
