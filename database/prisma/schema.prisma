@@ -12,6 +12,9 @@ model Region {
     id   Int    @id @default(autoincrement())
     name String @unique
 
+    // Soft delete
+    deleted Boolean @default(false)
+
     users UserRegion[]
 
     @@map("region")
@@ -29,8 +32,8 @@ model User {
     last_login DateTime
     phone      String
 
-    address_id Int?
-    address    Address? @relation(fields: [address_id], references: [id], onDelete: SetNull)
+    address_id Int
+    address    Address @relation(fields: [address_id], references: [id], onDelete: Restrict)
 
     // Rollen
     student       Boolean
@@ -40,6 +43,9 @@ model User {
     // Authenticatie
     hash String
     salt String
+
+    // Soft delete
+    deleted Boolean @default(false)
 
     // Relaties
     regions  UserRegion[]
@@ -127,11 +133,13 @@ model Building {
     syndicus_id Int?
     syndicus    Syndicus? @relation(fields: [syndicus_id], references: [id], onDelete: SetNull)
 
-    address_id Int?
-    address    Address? @relation(fields: [address_id], references: [id], onDelete: SetNull)
+    address_id Int
+    address    Address @relation(fields: [address_id], references: [id], onDelete: Restrict)
 
     manual_id Int?
     manual    File? @relation(fields: [manual_id], references: [id], onDelete: SetNull)
+
+    deleted Boolean @default(false)
 
     images   BuildingImages[]
     garbage  Garbage[]
@@ -172,8 +180,8 @@ model Garbage {
 
     pickup_time DateTime
 
-    action_id Int?
-    action    Action? @relation(fields: [action_id], references: [id], onDelete: SetNull)
+    action_id Int
+    action    Action @relation(fields: [action_id], references: [id], onDelete: Restrict)
 
     building_id Int
     building    Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
@@ -190,6 +198,8 @@ model RoundBuilding {
 
     building_id Int
     building    Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
+
+    deleted Boolean @default(false)
 
     @@map("round_building")
 }
@@ -215,6 +225,8 @@ model Schedule {
 
     round_id Int
     round    Round @relation(fields: [round_id], references: [id], onDelete: Cascade)
+
+    deleted Boolean @default(false)
 
     progress Progress[]
 
@@ -243,6 +255,8 @@ model Progress {
     schedule_id Int?
     schedule    Schedule? @relation(fields: [schedule_id], references: [id], onDelete: SetNull)
 
+    deleted Boolean @default(false)
+
     images ProgressImage[]
 
     @@map("progress")
@@ -260,6 +274,8 @@ model ProgressImage {
 
     progress_id Int
     progress    Progress @relation(fields: [progress_id], references: [id], onDelete: Cascade)
+
+    deleted Boolean @default(false)
 
     @@map("progress_image")
 }
