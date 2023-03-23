@@ -1,0 +1,31 @@
+{
+  "name": "@selab-2/groep-1-query-builder",
+  "version": "1.0.0",
+  "description": "Package to interact with the APi.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Warning: no tests specified. Continuing.\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SELab-2/Dr-Trottoir-1.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SELab-2/Dr-Trottoir-1/issues"
+  },
+  "homepage": "https://github.com/SELab-2/Dr-Trottoir-1#readme",
+  "author": "Groep 1",
+  "license": "ISC",
+  "dependencies": {
+    "@selab-2/groep-1-orm": "^1.0.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.6.0",
+    "prettier": "^2.8.6",
+    "typescript": "^5.0.2"
+  }
+}
