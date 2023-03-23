@@ -64,7 +64,7 @@ export class RoundRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        const result = prisma.round.delete({
+        const result = await prisma.round.delete({
             where: {
                 id: Parser.number(req.params["id"]),
             },

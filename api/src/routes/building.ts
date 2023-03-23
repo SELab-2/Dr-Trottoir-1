@@ -1,13 +1,20 @@
-import { prisma } from "../prisma";
+import {prisma} from "../prisma";
 import express from "express";
-import { CustomRequest, Routing, includeUser } from "./routing";
-import { Auth } from "../auth/auth";
-import { Parser } from "../parser";
+import {CustomRequest, includeUser, Routing} from "./routing";
+import {Auth} from "../auth/auth";
+import {Parser} from "../parser";
+import {APIError} from "../errors/api_error";
+import {APIErrorCode} from "../errors/api_error_code";
 
 export class BuildingRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
         const joins = Parser.stringArray(req.query.join, []);
+
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"])) {
+            deleted = undefined;
+        }
 
         const result = await prisma.building.findMany({
             take: Parser.number(req.query["take"], 1024),
@@ -16,6 +23,7 @@ export class BuildingRouting extends Routing {
                 name: req.query["name"],
                 ivago_id: req.query["ivago_id"],
                 syndicus_id: Parser.number(req.query["syndicus_id"]),
+                deleted: deleted,
             },
             include: {
                 address: joins?.includes("address"),
@@ -57,6 +65,10 @@ export class BuildingRouting extends Routing {
                 images: joins?.includes("images"),
             },
         });
+
+        if (result.deleted && ! req.user?.admin) {
+            throw new APIError(APIErrorCode.NOT_FOUND);
+        }
 
         return res.json(result);
     }

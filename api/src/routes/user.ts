@@ -3,11 +3,18 @@ import express from "express";
 import { CustomRequest, Routing } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
+import {APIError} from "../errors/api_error";
+import {APIErrorCode} from "../errors/api_error_code";
 
 export class UserRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
         const joins = Parser.stringArray(req.query.join, []);
+
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"])) {
+            deleted = undefined;
+        }
 
         const result = await prisma.user.findMany({
             take: Parser.number(req.query["take"], 1024),
@@ -16,6 +23,7 @@ export class UserRouting extends Routing {
                 student: Parser.bool(req.query["student"]),
                 super_student: Parser.bool(req.query["super_student"]),
                 admin: Parser.bool(req.query["admin"]),
+                deleted: deleted,
                 last_login: {
                     lte: Parser.date(req.query["login_before"]),
                     gte: Parser.date(req.query["login_after"]),
@@ -78,11 +86,16 @@ export class UserRouting extends Routing {
                 admin: true,
                 hash: false,
                 salt: false,
+                deleted: true,
                 address: true,
                 regions: joins?.includes("regions"),
                 schedule: joins?.includes("schedule"),
             },
         });
+
+        if (result.deleted && ! req.user?.admin) {
+            throw new APIError(APIErrorCode.NOT_FOUND);
+        }
 
         return res.status(200).json(result);
     }
