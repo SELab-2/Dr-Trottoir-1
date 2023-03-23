@@ -3,8 +3,8 @@ import { Auth } from "../auth/auth";
 import express from "express";
 import { Parser } from "../parser";
 import { prisma } from "../prisma";
-import {APIError} from "../errors/api_error";
-import {APIErrorCode} from "../errors/api_error_code";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
 
 export class ScheduleRouting extends Routing {
     @Auth.authorization({ superStudent: true })
@@ -74,7 +74,7 @@ export class ScheduleRouting extends Routing {
             },
         });
 
-        if (result.deleted && ! req.user?.admin) {
+        if (result.deleted && !req.user?.admin) {
             throw new APIError(APIErrorCode.NOT_FOUND);
         }
 

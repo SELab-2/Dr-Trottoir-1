@@ -1,10 +1,10 @@
-import {prisma} from "../prisma";
+import { prisma } from "../prisma";
 import express from "express";
-import {CustomRequest, includeUser, Routing} from "./routing";
-import {Auth} from "../auth/auth";
-import {Parser} from "../parser";
-import {APIError} from "../errors/api_error";
-import {APIErrorCode} from "../errors/api_error_code";
+import { CustomRequest, includeUser, Routing } from "./routing";
+import { Auth } from "../auth/auth";
+import { Parser } from "../parser";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
 
 export class BuildingRouting extends Routing {
     @Auth.authorization({ superStudent: true })
@@ -66,7 +66,7 @@ export class BuildingRouting extends Routing {
             },
         });
 
-        if (result.deleted && ! req.user?.admin) {
+        if (result.deleted && !req.user?.admin) {
             throw new APIError(APIErrorCode.NOT_FOUND);
         }
 
@@ -105,7 +105,7 @@ export class BuildingRouting extends Routing {
                     id: Parser.number(req.params["id"]),
                 },
             });
-        }else {
+        } else {
             result = await prisma.building.update({
                 data: {
                     deleted: true,

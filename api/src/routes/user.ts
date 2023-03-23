@@ -3,8 +3,8 @@ import express from "express";
 import { CustomRequest, Routing } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
-import {APIError} from "../errors/api_error";
-import {APIErrorCode} from "../errors/api_error_code";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
 
 export class UserRouting extends Routing {
     @Auth.authorization({ superStudent: true })
@@ -93,7 +93,7 @@ export class UserRouting extends Routing {
             },
         });
 
-        if (result.deleted && ! req.user?.admin) {
+        if (result.deleted && !req.user?.admin) {
             throw new APIError(APIErrorCode.NOT_FOUND);
         }
 
