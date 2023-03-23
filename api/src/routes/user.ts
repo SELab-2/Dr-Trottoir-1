@@ -129,6 +129,7 @@ export class UserRouting extends Routing {
             student: result.student,
             super_student: result.super_student,
             admin: result.admin,
+            deleted: result.deleted,
         };
 
         return res.status(200).json(resultWithoutPassword);
@@ -136,11 +137,25 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.user.delete({
-            where: {
-                id: Parser.number(req.params["id"]),
-            },
-        });
+        const hardDelete = req.body["hardDelete"];
+        let result;
+
+        if (req.user?.admin && hardDelete) {
+            result = await prisma.user.delete({
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+        } else {
+            result = await prisma.user.update({
+                data: {
+                    deleted: true,
+                },
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+        }
 
         const resultWithoutPassword = {
             id: result.id,
@@ -154,6 +169,7 @@ export class UserRouting extends Routing {
             student: result.student,
             super_student: result.super_student,
             admin: result.admin,
+            deleted: result.deleted,
         };
 
         return res.status(200).json(resultWithoutPassword);

@@ -84,11 +84,25 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.building.delete({
-            where: {
-                id: Parser.number(req.params["id"]),
-            },
-        });
+        const hardDelete = req.body["hardDelete"];
+        let result;
+
+        if (req.user?.admin && hardDelete) {
+            result = await prisma.building.delete({
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+        }else {
+            result = await prisma.building.update({
+                data: {
+                    deleted: true,
+                },
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+        }
 
         return res.status(200).json(result);
     }
