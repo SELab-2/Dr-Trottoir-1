@@ -14,7 +14,6 @@ import AccountSettings from "@/views/AccountSettings.vue";
 import RoundReport from "@/views/RoundReport.vue";
 import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
-import StudentFollowUp from "@/views/StudentFollowUp.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue";
 
 const routes = [
@@ -27,11 +26,6 @@ const routes = [
     name: "dashboard",
     component: MainLayout,
     children: [
-      {
-        path: "/studenten",
-        name: "Opvolging studenten",
-        component: StudentFollowUp,
-      },
       {
         path: "/planning",
         name: "Planningsoverzicht",
