@@ -18,7 +18,9 @@
         <v-col class="schedule-date" cols="3" />
         <v-col>
           <v-card class="schedule-action d-flex">
-            <p class="me-auto" style="font-weight: 500; font-size: 22px">REST</p>
+            <p class="me-auto" style="font-weight: 500; font-size: 22px">
+              REST
+            </p>
             <p>07u45</p>
           </v-card>
         </v-col>
@@ -31,7 +33,9 @@
         </v-col>
         <v-col>
           <v-card class="schedule-action d-flex">
-            <p class="me-auto" style="font-weight: 500; font-size: 22px">GLAS</p>
+            <p class="me-auto" style="font-weight: 500; font-size: 22px">
+              GLAS
+            </p>
             <p>08u10</p>
           </v-card>
         </v-col>
@@ -91,7 +95,7 @@
       </div>
     </div>
   </div>
-  <AddButton icon='mdi-plus' :items='actions'/>
+  <AddButton icon="mdi-plus" :items="actions" />
 </template>
 
 <script lang="ts" setup>
@@ -99,7 +103,7 @@ import { ref } from "vue";
 import BuildingData from "@/components/BuildingData.vue";
 import RoundedButton from "@/components/RoundedButton.vue";
 import ImageCard from "@/components/ImageCard.vue";
-import AddButton from '@/components/AddButton.vue'
+import AddButton from "@/components/AddButton.vue";
 
 // reactive state to show the drawer or not
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -142,25 +146,24 @@ const comments = ref<Array<{ title: String; comment: String }>>([
   },
 ]);
 
-function foto(){
+function foto() {
   console.log("foto");
 }
 
-function opmerking(){
+function opmerking() {
   console.log("opmerking");
 }
 
 const actions = [
   {
     title: "Foto toevoegen",
-    clicked: foto
+    clicked: foto,
   },
   {
     title: "Opmerking toevoegen",
-    clicked: opmerking
-  }
-]
-
+    clicked: opmerking,
+  },
+];
 </script>
 
 <style scoped lang="scss">
