@@ -91,6 +91,7 @@
       </div>
     </div>
   </div>
+  <AddButton icon='mdi-plus' :items='actions'/>
 </template>
 
 <script lang="ts" setup>
@@ -98,6 +99,7 @@ import { ref } from "vue";
 import BuildingData from "@/components/BuildingData.vue";
 import RoundedButton from "@/components/RoundedButton.vue";
 import ImageCard from "@/components/ImageCard.vue";
+import AddButton from '@/components/AddButton.vue'
 
 // reactive state to show the drawer or not
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -139,6 +141,25 @@ const comments = ref<Array<{ title: String; comment: String }>>([
     comment: "De deur in de berging is kapot",
   },
 ]);
+
+function foto(){
+  console.log("foto");
+}
+
+function opmerking(){
+  console.log("opmerking");
+}
+
+const actions = [
+  {
+    title: "Foto toevoegen",
+    clicked: foto
+  },
+  {
+    title: "Opmerking toevoegen",
+    clicked: opmerking
+  }
+]
 
 </script>
 
