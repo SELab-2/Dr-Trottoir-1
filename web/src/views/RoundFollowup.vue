@@ -1,37 +1,42 @@
 <template>
-  <div class="d-flex justify-end mr-3">
-    <v-btn
-      prepend-icon="mdi-plus"
-      color="primary"
-      to="/dashboard/rondes/nieuw"
-    >Ronde aanmaken</v-btn>
-  </div>
-  <LargeFilter
-    :search_by_labels="query_labels"
-    :sort_items="sort_items"
-    :filter_items="filter_options"
-    class="ma-3"
-    @onUpdate="(new_data: Filterdata) => filter_data = new_data"
-  />
-
   <!-- Simple vlist that uses the custom component RoundCard -->
-  <v-list class="mx-2">
-    <RoundCard
-      v-for="(round, i) in filtered_data()"
-      :key="i"
-      :round_name="round.name"
-      :round_start="round.start"
-      :round_end="round.end"
-      :round_started="round.started"
-      :student_name="round.student"
-      :building_index="round.current_building"
-      :total_buildings="round.buildings.length"
-      :round_comments="round.comments"
-      @click="redirect_to_detail()"
-      style="cursor: pointer"
-    ></RoundCard>
-    <v-spacer></v-spacer>
-  </v-list>
+  <v-row class="mt-1">
+    <!-- pump whitspace left -->
+    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%;"/>
+    <v-col cols="7" style="min-width: 400px;">
+      <LargeFilter
+        :search_by_labels="query_labels"
+        :sort_items="sort_items"
+        :filter_items="filter_options"
+        class="mx-1 mb-3"
+        @onUpdate="(new_data: Filterdata) => filter_data = new_data"
+      />
+      <RoundCard
+        v-for="(round, i) in filtered_data()"
+        :key="i"
+        :round_name="round.name"
+        :round_start="round.start"
+        :round_end="round.end"
+        :round_started="round.started"
+        :student_name="round.student"
+        :building_index="round.current_building"
+        :total_buildings="round.buildings.length"
+        :round_comments="round.comments"
+        @click="redirect_to_detail()"
+        style="cursor: pointer"
+      ></RoundCard>
+      <v-spacer></v-spacer>
+    </v-col>
+    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%;">
+        <v-btn
+          prepend-icon="mdi-plus"
+          color="primary"
+          to="/dashboard/rondes/nieuw"
+          class="mr-"
+        >Ronde aanmaken</v-btn>
+    </v-col>
+    
+  </v-row>
 </template>
 
 <script lang="ts" setup>
