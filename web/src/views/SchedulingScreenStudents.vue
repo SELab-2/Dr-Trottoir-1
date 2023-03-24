@@ -5,7 +5,14 @@
     :key="day.name"
     class="mx-4 mt-4"
     :title="day.name"
+    variant="flat"
   >
+    <template v-slot:append>
+      <v-chip label prepend-icon="mdi-calendar-month-outline" variant="text">
+        {{ day.rounds[0].deadline.getDate() }}
+        {{ formatter.format(day.rounds[0].deadline) }}
+      </v-chip>
+    </template>
     <!-- Round cards -->
     <router-link
       v-for="round in day.rounds"
@@ -61,30 +68,35 @@
     </router-link>
 
     <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
-    <v-snackbar v-model="snackbar" timeout="-1" elevation="24" color="white">
-      <v-card prepend-icon="mdi-exclamation" variant="flat">
-        <template v-slot:title> Start ronde </template>
-        <p class="mx-3">
-          Je staat op het punt een ronde te starten. Het huidige tijdstip zal
-          opgeslagen worden als start tijdstip. Ben je zeker dat je de ronde
-          wilt starten?
-        </p>
-        <div class="d-flex flex-row-reverse ma-3">
-          <router-link to="/rondes/detail">
-            <v-btn color="success"> Start ronde </v-btn>
-          </router-link>
+    <v-overlay v-model="snackbar">
+      <v-snackbar v-model="snackbar" timeout="-1" elevation="24" color="white">
+        <v-card prepend-icon="mdi-exclamation" variant="flat">
+          <template v-slot:title> Start ronde </template>
+          <p class="mx-3">
+            Je staat op het punt een ronde te starten. Het huidige tijdstip zal
+            opgeslagen worden als start tijdstip. Ben je zeker dat je de ronde
+            wilt starten?
+          </p>
+          <div class="d-flex flex-row-reverse ma-3">
+            <router-link to="/rondes/detail">
+              <v-btn color="success"> Start ronde </v-btn>
+            </router-link>
 
-          <v-btn @click="snackbar = false" color="error" class="mr-3">
-            Annuleer
-          </v-btn>
-        </div>
-      </v-card>
-    </v-snackbar>
+            <v-btn @click="snackbar = false" color="error" class="mr-3">
+              Annuleer
+            </v-btn>
+          </div>
+        </v-card>
+      </v-snackbar>
+    </v-overlay>
   </v-card>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
+
+// https://stackoverflow.com/questions/1643320/get-month-name-from-date
+const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
 
 const snackbar = ref(false);
 
@@ -98,19 +110,19 @@ const days = ref({
     rounds: [
       {
         name: "Grote Markt",
-        deadline: new Date(2023, 0o2, 0o6, 10, 30),
+        deadline: new Date(2023, 2, 6, 10, 30),
         buildings: 5,
         buildings_done: 5,
       },
       {
         name: "Vrijdagsmarkt",
-        deadline: new Date(2023, 0o2, 0o6, 12, 45),
+        deadline: new Date(2023, 2, 6, 12, 45),
         buildings: 5,
         buildings_done: 3,
       },
       {
         name: "Overpoort",
-        deadline: new Date(2023, 0o2, 0o6, 15, 30),
+        deadline: new Date(2023, 2, 6, 15, 30),
         buildings: 5,
         buildings_done: 0,
       },
@@ -121,7 +133,7 @@ const days = ref({
     rounds: [
       {
         name: "Korenmarkt",
-        deadline: new Date(2023, 0o2, 0o6, 10, 0),
+        deadline: new Date(2023, 2, 7, 10, 0),
         buildings: 5,
         buildings_done: 0,
       },
@@ -132,7 +144,7 @@ const days = ref({
     rounds: [
       {
         name: "Sterre",
-        deadline: new Date(2023, 0o2, 0o6, 15, 30),
+        deadline: new Date(2023, 2, 8, 15, 30),
         buildings: 5,
         buildings_done: 0,
       },
