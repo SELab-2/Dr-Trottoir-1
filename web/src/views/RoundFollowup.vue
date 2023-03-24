@@ -4,13 +4,7 @@
     :sort_items="sort_items"
     :filter_items="filter_options"
     class="ma-3"
-    @onSearch="(q: string) => query = q"
-    @searchLabel="(l: string) => label = l"
-    @filters="(f: string[]) => filters = f"
-    @sortBy="(s: string) => sort = s"
-    @startDate="(sd: Date) => start_date = sd"
-    @endDate="(ed: Date) => end_date = ed"
-    @sortAscending="(a: boolean) => sort_ascending = a"
+    @onUpdate="(new_data: Filterdata) => filter_data = new_data"
   />
 
   <!-- Simple vlist that uses the custom component RoundCard -->
@@ -39,6 +33,7 @@ import RoundCard from "@/components/RoundCard.vue";
 import LargeFilter from "@/components/LargeFilter.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import Filterdata from "@/components/models/Filterdata";
 
 const router = useRouter();
 
@@ -189,23 +184,24 @@ const mockrounds: Round[] = [
 ];
 
 // filter props to pass to largefilter component
-const query_labels = ['Ronde', 'Persoon'];
-const filter_options = ['Klaar', 'Bezig', 'Niet begonnen', 'Opmerkingen'];
-const sort_items= ['Voortgang', 'Gebouwen'];
-
+const query_labels = ["Ronde", "Persoon"];
+const filter_options = ["Klaar", "Bezig", "Niet begonnen", "Opmerkingen"];
+const sort_items = ["Voortgang", "Gebouwen"];
 
 // All the filter options
-const query = ref<string>('');
-const label = ref<string>(query_labels[0]);
-const filters = ref<string[]>([]);
-const sort = ref<string>(sort_items[0]);
-const start_date = ref<Date>(new Date());
-const end_date = ref<Date>(new Date());
-const sort_ascending = ref<boolean>(true);
+const filter_data = ref<Filterdata>({
+  query: "",
+  search_label: query_labels[0],
+  sort_by: sort_items[0],
+  sort_ascending: true,
+  filters: [],
+  start_day: new Date(),
+  end_day: new Date(),
+});
 
 function filter_query(round: Round): boolean {
   let search_by: string = "";
-  switch(label.value){
+  switch (filter_data.value.search_label) {
     case query_labels[0]:
       search_by = round.name.toLowerCase();
       break;
@@ -213,8 +209,10 @@ function filter_query(round: Round): boolean {
       search_by = round.student.toLowerCase();
       break;
   }
-  return search_by.includes(query.value.toLowerCase()) ||
-      query.value.length == 0
+  return (
+    search_by.includes(filter_data.value.query.toLowerCase()) ||
+    filter_data.value.query.length == 0
+  );
 }
 
 function filter_date(): boolean {
@@ -223,42 +221,43 @@ function filter_date(): boolean {
 }
 
 function filter_filters(round: Round): boolean {
-  if(filters.value.length == 0){
+  if (filter_data.value.filters.length == 0) {
     return true;
   }
   let result: boolean = false;
-  for(const option of filters.value){
-    switch(option){
-      case 'Klaar':
+  for (const option of filter_data.value.filters) {
+    switch (option) {
+      case "Klaar":
         result = round.current_building == round.buildings.length;
         break;
-      case 'Bezig':
-        result = 0 < round.current_building && 
+      case "Bezig":
+        result =
+          0 < round.current_building &&
           round.current_building < round.buildings.length;
         break;
-      case 'Niet begonnen':
+      case "Niet begonnen":
         result = round.current_building == 0;
         break;
-      case 'Opmerkingen':
+      case "Opmerkingen":
         result = round.comments;
         break;
     }
-    if(result){
+    if (result) {
       return result;
     }
   }
   return result;
 }
 
-function progress(done: number, total: number): number{
+function progress(done: number, total: number): number {
   return Math.round((done / total) * 100);
 }
 
 // The list of data after filtering
-function filtered_data() : Round[]  {
+function filtered_data(): Round[] {
   const result: Round[] = [];
   // filtering
-  mockrounds.forEach(elem =>{
+  mockrounds.forEach((elem) => {
     let can_add = true;
 
     // filter on query input
@@ -266,25 +265,24 @@ function filtered_data() : Round[]  {
     // apply filter options
     can_add = can_add && filter_filters(elem);
 
-    if(can_add){
+    if (can_add) {
       result.push(elem);
     }
   });
 
   // sort the results
-  result.sort((a,b) => {
-    if(sort.value == 'Gebouwen'){
-      return (a.buildings.length > b.buildings.length ? 1 : -1);
-    }else{
+  result.sort((a, b) => {
+    if (filter_data.value.sort_by == "Gebouwen") {
+      return a.buildings.length > b.buildings.length ? 1 : -1;
+    } else {
       const ap = progress(a.current_building, a.buildings.length);
       const bp = progress(b.current_building, b.buildings.length);
-      return (ap > bp ? 1 : -1);
+      return ap > bp ? 1 : -1;
     }
-  }
-  )
+  });
   // set sorting order
-  if(!sort_ascending.value){
-    result.reverse()
+  if (!filter_data.value.sort_ascending) {
+    result.reverse();
   }
   return result;
 }
