@@ -17,6 +17,7 @@ import session from "express-session";
 import { initializePassport } from "./passport";
 import dotenv from "dotenv";
 import { RegionRouting } from "./routes/region";
+import { GarbageRouting } from "./routes/garbage";
 
 const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
@@ -64,6 +65,7 @@ app.use("/user", new UserRouting().toRouter());
 app.use("/building", new BuildingRouting().toRouter());
 app.use("/schedule", new ScheduleRouting().toRouter());
 app.use("/region", new RegionRouting().toRouter());
+app.use("/garbage", new GarbageRouting().toRouter());
 app.use("/action", new ActionRouting().toRouter());
 app.use("/syndicus", new SyndicusRouting().toRouter());
 app.use("/round", new RoundRouting().toRouter());
@@ -77,6 +79,9 @@ if (process.env.DISABLE_AUTH === "true") {
 }
 
 // Actually start the server, we're done!
-app.listen(PORT_NUMBER, () => {
+const server = app.listen(PORT_NUMBER, () => {
     console.log(`API AVAILABLE AT: https://localhost:${PORT_NUMBER}`);
 });
+
+// export the server for testing
+export default server;

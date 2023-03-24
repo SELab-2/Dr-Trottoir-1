@@ -1,6 +1,6 @@
 import { prisma } from "../prisma";
 import express from "express";
-import { CustomRequest, Routing } from "./routing";
+import { CustomRequest, Routing, includeUser } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 
@@ -21,7 +21,7 @@ export class BuildingRouting extends Routing {
                 address: joins?.includes("address"),
                 syndicus: {
                     include: {
-                        user: joins?.includes("syndicus"),
+                        user: includeUser(joins?.includes("syndicus"), false),
                     },
                 },
                 manual: joins?.includes("manual"),
@@ -47,7 +47,7 @@ export class BuildingRouting extends Routing {
                 address: joins?.includes("address"),
                 syndicus: {
                     include: {
-                        user: joins?.includes("syndicus"),
+                        user: includeUser(joins?.includes("syndicus"), false),
                     },
                 },
                 manual: joins?.includes("manual"),

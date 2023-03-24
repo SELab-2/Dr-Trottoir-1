@@ -9,15 +9,24 @@ on:
             - 'api/**'
 
 jobs:
-    lint:
-        runs-on: [self-hosted]
-        env:
-          PRISMA_SKIP_POSTINSTALL_GENERATE: true
-          OUTPUT_DIRECTORY: ./api/prisma
+    lint_test:
+        runs-on: [ self-hosted ]
         defaults:
             run:
                 working-directory: ./api
         steps:
-            - uses: actions/checkout@v3
-            - name: "Check for linting and errors"
-              run: npm ci && npx prisma generate && npm run test
+            -   name: "Checkout"
+                uses: actions/checkout@v3
+            -   uses: actions/setup-node@v3
+                with:
+                    node-version: '16.x'
+                    registry-url: 'https://npm.pkg.github.com'
+                    scope: '@selab-2'
+            -   name: "Install dependencies"
+                run: npm ci
+                env:
+                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            -   name: "Check for linting and errors"
+                run: npm run lint
+                env:
+                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

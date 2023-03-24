@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@selab-2/groep-1-orm";
 import { APIError } from "./api_error";
 import { errorMessage } from "./api_error_code";
 import { errorMessagePrismaClient } from "./prisma_error";
