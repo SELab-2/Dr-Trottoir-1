@@ -36,6 +36,9 @@ ImgProxy is een microservice voor het aanbieden van afbeeldingen overheen het we
 Om gemakkelijk lokaal te kunnen ontwikkelen is `developer-compose.yml` voorzien. Deze bevat identieke diensten als wat op de server staat, maar is voorbereid om de diensten lokaal te draaien.
 Je hebt Docker met de Docker Compose plugin nodig om deze te kunnen uitvoeren.
 
+De services gebruiken omgevingsvariabelen opgeslagen in .env bestanden. De nodige variabelen zijn opgeslagen in `server/developer.env`.
+De script `generate_mock.sh` zal de reeds bestaande `.env` bestanden opslaan in `.env.bak` vooralleer ze worden overschreven.
+
 ```bash
 # start de diensten op
 docker compose --file=developer-compose.yml up -d
@@ -47,6 +50,5 @@ docker compose --file=developer-compose.yml up -d
 docker compose --file=developer-compose.yml down
 ```
 
-`./generate_mock.sh` hoef je slechts bij eerste keer diensten opstarten uit te voeren.
-
-In plaats van `sel2-1.ugent.be` browse je nu naar `localhost:3000` om je nieuwe features te bekijken.
+In plaats van `sel2-1.ugent.be` browse je nu naar `localhost:3000` voor de frontend.
+Backend is en blijft bereikbaar via `localhost:8080`
