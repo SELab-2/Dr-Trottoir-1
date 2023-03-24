@@ -1,12 +1,18 @@
 <template>
-  <v-btn :icon='icon' color='primary' class='addButton' :size='size' id="menu-activator"/>
-  <v-menu activator="#menu-activator" location='top'>
+  <v-btn
+    :icon="icon"
+    color="primary"
+    class="addButton"
+    :size="size"
+    id="menu-activator"
+  />
+  <v-menu activator="#menu-activator" location="top">
     <v-list>
       <v-list-item
         v-for="(item, index) in items"
         :key="index"
         :value="index"
-        @click='item.clicked'
+        @click="item.clicked"
       >
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
@@ -22,7 +28,7 @@ const props = defineProps({
     type: String,
     default: "x-large",
   },
-  items: Array
+  items: Array,
 });
 </script>
 
@@ -33,4 +39,3 @@ const props = defineProps({
   right: 20px;
 }
 </style>
-

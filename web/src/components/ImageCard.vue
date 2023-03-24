@@ -1,7 +1,7 @@
 <template>
   <img v-if="img" alt="imagecard" class="image" :src="img" />
   <v-card v-else class="image">
-    <v-card-item class='textcard'>
+    <v-card-item class="textcard">
       <div style="display: flex; justify-content: center">
         <v-icon v-if="titleIcon" color="#333333" :icon="titleIcon"></v-icon>
         <h3 v-if="title">{{ title }}</h3>
