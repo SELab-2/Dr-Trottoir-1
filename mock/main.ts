@@ -1,7 +1,10 @@
-import { createUser, createRegion, createUserRegion } from "./mock/user";
-import { createBuilding, createAction, createGarbage, createBuildingImages } from "./mock/building";
-import { createRound, createRoundBuilding } from "./mock/round";
-import { createSchedule, createProgress, createProgressImage } from "./mock/schedule";
+import { createUser, createRegion, createUserRegion } from "./src/user";
+import { createBuilding, createAction, createGarbage, createBuildingImages } from "./src/building";
+import { createRound, createRoundBuilding } from "./src/round";
+import { createSchedule, createProgress, createProgressImage } from "./src/schedule";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 async function main() {
     await createUser();
