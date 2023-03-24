@@ -2,8 +2,8 @@
   <!-- Simple vlist that uses the custom component RoundCard -->
   <v-row class="mt-1">
     <!-- pump whitspace left -->
-    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%;"/>
-    <v-col cols="7" style="min-width: 400px;">
+    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%" />
+    <v-col cols="7" style="min-width: 400px">
       <LargeFilter
         :search_by_labels="query_labels"
         :sort_items="sort_items"
@@ -27,15 +27,15 @@
       ></RoundCard>
       <v-spacer></v-spacer>
     </v-col>
-    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%;">
-        <v-btn
-          prepend-icon="mdi-plus"
-          color="primary"
-          to="/dashboard/rondes/nieuw"
-          class="mr-"
-        >Ronde aanmaken</v-btn>
+    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%">
+      <v-btn
+        prepend-icon="mdi-plus"
+        color="primary"
+        to="/dashboard/rondes/nieuw"
+        class="mr-"
+        >Ronde aanmaken</v-btn
+      >
     </v-col>
-    
   </v-row>
 </template>
 
