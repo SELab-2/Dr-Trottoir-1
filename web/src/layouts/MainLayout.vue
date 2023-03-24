@@ -5,6 +5,7 @@
         :temporary="!permanentDrawer"
         :permanent="!!permanentDrawer"
         v-model="drawer"
+        class='sidebar'
       >
         <v-list density="compact" nav>
           <v-list-item lines="two" @click="showAccount = !showAccount">
@@ -209,6 +210,7 @@ function onResize() {
   permanentDrawer.value = window.innerWidth > threasholdWidth;
 }
 window.addEventListener("resize", onResize);
+
 </script>
 
 <style lang="scss">
@@ -223,5 +225,10 @@ a {
 
 .flex {
   display: flex;
+}
+
+.sidebar{
+  position: fixed !important;
+  height: 100vh !important;
 }
 </style>
