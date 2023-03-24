@@ -28,13 +28,6 @@
       <v-spacer></v-spacer>
     </v-col>
     <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%">
-      <v-btn
-        prepend-icon="mdi-plus"
-        color="primary"
-        to="/dashboard/rondes/nieuw"
-        class="mr-"
-        >Ronde aanmaken</v-btn
-      >
     </v-col>
   </v-row>
 </template>
