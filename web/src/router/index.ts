@@ -8,7 +8,7 @@ import Users from "@/views/dashboard/Users.vue";
 import Buildings from "@/views/dashboard/Buildings.vue";
 import Routes from "@/views/dashboard/Routes.vue";
 import BuildingFollowup from "@/views/BuildingFollowup.vue";
-import RoundFollowup from "@/views/RoundFollowup.vue";
+import RoundFollowup from "@/views/Followup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 import RoundReport from "@/views/RoundReport.vue";
