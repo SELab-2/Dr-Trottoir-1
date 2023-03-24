@@ -8,13 +8,14 @@ import Users from "@/views/dashboard/Users.vue";
 import Buildings from "@/views/dashboard/Buildings.vue";
 import Routes from "@/views/dashboard/Routes.vue";
 import BuildingFollowup from "@/views/BuildingFollowup.vue";
-import RoundFollowup from "@/views/Followup.vue";
+import FollowUp from "@/views/Followup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 import RoundReport from "@/views/RoundReport.vue";
 import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue";
+import BuildingDetail from "@/views/BuildingDetail.vue";
 
 const routes = [
   {
@@ -69,9 +70,15 @@ const routes = [
         component: BuildingFollowup,
       },
       {
+        path: "/gebouwen/:id/:date",
+        name: "Gebouw detail",
+        component: BuildingDetail,
+        props: true,
+      },
+      {
         path: "/opvolging",
         name: "Opvolging",
-        component: RoundFollowup,
+        component: FollowUp,
       },
       {
         path: "/rondes/plannen",
