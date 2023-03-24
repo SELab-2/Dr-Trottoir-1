@@ -187,7 +187,7 @@ const filter_data = ref<Filterdata>({
   end_day: props.end_date,
 });
 
-function help(thing: any){
+function help(thing: any) {
   console.log(thing);
 }
 </script>
