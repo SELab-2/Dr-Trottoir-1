@@ -9,10 +9,7 @@
       :format="formatDate"
       @update:model-value="change"
     />
-    <div
-      v-if="get() === null"
-      class="centre text-center"
-    >
+    <div v-if="get() === null" class="centre text-center">
       <v-icon icon="mdi-alert-circle" size="x-large" />
       <h2>Geen gegevens voor dit gebouw op {{ formatDate(selectedDate) }}.</h2>
       <p>Selecteer een ander gebouw of kies een andere datum.</p>
@@ -21,10 +18,7 @@
       <div class="centre px-4 mb-4">
         <h2>Bezoek ({{ formatDate(selectedDate) }})</h2>
         <button @click="router.push('/account/2/false')">
-          <Avatar
-            :name="get().student"
-            size="40"
-          />
+          <Avatar :name="get().student" size="40" />
           {{ get().student }}
         </button>
         <div class="image-grid" style="margin-top: 10px">
@@ -40,9 +34,7 @@
             />
           </div>
         </div>
-        <h3 v-if="get().comments">
-          Opmerkingen
-        </h3>
+        <h3 v-if="get().comments">Opmerkingen</h3>
         <div class="image-grid" style="margin-top: 10px">
           <div
             v-for="comment in get().comments"
@@ -74,20 +66,23 @@ import router from "@/router";
 
 const props = defineProps({
   id: String,
-  date: String
+  date: String,
 });
 
-const selectedDate = ref<Date>(new Date(props.date))
+const selectedDate = ref<Date>(new Date(props.date));
 
 function get() {
-  if (formatDate(selectedDate.value) === mockbuilding.date){
+  if (formatDate(selectedDate.value) === mockbuilding.date) {
     return mockbuilding;
   }
   return null;
 }
 
 function change() {
-  router.push({name: 'Gebouw detail', params: { id: props.id, date: selectedDate.value}});
+  router.push({
+    name: "Gebouw detail",
+    params: { id: props.id, date: selectedDate.value },
+  });
 }
 
 const mockbuilding = {
@@ -101,7 +96,7 @@ const mockbuilding = {
       comment: "De deur in de berging is kapot",
     },
   ],
-}
+};
 
 const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
   {
