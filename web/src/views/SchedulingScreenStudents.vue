@@ -5,6 +5,7 @@
     :key="day.name"
     class="mx-4 mt-4"
     :title="day.name"
+    variant="flat"
   >
     <!-- Round cards -->
     <router-link
@@ -61,6 +62,7 @@
     </router-link>
 
     <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
+    <v-overlay v-model="snackbar">
     <v-snackbar v-model="snackbar" timeout="-1" elevation="24" color="white">
       <v-card prepend-icon="mdi-exclamation" variant="flat">
         <template v-slot:title> Start ronde </template>
@@ -80,6 +82,7 @@
         </div>
       </v-card>
     </v-snackbar>
+    </v-overlay>
   </v-card>
 </template>
 
