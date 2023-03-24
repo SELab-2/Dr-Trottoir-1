@@ -14,7 +14,7 @@
         <v-card
           class='pa-4 my-4'
           @click="
-            this.$router.push({
+            router.push({
               name: 'Gebouw detail',
               params: { id: 5, date: new Date() },
             })
@@ -32,6 +32,11 @@
 
 <script lang="ts" setup>
 import LargeFilter from "@/components/LargeFilter.vue";
+import Filterdata from "@/components/models/Filterdata";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
 const query_labels = ["Gebouw"];
 const filter_labels = ["Naam", "Naam + Datum"];
 const filter_options = ["Opmerkingen"];
