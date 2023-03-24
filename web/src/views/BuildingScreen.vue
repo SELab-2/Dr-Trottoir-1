@@ -7,16 +7,20 @@
           <h2>Woe</h2>
           <h1>15</h1>
         </v-col>
-        <v-col class="schedule-action">
-          <p style="font-weight: 500; font-size: 22px">GFT</p>
-          <p>07u30</p>
+        <v-col>
+          <v-card class="schedule-action d-flex">
+            <p class="me-auto" style="font-weight: 500; font-size: 22px">GFT</p>
+            <p>07u30</p>
+          </v-card>
         </v-col>
       </v-row>
       <v-row>
         <v-col class="schedule-date" cols="3" />
-        <v-col class="schedule-action">
-          <p style="font-weight: 500; font-size: 22px">REST</p>
-          <p>07u45</p>
+        <v-col>
+          <v-card class="schedule-action d-flex">
+            <p class="me-auto" style="font-weight: 500; font-size: 22px">REST</p>
+            <p>07u45</p>
+          </v-card>
         </v-col>
       </v-row>
       <v-row class="py-4"><v-divider /></v-row>
@@ -25,9 +29,11 @@
           <h2>Dond</h2>
           <h1>16</h1>
         </v-col>
-        <v-col class="schedule-action">
-          <p style="font-weight: 500; font-size: 22px">GLAS</p>
-          <p>08u10</p>
+        <v-col>
+          <v-card class="schedule-action d-flex">
+            <p class="me-auto" style="font-weight: 500; font-size: 22px">GLAS</p>
+            <p>08u10</p>
+          </v-card>
         </v-col>
       </v-row>
       <v-row class="py-4"><v-divider /></v-row>
@@ -36,9 +42,11 @@
           <h2>Vrij</h2>
           <h1>17</h1>
         </v-col>
-        <v-col class="schedule-action">
-          <p style="font-weight: 500; font-size: 22px">PMD</p>
-          <p>09u40</p>
+        <v-col>
+          <v-card class="schedule-action d-flex">
+            <p class="me-auto" style="font-weight: 500; font-size: 22px">PMD</p>
+            <p>09u40</p>
+          </v-card>
         </v-col>
       </v-row>
       <v-row class="py-4">
@@ -59,6 +67,22 @@
         >
           <ImageCard
             :img="String(image.url)"
+            btn-icon="mdi-pencil"
+            btn-text="Bewerken"
+          />
+        </div>
+        <ImageCard title="TOEVOEGEN" title-icon="mdi-plus" />
+      </div>
+      <h3>Opmerkingen</h3>
+      <div class="image-grid" style="margin-top: 10px">
+        <div
+          v-for="comment in comments"
+          :key="comment.title"
+          style="position: relative"
+        >
+          <ImageCard
+            :title="comment.title"
+            :text="comment.comment"
             btn-icon="mdi-pencil"
             btn-text="Bewerken"
           />
@@ -108,6 +132,14 @@ const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
     url: "https://unsplash.com/photos/sSRGytOhIkQ/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjc4ODMyNDEy&force=true&w=640",
   },
 ]);
+
+const comments = ref<Array<{ title: String; comment: String }>>([
+  {
+    title: "Kapotte deur",
+    comment: "De deur in de berging is kapot",
+  },
+]);
+
 </script>
 
 <style scoped lang="scss">
@@ -130,12 +162,6 @@ ul {
 .schedule-action {
   display: flex;
   padding: 20px;
-  justify-content: space-between;
-  border-radius: 5px;
-  border: 2px solid #f1f1f1;
-  background: #fafafa;
-  width: 90%;
-  margin: 4px;
 }
 
 .schedule-date {
