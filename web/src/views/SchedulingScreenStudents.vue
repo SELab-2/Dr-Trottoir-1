@@ -7,6 +7,14 @@
     :title="day.name"
     variant="flat"
   >
+    <template v-slot:append>
+      <v-chip label prepend-icon="mdi-calendar-month-outline" variant="text">
+        {{ day.rounds[0].deadline.getDate() }}
+        {{ formatter.format(day.rounds[0].deadline) }}
+        
+  
+      </v-chip>
+    </template>
     <!-- Round cards -->
     <router-link
       v-for="round in day.rounds"
@@ -89,6 +97,9 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
+// https://stackoverflow.com/questions/1643320/get-month-name-from-date
+const formatter = new Intl.DateTimeFormat('nl', { month: 'long' });
+
 const snackbar = ref(false);
 
 const calculateProgress = (done: number, toDo: number) => {
@@ -101,19 +112,19 @@ const days = ref({
     rounds: [
       {
         name: "Grote Markt",
-        deadline: new Date(2023, 0o2, 0o6, 10, 30),
+        deadline: new Date(2023, 2, 6, 10, 30),
         buildings: 5,
         buildings_done: 5,
       },
       {
         name: "Vrijdagsmarkt",
-        deadline: new Date(2023, 0o2, 0o6, 12, 45),
+        deadline: new Date(2023, 2, 6, 12, 45),
         buildings: 5,
         buildings_done: 3,
       },
       {
         name: "Overpoort",
-        deadline: new Date(2023, 0o2, 0o6, 15, 30),
+        deadline: new Date(2023, 2, 6, 15, 30),
         buildings: 5,
         buildings_done: 0,
       },
@@ -124,7 +135,7 @@ const days = ref({
     rounds: [
       {
         name: "Korenmarkt",
-        deadline: new Date(2023, 0o2, 0o6, 10, 0),
+        deadline: new Date(2023, 2, 7, 10, 0),
         buildings: 5,
         buildings_done: 0,
       },
@@ -135,7 +146,7 @@ const days = ref({
     rounds: [
       {
         name: "Sterre",
-        deadline: new Date(2023, 0o2, 0o6, 15, 30),
+        deadline: new Date(2023, 2, 8, 15, 30),
         buildings: 5,
         buildings_done: 0,
       },
