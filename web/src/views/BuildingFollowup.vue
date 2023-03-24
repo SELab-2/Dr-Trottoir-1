@@ -11,15 +11,17 @@
         @onUpdate="(new_data: Filterdata) => filter_data = new_data"
       />
       <div v-for="(building, id) in buildings" :key="id">
-        <v-btn
+        <v-card
+          class='pa-4 my-4'
           @click="
             this.$router.push({
               name: 'Gebouw detail',
               params: { id: 5, date: new Date() },
             })
           "
-          >{{ building }}</v-btn
         >
+          {{ building }}
+        </v-card>
       </div>
       <v-spacer></v-spacer>
     </v-col>
