@@ -80,10 +80,10 @@
               />
             </router-link>
 
-            <router-link to="/rondes">
+            <router-link to="/opvolging">
               <v-list-item
                 prepend-icon="mdi-transit-detour"
-                title="Rondes"
+                title="Opvolging"
                 value="rondes"
               />
             </router-link>

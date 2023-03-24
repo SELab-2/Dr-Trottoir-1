@@ -75,8 +75,8 @@ const routes = [
         component: BuildingFollowup,
       },
       {
-        path: "/rondes",
-        name: "Opvolgen van rondes",
+        path: "/opvolging",
+        name: "Opvolging",
         component: RoundFollowup,
       },
       {
