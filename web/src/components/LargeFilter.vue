@@ -7,8 +7,11 @@
     <template v-slot:title v-if="search_by_labels.length != 0">
       <v-text-field
         :label="search_placeholder()"
-        v-model="search_query"
-        @update:model-value="$emit('onSearch', search_query === null ? '' : search_query)"
+        v-model="filter_data.query"
+        @update:model-value="
+          filter_data.query === null ? '' : filter_data.query;
+          $emit('onUpdate', filter_data);
+        "
         variant="underlined"
         clearable
       />
@@ -32,8 +35,11 @@
               label="Eerste dag"
               type="date"
               variant="solo"
-              v-model="start_day"
-              @update:model-value="$emit('startDate', new Date(start_day))"
+              v-model="s_day"
+              @update:model-value="
+                filter_data.start_day = new Date(s_day);
+                $emit('onUpdate', filter_data);
+              "
             />
           </v-col>
           <v-col>
@@ -41,8 +47,11 @@
               label="Laatste dag"
               type="date"
               variant="solo"
-              v-model="end_day"
-              @update:model-value="$emit('endDate', new Date(end_day))"
+              v-model="e_day"
+              @update:model-value="
+                filter_data.end_day = new Date(e_day);
+                $emit('onUpdate', filter_data);
+              "
             />
           </v-col>
           <v-col>
@@ -50,8 +59,8 @@
               variant="solo"
               label="Zoekcategorie"
               :items="search_by_labels"
-              v-model="search_label"
-              @update:model-value="$emit('searchLabel', search_label)"
+              v-model="filter_data.search_label"
+              @update:model-value="$emit('onUpdate', filter_data)"
             />
           </v-col>
         </v-row>
@@ -68,19 +77,19 @@
               :key="item"
               :label="item"
               :value="item"
-              v-model="filters"
+              v-model="filter_data.filters"
               color="primary"
               density="compact"
               hide-details
-              @update:model-value="$emit('filters', $event)"
+              @update:model-value="$emit('onUpdate', filter_data)"
             />
           </v-col>
           <!-- Search order column -->
           <v-col v-if="sort_items.length != 0">
             <v-radio-group
-              v-model="sort_by"
+              v-model="filter_data.sort_by"
               color="primary"
-              @update:model-value="$emit('sortBy', sort_by)"
+              @update:model-value="$emit('onUpdate', filter_data)"
             >
               <v-label class="mb-2">
                 <v-icon icon="mdi-sort" class="mr-2" />
@@ -90,8 +99,8 @@
                 color="primary"
                 variant="tonal"
                 density="compact"
-                v-model="sort_ascending"
-                @update:model-value="$emit('sortAscending', sort_ascending)"
+                v-model="filter_data.sort_ascending"
+                @update:model-value="$emit('onUpdate', filter_data)"
                 mandatory
               >
                 <v-btn :value="true" prepend-icon="mdi-arrow-up-thin">
@@ -117,40 +126,37 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
+import Filterdata from "@/components/models/Filterdata";
 
+// The filter data is emitted with the 'onUpdate' tag
 const props = defineProps({
   // indicates what the search bar can function for
   // the first element will be the default search option
   // []: no search bar
   // 1 elem: search bar, no selection to search by other values
   // more elems: search bar, selection box to select the value to search by (name, place, etc)
-  // the search querry is emitted with 'onSearch'
-  // the updated label is emitted with 'searchLabel'
   search_by_labels: { type: Array<string>, default: [] },
 
   // All the filter options
   filter_items: { type: Array<string>, default: [] },
 
   // The inital selected filters
-  // The list of selected filters is emitted with 'filter'
   selected_filters: { type: Array<string>, default: [] },
 
   // All the search options
   // The first option will be the default
-  // The updated option is emitted with 'sortBy'
   sort_items: { type: Array<string>, default: [] },
 
   // The start and end date, current time as default
   // Option to show it or not
-  // The updated dates will be emitted with 'startDate' and 'endDate'
   start_date: {
-    type: String,
-    default: new Date().toISOString().substring(0, 10),
+    type: Date,
+    default: new Date(),
   },
   enable_start_date: { type: Boolean, default: true },
   end_date: {
-    type: String,
-    default: new Date().toISOString().substring(0, 10),
+    type: Date,
+    default: new Date(),
   },
   enable_end_date: { type: Boolean, default: true },
 });
@@ -158,34 +164,27 @@ const props = defineProps({
 // State to show or don't show the extra filter options
 const dropdown = ref<boolean>(false);
 
-// The search querry in the main search bar
-// This is emitted with 'onSearch'
-const search_query = ref<string>("");
-
-// The selcted value to seach by
-// This is emitted with 'searchLabel'
-const search_label = ref<string>(props.search_by_labels[0]);
-
 const search_placeholder = () => {
-  return "Zoek per " + search_label.value.toLowerCase();
+  return "Zoek per " + filter_data.value.search_label.toLowerCase();
 };
 
-// The currently selected sort option
-// This is emitted with 'sortBy'
-const sort_by = ref<string>(props.sort_items[0]);
+const s_day = ref<string>(props.start_date.toISOString().substring(0, 10));
+const e_day = ref<string>(props.end_date.toISOString().substring(0, 10));
 
-// The currently selected filters
-// This is emitted with 'filters'
-const filters = ref<string[]>(props.selected_filters);
-
-// The start and end date
-// These are emitted with 'startDate' and 'endDate'
-const start_day = ref<string>(props.start_date);
-const end_day = ref<string>(props.end_date);
-
-const sort_ascending = ref<boolean>(true);
-
-function help(thing: any){
-  console.log(thing);
-}
+// The filter data is emitted with the 'onUpdate' tag
+const filter_data = ref<Filterdata>({
+  // The search querry in the main search bar
+  query: "",
+  // The selcted value to seach by
+  search_label: props.search_by_labels[0],
+  // The currently selected sort option
+  sort_by: props.sort_items[0],
+  // State if we sort ascending or descending
+  sort_ascending: true,
+  // The currently selected filters
+  filters: props.selected_filters,
+  // The start and end date
+  start_day: props.start_date,
+  end_day: props.end_date,
+});
 </script>
