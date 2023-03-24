@@ -3,9 +3,9 @@
   <v-card class="mb-3 mx-1 pb-2">
     <v-progress-linear
       absolute
-      :model-value="progress"
+      :model-value="progress()"
       :color="
-        progress === 0 ? 'error' : progress === 100 ? 'success' : 'warning'
+        progress() === 0 ? 'error' : progress() === 100 ? 'success' : 'warning'
       "
     />
     <!-- Set round name as title -->
@@ -27,22 +27,26 @@
       <v-chip
         label
         :color="
-          progress === 0 ? 'error' : progress === 100 ? 'success' : 'warning'
+          progress() === 0
+            ? 'error'
+            : progress() === 100
+            ? 'success'
+            : 'warning'
         "
       >
         <v-icon
           :icon="
-            progress === 0
+            progress() === 0
               ? 'mdi-close'
-              : progress === 100
+              : progress() === 100
               ? 'mdi-check'
               : 'mdi-progress-clock'
           "
         ></v-icon>
         {{
-          progress === 0
+          progress() === 0
             ? "Niet begonnen"
-            : progress === 100
+            : progress() === 100
             ? "Klaar"
             : "Bezig " + building_index + "/" + total_buildings
         }}
@@ -62,7 +66,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
 import Avatar from "@/components/Avatar.vue";
 
 // TODO: maybe too much props to give to a component, could be changed to an object in the future
@@ -79,7 +82,7 @@ const props = defineProps({
 });
 
 // Value which calculates the percentage that will be shown in the progressbar
-const progress = ref(
-  Math.round((props.building_index / props.total_buildings) * 100),
-);
+function progress() {
+  return Math.round((props.building_index / props.total_buildings) * 100);
+}
 </script>

@@ -1,4 +1,11 @@
 <template>
+  <div class="d-flex justify-end mr-3">
+    <v-btn
+      prepend-icon="mdi-plus"
+      color="primary"
+      to="/dashboard/rondes/nieuw"
+    >Ronde aanmaken</v-btn>
+  </div>
   <LargeFilter
     :search_by_labels="query_labels"
     :sort_items="sort_items"
@@ -264,6 +271,8 @@ function filtered_data(): Round[] {
     can_add = can_add && filter_query(elem);
     // apply filter options
     can_add = can_add && filter_filters(elem);
+    // apply the date filtering
+    can_add = can_add && filter_date();
 
     if (can_add) {
       result.push(elem);

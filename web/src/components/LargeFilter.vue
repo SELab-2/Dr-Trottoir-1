@@ -9,11 +9,10 @@
         :label="search_placeholder()"
         v-model="filter_data.query"
         @update:model-value="
-          filter_data.query === null ? '' : filter_data.query;
+          help(filter_data.query);
           $emit('onUpdate', filter_data);
         "
         variant="underlined"
-        clearable
       />
     </template>
     <template v-slot:append>
@@ -187,4 +186,8 @@ const filter_data = ref<Filterdata>({
   start_day: props.start_date,
   end_day: props.end_date,
 });
+
+function help(thing: any){
+  console.log(thing);
+}
 </script>
