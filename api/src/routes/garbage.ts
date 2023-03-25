@@ -7,7 +7,6 @@ import { Auth } from "../auth/auth";
 export class GarbageRouting extends Routing {
     @Auth.authorization({ student: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
         const result = await prisma.garbage.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -34,7 +33,11 @@ export class GarbageRouting extends Routing {
             },
             include: {
                 action: true,
-                building: true,
+                building: {
+                    include: {
+                        address: true,
+                    },
+                },
             },
         });
 
@@ -43,14 +46,17 @@ export class GarbageRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
         const result = await prisma.garbage.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
             include: {
                 action: true,
-                building: true,
+                building: {
+                    include: {
+                        address: true,
+                    },
+                },
             },
         });
 

@@ -7,8 +7,6 @@ import { Parser } from "../parser";
 export class ActionRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.action.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -17,9 +15,6 @@ export class ActionRouting extends Routing {
                     contains: Parser.string(req.query["description"], ""),
                 },
             },
-            include: {
-                garbage: joins?.includes("garbage"),
-            },
         });
 
         return res.status(200).json(result);
@@ -27,14 +22,9 @@ export class ActionRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.action.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
-            },
-            include: {
-                garbage: joins?.includes("garbage"),
             },
         });
 
