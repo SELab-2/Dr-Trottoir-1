@@ -9,8 +9,6 @@ import { APIErrorCode } from "../errors/api_error_code";
 export class UserRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         let deleted: boolean | undefined = false;
         if (req.user?.admin && Parser.bool(req.query["deleted"])) {
             deleted = undefined;
@@ -53,11 +51,15 @@ export class UserRouting extends Routing {
                 student: true,
                 super_student: true,
                 admin: true,
+                deleted: true,
                 hash: false,
                 salt: false,
                 address: true,
-                regions: joins?.includes("regions"),
-                schedule: joins?.includes("schedule"),
+                regions: {
+                    include: {
+                        region: true,
+                    },
+                },
             },
         });
 
@@ -66,8 +68,6 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.user.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
@@ -88,8 +88,11 @@ export class UserRouting extends Routing {
                 salt: false,
                 deleted: true,
                 address: true,
-                regions: joins?.includes("regions"),
-                schedule: joins?.includes("schedule"),
+                regions: {
+                    include: {
+                        region: true,
+                    },
+                },
             },
         });
 
