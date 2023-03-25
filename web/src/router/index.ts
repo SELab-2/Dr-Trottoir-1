@@ -8,13 +8,12 @@ import Users from "@/views/dashboard/Users.vue";
 import Buildings from "@/views/dashboard/Buildings.vue";
 import Routes from "@/views/dashboard/Routes.vue";
 import BuildingFollowup from "@/views/BuildingFollowup.vue";
-import RoundFollowup from "@/views/RoundFollowup.vue";
+import RoundFollowup from "@/views/Followup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 import RoundReport from "@/views/RoundReport.vue";
 import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
-import StudentFollowUp from "@/views/StudentFollowUp.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue";
 
 const routes = [
@@ -27,11 +26,6 @@ const routes = [
     name: "dashboard",
     component: MainLayout,
     children: [
-      {
-        path: "/studenten",
-        name: "Opvolging studenten",
-        component: StudentFollowUp,
-      },
       {
         path: "/planning",
         name: "Planningsoverzicht",
@@ -75,8 +69,8 @@ const routes = [
         component: BuildingFollowup,
       },
       {
-        path: "/rondes",
-        name: "Opvolgen van rondes",
+        path: "/opvolging",
+        name: "Opvolging",
         component: RoundFollowup,
       },
       {
