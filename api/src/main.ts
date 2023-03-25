@@ -18,6 +18,7 @@ import { initializePassport } from "./passport";
 import dotenv from "dotenv";
 import { RegionRouting } from "./routes/region";
 import { GarbageRouting } from "./routes/garbage";
+import { UserRegionRouting } from "./routes/user_region";
 
 const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
@@ -69,6 +70,7 @@ app.use("/garbage", new GarbageRouting().toRouter());
 app.use("/action", new ActionRouting().toRouter());
 app.use("/syndicus", new SyndicusRouting().toRouter());
 app.use("/round", new RoundRouting().toRouter());
+app.use("/user_region", new UserRegionRouting().toRouter());
 
 // Finally, an error handler
 app.use(ErrorHandler.handle);

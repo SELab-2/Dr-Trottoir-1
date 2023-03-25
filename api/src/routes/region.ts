@@ -54,20 +54,8 @@ export class RegionRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        let users;
-        if (req.body["users"]) {
-            users = {
-                create: await getUsersForCreate(req),
-            };
-        } else {
-            users = {};
-        }
-
         const result = await prisma.region.create({
-            data: {
-                name: req.body["name"],
-                users: users,
-            },
+            data: req.body,
         });
 
         return res.status(201).json(result);
@@ -75,20 +63,9 @@ export class RegionRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        let usersObject;
-        if (req.body["users"]) {
-            usersObject = {
-                update: await getUsersForCreate(req),
-            };
-        } else {
-            // don't delete already present users
-            usersObject = {};
-        }
-
         const result = await prisma.region.update({
             data: {
                 name: req.body["name"],
-                users: usersObject,
             },
             where: {
                 id: Parser.number(req.params["id"]),
@@ -118,15 +95,3 @@ export class RegionRouting extends Routing {
         return res.status(200).json(result);
     }
 }
-
-const getUsersForCreate = async (req: CustomRequest) => {
-    return req.body["users"].map((id: string) => {
-        return {
-            user: {
-                connect: {
-                    id: id,
-                },
-            },
-        };
-    });
-};
