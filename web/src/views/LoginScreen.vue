@@ -34,7 +34,9 @@
           </span>
         </p>
         <!-- Login button -->
-        <v-btn prepend-icon="mdi-login" color="success" to="/planning">Login</v-btn>
+        <v-btn prepend-icon="mdi-login" color="success" to="/planning"
+          >Login</v-btn
+        >
       </div>
     </div>
   </div>
