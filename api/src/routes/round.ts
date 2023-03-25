@@ -7,8 +7,6 @@ import { Parser } from "../parser";
 export class RoundRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.round.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -16,8 +14,15 @@ export class RoundRouting extends Routing {
                 name: req.query["name"],
             },
             include: {
-                buildings: joins?.includes("buildings"),
-                schedule: joins?.includes("schedule"),
+                buildings: {
+                    include: {
+                        building: {
+                            include: {
+                                address: true,
+                            },
+                        },
+                    },
+                },
             },
         });
 
@@ -26,15 +31,20 @@ export class RoundRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.round.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
             include: {
-                buildings: joins?.includes("buildings"),
-                schedule: joins?.includes("schedule"),
+                buildings: {
+                    include: {
+                        building: {
+                            include: {
+                                address: true,
+                            },
+                        },
+                    },
+                },
             },
         });
 
