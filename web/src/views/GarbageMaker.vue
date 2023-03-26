@@ -65,7 +65,9 @@
             class="d-flex"
           >
             <v-spacer></v-spacer>
-            <v-btn @click="addItem" prepend-icon="mdi-plus" color="primary">Toevoegen</v-btn>
+            <v-btn @click="addItem" prepend-icon="mdi-plus" color="primary"
+              >Toevoegen</v-btn
+            >
           </v-card-actions>
         </div>
       </v-expand-transition>
@@ -118,13 +120,7 @@ import { reactive, computed, ref } from "vue";
 
 const show = ref(false);
 
-const buildings = [
-  "Gebouw A",
-  "Gebouw B",
-  "Gebouw C",
-  "Gebouw D",
-  "Gebouw E",
-];
+const buildings = ["Gebouw A", "Gebouw B", "Gebouw C", "Gebouw D", "Gebouw E"];
 const days = [
   "Maandag",
   "Dinsdag",
