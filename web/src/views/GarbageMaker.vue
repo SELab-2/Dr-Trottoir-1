@@ -1,23 +1,25 @@
 <template>
-    <div>
-        <v-select v-model="selectedBuilding" :items="buildings" label="Select Building"></v-select>
+    <div class="mx-4">
         <v-row>
             <v-col>
-                <v-select v-model="selectedWeek" :items="weeks" label="Select Week"></v-select>
+                <v-select variant='solo' v-model="selectedBuilding" :items="buildings" label="Select Building"></v-select>
             </v-col>
             <v-col>
-                <v-select v-model="selectedDay" :items="days" label="Select Day"></v-select>
+                <v-select variant='solo' v-model="selectedWeek" :items="weeks" label="Select Week"></v-select>
             </v-col>
         </v-row>
         <v-row>
             <v-col>
-                <v-select v-model="selectedGarbage" :items="garbageTypes" label="Select Garbage"></v-select>    
+                <v-select variant='solo' v-model="selectedDay" :items="days" label="Select Day"></v-select>
             </v-col>
             <v-col>
-                <v-select v-model="selectedAction" :items="actions" label="Select Action"></v-select>
+                <v-select variant='solo' v-model="selectedGarbage" :items="garbageTypes" label="Select Garbage"></v-select>    
+            </v-col>
+            <v-col>
+                <v-select variant='solo' v-model="selectedAction" :items="actions" label="Select Action"></v-select>
             </v-col>
         </v-row>
-        <v-table>
+        <v-table v-if="(selectedBuilding && selectedWeek && buildingItems.length > 0)">
             <thead>
                 <tr>
                     <th class="text-left">
@@ -49,7 +51,10 @@
             </tbody>
             
         </v-table>
-        <v-btn v-if="buildingItems.length == 0" @click="addItem">Add</v-btn>
+        <div class="d-flex flex-row-reverse">
+            <v-btn v-if="(buildingItems.length == 0 && selectedBuilding && selectedDay && selectedWeek && selectedAction) " @click="addItem">Toevoegen</v-btn>
+        </div>
+        
         <!-- && selectedBuilding.value&& selectedDay.value && selectedGarbage.value && selectedAction.value -->
       <!--
       <v-card v-if="selectedBuilding || selectedGarbage">
@@ -69,11 +74,11 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 const weeks = ['Odd', 'Even'];
 const garbageTypes = ['Garbage Type 1', 'Garbage Type 2', 'Garbage Type 3'];
 const actions = ['Action 1', 'Action 2', 'Action 3'];
-const selectedBuilding = ref("");
-const selectedDay = ref("");
-const selectedWeek=  ref("");
-const selectedGarbage = ref("");
-const selectedAction = ref("");
+const selectedBuilding = ref('');
+const selectedDay = ref('');
+const selectedWeek=  ref('');
+const selectedGarbage = ref('');
+const selectedAction = ref('');
 const buildingData: {building:string; garbage:String; day:String; week:String; action:String}[] = reactive([
     { building: 'Building A', garbage: 'Garbage Type 1', day: 'Monday', week: 'Odd', action: 'Action 1' },
     { building: 'Building B', garbage: 'Garbage Type 2', day: 'Tuesday', week: 'Even', action: 'Action 2' },
@@ -83,10 +88,10 @@ const buildingData: {building:string; garbage:String; day:String; week:String; a
 ]);
 
 const buildingItems = computed(() => {
-  if (selectedBuilding.value != "") {
-    if (selectedGarbage.value != "") {
-      if (selectedDay.value != "") {
-        if (selectedWeek.value != "") {
+  if (selectedBuilding.value) {
+    if (selectedGarbage.value) {
+      if (selectedDay.value ) {
+        if (selectedWeek.value) {
           return buildingData.filter(item => item.building === selectedBuilding.value && item.garbage === selectedGarbage.value && item.day === selectedDay.value && item.week === selectedWeek.value)
         } else {
           return buildingData.filter(item => item.building === selectedBuilding.value && item.garbage === selectedGarbage.value && item.day === selectedDay.value)
@@ -121,11 +126,9 @@ const addItem = () => {
       garbage: selectedGarbage.value,
       action: selectedAction.value,
     })
-    selectedBuilding.vlaue = ""
-    selectedDay.value = ""
-    selectedWeek.value = ""
-    selectedGarbage.value = ""
-    selectedAction.value = ""
+    selectedDay.value = ''
+    selectedGarbage.value = ''
+    selectedAction.value = ''
   }
 }
 </script>
