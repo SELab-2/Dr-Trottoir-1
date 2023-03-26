@@ -1,18 +1,48 @@
 <template>
     <div>
         <v-select v-model="selectedBuilding" :items="buildings" label="Select Building"></v-select>
-        <v-select v-model="selectedWeek" :items="weeks" label="Select Week"></v-select>
-        <v-select v-model="selectedDay" :items="days" label="Select Day"></v-select>
-        <v-select v-model="selectedGarbage" :items="garbageTypes" label="Select Garbage"></v-select>
-        <v-select v-model="selectedAction" :items="actions" label="Select Action"></v-select>
-
+        <v-row>
+            <v-col>
+                <v-select v-model="selectedWeek" :items="weeks" label="Select Week"></v-select>
+            </v-col>
+            <v-col>
+                <v-select v-model="selectedDay" :items="days" label="Select Day"></v-select>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <v-select v-model="selectedGarbage" :items="garbageTypes" label="Select Garbage"></v-select>    
+            </v-col>
+            <v-col>
+                <v-select v-model="selectedAction" :items="actions" label="Select Action"></v-select>
+            </v-col>
+        </v-row>
         <v-table>
+            <thead>
+                <tr>
+                    <th class="text-left">
+                    Gebouw
+                    </th>
+                    <th class="text-left">
+                    Vuilnis
+                    </th>
+                    <th class="text-left">
+                    Week
+                    </th>
+                    <th class="text-left">
+                    Dag
+                    </th>
+                    <th class="text-left">
+                    Actie
+                    </th>
+                </tr>
+            </thead>
             <tbody>
                 <tr v-for="item in buildingItems" :key="item.building">
                     <td>{{ item.building }}</td>
                     <td>{{ item.garbage }}</td>
-                    <td>{{ item.day }}</td>
                     <td>{{ item.week }}</td>
+                    <td>{{ item.day }}</td>
                     <td>{{ item.action }}</td>
                 </tr>
 
@@ -75,11 +105,9 @@ const buildingItems = computed(() => {
     } else if (selectedWeek.value) {
       return buildingData.filter(item => item.building === selectedBuilding.value && item.week === selectedWeek.value)
     } else {
-        console.log("building")
       return buildingData.filter(item => item.building === selectedBuilding.value)
     }
   } else {
-    console.log("all");
     return buildingData;
   }
 })
