@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { Prisma } from "@selab-2/groep-1-orm";
 import { APIError } from "./api_error";
-import { errorMessage } from "./api_error_code";
+import { APIErrorCode, errorMessage } from "./api_error_code";
 import { errorMessagePrismaClient } from "./prisma_error";
+import PrismaClientValidationError = Prisma.PrismaClientValidationError;
 
 /**
  * The ErrorHandler class contains a static method which will handle any thrown
@@ -13,12 +14,19 @@ import { errorMessagePrismaClient } from "./prisma_error";
  */
 export class ErrorHandler {
     static handle(err: Error, req: Request, res: Response, next: NextFunction) {
+        console.log(err);
         // If a PrismaORM error occurs, we send a more detailed message.
         if (err instanceof Prisma.PrismaClientKnownRequestError) {
             const { code, detail } = errorMessagePrismaClient(err);
             return res.status(code.valueOf()).json({
                 message: errorMessage(code),
                 detail: detail,
+            });
+        }
+
+        if (err instanceof Prisma.PrismaClientValidationError) {
+            return res.status(APIErrorCode.BAD_REQUEST).json({
+                message: "Bad request: Are your sort and order fields correct?",
             });
         }
 
