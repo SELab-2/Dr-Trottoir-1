@@ -1,7 +1,7 @@
 <template>
   <div class="mx-4">
-    <v-card>
-      <v-row class="mx-4">
+    <v-card variant="flat">
+      <v-row>
         <v-col>
           <v-select
             variant="solo"
@@ -28,7 +28,7 @@
       </v-row>
       <v-expand-transition>
         <div v-show="show">
-          <v-row class="mx-4">
+          <v-row>
             <v-col>
               <v-select
                 variant="solo"
@@ -65,7 +65,7 @@
             class="d-flex"
           >
             <v-spacer></v-spacer>
-            <v-btn @click="addItem" prepend-icon="mdi-send" color="primary">Toevoegen</v-btn>
+            <v-btn @click="addItem" prepend-icon="mdi-plus" color="primary">Toevoegen</v-btn>
           </v-card-actions>
         </div>
       </v-expand-transition>
