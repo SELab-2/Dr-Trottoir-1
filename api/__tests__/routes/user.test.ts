@@ -1,6 +1,8 @@
 import app from "../../src/main";
 // @ts-ignore
 import request from "supertest";
+// @ts-ignore
+import supertest from "supertest";
 
 // De gebruiker die voor het uitvoeren van de testen toegevoegd en verwijderd zal worden aan de databank.
 const userToCreate = {
@@ -57,31 +59,44 @@ const user = {
     id: undefined,
 };
 
+// schakel authenticatie in, ongeacht wat de runner in zijn .env heeft
+process.env["DISABLE_AUTH"] = "false";
+
+async function getSessionAndCookies(): Promise<
+    [supertest.SuperTest<any>, string]
+> {
+    const session = request(app);
+    const resultLogin = await session
+        .post("/auth/login")
+        .send({ username: "jens.pots@ugent.be", password: "password" });
+    expect(resultLogin.status).toBe(302);
+    expect(resultLogin.headers).toHaveProperty("set-cookie");
+
+    // Deze constante zorgt ervoor dat de ingelogde gebruiker behouden blijft en dus autorisatie heeft.
+    const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
+
+    // Nieuwe user toevoegen die gebruikt wordt bij de testen
+    const resultAdd = await session
+        .post("/user")
+        .send(userToCreate)
+        .set("Cookie", [cookies]);
+    expect(resultAdd.status).toEqual(201);
+    user.id = resultAdd.body["id"];
+    user.address.id = resultAdd.body["address_id"];
+    user.address_id = resultAdd.body["address_id"];
+
+    return [session, cookies];
+}
+
 describe("Test UserRouting successful requests", () => {
     let session: any;
     let cookies: string;
 
     beforeAll(async () => {
-        // Sessie starten en inloggen om autorisatie te krijgen
-        session = request(app);
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
-        expect(resultLogin.status).toBe(302);
-        expect(resultLogin.headers).toHaveProperty("set-cookie");
-
-        // Deze constante zorgt ervoor dat de ingelogde gebruiker behouden blijft en dus autorisatie heeft.
-        cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
-
-        // Nieuwe user toevoegen die gebruikt wordt bij de testen
-        const resultAdd = await session
-            .post("/user")
-            .send(userToCreate)
-            .set("Cookie", [cookies]);
-        expect(resultAdd.status).toEqual(201);
-        user.id = resultAdd.body["id"];
-        user.address.id = resultAdd.body["address_id"];
-        user.address_id = resultAdd.body["address_id"];
+        // Sessie starten en inloggen om authorisatie te krijgen
+        const session_cookies = await getSessionAndCookies();
+        session = session_cookies[0];
+        cookies = session_cookies[1];
     });
 
     // Na het uitvoeren van alle testen moet de gebruiker terug verwijderd worden uit de databank.
@@ -130,25 +145,9 @@ describe("Test UserRouting unsuccessful requests", () => {
 
     beforeAll(async () => {
         // Sessie starten en inloggen om autorisatie te krijgen
-        session = request(app);
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
-        expect(resultLogin.status).toBe(302);
-        expect(resultLogin.headers).toHaveProperty("set-cookie");
-
-        // Deze constante zorgt ervoor dat de ingelogde gebruiker behouden blijft en dus autorisatie heeft.
-        cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
-
-        // Nieuwe user toevoegen die gebruikt wordt bij de testen
-        const resultAdd = await session
-            .post("/user")
-            .send(userToCreate)
-            .set("Cookie", [cookies]);
-        expect(resultAdd.status).toEqual(201);
-        user.id = resultAdd.body["id"];
-        user.address.id = resultAdd.body["address_id"];
-        user.address_id = resultAdd.body["address_id"];
+        const session_cookies = await getSessionAndCookies();
+        session = session_cookies[0];
+        cookies = session_cookies[1];
     });
 
     // Na het uitvoeren van alle testen moet de gebruiker terug verwijderd worden uit de databank.
@@ -159,7 +158,7 @@ describe("Test UserRouting unsuccessful requests", () => {
         expect(resultDelete.status).toEqual(200);
     });
 
-    // Bij deze test wordt er niet ingelogd en heeft de sessie dus geen autorisatie om request uit te voeren.
+    // Bij deze test wordt er niet ingelogd en heeft de sessie dus geen authorisatie om request uit te voeren.
     test("Test authorization", async () => {
         const session = await request(app);
 
