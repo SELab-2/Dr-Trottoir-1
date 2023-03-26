@@ -19,6 +19,7 @@ export class RoundRouting extends Routing {
                 buildings: joins?.includes("buildings"),
                 schedule: joins?.includes("schedule"),
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.json(result);
