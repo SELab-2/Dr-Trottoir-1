@@ -9,8 +9,6 @@ import { APIErrorCode } from "../errors/api_error_code";
 export class BuildingRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         let deleted: boolean | undefined = false;
         if (req.user?.admin && Parser.bool(req.query["deleted"])) {
             deleted = undefined;
@@ -26,17 +24,18 @@ export class BuildingRouting extends Routing {
                 deleted: deleted,
             },
             include: {
-                address: joins?.includes("address"),
+                address: true,
                 syndicus: {
                     include: {
-                        user: includeUser(joins?.includes("syndicus"), false),
+                        user: includeUser(false),
                     },
                 },
-                manual: joins?.includes("manual"),
-                garbage: joins?.includes("garbage"),
-                progress: joins?.includes("progress"),
-                rounds: joins?.includes("rounds"),
-                images: joins?.includes("images"),
+                manual: true,
+                images: {
+                    include: {
+                        image: true,
+                    },
+                },
             },
         });
 
@@ -45,24 +44,23 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.building.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
             include: {
-                address: joins?.includes("address"),
+                address: true,
                 syndicus: {
                     include: {
-                        user: includeUser(joins?.includes("syndicus"), false),
+                        user: includeUser(false),
                     },
                 },
-                manual: joins?.includes("manual"),
-                garbage: joins?.includes("garbage"),
-                progress: joins?.includes("progress"),
-                rounds: joins?.includes("rounds"),
-                images: joins?.includes("images"),
+                manual: true,
+                images: {
+                    include: {
+                        image: true,
+                    },
+                },
             },
         });
 

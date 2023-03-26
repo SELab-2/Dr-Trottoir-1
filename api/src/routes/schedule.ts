@@ -9,8 +9,6 @@ import { APIErrorCode } from "../errors/api_error_code";
 export class ScheduleRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query["join"], []);
-
         let deleted: boolean | undefined = false;
         if (req.user?.admin && Parser.bool(req.query["deleted"])) {
             deleted = undefined;
@@ -42,9 +40,16 @@ export class ScheduleRouting extends Routing {
                 },
             },
             include: {
-                user: includeUser(joins?.includes("user"), false),
-                round: joins?.includes("round"),
-                progress: joins?.includes("progress"),
+                user: includeUser(true),
+                round: {
+                    include: {
+                        buildings: {
+                            select: {
+                                building_id: true,
+                            },
+                        },
+                    },
+                },
             },
         });
 
@@ -53,14 +58,12 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query["join"], []);
-
         const result = await prisma.schedule.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
             include: {
-                user: includeUser(joins?.includes("user"), false),
+                user: includeUser(true),
                 round: {
                     include: {
                         buildings: {
@@ -70,7 +73,6 @@ export class ScheduleRouting extends Routing {
                         },
                     },
                 },
-                progress: joins?.includes("progress"),
             },
         });
 

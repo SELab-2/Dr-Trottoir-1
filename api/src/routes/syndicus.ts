@@ -7,8 +7,6 @@ import { Parser } from "../parser";
 export class SyndicusRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.syndicus.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -34,8 +32,12 @@ export class SyndicusRouting extends Routing {
                 user_id: Parser.number(req.query["user"]),
             },
             include: {
-                user: includeUser(true, true),
-                building: joins?.includes("building"),
+                user: includeUser(true),
+                building: {
+                    include: {
+                        address: true,
+                    },
+                },
             },
         });
 
@@ -44,15 +46,17 @@ export class SyndicusRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.syndicus.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
             include: {
-                user: includeUser(true, true),
-                building: joins?.includes("building"),
+                user: includeUser(true),
+                building: {
+                    include: {
+                        address: true,
+                    },
+                },
             },
         });
 
