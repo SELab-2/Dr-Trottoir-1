@@ -7,7 +7,7 @@
             variant="solo"
             v-model="selectedBuilding"
             :items="buildings"
-            label="Select Building"
+            label="Selecteer Gebouw"
           ></v-select>
         </v-col>
         <v-col>
@@ -15,7 +15,7 @@
             variant="solo"
             v-model="selectedWeek"
             :items="weeks"
-            label="Select Week"
+            label="Selecteer Week"
           ></v-select>
         </v-col>
         <v-card-actions>
@@ -34,7 +34,7 @@
                 variant="solo"
                 v-model="selectedDay"
                 :items="days"
-                label="Select Day"
+                label="Selecteer Dag"
               ></v-select>
             </v-col>
             <v-col>
@@ -43,7 +43,7 @@
                 chips
                 v-model="selectedGarbage"
                 :items="garbageTypes"
-                label="Select Garbage"
+                label="Selecteer Vuilnis"
                 multiple
               ></v-select>
             </v-col>
@@ -54,7 +54,7 @@
                 multiple
                 v-model="selectedAction"
                 :items="actions"
-                label="Select Action"
+                label="Selecteer Actie"
               ></v-select>
             </v-col>
           </v-row>
@@ -119,24 +119,24 @@ import { reactive, computed, ref } from "vue";
 const show = ref(false);
 
 const buildings = [
-  "Building A",
-  "Building B",
-  "Building C",
-  "Building D",
-  "Building E",
+  "Gebouw A",
+  "Gebouw B",
+  "Gebouw C",
+  "Gebouw D",
+  "Gebouw E",
 ];
 const days = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
+  "Maandag",
+  "Dinsdag",
+  "Woensdag",
+  "Donderdag",
+  "Vrijdag",
+  "Zaterdag",
+  "Zondag",
 ];
-const weeks = ["Odd", "Even"];
-const garbageTypes = ["Garbage Type 1", "Garbage Type 2", "Garbage Type 3"];
-const actions = ["Action 1", "Action 2", "Action 3"];
+const weeks = ["Oneven", "Even"];
+const garbageTypes = ["Vuilnis Type 1", "Vuilnis Type 2", "Vuilnis Type 3"];
+const actions = ["Actie 1", "Actie 2", "Actie 3"];
 const selectedBuilding = ref("");
 const selectedDay = ref(null);
 const selectedWeek = ref(null);
@@ -150,39 +150,39 @@ const buildingData: {
   action: [String];
 }[] = reactive([
   {
-    building: "Building A",
-    garbage: ["Garbage Type 1", "w"],
-    day: "Monday",
-    week: "Odd",
-    action: ["Action 1"],
+    building: "Gebouw A",
+    garbage: ["Vuilnis Type 1", "w"],
+    day: "Maandag",
+    week: "Oneven",
+    action: ["Actie 1"],
   },
   {
-    building: "Building B",
-    garbage: ["Garbage Type 2"],
-    day: "Tuesday",
+    building: "Gebouw B",
+    garbage: ["Vuilnis Type 2"],
+    day: "Dinsdag",
     week: "Even",
-    action: ["Action 2"],
+    action: ["Actie 2"],
   },
   {
-    building: "Building C",
-    garbage: ["Garbage Type 1"],
-    day: "Wednesday",
-    week: "Odd",
-    action: ["Action 3"],
+    building: "Gebouw C",
+    garbage: ["Vuilnis Type 1"],
+    day: "Woensdag",
+    week: "Oneven",
+    action: ["Actie 3"],
   },
   {
-    building: "Building D",
-    garbage: ["Garbage Type 3"],
-    day: "Thursday",
+    building: "Gebouw D",
+    garbage: ["Vuilnis Type 3"],
+    day: "Donderdag",
     week: "Even",
-    action: ["Action 1"],
+    action: ["Actie 1"],
   },
   {
-    building: "Building E",
-    garbage: ["Garbage Type 2"],
-    day: "Friday",
-    week: "Odd",
-    action: ["Action 2"],
+    building: "Gebouw E",
+    garbage: ["Vuilnis Type 2"],
+    day: "Vrijdag",
+    week: "Oneven",
+    action: ["Actie 2"],
   },
 ]);
 
