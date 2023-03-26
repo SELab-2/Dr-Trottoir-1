@@ -3,15 +3,14 @@
     <v-main>
       <v-navigation-drawer
         :temporary="!permanentDrawer"
-        :permanent="permanentDrawer"
+        :permanent="!!permanentDrawer"
         v-model="drawer"
       >
         <v-list density="compact" nav>
-          <v-list-item
-            lines="two"
-            prepend-avatar="https://avatars.githubusercontent.com/u/38297449?v=4"
-            @click="showAccount = !showAccount"
-          >
+          <v-list-item lines="two" @click="showAccount = !showAccount">
+            <template v-slot:prepend>
+              <Avatar :name="studentName" />
+            </template>
             <div class="flex">
               <div class="text">
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
@@ -57,19 +56,11 @@
           <div v-if="isStudent">
             <p class="pa-2 font-weight-medium text-caption">Overzicht</p>
 
-            <router-link to="/dashboard">
+            <router-link to="/planning">
               <v-list-item
                 prepend-icon="mdi-calendar-edit"
                 title="Planning"
                 value="schedule"
-              />
-            </router-link>
-
-            <router-link to="/dashboard">
-              <v-list-item
-                prepend-icon="mdi-calendar"
-                title="Kalender"
-                value="calendar"
               />
             </router-link>
 
@@ -81,18 +72,10 @@
           <div v-if="isSuperStudent">
             <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
 
-            <router-link to="/dashboard">
-              <v-list-item
-                prepend-icon="mdi-account-school"
-                title="Studenten"
-                value="studenten"
-              />
-            </router-link>
-
-            <router-link to="/dashboard">
+            <router-link to="/opvolging">
               <v-list-item
                 prepend-icon="mdi-transit-detour"
-                title="Rondes"
+                title="Opvolging"
                 value="rondes"
               />
             </router-link>
@@ -105,14 +88,6 @@
               />
             </router-link>
 
-            <router-link to="/dashboard">
-              <v-list-item
-                prepend-icon="mdi-message-fast"
-                title="Communicatie"
-                value="communication"
-              />
-            </router-link>
-
             <div class="py-2">
               <v-divider />
             </div>
@@ -121,19 +96,11 @@
           <div v-if="isSyndicus">
             <p class="pa-2 font-weight-medium text-caption">Gebouwbeheer</p>
 
-            <router-link to="/dashboard">
+            <router-link to="/gebouwen">
               <v-list-item
                 prepend-icon="mdi-file-cabinet"
-                title="Geschiedenis"
-                value="history"
-              />
-            </router-link>
-
-            <router-link to="/dashboard">
-              <v-list-item
-                prepend-icon="mdi-cog"
-                title="Instellingen"
-                value="settings"
+                title="Mijn Gebouwen"
+                value="gebouwen"
               />
             </router-link>
 
@@ -145,36 +112,28 @@
           <div v-if="isAdmin">
             <p class="pa-2 font-weight-medium text-caption">Administratie</p>
 
-            <router-link to="/dashboard">
+            <router-link to="/dashboard/gebruikers">
               <v-list-item
                 prepend-icon="mdi-account-supervisor"
-                title="Studenten"
-                value="students"
-              />
+                title="Gebruikers"
+                value="users"
+              ></v-list-item>
             </router-link>
 
-            <router-link to="/dashboard">
+            <router-link to="/dashboard/gebouwen">
               <v-list-item
                 prepend-icon="mdi-office-building-outline"
                 title="Gebouwen"
-                value="buidlings"
-              />
+                value="buildings"
+              ></v-list-item>
             </router-link>
 
-            <router-link to="/dashboard">
+            <router-link to="/dashboard/rondes">
               <v-list-item
                 prepend-icon="mdi-map-legend"
                 title="Routes"
                 value="routes"
-              />
-            </router-link>
-
-            <router-link to="/dashboard/gebruikers/nieuw">
-              <v-list-item
-                prepend-icon="mdi-account-plus"
-                title="Maak account aan"
-                value="routes"
-              />
+              ></v-list-item>
             </router-link>
           </div>
         </v-list>
@@ -196,18 +155,16 @@
         </v-toolbar-title>
 
         <v-spacer />
-
-        <v-btn variant="text" icon="mdi-magnify" />
       </v-app-bar>
 
-      <div class="pa-8">
-        <router-view />
-      </div>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
+import Avatar from "@/components/Avatar.vue";
+
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -227,8 +184,8 @@ const isAdmin = ref(true);
 const showAccount = ref(false);
 
 // account display settings
-const studentName: String = "Jens Pots";
-function roles(): String {
+const studentName: string = "Jens Pots";
+function roles(): string {
   let str = "";
   if (isStudent.value) {
     str += "student ";
@@ -254,7 +211,7 @@ function onResize() {
 window.addEventListener("resize", onResize);
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 a {
   text-decoration: none;
   color: black;

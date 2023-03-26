@@ -3,7 +3,7 @@ import passportLocal from "passport-local";
 import { prisma } from "./prisma";
 import { pbkdf2Async } from "./crypto";
 import crypto from "crypto";
-import { User } from "@prisma/client";
+import { User } from "@selab-2/groep-1-orm";
 
 const CRYPTO_ITERATIONS = 310000;
 const CRYPTO_KEY_LENGTH = 32;
