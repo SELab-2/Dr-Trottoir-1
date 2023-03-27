@@ -20,6 +20,7 @@ export class ActionRouting extends Routing {
             include: {
                 garbage: joins?.includes("garbage"),
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.status(200).json(result);

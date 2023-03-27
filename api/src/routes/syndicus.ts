@@ -37,6 +37,7 @@ export class SyndicusRouting extends Routing {
                 user: includeUser(true, true),
                 building: joins?.includes("building"),
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.status(200).json(result);

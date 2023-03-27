@@ -38,6 +38,7 @@ export class BuildingRouting extends Routing {
                 rounds: joins?.includes("rounds"),
                 images: joins?.includes("images"),
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.json(result);
