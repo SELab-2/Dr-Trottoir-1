@@ -66,7 +66,7 @@ const routes = [
       //},
       {
         path: "/gebouwen",
-        name: "Opvolgen van gebouwen",
+        name: "Gebouwen",
         component: BuildingFollowup,
       },
       {
