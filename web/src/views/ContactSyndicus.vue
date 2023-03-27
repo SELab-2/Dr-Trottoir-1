@@ -28,11 +28,11 @@
             variant="solo"
           ></v-select>
         </v-col>
-        <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">          <v-select
+        <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
+          <v-select
             prepend-inner-icon="mdi-list-box"
             label="Sjabloon"
             :items="templates"
-
             variant="solo"
           >
           </v-select>
@@ -79,7 +79,10 @@ const templates: Template[] = reactive([
   { name: "Schade", subject: `Schade: ${building}`, content: "" },
 ]);
 
-const test : any[] = [{name: 'oe', id: 3}, {name: 'merel', id: 4}]
+const test: any[] = [
+  { name: "oe", id: 3 },
+  { name: "merel", id: 4 },
+];
 
 const template = ref<Template>(templates[0]);
 
