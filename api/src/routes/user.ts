@@ -143,12 +143,14 @@ export class UserRouting extends Routing {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
-        const user: User = req.body;
-        user.salt = crypto.randomBytes(32).toString();
-        user.hash = crypto
-            .createHash("sha256")
-            .update(req.body.password + user.salt)
-            .digest("hex");
+        // Indien het wachtwoord veranderd wordt
+        if (req.body.password) {
+            req.body.salt = crypto.randomBytes(32).toString();
+            req.body.hash = crypto
+                .createHash("sha256")
+                .update(req.body.password + req.body.salt)
+                .digest("hex");
+        }
 
         const result = await prisma.user.update({
             data: req.body,
@@ -170,7 +172,7 @@ export class UserRouting extends Routing {
                 hash: false,
                 salt: false,
                 address: true,
-            }
+            },
         });
 
         return res.status(200).json(result);
@@ -209,7 +211,7 @@ export class UserRouting extends Routing {
                 hash: false,
                 salt: false,
                 address: true,
-            }
+            },
         });
 
         return res.status(200).json(result);
