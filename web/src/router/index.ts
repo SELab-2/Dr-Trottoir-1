@@ -15,6 +15,7 @@ import RoundReport from "@/views/RoundReport.vue";
 import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue";
+import ContactSyndicus from "@/views/ContactSyndicus.vue"
 
 const routes = [
   {
@@ -114,6 +115,11 @@ const routes = [
         path: "/dashboard/rondes/plannen",
         name: "Ronde Planner",
         component: RoundPlanner,
+      },
+      {
+        path: "/contact",
+        name: "Contact syndicus",
+        component: ContactSyndicus,
       },
     ],
   },
