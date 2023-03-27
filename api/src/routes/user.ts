@@ -51,6 +51,7 @@ export class UserRouting extends Routing {
                 regions: joins?.includes("regions"),
                 schedule: joins?.includes("schedule"),
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.status(200).json(result);
