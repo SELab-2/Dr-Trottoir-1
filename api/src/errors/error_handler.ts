@@ -23,9 +23,11 @@ export class ErrorHandler {
             });
         }
 
+        // The Prisma query was invalid. This may happen for a variety of
+        // reasons, such as invalid sorting parameters.
         if (err instanceof Prisma.PrismaClientValidationError) {
             return res.status(APIErrorCode.BAD_REQUEST).json({
-                message: "Bad request: Are your sort and order fields correct?",
+                message: errorMessage(APIErrorCode.BAD_REQUEST),
             });
         }
 
