@@ -70,7 +70,9 @@ const props = defineProps({
 });
 
 const dateParts = props.date.split("/");
-const selectedDate = ref<Date>(new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]));
+const selectedDate = ref<Date>(
+  new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]),
+);
 
 function get() {
   if (formatDate(selectedDate.value) === mockbuilding.date) {

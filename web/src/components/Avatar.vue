@@ -46,7 +46,7 @@ const color = colors[hash(String(props.name), colors.length)];
 // get the initials from the name
 function getInitials(str: string) {
   const inits = str.split(" ").map((c) => c[0]);
-  return inits[0] + inits[inits.length-1];
+  return inits[0] + inits[inits.length - 1];
 }
 const initials = getInitials(String(props.name));
 </script>

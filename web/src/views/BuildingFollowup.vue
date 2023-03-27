@@ -10,25 +10,33 @@
         class="mx-1 mb-3"
         @onUpdate="(new_data: Filterdata) => filter_data = new_data"
       />
-      <div v-for="(building, id) in filter()" :key="id + filter_data.filter_label">
+      <div
+        v-for="(building, id) in filter()"
+        :key="id + filter_data.filter_label"
+      >
         <v-card
           class="pa-4 my-4"
           @click="
             router.push({
               name: 'Gebouw detail',
-              params: { id: building.id, date: building.date},
+              params: { id: building.id, date: building.date },
             })
           "
         >
           <template v-slot:title>
             {{ building.name }}
-            <v-icon end v-if="building.comments">mdi-comment-alert-outline</v-icon>
+            <v-icon end v-if="building.comments"
+              >mdi-comment-alert-outline</v-icon
+            >
           </template>
           <template v-slot:subtitle>
             <Avatar :name="building.syndicus" size="x-small" />
             {{ building.syndicus }}
           </template>
-          <template v-slot:append v-if='filter_data.filter_label === filter_labels[1]'>
+          <template
+            v-slot:append
+            v-if="filter_data.filter_label === filter_labels[1]"
+          >
             <v-chip label color="blue" class="ml-3">
               <v-icon icon="mdi-calendar-clock"></v-icon>
               <p class="ml-2">{{ building.date }}</p>
@@ -50,9 +58,9 @@
 <script lang="ts" setup>
 import LargeFilter from "@/components/LargeFilter.vue";
 import Filterdata from "@/components/models/Filterdata";
-import Avatar from '@/components/Avatar.vue'
-import { ref } from 'vue'
-import { formatDate } from '@/assets/scripts/format'
+import Avatar from "@/components/Avatar.vue";
+import { ref } from "vue";
+import { formatDate } from "@/assets/scripts/format";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -91,8 +99,8 @@ const buildings: any[] = [
       {
         comments: false,
         date: "13/3/2023",
-      }
-    ]
+      },
+    ],
   },
   {
     id: 2,
@@ -107,8 +115,8 @@ const buildings: any[] = [
       {
         comments: false,
         date: "27/3/2023",
-      }
-    ]
+      },
+    ],
   },
   {
     id: 3,
@@ -120,7 +128,7 @@ const buildings: any[] = [
         comments: true,
         date: "15/3/2023",
       },
-    ]
+    ],
   },
   {
     id: 4,
@@ -135,8 +143,8 @@ const buildings: any[] = [
       {
         comments: false,
         date: "27/3/2023",
-      }
-    ]
+      },
+    ],
   },
 ];
 
@@ -145,16 +153,14 @@ function filter() {
   const result: any[] = [];
   // filtering
   buildings.forEach((elem) => {
-   if(filter_data.value.filter_label === filter_labels[0]){
-      let newel = {...elem};
+    if (filter_data.value.filter_label === filter_labels[0]) {
+      let newel = { ...elem };
       newel.date = formatDate(today);
       newel.comments = false;
       prefilter.push(newel);
-    }
-    else {
-      for (const datum of elem.data)
-      {
-        let newel = {...elem};
+    } else {
+      for (const datum of elem.data) {
+        let newel = { ...elem };
         newel.date = datum.date;
         newel.comments = datum.comments;
         prefilter.push(newel);
@@ -165,23 +171,20 @@ function filter() {
   prefilter.forEach((elem) => {
     let can_add = true;
 
-    for (let filter of filter_data.value.filters)
-    {
-      if(filter === filter_options[0])
-      {
+    for (let filter of filter_data.value.filters) {
+      if (filter === filter_options[0]) {
         can_add = can_add && elem.comments;
       }
     }
-    if(can_add){
+    if (can_add) {
       result.push(elem);
     }
-  })
-
+  });
 
   // sort the results
-  result.sort((a, b) => a.name > b.name ? 1 : -1);
+  result.sort((a, b) => (a.name > b.name ? 1 : -1));
   result.sort((a, b) => {
-    if (filter_data.value.sort_by == "Datum" ) {
+    if (filter_data.value.sort_by == "Datum") {
       return a.date > b.date ? 1 : -1;
     }
     return 0;
