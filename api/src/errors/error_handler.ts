@@ -3,7 +3,6 @@ import { Prisma } from "@selab-2/groep-1-orm";
 import { APIError } from "./api_error";
 import { APIErrorCode, errorMessage } from "./api_error_code";
 import { errorMessagePrismaClient } from "./prisma_error";
-import PrismaClientValidationError = Prisma.PrismaClientValidationError;
 
 /**
  * The ErrorHandler class contains a static method which will handle any thrown

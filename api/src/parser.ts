@@ -91,35 +91,38 @@ export class Parser {
      */
     static order(
         sortFields: string | undefined,
-        sortOrder: string | undefined,
+        orderFields: string | undefined,
     ): object[] {
-        const allowedOrderValues = ["desc", "asc"]; // these are the values allowed by Prisma
         const sortFieldsSeparated = sortFields?.split(",");
-        const orderFieldsSeparated = sortOrder?.split(",");
+        const orderFieldsSeparated = orderFields?.split(",");
 
-        // if there's no fields to sort on, return empty list
-        // In this case, Prisma will return the elements as recorded in the database
-        if (sortFieldsSeparated === undefined) {
+        // Length of sort and order field must be equal.
+        if (sortFieldsSeparated?.length !== orderFieldsSeparated?.length) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
+        // Either both are undefined, or neither are.
+        if (
+            sortFieldsSeparated === undefined &&
+            orderFieldsSeparated === undefined
+        ) {
             return [];
+        } else if (
+            sortFieldsSeparated === undefined ||
+            orderFieldsSeparated === undefined
+        ) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
-        const out = [];
-        for (let i = 0; i < sortFieldsSeparated.length; i++) {
-            const field = sortFieldsSeparated[i];
-            let sortOrder;
-            if (orderFieldsSeparated === undefined) {
-                sortOrder = "desc"; // default value
-            } else {
-                sortOrder = orderFieldsSeparated[i];
-                // if an invalid value is given, skip that field
-                if (!allowedOrderValues.includes(sortOrder)) {
-                    continue;
-                }
-            }
+        // Accumulate the result
+        const result = [];
 
-            out.push({ [field]: sortOrder });
+        for (const i in sortFieldsSeparated) {
+            const sortField = sortFieldsSeparated[i];
+            const orderField = orderFieldsSeparated[i];
+            result.push({ [sortField]: orderField });
         }
 
-        return out;
+        return result;
     }
 }
