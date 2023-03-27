@@ -133,17 +133,17 @@ const days = [
 const weeks = ["Oneven", "Even"];
 const garbageTypes = ["Vuilnis Type 1", "Vuilnis Type 2", "Vuilnis Type 3"];
 const actions = ["Actie 1", "Actie 2", "Actie 3"];
-const selectedBuilding = ref("");
+const selectedBuilding = ref(null);
 const selectedDay = ref(null);
 const selectedWeek = ref(null);
 const selectedGarbage = ref(null);
 const selectedAction = ref(null);
 const buildingData: {
   building: string;
-  garbage: [String];
-  day: String;
-  week: String;
-  action: [String];
+  garbage: string[];
+  day: string;
+  week: string;
+  action: string[];
 }[] = reactive([
   {
     building: "Gebouw A",
