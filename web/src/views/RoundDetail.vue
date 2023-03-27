@@ -1,13 +1,18 @@
 <template>
-
-  <v-card :title="mockround.name" :subtitle="date" variant="flat">
+  <v-card :title="mockround.name" :subtitle="date" variant="flat" class="ma-1">
+    <!-- Select component to select the role, will be removed after auth -->
+    <template v-slot:append>
+      <v-select variant="solo"
+        v-model="current_role"
+        :items="roles"
+      />
+    </template>
       <v-hover>
         <template v-slot:default="{ isHovering, props }">
           <v-btn
             v-bind="props"
-            class="text-body-2 mb-1 ml-3"
+            class="text-body-2 mb-2 ml-3"
             :variant="isHovering ? 'elevated': 'text'"
-            :color="isHovering ? 'primary': ''"
             to="/account/0/false"
           >
             <template v-slot:prepend>
@@ -17,8 +22,7 @@
           </v-btn>
         </template>
       </v-hover>
-    <v-container fluid>
-      <v-timeline truncate-line="both" side="end" density="compact">
+      <v-timeline truncate-line="both" side="end" density="compact" class="mx-3">
         <v-timeline-item dot-color="green" icon="mdi-check">
           <v-card>
             <v-card-title> Start {{ mockround.start }} </v-card-title>
@@ -34,33 +38,41 @@
           icon-color="white"
         >
           <router-link to="/gebouw/3">
-            <v-card
-              width="100%"
-              :title="building.name"
-              :subtitle="building.address"
-            >
-              <template v-slot:append>
-                <v-card-title>{{ cleanup_time_data(id) }}</v-card-title>
+            <v-hover>
+              <template v-slot:default="{ isHovering, props }">
+                <v-card
+                  v-bind:="props"
+                  width="100%"
+                  :title="building.name"
+                  :subtitle="building.address"
+                  :color="isHovering ? 'grey-lighten-5': ''"
+                >
+                  <template v-slot:append>
+                    <v-card-title>{{ cleanup_time_data(id) }}</v-card-title>
+                  </template>
+                  <v-chip
+                    prepend-icon="mdi-camera"
+                    label
+                    color="success"
+                    class="pa-2 ma-2"
+                    v-if="id < 2"
+                  >
+                    {{ building.amount_of_pics }} foto's geupload
+                  </v-chip>
+                  <v-chip
+                    prepend-icon="mdi-comment"
+                    label
+                    color="red"
+                    class="pa-2 ma-2"
+                    v-if="building.comments"
+                  >
+                    Opmerkingen beschikbaar
+                  </v-chip>
+                </v-card>
+
               </template>
-              <v-chip
-                prepend-icon="mdi-camera"
-                label
-                color="success"
-                class="pa-2 ma-2"
-                v-if="id < 2"
-              >
-                {{ building.amount_of_pics }} foto's geupload
-              </v-chip>
-              <v-chip
-                prepend-icon="mdi-comment"
-                label
-                color="red"
-                class="pa-2 ma-2"
-                v-if="building.comments"
-              >
-                Opmerkingen beschikbaar
-              </v-chip>
-            </v-card>
+            </v-hover>
+            
           </router-link>
         </v-timeline-item>
         <v-timeline-item dot-color="red" icon="mdi-close" size="small">
@@ -69,7 +81,6 @@
           </v-card>
         </v-timeline-item>
       </v-timeline>
-    </v-container>
     <v-card-actions class="d-flex">
       <v-spacer></v-spacer>
       <v-btn
@@ -86,6 +97,13 @@
 <script lang="ts" setup>
 import Round from "@/components/models/Round";
 import Avatar from "@/components/Avatar.vue";
+import { ref } from 'vue'
+
+// add the role, will be replaced with actual athentication
+// TODO: replace with actual authentication
+const roles = ['Admin', 'Student', 'Superstudent', 'Syndicus']
+const current_role = ref(roles[0])
+
 
 const date = "13/03/2023";
 
