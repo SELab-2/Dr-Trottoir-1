@@ -70,7 +70,7 @@ const props = defineProps({
 });
 const selectedDate = ref<Date>(createDate(String(props.date)));
 
-function get() {
+function get(): any {
   if (formatDate(selectedDate.value) === mockbuilding.date) {
     return mockbuilding;
   }

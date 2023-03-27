@@ -21,6 +21,7 @@
 </template>
 
 <script lang="ts" setup>
+import Button from "@/components/models/Button";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps({
   icon: String,
@@ -28,7 +29,7 @@ const props = defineProps({
     type: String,
     default: "x-large",
   },
-  items: Array,
+  items: Array<Button>
 });
 </script>
 

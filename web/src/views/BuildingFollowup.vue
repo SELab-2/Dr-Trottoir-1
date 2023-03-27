@@ -8,9 +8,9 @@
         :sort_items="sort_items"
         :filter_items="filter_options"
         class="mx-1 mb-3"
-        @onUpdate="(new_data: Filterdata) => filter_data = new_data"
+        @onUpdate="(new_data: Filterdata) => {filter_data = new_data; filterIndex++;}"
       />
-      <div v-for="(building, id) in filter()" :key="id + filter_data">
+      <div v-for="(building, id) in filter()" :key="id + filterIndex">
         <v-card
           class="mb-3 mx-1 pb-2"
           @click="
@@ -83,6 +83,8 @@ const filter_data = ref<Filterdata>({
   end_day: formatDate(new Date()),
 });
 
+const filterIndex = ref<number>(0);
+
 // TODO: mockdata, remove in future
 const buildings: any[] = [
   {
@@ -147,7 +149,11 @@ const buildings: any[] = [
   },
 ];
 
-function filter_query(building): boolean {
+function filter_query(building: {
+  name: string;
+  syndicus: string;
+  adres: string;
+}): boolean {
   let search_by: string = "";
   switch (filter_data.value.search_label) {
     case query_labels[0]:
