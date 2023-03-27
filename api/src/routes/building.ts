@@ -8,7 +8,6 @@ export class BuildingRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
         const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.building.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -30,6 +29,7 @@ export class BuildingRouting extends Routing {
                 rounds: joins?.includes("rounds"),
                 images: joins?.includes("images"),
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.json(result);
