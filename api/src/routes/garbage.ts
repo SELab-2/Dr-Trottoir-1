@@ -39,6 +39,7 @@ export class GarbageRouting extends Routing {
                     },
                 },
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.json(result);

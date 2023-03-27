@@ -15,6 +15,7 @@ export class ActionRouting extends Routing {
                     contains: Parser.string(req.query["description"], ""),
                 },
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.status(200).json(result);

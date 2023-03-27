@@ -55,6 +55,7 @@ export class ScheduleRouting extends Routing {
                     },
                 },
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.status(200).json(result);

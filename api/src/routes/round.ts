@@ -24,6 +24,7 @@ export class RoundRouting extends Routing {
                     },
                 },
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.json(result);

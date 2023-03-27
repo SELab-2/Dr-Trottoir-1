@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Prisma } from "@selab-2/groep-1-orm";
 import { APIError } from "./api_error";
-import { errorMessage } from "./api_error_code";
+import { APIErrorCode, errorMessage } from "./api_error_code";
 import { errorMessagePrismaClient } from "./prisma_error";
 
 /**
@@ -19,6 +19,14 @@ export class ErrorHandler {
             return res.status(code.valueOf()).json({
                 message: errorMessage(code),
                 detail: detail,
+            });
+        }
+
+        // The Prisma query was invalid. This may happen for a variety of
+        // reasons, such as invalid sorting parameters.
+        if (err instanceof Prisma.PrismaClientValidationError) {
+            return res.status(APIErrorCode.BAD_REQUEST).json({
+                message: errorMessage(APIErrorCode.BAD_REQUEST),
             });
         }
 
