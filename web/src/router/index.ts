@@ -15,7 +15,7 @@ import RoundReport from "@/views/RoundReport.vue";
 import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue";
-import ContactSyndicus from "@/views/ContactSyndicus.vue"
+import ContactSyndicus from "@/views/ContactSyndicus.vue";
 
 const routes = [
   {

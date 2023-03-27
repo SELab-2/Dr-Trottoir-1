@@ -1,6 +1,5 @@
 export default interface Template {
-    name: string;
-    subject: string;
-    content: string;
-  }
-  
+  name: string;
+  subject: string;
+  content: string;
+}
