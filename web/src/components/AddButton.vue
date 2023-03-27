@@ -29,7 +29,7 @@ const props = defineProps({
     type: String,
     default: "x-large",
   },
-  items: Array<Button>
+  items: Array<Button>,
 });
 </script>
 
