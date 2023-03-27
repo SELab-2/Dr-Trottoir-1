@@ -7,7 +7,6 @@
           style="min-width: 100px; max-width: 100%"
           class="flex-grow-1 flex-shrink-0 py-0 my-0"
         >
-          <!-- Text input field for the street name -->
           <v-select
             prepend-inner-icon="mdi-account"
             label="Syndicus"
@@ -22,7 +21,6 @@
           style="min-width: 100px; max-width: 100%"
           class="flex-grow-1 flex-shrink-0 py-0 my-0"
         >
-          <!-- Text input field for the street name -->
           <v-select
             prepend-inner-icon="mdi-office-building"
             label="Gebouw"
@@ -30,12 +28,10 @@
             variant="solo"
           ></v-select>
         </v-col>
-        <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
-          <!-- Text input field for the house number -->
-          <v-select
+        <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">          <v-select
             prepend-inner-icon="mdi-list-box"
             label="Sjabloon"
-            :items="test"
+            :items="templates"
 
             variant="solo"
           >
@@ -90,7 +86,7 @@ const template = ref<Template>(templates[0]);
 const mockdata = [
   {
     syndicus: "Bert Kappellen",
-    buildings: ["Upkot zwijnaarde", "Home Astrid", "Home Benedictijntjes"],
+    buildings: ["Upkot Zwijnaarde", "Home Astrid", "Home Benedictijntjes"],
   },
   {
     syndicus: "Tijbe Habils",
