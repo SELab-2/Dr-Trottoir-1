@@ -10,11 +10,11 @@
         class="mx-1 mb-3"
         @onUpdate="(new_data: Filterdata) => filter_data = new_data"
       />
-      <div v-for="building in filter()" :key="building.id + filter_data.filter_label">
+      <div v-for="(building, id) in filter()" :key="id + filter_data.filter_label">
         <v-card
-          class='pa-4 my-4'
+          class="pa-4 my-4"
           @click="
-            this.$router.push({
+            router.push({
               name: 'Gebouw detail',
               params: { id: building.id, date: building.date},
             })
@@ -50,9 +50,12 @@
 <script lang="ts" setup>
 import LargeFilter from "@/components/LargeFilter.vue";
 import Filterdata from "@/components/models/Filterdata";
-import { ref } from 'vue'
 import Avatar from '@/components/Avatar.vue'
+import { ref } from 'vue'
 import { formatDate } from '@/assets/scripts/format'
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
 const filter_labels = ["Naam", "Naam + Datum"];
@@ -76,67 +79,90 @@ const filter_data = ref<Filterdata>({
 // TODO: mockdata, remove in future
 const buildings: any[] = [
   {
-    id: 11,
+    id: 1,
     name: "Eiffeltoren",
     syndicus: "Mats Van Belle",
     adres: "Examplestreet -2",
-    comments: true,
-    date: "15/3/2023",
+    data: [
+      {
+        comments: true,
+        date: "15/3/2023",
+      },
+      {
+        comments: false,
+        date: "13/3/2023",
+      }
+    ]
   },
   {
-    id: 12,
-    name: "Eiffeltoren",
-    syndicus: "Mats Van Belle",
-    adres: "Examplestreet -2",
-    comments: false,
-    date: "13/3/2023",
-  },
-  {
-    id: 21,
+    id: 2,
     name: "Taj Mahal",
     syndicus: "Brent Matthys",
     adres: "Nieuwestraat 8",
-    comments: false,
-    date: "27/3/2023",
+    data: [
+      {
+        comments: true,
+        date: "15/3/2023",
+      },
+      {
+        comments: false,
+        date: "27/3/2023",
+      }
+    ]
   },
   {
-    id: 31,
+    id: 3,
     name: "Machu Picchu",
     syndicus: "Arne Vanheule",
     adres: "Voorbeeldstraat 22",
-    comments: true,
-    date: "24/3/2023",
-  },
-  {
-    id: 32,
-    name: "Machu Picchu",
-    syndicus: "Arne Vanheule",
-    adres: "Voorbeeldstraat 22",
-    comments: true,
-    date: "19/3/2023",
-  },
-  {
-    id: 33,
-    name: "Machu Picchu",
-    syndicus: "Arne Vanheule",
-    adres: "Voorbeeldstraat 22",
-    comments: false,
-    date: "07/3/2023",
+    data: [
+      {
+        comments: true,
+        date: "15/3/2023",
+      },
+    ]
   },
   {
     id: 4,
     name: "Toren van Pisa",
     syndicus: "Mats Van Belle",
     adres: "Italiëwegel 345",
-    comments: false,
-    date: "07/3/2023",
+    data: [
+      {
+        comments: false,
+        date: "07/3/2023",
+      },
+      {
+        comments: false,
+        date: "27/3/2023",
+      }
+    ]
   },
 ];
 
 function filter() {
+  const prefilter: any[] = [];
   const result: any[] = [];
   // filtering
   buildings.forEach((elem) => {
+   if(filter_data.value.filter_label === filter_labels[0]){
+      let newel = {...elem};
+      newel.date = formatDate(today);
+      newel.comments = false;
+      prefilter.push(newel);
+    }
+    else {
+      for (const datum of elem.data)
+      {
+        let newel = {...elem};
+        newel.date = datum.date;
+        newel.comments = datum.comments;
+        prefilter.push(newel);
+      }
+    }
+  });
+
+  prefilter.forEach((elem) => {
     let can_add = true;
 
     for (let filter of filter_data.value.filters)
@@ -146,15 +172,11 @@ function filter() {
         can_add = can_add && elem.comments;
       }
     }
-
-    if (can_add) {
-      let newel = {...elem};
-      if(filter_data.value.filter_label === filter_labels[0]){
-        newel.date = formatDate(today);
-      }
-      result.push(newel);
+    if(can_add){
+      result.push(elem);
     }
-  });
+  })
+
 
   // sort the results
   result.sort((a, b) => a.name > b.name ? 1 : -1);
