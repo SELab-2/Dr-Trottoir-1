@@ -69,7 +69,8 @@ const props = defineProps({
   date: String,
 });
 
-const selectedDate = ref<Date>(new Date(props.date));
+const dateParts = props.date.split("/");
+const selectedDate = ref<Date>(new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]));
 
 function get() {
   if (formatDate(selectedDate.value) === mockbuilding.date) {
@@ -81,7 +82,7 @@ function get() {
 function change() {
   router.push({
     name: "Gebouw detail",
-    params: { id: props.id, date: selectedDate.value },
+    params: { id: props.id, date: formatDate(selectedDate.value) },
   });
 }
 

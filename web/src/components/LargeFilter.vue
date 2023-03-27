@@ -200,7 +200,8 @@ const filter_data = ref<Filterdata>({
   end_day: props.end_date,
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function help(thing: any) {
-  console.log(thing);
+  //console.log(thing);
 }
 </script>

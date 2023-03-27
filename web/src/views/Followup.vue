@@ -197,6 +197,7 @@ const sort_items = ["Voortgang", "Gebouwen"];
 const filter_data = ref<Filterdata>({
   query: "",
   search_label: query_labels[0],
+  filter_label: "",
   sort_by: sort_items[0],
   sort_ascending: true,
   filters: [],
