@@ -60,7 +60,7 @@ import ImageCard from "@/components/ImageCard.vue";
 import Avatar from "@/components/Avatar.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { formatDate } from "@/assets/scripts/format";
+import { createDate, formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
 import router from "@/router";
 
@@ -68,11 +68,7 @@ const props = defineProps({
   id: String,
   date: String,
 });
-
-const dateParts = props.date.split("/");
-const selectedDate = ref<Date>(
-  new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]),
-);
+const selectedDate = ref<Date>(createDate(String(props.date)));
 
 function get() {
   if (formatDate(selectedDate.value) === mockbuilding.date) {

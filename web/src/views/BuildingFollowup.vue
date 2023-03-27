@@ -62,7 +62,7 @@ import Filterdata from "@/components/models/Filterdata";
 import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { formatDate } from "@/assets/scripts/format";
+import { createDate, formatDate } from "@/assets/scripts/date";
 
 const router = useRouter();
 
@@ -190,6 +190,12 @@ function filter() {
     let can_add = true;
 
     can_add = can_add && filter_query(elem);
+
+    can_add =
+      can_add && createDate(elem.date) <= createDate(filter_data.value.end_day);
+    can_add =
+      can_add &&
+      createDate(elem.date) >= createDate(filter_data.value.start_day);
 
     for (let filter of filter_data.value.filters) {
       if (filter === filter_options[0]) {

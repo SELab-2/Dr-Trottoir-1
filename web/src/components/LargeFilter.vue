@@ -135,7 +135,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import Filterdata from "@/components/models/Filterdata";
-import { formatDate } from "@/assets/scripts/format";
+import { formatDate } from "@/assets/scripts/date";
 
 // The filter data is emitted with the 'onUpdate' tag
 const props = defineProps({
