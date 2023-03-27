@@ -10,10 +10,7 @@
         class="mx-1 mb-3"
         @onUpdate="(new_data: Filterdata) => filter_data = new_data"
       />
-      <div
-        v-for="(building, id) in filter()"
-        :key="id + filter_data.filter_label"
-      >
+      <div v-for="(building, id) in filter()" :key="id + filter_data">
         <v-card
           class="pa-4 my-4"
           @click="
@@ -30,7 +27,11 @@
             >
           </template>
           <template v-slot:subtitle>
-            <Avatar :name="building.syndicus" size="x-small" />
+            <Avatar
+              :name="building.syndicus"
+              size="x-small"
+              :key="building.syndicus"
+            />
             {{ building.syndicus }}
           </template>
           <template
@@ -60,8 +61,8 @@ import LargeFilter from "@/components/LargeFilter.vue";
 import Filterdata from "@/components/models/Filterdata";
 import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
-import { formatDate } from "@/assets/scripts/format";
 import { useRouter } from "vue-router";
+import { formatDate } from "@/assets/scripts/format";
 
 const router = useRouter();
 
@@ -69,8 +70,6 @@ const query_labels = ["Gebouw", "Syndicus", "Adres"];
 const filter_labels = ["Naam", "Naam + Datum"];
 const filter_options = ["Opmerkingen"];
 const sort_items = ["Naam", "Datum"];
-
-const today: Date = new Date();
 
 // All the filter options
 const filter_data = ref<Filterdata>({
@@ -80,8 +79,8 @@ const filter_data = ref<Filterdata>({
   sort_by: sort_items[0],
   sort_ascending: true,
   filters: [],
-  start_day: new Date(),
-  end_day: new Date(),
+  start_day: formatDate(new Date()),
+  end_day: formatDate(new Date()),
 });
 
 // TODO: mockdata, remove in future
@@ -148,6 +147,25 @@ const buildings: any[] = [
   },
 ];
 
+function filter_query(building): boolean {
+  let search_by: string = "";
+  switch (filter_data.value.search_label) {
+    case query_labels[0]:
+      search_by = building.name.toLowerCase();
+      break;
+    case query_labels[1]:
+      search_by = building.syndicus.toLowerCase();
+      break;
+    case query_labels[2]:
+      search_by = building.adres.toLowerCase();
+      break;
+  }
+  return (
+    search_by.includes(filter_data.value.query.toLowerCase()) ||
+    filter_data.value.query.length == 0
+  );
+}
+
 function filter() {
   const prefilter: any[] = [];
   const result: any[] = [];
@@ -155,7 +173,7 @@ function filter() {
   buildings.forEach((elem) => {
     if (filter_data.value.filter_label === filter_labels[0]) {
       let newel = { ...elem };
-      newel.date = formatDate(today);
+      newel.date = filter_data.value.start_day;
       newel.comments = false;
       prefilter.push(newel);
     } else {
@@ -170,6 +188,8 @@ function filter() {
 
   prefilter.forEach((elem) => {
     let can_add = true;
+
+    can_add = can_add && filter_query(elem);
 
     for (let filter of filter_data.value.filters) {
       if (filter === filter_options[0]) {
