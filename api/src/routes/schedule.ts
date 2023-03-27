@@ -44,8 +44,12 @@ export class ScheduleRouting extends Routing {
                 round: {
                     include: {
                         buildings: {
-                            select: {
-                                building_id: true,
+                            include: {
+                                building: {
+                                    include: {
+                                        address: true,
+                                    },
+                                },
                             },
                         },
                     },
@@ -67,8 +71,12 @@ export class ScheduleRouting extends Routing {
                 round: {
                     include: {
                         buildings: {
-                            select: {
-                                building: true,
+                            include: {
+                                building: {
+                                    include: {
+                                        address: true,
+                                    },
+                                },
                             },
                         },
                     },
