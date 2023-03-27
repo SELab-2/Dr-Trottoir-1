@@ -58,11 +58,20 @@
               ></v-select>
             </v-col>
           </v-row>
-          <v-card-actions
-            class="d-flex"
-          >
+          <v-card-actions class="d-flex">
             <v-spacer></v-spacer>
-            <v-btn @click="addItem" :disabled="!(selectedBuilding && selectedDay && selectedWeek && selectedAction)" prepend-icon="mdi-plus" color="primary"
+            <v-btn
+              @click="addItem"
+              :disabled="
+                !(
+                  selectedBuilding &&
+                  selectedDay &&
+                  selectedWeek &&
+                  selectedAction
+                )
+              "
+              prepend-icon="mdi-plus"
+              color="primary"
               >Toevoegen</v-btn
             >
           </v-card-actions>
