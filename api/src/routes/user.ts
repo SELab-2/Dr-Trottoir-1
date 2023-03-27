@@ -93,8 +93,9 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        // Men mag NOOIT manueel een hash of salt opgeven.
-        if (req.user.hash || req.user.salt) {
+        // De body van een request mag niet leeg zijn, alsook geen hash of salt
+        // bevatten.
+        if (!req.body == null || req.body.hash || req.body.salt) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
@@ -138,8 +139,9 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        // Men mag NOOIT manueel een hash of salt opgeven.
-        if (req.user.hash || req.user.salt) {
+        // De body van een request mag niet leeg zijn, alsook geen hash of salt
+        // bevatten.
+        if (req.body == null || req.body.hash || req.body.salt) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
@@ -180,11 +182,6 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        // Men mag NOOIT manueel een hash of salt opgeven.
-        if (req.user.hash || req.user.salt) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
-
         // TODO: delete cascade in the database!
         await prisma.userRegion.deleteMany({
             where: {
