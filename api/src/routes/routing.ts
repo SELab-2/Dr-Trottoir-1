@@ -71,6 +71,7 @@ export function includeUser(includeAddress: boolean) {
             student: true,
             super_student: true,
             admin: true,
+            deleted: true,
             hash: false,
             salt: false,
         },
