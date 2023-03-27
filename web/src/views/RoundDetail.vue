@@ -1,5 +1,5 @@
 <template>
-  <v-card :title="mockround.name" :subtitle="date" variant="flat" class="ma-1">
+  <v-card :title="bussyround.name" :subtitle="date" variant="flat" class="ma-1">
     <!-- Select component to select the role, will be removed after auth -->
     <template v-slot:append>
       <v-select variant="solo"
@@ -16,24 +16,24 @@
             to="/account/0/false"
           >
             <template v-slot:prepend>
-              <Avatar :name="mockround.student" size="x-small"/>
+              <Avatar :name="bussyround.student" size="x-small"/>
             </template>
-            {{ mockround.student }}    
+            {{ bussyround.student }}    
           </v-btn>
         </template>
       </v-hover>
       <v-timeline truncate-line="both" side="end" density="compact" class="mx-3">
         <v-timeline-item dot-color="green" icon="mdi-check">
           <v-card>
-            <v-card-title> Start {{ mockround.start }} </v-card-title>
+            <v-card-title> Start {{ bussyround.start }} </v-card-title>
           </v-card>
         </v-timeline-item>
         <v-timeline-item
           width="100%"
-          v-for="(building, id) in mockround.buildings"
+          v-for="(building, id) in bussyround.buildings"
           :key="id"
           :dot-color="mockdata[id].color"
-          :size="mockdata[id].color != 'red' ? 'default' : 'small'"
+          :size="mockdata[id].color != 'red' ? 'large' : 'small'"
           :icon="mockdata[id].icon"
           icon-color="white"
         >
@@ -77,7 +77,7 @@
         </v-timeline-item>
         <v-timeline-item dot-color="red" icon="mdi-close" size="small">
           <v-card>
-            <v-card-title> Einde {{ mockround.start }} </v-card-title>
+            <v-card-title> Einde {{ bussyround.start }} </v-card-title>
           </v-card>
         </v-timeline-item>
       </v-timeline>
@@ -133,7 +133,9 @@ function cleanup_time_data(id: number) {
   }
 }
 
-const mockround: Round = {
+
+
+const bussyround: Round = {
   name: "Vrijdagmarkt",
   start: "16:00",
   end: "",
@@ -191,6 +193,46 @@ const mockround: Round = {
       comments: false,
       amount_of_pics: 4,
     },
+  ],
+};
+
+const doneround: Round = {
+  name: "Vrijdagmarkt",
+  start: "16:00",
+  end: "",
+  started: true,
+  student: "Sophie",
+  comments: false,
+  current_building: 1,
+  buildings: [
+  {
+    name: "Upkot",
+    address: "Witbakkerstraat 49",
+    deltatime: "15 min",
+    comments: true,
+    amount_of_pics: 3,
+  },
+  {
+    name: "Delhaize",
+    address: "boulevard Antoine 221",
+    deltatime: "50 min",
+    comments: false,
+    amount_of_pics: 7,
+  },
+  {
+    name: "Q8",
+    address: "Pastoor Goossenslaan 34",
+    deltatime: "30 min",
+    comments: false,
+    amount_of_pics: 3,
+  },
+  {
+    name: "Appartment 4",
+    address: "Oranjeboomstraat 345",
+    deltatime: "20 min",
+    comments: true,
+    amount_of_pics: 3,
+  },
   ],
 };
 </script>
