@@ -12,7 +12,7 @@
       />
       <div v-for="(building, id) in filter()" :key="id + filter_data">
         <v-card
-          class="pa-4 my-4"
+          class="mb-3 mx-1 pb-2"
           @click="
             router.push({
               name: 'Gebouw detail',
