@@ -1,100 +1,286 @@
 <template>
-  <v-container fluid>
-    <v-card>
-      <v-card-actions>
+  <v-card variant="flat">
+    <v-row class="py-0 my-0">
+      <v-col
+        cols="1"
+        style="min-width: 100px; max-width: 100%"
+        class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
+      >
         <v-select
+          label="Student"
+          :items="mock_students"
+          type="text"
           variant="solo"
-          label="Selecteer type week"
-          v-model="selectedWeek"
-          :items="['Even', 'Oneven']"
+          prepend-inner-icon="mdi-account"
+          v-model="selected_student"
+          required
         ></v-select>
-        <v-spacer></v-spacer>
+      </v-col>
+      <v-col
+        cols="3"
+        style="min-width: 100px; max-width: 100%"
+        class="flex-grow-0 flex-shrink-0 py-0 my-0"
+      >
+        <v-text-field
+          label="Datum"
+          type="date"
+          variant="solo"
+          v-model="selected_day"
+        />
+      </v-col>
+      <v-col
+        cols="3"
+        style="min-width: 100px; max-width: 100%"
+        class="flex-grow-0 flex-shrink-0 py-0 my-0 mr-5"
+      >
+        <v-text-field
+          label="Start"
+          type="time"
+          variant="solo"
+          v-model="selected_time"
+        />
+      </v-col> </v-row
+    ><v-row class="py-0 my-0">
+      <v-col
+        cols="1"
+        style="min-width: 100px; max-width: 100%"
+        class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
+      >
         <v-select
+          label="Ronde"
+          :items="mock_rounds"
+          v-model="selected_round"
+          item-value="name"
+          item-title="name"
+          return-object
+          type="text"
           variant="solo"
-          label="Selecteer student"
-          v-model="selectedStudent"
-          :items="['Jonathan', 'Oscar', 'Pol', 'Annemie']"
+          prepend-inner-icon="mdi-transit-detour"
+          required
         ></v-select>
-        <v-spacer></v-spacer>
-        <VueDatePicker
-          class="date-select"
-          v-model="selectedDate"
-          :enable-time-picker="false"
-          input-class-name="v-field__input"
-          :format="format"
-        ></VueDatePicker>
-      </v-card-actions>
-
-      <v-container fluid>
-        <v-card title="Rondes">
-          <v-card-actions>
-            <v-select
-              variant="solo"
-              v-model="selectedRound"
-              label="Aangemaakte rondes"
-              :items="rounds"
-            ></v-select>
-            <v-spacer></v-spacer>
-            <router-link to="/dashboard/rondes/nieuw">
-              <v-btn
-                v-if="selectedRound"
-                prepend-icon="mdi-pencil"
-                color="primary"
-                >Bewerk ronde</v-btn
-              >
-            </router-link>
-          </v-card-actions>
-          <v-list v-if="selectedRound">
-            <v-list-item v-for="building in buildings" :key="building.name">
-              <template v-slot:prepend>
-                <v-icon icon="mdi-office-building"></v-icon>
+      </v-col>
+      <v-col
+        cols="3"
+        style="min-width: 100px; max-width: 100%"
+        class="flex-grow-0 flex-shrink-0 py-0 my-0"
+      >
+        <v-btn
+          min-width="100%"
+          min-height="55px"
+          prepend-icon="mdi-pencil"
+          left
+          max-width="100%"
+          >Bewerken</v-btn
+        >
+      </v-col>
+      <v-col
+        cols="3"
+        style="min-width: 100px; max-width: 100%"
+        class="flex-grow-0 flex-shrink-0 py-0 my-0 mr-5"
+      >
+        <v-btn
+          min-height="55px"
+          min-width="100%"
+          prepend-icon="mdi-plus"
+          max-width="100%"
+          >Nieuwe maken</v-btn
+        >
+      </v-col>
+    </v-row>
+    <v-card
+      v-if="selected_round"
+      variant="flat"
+      class="py-0 my-0 mx-2"
+      :title="selected_round.name"
+    >
+      <v-list class="mx-3">
+        <v-list-item v-for="building in selected_round.buildings">
+          <v-card variant="flat"></v-card>
+          <template v-slot:prepend v-if="building.comments">
+            <v-tooltip text="Gebouw is al ingepland.">
+              <template v-slot:activator="{ props }">
+                <v-icon color="orange" icon="mdi-alert" v-bind="props"></v-icon>
               </template>
-              <v-list-item-title>{{ building.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{ building.adress }}</v-list-item-subtitle>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-container>
-      <v-spacer></v-spacer>
-      <v-card-actions class="">
-        <v-spacer></v-spacer>
-        <v-btn prepend-icon="mdi-cancel" color="error">Annuleren</v-btn>
-        <v-btn prepend-icon="mdi-check" color="primary">Ronde opslaan</v-btn>
-      </v-card-actions>
+            </v-tooltip>
+          </template>
+          <template v-slot:prepend>
+            <v-icon color="green" icon="mdi-office-building"></v-icon>
+          </template>
+          <template v-slot:title>
+            <v-card-title>{{ building.name }}</v-card-title>
+          </template><template v-slot:subtitle>
+            <v-card-subtitle>{{ building.address }}</v-card-subtitle>
+          </template>
+          </v-list-item
+        >
+      </v-list>
     </v-card>
-  </v-container>
+    <v-card v-else title="Nog geen ronde geselecteerd" variant="flat"></v-card>
+    <v-card-actions class="d-flex">
+      <v-spacer></v-spacer>
+      <!-- TODO fill in correct link, router pushback to previous page or reload this one? -->
+      <v-btn :disabled="!(selected_student && selected_round && selected_day && selected_time)" to="/todo" prepend-icon="mdi-check" color="primary"
+        >Ronde inplannen</v-btn
+      >
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import VueDatePicker from "@vuepic/vue-datepicker";
+import Round from "@/components/models/Round";
 
-const selectedWeek = ref("");
-const selectedStudent = ref("");
-const selectedDate = ref("");
-const selectedRound = ref("");
+const selected_student = ref<string>("");
+const selected_day = ref<string>(new Date().toISOString().substring(0, 10));
+const selected_time = ref<string>("");
+const selected_round = ref<Round | null>(null);
 
-const format = (date: Date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-
-  return `${day}/${month}/${year}`;
-};
-
-const rounds = ref(["Gent Zuid", "Station", "Koremarkt"]);
-
-const buildings = ref([
-  { adress: "Lange Violettestraat 50", name: "Upkot" },
-  { adress: "Vlaanderenstraat 4", name: "Appartement 21" },
-  { adress: "Zuidstraat 2", name: "Shopping Gent Zuid" },
-  { adress: "Krookstraat 345", name: "De krook" },
+const mock_students = ref<string[]>([
+  "Michael",
+  "Christopher",
+  "Jessica",
+  "Matthew",
+  "Ashley",
 ]);
-</script>
 
-<style>
-.date-select {
-  margin-left: 10%;
-  width: 20%;
-}
-</style>
+const mock_rounds: Round[] = [
+  {
+    name: "Grote Markt",
+    start: "13:30",
+    end: "14:00",
+    started: true,
+    student: "Emma",
+    comments: true,
+    current_building: 5,
+    buildings: [
+      {
+        name: "Smith",
+        address: "Gent, Belgium",
+        deltatime: "10 min",
+        comments: false,
+        amount_of_pics: 5,
+      },
+      {
+        name: "Johnson",
+        address: "Brussels, Belgium",
+        deltatime: "35 min",
+        comments: false,
+        amount_of_pics: 2,
+      },
+      {
+        name: "Smith",
+        address: "Gent, Belgium",
+        deltatime: "10 min",
+        comments: true,
+        amount_of_pics: 5,
+      },
+      {
+        name: "Johnson",
+        address: "Brussels, Belgium",
+        deltatime: "35 min",
+        comments: false,
+        amount_of_pics: 2,
+      },
+      {
+        name: "Brown",
+        address: "Antwerp, Belgium",
+        deltatime: "25 min",
+        comments: true,
+        amount_of_pics: 4,
+      },
+    ],
+  },
+  {
+    name: "Vrijdagmarkt",
+    start: "16:00",
+    end: "",
+    started: true,
+    student: "Sophie",
+    comments: false,
+    current_building: 1,
+    buildings: [
+      {
+        name: "Garcia",
+        address: "Bruges, Belgium",
+        deltatime: "15 min",
+        comments: false,
+        amount_of_pics: 3,
+      },
+      {
+        name: "Miller",
+        address: "Leuven, Belgium",
+        deltatime: "20 min",
+        comments: false,
+        amount_of_pics: 2,
+      },
+      {
+        name: "Clark",
+        address: "Ostend, Belgium",
+        deltatime: "30 min",
+        comments: false,
+        amount_of_pics: 4,
+      },
+      {
+        name: "Miller",
+        address: "Leuven, Belgium",
+        deltatime: "20 min",
+        comments: false,
+        amount_of_pics: 2,
+      },
+      {
+        name: "Clark",
+        address: "Ostend, Belgium",
+        deltatime: "30 min",
+        comments: false,
+        amount_of_pics: 4,
+      },
+      {
+        name: "Miller",
+        address: "Leuven, Belgium",
+        deltatime: "20 min",
+        comments: false,
+        amount_of_pics: 2,
+      },
+      {
+        name: "Clark",
+        address: "Ostend, Belgium",
+        deltatime: "30 min",
+        comments: false,
+        amount_of_pics: 4,
+      },
+    ],
+  },
+  {
+    name: "Korenmarkt",
+    start: "16:15",
+    end: "",
+    student: "Alex",
+    started: false,
+    comments: false,
+    current_building: 0,
+    buildings: [
+      {
+        name: "Wilson",
+        address: "Veldstraat, Belgium",
+        deltatime: "5 min",
+        comments: false,
+        amount_of_pics: 3,
+      },
+      {
+        name: "Moore",
+        address: "Liege, Belgium",
+        deltatime: "45 min",
+        comments: false,
+        amount_of_pics: 5,
+      },
+      {
+        name: "Anderson",
+        address: "Mons, Belgium",
+        deltatime: "30 min",
+        comments: false,
+        amount_of_pics: 2,
+      },
+    ],
+  },
+];
+</script>
