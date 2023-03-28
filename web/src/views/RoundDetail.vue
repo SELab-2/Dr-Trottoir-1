@@ -1,5 +1,5 @@
 <template>
-  <v-card :title="mockround.name" :subtitle="date" variant="flat" class="ma-1">
+  <v-card :title="mockround.name" :subtitle="date_to_dd_MM_yyyy(mockround.due_date)" variant="flat" class="ma-1">
     <!-- Select component to select the role, will be removed after auth -->
     <template v-slot:append>
       <v-select variant="solo"
@@ -29,8 +29,8 @@
 
         <v-timeline-item dot-color="green" icon="mdi-check">
           <!-- We started: same view for everyone -->
-          <v-card v-if="mockround.started">
-            <v-card-title> Start {{ mockround.start }} </v-card-title>
+          <v-card v-if="mockround.start_time">
+            <v-card-title> Start {{ mockround.start_time }} </v-card-title>
           </v-card>
           <!-- Student has other option when not started -->
           <v-btn 
@@ -51,18 +51,18 @@
             </v-overlay>
           </v-btn>
           <!-- Last option: the round is not started yet-->
-          <v-card v-else color="error">
-            <v-card-title> Ronde nog niet begonnen </v-card-title>
+          <v-card v-else>
+            <v-card-title> Nog niet gestart </v-card-title>
           </v-card>
         </v-timeline-item>
 
         <v-timeline-item
           width="100%"
-          v-for="(building, id) in mockround.buildings"
-          :key="id"
-          :dot-color="mockdata[id].color"
-          :size="mockdata[id].color != 'red' ? 'large' : 'small'"
-          :icon="mockdata[id].icon"
+          v-for="building in mockround.buildings"
+          :key="building.name"
+          :dot-color="building_status_color(building)"
+          :size="building_status_size(building)"
+          :icon="building_status_icon(building)"
           icon-color="white"
         >
           <router-link to="/gebouw/3">
@@ -76,14 +76,14 @@
                   :color="isHovering ? 'grey-lighten-5': ''"
                 >
                   <template v-slot:append>
-                    <v-card-title>{{ cleanup_time_data(id) }}</v-card-title>
+                    <v-card-title>{{ building_time_range(building) }}</v-card-title>
                   </template>
                   <v-chip
                     prepend-icon="mdi-camera"
                     label
                     color="success"
                     class="pa-2 ma-2"
-                    v-if="id < 2"
+                    v-if="building.amount_of_pics > 0"
                   >
                     {{ building.amount_of_pics }} foto's geupload
                   </v-chip>
@@ -105,7 +105,7 @@
         </v-timeline-item>
         <v-timeline-item dot-color="red" icon="mdi-close" size="small">
           <v-card>
-            <v-card-title> Einde {{ mockround.start }} </v-card-title>
+            <v-card-title> Einde </v-card-title>
           </v-card>
         </v-timeline-item>
       </v-timeline>
@@ -128,6 +128,7 @@ import Avatar from "@/components/Avatar.vue";
 import StartRoundPopup from "@/components/StartRoundPopupContent.vue";
 import { ref } from 'vue'
 import router from "@/router";
+import RoundBuilding from "@/components/models/RoundBuilding"
 
 // add the role, will be replaced with actual athentication
 // TODO: replace with actual authentication
@@ -142,38 +143,45 @@ function start_round(){
   router.go(0);
 };
 
-const date = "13/03/2023";
-
-//TODO remove after mockpresentation
-const mockdata = [
-  { time_start: "16:10", time_end: "16:12", color: "green", icon: "mdi-check" },
-  {
-    time_start: "16:15",
-    time_end: "",
-    color: "orange",
-    icon: "mdi-account-clock",
-  },
-  { time_start: "", time_end: "", color: "red", icon: "mdi-office-building" },
-  { time_start: "", time_end: "", color: "red", icon: "mdi-office-building" },
-  { time_start: "", time_end: "", color: "red", icon: "mdi-office-building" },
-  { time_start: "", time_end: "", color: "red", icon: "mdi-office-building" },
-  { time_start: "", time_end: "", color: "red", icon: "mdi-office-building" },
-  { time_start: "", time_end: "", color: "red", icon: "mdi-office-building" },
-];
-
-function cleanup_time_data(id: number) {
-  const building = mockdata[id];
-  if (building.time_end) {
-    return `${building.time_start} - ${building.time_end}`;
-  } else {
-    return `${building.time_start}`;
+function building_time_range(building: RoundBuilding) {
+  if (!building.start_time) {
+    return ""; 
+  }  
+  if(building.end_time){
+    return date_to_hh_mm(building.start_time) + '-' + date_to_hh_mm(building.end_time);
   }
+    return date_to_hh_mm(building.start_time);
 }
 
+function date_to_hh_mm(date: Date|null): string {
+  if(!date){
+    return "";
+  }
+  return date.getHours() + ':' + date.getMinutes();
+}
 
+function date_to_dd_MM_yyyy(date: Date|null): string {
+  if(!date){
+    return "";
+  }
+  return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+}
+
+function building_status_color(building: RoundBuilding): string{
+  return 'success'
+}
+
+function building_status_size(building: RoundBuilding): string{
+  return 'large'
+}
+
+function building_status_icon(building: RoundBuilding): string{
+  return 'mdi-check'
+}
 
 const mockround: Round = {
   name: "Vrijdagmarkt",
+  due_date: new Date(2023, 2, 6, 12, 45),
   start_time: new Date(2023, 2, 6, 12, 45),
   end_time: null,
   student: "Sophie",
