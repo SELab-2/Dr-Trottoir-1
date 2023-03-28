@@ -1,6 +1,6 @@
 import { prisma } from "../prisma";
 import express from "express";
-import { CustomRequest, Routing, includeUser } from "./routing";
+import { CustomRequest, Routing} from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 
@@ -11,7 +11,6 @@ export class BuildingRouting extends Routing {
         const result = await prisma.file.create({
             data: req.body,
         });
-
         return res.status(201).json(result);
     }
 
