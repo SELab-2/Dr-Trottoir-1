@@ -16,16 +16,32 @@
           required
         ></v-select>
       </v-col>
+      <!-- Start en einddatum zou idealiter een kalender moeten zijn waarop datums te selecteren zijn -->
       <v-col
         cols="3"
         style="min-width: 100px; max-width: 100%"
-        class="flex-grow-0 flex-shrink-0 py-0 my-0"
+        class="flex-grow-0 flex-shrink-1 py-0 my-0"
       >
         <v-text-field
-          label="Datum"
+          label="Startdatum"
           type="date"
           variant="solo"
-          v-model="selected_day"
+          multiple
+          v-model="selected_start_day"
+        />
+      </v-col>
+      <v-col
+        cols="3"
+        style="min-width: 100px; max-width: 100%"
+        class="flex-grow-0 flex-shrink-1 py-0 my-0"
+      >
+        <v-text-field
+          label="Einddatum"
+          type="date"
+          variant="solo"
+          multiple
+          v-model="selected_end_day"
+          :placeholder="selected_start_day"
         />
       </v-col>
       <v-col
@@ -126,7 +142,12 @@
       <!-- TODO fill in correct link, router pushback to previous page or reload this one? -->
       <v-btn
         :disabled="
-          !(selected_student && selected_round && selected_day && selected_time)
+          !(
+            selected_student &&
+            selected_round &&
+            selected_start_day &&
+            selected_time
+          )
         "
         to="/todo"
         prepend-icon="mdi-check"
@@ -142,7 +163,10 @@ import { ref } from "vue";
 import Round from "@/components/models/Round";
 
 const selected_student = ref<string>("");
-const selected_day = ref<string>(new Date().toISOString().substring(0, 10));
+const selected_start_day = ref<string>(
+  new Date().toISOString().substring(0, 10),
+);
+const selected_end_day = ref<string>(new Date().toISOString().substring(0, 10));
 const selected_time = ref<string>("");
 const selected_round = ref<Round | null>(null);
 
