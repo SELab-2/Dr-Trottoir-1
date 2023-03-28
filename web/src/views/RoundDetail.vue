@@ -30,6 +30,7 @@
         <v-timeline-item 
           :dot-color="mockround.start_time ? 'success': 'red'"
           :icon="mockround.start_time ? 'mdi-check': 'mdi-close'"
+          :size="mockround.start_time ? 'large': 'small'"
         >
           <!-- We started: same view for everyone -->
           <v-card v-if="mockround.start_time">
@@ -106,20 +107,59 @@
             
           </router-link>
         </v-timeline-item>
-        <v-timeline-item dot-color="red" icon="mdi-close" size="small">
+
+        <!-- The end card as last on the timeline-->
+        <v-timeline-item 
+          :dot-color="mockround.end_time ? 'success': 'red'"
+          :icon="mockround.end_time ? 'mdi-check': 'mdi-close'"
+          :size="mockround.end_time ? 'large': 'small'"
+        >
+          <!-- The student has -->
           <v-card>
-            <v-card-title> Einde </v-card-title>
+            <v-card-title> Einde {{ date_to_hh_mm(mockround.end_time) }} </v-card-title>
           </v-card>
         </v-timeline-item>
+
       </v-timeline>
-    <v-card-actions class="d-flex" v-if="current_role === 'Student'">
+    <!-- Only show the finish button to the student if the round is already started and not finished-->
+    <v-card-actions class="d-flex" v-if="current_role === 'Student' && mockround.start_time && !mockround.end_time">
       <v-spacer></v-spacer>
       <v-btn
         prepend-icon="mdi-check"
         color="success"
         variant="elevated"
+        @click=" end_popup = true" 
         >Ronde beïndigen</v-btn
       >
+      <!-- Show warning before ending -->
+      <v-overlay v-model="end_popup">
+        <v-snackbar v-model="end_popup" timeout="-1" elevation="24" color="white">
+          <v-card prepend-icon="mdi-exclamation" variant="flat">
+            <template v-slot:title> Beïndig ronde </template>
+            
+            <p class="mx-3" v-if="round_complete(mockround)">
+              Je staat op het punt een ronde te beïndigen. Het huidige tijdstip zal
+              opgeslagen worden als eind tijdstip. Je zal acheraf geen opmerkingen of foto's kunnen toevoegen.
+              Ben je zeker dat je de ronde wilt beïndigen?
+            </p>   
+            <p class="mx-3" v-else>
+              Nog niet alle gebouwen van deze route zijn afgewerkt. 
+              Ben je zeker dat je de ronde wilt beïndigen?
+            </p>        
+            <div class="d-flex flex-row-reverse ma-3">
+              <v-btn 
+                color="success"
+                @click="close_round()"
+              > Beïndig ronde </v-btn>
+              <v-btn 
+                @click=" end_popup = false" 
+                color="error" 
+                class="mr-3"
+              > Annuleer </v-btn>
+            </div>
+          </v-card>
+        </v-snackbar>
+      </v-overlay>
     </v-card-actions>
   </v-card>
 
@@ -145,6 +185,13 @@ function start_round(){
   // we are already on the page, so refresh after the db update
   router.go(0);
 };
+
+const end_popup = ref(false);
+function close_round(){
+  // TODO: close the round in the database
+  // we are already on the page, so refresh after the db update
+  router.go(0);
+}
 
 function building_time_range(building: RoundBuilding) {
   if (!building.start_time) {
@@ -201,10 +248,26 @@ function building_status_icon(building: RoundBuilding): string{
   return 'mdi-office-building'
 }
 
+function round_complete(round: Round): boolean {
+  for(const building of round.buildings){
+    if(!building.end_time){
+      return false
+    }
+  }
+  return true;
+}
+
+function date_not_null(date: Date|null): boolean {
+  if(date){
+    return true;
+  }
+  return false;
+}
+
 const mockround: Round = {
   name: "Vrijdagmarkt",
   due_date: new Date(2023, 2, 6, 12, 45),
-  start_time: null,
+  start_time: new Date(2023, 2, 6, 12, 45),
   end_time: null,
   student: "Sophie",
   buildings: [
@@ -231,7 +294,7 @@ const mockround: Round = {
       end_time: null,
       comments: false,
       amount_of_pics: 0,
-    },
+    },/*
     {
       name: "Miller",
       address: "Leuven, Belgium",
@@ -263,7 +326,7 @@ const mockround: Round = {
       end_time: null,
       comments: false,
       amount_of_pics: 0,
-    },
+    },*/
   ],
 };
 </script>
