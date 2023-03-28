@@ -27,10 +27,13 @@
       <!-- The main timeline, containing all te stops -->
       <v-timeline truncate-line="both" side="end" density="compact" class="mx-3">
 
-        <v-timeline-item dot-color="green" icon="mdi-check">
+        <v-timeline-item 
+          :dot-color="mockround.start_time ? 'success': 'red'"
+          :icon="mockround.start_time ? 'mdi-check': 'mdi-close'"
+        >
           <!-- We started: same view for everyone -->
           <v-card v-if="mockround.start_time">
-            <v-card-title> Start {{ mockround.start_time }} </v-card-title>
+            <v-card-title> Start {{ date_to_hh_mm(mockround.start_time) }} </v-card-title>
           </v-card>
           <!-- Student has other option when not started -->
           <v-btn 
@@ -157,7 +160,8 @@ function date_to_hh_mm(date: Date|null): string {
   if(!date){
     return "";
   }
-  return date.getHours() + ':' + date.getMinutes();
+  const minutes = date.getMinutes()
+  return date.getHours() + ':' + (minutes > 9 ? minutes: ('0' + minutes));
 }
 
 function date_to_dd_MM_yyyy(date: Date|null): string {
@@ -168,15 +172,33 @@ function date_to_dd_MM_yyyy(date: Date|null): string {
 }
 
 function building_status_color(building: RoundBuilding): string{
-  return 'success'
+  if(building.end_time){
+    return 'success'
+  }
+  if(building.start_time){
+    return 'warning'
+  }
+  return 'red'
 }
 
 function building_status_size(building: RoundBuilding): string{
-  return 'large'
+  if(building.end_time){
+    return 'large'
+  }
+  if(building.start_time){
+    return 'default'
+  }
+  return 'small'
 }
 
 function building_status_icon(building: RoundBuilding): string{
-  return 'mdi-check'
+  if(building.end_time){
+    return 'mdi-check'
+  }
+  if(building.start_time){
+    return 'mdi-account-clock'
+  }
+  return 'mdi-office-building'
 }
 
 const mockround: Round = {
@@ -190,14 +212,14 @@ const mockround: Round = {
       name: "Garcia",
       address: "Bruges, Belgium",
       start_time: new Date(2023, 2, 6, 12, 45),
-      end_time: new Date(2023, 2, 6, 12, 45),
+      end_time: new Date(2023, 2, 6, 12, 55),
       comments: true,
       amount_of_pics: 5,
     },
     {
       name: "Miller",
       address: "Leuven, Belgium",
-      start_time: new Date(2023, 2, 6, 12, 45),
+      start_time: new Date(2023, 2, 6, 13, 5),
       end_time: null,
       comments: false,
       amount_of_pics: 2,
@@ -208,7 +230,7 @@ const mockround: Round = {
       start_time: null,
       end_time: null,
       comments: false,
-      amount_of_pics: 4,
+      amount_of_pics: 0,
     },
     {
       name: "Miller",
@@ -216,7 +238,7 @@ const mockround: Round = {
       start_time: null,
       end_time: null,
       comments: false,
-      amount_of_pics: 2,
+      amount_of_pics: 0,
     },
     {
       name: "Clark",
@@ -224,7 +246,7 @@ const mockround: Round = {
       start_time: null,
       end_time: null,
       comments: false,
-      amount_of_pics: 4,
+      amount_of_pics: 0,
     },
     {
       name: "Miller",
@@ -232,7 +254,7 @@ const mockround: Round = {
       start_time: null,
       end_time: null,
       comments: false,
-      amount_of_pics: 2,
+      amount_of_pics: 0,
     },
     {
       name: "Clark",
@@ -240,7 +262,7 @@ const mockround: Round = {
       start_time: null,
       end_time: null,
       comments: false,
-      amount_of_pics: 4,
+      amount_of_pics: 0,
     },
   ],
 };
