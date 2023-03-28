@@ -72,8 +72,8 @@
     <v-overlay v-model="snackbar">
       <v-snackbar v-model="snackbar" timeout="-1" elevation="24" color="white">
         <StartRoundPopup
-          to="/rondes/detail"
-          @cancel="val => snackbar = val"
+          :oncancel="() => snackbar = !snackbar"
+          :onsubmit="() => start_round()"
         />
       </v-snackbar>
     </v-overlay>
@@ -83,11 +83,17 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import StartRoundPopup from "@/components/StartRoundPopupContent.vue";
+import router from "@/router";
 
 // https://stackoverflow.com/questions/1643320/get-month-name-from-date
 const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
 
+// logic for starting a round with a warning popup
 const snackbar = ref(false);
+function start_round(){
+  // TODO: start the round in the database
+  router.push("/rondes/detail")
+}
 
 const calculateProgress = (done: number, toDo: number) => {
   return Math.round((done / toDo) * 100);

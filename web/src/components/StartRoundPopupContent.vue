@@ -9,22 +9,21 @@
         wilt starten?
       </p>
       <div class="d-flex flex-row-reverse ma-3">
-        <router-link :to="to">
-          <v-btn color="success"> Start ronde </v-btn>
-        </router-link>
-
         <v-btn 
-          @click=" $emit('cancel', false)" 
+          color="success"
+          @click="onsubmit"
+        > Start ronde </v-btn>
+        <v-btn 
+          @click=" oncancel" 
           color="error" 
           class="mr-3"
-        >
-          Annuleer
-        </v-btn>
+        > Annuleer </v-btn>
       </div>
     </v-card>
 </template>
 <script lang="ts" setup>
 defineProps({
-  to: {type: String, required: true}
+  oncancel: {type: Function, required: true},
+  onsubmit: {type: Function, required: true},
 });
 </script>
