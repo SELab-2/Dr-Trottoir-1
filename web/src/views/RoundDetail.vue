@@ -7,6 +7,7 @@
         :items="roles"
       />
     </template>
+      <!-- The name and avatar of the student -->
       <v-hover>
         <template v-slot:default="{ isHovering, props }">
           <v-btn
@@ -22,12 +23,35 @@
           </v-btn>
         </template>
       </v-hover>
+
+      <!-- The main timeline, containing all te stops -->
       <v-timeline truncate-line="both" side="end" density="compact" class="mx-3">
+
         <v-timeline-item dot-color="green" icon="mdi-check">
-          <v-card>
+          <!-- We started: same view for everyone -->
+          <v-card v-if="bussyround.started">
             <v-card-title> Start {{ bussyround.start }} </v-card-title>
           </v-card>
+          <!-- Student has other option when not started -->
+          <v-btn 
+            v-else-if="current_role === 'Student'"
+            color="success"
+            @click="start_popup = !start_popup"
+          >
+            Start ronde
+
+            <!-- Show warning before start -->
+            <v-overlay v-model="start_popup">
+              <v-snackbar v-model="start_popup" timeout="-1" elevation="24" color="white">
+                <StartRoundPopup
+                  to="/rondes/detail"
+                  @cancel="val => start_popup = val"
+                />
+              </v-snackbar>
+            </v-overlay>
+          </v-btn>
         </v-timeline-item>
+
         <v-timeline-item
           width="100%"
           v-for="(building, id) in bussyround.buildings"
@@ -97,13 +121,16 @@
 <script lang="ts" setup>
 import Round from "@/components/models/Round";
 import Avatar from "@/components/Avatar.vue";
+import StartRoundPopup from "@/components/StartRoundPopupContent.vue";
 import { ref } from 'vue'
 
 // add the role, will be replaced with actual athentication
 // TODO: replace with actual authentication
-const roles = ['Admin', 'Student', 'Superstudent', 'Syndicus']
-const current_role = ref(roles[0])
+const roles = ['Admin', 'Student', 'Superstudent', 'Syndicus'];
+const current_role = ref(roles[0]);
 
+// state to keep track of the startround popup
+const start_popup = ref(false);
 
 const date = "13/03/2023";
 
@@ -139,7 +166,7 @@ const bussyround: Round = {
   name: "Vrijdagmarkt",
   start: "16:00",
   end: "",
-  started: true,
+  started: false,
   student: "Sophie",
   comments: false,
   current_building: 1,
