@@ -67,10 +67,11 @@ model UserRegion {
 
 // Hier wordt het pad naar een bestand bijgehouden.
 model File {
-    id     Int    @id @default(autoincrement())
-    format String
-
-    path      String
+    id        Int        @id @default(autoincrement())
+    name      String
+    format    String
+    content   Bytes
+    createdAt DateTime   @default(now())
     buildings Building[] // Vereist?
 
     @@map("file")
