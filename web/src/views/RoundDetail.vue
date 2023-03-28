@@ -1,5 +1,5 @@
 <template>
-  <v-card :title="bussyround.name" :subtitle="date" variant="flat" class="ma-1">
+  <v-card :title="mockround.name" :subtitle="date" variant="flat" class="ma-1">
     <!-- Select component to select the role, will be removed after auth -->
     <template v-slot:append>
       <v-select variant="solo"
@@ -17,9 +17,9 @@
             to="/account/0/false"
           >
             <template v-slot:prepend>
-              <Avatar :name="bussyround.student" size="x-small"/>
+              <Avatar :name="mockround.student" size="x-small"/>
             </template>
-            {{ bussyround.student }}    
+            {{ mockround.student }}    
           </v-btn>
         </template>
       </v-hover>
@@ -29,8 +29,8 @@
 
         <v-timeline-item dot-color="green" icon="mdi-check">
           <!-- We started: same view for everyone -->
-          <v-card v-if="bussyround.started">
-            <v-card-title> Start {{ bussyround.start }} </v-card-title>
+          <v-card v-if="mockround.started">
+            <v-card-title> Start {{ mockround.start }} </v-card-title>
           </v-card>
           <!-- Student has other option when not started -->
           <v-btn 
@@ -44,17 +44,21 @@
             <v-overlay v-model="start_popup">
               <v-snackbar v-model="start_popup" timeout="-1" elevation="24" color="white">
                 <StartRoundPopup
-                  to="/rondes/detail"
-                  @cancel="val => start_popup = val"
+                  :oncancel="() => start_popup = !start_popup"
+                  :onsubmit="() => start_round()"
                 />
               </v-snackbar>
             </v-overlay>
           </v-btn>
+          <!-- Last option: the round is not started yet-->
+          <v-card v-else color="error">
+            <v-card-title> Ronde nog niet begonnen </v-card-title>
+          </v-card>
         </v-timeline-item>
 
         <v-timeline-item
           width="100%"
-          v-for="(building, id) in bussyround.buildings"
+          v-for="(building, id) in mockround.buildings"
           :key="id"
           :dot-color="mockdata[id].color"
           :size="mockdata[id].color != 'red' ? 'large' : 'small'"
@@ -101,7 +105,7 @@
         </v-timeline-item>
         <v-timeline-item dot-color="red" icon="mdi-close" size="small">
           <v-card>
-            <v-card-title> Einde {{ bussyround.start }} </v-card-title>
+            <v-card-title> Einde {{ mockround.start }} </v-card-title>
           </v-card>
         </v-timeline-item>
       </v-timeline>
@@ -123,6 +127,7 @@ import Round from "@/components/models/Round";
 import Avatar from "@/components/Avatar.vue";
 import StartRoundPopup from "@/components/StartRoundPopupContent.vue";
 import { ref } from 'vue'
+import router from "@/router";
 
 // add the role, will be replaced with actual athentication
 // TODO: replace with actual authentication
@@ -131,6 +136,11 @@ const current_role = ref(roles[0]);
 
 // state to keep track of the startround popup
 const start_popup = ref(false);
+function start_round(){
+  // TODO: start the round in the database
+  // we are already on the page, so refresh after the db update
+  router.go(0);
+};
 
 const date = "13/03/2023";
 
@@ -162,104 +172,68 @@ function cleanup_time_data(id: number) {
 
 
 
-const bussyround: Round = {
+const mockround: Round = {
   name: "Vrijdagmarkt",
-  start: "16:00",
-  end: "",
-  started: false,
+  start_time: new Date(2023, 2, 6, 12, 45),
+  end_time: null,
   student: "Sophie",
-  comments: false,
-  current_building: 1,
   buildings: [
     {
       name: "Garcia",
       address: "Bruges, Belgium",
-      deltatime: "15 min",
+      start_time: new Date(2023, 2, 6, 12, 45),
+      end_time: new Date(2023, 2, 6, 12, 45),
       comments: true,
       amount_of_pics: 5,
     },
     {
       name: "Miller",
       address: "Leuven, Belgium",
-      deltatime: "20 min",
+      start_time: new Date(2023, 2, 6, 12, 45),
+      end_time: null,
       comments: false,
       amount_of_pics: 2,
     },
     {
       name: "Clark",
       address: "Ostend, Belgium",
-      deltatime: "30 min",
+      start_time: null,
+      end_time: null,
       comments: false,
       amount_of_pics: 4,
     },
     {
       name: "Miller",
       address: "Leuven, Belgium",
-      deltatime: "20 min",
+      start_time: null,
+      end_time: null,
       comments: false,
       amount_of_pics: 2,
     },
     {
       name: "Clark",
       address: "Ostend, Belgium",
-      deltatime: "30 min",
+      start_time: null,
+      end_time: null,
       comments: false,
       amount_of_pics: 4,
     },
     {
       name: "Miller",
       address: "Leuven, Belgium",
-      deltatime: "20 min",
+      start_time: null,
+      end_time: null,
       comments: false,
       amount_of_pics: 2,
     },
     {
       name: "Clark",
       address: "Ostend, Belgium",
-      deltatime: "30 min",
+      start_time: null,
+      end_time: null,
       comments: false,
       amount_of_pics: 4,
     },
-  ],
-};
-
-const doneround: Round = {
-  name: "Vrijdagmarkt",
-  start: "16:00",
-  end: "",
-  started: true,
-  student: "Sophie",
-  comments: false,
-  current_building: 1,
-  buildings: [
-  {
-    name: "Upkot",
-    address: "Witbakkerstraat 49",
-    deltatime: "15 min",
-    comments: true,
-    amount_of_pics: 3,
-  },
-  {
-    name: "Delhaize",
-    address: "boulevard Antoine 221",
-    deltatime: "50 min",
-    comments: false,
-    amount_of_pics: 7,
-  },
-  {
-    name: "Q8",
-    address: "Pastoor Goossenslaan 34",
-    deltatime: "30 min",
-    comments: false,
-    amount_of_pics: 3,
-  },
-  {
-    name: "Appartment 4",
-    address: "Oranjeboomstraat 345",
-    deltatime: "20 min",
-    comments: true,
-    amount_of_pics: 3,
-  },
   ],
 };
 </script>
