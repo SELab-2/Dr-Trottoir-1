@@ -66,13 +66,12 @@
         </template>
       </v-card>
     </router-link>
-    
 
     <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
     <v-overlay v-model="snackbar">
       <v-snackbar v-model="snackbar" timeout="-1" elevation="24" color="white">
         <StartRoundPopup
-          :oncancel="() => snackbar = !snackbar"
+          :oncancel="() => (snackbar = !snackbar)"
           :onsubmit="() => start_round()"
         />
       </v-snackbar>
@@ -90,9 +89,9 @@ const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
 
 // logic for starting a round with a warning popup
 const snackbar = ref(false);
-function start_round(){
+function start_round() {
   // TODO: start the round in the database
-  router.push("/rondes/detail")
+  router.push("/rondes/detail");
 }
 
 const calculateProgress = (done: number, toDo: number) => {
