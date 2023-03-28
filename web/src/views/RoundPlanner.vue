@@ -79,6 +79,7 @@
         style="min-width: 100px; max-width: 100%"
         class="flex-grow-0 flex-shrink-0 py-0 my-0 mr-5"
       >
+        <!-- TODO: fix router to link -->
         <v-btn
           to="/rondes/nieuw"
           min-height="55px"
@@ -98,7 +99,10 @@
       <v-list class="mx-3">
         <v-list-item v-for="building in selected_round.buildings">
           <v-card variant="flat"></v-card>
+          <!-- TODO: Currently using the building.comments as a indication for mock -->
+          <!-- Change in a api call if building already in other rounds -->
           <template v-slot:prepend v-if="building.comments">
+            <!-- TODO: Maybe change the text of the tooltip to ref of round -->
             <v-tooltip text="Gebouw is al ingepland.">
               <template v-slot:activator="{ props }">
                 <v-icon color="orange" icon="mdi-alert" v-bind="props"></v-icon>
