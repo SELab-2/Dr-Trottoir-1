@@ -65,6 +65,7 @@
         class="flex-grow-0 flex-shrink-0 py-0 my-0"
       >
         <v-btn
+          to="/rondes/nieuw"
           min-width="100%"
           min-height="55px"
           prepend-icon="mdi-pencil"
@@ -79,6 +80,7 @@
         class="flex-grow-0 flex-shrink-0 py-0 my-0 mr-5"
       >
         <v-btn
+          to="/rondes/nieuw"
           min-height="55px"
           min-width="100%"
           prepend-icon="mdi-plus"
@@ -107,19 +109,24 @@
             <v-icon color="green" icon="mdi-office-building"></v-icon>
           </template>
           <template v-slot:title>
-            <v-card-title>{{ building.name }}</v-card-title>
-          </template><template v-slot:subtitle>
+            <v-card-title>{{ building.name }}</v-card-title> </template
+          ><template v-slot:subtitle>
             <v-card-subtitle>{{ building.address }}</v-card-subtitle>
           </template>
-          </v-list-item
-        >
+        </v-list-item>
       </v-list>
     </v-card>
     <v-card v-else title="Nog geen ronde geselecteerd" variant="flat"></v-card>
     <v-card-actions class="d-flex">
       <v-spacer></v-spacer>
       <!-- TODO fill in correct link, router pushback to previous page or reload this one? -->
-      <v-btn :disabled="!(selected_student && selected_round && selected_day && selected_time)" to="/todo" prepend-icon="mdi-check" color="primary"
+      <v-btn
+        :disabled="
+          !(selected_student && selected_round && selected_day && selected_time)
+        "
+        to="/todo"
+        prepend-icon="mdi-check"
+        color="primary"
         >Ronde inplannen</v-btn
       >
     </v-card-actions>
