@@ -25,7 +25,7 @@
       </v-hover>
 
       <!-- The main timeline, containing all te stops -->
-      <v-timeline truncate-line="both" side="end" density="compact" class="mx-3">
+      <v-timeline truncate-line="both" side="end" density="compact" class="mx-3 mb-1">
 
         <v-timeline-item 
           :dot-color="mockround.start_time ? 'success': 'red'"
@@ -112,13 +112,13 @@
           </v-card>
         </v-timeline-item>
       </v-timeline>
-    <v-card-actions class="d-flex">
+    <v-card-actions class="d-flex" v-if="current_role === 'Student'">
       <v-spacer></v-spacer>
       <v-btn
-        to="/dashboard/rondes/rapport"
         prepend-icon="mdi-check"
-        color="primary"
-        >Ronde stoppen</v-btn
+        color="success"
+        variant="elevated"
+        >Ronde beïndigen</v-btn
       >
     </v-card-actions>
   </v-card>
@@ -204,7 +204,7 @@ function building_status_icon(building: RoundBuilding): string{
 const mockround: Round = {
   name: "Vrijdagmarkt",
   due_date: new Date(2023, 2, 6, 12, 45),
-  start_time: new Date(2023, 2, 6, 12, 45),
+  start_time: null,
   end_time: null,
   student: "Sophie",
   buildings: [
