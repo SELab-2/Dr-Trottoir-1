@@ -53,11 +53,6 @@ const routes = [
         component: BuildingSceen,
         props: true,
       },
-      {
-        path: "/dashboard/gebouwen/nieuw",
-        name: "Gebouw aanmaken",
-        component: BuildingMaker,
-      },
       //{
       //  path: "/ronde/:id",
       //  name: "Ronde",
