@@ -10,20 +10,18 @@
       <v-select variant="solo" v-model="current_role" :items="roles" />
     </template>
     <!-- The name and avatar of the student -->
-    <v-hover>
-      <template v-slot:default="{ isHovering, props }">
-        <v-btn
-          v-bind="props"
-          class="text-body-2 mb-2 ml-3"
-          :variant="isHovering ? 'elevated' : 'text'"
-          to="/account/0/false"
-        >
-          <template v-slot:prepend>
-            <Avatar :name="mockround.student" size="x-small" />
-          </template>
-          {{ mockround.student }}
-        </v-btn>
-      </template>
+    <v-hover v-slot="{ isHovering, props }">
+      <v-btn
+        v-bind="props"
+        class="text-body-2 mb-2 ml-3"
+        :variant="isHovering ? 'elevated' : 'text'"
+        to="/account/0/false"
+      >
+        <template v-slot:prepend>
+          <Avatar :name="mockround.student" size="x-small" />
+        </template>
+        {{ mockround.student }}
+      </v-btn>
     </v-hover>
 
     <!-- The main timeline, containing all te stops -->
@@ -82,14 +80,14 @@
         :icon="building_status_icon(building)"
         icon-color="white"
       >
-        <router-link to="/gebouw/3">
-          <v-hover v-slot="{ isHovering, binding }">
+        <v-hover v-slot="{ isHovering, props }">
+          <router-link to="/gebouw/3">
             <v-card
-              v-bind:="binding"
               width="100%"
               :title="building.name"
               :subtitle="building.address"
               :color="isHovering ? 'grey-lighten-5' : ''"
+              v-bind:="props"
             >
               <template v-slot:append>
                 <v-card-title>{{ building_time_range(building) }}</v-card-title>
@@ -113,8 +111,8 @@
                 Opmerkingen beschikbaar
               </v-chip>
             </v-card>
-          </v-hover>
-        </router-link>
+          </router-link>
+        </v-hover>
       </v-timeline-item>
 
       <!-- The end card as last on the timeline-->
