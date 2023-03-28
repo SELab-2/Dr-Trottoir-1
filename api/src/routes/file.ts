@@ -4,7 +4,7 @@ import { CustomRequest, Routing} from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 
-export class BuildingRouting extends Routing {
+export class FileRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
