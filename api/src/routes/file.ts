@@ -5,12 +5,26 @@ import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import multer from 'multer'
 import { Request, Response } from 'express';
+import path from 'path'
 
 const router = express.Router();
 
 //create multer object (multer saves files to direcotry files)
+
+//with this code he will download the file
+// const fileUpload = multer({
+//     dest: 'files',
+// });
+
 const fileUpload = multer({
-    dest: 'files',
+    storage: multer.diskStorage({
+        destination:  function (req,file,cb){
+            cb(null, 'files/');
+        },
+        filename: function (req,file,cb){
+            cb(null,file.originalname);
+        }
+    })
 });
 
 
@@ -21,44 +35,12 @@ router.post('/',fileUpload.single('file'), (req: Request, res: Response) => {
 });
 
 // file get route
-router.get('/:id', (req: Request, res: Response) => {
-    res.json('/file/:id');
+router.get('/:filename', (req: Request, res: Response) => {
+    const { filename } = req.params;
+    const dirname = path.resolve();
+    const filePath = path.join(dirname, 'files/' + filename);
+    return res.sendFile(filePath);
 });
 
 
 export {router as FileRouter}
-
-
-
-
-
-
-
-
-
-// export class FileRouting extends Routing {
-
-//     @Auth.authorization({ superStudent: true })
-//     async createOne(req: CustomRequest, res: express.Response) {
-//         const result = await prisma.file.create({
-//             data: req.body,
-//         });
-//         return res.status(201).json(result);
-//     }
-
-
-//     @Auth.authorization({ student: true })
-//     async getOne(req: CustomRequest, res: express.Response) {
-
-//         const result = await prisma.file.findUniqueOrThrow({
-//             where: {
-//                 id: Parser.number(req.params["id"]),
-//             },
-//             select: {
-                
-//             },
-//         });
-
-//         return res.status(200).json(result);
-//     }
-// }
