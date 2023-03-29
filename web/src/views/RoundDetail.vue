@@ -80,39 +80,35 @@
         :icon="building_status_icon(building)"
         icon-color="white"
       >
-        <v-hover v-slot="{ isHovering, props }">
-          <router-link to="/gebouw/3">
-            <v-card
-              width="100%"
-              :title="building.name"
-              :subtitle="building.address"
-              :color="isHovering ? 'grey-lighten-5' : ''"
-              v-bind:="props"
+        <router-link to="/gebouw/3">
+          <v-card
+            width="100%"
+            :title="building.name"
+            :subtitle="building.address"
+          >
+            <template v-slot:append>
+              <v-card-title>{{ building_time_range(building) }}</v-card-title>
+            </template>
+            <v-chip
+              prepend-icon="mdi-camera"
+              label
+              color="success"
+              class="pa-2 ma-2"
+              v-if="building.amount_of_pics > 0"
             >
-              <template v-slot:append>
-                <v-card-title>{{ building_time_range(building) }}</v-card-title>
-              </template>
-              <v-chip
-                prepend-icon="mdi-camera"
-                label
-                color="success"
-                class="pa-2 ma-2"
-                v-if="building.amount_of_pics > 0"
-              >
-                {{ building.amount_of_pics }} foto's geupload
-              </v-chip>
-              <v-chip
-                prepend-icon="mdi-comment"
-                label
-                color="red"
-                class="pa-2 ma-2"
-                v-if="building.comments"
-              >
-                Opmerkingen beschikbaar
-              </v-chip>
-            </v-card>
-          </router-link>
-        </v-hover>
+              {{ building.amount_of_pics }} foto's geupload
+            </v-chip>
+            <v-chip
+              prepend-icon="mdi-comment"
+              label
+              color="red"
+              class="pa-2 ma-2"
+              v-if="building.comments"
+            >
+              Opmerkingen beschikbaar
+            </v-chip>
+          </v-card>
+        </router-link>
       </v-timeline-item>
 
       <!-- The end card as last on the timeline-->
