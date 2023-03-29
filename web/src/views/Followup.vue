@@ -15,13 +15,13 @@
         v-for="(round, i) in filtered_data()"
         :key="i"
         :round_name="round.name"
-        :round_start="round.start"
-        :round_end="round.end"
-        :round_started="round.started"
+        :round_start="date_to_hh_mm(round.start_time)"
+        :round_end="date_to_hh_mm(round.end_time)"
+        :round_started="round.start_time ? true : false"
         :student_name="round.student"
-        :building_index="round.current_building"
+        :building_index="completed_buildings(round)"
         :total_buildings="round.buildings.length"
-        :round_comments="round.comments"
+        :round_comments="round_has_comments(round)"
         @click="redirect_to_detail()"
         style="cursor: pointer"
       ></RoundCard>
@@ -39,11 +39,31 @@ import LargeFilter from "@/components/LargeFilter.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import Filterdata from "@/components/models/Filterdata";
+import { date_to_hh_mm } from "@/assets/scripts/format";
 
 const router = useRouter();
 
 function redirect_to_detail() {
   router.push({ path: "/rondes/detail" });
+}
+
+function round_has_comments(round: Round): boolean {
+  for (const building of round.buildings) {
+    if (building.comments) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function completed_buildings(round: Round): number {
+  let count = 0;
+  for (const building of round.buildings) {
+    if (building.end_time) {
+      count++;
+    }
+  }
+  return count;
 }
 
 // TODO: mockdata for rounds, remove in future
@@ -210,18 +230,18 @@ function filter_filters(round: Round): boolean {
   for (const option of filter_data.value.filters) {
     switch (option) {
       case "Klaar":
-        result = round.current_building == round.buildings.length;
+        result = completed_buildings(round) == round.buildings.length;
         break;
       case "Bezig":
         result =
-          0 < round.current_building &&
-          round.current_building < round.buildings.length;
+          0 < completed_buildings(round) &&
+          completed_buildings(round) < round.buildings.length;
         break;
       case "Niet begonnen":
-        result = round.current_building == 0;
+        result = completed_buildings(round) == 0;
         break;
       case "Opmerkingen":
-        result = round.comments;
+        result = round_has_comments(round);
         break;
     }
     if (result) {
@@ -255,12 +275,12 @@ function filtered_data(): Round[] {
   });
 
   // sort the results
-  result.sort((a, b) => {
+  result.sort((a: Round, b: Round) => {
     if (filter_data.value.sort_by == "Gebouwen") {
       return a.buildings.length > b.buildings.length ? 1 : -1;
     } else {
-      const ap = progress(a.current_building, a.buildings.length);
-      const bp = progress(b.current_building, b.buildings.length);
+      const ap = progress(completed_buildings(a), a.buildings.length);
+      const bp = progress(completed_buildings(b), b.buildings.length);
       return ap > bp ? 1 : -1;
     }
   });

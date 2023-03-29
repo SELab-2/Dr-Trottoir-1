@@ -185,6 +185,7 @@ import StartRoundPopup from "@/components/StartRoundPopupContent.vue";
 import { ref } from "vue";
 import router from "@/router";
 import RoundBuilding from "@/components/models/RoundBuilding";
+import { date_to_hh_mm, date_to_dd_MM_yyyy } from "@/assets/scripts/format";
 
 // add the role, will be replaced with actual athentication
 // TODO: replace with actual authentication
@@ -218,23 +219,6 @@ function building_time_range(building: RoundBuilding) {
     );
   }
   return date_to_hh_mm(building.start_time);
-}
-
-function date_to_hh_mm(date: Date | null): string {
-  if (!date) {
-    return "";
-  }
-  const minutes = date.getMinutes();
-  return date.getHours() + ":" + (minutes > 9 ? minutes : "0" + minutes);
-}
-
-function date_to_dd_MM_yyyy(date: Date | null): string {
-  if (!date) {
-    return "";
-  }
-  return (
-    date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-  );
 }
 
 function building_status_color(building: RoundBuilding): string {
