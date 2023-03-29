@@ -35,6 +35,7 @@
           <div v-if="showAccount">
             <router-link to="/">
               <v-list-item
+                class="logout"
                 prepend-icon="mdi-account-cancel"
                 title="Afmelden"
                 value="logout"

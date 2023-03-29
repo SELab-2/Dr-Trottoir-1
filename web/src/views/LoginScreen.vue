@@ -7,6 +7,7 @@
 
       <!-- The input field for the e-mail -->
       <v-text-field
+        class="email"
         v-model="email"
         :prepend-inner-icon="'mdi-email'"
         label="E-mail"
@@ -16,6 +17,7 @@
 
       <!-- The input field for the password -->
       <v-text-field
+        class="password"
         v-model="password"
         :prepend-inner-icon="'mdi-lock'"
         :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
@@ -34,7 +36,7 @@
           </span>
         </p>
         <!-- Login button -->
-        <v-btn prepend-icon="mdi-login" color="success" to="/planning"
+        <v-btn class="login" prepend-icon="mdi-login" color="success" to="/planning"
           >Login</v-btn
         >
       </div>
