@@ -69,8 +69,8 @@ model UserRegion {
 model File {
     id        Int        @id @default(autoincrement())
     name      String
-    format    String
-    content   Bytes
+    path      String
+    //TODO: user
     createdAt DateTime   @default(now())
     buildings Building[] // Vereist?
 
