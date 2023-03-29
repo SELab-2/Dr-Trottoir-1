@@ -2,6 +2,7 @@ import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import chance from "chance";
+import router from "@/router";
 
 export class User implements TableEntity<User> {
   id: number;
@@ -32,6 +33,8 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.AVATAR,
         sortable: false,
+        clickable: false,
+        onclick: () => {},
       },
       {
         id: 1,
@@ -40,6 +43,8 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.TEXT,
         sortable: true,
+        clickable: false,
+        onclick: () => {},
       },
       {
         id: 2,
@@ -48,6 +53,8 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.student,
         type: RowType.BOOLEAN,
         sortable: true,
+        clickable: false,
+        onclick: () => {},
       },
       {
         id: 3,
@@ -56,6 +63,8 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.super_student,
         type: RowType.BOOLEAN,
         sortable: true,
+        clickable: false,
+        onclick: () => {},
       },
       {
         id: 4,
@@ -64,6 +73,8 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.admin,
         type: RowType.BOOLEAN,
         sortable: true,
+        clickable: false,
+        onclick: () => {},
       },
       {
         id: 5,
@@ -72,6 +83,8 @@ export class User implements TableEntity<User> {
         get: () => "mdi-text-box-edit-outline",
         type: RowType.ICON,
         sortable: false,
+        clickable: true,
+        onclick: () => {console.log('edit')},
       },
       {
         id: 6,
@@ -80,6 +93,8 @@ export class User implements TableEntity<User> {
         get: () => "mdi-trash-can-outline",
         type: RowType.ICON,
         sortable: false,
+        clickable: true,
+        onclick: () => {console.log('trash')},
       },
     ];
   }

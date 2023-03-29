@@ -32,12 +32,14 @@
             <div
               v-if="header.type === RowType.IMAGE"
               style="display: flex; align-items: center"
+              @click="handle_click($event, header)"
             >
               <img :src="header.get(item)" class="image" alt="Portrait" />
             </div>
             <div
               v-if="header.type === RowType.AVATAR"
               style="display: flex; align-items: center"
+              @click="handle_click($event, header)"
             >
               <Avatar :name="header.get(item)" />
             </div>
@@ -49,8 +51,12 @@
               variant="plain"
               v-bind:icon="header.get(item)"
               size="small"
+              @click="handle_click($event, header)"
             ></v-btn>
-            <p v-if="header.type === RowType.TEXT">{{ header.get(item) }}</p>
+            <p 
+              v-if="header.type === RowType.TEXT"
+              @click="handle_click($event, header)"
+            >{{ header.get(item) }}</p>
           </router-link>
         </td>
       </tr>
@@ -61,8 +67,18 @@
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
 import { RowType } from "@/components/table/RowType";
+import { Header } from "@/components/table/Header";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps(["entries", "headers"]);
+
+function handle_click(event: MouseEvent, header: Header<any>){
+  if(header.clickable){
+    // prevent the parrent click
+    event.preventDefault();
+    // execute the action for this column item
+    header.onclick();
+  }
+};
 </script>
 
 <style lang="sass" scoped>
