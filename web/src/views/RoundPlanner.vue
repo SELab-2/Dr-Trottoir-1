@@ -23,25 +23,11 @@
         class="flex-grow-0 flex-shrink-1 py-0 my-0"
       >
         <v-text-field
-          label="Startdatum"
+          label="Datum"
           type="date"
           variant="solo"
           multiple
           v-model="selected_start_day"
-        />
-      </v-col>
-      <v-col
-        cols="3"
-        style="min-width: 100px; max-width: 100%"
-        class="flex-grow-0 flex-shrink-1 py-0 my-0"
-      >
-        <v-text-field
-          label="Einddatum"
-          type="date"
-          variant="solo"
-          multiple
-          v-model="selected_end_day"
-          :placeholder="selected_start_day"
         />
       </v-col>
       <v-col

@@ -85,7 +85,7 @@ const routes = [
         props: true,
       },
       {
-        path: "/dashboard/rondes/nieuw",
+        path: "/rondes/nieuw",
         name: "Nieuwe ronde",
         component: RoundMaker,
       },
