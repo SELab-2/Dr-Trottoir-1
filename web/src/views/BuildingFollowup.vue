@@ -4,7 +4,6 @@
     <v-col cols="7" style="min-width: 400px">
       <LargeFilter
         :search_by_labels="query_labels"
-        :filter_labels="filter_labels"
         :sort_items="sort_items"
         :filter_items="filter_options"
         class="mx-1 mb-3"
@@ -12,7 +11,7 @@
       />
       <div v-for="(building, id) in filter()" :key="id + filterIndex">
         <v-card
-          class="mb-3 mx-1 pb-2"
+          class="mb-3 mx-1"
           @click="
             router.push({
               name: 'Gebouw detail',
@@ -20,6 +19,9 @@
             })
           "
         >
+          <template v-slot:prepend>
+            <v-img cover src='https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920' class='prepend-img'/>
+          </template>
           <template v-slot:title>
             {{ building.name }}
             <v-icon end v-if="building.comments"
@@ -32,22 +34,21 @@
               size="x-small"
               :key="building.syndicus"
             />
-            {{ building.syndicus }}
+            {{ building.syndicus }} <br/>
+            <v-chip label color="brown" class='mt-4'>
+              <v-icon icon="mdi-office-building-marker-outline"></v-icon>
+              <p class="ml-2">{{ building.adres }}</p>
+            </v-chip>
           </template>
-          <template
-            v-slot:append
-            v-if="filter_data.filter_label === filter_labels[1]"
-          >
-            <v-chip label color="blue" class="ml-3">
+          <template v-slot:append>
+            <v-chip label color="blue" class="ml-3 align-top">
               <v-icon icon="mdi-calendar-clock"></v-icon>
               <p class="ml-2">{{ building.date }}</p>
             </v-chip>
+            <v-icon icon='mdi-menu-down' class='dropdown-button'/>
           </template>
-          <v-chip label color="brown" class="ml-3">
-            <v-icon icon="mdi-office-building-marker-outline"></v-icon>
-            <p class="ml-2">{{ building.adres }}</p>
-          </v-chip>
         </v-card>
+        <div></div>
       </div>
       <v-spacer></v-spacer>
     </v-col>
@@ -67,7 +68,6 @@ import { createDate, formatDate } from "@/assets/scripts/date";
 const router = useRouter();
 
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
-const filter_labels = ["Naam", "Naam + Datum"];
 const filter_options = ["Opmerkingen"];
 const sort_items = ["Naam", "Datum"];
 
@@ -75,7 +75,6 @@ const sort_items = ["Naam", "Datum"];
 const filter_data = ref<Filterdata>({
   query: "",
   search_label: query_labels[0],
-  filter_label: filter_labels[0],
   sort_by: sort_items[0],
   sort_ascending: true,
   filters: [],
@@ -177,28 +176,21 @@ function filter() {
   const result: any[] = [];
   // filtering
   buildings.forEach((elem) => {
-    if (filter_data.value.filter_label === filter_labels[0]) {
-      let newel = { ...elem };
-      newel.date = filter_data.value.start_day;
-      newel.comments = false;
-      prefilter.push(newel);
-    } else {
-      for (const datum of elem.data) {
-        let newel = { ...elem };
-        newel.date = datum.date;
-        newel.comments = datum.comments;
-        prefilter.push(newel);
-      }
-    }
+    let newel = { ...elem };
+    newel.date = filter_data.value.start_day;
+    newel.comments = false;
+    prefilter.push(newel);
   });
 
   prefilter.forEach((elem) => {
     let can_add = true;
 
-    can_add = can_add && filter_query(elem);
-
     can_add =
-      can_add && createDate(elem.date) <= createDate(filter_data.value.end_day);
+      can_add &&
+      filter_query(elem);
+    can_add =
+      can_add &&
+      createDate(elem.date) <= createDate(filter_data.value.end_day);
     can_add =
       can_add &&
       createDate(elem.date) >= createDate(filter_data.value.start_day);
@@ -229,4 +221,22 @@ function filter() {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.prepend-img {
+  aspect-ratio: 1;
+  width: 105px;
+  border-radius: 5px;
+}
+
+.dropdown-button {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+}
+
+.align-top {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+</style>

@@ -62,15 +62,6 @@
               @update:model-value="$emit('onUpdate', filter_data)"
             />
           </v-col>
-          <v-col v-if="filter_labels.length > 1">
-            <v-select
-              variant="solo"
-              label="FilterCategorie"
-              :items="filter_labels"
-              v-model="filter_data.filter_label"
-              @update:model-value="$emit('onUpdate', filter_data)"
-            />
-          </v-col>
         </v-row>
 
         <v-row class="ml-2">
@@ -146,8 +137,6 @@ const props = defineProps({
   // more elems: search bar, selection box to select the value to search by (name, place, etc)
   search_by_labels: { type: Array<string>, default: [] },
 
-  filter_labels: { type: Array<string>, default: [] },
-
   // All the filter options
   filter_items: { type: Array<string>, default: [] },
 
@@ -188,8 +177,6 @@ const filter_data = ref<Filterdata>({
   query: "",
   // The selcted value to seach by
   search_label: props.search_by_labels[0],
-  // The filter label
-  filter_label: props.filter_labels[0],
   // The currently selected sort option
   sort_by: props.sort_items[0],
   // State if we sort ascending or descending
