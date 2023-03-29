@@ -8,7 +8,6 @@ export class RoundRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
         const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.round.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -19,6 +18,7 @@ export class RoundRouting extends Routing {
                 buildings: joins?.includes("buildings"),
                 schedule: joins?.includes("schedule"),
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.json(result);
