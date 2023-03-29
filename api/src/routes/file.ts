@@ -10,12 +10,13 @@ import path from 'path'
 const router = express.Router();
 
 //create multer object (multer saves files to direcotry files)
-
-//with this code he will download the file
+// get request will download the file
 // const fileUpload = multer({
 //     dest: 'files',
 // });
 
+//creates multer object 
+//get request will show file in browser
 const fileUpload = multer({
     storage: multer.diskStorage({
         destination:  function (req,file,cb){
@@ -30,8 +31,8 @@ const fileUpload = multer({
 
 // file upload route (single file: .single(),multiple file: .array() )
 router.post('/',fileUpload.single('file'), (req: Request, res: Response) => { 
-    console.log(req.file);
-    res.json('/file'); 
+    //console.log(req.file);
+    res.json(req.file); 
 });
 
 // file get route
