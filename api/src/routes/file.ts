@@ -4,13 +4,24 @@ import { CustomRequest, Routing} from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import multer from 'multer'
-import { Request, Response } from 'express';
+import { Request, Response,NextFunction } from 'express';
 import path from 'path'
 import { PrismaClient } from '@prisma/client';
 import { prisma } from "../prisma";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
+import { env } from "process";
 
 const router = express.Router();
 //const prisma = new PrismaClient();
+
+const isAuth = (req: Request, res: Response, next: NextFunction) => {
+  const { user } = req;
+  if (process.env.DISABLE_AUTH === "false" && (!user || !user.super_student)) {
+     throw new APIError(APIErrorCode.FORBIDDEN);
+  }
+  next();
+};
 
 //create multer object (multer saves files to direcotry files)
 // get request will download the file
@@ -31,9 +42,8 @@ const fileUpload = multer({
     })
 });
 
-
 // file upload route (single file: .single(),multiple file: .array() )
-router.post('/',fileUpload.single('file'), async (req: Request, res: Response) => { 
+router.post('/',isAuth,fileUpload.single('file'), async (req: Request, res: Response) => { 
     //console.log(req.file);
     try {
         // save the file to the database using Prisma
@@ -55,8 +65,8 @@ router.get('/:id', async (req: Request, res: Response) => {
     // const filePath = path.join(dirname, 'files/' + filename);
     try {
         // Look up the file in the database using Prisma
-        console.log("hier")
-        console.log(req.params);
+        //console.log("hier")
+        //console.log(req.params);
         const result = await prisma.file.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
@@ -69,7 +79,7 @@ router.get('/:id', async (req: Request, res: Response) => {
         }
 
         // Send the file to the client
-        console.log(result);
+        //console.log(result);
         const dirname = path.resolve();
         res.sendFile(path.join(dirname, result.path));
       } catch (err) {
