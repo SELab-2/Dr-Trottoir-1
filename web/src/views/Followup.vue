@@ -1,9 +1,9 @@
 <template>
   <!-- Simple vlist that uses the custom component RoundCard -->
-  <v-row class="mt-1">
+  <v-row>
     <!-- pump whitspace left -->
-    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%" />
-    <v-col cols="7" style="min-width: 400px">
+    <HFill/>
+    <v-col style="min-width: 65%" class="ma-3">
       <LargeFilter
         :search_by_labels="query_labels"
         :sort_items="sort_items"
@@ -27,8 +27,7 @@
       ></RoundCard>
       <v-spacer></v-spacer>
     </v-col>
-    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%">
-    </v-col>
+    <HFill/>
   </v-row>
 </template>
 
@@ -39,7 +38,10 @@ import LargeFilter from "@/components/LargeFilter.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import Filterdata from "@/components/models/Filterdata";
+import HFill from "@/components/HFill.vue"
 
+
+// the router constant
 const router = useRouter();
 
 function redirect_to_detail() {

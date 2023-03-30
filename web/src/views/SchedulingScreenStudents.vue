@@ -1,9 +1,11 @@
 <template>
+  <v-row>
+  <HFill/>
   <!-- Day cards -->
+  <v-col style="min-width: 65%">
   <v-card
     v-for="day in days"
     :key="day.name"
-    class="mx-4 mt-4"
     :title="day.name"
     variant="flat"
   >
@@ -90,10 +92,15 @@
       </v-snackbar>
     </v-overlay>
   </v-card>
+  </v-col>
+  <HFill/>
+  </v-row>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import HFill from "@/components/HFill.vue"
+
 
 // https://stackoverflow.com/questions/1643320/get-month-name-from-date
 const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
