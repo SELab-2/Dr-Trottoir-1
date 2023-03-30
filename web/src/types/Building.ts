@@ -7,6 +7,8 @@ export class Building implements TableEntity<Building> {
   id: number;
   name: string;
   address: string;
+  syndicus_fn: string;
+  syndicus_ln: string;
 
   public constructor(init?: Partial<Building>) {
     Object.assign(this, init);
@@ -24,11 +26,12 @@ export class Building implements TableEntity<Building> {
     return [
       {
         id: 0,
-        name: "Naam",
+        name: "Gebouw",
         fit: false,
         get: (e: Building) => e.name,
         type: RowType.TEXT,
         sortable: true,
+        route_to: `/gebouw/${this.id}`,
       },
       {
         id: 1,
@@ -37,22 +40,25 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.address,
         type: RowType.TEXT,
         sortable: true,
+        route_to: `/gebouw/${this.id}`,
       },
       {
-        id: 5,
+        id: 2,
         name: "",
         fit: true,
-        get: () => "mdi-text-box-edit-outline",
-        type: RowType.ICONBUTTON,
+        get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
+        type: RowType.AVATAR,
         sortable: false,
+        route_to: `/account/0/false`,
       },
       {
-        id: 6,
-        name: "",
-        fit: true,
-        get: () => "mdi-trash-can-outline",
-        type: RowType.ICONBUTTON,
-        sortable: false,
+        id: 3,
+        name: "Syndicus",
+        fit: false,
+        get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
+        type: RowType.TEXT,
+        sortable: true,
+        route_to: `/account/0/false`,
       },
     ];
   }
@@ -63,6 +69,8 @@ export class Building implements TableEntity<Building> {
         id: chance().integer(),
         name: chance().sentence({ words: 4 }),
         address: chance().address(),
+        syndicus_fn: chance().first(),
+        syndicus_ln: chance().last(),
       });
     });
   }

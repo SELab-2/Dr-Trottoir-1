@@ -20,15 +20,11 @@ export class User implements TableEntity<User> {
     return User.headers();
   }
 
-  detailPageUrl(): string {
-    return `/account/${this.id}/false`;
-  }
-
   static headers(): Array<Header<User>> {
     return [
       {
         id: 0,
-        name: "Portret",
+        name: "",
         fit: true,
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.AVATAR,

@@ -42,7 +42,7 @@
               @click="route_to(header.route_to)"
               :class="actual_route(header.route_to) ? 'clickable': ''"
             >
-              <Avatar :name="header.get(item)" clickable/>
+              <Avatar :name="header.get(item)" size="default"/>
             </div>
             <div 
               v-if="header.type === RowType.CHECKBOX"
