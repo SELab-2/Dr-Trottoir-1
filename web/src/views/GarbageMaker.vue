@@ -67,7 +67,8 @@
                   selectedBuilding &&
                   selectedDay &&
                   selectedWeek &&
-                  selectedAction
+                  selectedGarbage.length !== 0 &&
+                  selectedAction.length !== 0
                 )
               "
               prepend-icon="mdi-plus"
@@ -142,8 +143,8 @@ const actions = ["Actie 1", "Actie 2", "Actie 3"];
 const selectedBuilding = ref(null);
 const selectedDay = ref(null);
 const selectedWeek = ref(null);
-const selectedGarbage = ref(null);
-const selectedAction = ref(null);
+const selectedGarbage = ref([]);
+const selectedAction = ref([]);
 const buildingData: {
   building: string;
   garbage: string[];
@@ -208,6 +209,7 @@ const addItem = () => {
     selectedGarbage.value &&
     selectedAction.value
   ) {
+    console.log(selectedGarbage);
     buildingData.push({
       building: selectedBuilding.value,
       day: selectedDay.value,
@@ -216,8 +218,8 @@ const addItem = () => {
       action: selectedAction.value,
     });
     selectedDay.value = null;
-    selectedGarbage.value = null;
-    selectedAction.value = null;
+    selectedGarbage.value = [];
+    selectedAction.value = [];
   }
 };
 
