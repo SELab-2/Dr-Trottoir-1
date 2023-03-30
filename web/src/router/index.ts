@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/LoginScreen.vue";
 import BuildingSceen from "@/views/BuildingScreen.vue";
-import UserCreation from "@/views/UserCreation.vue";
+import UserCreation from "@/views/AccountCreation.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import SchedulingScreenStudent from "@/views/SchedulingScreenStudents.vue";
 import Users from "@/views/dashboard/Users.vue";

@@ -1,34 +1,29 @@
 <template>
   <!-- Simple vlist that uses the custom component RoundCard -->
-  <v-row>
-    <!-- pump whitspace left -->
-    <HFill/>
-    <v-col style="min-width: 65%" class="ma-3">
-      <LargeFilter
-        :search_by_labels="query_labels"
-        :sort_items="sort_items"
-        :filter_items="filter_options"
-        class="mx-1 mb-3"
-        @onUpdate="(new_data: Filterdata) => filter_data = new_data"
-      />
-      <RoundCard
-        v-for="(round, i) in filtered_data()"
-        :key="i"
-        :round_name="round.name"
-        :round_start="round.start"
-        :round_end="round.end"
-        :round_started="round.started"
-        :student_name="round.student"
-        :building_index="round.current_building"
-        :total_buildings="round.buildings.length"
-        :round_comments="round.comments"
-        @click="redirect_to_detail()"
-        style="cursor: pointer"
-      ></RoundCard>
-      <v-spacer></v-spacer>
-    </v-col>
-    <HFill/>
-  </v-row>
+  <HFillWrapper>
+    <LargeFilter
+      :search_by_labels="query_labels"
+      :sort_items="sort_items"
+      :filter_items="filter_options"
+      class="mx-1 mb-3"
+      @onUpdate="(new_data: Filterdata) => filter_data = new_data"
+    />
+    <RoundCard
+      v-for="(round, i) in filtered_data()"
+      :key="i"
+      :round_name="round.name"
+      :round_start="round.start"
+      :round_end="round.end"
+      :round_started="round.started"
+      :student_name="round.student"
+      :building_index="round.current_building"
+      :total_buildings="round.buildings.length"
+      :round_comments="round.comments"
+      @click="redirect_to_detail()"
+      style="cursor: pointer"
+    ></RoundCard>
+    <v-spacer></v-spacer>
+  </HFillWrapper>
 </template>
 
 <script lang="ts" setup>
@@ -38,8 +33,7 @@ import LargeFilter from "@/components/LargeFilter.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import Filterdata from "@/components/models/Filterdata";
-import HFill from "@/components/HFill.vue"
-
+import HFillWrapper from "@/components/HFillWrapper.vue";
 
 // the router constant
 const router = useRouter();
