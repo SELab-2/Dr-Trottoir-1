@@ -38,6 +38,7 @@ export class ScheduleRouting extends Routing {
                 round: joins?.includes("round"),
                 progress: joins?.includes("progress"),
             },
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.status(200).json(result);
