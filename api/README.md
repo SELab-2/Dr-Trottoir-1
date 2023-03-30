@@ -6,7 +6,7 @@ We bieden een REST API aan op basis van JSON documenten geschreven in TypeScript
 
 ## Postman
 
-Postman is een interactieve GUI client om RESTful APIs te beschrijven, testen en te verkennen. We voorzien in `postman.json` dergelijke documentatie voor onze API. 
+Postman is een interactieve GUI client om RESTful APIs te beschrijven, testen en te verkennen. We voorzien in `postman.json` dergelijke documentatie voor onze API.
 
 > Merk op dat de nog niet de volledige API gedocumenteerd is in Postman.
 
@@ -52,7 +52,7 @@ We maken gebruik van `passport.js` voor authenticatie in combinatie met het manu
 
 ### Authorization
 
-In `/api/auth` vind je de _decorator_ `Auth.authorization` waarmee je heel eenvoudig een route kan beveiligen. Merk echter op dat deze geen nuance toelaat; je kan alleen toegang geven tot alle studenten, alle superstudenten, enzvoort, en niet bijvoorbeeld degene met specifieke *identifiers*. Wil je dus een regel toevoegen als "indien de ID van de resource overeenkomt met de huidige gebruiker", dan dien je dit nog steeds manueel te implementeren. Geen decorator gebruiken komt in essentie overeen met geen autorisatie. Administratoren hebben rechten voor alle routes.
+In `/api/auth` vind je de _decorator_ `Auth.authorization` waarmee je heel eenvoudig een route kan beveiligen. Merk echter op dat deze geen nuance toelaat; je kan alleen toegang geven tot alle studenten, alle superstudenten, enzvoort, en niet bijvoorbeeld degene met specifieke _identifiers_. Wil je dus een regel toevoegen als "indien de ID van de resource overeenkomt met de huidige gebruiker", dan dien je dit nog steeds manueel te implementeren. Geen decorator gebruiken komt in essentie overeen met geen autorisatie. Administratoren hebben rechten voor alle routes.
 
 ```typescript
 export class BuildingRouting extends Routing {
@@ -174,8 +174,8 @@ const result = await prisma.user.findMany({
 };
 ```
 
-Wordt in het bovenstaande voorbeeld `added_before` opgegeven in de URL van de HTTP request, dan zal de deze waarde oftewel correct omgezet worden naar een `Date` object door de Parser, of zal een `Bad Request` error opgegooid worden indien de datum niet geldig is. Indien `added_before` helemaal niet opgegeven is (en dus `undefined` is), dan geeft de parser opnieuw `undefined` 
+Wordt in het bovenstaande voorbeeld `added_before` opgegeven in de URL van de HTTP request, dan zal de deze waarde oftewel correct omgezet worden naar een `Date` object door de Parser, of zal een `Bad Request` error opgegooid worden indien de datum niet geldig is. Indien `added_before` helemaal niet opgegeven is (en dus `undefined` is), dan geeft de parser opnieuw `undefined`
 
 ## Slot
 
-We bespraken de meest prominente onderdelen van onze API. Merk echter op doorheen de broncode zelf ook nog uitleg gegeven is, en we hier slechts een *high-level overview* gegeven hebben. De werkelijke definities van de verschillende endpoints kunnen nog wijzigen. Zo zullen wij eventueel routes, parameters, en queries toevoegen indien vereist.
+We bespraken de meest prominente onderdelen van onze API. Merk echter op doorheen de broncode zelf ook nog uitleg gegeven is, en we hier slechts een _high-level overview_ gegeven hebben. De werkelijke definities van de verschillende endpoints kunnen nog wijzigen. Zo zullen wij eventueel routes, parameters, en queries toevoegen indien vereist.

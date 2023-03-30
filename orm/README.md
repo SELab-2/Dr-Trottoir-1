@@ -27,7 +27,7 @@ npm run start
 
 De relaties tussen de verschillende entteiten wordt hieronder gegeven. Merk echter op dat deze niet noodzakelijk finaal zijn. Voor meer informatie, zie `./prisma/schema.prisma`
 
-![](./Logisch_ontwerp.png)
+![](../orm/Logisch_ontwerp.png)
 
 ## Deployment
 
