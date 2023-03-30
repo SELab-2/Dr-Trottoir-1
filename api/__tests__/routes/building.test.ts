@@ -1,6 +1,8 @@
 import app from "../../src/main";
 // @ts-ignore
 import request from "supertest";
+// @ts-ignore
+import supertest from "supertest";
 
 const buildingToCreate = {
     name: "BuildingName",
@@ -21,63 +23,82 @@ const building = {
     },
     address_id: undefined,
     manual_id: undefined,
+    deleted: false,
 };
+
+// schakel authenticatie in, ongeacht wat de runner in zijn .env heeft
+process.env["DISABLE_AUTH"] = "false";
+
+// Voor de testen uitgevoerd worden, moet de sessie gestart worden en moet autorisatie verkregen en bewaard worden.
+// Daarnaast moeten bepaalde waarden aan de databank toegevoegd worden die gebruikt zullen worden in de testen.
+async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
+    // Sessie starten en inloggen voor autorisatie
+    const session = request(app);
+    const resultLogin = await session
+        .post("/auth/login")
+        .send({ username: "jens.pots@ugent.be", password: "password" });
+    expect(resultLogin.status).toEqual(302);
+    expect(resultLogin.headers).toHaveProperty("set-cookie");
+
+    const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
+
+    // adres van gebruiker opzoeken
+    const resultUser = await session.get("/user/11").set("Cookie", [cookies]);
+    const user = resultUser.body;
+    buildingToCreate.address_id = user.address_id;
+
+    // Nieuwe syndicus toevoegen om te gebruiken bij het aanmaken van het gebouw
+    const resultSyndicus = await session
+        .post("/syndicus")
+        .send({ user_id: user.id })
+        .set("Cookie", [cookies]);
+    buildingToCreate.syndicus_id = resultSyndicus.body.id;
+
+    // Gebouw toevoegen om te gebruiken tijdens de testen.
+    const resultAdd = await session
+        .post("/building")
+        .send(buildingToCreate)
+        .set("Cookie", [cookies]);
+    expect(resultAdd.status).toEqual(201);
+    building.id = resultAdd.body.id;
+    building.syndicus_id = resultAdd.body.syndicus_id;
+    building.syndicus.id = resultAdd.body.syndicus_id;
+    building.syndicus.user_id = user.id;
+    building.address_id = resultAdd.body.address_id;
+    building.manual_id = resultAdd.body.manual_id;
+
+    return [session, cookies];
+}
+
+async function closeSession(
+    session: supertest.SuperTest<any>,
+    cookies: string,
+) {
+    // Toegevoegde gebouw terug verwijderen uit de databank
+    const resultDelete = await session
+        .delete("/building/" + building.id)
+        .set("Cookie", [cookies]);
+    expect(resultDelete.status).toEqual(200);
+
+    const resultDeleteSyndicus = await session
+        .delete("/syndicus/" + buildingToCreate.syndicus_id)
+        .set("Cookie", [cookies]);
+    expect(resultDeleteSyndicus.status).toEqual(200);
+}
 
 describe("Test BuildingRouting successful tests", () => {
     let session: any;
     let cookies: string;
 
     beforeAll(async () => {
-        // Sessie starten en inloggen voor autorisatie
-        session = request(app);
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
-        expect(resultLogin.status).toEqual(302);
-        expect(resultLogin.headers).toHaveProperty("set-cookie");
-
-        cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
-
-        // adres van gebruiker opzoeken
-        const resultUser = await session
-            .get("/user/11")
-            .set("Cookie", [cookies]);
-        const user = resultUser.body;
-        buildingToCreate.address_id = user.address_id;
-
-        // Nieuwe syndicus toevoegen om te gebruiken bij het aanmaken van het gebouw
-        const resultSyndicus = await session
-            .post("/syndicus")
-            .send({ user_id: user.id })
-            .set("Cookie", [cookies]);
-        buildingToCreate.syndicus_id = resultSyndicus.body.id;
-
-        // Gebouw toevoegen om te gebruiken tijdens de testen.
-        const resultAdd = await session
-            .post("/building")
-            .send(buildingToCreate)
-            .set("Cookie", [cookies]);
-        expect(resultAdd.status).toEqual(201);
-        building.id = resultAdd.body.id;
-        building.syndicus_id = resultAdd.body.syndicus_id;
-        building.syndicus.id = resultAdd.body.syndicus_id;
-        building.syndicus.user_id = user.id;
-        building.address_id = resultAdd.body.address_id;
-        building.manual_id = resultAdd.body.manual_id;
+        const session_cookies = await prepareSession();
+        session = session_cookies[0];
+        cookies = session_cookies[1];
     });
 
     // Na het uitvoeren van alle testen moeten zowel het gebouw als de syndicus terug verwijderd worden uit de databank.
     afterAll(async () => {
-        // Toegevoegde gebouw terug verwijderen uit de databank
-        const resultDelete = await session
-            .delete("/building/" + building.id)
-            .set("Cookie", [cookies]);
-        expect(resultDelete.status).toEqual(200);
-
-        const resultDeleteSyndicus = await session
-            .delete("/syndicus/" + buildingToCreate.syndicus_id)
-            .set("Cookie", [cookies]);
-        expect(resultDeleteSyndicus.status).toEqual(200);
+        await closeSession(session, cookies);
     });
 
     test("Test searching existing building", async () => {
@@ -96,6 +117,7 @@ describe("Test BuildingRouting successful tests", () => {
             syndicus_id: building.syndicus_id,
             address_id: building.address_id,
             manual_id: building.manual_id,
+            deleted: false,
         };
 
         const result = await session
@@ -144,6 +166,7 @@ describe("Test BuildingRouting successful tests", () => {
             },
             address_id: building.address_id,
             manual_id: building.manual_id,
+            deleted: false,
         };
         delete buildingWithSyndicus.syndicus.user.address;
 
@@ -181,56 +204,14 @@ describe("Test BuildingRouting unsuccessful tests", () => {
     let cookies: string;
 
     beforeAll(async () => {
-        // Sessie starten en inloggen voor autorisatie
-        session = request(app);
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
-        expect(resultLogin.status).toEqual(302);
-        expect(resultLogin.headers).toHaveProperty("set-cookie");
-
-        cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
-
-        // adres van gebruiker opzoeken
-        const resultUser = await session
-            .get("/user/11")
-            .set("Cookie", [cookies]);
-        const user = resultUser.body;
-        buildingToCreate.address_id = user.address_id;
-
-        // Nieuwe syndicus toevoegen om te gebruiken bij het aanmaken van het gebouw
-        const resultSyndicus = await session
-            .post("/syndicus")
-            .send({ user_id: user.id })
-            .set("Cookie", [cookies]);
-        buildingToCreate.syndicus_id = resultSyndicus.body.id;
-
-        // Gebouw toevoegen om te gebruiken tijdens de testen.
-        const resultAdd = await session
-            .post("/building")
-            .send(buildingToCreate)
-            .set("Cookie", [cookies]);
-        expect(resultAdd.status).toEqual(201);
-        building.id = resultAdd.body.id;
-        building.syndicus_id = resultAdd.body.syndicus_id;
-        building.syndicus.id = resultAdd.body.syndicus_id;
-        building.syndicus.user_id = user.id;
-        building.address_id = resultAdd.body.address_id;
-        building.manual_id = resultAdd.body.manual_id;
+        const session_cookies = await prepareSession();
+        session = session_cookies[0];
+        cookies = session_cookies[1];
     });
 
     // Na het uitvoeren van alle testen moeten zowel het gebouw als de syndicus terug verwijderd worden uit de databank.
     afterAll(async () => {
-        // Toegevoegde gebouw terug verwijderen uit de databank
-        const resultDelete = await session
-            .delete("/building/" + building.id)
-            .set("Cookie", [cookies]);
-        expect(resultDelete.status).toEqual(200);
-
-        const resultDeleteSyndicus = await session
-            .delete("/syndicus/" + buildingToCreate.syndicus_id)
-            .set("Cookie", [cookies]);
-        expect(resultDeleteSyndicus.status).toEqual(200);
+        await closeSession(session, cookies);
     });
 
     // Bij deze test wordt er niet ingelogd en heeft de sessie dus geen autorisatie om request uit te voeren.
@@ -310,21 +291,24 @@ describe("Test BuildingRouting unsuccessful tests", () => {
             .patch("/building/" + building.id)
             .send({ syndicus_id: "string in plaats van int" })
             .set("Cookie", [cookies]);
-        expect(result1.status).toEqual(500);
+        expect(result1.status).toEqual(400);
+        expect(result1.badRequest).toEqual(true);
 
         // Getal in plaats van string
         const result2 = await session
             .patch("/building/" + building.id)
             .send({ ivago_id: 5 })
             .set("Cookie", [cookies]);
-        expect(result2.status).toEqual(500);
+        expect(result2.status).toEqual(400);
+        expect(result2.badRequest).toEqual(true);
 
         // Boolean in plaats van string
         const result3 = await session
             .patch("/building/" + building.id)
             .send({ name: true })
             .set("Cookie", [cookies]);
-        expect(result3.status).toEqual(500);
+        expect(result3.status).toEqual(400);
+        expect(result3.badRequest).toEqual(true);
     });
 });
 
