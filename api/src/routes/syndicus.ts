@@ -1,6 +1,6 @@
 import { prisma } from "../prisma";
 import express from "express";
-import { CustomRequest, Routing, includeUser } from "./routing";
+import { CustomRequest, Routing, includeUser, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 
@@ -33,16 +33,7 @@ export class SyndicusRouting extends Routing {
             },
             include: {
                 user: includeUser(true),
-                building: {
-                    select: {
-                        id: true,
-                        name: true,
-                        ivago_id: true,
-                        deleted: true,
-                        hash: false,
-                        address: true,
-                    },
-                },
+                building: selectBuilding(),
             },
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
@@ -58,16 +49,7 @@ export class SyndicusRouting extends Routing {
             },
             include: {
                 user: includeUser(true),
-                building: {
-                    select: {
-                        id: true,
-                        name: true,
-                        ivago_id: true,
-                        deleted: true,
-                        hash: false,
-                        address: true,
-                    },
-                },
+                building: selectBuilding(),
             },
         });
 
