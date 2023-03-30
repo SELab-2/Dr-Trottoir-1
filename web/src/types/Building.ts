@@ -60,7 +60,6 @@ export class Building implements TableEntity<Building> {
         sortable: true,
         route_to: `/gebouw/${this.id}`,
       },
-      
     ];
   }
 

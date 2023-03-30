@@ -47,7 +47,7 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.name,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/rondes/detail`
+        route_to: `/rondes/detail`,
       },
       {
         id: 1,
@@ -56,7 +56,7 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.buildings,
         type: RowType.TEXT,
         sortable: true,
-        route_to: ""
+        route_to: "",
       },
       {
         id: 2,
@@ -65,7 +65,7 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.date,
         type: RowType.TEXT,
         sortable: true,
-        route_to: ""
+        route_to: "",
       },
       {
         id: 4,
@@ -76,7 +76,6 @@ export class Routes implements TableEntity<Routes> {
         sortable: true,
         route_to: "",
       },
-      
     ];
   }
 
@@ -86,7 +85,7 @@ export class Routes implements TableEntity<Routes> {
         id: chance().integer(),
         name: chance().sentence({ words: 4 }),
         buildings: chance().integer({ max: 10, min: 3 }),
-        date: String(chance().date({string: true, american: false})),
+        date: String(chance().date({ string: true, american: false })),
         student_fn: chance().first(),
         student_ln: chance().last(),
         finished: chance().bool(),

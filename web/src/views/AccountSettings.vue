@@ -155,7 +155,7 @@
         >
       </div>
     </v-card>
-    <v-divider :thickness="3"/>
+    <v-divider :thickness="3" />
 
     <!-- Section that allows to remove the account -->
     <v-card v-if="edit" class="my-4" prepend-icon="mdi-delete">
@@ -233,8 +233,8 @@ const confirm_psswd = ref("");
 const show_confirm = ref(false);
 
 // state for the remove password
-const remove_psswd = ref("")
-const show_remove = ref(false)
+const remove_psswd = ref("");
+const show_remove = ref(false);
 </script>
 <style lang="sass" scoped>
 a

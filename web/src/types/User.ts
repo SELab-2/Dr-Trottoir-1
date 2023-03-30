@@ -2,7 +2,6 @@ import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import chance from "chance";
-import router from "@/router";
 
 export class User implements TableEntity<User> {
   id: number;
