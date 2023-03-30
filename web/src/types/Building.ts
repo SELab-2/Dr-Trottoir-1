@@ -25,24 +25,6 @@ export class Building implements TableEntity<Building> {
   static headers(): Array<Header<Building>> {
     return [
       {
-        id: 0,
-        name: "Gebouw",
-        fit: false,
-        get: (e: Building) => e.name,
-        type: RowType.TEXT,
-        sortable: true,
-        route_to: `/gebouw/${this.id}`,
-      },
-      {
-        id: 1,
-        name: "Adres",
-        fit: false,
-        get: (e: Building) => e.address,
-        type: RowType.TEXT,
-        sortable: true,
-        route_to: `/gebouw/${this.id}`,
-      },
-      {
         id: 2,
         name: "",
         fit: true,
@@ -60,6 +42,25 @@ export class Building implements TableEntity<Building> {
         sortable: true,
         route_to: `/account/0/false`,
       },
+      {
+        id: 0,
+        name: "Gebouw",
+        fit: false,
+        get: (e: Building) => e.name,
+        type: RowType.TEXT,
+        sortable: true,
+        route_to: `/gebouw/${this.id}`,
+      },
+      {
+        id: 1,
+        name: "Adres",
+        fit: false,
+        get: (e: Building) => e.address,
+        type: RowType.TEXT,
+        sortable: true,
+        route_to: `/gebouw/${this.id}`,
+      },
+      
     ];
   }
 
