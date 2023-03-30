@@ -15,9 +15,17 @@ import { env } from "process";
 const router = express.Router();
 //const prisma = new PrismaClient();
 
-const isAuth = (req: Request, res: Response, next: NextFunction) => {
+const isAuthPost = (req: Request, res: Response, next: NextFunction) => {
   const { user } = req;
-  if (process.env.DISABLE_AUTH === "false" && (!user || !user.super_student)) {
+  if (process.env.DISABLE_AUTH === "false" && (!user || user.student)) {
+     throw new APIError(APIErrorCode.FORBIDDEN);
+  }
+  next();
+};
+
+const isAuthGet = (req: Request, res: Response, next: NextFunction) => {
+  const { user } = req;
+  if (process.env.DISABLE_AUTH === "false" && (!user)) {
      throw new APIError(APIErrorCode.FORBIDDEN);
   }
   next();
@@ -43,7 +51,7 @@ const fileUpload = multer({
 });
 
 // file upload route (single file: .single(),multiple file: .array() )
-router.post('/',isAuth,fileUpload.single('file'), async (req: Request, res: Response) => { 
+router.post('/',isAuthPost,fileUpload.single('file'), async (req: Request, res: Response) => { 
     //console.log(req.file);
     try {
         // save the file to the database using Prisma
@@ -59,7 +67,7 @@ router.post('/',isAuth,fileUpload.single('file'), async (req: Request, res: Resp
 });
 
 // file get route
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id',isAuthGet, async (req: Request, res: Response) => {
     // const { filename } = req.params;
     // const dirname = path.resolve();
     // const filePath = path.join(dirname, 'files/' + filename);
