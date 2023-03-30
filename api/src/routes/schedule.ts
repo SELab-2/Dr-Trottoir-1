@@ -1,4 +1,4 @@
-import { CustomRequest, includeUser, Routing } from "./routing";
+import { CustomRequest, Routing, includeUser, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import express from "express";
 import { Parser } from "../parser";
@@ -45,11 +45,7 @@ export class ScheduleRouting extends Routing {
                     include: {
                         buildings: {
                             include: {
-                                building: {
-                                    include: {
-                                        address: true,
-                                    },
-                                },
+                                building: selectBuilding(),
                             },
                         },
                     },
@@ -73,11 +69,7 @@ export class ScheduleRouting extends Routing {
                     include: {
                         buildings: {
                             include: {
-                                building: {
-                                    include: {
-                                        address: true,
-                                    },
-                                },
+                                building: selectBuilding(),
                             },
                         },
                     },

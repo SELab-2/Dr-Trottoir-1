@@ -34,7 +34,12 @@ export class SyndicusRouting extends Routing {
             include: {
                 user: includeUser(true),
                 building: {
-                    include: {
+                    select: {
+                        id: true,
+                        name: true,
+                        ivago_id: true,
+                        deleted: true,
+                        hash: false,
                         address: true,
                     },
                 },
@@ -54,7 +59,12 @@ export class SyndicusRouting extends Routing {
             include: {
                 user: includeUser(true),
                 building: {
-                    include: {
+                    select: {
+                        id: true,
+                        name: true,
+                        ivago_id: true,
+                        deleted: true,
+                        hash: false,
                         address: true,
                     },
                 },

@@ -1,6 +1,6 @@
 import { prisma } from "../prisma";
 import express from "express";
-import { CustomRequest, Routing } from "./routing";
+import { CustomRequest, Routing, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 
@@ -16,11 +16,7 @@ export class RoundRouting extends Routing {
             include: {
                 buildings: {
                     include: {
-                        building: {
-                            include: {
-                                address: true,
-                            },
-                        },
+                        building: selectBuilding(),
                     },
                 },
             },
@@ -39,11 +35,7 @@ export class RoundRouting extends Routing {
             include: {
                 buildings: {
                     include: {
-                        building: {
-                            include: {
-                                address: true,
-                            },
-                        },
+                        building: selectBuilding(),
                     },
                 },
             },

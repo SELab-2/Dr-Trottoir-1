@@ -77,3 +77,16 @@ export function includeUser(includeAddress: boolean) {
         },
     };
 }
+
+export function selectBuilding() {
+    return {
+        select: {
+            id: true,
+            name: true,
+            ivago_id: true,
+            deleted: true,
+            hash: false,
+            address: true,
+        },
+    };
+}

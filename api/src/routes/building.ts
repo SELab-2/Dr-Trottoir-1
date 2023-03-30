@@ -23,7 +23,12 @@ export class BuildingRouting extends Routing {
                 syndicus_id: Parser.number(req.query["syndicus_id"]),
                 deleted: deleted,
             },
-            include: {
+            select: {
+                id: true,
+                name: true,
+                ivago_id: true,
+                deleted: true,
+                hash: false,
                 address: true,
                 syndicus: {
                     include: {

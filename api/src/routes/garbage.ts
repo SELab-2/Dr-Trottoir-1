@@ -1,4 +1,4 @@
-import { CustomRequest, Routing } from "./routing";
+import { CustomRequest, Routing, selectBuilding } from "./routing";
 import express from "express";
 import { prisma } from "../prisma";
 import { Parser } from "../parser";
@@ -33,11 +33,7 @@ export class GarbageRouting extends Routing {
             },
             include: {
                 action: true,
-                building: {
-                    include: {
-                        address: true,
-                    },
-                },
+                building: selectBuilding(),
             },
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
@@ -53,11 +49,7 @@ export class GarbageRouting extends Routing {
             },
             include: {
                 action: true,
-                building: {
-                    include: {
-                        address: true,
-                    },
-                },
+                building: selectBuilding(),
             },
         });
 
