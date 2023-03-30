@@ -209,7 +209,6 @@ const addItem = () => {
     selectedGarbage.value &&
     selectedAction.value
   ) {
-    console.log(selectedGarbage);
     buildingData.push({
       building: selectedBuilding.value,
       day: selectedDay.value,
