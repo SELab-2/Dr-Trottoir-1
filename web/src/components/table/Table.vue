@@ -31,31 +31,31 @@
             <div
               v-if="header.type === RowType.IMAGE"
               style="display: flex; align-items: center"
-              @click="route_to(header.routeto)"
-              :class="actual_route(header.routeto) ? 'clickable': ''"
+              @click="route_to(header.route_to)"
+              :class="actual_route(header.route_to) ? 'clickable': ''"
             >
               <img :src="header.get(item)" class="image" alt="Portrait" />
             </div>
             <div
               v-if="header.type === RowType.AVATAR"
               style="display: flex; align-items: center"
-              @click="route_to(header.routeto)"
-              :class="actual_route(header.routeto) ? 'clickable': ''"
+              @click="route_to(header.route_to)"
+              :class="actual_route(header.route_to) ? 'clickable': ''"
             >
               <Avatar :name="header.get(item)" clickable/>
             </div>
             <div 
               v-if="header.type === RowType.CHECKBOX"
-              @click="route_to(header.routeto)"
-              :class="actual_route(header.routeto) ? 'clickable': ''"
+              @click="route_to(header.route_to)"
+              :class="actual_route(header.route_to) ? 'clickable': ''"
             >
               <input type="checkbox" v-model="item.student" />
             </div>
             <!-- Check or cross icon for boolean-->
             <div 
               v-if="header.type === RowType.BOOLEAN"
-              @click="route_to(header.routeto)"
-              :class="actual_route(header.routeto) ? 'clickable': ''"
+              @click="route_to(header.route_to)"
+              :class="actual_route(header.route_to) ? 'clickable': ''"
               >
               <v-icon 
                 :icon="bool_icon(header.get(item))"
@@ -67,13 +67,13 @@
               variant="plain"
               v-bind:icon="header.get(item)"
               size="small"
-              @click="route_to(header.routeto)"
-              :class="actual_route(header.routeto) ? 'clickable': ''"
+              @click="route_to(header.route_to)"
+              :class="actual_route(header.route_to) ? 'clickable': ''"
             ></v-btn>
             <p 
               v-if="header.type === RowType.TEXT"
-              @click="route_to(header.routeto)"
-              :class="actual_route(header.routeto) ? 'clickable': ''"
+              @click="route_to(header.route_to)"
+              :class="actual_route(header.route_to) ? 'clickable': ''"
             >{{ header.get(item) }}</p>
         </td>
       </tr>

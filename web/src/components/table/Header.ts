@@ -24,5 +24,5 @@ export abstract class Header<T> {
 
   // The route to link to
   // if the empty string is given, it will not route
-  routeto: string;
+  route_to: string;
 }

@@ -33,7 +33,7 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.AVATAR,
         sortable: false,
-        routeto: `/account/${this.id}/false`,
+        route_to: `/account/${this.id}/false`,
       },
       {
         id: 1,
@@ -42,7 +42,7 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.TEXT,
         sortable: true,
-        routeto: `/account/${this.id}/false`,
+        route_to: `/account/${this.id}/false`,
       },
       {
         id: 2,
@@ -51,7 +51,7 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.student,
         type: RowType.BOOLEAN,
         sortable: true,
-        routeto: "",
+        route_to: "",
       },
       {
         id: 3,
@@ -60,7 +60,7 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.super_student,
         type: RowType.BOOLEAN,
         sortable: true,
-        routeto: "",
+        route_to: "",
       },
       {
         id: 4,
@@ -69,7 +69,7 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.admin,
         type: RowType.BOOLEAN,
         sortable: true,
-        routeto: "",
+        route_to: "",
       },
       {
         id: 5,
@@ -78,7 +78,7 @@ export class User implements TableEntity<User> {
         get: () => "mdi-account-cog-outline",
         type: RowType.ICONBUTTON,
         sortable: false,
-        routeto: `/account/${this.id}/false`,
+        route_to: `/account/${this.id}/false`,
       },
     ];
   }
