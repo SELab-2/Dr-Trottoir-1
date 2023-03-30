@@ -22,9 +22,7 @@ export abstract class Header<T> {
   // Whether this column can be sorted
   sortable: boolean = false;
 
-  // Whether this column is clickable or not
-  clickable: boolean;
-
-  // The function to call when clicked on this column
-  onclick: Function;
+  // The route to link to
+  // if the empty string is given, it will not route
+  routeto: string;
 }

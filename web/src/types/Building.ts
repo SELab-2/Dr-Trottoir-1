@@ -43,7 +43,7 @@ export class Building implements TableEntity<Building> {
         name: "",
         fit: true,
         get: () => "mdi-text-box-edit-outline",
-        type: RowType.ICON,
+        type: RowType.ICONBUTTON,
         sortable: false,
       },
       {
@@ -51,7 +51,7 @@ export class Building implements TableEntity<Building> {
         name: "",
         fit: true,
         get: () => "mdi-trash-can-outline",
-        type: RowType.ICON,
+        type: RowType.ICONBUTTON,
         sortable: false,
       },
     ];

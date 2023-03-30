@@ -28,36 +28,53 @@
           v-for="header in headers"
           :class="{ fit: header.fit }"
         >
-          <router-link :to="item.detailPageUrl()">
             <div
               v-if="header.type === RowType.IMAGE"
               style="display: flex; align-items: center"
-              @click="handle_click($event, header)"
+              @click="route_to(header.routeto)"
+              :class="actual_route(header.routeto) ? 'clickable': ''"
             >
               <img :src="header.get(item)" class="image" alt="Portrait" />
             </div>
             <div
               v-if="header.type === RowType.AVATAR"
               style="display: flex; align-items: center"
-              @click="handle_click($event, header)"
+              @click="route_to(header.routeto)"
+              :class="actual_route(header.routeto) ? 'clickable': ''"
             >
-              <Avatar :name="header.get(item)" />
+              <Avatar :name="header.get(item)" clickable/>
             </div>
-            <div v-if="header.type === RowType.BOOLEAN">
+            <div 
+              v-if="header.type === RowType.CHECKBOX"
+              @click="route_to(header.routeto)"
+              :class="actual_route(header.routeto) ? 'clickable': ''"
+            >
               <input type="checkbox" v-model="item.student" />
             </div>
+            <!-- Check or cross icon for boolean-->
+            <div 
+              v-if="header.type === RowType.BOOLEAN"
+              @click="route_to(header.routeto)"
+              :class="actual_route(header.routeto) ? 'clickable': ''"
+              >
+              <v-icon 
+                :icon="bool_icon(header.get(item))"
+                :color="bool_color(header.get(item))"
+              />
+            </div>
             <v-btn
-              v-if="header.type === RowType.ICON"
+              v-if="header.type === RowType.ICONBUTTON"
               variant="plain"
               v-bind:icon="header.get(item)"
               size="small"
-              @click="handle_click($event, header)"
+              @click="route_to(header.routeto)"
+              :class="actual_route(header.routeto) ? 'clickable': ''"
             ></v-btn>
             <p 
               v-if="header.type === RowType.TEXT"
-              @click="handle_click($event, header)"
+              @click="route_to(header.routeto)"
+              :class="actual_route(header.routeto) ? 'clickable': ''"
             >{{ header.get(item) }}</p>
-          </router-link>
         </td>
       </tr>
     </tbody>
@@ -68,20 +85,35 @@
 import Avatar from "@/components/Avatar.vue";
 import { RowType } from "@/components/table/RowType";
 import { Header } from "@/components/table/Header";
+import router from "@/router";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps(["entries", "headers"]);
 
-function handle_click(event: MouseEvent, header: Header<any>){
-  if(header.clickable){
-    // prevent the parrent click
-    event.preventDefault();
-    // execute the action for this column item
-    header.onclick();
+function bool_icon(bool: boolean): string{
+  return bool ? 'mdi-check' : 'mdi-close'; 
+}
+
+function bool_color(bool: boolean): string{
+  return bool ? 'success' : 'red'; 
+}
+
+function actual_route(route: string): boolean{
+  return route !== ""
+}
+
+function route_to(route: string){
+  if(actual_route(route)){
+    router.push(route)
   }
-};
+}
+
 </script>
 
 <style lang="sass" scoped>
+
+.clickable
+  cursor: pointer
+
 tr:nth-child(even)
   background-color: #f8f8f8
 
