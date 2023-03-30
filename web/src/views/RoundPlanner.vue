@@ -1,5 +1,23 @@
 <template>
   <v-card variant="flat">
+    <v-card-actions class="d-flex ml-3">
+      <!-- Buttons to select if the user wants to plan for multiple days or not -->
+      <v-btn
+        @click="
+          () => {
+            selected_multiple = false;
+            selected_end_day = '';
+          }
+        "
+        :active="!selected_multiple"
+        >Enkel</v-btn
+      >
+      <v-btn
+        @click="() => (selected_multiple = true)"
+        :active="selected_multiple"
+        >Meerdere</v-btn
+      >
+    </v-card-actions>
     <v-row class="py-0 my-0">
       <v-col
         cols="1"
@@ -16,19 +34,28 @@
           required
         ></v-select>
       </v-col>
-      <!-- Start en einddatum zou idealiter een kalender moeten zijn waarop datums te selecteren zijn -->
+      <!-- TODO: implement check to see if start and end date dont crossover -->
       <v-col
         cols="3"
         style="min-width: 100px; max-width: 100%"
         class="flex-grow-0 flex-shrink-1 py-0 my-0"
-      >
-        <v-text-field
-          label="Datum"
-          type="date"
-          variant="solo"
-          multiple
-          v-model="selected_start_day"
-        />
+        ><div class="d-flex">
+          <v-text-field
+            label="Datum"
+            type="date"
+            variant="solo"
+            multiple
+            v-model="selected_start_day"
+          /><v-text-field
+            class="ml-1"
+            v-if="selected_multiple"
+            label="Datum"
+            type="date"
+            variant="solo"
+            multiple
+            v-model="selected_end_day"
+          />
+        </div>
       </v-col>
       <v-col
         cols="3"
@@ -66,6 +93,8 @@
         style="min-width: 100px; max-width: 100%"
         class="flex-grow-0 flex-shrink-0 py-0 my-0"
       >
+        <!-- TODO: currently 55px on this button to make it fit the theme, maybe css in future? -->
+        <!-- TODO: fix this router link to load in dynamicly -->
         <v-btn
           to="/rondes/nieuw"
           min-width="100%"
@@ -81,7 +110,7 @@
         style="min-width: 100px; max-width: 100%"
         class="flex-grow-0 flex-shrink-0 py-0 my-0 mr-5"
       >
-        <!-- TODO: fix router to link -->
+        <!-- TODO: Fix router link so there's a pushback to this page once a round is created?-->
         <v-btn
           to="/rondes/nieuw"
           min-height="55px"
@@ -92,37 +121,48 @@
         >
       </v-col>
     </v-row>
+
     <v-card
       v-if="selected_round"
-      variant="flat"
-      class="py-0 my-0 mx-2"
-      :title="selected_round.name"
+      v-for="planned in planned_rounds"
+      class="py-0 my-5 mx-5"
     >
-      <v-list class="mx-3">
-        <v-list-item v-for="building in selected_round.buildings">
-          <v-card variant="flat"></v-card>
-          <!-- TODO: Currently using the building.comments as a indication for mock -->
-          <!-- Change in a api call if building already in other rounds -->
-          <template v-slot:prepend v-if="building.comments">
-            <!-- TODO: Maybe change the text of the tooltip to ref of round -->
-            <v-tooltip text="Gebouw is al ingepland.">
-              <template v-slot:activator="{ props }">
-                <v-icon color="orange" icon="mdi-alert" v-bind="props"></v-icon>
-              </template>
-            </v-tooltip>
-          </template>
-          <template v-slot:prepend>
-            <v-icon color="green" icon="mdi-office-building"></v-icon>
-          </template>
-          <template v-slot:title>
-            <v-card-title>{{ building.name }}</v-card-title> </template
-          ><template v-slot:subtitle>
-            <v-card-subtitle>{{ building.address }}</v-card-subtitle>
-          </template>
-        </v-list-item>
-      </v-list>
+      <template v-if="selected_round.comments" v-slot:prepend>
+        <v-tooltip :text="`Ronde al ingepland op ${planned.date}`"
+          ><template v-slot:activator="{ props }">
+            <v-icon
+              v-bind="props"
+              color="error"
+              icon="mdi-alert"
+            ></v-icon></template
+        ></v-tooltip>
+      </template>
+
+      <template v-else v-slot:prepend>
+        <v-icon v-bind="props" color="green" icon="mdi-transit-detour"></v-icon>
+      </template>
+      <template v-slot:title>
+        <v-card-title>{{ selected_round.name }}</v-card-title> </template
+      ><template v-slot:subtitle>
+        <v-card-subtitle>{{
+          selected_multiple ? planned.date : ""
+        }}</v-card-subtitle>
+      </template>
+      <template v-slot:append>
+        <v-icon class="ml-2" color="error" icon="mdi-close"></v-icon>
+        <v-icon class="ml-2" color="primary" icon="mdi-pencil"></v-icon>
+        <v-icon
+          class="ml-2"
+          :icon="planned.showinfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+        ></v-icon>
+      </template>
     </v-card>
-    <v-card v-else title="Nog geen ronde geselecteerd" variant="flat"></v-card>
+    <v-card
+      v-else
+      prepend-icon="mdi-information"
+      title="Nog geen ronde geselecteerd"
+      variant="flat"
+    ></v-card>
     <v-card-actions class="d-flex">
       <v-spacer></v-spacer>
       <!-- TODO fill in correct link, router pushback to previous page or reload this one? -->
@@ -138,23 +178,66 @@
         to="/todo"
         prepend-icon="mdi-check"
         color="primary"
-        >Ronde inplannen</v-btn
+        >Ronde(s) inplannen</v-btn
       >
     </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed, ComputedRef } from "vue";
 import Round from "@/components/models/Round";
 
+const selected_multiple = ref<boolean>(false);
 const selected_student = ref<string>("");
 const selected_start_day = ref<string>(
   new Date().toISOString().substring(0, 10),
 );
-const selected_end_day = ref<string>(new Date().toISOString().substring(0, 10));
+const selected_end_day = ref<string>("");
 const selected_time = ref<string>("");
 const selected_round = ref<Round | null>(null);
+
+function getDateRange(start: string, end: string): string[] {
+  if (!end) {
+    return [start];
+  } else {
+    let dates: string[] = [];
+    let current_date = new Date(start);
+    let end_date = new Date(end);
+    while (current_date <= end_date) {
+      dates.push(current_date.toISOString().substring(0, 10));
+      current_date.setDate(current_date.getDate() + 1);
+    }
+
+    return dates;
+  }
+}
+
+interface RoutePlanning {
+  date: string;
+  round: Round | null;
+  showinfo: boolean;
+}
+
+const planned_rounds: ComputedRef<RoutePlanning[]> = computed(() => {
+  let date_round: RoutePlanning[] = [];
+  for (let curr_date of getDateRange(
+    selected_start_day.value,
+    selected_end_day.value,
+  )) {
+    date_round.push({
+      date: curr_date,
+      round: selected_round.value,
+      showinfo: false,
+    });
+  }
+  return date_round;
+});
+
+function logme(planned: RoutePlanning) {
+  planned.showinfo = !planned.showinfo;
+  console.log("hssssssss");
+}
 
 const mock_students = ref<string[]>([
   "Michael",

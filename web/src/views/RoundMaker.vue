@@ -1,32 +1,35 @@
 <template>
-  <v-row no-gutters>
-    <!-- Usage of v-col to get 2 columns -->
-    <!-- This v-col is the content on left hand side of the screen -->
-    <v-col class="pa-2 ma-2">
-      <v-card width="100%">
+  <v-row class="py-0 my-2 mx-2">
+    <v-col
+      cols="1"
+      style="min-width: 100px; max-width: 100%"
+      class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
+      ><v-card width="100%">
         <!-- Header for the card title -->
         <!-- TODO: remove the mockdata from this part -->
-        <v-card-title class="d-flex"
-          ><v-text-field
-            label="Naam ronde"
-            hint="Bv: Copure vrijdag"
-            variant="solo"
-          ></v-text-field
-          ><v-spacer></v-spacer><v-btn>Klaar</v-btn>
-        </v-card-title>
+        <v-row class="py-0 my-2">
+          <v-col
+            cols="1"
+            style="min-width: 100px; max-width: 100%"
+            class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
+            ><v-text-field label="Template naam" variant="solo" /></v-col
+          ><v-col
+            cols="3"
+            style="min-width: 100px; max-width: 100%"
+            class="flex-grow-0 flex-shrink-0 py-0 my-0 ml-5"
+            ><v-btn height="55px">Aanmaken</v-btn></v-col
+          >
+        </v-row>
         <v-divider></v-divider>
         <v-layout>
           <v-list width="100%">
-            <v-list-item
+            <v-card
               v-for="(building, i) in round"
               :key="i"
               :value="building"
               fluid
+              variant="flat"
             >
-              <v-list-item-title>{{ building.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{ building.adress }}</v-list-item-subtitle>
-
-              <!-- Buttons for manipulating the round list -->
               <template v-slot:prepend>
                 <v-icon
                   icon="mdi-chevron-up"
@@ -36,19 +39,27 @@
                   icon="mdi-chevron-down"
                   @click="moveBuildingDown(i)"
                 ></v-icon>
+              </template>
+              <template v-slot:title>
+                <v-card-title>{{ building.name }}</v-card-title> </template
+              ><template v-slot:subtitle>
+                <v-card-subtitle>{{ building.adress }}</v-card-subtitle>
+              </template>
+              <template v-slot:append>
                 <v-icon
                   icon="mdi-close"
                   @click="deleteBuildingFromRound(i, building)"
                 ></v-icon>
               </template>
-            </v-list-item>
+            </v-card>
           </v-list>
-        </v-layout>
-      </v-card>
-    </v-col>
-    <!-- Right hand side of the screen -->
-    <v-col class="pa-2 ma-2">
-      <v-card width="100%">
+        </v-layout> </v-card
+    ></v-col>
+    <v-col
+      cols="2"
+      style="min-width: 100px; max-width: 100%"
+      class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
+      ><v-card width="100%">
         <v-card-title>
           <v-text-field
             label="Zoeken op naam van bestaande gebouwen"
@@ -59,14 +70,13 @@
         <v-divider></v-divider>
         <v-layout>
           <v-list width="100%">
-            <v-list-item
+            <v-card
               v-for="building in filterlist()"
               :key="building.listid"
               :value="building"
               fluid
+              variant="flat"
             >
-              <v-list-item-title>{{ building.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{ building.adress }}</v-list-item-subtitle>
               <template v-slot:prepend>
                 <!-- Button for manipulating the building list -->
                 <v-icon
@@ -76,11 +86,16 @@
                   "
                 ></v-icon>
               </template>
-            </v-list-item>
+              <template v-slot:title>
+                <v-card-title>{{ building.name }}</v-card-title> </template
+              ><template v-slot:subtitle>
+                <v-card-subtitle>{{ building.adress }}</v-card-subtitle>
+              </template>
+            </v-card>
           </v-list>
         </v-layout>
-      </v-card>
-    </v-col>
+      </v-card></v-col
+    >
   </v-row>
 </template>
 
