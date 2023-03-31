@@ -11,7 +11,6 @@ import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/Followup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
-import RoundReport from "@/views/RoundReport.vue";
 import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue";
@@ -99,11 +98,6 @@ const routes = [
         path: "/dashboard/gebruikers/nieuw",
         name: "Nieuwe gebruiker",
         component: UserCreation,
-      },
-      {
-        path: "/dashboard/rondes/rapport",
-        name: "Ronde rapport",
-        component: RoundReport,
       },
       {
         path: "/rondes/detail",
