@@ -21,10 +21,10 @@
       >
       <v-btn
         v-else
-        prepend-icon="mdi-delete"
+        prepend-icon="mdi-close"
         @click="edit = !edit"
-        color="error"
-        >Verwijder aanpassingen</v-btn
+        color="warning"
+        >Annuleer aanpassingen</v-btn
       >
     </div>
 
@@ -155,7 +155,35 @@
         >
       </div>
     </v-card>
+    <v-divider :thickness="3" />
+
+    <!-- Section that allows to remove the account -->
+    <v-card v-if="edit" class="my-4" prepend-icon="mdi-delete">
+      <template v-slot:title> Verwijder account </template>
+      <div class="d-flex">
+        <v-text-field
+          class="mx-5 me-auto"
+          v-model="remove_psswd"
+          :prepend-inner-icon="'mdi-lock'"
+          :append-inner-icon="show_remove ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="show_remove ? 'text' : 'password'"
+          :label="isAdmin ? 'Jouw admin wachtwoord' : 'Huidig wachtwoord'"
+          @click:append-inner="show_remove = !show_remove"
+          bg
+        ></v-text-field>
+
+        <v-btn
+          prepend-icon="mdi-delete"
+          @click="edit = !edit"
+          color="error"
+          class="mx-5 my-3"
+          >Verwijder account</v-btn
+        >
+      </div>
+    </v-card>
+  </div>
   </HFillWrapper>
+
 </template>
 <script lang="ts" setup>
 import ContactForm from "@/components/ContactForm.vue";
@@ -206,6 +234,10 @@ const showPsswd = ref(false);
 // reactive state for the submission
 const confirm_psswd = ref("");
 const show_confirm = ref(false);
+
+// state for the remove password
+const remove_psswd = ref("");
+const show_remove = ref(false);
 </script>
 <style lang="sass" scoped>
 a
