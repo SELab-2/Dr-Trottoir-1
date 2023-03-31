@@ -2,57 +2,34 @@
   <v-container>
     <v-form>
       <!-- card met alle info over het gebouw -->
-      <v-card prepend-icon="mdi-home">
-        <template v-slot:title> Gebouw info </template>
-        <v-card-item>
-          <v-row>
-            <v-col cols="3">
-              <v-img
-                cover
-                :src="preview"
-                lazy-src="@/assets/images/defaultImage.png"
-              ></v-img>
-            </v-col>
-            <v-col>
-              <v-file-input
-                label="Building Image"
-                prepend-icon=""
-                prepend-inner-icon="mdi-image"
-                required
-                v-model="buildingImage"
-                @change="previewImage"
-              ></v-file-input>
-              <v-text-field
-                required
-                type="text"
-                v-model="building.name"
-                label="Building Name"
-              ></v-text-field>
-              <v-text-field
-                required
-                type="text"
-                v-model="building.ivagoId"
-                label="Ivago id"
-              ></v-text-field>
-              <v-select
-                label="Syndicus"
-                :items="['Jeff', 'Elon', 'Tim', 'Bill', 'Warren', 'Steve']"
-                v-model="building.syndicus"
-              ></v-select>
-            </v-col>
-          </v-row>
-          <v-file-input
-            prepend-icon=""
-            prepend-inner-icon="mdi-file"
-            v-model="building.manual"
-            label="Manual"
-          ></v-file-input>
-        </v-card-item>
+      <v-card prepend-icon="mdi-home" class="mb-4 px-4" title="Gebouw info">
+        <v-text-field
+          required
+          type="text"
+          v-model="building.name"
+          label="Building Name"
+        ></v-text-field>
+        <v-text-field
+          required
+          type="text"
+          v-model="building.ivagoId"
+          label="Ivago id"
+        ></v-text-field>
+        <v-select
+          label="Syndicus"
+          :items="['Jeff', 'Elon', 'Tim', 'Bill', 'Warren', 'Steve']"
+          v-model="building.syndicus"
+        ></v-select>
+
+        <v-file-input
+          prepend-icon=""
+          prepend-inner-icon="mdi-file"
+          v-model="building.manual"
+          label="Manual"
+        ></v-file-input>
       </v-card>
-      <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
-      <v-card prepend-icon="mdi-access-point">
+      <v-card prepend-icon="mdi-access-point" title="Locatie info" class="mb-4">
         <!-- card met alle info over de locatie -->
-        <template v-slot:title> Locatie info </template>
         <v-card-item>
           <v-row>
             <v-col cols="3">
@@ -88,7 +65,7 @@
           </v-row>
         </v-card-item>
       </v-card>
-      <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
+
       <v-card prepend-icon="mdi-image">
         <!-- v-card met alle extra afbeeldingen -->
         <template v-slot:title> Extra afbeeldigen </template>
@@ -99,9 +76,7 @@
       </v-card>
       <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
       <div class="d-flex flex-row-reverse">
-        <v-btn @click="submit" type="submit" color="primary"
-          >Submit gebouw</v-btn
-        >
+        <v-btn @click="submit" type="submit" color="primary">Maak gebouw</v-btn>
       </div>
     </v-form>
   </v-container>

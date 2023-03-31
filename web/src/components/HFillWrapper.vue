@@ -15,6 +15,6 @@
 import HFill from "@/components/HFill.vue";
 
 defineProps({
-  margin: { type: String, default: 'ma-3' },
+  margin: { type: String, default: "ma-3" },
 });
 </script>
