@@ -23,19 +23,18 @@
 import LargeFilter from "@/components/LargeFilter.vue";
 import Filterdata from "@/components/models/Filterdata";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { createDate, formatDate } from "@/assets/scripts/date";
 import BuildingCard from '@/components/BuildingCard.vue'
 
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
 const filter_options = ["Opmerkingen"];
-const sort_items = ["Naam", "Datum"];
+const sort_items = [];
 
 // All the filter options
 const filter_data = ref<Filterdata>({
   query: "",
   search_label: query_labels[0],
-  sort_by: sort_items[0],
+  sort_by: "",
   sort_ascending: true,
   filters: [],
   start_day: formatDate(new Date()),
@@ -133,52 +132,61 @@ function filter_query(building: {
 }
 
 function filter() {
-  const prefilter: any[] = [];
   const result: any[] = [];
   // filtering
   buildings.forEach((elem) => {
-    let newel = { ...elem };
-    newel.date = filter_data.value.start_day;
-    newel.comments = false;
-    prefilter.push(newel);
-  });
 
-  prefilter.forEach((elem) => {
-    let can_add = true;
+    const building = {...elem}
 
-    can_add =
-      can_add &&
-      filter_query(elem);
-    can_add =
-      can_add &&
-      createDate(elem.date) <= createDate(filter_data.value.end_day);
-    can_add =
-      can_add &&
-      createDate(elem.date) >= createDate(filter_data.value.start_day);
+    if (filter_query(building)) {
+      const data = [];
+      building.data.forEach((datum: {comments: boolean, date: string}) => {
+        let can_add = true;
 
-    for (let filter of filter_data.value.filters) {
-      if (filter === filter_options[0]) {
-        can_add = can_add && elem.comments;
+        can_add =
+          can_add &&
+          createDate(datum.date) <= createDate(filter_data.value.end_day);
+        can_add =
+          can_add &&
+          createDate(datum.date) >= createDate(filter_data.value.start_day);
+
+        for (let filter of filter_data.value.filters) {
+          if (filter === filter_options[0]) {
+            can_add = can_add && datum.comments;
+          }
+        }
+        if (can_add) {
+          data.push(datum);
+        }
+      })
+
+      if (data.length === 0 && filter_data.value.end_day === filter_data.value.start_day)
+      {
+        data.push({date: filter_data.value.start_day, comments: false});
       }
+
+      data.sort((a, b) => {
+        return a.date > b.date ? 1 : -1;
+      });
+
+      if (!filter_data.value.sort_ascending) {
+        data.reverse();
+      }
+
+      building.data = data;
+
+      result.push(building);
     }
-    if (can_add) {
-      result.push(elem);
-    }
+
   });
 
-  // sort the results
   result.sort((a, b) => (a.name > b.name ? 1 : -1));
-  result.sort((a, b) => {
-    if (filter_data.value.sort_by == "Datum") {
-      return a.date > b.date ? 1 : -1;
-    }
-    return 0;
-  });
-  // set sorting order
+
   if (!filter_data.value.sort_ascending) {
     result.reverse();
   }
-  return buildings;
+
+  return result;
 }
 </script>
 

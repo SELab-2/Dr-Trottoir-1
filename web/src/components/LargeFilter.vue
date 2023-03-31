@@ -84,7 +84,7 @@
             />
           </v-col>
           <!-- Search order column -->
-          <v-col v-if="sort_items.length != 0">
+          <v-col>
             <v-radio-group
               v-model="filter_data.sort_by"
               color="primary"
