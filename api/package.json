@@ -3,7 +3,7 @@
     "start": "node ./dist/main.js",
     "serve": "nodemon ./src/main.ts",
     "lint": "npx prettier --write . && npx eslint src",
-    "pretest": "npx prettier --check . && npx eslint src --max-warnings 0",
+    "pretest": "npx prettier --check . && npx eslint src --max-warnings 0 && tsc",
     "test": "jest"
   },
   "dependencies": {
@@ -26,7 +26,8 @@
     "@types/compression": "^1.7.2",
     "@types/express": "^4.17.17",
     "@types/express-session": "^1.17.6",
-    "@types/jest": "^29.4.0",
+    "@types/jest": "^29.5.0",
+    "@types/mocha": "^10.0.1",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.14.1",
     "@types/passport-local": "^1.0.35",

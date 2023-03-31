@@ -16,6 +16,7 @@ import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue";
 import BuildingDetail from "@/views/BuildingDetail.vue";
+import GarbageMaker from "@/views/GarbageMaker.vue";
 
 const routes = [
   {
@@ -61,7 +62,7 @@ const routes = [
       //},
       {
         path: "/gebouwen",
-        name: "Gebouwen",
+        name: "Gebouw opvolging",
         component: BuildingFollowup,
       },
       {
@@ -116,6 +117,11 @@ const routes = [
         path: "/dashboard/rondes/plannen",
         name: "Ronde Planner",
         component: RoundPlanner,
+      },
+      {
+        path: "/dashboard/garbage",
+        name: "Garbage",
+        component: GarbageMaker,
       },
     ],
   },
