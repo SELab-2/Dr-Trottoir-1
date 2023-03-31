@@ -28,7 +28,7 @@ import BuildingCard from "@/components/BuildingCard.vue";
 
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
 const filter_options = ["Opmerkingen"];
-const sort_items = [];
+const sort_items: string[] = [];
 
 // All the filter options
 const filter_data = ref<Filterdata>({
