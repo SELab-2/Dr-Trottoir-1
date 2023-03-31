@@ -182,7 +182,6 @@
       </div>
     </v-card>
   </HFillWrapper>
-
 </template>
 <script lang="ts" setup>
 import ContactForm from "@/components/ContactForm.vue";
