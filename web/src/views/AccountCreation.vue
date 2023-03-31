@@ -1,5 +1,5 @@
 <template>
-  <HFillWrapper>
+  <HFillWrapper margin="mx-4">
       <v-card class="mt-4" prepend-icon="mdi-account-details">
         <template v-slot:title> Persoonlijke gegevens </template>
         <v-row class="py-0 my-0">

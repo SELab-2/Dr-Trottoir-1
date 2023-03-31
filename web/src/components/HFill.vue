@@ -3,7 +3,7 @@
 -->
 <template>
   <v-col
-    v-if="screen.mdAndUp.value"
+    v-if="!screen.mdAndDown.value"
     cols="1"
     class="flex-grow-1 flex-shrink-0"
     style="max-width: 100%"

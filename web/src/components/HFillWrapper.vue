@@ -5,7 +5,7 @@
     -->
   <v-row>
     <HFill />
-    <v-col style="min-width: 65%" class="ma-3">
+    <v-col style="min-width: 65%" :class="margin">
       <slot></slot>
     </v-col>
     <HFill />
@@ -13,4 +13,8 @@
 </template>
 <script setup lang="ts">
 import HFill from "@/components/HFill.vue";
+
+defineProps({
+  margin: { type: String, default: 'ma-3' },
+});
 </script>
