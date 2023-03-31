@@ -17,7 +17,7 @@
         block
         @click="addMore"
         prepend-icon="mdi-plus"
-        color="success"
+        color="primary"
         variant="elevated"
       >
         afbeelding toevoegen
