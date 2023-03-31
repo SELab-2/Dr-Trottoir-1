@@ -9,46 +9,8 @@
         class="mx-1 mb-3"
         @onUpdate="(new_data: Filterdata) => {filter_data = new_data; filterIndex++;}"
       />
-      <div v-for="(building, id) in filter()" :key="id + filterIndex">
-        <v-card
-          class="mb-3 mx-1"
-          @click="
-            router.push({
-              name: 'Gebouw detail',
-              params: { id: building.id, date: building.date },
-            })
-          "
-        >
-          <template v-slot:prepend>
-            <v-img cover src='https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920' class='prepend-img'/>
-          </template>
-          <template v-slot:title>
-            {{ building.name }}
-            <v-icon end v-if="building.comments"
-              >mdi-comment-alert-outline</v-icon
-            >
-          </template>
-          <template v-slot:subtitle>
-            <Avatar
-              :name="building.syndicus"
-              size="x-small"
-              :key="building.syndicus"
-            />
-            {{ building.syndicus }} <br/>
-            <v-chip label color="brown" class='mt-4'>
-              <v-icon icon="mdi-office-building-marker-outline"></v-icon>
-              <p class="ml-2">{{ building.adres }}</p>
-            </v-chip>
-          </template>
-          <template v-slot:append>
-            <v-chip label color="blue" class="ml-3 align-top">
-              <v-icon icon="mdi-calendar-clock"></v-icon>
-              <p class="ml-2">{{ building.date }}</p>
-            </v-chip>
-            <v-icon icon='mdi-menu-down' class='dropdown-button'/>
-          </template>
-        </v-card>
-        <div></div>
+      <div v-for="(building, id) in filter()" :key="id + ':' + filterIndex">
+        <building-card :building='building'/>
       </div>
       <v-spacer></v-spacer>
     </v-col>
@@ -60,12 +22,10 @@
 <script lang="ts" setup>
 import LargeFilter from "@/components/LargeFilter.vue";
 import Filterdata from "@/components/models/Filterdata";
-import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { createDate, formatDate } from "@/assets/scripts/date";
-
-const router = useRouter();
+import BuildingCard from '@/components/BuildingCard.vue'
 
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
 const filter_options = ["Opmerkingen"];
@@ -91,6 +51,7 @@ const buildings: any[] = [
     name: "Eiffeltoren",
     syndicus: "Mats Van Belle",
     adres: "Examplestreet -2",
+    expanded: false,
     data: [
       {
         comments: true,
@@ -217,26 +178,9 @@ function filter() {
   if (!filter_data.value.sort_ascending) {
     result.reverse();
   }
-  return result;
+  return buildings;
 }
 </script>
 
 <style scoped lang="scss">
-.prepend-img {
-  aspect-ratio: 1;
-  width: 105px;
-  border-radius: 5px;
-}
-
-.dropdown-button {
-  position: absolute;
-  bottom: 3px;
-  right: 3px;
-}
-
-.align-top {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
 </style>
