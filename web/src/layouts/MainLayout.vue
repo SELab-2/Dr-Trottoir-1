@@ -97,8 +97,13 @@
           <div v-if="isSyndicus">
             <p class="pa-2 font-weight-medium text-caption">Mijn gebouwen</p>
 
-            <div v-for='buildingid of [1, 2]' :key='buildingid'>
-              <router-link :to="{name: 'Gebouw detail', params: { id: buildingid, date: today }}">
+            <div v-for="buildingid of [1, 2]" :key="buildingid">
+              <router-link
+                :to="{
+                  name: 'Gebouw detail',
+                  params: { id: buildingid, date: today },
+                }"
+              >
                 <v-list-item
                   prepend-icon="mdi-file-cabinet"
                   :title="'Gebouw ' + buildingid"
@@ -167,7 +172,7 @@
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
-import { formatDate } from '@/assets/scripts/date'
+import { formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 

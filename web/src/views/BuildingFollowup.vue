@@ -10,7 +10,7 @@
         @onUpdate="(new_data: Filterdata) => {filter_data = new_data; filterIndex++;}"
       />
       <div v-for="(building, id) in filter()" :key="id + ':' + filterIndex">
-        <building-card :building='building'/>
+        <building-card :building="building" />
       </div>
       <v-spacer></v-spacer>
     </v-col>
@@ -24,7 +24,7 @@ import LargeFilter from "@/components/LargeFilter.vue";
 import Filterdata from "@/components/models/Filterdata";
 import { ref } from "vue";
 import { createDate, formatDate } from "@/assets/scripts/date";
-import BuildingCard from '@/components/BuildingCard.vue'
+import BuildingCard from "@/components/BuildingCard.vue";
 
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
 const filter_options = ["Opmerkingen"];
@@ -135,12 +135,11 @@ function filter() {
   const result: any[] = [];
   // filtering
   buildings.forEach((elem) => {
-
-    const building = {...elem}
+    const building = { ...elem };
 
     if (filter_query(building)) {
       const data = [];
-      building.data.forEach((datum: {comments: boolean, date: string}) => {
+      building.data.forEach((datum: { comments: boolean; date: string }) => {
         let can_add = true;
 
         can_add =
@@ -158,11 +157,13 @@ function filter() {
         if (can_add) {
           data.push(datum);
         }
-      })
+      });
 
-      if (data.length === 0 && filter_data.value.end_day === filter_data.value.start_day)
-      {
-        data.push({date: filter_data.value.start_day, comments: false});
+      if (
+        data.length === 0 &&
+        filter_data.value.end_day === filter_data.value.start_day
+      ) {
+        data.push({ date: filter_data.value.start_day, comments: false });
       }
 
       data.sort((a, b) => {
@@ -177,7 +178,6 @@ function filter() {
 
       result.push(building);
     }
-
   });
 
   result.sort((a, b) => (a.name > b.name ? 1 : -1));
@@ -190,5 +190,4 @@ function filter() {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>
