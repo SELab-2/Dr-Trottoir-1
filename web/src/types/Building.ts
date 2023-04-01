@@ -15,14 +15,10 @@ export class Building implements TableEntity<Building> {
   }
 
   headers(): Array<Header<Building>> {
-    return Building.headers();
+    return Building.headers(this.id);
   }
 
-  detailPageUrl(): string {
-    return `/gebouw/${this.id}`;
-  }
-
-  static headers(): Array<Header<Building>> {
+  static headers(id: number): Array<Header<Building>> {
     return [
       {
         id: 2,
@@ -49,7 +45,7 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.name,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/gebouw/${this.id}`,
+        route_to: `/gebouw/${id}`,
       },
       {
         id: 1,
@@ -58,7 +54,7 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.address,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/gebouw/${this.id}`,
+        route_to: `/gebouw/${id}`,
       },
     ];
   }
