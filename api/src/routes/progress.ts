@@ -3,22 +3,27 @@ import { Auth } from "../auth/auth";
 import express from "express";
 import { Parser } from "../parser";
 import { prisma } from "../prisma";
-import { APIError } from "../errors/api_error";
-import { APIErrorCode } from "../errors/api_error_code";
+import { Prisma } from "@selab-2/groep-1-orm";
 
 export class ProgressRouting extends Routing {
+    private static includes: Prisma.ProgressInclude = {
+        building: selectBuilding(),
+        schedule: {
+            include: {
+                round: true,
+                user: includeUser(false),
+            },
+        },
+        images: true,
+    };
+
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        let deleted: boolean | undefined = false;
-        if (req.user?.admin && Parser.bool(req.query["deleted"])) {
-            deleted = undefined;
-        }
-
         const result = await prisma.progress.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                deleted: deleted,
+                deleted: Parser.bool(req.query["deleted"], false),
                 report: {
                     contains: Parser.string(req.query["report"], ""),
                 },
@@ -30,27 +35,14 @@ export class ProgressRouting extends Routing {
                     lte: Parser.date(req.query["left_before"]),
                     gte: Parser.date(req.query["left_after"]),
                 },
-                building_id: Parser.number(req.query["building_id"]),
-                schedule_id: Parser.number(req.query["schedule_id"]),
-                building: {
-                    name: Parser.string(req.query["building"]),
-                    ivago_id: Parser.string(req.query["ivago_id"]),
-                },
+                building_id: Parser.number(req.query["building"]),
+                schedule_id: Parser.number(req.query["schedule"]),
                 schedule: {
-                    round_id: Parser.number(req.query["round_id"]),
-                    user_id: Parser.number(req.query["user_id"]),
+                    round_id: Parser.number(req.query["round"]),
+                    user_id: Parser.number(req.query["user"]),
                 },
             },
-            include: {
-                building: selectBuilding(),
-                schedule: {
-                    include: {
-                        round: true,
-                        user: includeUser(false),
-                    },
-                },
-                images: true,
-            },
+            include: ProgressRouting.includes,
         });
 
         return res.status(200).json(result);
@@ -58,25 +50,13 @@ export class ProgressRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.progress.findUniqueOrThrow({
+        const result = await prisma.progress.findFirstOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
+                deleted: req.user?.admin ? undefined : false,
             },
-            include: {
-                building: selectBuilding(),
-                schedule: {
-                    include: {
-                        round: true,
-                        user: includeUser(false),
-                    },
-                },
-                images: true,
-            },
+            include: ProgressRouting.includes,
         });
-
-        if (result.deleted && !req.user?.admin) {
-            throw new APIError(APIErrorCode.NOT_FOUND);
-        }
 
         return res.status(200).json(result);
     }
@@ -104,17 +84,14 @@ export class ProgressRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        const hardDelete = req.body["hardDelete"];
-        let result;
-
-        if (req.user?.admin && hardDelete) {
-            result = await prisma.progress.delete({
+        if (Parser.bool(req.body["hardDelete"], false)) {
+            await prisma.progress.delete({
                 where: {
                     id: Parser.number(req.params["id"]),
                 },
             });
         } else {
-            result = await prisma.progress.update({
+            await prisma.progress.update({
                 data: {
                     deleted: true,
                 },
@@ -124,6 +101,6 @@ export class ProgressRouting extends Routing {
             });
         }
 
-        return res.status(200).json(result);
+        return res.status(200).json({});
     }
 }

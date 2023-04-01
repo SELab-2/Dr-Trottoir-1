@@ -55,12 +55,12 @@ export class ActionRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.action.delete({
+        await prisma.action.delete({
             where: {
                 id: Parser.number(req.params["id"]),
             },
         });
 
-        return res.status(200).json(result);
+        return res.status(200).json({});
     }
 }

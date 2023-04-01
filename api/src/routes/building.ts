@@ -3,17 +3,31 @@ import express from "express";
 import { CustomRequest, includeUser, Routing } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
-import { APIError } from "../errors/api_error";
-import { APIErrorCode } from "../errors/api_error_code";
+import { Prisma } from "@selab-2/groep-1-orm";
 
 export class BuildingRouting extends Routing {
+    private static selects: Prisma.BuildingSelect = {
+        id: true,
+        name: true,
+        ivago_id: true,
+        deleted: true,
+        hash: false,
+        address: true,
+        syndicus: {
+            include: {
+                user: includeUser(false),
+            },
+        },
+        manual: true,
+        images: {
+            include: {
+                image: true,
+            },
+        },
+    };
+
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        let deleted: boolean | undefined = false;
-        if (req.user?.admin && Parser.bool(req.query["deleted"])) {
-            deleted = undefined;
-        }
-
         const result = await prisma.building.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -21,27 +35,9 @@ export class BuildingRouting extends Routing {
                 name: req.query["name"],
                 ivago_id: req.query["ivago_id"],
                 syndicus_id: Parser.number(req.query["syndicus_id"]),
-                deleted: deleted,
+                deleted: Parser.bool(req.query["deleted"], false),
             },
-            select: {
-                id: true,
-                name: true,
-                ivago_id: true,
-                deleted: true,
-                hash: false,
-                address: true,
-                syndicus: {
-                    include: {
-                        user: includeUser(false),
-                    },
-                },
-                manual: true,
-                images: {
-                    include: {
-                        image: true,
-                    },
-                },
-            },
+            select: BuildingRouting.selects,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
@@ -50,29 +46,13 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.building.findUniqueOrThrow({
+        const result = await prisma.building.findFirstOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
+                deleted: req.user?.admin ? undefined : false,
             },
-            include: {
-                address: true,
-                syndicus: {
-                    include: {
-                        user: includeUser(false),
-                    },
-                },
-                manual: true,
-                images: {
-                    include: {
-                        image: true,
-                    },
-                },
-            },
+            select: BuildingRouting.selects,
         });
-
-        if (result.deleted && !req.user?.admin) {
-            throw new APIError(APIErrorCode.NOT_FOUND);
-        }
 
         return res.json(result);
     }
@@ -100,17 +80,14 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        const hardDelete = req.body["hardDelete"];
-        let result;
-
-        if (req.user?.admin && hardDelete) {
-            result = await prisma.building.delete({
+        if (Parser.bool(req.body["hardDelete"], false)) {
+            await prisma.building.delete({
                 where: {
                     id: Parser.number(req.params["id"]),
                 },
             });
         } else {
-            result = await prisma.building.update({
+            await prisma.building.update({
                 data: {
                     deleted: true,
                 },
@@ -120,6 +97,6 @@ export class BuildingRouting extends Routing {
             });
         }
 
-        return res.status(200).json(result);
+        return res.status(200).json({});
     }
 }

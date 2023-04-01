@@ -3,22 +3,29 @@ import { Auth } from "../auth/auth";
 import express from "express";
 import { Parser } from "../parser";
 import { prisma } from "../prisma";
-import { APIError } from "../errors/api_error";
-import { APIErrorCode } from "../errors/api_error_code";
+import { Prisma } from "@selab-2/groep-1-orm";
 
 export class ScheduleRouting extends Routing {
+    private static includes: Prisma.ScheduleInclude = {
+        user: includeUser(true),
+        round: {
+            include: {
+                buildings: {
+                    include: {
+                        building: selectBuilding(),
+                    },
+                },
+            },
+        },
+    };
+
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        let deleted: boolean | undefined = false;
-        if (req.user?.admin && Parser.bool(req.query["deleted"])) {
-            deleted = undefined;
-        }
-
         const result = await prisma.schedule.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                deleted: deleted,
+                deleted: Parser.bool(req.query["deleted"], false),
                 day: {
                     lte: Parser.date(req.query["before"]),
                     gte: Parser.date(req.query["after"]),
@@ -39,18 +46,7 @@ export class ScheduleRouting extends Routing {
                     name: req.query["round"],
                 },
             },
-            include: {
-                user: includeUser(true),
-                round: {
-                    include: {
-                        buildings: {
-                            include: {
-                                building: selectBuilding(),
-                            },
-                        },
-                    },
-                },
-            },
+            include: ScheduleRouting.includes,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
@@ -59,27 +55,13 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.schedule.findUniqueOrThrow({
+        const result = await prisma.schedule.findFirstOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
+                deleted: req.user?.admin ? undefined : false,
             },
-            include: {
-                user: includeUser(true),
-                round: {
-                    include: {
-                        buildings: {
-                            include: {
-                                building: selectBuilding(),
-                            },
-                        },
-                    },
-                },
-            },
+            include: ScheduleRouting.includes,
         });
-
-        if (result.deleted && !req.user?.admin) {
-            throw new APIError(APIErrorCode.NOT_FOUND);
-        }
 
         return res.status(200).json(result);
     }
@@ -107,17 +89,14 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        const hardDelete = req.body["hardDelete"];
-        let result;
-
-        if (req.user?.admin && hardDelete) {
-            result = await prisma.schedule.delete({
+        if (Parser.bool(req.body["hardDelete"], false)) {
+            await prisma.schedule.delete({
                 where: {
                     id: Parser.number(req.params["id"]),
                 },
             });
         } else {
-            result = await prisma.schedule.update({
+            await prisma.schedule.update({
                 data: {
                     deleted: true,
                 },
@@ -127,6 +106,6 @@ export class ScheduleRouting extends Routing {
             });
         }
 
-        return res.status(200).json(result);
+        return res.status(200).json({});
     }
 }
