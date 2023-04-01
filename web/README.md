@@ -29,7 +29,7 @@ Eenmaal de node modules geïnstalleerd zijn kan men de applicatie compileren en 
 npm run dev
 ```
 
-Dit start normaal een [Vite](https://vitejs.dev/) server op op het lokaal address [http://localhost:3000/](http://localhost:3000/).
+Dit start normaal een [Vite](https://vitejs.dev/) server op het lokaal address [http://localhost:3000/](http://localhost:3000/).
 De vite server zorgt ervoor dat de applicatie uitgevoerd wordt.
 
 ## Linting
