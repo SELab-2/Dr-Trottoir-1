@@ -7,6 +7,10 @@ export class Routes implements TableEntity<Routes> {
   id: number;
   name: string;
   buildings: number;
+  date: string;
+  student_fn: string;
+  student_ln: string;
+  finished: boolean;
 
   public constructor(init?: Partial<Routes>) {
     Object.assign(this, init);
@@ -16,19 +20,34 @@ export class Routes implements TableEntity<Routes> {
     return Routes.headers();
   }
 
-  detailPageUrl(): string {
-    return `/ronde/${this.id}`;
-  }
-
   static headers(): Array<Header<Routes>> {
     return [
       {
+        id: 3,
+        name: "",
+        fit: true,
+        get: (e: Routes) => e.student_fn + " " + e.student_ln,
+        type: RowType.AVATAR,
+        sortable: false,
+        route_to: `/account/0/false`,
+      },
+      {
+        id: 4,
+        name: "Student",
+        fit: false,
+        get: (e: Routes) => e.student_fn + " " + e.student_ln,
+        type: RowType.TEXT,
+        sortable: true,
+        route_to: `/account/0/false`,
+      },
+      {
         id: 0,
-        name: "Naam",
+        name: "Ronde",
         fit: false,
         get: (e: Routes) => e.name,
         type: RowType.TEXT,
         sortable: true,
+        route_to: `/rondes/detail`,
       },
       {
         id: 1,
@@ -37,22 +56,25 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.buildings,
         type: RowType.TEXT,
         sortable: true,
+        route_to: "",
       },
       {
-        id: 5,
-        name: "",
-        fit: true,
-        get: () => "mdi-text-box-edit-outline",
-        type: RowType.ICON,
-        sortable: false,
+        id: 2,
+        name: "Datum",
+        fit: false,
+        get: (e: Routes) => e.date,
+        type: RowType.TEXT,
+        sortable: true,
+        route_to: "",
       },
       {
-        id: 6,
-        name: "",
+        id: 4,
+        name: "Klaar",
         fit: true,
-        get: () => "mdi-trash-can-outline",
-        type: RowType.ICON,
-        sortable: false,
+        get: (e: Routes) => e.finished,
+        type: RowType.BOOLEAN,
+        sortable: true,
+        route_to: "",
       },
     ];
   }
@@ -63,6 +85,10 @@ export class Routes implements TableEntity<Routes> {
         id: chance().integer(),
         name: chance().sentence({ words: 4 }),
         buildings: chance().integer({ max: 10, min: 3 }),
+        date: String(chance().date({ string: true, american: false })),
+        student_fn: chance().first(),
+        student_ln: chance().last(),
+        finished: chance().bool(),
       });
     });
   }

@@ -1,7 +1,7 @@
 <template>
   <img v-if="img" alt="imagecard" class="image" :src="img" />
-  <v-container v-else class="textcard image">
-    <div>
+  <v-card v-else class="image">
+    <v-card-item class="textcard">
       <div style="display: flex; justify-content: center">
         <v-icon v-if="titleIcon" color="#333333" :icon="titleIcon"></v-icon>
         <h3 v-if="title">{{ title }}</h3>
@@ -10,8 +10,8 @@
         <v-icon v-if="textIcon" color="#333333" :icon="textIcon"></v-icon>
         <p v-if="text">{{ text }}</p>
       </div>
-    </div>
-  </v-container>
+    </v-card-item>
+  </v-card>
   <div style="position: absolute; bottom: 20px; right: 10px" v-if="btnText">
     <RoundedButton :icon="btnIcon" :value="btnText"></RoundedButton>
   </div>
@@ -43,10 +43,9 @@ defineProps({
   display: grid;
   padding: 20px;
   border-radius: 5px;
-  border: 2px solid #f1f1f1;
-  background: #fafafa;
   justify-content: center;
   align-items: center;
   text-align: center;
+  height: 100%;
 }
 </style>

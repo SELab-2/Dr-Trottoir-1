@@ -30,24 +30,24 @@
         <p class="me-auto">
           Nog geen account?
           <span @click="snackbar = true" class="clickable-text">
-            Contacteer ons
+            Contacteer ons.
           </span>
         </p>
         <!-- Login button -->
-        <router-link to="/dashboard">
-          <v-btn prepend-icon="mdi-login" color="success">Login</v-btn>
-        </router-link>
+        <v-btn prepend-icon="mdi-login" color="success" to="/planning"
+          >Login</v-btn
+        >
       </div>
     </div>
   </div>
 
   <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
-  <v-snackbar v-model="snackbar" timeout="-1">
-    <v-card prepend-icon="mdi-help">
+  <v-snackbar v-model="snackbar" timeout="-1" color="white">
+    <v-card prepend-icon="mdi-help" variant="flat">
       <template v-slot:title> Help </template>
       <p class="mx-3">
         Indien je nog geen account hebt en graag lid wilt worden van DR.
-        Trottoir neem dan contact op met ons via exaple@drtrottoir.be
+        Trottoir neem dan contact op met ons via example@drtrottoir.be
       </p>
       <div class="d-flex flex-row-reverse ma-3">
         <v-btn @click="snackbar = false" color="primary"> Close </v-btn>

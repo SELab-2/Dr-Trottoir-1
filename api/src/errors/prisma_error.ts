@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@selab-2/groep-1-orm";
 import { APIErrorCode } from "./api_error_code";
 
 /**
