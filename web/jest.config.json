@@ -4,5 +4,6 @@
   "transform": {
     "^.+\\.tsx?$": "ts-jest"
   },
-  "setupFiles": ["<rootDir>/__tests__/env.test.ts"]
+  "setupFiles": ["<rootDir>/__tests__/env.ts"],
+  "testMatch": ["<rootDir>/__tests__/*.test.ts"]
 }
