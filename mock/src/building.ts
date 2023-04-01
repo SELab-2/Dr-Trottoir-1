@@ -12,7 +12,7 @@ create-functie. De tabel van adres kan echter wel nog aangevuld worden via de fu
  */
 export async function createBuilding() {
     const password = "password";
-    const salt = crypto.randomBytes(32).toString();
+    const salt = crypto.randomBytes(32).toString("hex");
     await prisma.building.create({
         data: {
             name: chance.company(),
