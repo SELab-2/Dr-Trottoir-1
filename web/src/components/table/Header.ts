@@ -10,7 +10,7 @@ export abstract class Header<T> {
   // The shown name of the column
   name: string;
 
-  // A function which retrieves the value for this colunn of a given entry
+  // A function which retrieves the value for this column of a given entry
   get: (element: T) => any;
 
   // Indicate how to render the value
@@ -21,4 +21,8 @@ export abstract class Header<T> {
 
   // Whether this column can be sorted
   sortable: boolean = false;
+
+  // The route to link to
+  // if the empty string is given, it will not route
+  route_to: string;
 }

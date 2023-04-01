@@ -1,11 +1,6 @@
 {
   "collectCoverage": true,
-  "moduleFileExtensions": [
-    "js",
-    "ts",
-    "json",
-    "vue"
-  ],
+  "moduleFileExtensions": ["js", "ts", "json", "vue"],
   "transform": {
     "^.+\\.tsx?$": "ts-jest"
   },

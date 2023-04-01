@@ -16,22 +16,19 @@ export class User implements TableEntity<User> {
   }
 
   headers(): Array<Header<User>> {
-    return User.headers();
+    return User.headers(this.id);
   }
 
-  detailPageUrl(): string {
-    return `/account/${this.id}/false`;
-  }
-
-  static headers(): Array<Header<User>> {
+  static headers(id: number): Array<Header<User>> {
     return [
       {
         id: 0,
-        name: "Portret",
+        name: "",
         fit: true,
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.AVATAR,
         sortable: false,
+        route_to: `/account/${id}/false`,
       },
       {
         id: 1,
@@ -40,6 +37,7 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.TEXT,
         sortable: true,
+        route_to: `/account/${id}/false`,
       },
       {
         id: 2,
@@ -48,6 +46,7 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.student,
         type: RowType.BOOLEAN,
         sortable: true,
+        route_to: "",
       },
       {
         id: 3,
@@ -56,6 +55,7 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.super_student,
         type: RowType.BOOLEAN,
         sortable: true,
+        route_to: "",
       },
       {
         id: 4,
@@ -64,22 +64,16 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.admin,
         type: RowType.BOOLEAN,
         sortable: true,
+        route_to: "",
       },
       {
         id: 5,
         name: "",
         fit: true,
-        get: () => "mdi-text-box-edit-outline",
-        type: RowType.ICON,
+        get: () => "mdi-account-cog-outline",
+        type: RowType.ICONBUTTON,
         sortable: false,
-      },
-      {
-        id: 6,
-        name: "",
-        fit: true,
-        get: () => "mdi-trash-can-outline",
-        type: RowType.ICON,
-        sortable: false,
+        route_to: `/account/${id}/false`,
       },
     ];
   }

@@ -42,7 +42,12 @@ export class ImgProxyServer {
     return new ImgProxyServer(protocol, location, port, root);
   })();
 
-  constructor(protocol: "http" | "https", path: string, port: number, root: string) {
+  constructor(
+    protocol: "http" | "https",
+    path: string,
+    port: number,
+    root: string,
+  ) {
     this.protocol = protocol;
     this.path = path;
     this.port = port;
