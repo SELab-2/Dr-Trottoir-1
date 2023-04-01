@@ -6,4 +6,11 @@ import { Header } from "@/components/table/Header";
  */
 export abstract class TableEntity<T> {
   abstract headers(): Array<Header<T>>;
+
+  /**
+   * Return for each header where to route to.
+   * The empty string represents no routing
+   * @param header_id The id of the header
+   */
+  abstract route_to(header_id: number): string;
 }

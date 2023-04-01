@@ -19,6 +19,17 @@ export class User implements TableEntity<User> {
     return User.headers(this.id);
   }
 
+  route_to(header_id: number): string{
+    switch(header_id){
+      case 0: // route to student (click avatar)
+      case 1: // route to student (click student name)
+      case 5: // route to student (click edit account icon)
+        return `/account/${this.id}/false`;
+      default: // the other headers don't route
+        return "";
+    }
+  }
+
   /**
    * Sort a list of Users. The object will be mutated
    * @param data The list to sort.
@@ -68,7 +79,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.AVATAR,
         sortable: false,
-        route_to: `/account/${id}/false`,
       },
       {
         id: 1,
@@ -77,7 +87,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/account/${id}/false`,
       },
       {
         id: 2,
@@ -86,7 +95,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.student,
         type: RowType.BOOLEAN,
         sortable: true,
-        route_to: "",
       },
       {
         id: 3,
@@ -95,7 +103,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.super_student,
         type: RowType.BOOLEAN,
         sortable: true,
-        route_to: "",
       },
       {
         id: 4,
@@ -104,7 +111,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.admin,
         type: RowType.BOOLEAN,
         sortable: true,
-        route_to: "",
       },
       {
         id: 5,
@@ -113,7 +119,6 @@ export class User implements TableEntity<User> {
         get: () => "mdi-account-cog-outline",
         type: RowType.ICONBUTTON,
         sortable: false,
-        route_to: `/account/${id}/false`,
       },
     ];
   }

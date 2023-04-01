@@ -21,6 +21,18 @@ export class Routes implements TableEntity<Routes> {
     return Routes.headers();
   }
 
+  route_to(header_id: number): string{
+    switch(header_id){
+      case 0: // route to student (click avatar)
+      case 1: // route to student (click student name)
+        return `/account/0/false`;
+      case 2: // route to round
+        return "/rondes/detail";
+      default: // the other headers don't route
+        return "";
+    }
+  }
+
   /**
    * Sort a list of Routes. The object will be mutated
    * @param data The list to sort.
@@ -73,7 +85,6 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.student_fn + " " + e.student_ln,
         type: RowType.AVATAR,
         sortable: false,
-        route_to: `/account/0/false`,
       },
       {
         id: 1,
@@ -82,7 +93,6 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.student_fn + " " + e.student_ln,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/account/0/false`,
       },
       {
         id: 2,
@@ -91,7 +101,6 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.name,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/rondes/detail`,
       },
       {
         id: 3,
@@ -100,7 +109,6 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.buildings,
         type: RowType.TEXT,
         sortable: true,
-        route_to: "",
       },
       {
         id: 4,
@@ -109,7 +117,6 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => formatDate(e.date),
         type: RowType.TEXT,
         sortable: true,
-        route_to: "",
       },
       {
         id: 5,
@@ -118,7 +125,6 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.finished,
         type: RowType.BOOLEAN,
         sortable: true,
-        route_to: "",
       },
     ];
   }

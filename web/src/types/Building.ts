@@ -15,7 +15,20 @@ export class Building implements TableEntity<Building> {
   }
 
   headers(): Array<Header<Building>> {
-    return Building.headers(this.id);
+    return Building.headers();
+  }
+
+  route_to(header_id: number): string{
+    switch(header_id){
+      case 0: // route to syndicus (click avatar)
+      case 1: // route to syndicus (click syndicus name)
+        return "/account/0/false";
+      case 2: // route to building (click building name)
+      case 3: // route to building (click building adress)
+        return `/gebouw/${this.id}`;
+      default: // the other headers don't route
+        return "";
+    }
   }
 
   /**
@@ -56,7 +69,7 @@ export class Building implements TableEntity<Building> {
     })
   }
 
-  static headers(id: number): Array<Header<Building>> {
+  static headers(): Array<Header<Building>> {
     return [
       {
         id: 0,
@@ -65,7 +78,6 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
         type: RowType.AVATAR,
         sortable: false,
-        route_to: `/account/0/false`,
       },
       {
         id: 1,
@@ -74,7 +86,6 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/account/0/false`,
       },
       {
         id: 2,
@@ -83,7 +94,6 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.name,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/gebouw/${id}`,
       },
       {
         id: 3,
@@ -92,7 +102,6 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.address,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/gebouw/${id}`,
       },
     ];
   }
