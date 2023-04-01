@@ -11,7 +11,6 @@ import { AuthRouting } from "./routes/auth";
 import { ActionRouting } from "./routes/action";
 import { SyndicusRouting } from "./routes/syndicus";
 import { RoundRouting } from "./routes/round";
-import { BuildingResidentRouting } from "./routes/buildingResident";
 import passport from "passport";
 import crypto from "crypto";
 import session from "express-session";
@@ -70,7 +69,6 @@ app.use("/action", new ActionRouting().toRouter());
 app.use("/syndicus", new SyndicusRouting().toRouter());
 app.use("/round", new RoundRouting().toRouter());
 app.use("/progress", new ProgressRouting().toRouter());
-app.use("/buildingResident", new BuildingResidentRouting().toRouter);
 
 // Finally, an error handler
 app.use(ErrorHandler.handle);
