@@ -1,6 +1,6 @@
 {
   "name": "@selab-2/groep-1-orm",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Package containing the PrismaORM types of our database schema.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -22,6 +22,7 @@
     "prisma": "^4.11.0"
   },
   "dependencies": {
-    "@prisma/client": "^4.11.0"
+    "@prisma/client": "^4.11.0",
+    "dotenv": "^16.0.3"
   }
 }
