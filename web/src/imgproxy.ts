@@ -6,10 +6,11 @@ import * as process from "process";
  * Abstraction over the URl of an ImgProxy instance. Provides a `url` function
  * to retrieve the location of the server.
  */
-class ImgProxyServer {
+export class ImgProxyServer {
   private readonly protocol: "http" | "https";
   private readonly path: string;
   private readonly port: number;
+  private readonly root: string;
 
   /**
    * A singleton object which contains the information about ImgProxy instance
@@ -19,6 +20,7 @@ class ImgProxyServer {
     const protocol = process.env.VUE_APP_IMGPROXY_PROTOCOL as "http" | "https";
     const location = process.env.VUE_APP_IMGPROXY_LOCATION;
     const port: number = parseInt(process.env.VUE_APP_IMGPROXY_PORT ?? "");
+    const root = process.env.VUE_APP_IMGPROXY_ROOT;
 
     // Protocol must be either `http` or `https`!
     if (!["http", "https"].includes(protocol)) {
@@ -33,20 +35,25 @@ class ImgProxyServer {
       throw new Error("IMGPROXY: Invalid port supplied.");
     }
 
-    return new ImgProxyServer(protocol, location, port);
+    if (root === undefined) {
+      throw new Error("IMGPROXY: Invalid root supplied.");
+    }
+
+    return new ImgProxyServer(protocol, location, port, root);
   })();
 
-  constructor(protocol: "http" | "https", path: string, port: number) {
+  constructor(protocol: "http" | "https", path: string, port: number, root: string) {
     this.protocol = protocol;
     this.path = path;
     this.port = port;
+    this.root = root;
   }
 
   /**
    * Retrieve the base url of the ImgProxy instance as a single string.
    */
   url(): string {
-    return `${this.protocol}://${this.path}:${this.port}/`;
+    return `${this.protocol}://${this.path}:${this.port}/${this.root}`;
   }
 }
 
@@ -64,16 +71,13 @@ export class ImgProxy extends ParamBuilder {
    * */
   public static env: ImgProxy = new ImgProxy(ImgProxyServer.env);
 
-  private constructor(server: ImgProxyServer) {
+  constructor(server: ImgProxyServer) {
     super();
 
     // Assign the server variable for further reference
     this.server = server;
 
     // TODO: Default parameters
-    this.jpegOptions({
-      progressive: true,
-    });
   }
 
   /**
@@ -90,7 +94,8 @@ export class ImgProxy extends ParamBuilder {
 
     return this.build({
       baseUrl: this.server.url(),
-      path: image.path,
+      path: `local://${image.path}@jpg`,
+      plain: true,
     });
   }
 }

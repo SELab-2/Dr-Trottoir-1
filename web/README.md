@@ -38,6 +38,7 @@ Doorgaans gebruik je slechts één ImgProxy server, dus er wordt een singleton o
 VUE_APP_IMGPROXY_PROTOCOL=<http|https>
 VUE_APP_IMGPROXY_LOCATION=<ip|domain>
 VUE_APP_IMGPROXY_PORT=<port>
+VUE_APP_IMGPROXY_ROOT=<string>
 ```
 
 #### Uploads
