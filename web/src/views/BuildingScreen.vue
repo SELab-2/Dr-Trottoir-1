@@ -104,6 +104,7 @@ import BuildingData from "@/components/BuildingData.vue";
 import RoundedButton from "@/components/RoundedButton.vue";
 import ImageCard from "@/components/ImageCard.vue";
 import AddButton from "@/components/AddButton.vue";
+import Actions from "@/components/models/Actions";
 
 // reactive state to show the drawer or not
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -139,7 +140,7 @@ const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
   },
 ]);
 
-const comments = ref<Array<{ title: String; comment: String }>>([
+const comments = ref<Array<{ title: string; comment: string }>>([
   {
     title: "Kapotte deur",
     comment: "De deur in de berging is kapot",
@@ -154,14 +155,14 @@ function opmerking() {
   console.log("opmerking");
 }
 
-const actions = [
+const actions: Actions[] = [
   {
     title: "Foto toevoegen",
-    clicked: foto,
+    clicked: foto(),
   },
   {
     title: "Opmerking toevoegen",
-    clicked: opmerking,
+    clicked: opmerking(),
   },
 ];
 </script>

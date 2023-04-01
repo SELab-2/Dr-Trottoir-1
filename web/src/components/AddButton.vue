@@ -22,13 +22,15 @@
 
 <script lang="ts" setup>
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import Actions from "@/components/models/Actions";
+
 const props = defineProps({
   icon: String,
+  items: Array<Actions>,
   size: {
     type: String,
     default: "x-large",
   },
-  items: Array,
 });
 </script>
 

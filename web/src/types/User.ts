@@ -16,7 +16,7 @@ export class User implements TableEntity<User> {
   }
 
   headers(): Array<Header<User>> {
-    return User.headers(this.id);
+    return User.headers();
   }
 
   route_to(header_id: number): string {
