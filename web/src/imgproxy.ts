@@ -17,7 +17,7 @@ class ImgProxyServer {
    * */
   public static env: ImgProxyServer = (() => {
     const protocol = process.env.VUE_APP_IMGPROXY_PROTOCOL as "http" | "https";
-    const location = process.env.VUE_APP_IMGPROXY_LOCATION
+    const location = process.env.VUE_APP_IMGPROXY_LOCATION;
     const port: number = parseInt(process.env.VUE_APP_IMGPROXY_PORT ?? "");
 
     // Protocol must be either `http` or `https`!
