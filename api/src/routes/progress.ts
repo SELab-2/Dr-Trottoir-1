@@ -5,49 +5,44 @@ import { Parser } from "../parser";
 import { prisma } from "../prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
 
-export class ScheduleRouting extends Routing {
-    private static includes: Prisma.ScheduleInclude = {
-        user: includeUser(true),
-        round: {
+export class ProgressRouting extends Routing {
+    private static includes: Prisma.ProgressInclude = {
+        building: selectBuilding(),
+        schedule: {
             include: {
-                buildings: {
-                    include: {
-                        building: selectBuilding(),
-                    },
-                },
+                round: true,
+                user: includeUser(false),
             },
         },
+        images: true,
     };
 
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const result = await prisma.schedule.findMany({
+        const result = await prisma.progress.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
                 deleted: Parser.bool(req.query["deleted"], false),
-                day: {
-                    lte: Parser.date(req.query["before"]),
-                    gte: Parser.date(req.query["after"]),
+                report: {
+                    contains: Parser.string(req.query["report"], ""),
                 },
-                user_id: Parser.number(req.query["user_id"]),
-                round_id: Parser.number(req.query["round_id"]),
-                user: {
-                    OR: {
-                        first_name: {
-                            contains: Parser.string(req.query["user_name"], ""),
-                        },
-                        last_name: {
-                            contains: Parser.string(req.query["user_name"], ""),
-                        },
-                    },
+                arrival: {
+                    lte: Parser.date(req.query["arrived_before"]),
+                    gte: Parser.date(req.query["arrived_after"]),
                 },
-                round: {
-                    name: req.query["round"],
+                departure: {
+                    lte: Parser.date(req.query["left_before"]),
+                    gte: Parser.date(req.query["left_after"]),
+                },
+                building_id: Parser.number(req.query["building"]),
+                schedule_id: Parser.number(req.query["schedule"]),
+                schedule: {
+                    round_id: Parser.number(req.query["round"]),
+                    user_id: Parser.number(req.query["user"]),
                 },
             },
-            include: ScheduleRouting.includes,
-            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
+            include: ProgressRouting.includes,
         });
 
         return res.status(200).json(result);
@@ -55,29 +50,29 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.schedule.findFirstOrThrow({
+        const result = await prisma.progress.findFirstOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
                 deleted: req.user?.admin ? undefined : false,
             },
-            include: ScheduleRouting.includes,
+            include: ProgressRouting.includes,
         });
 
         return res.status(200).json(result);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        const user = await prisma.schedule.create({
+        const user = await prisma.progress.create({
             data: req.body,
         });
 
         return res.status(201).json(user);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.schedule.update({
+        const result = await prisma.progress.update({
             data: req.body,
             where: {
                 id: Parser.number(req.params["id"]),
@@ -90,13 +85,13 @@ export class ScheduleRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
         if (Parser.bool(req.body["hardDelete"], false)) {
-            await prisma.schedule.delete({
+            await prisma.progress.delete({
                 where: {
                     id: Parser.number(req.params["id"]),
                 },
             });
         } else {
-            await prisma.schedule.update({
+            await prisma.progress.update({
                 data: {
                     deleted: true,
                 },
