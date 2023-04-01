@@ -6,6 +6,7 @@ import { Parser } from "../parser";
 import { Prisma } from "@selab-2/groep-1-orm";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import crypto from "crypto";
 
 export class BuildingRouting extends Routing {
     private static selects: Prisma.BuildingSelect = {
@@ -61,8 +62,16 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
+        if (Parser.string(req.body["hash"], "") !== "") {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
+        // We use a simple 32 byte sequence to create a hidden link.
+        req.body["hash"] = crypto.randomBytes(32).toString();
+
         const result = await prisma.building.create({
             data: req.body,
+            select: BuildingRouting.selects,
         });
 
         return res.status(201).json(result);
@@ -70,6 +79,10 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
+        if (Parser.bool(req.body["hash"], false)) {
+            req.body = crypto.randomBytes(32).toString();
+        }
+
         const result = await prisma.building.update({
             data: req.body,
             where: {
