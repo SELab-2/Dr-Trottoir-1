@@ -8,15 +8,15 @@
           :class="{ fit: header.fit }"
         >
           <div style="display: flex; align-items: center">
-            <p>
+            <p @click="sort_data(header.id)" class="clickable">
               {{ header.name }}
             </p>
             <v-btn
               v-if="header.sortable"
               variant="plain"
-              icon="mdi-chevron-down"
+              :icon="sort_ascending.at(index_from_header(header.id)) ? 'mdi-chevron-down' : 'mdi-chevron-up'"
               size="small"
-              @click="sort_data(header.id)"
+              @click="sort_order(header.id)"
             ></v-btn>
           </div>
         </th>
@@ -102,9 +102,22 @@ const entries = ref(props.entries);
 const sort_ids = ref(props.headers.map(header => header.id))
 const sort_ascending = ref(props.headers.map(_ => true))
 
+function index_from_header(header_id: number){
+  return sort_ids.value.indexOf(header_id);
+}
+
+function sort_order(header_id: number){
+  // togle sort order
+  const index = index_from_header(header_id);
+  sort_ascending.value[index] = !sort_ascending.value[index];
+
+  // sort the data
+  sort_data(header_id);
+}
+
 function sort_data(header_id: number){
   // remove elements
-  const index = sort_ids.value.indexOf(header_id);
+  const index = index_from_header(header_id);
   sort_ids.value.splice(index, 1);
   const ascending = sort_ascending.value[index];
   sort_ascending.value.splice(index, 1);
