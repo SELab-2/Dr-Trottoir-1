@@ -9,20 +9,25 @@ const buildingToCreate = {
     ivago_id: "1234567890",
     syndicus_id: undefined,
     address_id: undefined,
-    manual_id: 8,
+    manual_id: 1,
 };
 
 const building = {
     id: undefined,
     name: "BuildingName",
     ivago_id: "1234567890",
-    syndicus_id: undefined,
     syndicus: {
         id: undefined,
         user_id: undefined,
+        user: undefined,
     },
-    address_id: undefined,
-    manual_id: undefined,
+    address: undefined,
+    manual: {
+        id: 1,
+        path: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        location: "EXTERNAL",
+    },
+    images: [],
     deleted: false,
 };
 
@@ -42,10 +47,13 @@ async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
 
     const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
 
-    // adres van gebruiker opzoeken
-    const resultUser = await session.get("/user/11").set("Cookie", [cookies]);
-    const user = resultUser.body;
+    // adres van een willekeurige gebruiker opzoeken
+    const resultUser = await session
+        .get("/user")
+        .set("Cookie", [cookies]);
+    const user = resultUser.body[0];
     buildingToCreate.address_id = user.address_id;
+    building.address = user.address;
 
     // Nieuwe syndicus toevoegen om te gebruiken bij het aanmaken van het gebouw
     const resultSyndicus = await session
@@ -61,11 +69,11 @@ async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
         .set("Cookie", [cookies]);
     expect(resultAdd.status).toEqual(201);
     building.id = resultAdd.body.id;
-    building.syndicus_id = resultAdd.body.syndicus_id;
-    building.syndicus.id = resultAdd.body.syndicus_id;
+    building.syndicus.id = buildingToCreate.syndicus_id;
     building.syndicus.user_id = user.id;
-    building.address_id = resultAdd.body.address_id;
-    building.manual_id = resultAdd.body.manual_id;
+    delete user.address;
+    delete user.regions;
+    building.syndicus.user = user;
 
     return [session, cookies];
 }
@@ -114,9 +122,9 @@ describe("Test BuildingRouting successful tests", () => {
             id: building.id,
             name: "NewName",
             ivago_id: building.ivago_id,
-            syndicus_id: building.syndicus_id,
-            address_id: building.address_id,
-            manual_id: building.manual_id,
+            syndicus_id: buildingToCreate.syndicus_id,
+            address_id: buildingToCreate.address_id,
+            manual_id: buildingToCreate.manual_id,
             deleted: false,
         };
 
@@ -128,74 +136,6 @@ describe("Test BuildingRouting successful tests", () => {
         expect(result.body).toEqual(changedBuilding);
 
         building.name = changedBuilding.name;
-    });
-
-    // Deze test controleert de werking van de join-operator met manual
-    test("Test join-operator with manual", async () => {
-        const buildingWithManual = {
-            ...building,
-            manual: {
-                id: building.manual_id,
-                path: "user/files/manual.pdf",
-            },
-        };
-
-        const result = await session
-            .get("/building/" + building.id + "?join=manual")
-            .set("Cookie", [cookies]);
-        expect(result.status).toEqual(200);
-        expect(result.body).toEqual(buildingWithManual);
-    });
-
-    // Deze test controleert de werking van de join-operator met syndicus
-    test("Test join-operator with syndicus", async () => {
-        const resultUser = await session
-            .get("/user/" + building.syndicus.user_id)
-            .set("Cookie", [cookies]);
-        expect(resultUser.status).toEqual(200);
-
-        const buildingWithSyndicus = {
-            id: building.id,
-            name: building.name,
-            ivago_id: building.ivago_id,
-            syndicus_id: building.syndicus_id,
-            syndicus: {
-                id: building.syndicus_id,
-                user_id: building.syndicus.user_id,
-                user: resultUser.body,
-            },
-            address_id: building.address_id,
-            manual_id: building.manual_id,
-            deleted: false,
-        };
-        delete buildingWithSyndicus.syndicus.user.address;
-
-        const result = await session
-            .get("/building/" + building.id + "?join=syndicus")
-            .set("Cookie", [cookies]);
-        expect(result.status).toEqual(200);
-        expect(result.body).toEqual(buildingWithSyndicus);
-    });
-
-    // Deze test controleert dat de andere parameters bij de join-operator lege lijsten teruggeven
-    test("Test join-parameters", async () => {
-        const buildingWithJoin = {
-            ...building,
-            garbage: [],
-            progress: [],
-            rounds: [],
-            images: [],
-        };
-
-        const result = await session
-            .get(
-                "/building/" +
-                    building.id +
-                    "?join=garbage,progress,rounds,images",
-            )
-            .set("Cookie", [cookies]);
-        expect(result.status).toEqual(200);
-        expect(result.body).toEqual(buildingWithJoin);
     });
 });
 
