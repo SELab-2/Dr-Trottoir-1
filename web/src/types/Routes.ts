@@ -30,19 +30,23 @@ export class Routes implements TableEntity<Routes> {
    */
   static sort(data: Routes[], header_ids: number[], header_orders: boolean[]) {
 
+    function order(ascending: boolean): number {
+      return ascending ? 1 : -1
+    }
+
     // get the order for any 2 elements given a header id and its order
     function get_sorting(a: Routes, b: Routes, header_id: number, ascending: boolean): number{
       switch(header_id){
         case 1: // sort by name
-          return (a.student_fn + a.student_ln).localeCompare(b.student_fn + b.student_ln);
+          return (a.student_fn + a.student_ln).localeCompare(b.student_fn + b.student_ln) * order(ascending);
         case 2: // sort by round
-          return a.name.localeCompare(b.name);
+          return a.name.localeCompare(b.name) * order(ascending);
         case 3: // sort by building
-          return a.buildings - b.buildings;
+          return (a.buildings - b.buildings) * order(ascending);
         case 4: // sort by date
-          return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+          return (a.date < b.date ? -1 : a.date > b.date ? 1 : 0) * order(ascending);
         case 5: // sort by finished
-          return a.finished == b.finished ? 0 : a.finished ? -1 : 1;
+          return (a.finished == b.finished ? 0 : a.finished ? -1 : 1) * order(ascending);
       }
       // should not occur
       return -1;
