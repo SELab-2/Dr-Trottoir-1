@@ -57,6 +57,7 @@ export class ProgressRouting extends Routing {
         const result = await prisma.progress.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
+                // @ts-ignore
                 deleted: req.user?.admin ? undefined : false,
             },
             include: ProgressRouting.includes,
