@@ -2,7 +2,6 @@
 FROM node:19-alpine3.16 AS build
 WORKDIR /build
 
-RUN ["ls"]
 
 COPY package*.json /build/
 RUN npm install
