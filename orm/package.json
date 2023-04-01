@@ -1,6 +1,6 @@
 {
   "name": "@selab-2/groep-1-orm",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Package containing the PrismaORM types of our database schema.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

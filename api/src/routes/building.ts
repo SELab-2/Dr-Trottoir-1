@@ -30,10 +30,14 @@ export class BuildingRouting extends Routing {
         },
     };
 
-    private twoWeekDelta: { gte: Date; lte: Date } = {
+    private static twoWeekDelta: { gte: Date; lte: Date } = {
         gte: dateMath.subtract(new Date(), 2, "week"),
         lte: dateMath.add(new Date(), 2, "week"),
     };
+
+    constructor() {
+        super();
+    }
 
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
@@ -54,16 +58,12 @@ export class BuildingRouting extends Routing {
     }
 
     @Auth.authorization({ student: true })
-    async getOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.building.findFirstOrThrow({
-            where: {
-                id: Parser.number(req.params["id"]),
-                deleted: req.user?.admin ? undefined : false,
-            },
-            select: BuildingRouting.selects,
-        });
-
-        return res.json(result);
+    override async getOne(req: CustomRequest, res: express.Response) {
+        if (Number.isNaN(parseInt(req.params["id"]))) {
+            return BuildingRouting.resident(req, res);
+        } else {
+            return BuildingRouting.internal(req, res);
+        }
     }
 
     @Auth.authorization({ superStudent: true })
@@ -121,9 +121,22 @@ export class BuildingRouting extends Routing {
         return res.status(200).json({});
     }
 
-    async resident(req: CustomRequest, res: express.Response) {
+    @Auth.authorization({})
+    static async internal(req: CustomRequest, res: express.Response) {
+        const result = await prisma.building.findFirstOrThrow({
+            where: {
+                id: Parser.number(req.params["id"]),
+                deleted: req.user?.admin ? undefined : false,
+            },
+            select: BuildingRouting.selects,
+        });
+
+        return res.json(result);
+    }
+
+    static async resident(req: CustomRequest, res: express.Response) {
         // Default hash is the empty string, which doesn't match anything.
-        const hash = Parser.string(req.params["hash"], "");
+        const hash = Parser.string(req.params["id"], "");
 
         const result = await prisma.building.findUniqueOrThrow({
             where: {
@@ -159,7 +172,7 @@ export class BuildingRouting extends Routing {
                     include: {
                         schedule: {
                             include: {
-                                user: true,
+                                user: includeUser(false),
                                 round: true,
                             },
                         },
@@ -183,11 +196,5 @@ export class BuildingRouting extends Routing {
         }
 
         return res.json(result);
-    }
-
-    toRouter(): express.Router {
-        const router = super.toRouter();
-        router.get("/resident/:hash", this.resident);
-        return router;
     }
 }
