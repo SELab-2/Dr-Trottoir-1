@@ -24,7 +24,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Actions from "@/components/models/Actions";
 
-const props = defineProps({
+defineProps({
   icon: String,
   items: Array<Actions>,
   size: {

@@ -7,7 +7,7 @@
   <Table
     v-bind:entries="User.random()"
     v-bind:headers="User.headers()"
-    v-bind:sort="User.sort"
+    v-bind:sort="User.sort()"
   ></Table>
 </template>
 
