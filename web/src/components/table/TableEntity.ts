@@ -6,6 +6,4 @@ import { Header } from "@/components/table/Header";
  */
 export abstract class TableEntity<T> {
   abstract headers(): Array<Header<T>>;
-
-  abstract detailPageUrl(): string;
 }
