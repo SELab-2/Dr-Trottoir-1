@@ -4,7 +4,7 @@
       <tr>
         <th
           v-bind:key="header.id"
-          v-for="header in headers"
+          v-for="header in props.headers"
           :class="{ fit: header.fit }"
         >
           <div style="display: flex; align-items: center">
@@ -16,6 +16,7 @@
               variant="plain"
               icon="mdi-chevron-down"
               size="small"
+              @click="sort_data(header.id)"
             ></v-btn>
           </div>
         </th>
@@ -25,7 +26,7 @@
       <tr v-for="item in entries" :key="item.id">
         <td
           v-bind:key="header.id"
-          v-for="header in headers"
+          v-for="header in props.headers"
           :class="{ fit: header.fit }"
         >
           <div
@@ -87,8 +88,34 @@
 import Avatar from "@/components/Avatar.vue";
 import { RowType } from "@/components/table/RowType";
 import router from "@/router";
+import { Header } from "@/components/table/Header"
+import { ref } from "vue";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const props = defineProps(["entries", "headers"]);
+const props = defineProps({
+  // we use any because the type is generic
+  entries: {type: Array<any>, require: true},
+  headers: {type: Array<Header<any>>, require: true, default: []},
+  sort: {type: Function, require: true, default: () => {}},
+});
+
+const entries = ref(props.entries);
+const sort_ids = ref(props.headers.map(header => header.id))
+const sort_ascending = ref(props.headers.map(_ => true))
+
+function sort_data(header_id: number){
+  // remove elements
+  const index = sort_ids.value.indexOf(header_id);
+  sort_ids.value.splice(index, 1);
+  const ascending = sort_ascending.value[index];
+  sort_ascending.value.splice(index, 1);
+
+  // place them up front
+  sort_ids.value.unshift(header_id);
+  sort_ascending.value.unshift(ascending);
+
+  // sort the entries
+  props.sort(entries.value, sort_ids.value, sort_ascending.value);
+}
 
 function bool_icon(bool: boolean): string {
   return bool ? "mdi-check" : "mdi-close";

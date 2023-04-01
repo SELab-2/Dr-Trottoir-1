@@ -7,6 +7,7 @@
   <Table
     v-bind:entries="Routes.random()"
     v-bind:headers="Routes.headers()"
+    v-bind:sort="Routes.sort"
   ></Table>
 </template>
 
