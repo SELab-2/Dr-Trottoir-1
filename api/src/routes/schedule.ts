@@ -59,9 +59,10 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.schedule.findUniqueOrThrow({
+        const result = await prisma.schedule.findFirstOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
+                deleted: req.user?.admin ? undefined : false,
             },
             include: ScheduleRouting.includes,
         });

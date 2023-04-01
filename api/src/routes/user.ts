@@ -68,9 +68,10 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.user.findUniqueOrThrow({
+        const result = await prisma.user.findFirstOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
+                deleted: req.user?.admin ? undefined : false,
             },
             select: UserRouting.selects,
         });
