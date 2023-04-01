@@ -3,8 +3,21 @@ import express from "express";
 import { CustomRequest, Routing } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
+import { Prisma } from "@selab-2/groep-1-orm";
 
 export class RoundRouting extends Routing {
+    private static includes: Prisma.RoundInclude = {
+        buildings: {
+            include: {
+                building: {
+                    include: {
+                        address: true,
+                    },
+                },
+            },
+        },
+    };
+
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
         const result = await prisma.round.findMany({
@@ -13,17 +26,7 @@ export class RoundRouting extends Routing {
             where: {
                 name: req.query["name"],
             },
-            include: {
-                buildings: {
-                    include: {
-                        building: {
-                            include: {
-                                address: true,
-                            },
-                        },
-                    },
-                },
-            },
+            include: RoundRouting.includes,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
@@ -36,17 +39,7 @@ export class RoundRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            include: {
-                buildings: {
-                    include: {
-                        building: {
-                            include: {
-                                address: true,
-                            },
-                        },
-                    },
-                },
-            },
+            include: RoundRouting.includes,
         });
 
         return res.status(200).json(result);

@@ -3,8 +3,18 @@ import express from "express";
 import { CustomRequest, Routing, includeUser } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
+import { Prisma } from "@selab-2/groep-1-orm";
 
 export class SyndicusRouting extends Routing {
+    private static includes: Prisma.SyndicusInclude = {
+        user: includeUser(true),
+        building: {
+            include: {
+                address: true,
+            },
+        },
+    };
+
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
         const result = await prisma.syndicus.findMany({
@@ -31,14 +41,7 @@ export class SyndicusRouting extends Routing {
                 },
                 user_id: Parser.number(req.query["user"]),
             },
-            include: {
-                user: includeUser(true),
-                building: {
-                    include: {
-                        address: true,
-                    },
-                },
-            },
+            include: SyndicusRouting.includes,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
@@ -51,14 +54,7 @@ export class SyndicusRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            include: {
-                user: includeUser(true),
-                building: {
-                    include: {
-                        address: true,
-                    },
-                },
-            },
+            include: SyndicusRouting.includes,
         });
 
         return res.status(200).json(result);

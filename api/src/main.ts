@@ -17,7 +17,7 @@ import session from "express-session";
 import { initializePassport } from "./passport";
 import dotenv from "dotenv";
 import { GarbageRouting } from "./routes/garbage";
-import {ProgressRouting} from "./routes/progress";
+import { ProgressRouting } from "./routes/progress";
 
 const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
