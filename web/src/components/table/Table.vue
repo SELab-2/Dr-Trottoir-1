@@ -14,7 +14,11 @@
             <v-btn
               v-if="header.sortable"
               variant="plain"
-              :icon="sort_ascending.at(index_from_header(header.id)) ? 'mdi-chevron-down' : 'mdi-chevron-up'"
+              :icon="
+                sort_ascending.at(index_from_header(header.id))
+                  ? 'mdi-chevron-down'
+                  : 'mdi-chevron-up'
+              "
               size="small"
               @click="sort_order(header.id)"
             ></v-btn>
@@ -88,25 +92,25 @@
 import Avatar from "@/components/Avatar.vue";
 import { RowType } from "@/components/table/RowType";
 import router from "@/router";
-import { Header } from "@/components/table/Header"
+import { Header } from "@/components/table/Header";
 import { ref } from "vue";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps({
   // we use any because the type is generic
-  entries: {type: Array<any>, require: true},
-  headers: {type: Array<Header<any>>, require: true, default: []},
-  sort: {type: Function, require: true, default: () => {}},
+  entries: { type: Array<any>, require: true },
+  headers: { type: Array<Header<any>>, require: true, default: [] },
+  sort: { type: Function, require: true, default: () => {} },
 });
 
 const entries = ref(props.entries);
-const sort_ids = ref(props.headers.map(header => header.id))
-const sort_ascending = ref(props.headers.map(_ => true))
+const sort_ids = ref(props.headers.map((header) => header.id));
+const sort_ascending = ref(props.headers.map(() => true));
 
-function index_from_header(header_id: number){
+function index_from_header(header_id: number) {
   return sort_ids.value.indexOf(header_id);
 }
 
-function sort_order(header_id: number){
+function sort_order(header_id: number) {
   // togle sort order
   const index = index_from_header(header_id);
   sort_ascending.value[index] = !sort_ascending.value[index];
@@ -115,7 +119,7 @@ function sort_order(header_id: number){
   sort_data(header_id);
 }
 
-function sort_data(header_id: number){
+function sort_data(header_id: number) {
   // remove elements
   const index = index_from_header(header_id);
   sort_ids.value.splice(index, 1);

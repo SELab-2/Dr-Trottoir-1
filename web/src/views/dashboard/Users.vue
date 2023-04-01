@@ -4,8 +4,8 @@
       Nieuwe Gebruiker
     </v-btn>
   </router-link>
-  <Table 
-    v-bind:entries="User.random()" 
+  <Table
+    v-bind:entries="User.random()"
     v-bind:headers="User.headers()"
     v-bind:sort="User.sort"
   ></Table>

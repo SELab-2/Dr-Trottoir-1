@@ -18,8 +18,8 @@ export class Building implements TableEntity<Building> {
     return Building.headers();
   }
 
-  route_to(header_id: number): string{
-    switch(header_id){
+  route_to(header_id: number): string {
+    switch (header_id) {
       case 0: // route to syndicus (click avatar)
       case 1: // route to syndicus (click syndicus name)
         return "/account/0/false";
@@ -38,35 +38,47 @@ export class Building implements TableEntity<Building> {
    * @param ascending Whether to sort ascending or descending for each header_id
    * @returns The sorted list.
    */
-  static sort(data: Building[], header_ids: number[], header_orders: boolean[]) {
-
+  static sort(
+    data: Building[],
+    header_ids: number[],
+    header_orders: boolean[],
+  ) {
     function order(ascending: boolean): number {
-      return ascending ? 1 : -1
+      return ascending ? 1 : -1;
     }
 
     // get the order for any 2 elements given a header id and its order
-    function get_sorting(a: Building, b: Building, header_id: number, ascending: boolean): number{
-      switch(header_id){
+    function get_sorting(
+      a: Building,
+      b: Building,
+      header_id: number,
+      ascending: boolean,
+    ): number {
+      switch (header_id) {
         case 1: // sort by syndicus name
-          return (a.syndicus_fn + a.syndicus_ln).localeCompare(b.syndicus_fn + b.syndicus_ln) * order(ascending);
+          return (
+            (a.syndicus_fn + a.syndicus_ln).localeCompare(
+              b.syndicus_fn + b.syndicus_ln,
+            ) * order(ascending)
+          );
         case 2: // sort by building name
-          return (a.name).localeCompare(b.name) * order(ascending);
+          return a.name.localeCompare(b.name) * order(ascending);
         case 3: // sort by address
-          return (a.address).localeCompare(b.address) * order(ascending);
+          return a.address.localeCompare(b.address) * order(ascending);
       }
       // should not occur
       return -1;
     }
 
     // sort by the header id
-    data.sort((a,b) =>{
+    data.sort((a, b) => {
       // get the sorting order
       let order = 0;
-      for(let i = 0; i < header_ids.length; i++){
-        order = order || get_sorting(a,b, header_ids[i], header_orders[i]);
+      for (let i = 0; i < header_ids.length; i++) {
+        order = order || get_sorting(a, b, header_ids[i], header_orders[i]);
       }
       return order;
-    })
+    });
   }
 
   static headers(): Array<Header<Building>> {

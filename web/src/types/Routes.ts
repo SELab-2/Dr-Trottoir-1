@@ -2,7 +2,7 @@ import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import chance from "chance";
-import { formatDate } from "@/assets/scripts/format"
+import { formatDate } from "@/assets/scripts/format";
 
 export class Routes implements TableEntity<Routes> {
   id: number;
@@ -21,8 +21,8 @@ export class Routes implements TableEntity<Routes> {
     return Routes.headers();
   }
 
-  route_to(header_id: number): string{
-    switch(header_id){
+  route_to(header_id: number): string {
+    switch (header_id) {
       case 0: // route to student (click avatar)
       case 1: // route to student (click student name)
         return `/account/0/false`;
@@ -41,40 +41,52 @@ export class Routes implements TableEntity<Routes> {
    * @returns The sorted list.
    */
   static sort(data: Routes[], header_ids: number[], header_orders: boolean[]) {
-
     function order(ascending: boolean): number {
-      return ascending ? 1 : -1
+      return ascending ? 1 : -1;
     }
 
     // get the order for any 2 elements given a header id and its order
-    function get_sorting(a: Routes, b: Routes, header_id: number, ascending: boolean): number{
-      switch(header_id){
+    function get_sorting(
+      a: Routes,
+      b: Routes,
+      header_id: number,
+      ascending: boolean,
+    ): number {
+      switch (header_id) {
         case 1: // sort by name
-          return (a.student_fn + a.student_ln).localeCompare(b.student_fn + b.student_ln) * order(ascending);
+          return (
+            (a.student_fn + a.student_ln).localeCompare(
+              b.student_fn + b.student_ln,
+            ) * order(ascending)
+          );
         case 2: // sort by round
           return a.name.localeCompare(b.name) * order(ascending);
         case 3: // sort by building
           return (a.buildings - b.buildings) * order(ascending);
         case 4: // sort by date
-          return (a.date < b.date ? -1 : a.date > b.date ? 1 : 0) * order(ascending);
+          return (
+            (a.date < b.date ? -1 : a.date > b.date ? 1 : 0) * order(ascending)
+          );
         case 5: // sort by finished
-          return (a.finished == b.finished ? 0 : a.finished ? -1 : 1) * order(ascending);
+          return (
+            (a.finished == b.finished ? 0 : a.finished ? -1 : 1) *
+            order(ascending)
+          );
       }
       // should not occur
       return -1;
     }
 
     // sort by the header id
-    data.sort((a,b) =>{
+    data.sort((a, b) => {
       // get the sorting order
       let order = 0;
-      for(let i = 0; i < header_ids.length; i++){
-        order = order || get_sorting(a,b, header_ids[i], header_orders[i]);
+      for (let i = 0; i < header_ids.length; i++) {
+        order = order || get_sorting(a, b, header_ids[i], header_orders[i]);
       }
       return order;
-    })
+    });
   }
-
 
   static headers(): Array<Header<Routes>> {
     return [

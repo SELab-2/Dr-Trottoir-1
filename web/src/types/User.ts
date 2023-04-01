@@ -19,8 +19,8 @@ export class User implements TableEntity<User> {
     return User.headers(this.id);
   }
 
-  route_to(header_id: number): string{
-    switch(header_id){
+  route_to(header_id: number): string {
+    switch (header_id) {
       case 0: // route to student (click avatar)
       case 1: // route to student (click student name)
       case 5: // route to student (click edit account icon)
@@ -38,20 +38,36 @@ export class User implements TableEntity<User> {
    * @returns The sorted list.
    */
   static sort(data: User[], header_ids: number[], header_orders: boolean[]) {
-
     function order(ascending: boolean): number {
-      return ascending ? 1 : -1
+      return ascending ? 1 : -1;
     }
 
     // get the order for any 2 elements given a header id and its order
-    function get_sorting(a: User, b: User, header_id: number, ascending: boolean): number{
-      switch(header_id){
+    function get_sorting(
+      a: User,
+      b: User,
+      header_id: number,
+      ascending: boolean,
+    ): number {
+      switch (header_id) {
         case 1: // sort by name
-          return (a.first_name + a.last_name).localeCompare(b.first_name + b.last_name) * order(ascending);
+          return (
+            (a.first_name + a.last_name).localeCompare(
+              b.first_name + b.last_name,
+            ) * order(ascending)
+          );
         case 2: // sort by if is student
-          return (a.student == b.student ? 0 : a.student ? -1 : 1) * order(ascending);
+          return (
+            (a.student == b.student ? 0 : a.student ? -1 : 1) * order(ascending)
+          );
         case 3: // sort by if is super student
-          return (a.super_student == b.super_student ? 0 : a.super_student ? -1 : 1) * order(ascending);
+          return (
+            (a.super_student == b.super_student
+              ? 0
+              : a.super_student
+              ? -1
+              : 1) * order(ascending)
+          );
         case 4: // sort by admin
           return (a.admin == b.admin ? 0 : a.admin ? -1 : 1) * order(ascending);
       }
@@ -60,17 +76,17 @@ export class User implements TableEntity<User> {
     }
 
     // sort by the header id
-    data.sort((a,b) =>{
+    data.sort((a, b) => {
       // get the sorting order
       let order = 0;
-      for(let i = 0; i < header_ids.length; i++){
-        order = order || get_sorting(a,b, header_ids[i], header_orders[i]);
+      for (let i = 0; i < header_ids.length; i++) {
+        order = order || get_sorting(a, b, header_ids[i], header_orders[i]);
       }
       return order;
-    })
+    });
   }
 
-  static headers(id: number): Array<Header<User>> {
+  static headers(): Array<Header<User>> {
     return [
       {
         id: 0,
