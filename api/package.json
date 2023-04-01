@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "build": "npx tsc",
     "start": "node ./dist/main.js",
     "serve": "nodemon ./src/main.ts",
     "lint": "npx prettier --write . && npx eslint src",
@@ -7,7 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@selab-2/groep-1-orm": "^1.0.7",
+    "@selab-2/groep-1-orm": "^1.0.8",
     "@types/date-arithmetic": "^4.1.1",
     "@types/passport": "^1.0.12",
     "compression": "^1.7.4",

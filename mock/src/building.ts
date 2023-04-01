@@ -1,8 +1,8 @@
-import { PrismaClient } from '@selab-2/groep-1-orm'
+import { PrismaClient } from "@selab-2/groep-1-orm";
 import { Chance } from "chance";
 import crypto from "crypto";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 const chance = new Chance();
 
 /*
@@ -31,46 +31,56 @@ export async function createBuilding() {
                             date_added: chance.date(),
                             email: chance.email(),
                             salt: salt,
-                            hash: crypto.createHash('sha256').update(password+salt).digest('hex'),
+                            hash: crypto
+                                .createHash("sha256")
+                                .update(password + salt)
+                                .digest("hex"),
                             address: {
                                 create: {
                                     city: "Gent",
                                     street: chance.street(),
-                                    number: chance.integer({min: 1, max: 200}),
-                                    zip_code: chance.integer({min: 1000, max: 9999}),
+                                    number: chance.integer({
+                                        min: 1,
+                                        max: 200,
+                                    }),
+                                    zip_code: chance.integer({
+                                        min: 1000,
+                                        max: 9999,
+                                    }),
                                     latitude: chance.latitude(),
                                     longitude: chance.longitude(),
-                                }
-                            }
-                        }
-                    }
-                }
+                                },
+                            },
+                        },
+                    },
+                },
             },
             address: {
                 create: {
                     city: "Gent",
                     street: chance.street(),
-                    number: chance.integer({min: 1, max: 200}),
-                    zip_code: chance.integer({min: 1000, max: 9999}),
+                    number: chance.integer({ min: 1, max: 200 }),
+                    zip_code: chance.integer({ min: 1000, max: 9999 }),
                     latitude: chance.latitude(),
                     longitude: chance.longitude(),
-                }
+                },
             },
             manual: {
                 create: {
-                    path: chance.word()+'/'+chance.word()+'/'+chance.word()
-                }
-            }
-        }
-    })
+                    path: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                    location: "EXTERNAL",
+                },
+            },
+        },
+    });
 }
 
 export async function createAction() {
     await prisma.action.create({
         data: {
-            description: chance.sentence()
-        }
-    })
+            description: chance.sentence(),
+        },
+    });
 }
 
 /*
@@ -82,19 +92,19 @@ export async function createGarbage() {
     const actions = await prisma.action.findMany();
     const maxBuilding = buildings.length - 1;
     const maxAction = actions.length - 1;
-    const building = buildings[chance.integer({min: 0, max: maxBuilding})];
-    const action = actions[chance.integer({min: 0, max: maxAction})];
+    const building = buildings[chance.integer({ min: 0, max: maxBuilding })];
+    const action = actions[chance.integer({ min: 0, max: maxAction })];
     await prisma.garbage.create({
         data: {
             pickup_time: chance.date(),
             building: {
-                connect: {id: building.id}
+                connect: { id: building.id },
             },
             action: {
-                connect: {id: action.id}
-            }
-        }
-    })
+                connect: { id: action.id },
+            },
+        },
+    });
 }
 
 /*
@@ -104,17 +114,19 @@ en wordt een nieuwe afbeelding aangemaakt. Een afbeelding kan niet via een apart
 export async function createBuildingImages() {
     const buildings = await prisma.building.findMany();
     const maxBuilding = buildings.length - 1;
-    const building = buildings[chance.integer({min: 0, max: maxBuilding})];
+    const building = buildings[chance.integer({ min: 0, max: maxBuilding })];
     await prisma.buildingImages.create({
         data: {
             building: {
-                connect: {id: building.id}
+                connect: { id: building.id },
             },
             image: {
                 create: {
-                    time: chance.date()
-                }
-            }
-        }
-    })
+                    time: chance.date(),
+                    path: "https://unsplash.com/photos/2ONGY4I82lg/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjgwMzYyNjc3&force=true&w=640",
+                    location: "EXTERNAL",
+                },
+            },
+        },
+    });
 }

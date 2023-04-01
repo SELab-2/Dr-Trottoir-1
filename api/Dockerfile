@@ -7,7 +7,7 @@ COPY .npmrc /build/.npmrc
 RUN npm ci && rm -f .npmrc
 
 COPY . .
-RUN npx tsc
+RUN npm run build
 
 FROM node:19-alpine3.16 AS production
 WORKDIR /prod
