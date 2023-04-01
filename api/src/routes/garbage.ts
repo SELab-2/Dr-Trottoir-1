@@ -87,12 +87,12 @@ export class GarbageRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.garbage.delete({
+        await prisma.garbage.delete({
             where: {
                 id: Parser.number(req.params["id"]),
             },
         });
 
-        return res.status(200).json(result);
+        return res.status(200).json({});
     }
 }
