@@ -7,6 +7,7 @@ import { Prisma } from "@selab-2/groep-1-orm";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 import crypto from "crypto";
+import * as dateMath from "date-arithmetic";
 
 export class BuildingRouting extends Routing {
     private static selects: Prisma.BuildingSelect = {
@@ -27,6 +28,11 @@ export class BuildingRouting extends Routing {
                 image: true,
             },
         },
+    };
+
+    private twoWeekDelta: { gte: Date; lte: Date } = {
+        gte: dateMath.subtract(new Date(), 2, "week"),
+        lte: dateMath.add(new Date(), 2, "week"),
     };
 
     @Auth.authorization({ superStudent: true })
@@ -145,6 +151,9 @@ export class BuildingRouting extends Routing {
                     include: {
                         action: true,
                     },
+                    where: {
+                        pickup_time: this.twoWeekDelta,
+                    },
                 },
                 progress: {
                     include: {
@@ -160,6 +169,10 @@ export class BuildingRouting extends Routing {
                             },
                         },
                     },
+                    where: {
+                        arrival: this.twoWeekDelta,
+                        departure: this.twoWeekDelta,
+                    },
                 },
             },
         });
@@ -172,10 +185,9 @@ export class BuildingRouting extends Routing {
         return res.json(result);
     }
 
-
     toRouter(): express.Router {
         const router = super.toRouter();
         router.get("/resident/:hash", this.resident);
-        return router
+        return router;
     }
 }
