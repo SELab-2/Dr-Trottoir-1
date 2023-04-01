@@ -19,6 +19,46 @@ export class User implements TableEntity<User> {
     return User.headers(this.id);
   }
 
+  /**
+   * Sort a list of Users. The object will be mutated
+   * @param data The list to sort.
+   * @param header_id List of header_id's to sort by, first element will be sorted first
+   * @param ascending Whether to sort ascending or descending for each header_id
+   * @returns The sorted list.
+   */
+  static sort(data: User[], header_ids: number[], header_orders: boolean[]) {
+
+    function order(ascending: boolean): number {
+      return ascending ? 1 : -1
+    }
+
+    // get the order for any 2 elements given a header id and its order
+    function get_sorting(a: User, b: User, header_id: number, ascending: boolean): number{
+      switch(header_id){
+        case 1: // sort by last_name
+          return (a.first_name + a.last_name).localeCompare(b.first_name + b.last_name) * order(ascending);
+        case 2: // sort by round
+          return (a.student == b.student ? 0 : a.student ? -1 : 1) * order(ascending);
+        case 3: // sort by building
+          return (a.super_student == b.super_student ? 0 : a.super_student ? -1 : 1) * order(ascending);
+        case 4: // sort by date
+          return (a.admin == b.admin ? 0 : a.admin ? -1 : 1) * order(ascending);
+      }
+      // should not occur
+      return -1;
+    }
+
+    // sort by the header id
+    data.sort((a,b) =>{
+      // get the sorting order
+      let order = 0;
+      for(let i = 0; i < header_ids.length; i++){
+        order = order || get_sorting(a,b, header_ids[i], header_orders[i]);
+      }
+      return order;
+    })
+  }
+
   static headers(id: number): Array<Header<User>> {
     return [
       {
