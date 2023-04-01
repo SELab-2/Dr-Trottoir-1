@@ -7,7 +7,6 @@ import { Auth } from "../auth/auth";
 export class GarbageRouting extends Routing {
     @Auth.authorization({ student: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
         const result = await prisma.garbage.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -34,7 +33,11 @@ export class GarbageRouting extends Routing {
             },
             include: {
                 action: true,
-                building: true,
+                building: {
+                    include: {
+                        address: true,
+                    },
+                },
             },
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
@@ -44,14 +47,17 @@ export class GarbageRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
         const result = await prisma.garbage.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
             include: {
                 action: true,
-                building: true,
+                building: {
+                    include: {
+                        address: true,
+                    },
+                },
             },
         });
 
@@ -81,12 +87,12 @@ export class GarbageRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.garbage.delete({
+        await prisma.garbage.delete({
             where: {
                 id: Parser.number(req.params["id"]),
             },
         });
 
-        return res.status(200).json(result);
+        return res.status(200).json({});
     }
 }
