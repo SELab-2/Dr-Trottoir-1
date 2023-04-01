@@ -35,13 +35,13 @@ export class User implements TableEntity<User> {
     // get the order for any 2 elements given a header id and its order
     function get_sorting(a: User, b: User, header_id: number, ascending: boolean): number{
       switch(header_id){
-        case 1: // sort by last_name
+        case 1: // sort by name
           return (a.first_name + a.last_name).localeCompare(b.first_name + b.last_name) * order(ascending);
-        case 2: // sort by round
+        case 2: // sort by if is student
           return (a.student == b.student ? 0 : a.student ? -1 : 1) * order(ascending);
-        case 3: // sort by building
+        case 3: // sort by if is super student
           return (a.super_student == b.super_student ? 0 : a.super_student ? -1 : 1) * order(ascending);
-        case 4: // sort by date
+        case 4: // sort by admin
           return (a.admin == b.admin ? 0 : a.admin ? -1 : 1) * order(ascending);
       }
       // should not occur

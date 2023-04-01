@@ -18,10 +18,48 @@ export class Building implements TableEntity<Building> {
     return Building.headers(this.id);
   }
 
+  /**
+   * Sort a list of Users. The object will be mutated
+   * @param data The list to sort.
+   * @param header_id List of header_id's to sort by, first element will be sorted first
+   * @param ascending Whether to sort ascending or descending for each header_id
+   * @returns The sorted list.
+   */
+  static sort(data: Building[], header_ids: number[], header_orders: boolean[]) {
+
+    function order(ascending: boolean): number {
+      return ascending ? 1 : -1
+    }
+
+    // get the order for any 2 elements given a header id and its order
+    function get_sorting(a: Building, b: Building, header_id: number, ascending: boolean): number{
+      switch(header_id){
+        case 1: // sort by syndicus name
+          return (a.syndicus_fn + a.syndicus_ln).localeCompare(b.syndicus_fn + b.syndicus_ln) * order(ascending);
+        case 2: // sort by building name
+          return (a.name).localeCompare(b.name) * order(ascending);
+        case 3: // sort by address
+          return (a.address).localeCompare(b.address) * order(ascending);
+      }
+      // should not occur
+      return -1;
+    }
+
+    // sort by the header id
+    data.sort((a,b) =>{
+      // get the sorting order
+      let order = 0;
+      for(let i = 0; i < header_ids.length; i++){
+        order = order || get_sorting(a,b, header_ids[i], header_orders[i]);
+      }
+      return order;
+    })
+  }
+
   static headers(id: number): Array<Header<Building>> {
     return [
       {
-        id: 2,
+        id: 0,
         name: "",
         fit: true,
         get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
@@ -30,7 +68,7 @@ export class Building implements TableEntity<Building> {
         route_to: `/account/0/false`,
       },
       {
-        id: 3,
+        id: 1,
         name: "Syndicus",
         fit: false,
         get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
@@ -39,7 +77,7 @@ export class Building implements TableEntity<Building> {
         route_to: `/account/0/false`,
       },
       {
-        id: 0,
+        id: 2,
         name: "Gebouw",
         fit: false,
         get: (e: Building) => e.name,
@@ -48,7 +86,7 @@ export class Building implements TableEntity<Building> {
         route_to: `/gebouw/${id}`,
       },
       {
-        id: 1,
+        id: 3,
         name: "Adres",
         fit: false,
         get: (e: Building) => e.address,
