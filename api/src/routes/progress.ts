@@ -1,4 +1,4 @@
-import { CustomRequest, includeUser, Routing } from "./routing";
+import { CustomRequest, Routing, includeUser, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import express from "express";
 import { Parser } from "../parser";
@@ -7,11 +7,7 @@ import { Prisma } from "@selab-2/groep-1-orm";
 
 export class ProgressRouting extends Routing {
     private static includes: Prisma.ProgressInclude = {
-        building: {
-            include: {
-                address: true,
-            },
-        },
+        building: selectBuilding(),
         schedule: {
             include: {
                 round: true,
@@ -54,7 +50,7 @@ export class ProgressRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.progress.findUniqueOrThrow({
+        const result = await prisma.progress.findFirstOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
                 deleted: req.user?.admin ? undefined : false,

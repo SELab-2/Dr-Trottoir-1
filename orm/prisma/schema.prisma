@@ -143,6 +143,9 @@ model Building {
 
     deleted Boolean @default(false)
 
+    // Wachtwoord voor publieke link voor bewoners
+    hash String? @unique
+
     images   BuildingImages[]
     garbage  Garbage[]
     rounds   RoundBuilding[]

@@ -1,6 +1,6 @@
 import { prisma } from "../prisma";
 import express from "express";
-import { CustomRequest, Routing } from "./routing";
+import { CustomRequest, Routing, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import { Prisma } from "@selab-2/groep-1-orm";
@@ -9,11 +9,7 @@ export class RoundRouting extends Routing {
     private static includes: Prisma.RoundInclude = {
         buildings: {
             include: {
-                building: {
-                    include: {
-                        address: true,
-                    },
-                },
+                building: selectBuilding(),
             },
         },
     };
