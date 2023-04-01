@@ -7,10 +7,12 @@
     "test": "jest"
   },
   "dependencies": {
-    "@selab-2/groep-1-orm": "^1.0.5",
+    "@selab-2/groep-1-orm": "^1.0.7",
+    "@types/date-arithmetic": "^4.1.1",
     "@types/passport": "^1.0.12",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
+    "date-arithmetic": "^4.1.0",
     "dotenv": "16.0.3",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",

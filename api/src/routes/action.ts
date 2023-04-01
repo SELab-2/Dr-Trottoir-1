@@ -7,8 +7,6 @@ import { Parser } from "../parser";
 export class ActionRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.action.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -16,9 +14,6 @@ export class ActionRouting extends Routing {
                 description: {
                     contains: Parser.string(req.query["description"], ""),
                 },
-            },
-            include: {
-                garbage: joins?.includes("garbage"),
             },
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
@@ -28,14 +23,9 @@ export class ActionRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.action.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
-            },
-            include: {
-                garbage: joins?.includes("garbage"),
             },
         });
 
@@ -65,18 +55,12 @@ export class ActionRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        await prisma.garbage.deleteMany({
-            where: {
-                action_id: Parser.number(req.params["id"]),
-            },
-        });
-
-        const result = await prisma.action.delete({
+        await prisma.action.delete({
             where: {
                 id: Parser.number(req.params["id"]),
             },
         });
 
-        return res.status(200).json(result);
+        return res.status(200).json({});
     }
 }
