@@ -47,7 +47,6 @@ function redirect_to_detail() {
   router.push({ path: "/rondes/detail" });
 }
 
-
 function round_has_comments(round: Round): boolean {
   for (const building of round.buildings) {
     if (building.comments) {

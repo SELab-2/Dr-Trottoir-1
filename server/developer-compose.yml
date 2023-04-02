@@ -85,9 +85,7 @@ services:
         container_name: api
         hostname: api
         build: ../api/
-        networks:
-            main:
-                ipv4_address: 10.0.0.5
+
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.api.rule=Host(`localhost`)"
@@ -99,10 +97,14 @@ services:
         environment:
             DATABASE_URL: "postgresql://postgres:postgres@10.0.0.3:5432/main"
         restart: always
+        networks:
+            main:
+                ipv4_address: 10.0.0.5
         ports:
             - "8080:8080"
         links:
-            -   postgres
+            - traefik
+            - postgres
 
     frontend:
         container_name: frontend
@@ -124,6 +126,8 @@ services:
         restart: always
         ports:
             - "3000:3000"
+        links:
+            - traefik
 
 networks:
     main:
