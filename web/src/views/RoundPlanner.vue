@@ -9,13 +9,19 @@
           () => {
             selected_multiple = false;
             selected_end_day = '';
+            reset_planning();
           }
         "
         :active="!selected_multiple"
         >Enkel</v-btn
       >
       <v-btn
-        @click="() => (selected_multiple = true)"
+        @click="
+          () => {
+            selected_multiple = true;
+            reset_planning();
+          }
+        "
         :active="selected_multiple"
         >Meerdere</v-btn
       >
@@ -159,7 +165,7 @@
           }}</v-card-title> </template
         ><template v-slot:subtitle>
           <v-card-subtitle>{{
-            selected_multiple ? selected_round.name : ""
+            selected_multiple ? selected_round.name : planned.date
           }}</v-card-subtitle>
         </template>
         <template v-slot:append>
