@@ -45,15 +45,11 @@
           >
             <Avatar :name="header.get(item)" size="default" />
           </div>
-          <div
-            v-if="header.type === RowType.CHECKBOX"
-          >
+          <div v-if="header.type === RowType.CHECKBOX">
             <input type="checkbox" v-model="item.student" />
           </div>
           <!-- Check or cross icon for boolean-->
-          <div
-            v-if="header.type === RowType.BOOLEAN"
-          >
+          <div v-if="header.type === RowType.BOOLEAN">
             <v-icon
               :icon="bool_icon(header.get(item))"
               :color="bool_color(header.get(item))"
@@ -65,9 +61,7 @@
             v-bind:icon="header.get(item)"
             size="small"
           ></v-btn>
-          <p
-            v-if="header.type === RowType.TEXT"
-          >
+          <p v-if="header.type === RowType.TEXT">
             {{ header.get(item) }}
           </p>
         </td>

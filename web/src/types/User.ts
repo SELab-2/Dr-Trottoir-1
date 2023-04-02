@@ -78,6 +78,6 @@ export class User implements TableEntity<User> {
   }
 
   route(): string {
-    return `/dasboard/gebruiker/${this.id}`;
+    return `/account/${this.id}/false`; // TODO: bizarre routing?
   }
 }
