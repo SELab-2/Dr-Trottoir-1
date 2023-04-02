@@ -56,7 +56,7 @@ export class Building implements TableEntity<Building> {
         sortable: true,
         route_to: `/gebouw/${id}`,
       },
-    ];
+    ].map((e) => new Header<Building>(e));
   }
 
   static random(): Array<Building> {

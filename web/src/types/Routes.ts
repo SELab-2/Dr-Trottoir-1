@@ -76,7 +76,7 @@ export class Routes implements TableEntity<Routes> {
         sortable: true,
         route_to: "",
       },
-    ];
+    ].map((e) => new Header<Routes>(e));
   }
 
   static random(): Array<Routes> {

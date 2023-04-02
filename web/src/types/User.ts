@@ -75,7 +75,7 @@ export class User implements TableEntity<User> {
         sortable: false,
         route_to: `/account/${id}/false`,
       },
-    ];
+    ].map((e) => new Header<User>(e));
   }
 
   static random(): Array<User> {

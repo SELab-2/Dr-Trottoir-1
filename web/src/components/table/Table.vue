@@ -14,7 +14,10 @@
             <v-btn
               v-if="header.sortable"
               variant="plain"
-              icon="mdi-chevron-down"
+              :icon="
+                header.order == 'asc' ? 'mdi-chevron-up' : 'mdi-chevron-down'
+              "
+              @click="() => sort(header)"
               size="small"
             ></v-btn>
           </div>
@@ -87,8 +90,18 @@
 import Avatar from "@/components/Avatar.vue";
 import { RowType } from "@/components/table/RowType";
 import router from "@/router";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const props = defineProps(["entries", "headers"]);
+import { ref } from "vue";
+import { Header } from "@/components/table/Header";
+
+const props = defineProps({
+  entries: { type: Array<any>, require: true },
+  headers: { type: Array<Header<any>>, require: true, default: [] },
+  sort: { type: Function, require: true, default: () => {} },
+});
+
+const entries = ref(props.entries);
+
+const headers = ref(props.headers);
 
 function bool_icon(bool: boolean): string {
   return bool ? "mdi-check" : "mdi-close";
@@ -100,6 +113,18 @@ function bool_color(bool: boolean): string {
 
 function actual_route(route: string): boolean {
   return route !== "";
+}
+
+function sort(header: Header<any>) {
+  // Reset all other headers to `null` order.
+  headers.value?.forEach((e) => {
+    if (e != header) {
+      e.order = null;
+    }
+  });
+
+  // Sort the actual entries using the specific comparator.
+  header.sort(entries.value ?? []);
 }
 
 function route_to(route: string) {
