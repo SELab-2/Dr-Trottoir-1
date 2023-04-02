@@ -23,13 +23,23 @@
 <script lang="ts" setup>
 import Action from "@/components/models/Action";
 
+interface MenuItem {
+  title: string;
+  clicked: () => void;
+}
+
+interface MenuItem {
+  title: string;
+  clicked: () => void;
+}
+
 defineProps({
   icon: String,
   size: {
     type: String,
     default: "x-large",
   },
-  items: Array<Action>,
+  items: Array<MenuItem>,
 });
 </script>
 
