@@ -16,10 +16,10 @@ export class User implements TableEntity<User> {
   }
 
   headers(): Array<Header<User>> {
-    return User.headers(this.id);
+    return User.headers();
   }
 
-  static headers(id: number): Array<Header<User>> {
+  static headers(): Array<Header<User>> {
     return [
       {
         id: 0,
@@ -28,7 +28,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.AVATAR,
         sortable: false,
-        route_to: `/account/${id}/false`,
       },
       {
         id: 1,
@@ -37,7 +36,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/account/${id}/false`,
       },
       {
         id: 2,
@@ -46,7 +44,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.student,
         type: RowType.BOOLEAN,
         sortable: true,
-        route_to: "",
       },
       {
         id: 3,
@@ -55,7 +52,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.super_student,
         type: RowType.BOOLEAN,
         sortable: true,
-        route_to: "",
       },
       {
         id: 4,
@@ -64,16 +60,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.admin,
         type: RowType.BOOLEAN,
         sortable: true,
-        route_to: "",
-      },
-      {
-        id: 5,
-        name: "",
-        fit: true,
-        get: () => "mdi-account-cog-outline",
-        type: RowType.ICONBUTTON,
-        sortable: false,
-        route_to: `/account/${id}/false`,
       },
     ].map((e) => new Header<User>(e));
   }
@@ -89,5 +75,9 @@ export class User implements TableEntity<User> {
         admin: chance().bool(),
       });
     });
+  }
+
+  route(): string {
+    return `/dasboard/gebruiker/${this.id}`;
   }
 }

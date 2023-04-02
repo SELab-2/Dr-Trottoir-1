@@ -22,10 +22,6 @@ export class Header<T> {
   // Whether this column can be sorted
   sortable: boolean = false;
 
-  // The route to link to
-  // if the empty string is given, it will not route
-  route_to: string;
-
   // Whether the values in the list are sorted using this header.
   order: "asc" | "desc" | null = null;
 

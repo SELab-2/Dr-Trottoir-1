@@ -30,35 +30,29 @@
           v-bind:key="header.id"
           v-for="header in headers"
           :class="{ fit: header.fit }"
+          style="cursor: pointer"
+          @click="router.push(item.route())"
         >
           <div
             v-if="header.type === RowType.IMAGE"
             style="display: flex; align-items: center"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
           >
             <img :src="header.get(item)" class="image" alt="Portrait" />
           </div>
           <div
             v-if="header.type === RowType.AVATAR"
             style="display: flex; align-items: center"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
           >
             <Avatar :name="header.get(item)" size="default" />
           </div>
           <div
             v-if="header.type === RowType.CHECKBOX"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
           >
             <input type="checkbox" v-model="item.student" />
           </div>
           <!-- Check or cross icon for boolean-->
           <div
             v-if="header.type === RowType.BOOLEAN"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
           >
             <v-icon
               :icon="bool_icon(header.get(item))"
@@ -70,13 +64,9 @@
             variant="plain"
             v-bind:icon="header.get(item)"
             size="small"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
           ></v-btn>
           <p
             v-if="header.type === RowType.TEXT"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
           >
             {{ header.get(item) }}
           </p>
@@ -89,9 +79,9 @@
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
 import { RowType } from "@/components/table/RowType";
-import router from "@/router";
 import { ref } from "vue";
 import { Header } from "@/components/table/Header";
+import router from "@/router";
 
 const props = defineProps({
   entries: { type: Array<any>, require: true },
@@ -111,10 +101,6 @@ function bool_color(bool: boolean): string {
   return bool ? "success" : "red";
 }
 
-function actual_route(route: string): boolean {
-  return route !== "";
-}
-
 function sort(header: Header<any>) {
   // Reset all other headers to `null` order.
   headers.value?.forEach((e) => {
@@ -125,12 +111,6 @@ function sort(header: Header<any>) {
 
   // Sort the actual entries using the specific comparator.
   header.sort(entries.value ?? []);
-}
-
-function route_to(route: string) {
-  if (actual_route(route)) {
-    router.push(route);
-  }
 }
 </script>
 
