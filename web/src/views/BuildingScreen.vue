@@ -150,9 +150,7 @@ const comments = ref<Array<{ title: string; comment: string }>>([
 
 // TODO: this should become an actual redirect to page
 function foto() {
-  console.log("fotdddo");
   router.push({ path: "foto" });
-  
 }
 
 function opmerking() {
