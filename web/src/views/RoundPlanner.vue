@@ -1,5 +1,7 @@
 <template>
   <v-card variant="flat">
+    <!-- Select input fields -->
+
     <v-card-actions class="d-flex ml-3">
       <!-- Buttons to select if the user wants to plan for multiple days or not -->
       <v-btn
@@ -34,6 +36,7 @@
           required
         ></v-select>
       </v-col>
+
       <!-- TODO: implement check to see if start and end date dont crossover -->
       <v-col
         cols="3"
@@ -46,6 +49,7 @@
             variant="solo"
             multiple
             v-model="selected_start_day"
+            @update:model-value="reset_planning()"
           /><v-text-field
             class="ml-1"
             v-if="selected_multiple"
@@ -54,6 +58,7 @@
             variant="solo"
             multiple
             v-model="selected_end_day"
+            @update:model-value="reset_planning()"
           />
         </div>
       </v-col>
@@ -76,7 +81,7 @@
         class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
       >
         <v-select
-          label="Ronde"
+          label="Template ronde"
           :items="mock_rounds"
           v-model="selected_round"
           item-value="name"
@@ -86,6 +91,7 @@
           variant="solo"
           prepend-inner-icon="mdi-transit-detour"
           required
+          @update:model-value="reset_planning()"
         ></v-select>
       </v-col>
       <v-col
@@ -122,47 +128,112 @@
       </v-col>
     </v-row>
 
-    <v-card
-      v-if="selected_round"
-      v-for="planned in planned_rounds"
-      class="py-0 my-5 mx-5"
-    >
-      <template v-if="selected_round.comments" v-slot:prepend>
-        <v-tooltip :text="`Ronde al ingepland op ${planned.date}`"
-          ><template v-slot:activator="{ props }">
-            <v-icon
-              v-bind="props"
-              color="error"
-              icon="mdi-alert"
-            ></v-icon></template
-        ></v-tooltip>
-      </template>
+    <!-- View selected rounds -->
+    <div v-if="selected_round">
+      <v-card
+        v-for="(planned, index) in planning"
+        v-bind:key="index"
+        class="py-0 my-5 mx-5"
+      >
+        <!-- Give user a warning with tooltip + icon -->
+        <!-- Use this when trying to plan a building in a round that's already planned in -->
+        <!-- TODO: currently this uses round.comments as warning, should be an API call -->
+        <template v-if="selected_round.comments" v-slot:prepend>
+          <v-tooltip :text="`Gebouw(en) ingepland op ${planned.date}`"
+            ><template v-slot:activator="{ props }">
+              <v-icon
+                v-bind="props"
+                color="error"
+                icon="mdi-alert"
+              ></v-icon></template
+          ></v-tooltip>
+        </template>
 
-      <template v-else v-slot:prepend>
-        <v-icon v-bind="props" color="green" icon="mdi-transit-detour"></v-icon>
-      </template>
-      <template v-slot:title>
-        <v-card-title>{{ selected_round.name }}</v-card-title> </template
-      ><template v-slot:subtitle>
-        <v-card-subtitle>{{
-          selected_multiple ? planned.date : ""
-        }}</v-card-subtitle>
-      </template>
-      <template v-slot:append>
-        <v-icon class="ml-2" color="error" icon="mdi-close"></v-icon>
-        <v-icon class="ml-2" color="primary" icon="mdi-pencil"></v-icon>
-        <v-icon
-          class="ml-2"
-          :icon="planned.showinfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-        ></v-icon>
-      </template>
-    </v-card>
-    <v-card
-      v-else
-      prepend-icon="mdi-information"
-      title="Nog geen ronde geselecteerd"
-      variant="flat"
-    ></v-card>
+        <!-- Icons for showing extra info about the building -->
+        <template v-else v-slot:prepend>
+          <v-icon color="green" icon="mdi-transit-detour"></v-icon>
+        </template>
+        <template v-slot:title>
+          <v-card-title>{{
+            selected_multiple ? planned.date : selected_round.name
+          }}</v-card-title> </template
+        ><template v-slot:subtitle>
+          <v-card-subtitle>{{
+            selected_multiple ? selected_round.name : ""
+          }}</v-card-subtitle>
+        </template>
+        <template v-slot:append>
+          <v-icon
+            v-if="planned.showinfo"
+            class="ml-2"
+            color="primary"
+            icon="mdi-pencil"
+            @click="planned.edit = !planned.edit"
+          ></v-icon>
+          <v-icon
+            class="ml-2"
+            :icon="planned.showinfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+            @click="() => (planned.showinfo = !planned.showinfo)"
+          ></v-icon>
+          <v-icon
+            class="ml-2"
+            color="error"
+            icon="mdi-close"
+            @click="remove_from_planning(index)"
+          ></v-icon>
+        </template>
+
+        <!-- Show the expand, where users can quickly alter their rounds -->
+        <v-expand-transition>
+          <div v-show="planned.showinfo">
+            <v-divider></v-divider>
+
+            <v-card
+              v-for="(building, bindex) in planned.round?.buildings"
+              v-bind:key="bindex"
+              class="ml-3 my-1"
+              variant="flat"
+            >
+              <!-- TODO: currently this uses building.comments as warning, should be an API call -->
+              <template v-if="building.comments" v-slot:prepend>
+                <v-tooltip :text="`Gebouw al ingepland op ${planned.date}`"
+                  ><template v-slot:activator="{ props }">
+                    <v-icon
+                      v-bind="props"
+                      color="error"
+                      icon="mdi-alert"
+                    ></v-icon></template
+                ></v-tooltip>
+              </template>
+
+              <template v-else v-slot:prepend>
+                <v-icon color="green" icon="mdi-office-building"></v-icon>
+              </template>
+              <template v-slot:title>
+                <v-card-title>{{ building.name }}</v-card-title> </template
+              ><template v-slot:subtitle>
+                <v-card-subtitle>{{ building.address }}</v-card-subtitle>
+              </template>
+              <template v-slot:append
+                ><v-icon
+                  v-if="planned.edit"
+                  icon="mdi-close"
+                  color="error"
+                  @click="planned.round?.buildings.splice(bindex, 1)"
+                ></v-icon
+              ></template>
+            </v-card>
+          </div>
+        </v-expand-transition>
+      </v-card>
+    </div>
+    <div v-else>
+      <v-card
+        prepend-icon="mdi-information"
+        title="Nog geen ronde geselecteerd"
+        variant="flat"
+      ></v-card>
+    </div>
     <v-card-actions class="d-flex">
       <v-spacer></v-spacer>
       <!-- TODO fill in correct link, router pushback to previous page or reload this one? -->
@@ -185,8 +256,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, ComputedRef } from "vue";
+import { ref } from "vue";
 import Round from "@/components/models/Round";
+import RoundPlanning from "@/components/models/RoundPlanning";
 
 const selected_multiple = ref<boolean>(false);
 const selected_student = ref<string>("");
@@ -197,6 +269,11 @@ const selected_end_day = ref<string>("");
 const selected_time = ref<string>("");
 const selected_round = ref<Round | null>(null);
 
+/**
+ * Gives all the dates in a range
+ * @param start startdate in string format
+ * @param end enddate in string format
+ */
 function getDateRange(start: string, end: string): string[] {
   if (!end) {
     return [start];
@@ -213,30 +290,30 @@ function getDateRange(start: string, end: string): string[] {
   }
 }
 
-interface RoutePlanning {
-  date: string;
-  round: Round | null;
-  showinfo: boolean;
+// List gets updated when the user updates input field
+let planning = ref<RoundPlanning[]>([]);
+
+function remove_from_planning(index: number) {
+  planning.value.splice(index, 1);
 }
 
-const planned_rounds: ComputedRef<RoutePlanning[]> = computed(() => {
-  let date_round: RoutePlanning[] = [];
+/**
+ * Would be better if this was a computed property
+ * The extra fields in RoutePlanning dont allow for this
+ */
+function reset_planning() {
+  planning.value = [];
   for (let curr_date of getDateRange(
     selected_start_day.value,
     selected_end_day.value,
   )) {
-    date_round.push({
+    planning.value.push({
       date: curr_date,
       round: selected_round.value,
       showinfo: false,
+      edit: false,
     });
   }
-  return date_round;
-});
-
-function logme(planned: RoutePlanning) {
-  planned.showinfo = !planned.showinfo;
-  console.log("hssssssss");
 }
 
 const mock_students = ref<string[]>([
@@ -247,7 +324,7 @@ const mock_students = ref<string[]>([
   "Ashley",
 ]);
 
-const mock_rounds: Round[] = [
+const mock_rounds = ref<Round[]>([
   {
     name: "Grote Markt",
     start: "13:30",
@@ -386,5 +463,5 @@ const mock_rounds: Round[] = [
       },
     ],
   },
-];
+]);
 </script>

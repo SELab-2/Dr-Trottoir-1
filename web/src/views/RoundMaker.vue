@@ -7,7 +7,7 @@
       ><v-card width="100%">
         <!-- Header for the card title -->
         <!-- TODO: remove the mockdata from this part -->
-        <v-row class="py-0 my-2">
+        <v-row class="py-1 my-1">
           <v-col
             cols="1"
             style="min-width: 100px; max-width: 100%"
@@ -129,7 +129,11 @@ const buildings: { name: string; adress: string }[] = reactive([
  */
 const round: { name: string; adress: string }[] = reactive([]);
 
-// This function will give back the buildings which match the string given by the user
+/**
+ * TODO: This function will give back the buildings which match the string given by the user
+ * Change this with an autocomplete but currently doesnt work with objects from mockdata
+ * Pagination is something that could be introduced in the API aswell?
+ */
 function filterlist(): { name: string; adress: string; listid: number }[] {
   let filteredlist: { name: string; adress: string; listid: number }[] = [];
   buildings.forEach((building, index) => {
