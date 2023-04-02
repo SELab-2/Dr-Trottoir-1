@@ -48,9 +48,7 @@ async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
     const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
 
     // adres van een willekeurige gebruiker opzoeken
-    const resultUser = await session
-        .get("/user")
-        .set("Cookie", [cookies]);
+    const resultUser = await session.get("/user").set("Cookie", [cookies]);
     const user = resultUser.body[0];
     buildingToCreate.address_id = user.address_id;
     building.address = user.address;
@@ -85,6 +83,7 @@ async function closeSession(
     // Toegevoegde gebouw terug verwijderen uit de databank
     const resultDelete = await session
         .delete("/building/" + building.id)
+        .send({ hardDelete: true })
         .set("Cookie", [cookies]);
     expect(resultDelete.status).toEqual(200);
 
