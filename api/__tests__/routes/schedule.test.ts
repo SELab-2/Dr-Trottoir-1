@@ -69,7 +69,7 @@ async function closeSession(
 ) {
     const resultDelete = await session
         .delete("/schedule/" + schedule.id)
-        .send({ hardDelete: "true" })
+        .send({ hardDelete: true })
         .set("Cookie", [cookies]);
     expect(resultDelete.status).toEqual(200);
 }
@@ -117,7 +117,7 @@ describe("Successful tests", () => {
     });
 
     // Deze test verwijderd een schedule niet definitief uit de databank (soft delete).
-    test("Soft deleting an existing schedule", async () => {
+    test("Test soft deleting an existing schedule", async () => {
         schedule.deleted = true;
 
         const result = await session
