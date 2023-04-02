@@ -1,6 +1,6 @@
 import { prisma } from "../prisma";
 import express from "express";
-import { CustomRequest, Routing, includeUser } from "./routing";
+import { CustomRequest, Routing, includeUser, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import { Prisma } from "@selab-2/groep-1-orm";
@@ -8,11 +8,7 @@ import { Prisma } from "@selab-2/groep-1-orm";
 export class SyndicusRouting extends Routing {
     private static includes: Prisma.SyndicusInclude = {
         user: includeUser(true),
-        building: {
-            include: {
-                address: true,
-            },
-        },
+        building: selectBuilding(),
     };
 
     @Auth.authorization({ superStudent: true })

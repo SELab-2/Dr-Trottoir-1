@@ -75,7 +75,9 @@ export async function createProgressImage() {
             },
             image: {
                 create: {
-                    time: chance.date()
+                    time: chance.date(),
+                    location: "EXTERNAL",
+                    path: "https://unsplash.com/photos/2ONGY4I82lg/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjgwMzYyNjc3&force=true&w=640"
                 }
             }
         }

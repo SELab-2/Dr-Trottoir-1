@@ -16,7 +16,9 @@ import crypto from "crypto";
 import session from "express-session";
 import { initializePassport } from "./passport";
 import dotenv from "dotenv";
+import { RegionRouting } from "./routes/region";
 import { GarbageRouting } from "./routes/garbage";
+import { UserRegionRouting } from "./routes/user_region";
 import { ProgressRouting } from "./routes/progress";
 
 const PORT_NUMBER = 8080;
@@ -64,10 +66,12 @@ app.use("/auth", new AuthRouting().toRouter());
 app.use("/user", new UserRouting().toRouter());
 app.use("/building", new BuildingRouting().toRouter());
 app.use("/schedule", new ScheduleRouting().toRouter());
+app.use("/region", new RegionRouting().toRouter());
 app.use("/garbage", new GarbageRouting().toRouter());
 app.use("/action", new ActionRouting().toRouter());
 app.use("/syndicus", new SyndicusRouting().toRouter());
 app.use("/round", new RoundRouting().toRouter());
+app.use("/user_region", new UserRegionRouting().toRouter());
 app.use("/progress", new ProgressRouting().toRouter());
 
 // Finally, an error handler

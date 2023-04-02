@@ -16,10 +16,10 @@ export class User implements TableEntity<User> {
   }
 
   headers(): Array<Header<User>> {
-    return User.headers();
+    return User.headers(this.id);
   }
 
-  static headers(): Array<Header<User>> {
+  static headers(id: number): Array<Header<User>> {
     return [
       {
         id: 0,
@@ -28,7 +28,7 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.AVATAR,
         sortable: false,
-        route_to: `/account/${this.id}/false`,
+        route_to: `/account/${id}/false`,
       },
       {
         id: 1,
@@ -37,7 +37,7 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/account/${this.id}/false`,
+        route_to: `/account/${id}/false`,
       },
       {
         id: 2,
@@ -73,7 +73,7 @@ export class User implements TableEntity<User> {
         get: () => "mdi-account-cog-outline",
         type: RowType.ICONBUTTON,
         sortable: false,
-        route_to: `/account/${this.id}/false`,
+        route_to: `/account/${id}/false`,
       },
     ];
   }

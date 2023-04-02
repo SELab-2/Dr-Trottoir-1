@@ -50,9 +50,10 @@ model User {
     deleted Boolean @default(false)
 
     // Relaties
-    regions  UserRegion[]
-    Syndicus Syndicus[]
-    schedule Schedule[]
+    regions         UserRegion[]
+    Syndicus        Syndicus[]
+    schedule        Schedule[]
+    uploaded_images Image[]
 
     @@map("user")
 }
@@ -76,15 +77,32 @@ model File {
     id Int @id @default(autoincrement())
 
     path      String
-    buildings Building[] // Vereist?
+    buildings Building[]
+    location  FileLocation
 
     @@map("file")
 }
 
+// Geeft aan waar een bestand zich bevindt op het web
+enum FileLocation {
+    EXTERNAL // Externe server, absolute padnaam
+    IMGPROXY // Onze eigen ImgProxy instantie, relatieve padnaam
+    STATIC_FILES // De static file endpoint van onze web server, relatieve padnaam
+    FILE_SERVER // File endpoint van onze API, relatieve padnaam
+
+    @@map("image_location")
+}
+
 // Bij een afbeelding kan de tijd optioneel opgeslagen worden waarop de foto genomen werd.
 model Image {
-    id   Int       @id @default(autoincrement())
-    time DateTime?
+    id       Int          @id @default(autoincrement())
+    time     DateTime     @default(now())
+    location FileLocation
+    path     String
+
+    // Gebruiker die het bestand geupload heeft.
+    user_id Int?
+    user    User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
 
     buildings BuildingImages[]
     progress  ProgressImage[]
@@ -142,6 +160,9 @@ model Building {
     manual    File? @relation(fields: [manual_id], references: [id], onDelete: SetNull)
 
     deleted Boolean @default(false)
+
+    // Wachtwoord voor publieke link voor bewoners
+    hash String? @unique
 
     images   BuildingImages[]
     garbage  Garbage[]
