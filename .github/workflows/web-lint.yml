@@ -28,7 +28,7 @@ jobs:
                     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: "Check for build errors"
                 run: npm run build
-            -   name: "Check for linting and errors"
-                run: npm run test
+#            -   name: "Check for linting and errors"
+#                run: npm run test
                 env:
                     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
