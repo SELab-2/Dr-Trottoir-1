@@ -44,7 +44,7 @@ import { date_to_hh_mm } from "@/assets/scripts/format";
 const router = useRouter();
 
 function redirect_to_detail() {
-  router.push({ path: "/rondes/detail" });
+  router.push({ name: "round_detail", params: {id: 0}});
 }
 
 function round_has_comments(round: Round): boolean {

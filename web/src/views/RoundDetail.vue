@@ -15,7 +15,7 @@
         v-bind="props"
         class="text-body-2 mb-2 ml-3"
         :variant="isHovering ? 'elevated' : 'text'"
-        to="/account/0/false"
+        :to="{name: 'account_settings', params: {id: 0, isadmin: 'false'}}"
       >
         <template v-slot:prepend>
           <Avatar :name="mockround.student" size="x-small" />
@@ -80,7 +80,7 @@
         :icon="building_status_icon(building)"
         icon-color="white"
       >
-        <router-link to="/gebouw/3">
+        <router-link :to="{name: 'building_id', params: {id: 3}}">
           <v-card
             width="100%"
             :title="building.name"

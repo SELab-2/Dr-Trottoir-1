@@ -14,58 +14,54 @@
       </v-chip>
     </template>
     <!-- Round cards -->
-    <router-link
+
+    <v-card
       v-for="round in day.rounds"
       :key="round.name"
-      to="/rondes/detail"
+      class="ma-3"
+      :title="round.name"
+      prepend-icon="mdi-transit-detour"
+      :to="{ name: 'round_detail', params: { id: 0 } }"
     >
-      <v-card
-        class="ma-3"
-        :title="round.name"
-        prepend-icon="mdi-transit-detour"
-      >
-        <!-- Time -->
-        <template v-slot:subtitle>
-          {{ round.deadline.getHours() }}:{{
-            ("0" + round.deadline.getUTCMinutes()).slice(-2)
-          }}
-          <v-icon icon="mdi-clock-time-ten-outline"></v-icon>
-        </template>
+      <!-- Time -->
+      <template v-slot:subtitle>
+        {{ round.deadline.getHours() }}:{{
+          ("0" + round.deadline.getUTCMinutes()).slice(-2)
+        }}
+        <v-icon icon="mdi-clock-time-ten-outline"></v-icon>
+      </template>
 
-        <!-- Status -->
-        <template v-slot:append>
-          <v-btn
-            v-if="
-              calculateProgress(round.buildings_done, round.buildings) === 0
-            "
-            color="primary"
-            @click="snackbar = !snackbar"
-            v-on:click.prevent
-            :variant="
-              round.name == 'Sterre' || round.name == 'Korenmarkt'
-                ? 'flat'
-                : 'elevated'
-            "
-            :disabled="round.name == 'Sterre' || round.name == 'Korenmarkt'"
-          >
-            Start ronde</v-btn
-          >
-          <v-chip
-            v-else-if="
-              calculateProgress(round.buildings_done, round.buildings) === 100
-            "
-            label
-            color="success"
-          >
-            <v-icon icon="mdi-check"></v-icon>
-            Klaar
-          </v-chip>
-          <v-chip v-else label color="warning">
-            Bezig {{ round.buildings_done }}/{{ round.buildings }}
-          </v-chip>
-        </template>
-      </v-card>
-    </router-link>
+      <!-- Status -->
+      <template v-slot:append>
+        <v-btn
+          v-if="calculateProgress(round.buildings_done, round.buildings) === 0"
+          color="primary"
+          @click="snackbar = !snackbar"
+          v-on:click.prevent
+          :variant="
+            round.name == 'Sterre' || round.name == 'Korenmarkt'
+              ? 'flat'
+              : 'elevated'
+          "
+          :disabled="round.name == 'Sterre' || round.name == 'Korenmarkt'"
+        >
+          Start ronde</v-btn
+        >
+        <v-chip
+          v-else-if="
+            calculateProgress(round.buildings_done, round.buildings) === 100
+          "
+          label
+          color="success"
+        >
+          <v-icon icon="mdi-check"></v-icon>
+          Klaar
+        </v-chip>
+        <v-chip v-else label color="warning">
+          Bezig {{ round.buildings_done }}/{{ round.buildings }}
+        </v-chip>
+      </template>
+    </v-card>
 
     <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
     <v-overlay v-model="snackbar">

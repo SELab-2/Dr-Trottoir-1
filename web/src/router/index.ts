@@ -138,6 +138,14 @@ const routes = [
         },
       },
       {
+        path: "gebruikers/nieuw",
+        name: "user_new",
+        component: UserCreation,
+        meta: {
+          title: "Nieuwe gebruiker",
+        },
+      },
+      {
         path: "gebouwen",
         component: BuildingOverview,
         name: "building_overview",
@@ -152,11 +160,6 @@ const routes = [
         meta: {
           title: "Rondes",
         },
-      },
-      {
-        path: "/dashboard/gebruikers/nieuw",
-        name: "Nieuwe gebruiker",
-        component: UserCreation,
       },
     ],
   },
