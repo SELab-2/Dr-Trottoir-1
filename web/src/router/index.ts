@@ -61,7 +61,6 @@ const routes = [
       //  path: "/ronde/:id",
       //  name: "Ronde",
       //  component: TODO detailpagina ronde,
-      //  props: true,
       //},
       {
         path: "/gebouwen",
