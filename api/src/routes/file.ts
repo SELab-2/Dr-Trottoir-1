@@ -39,7 +39,7 @@ const isAuthGet = (req: Request, res: Response, next: NextFunction) => {
 const fileUpload = multer({
     storage: multer.diskStorage({
         destination:  function (req,file,cb){
-            cb(null, 'files/');
+          cb(null, "files/");
         },
         filename: function (req,file,cb){
             cb(null,file.originalname);
@@ -50,7 +50,6 @@ const fileUpload = multer({
 // file upload route (single file: .single(),multiple file: .array() )
 //Multer saves files whose name attribute is file to directory given in fileUpload
 router.post('/',isAuthPost,fileUpload.single('file'), async (req: Request, res: Response) => { 
-    //console.log(req.file);
     try {
         // save the file to the database using Prisma
         const result = await prisma.file.create({
