@@ -58,7 +58,8 @@ export async function createBuilding() {
             },
             manual: {
                 create: {
-                    path: chance.word()+'/'+chance.word()+'/'+chance.word()
+                    path: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                    location: "EXTERNAL"
                 }
             }
         }
@@ -112,7 +113,9 @@ export async function createBuildingImages() {
             },
             image: {
                 create: {
-                    time: chance.date()
+                    time: chance.date(),
+                    path: "https://unsplash.com/photos/2ONGY4I82lg/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjgwMzYyNjc3&force=true&w=640",
+                    location: "EXTERNAL",
                 }
             }
         }
