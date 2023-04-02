@@ -143,8 +143,8 @@
       >
         <!-- Give user a warning with tooltip + icon -->
         <!-- Use this when trying to plan a building in a round that's already planned in -->
-        <!-- TODO: currently this uses round.comments as warning, should be an API call -->
-        <template v-if="selected_round.comments" v-slot:prepend>
+        <!-- TODO: currently this uses substring as warning for show, should be an API call -->
+        <template v-if="selected_round.name.includes('rote')" v-slot:prepend>
           <v-tooltip :text="`Gebouw(en) ingepland op ${planned.date}`"
             ><template v-slot:activator="{ props }">
               <v-icon
@@ -330,7 +330,7 @@ const mock_students = ref<string[]>([
   "Ashley",
 ]);
 
-const mock_rounds = ref<Round[]>([
+const mock_rounds = [
   {
     name: "Grote Markt",
     start: "13:30",
@@ -469,5 +469,5 @@ const mock_rounds = ref<Round[]>([
       },
     ],
   },
-]);
+];
 </script>
