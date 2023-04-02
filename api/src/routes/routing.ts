@@ -55,29 +55,38 @@ export abstract class Routing {
         return router;
     }
 }
-export function includeUser(
-    include: boolean | undefined,
-    includeAddress: boolean,
-) {
-    if (include) {
-        return {
-            select: {
-                id: true,
-                email: true,
-                first_name: true,
-                last_name: true,
-                last_login: true,
-                date_added: true,
-                phone: true,
-                address_id: true,
-                address: includeAddress,
-                student: true,
-                super_student: true,
-                admin: true,
-                hash: false,
-                salt: false,
-            },
-        };
-    }
-    return false;
+
+export function includeUser(includeAddress: boolean) {
+    return {
+        select: {
+            id: true,
+            email: true,
+            first_name: true,
+            last_name: true,
+            last_login: true,
+            date_added: true,
+            phone: true,
+            address_id: true,
+            address: includeAddress,
+            student: true,
+            super_student: true,
+            admin: true,
+            deleted: true,
+            hash: false,
+            salt: false,
+        },
+    };
+}
+
+export function selectBuilding() {
+    return {
+        select: {
+            id: true,
+            name: true,
+            ivago_id: true,
+            deleted: true,
+            hash: false,
+            address: true,
+        },
+    };
 }

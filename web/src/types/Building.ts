@@ -7,6 +7,8 @@ export class Building implements TableEntity<Building> {
   id: number;
   name: string;
   address: string;
+  syndicus_fn: string;
+  syndicus_ln: string;
 
   public constructor(init?: Partial<Building>) {
     Object.assign(this, init);
@@ -16,19 +18,35 @@ export class Building implements TableEntity<Building> {
     return Building.headers();
   }
 
-  detailPageUrl(): string {
-    return `/gebouw/${this.id}`;
-  }
-
   static headers(): Array<Header<Building>> {
     return [
       {
+        id: 2,
+        name: "",
+        fit: true,
+        get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
+        type: RowType.AVATAR,
+        sortable: false,
+        route_to: `/account/0/false`,
+      },
+      {
+        id: 3,
+        name: "Syndicus",
+        fit: false,
+        get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
+        type: RowType.TEXT,
+        sortable: true,
+        route_to: `/account/0/false`,
+      },
+      {
         id: 0,
-        name: "Naam",
+        name: "Gebouw",
         fit: false,
         get: (e: Building) => e.name,
         type: RowType.TEXT,
         sortable: true,
+        // TODO: removed header_id and changed building redirect to id 0, making an issue to fix this
+        route_to: `/gebouw/0`,
       },
       {
         id: 1,
@@ -37,22 +55,7 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.address,
         type: RowType.TEXT,
         sortable: true,
-      },
-      {
-        id: 5,
-        name: "",
-        fit: true,
-        get: () => "mdi-text-box-edit-outline",
-        type: RowType.ICON,
-        sortable: false,
-      },
-      {
-        id: 6,
-        name: "",
-        fit: true,
-        get: () => "mdi-trash-can-outline",
-        type: RowType.ICON,
-        sortable: false,
+        route_to: `/gebouw/0`,
       },
     ];
   }
@@ -63,6 +66,8 @@ export class Building implements TableEntity<Building> {
         id: chance().integer(),
         name: chance().sentence({ words: 4 }),
         address: chance().address(),
+        syndicus_fn: chance().first(),
+        syndicus_ln: chance().last(),
       });
     });
   }

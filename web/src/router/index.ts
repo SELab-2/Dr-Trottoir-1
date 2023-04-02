@@ -11,10 +11,10 @@ import BuildingFollowup from "@/views/BuildingFollowup.vue";
 import RoundFollowup from "@/views/Followup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
-import RoundReport from "@/views/RoundReport.vue";
 import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue";
+import GarbageMaker from "@/views/GarbageMaker.vue";
 
 const routes = [
   {
@@ -100,11 +100,6 @@ const routes = [
         component: UserCreation,
       },
       {
-        path: "/dashboard/rondes/rapport",
-        name: "Ronde rapport",
-        component: RoundReport,
-      },
-      {
         path: "/rondes/detail",
         name: "Detail van ronde",
         component: RoundDetail,
@@ -114,6 +109,11 @@ const routes = [
         path: "/dashboard/rondes/plannen",
         name: "Ronde Planner",
         component: RoundPlanner,
+      },
+      {
+        path: "/dashboard/garbage",
+        name: "Garbage",
+        component: GarbageMaker,
       },
     ],
   },
