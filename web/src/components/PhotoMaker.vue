@@ -22,18 +22,21 @@
           prepend-inner-icon="mdi-image"
           @update:model-value="$emit('onUpdate', photo)"
         ></v-file-input>
+        <v-text-field
+          @update:model-value="$emit('onUpdate', photo)"
+          label="Titel"
+          v-model="photo.label"
+        ></v-text-field>
         <v-textarea
           @update:model-value="$emit('onUpdate', photo)"
           label="Commentaar"
           rows="3"
           v-model="photo.comments"
         ></v-textarea>
-        <v-text-field
-          @update:model-value="$emit('onUpdate', photo)"
-          label="Foto label"
-          v-model="photo.label"
-        ></v-text-field>
       </v-form>
+      <div class="d-flex flex-row-reverse my-3">
+        <v-btn  prepend-icon="mdi-plus"> Toevoegen </v-btn>
+      </div>
     </v-container>
   </div>
 </template>

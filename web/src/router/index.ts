@@ -15,6 +15,7 @@ import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue";
 import GarbageMaker from "@/views/GarbageMaker.vue";
+import PhotoMaker from "@/components/PhotoMaker.vue"
 
 const routes = [
   {
@@ -51,6 +52,11 @@ const routes = [
         name: "Gebouw",
         component: BuildingSceen,
         props: true,
+      },
+      {
+        path: "/gebouw/foto",
+        name: "Foto Toevoegen",
+        component: PhotoMaker,
       },
       {
         path: "/dashboard/gebouwen/nieuw",
