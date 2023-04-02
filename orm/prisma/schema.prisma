@@ -54,6 +54,7 @@ model User {
     Syndicus        Syndicus[]
     schedule        Schedule[]
     uploaded_images Image[]
+    uploaded_files  File[]
 
     @@map("user")
 }
@@ -74,14 +75,17 @@ model UserRegion {
 
 // Hier wordt het pad naar een bestand bijgehouden.
 model File {
-    id        Int        @id @default(autoincrement())
-    name      String
-    path      String
-    //TODO: user
-    createdAt DateTime   @default(now())
+    id   Int    @id @default(autoincrement())
+    name String
+    path String
+
+    // Gebruiker die de file geupload heeft.
+    user_id Int?
+    user    User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+    createdAt DateTime     @default(now())
     buildings Building[]
     location  FileLocation
-
 
     @@map("file")
 }
