@@ -33,8 +33,15 @@ export class Routes implements TableEntity<Routes> {
     }
   }
 
-  static sort() {
-    //API call
+  /**
+   * Sort a list of Users. The object will be mutated
+   * @param data The list to sort.
+   * @param header_id List of header_id's to sort by, first element will be sorted first
+   * @param ascending Whether to sort ascending or descending for each header_id
+   * @returns The sorted list.
+   */
+  static sort(data: Routes[], header_ids: number[], header_orders: boolean[]) {
+    // TODO: sorted API call
   }
 
   static headers(): Array<Header<Routes>> {

@@ -203,7 +203,7 @@ function roles(): string {
   return str;
 }
 
-const threasholdWidth: Number = 750;
+const threasholdWidth: number = 750;
 // permanentdrawer
 const permanentDrawer = ref<Boolean>(window.innerWidth > threasholdWidth);
 function onResize() {

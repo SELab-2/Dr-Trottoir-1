@@ -8,7 +8,7 @@
           :class="{ fit: header.fit }"
         >
           <div style="display: flex; align-items: center">
-            <p @click="sort_data()" class="clickable">
+            <p @click="sort_data(header.id)" class="clickable">
               {{ header.name }}
             </p>
             <v-btn
@@ -99,6 +99,7 @@ const props = defineProps({
   // we use any because the type is generic
   entries: { type: Array<any>, require: true },
   headers: { type: Array<Header<any>>, require: true, default: [] },
+  sort: { type: Function, require: true, default: () => {} },
 });
 
 const entries = ref(props.entries);
@@ -115,12 +116,26 @@ function sort_order(header_id: number) {
   sort_ascending.value[index] = !sort_ascending.value[index];
 
   // sort the data
-  sort_data();
+  sort_data(header_id);
 }
-
-function sort_data() {
+/**
+ * moves the requested header to the front
+ * sort the entries, using API call
+ * @param header_id
+ */
+function sort_data(header_id: number) {
   // remove elements
-  // API call
+  const index = index_from_header(header_id);
+  sort_ids.value.splice(index, 1);
+  const ascending = sort_ascending.value[index];
+  sort_ascending.value.splice(index, 1);
+
+  // place them up front
+  sort_ids.value.unshift(header_id);
+  sort_ascending.value.unshift(ascending);
+
+  // sort the entries
+  props.sort(entries.value, sort_ids.value, sort_ascending.value);
 }
 
 function bool_icon(bool: boolean): string {
