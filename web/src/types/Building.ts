@@ -15,10 +15,10 @@ export class Building implements TableEntity<Building> {
   }
 
   headers(): Array<Header<Building>> {
-    return Building.headers(this.id);
+    return Building.headers();
   }
 
-  static headers(id: number): Array<Header<Building>> {
+  static headers(): Array<Header<Building>> {
     return [
       {
         id: 2,
@@ -45,7 +45,8 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.name,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/gebouw/${id}`,
+        // TODO: removed header_id and changed building redirect to id 0, making an issue to fix this
+        route_to: `/gebouw/0`,
       },
       {
         id: 1,
@@ -54,7 +55,7 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.address,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/gebouw/${id}`,
+        route_to: `/gebouw/0`,
       },
     ];
   }
