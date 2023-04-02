@@ -4,15 +4,36 @@ import { CustomRequest, Routing } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import crypto from "crypto";
-import { User } from "@selab-2/groep-1-orm";
+import { Prisma, User } from "@selab-2/groep-1-orm";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 
 export class UserRouting extends Routing {
+    private static selects: Prisma.UserSelect = {
+        id: true,
+        email: true,
+        first_name: true,
+        last_name: true,
+        last_login: true,
+        date_added: true,
+        phone: true,
+        address_id: true,
+        student: true,
+        super_student: true,
+        admin: true,
+        deleted: true,
+        hash: false,
+        salt: false,
+        address: true,
+        regions: {
+            include: {
+                region: true,
+            },
+        },
+    };
+
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.user.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -20,6 +41,7 @@ export class UserRouting extends Routing {
                 student: Parser.bool(req.query["student"]),
                 super_student: Parser.bool(req.query["super_student"]),
                 admin: Parser.bool(req.query["admin"]),
+                deleted: Parser.bool(req.query["deleted"], false),
                 last_login: {
                     lte: Parser.date(req.query["login_before"]),
                     gte: Parser.date(req.query["login_after"]),
@@ -37,24 +59,7 @@ export class UserRouting extends Routing {
                     },
                 },
             },
-            select: {
-                id: true,
-                email: true,
-                first_name: true,
-                last_name: true,
-                last_login: true,
-                date_added: true,
-                phone: true,
-                address_id: true,
-                student: true,
-                super_student: true,
-                admin: true,
-                hash: false,
-                salt: false,
-                address: true,
-                regions: joins?.includes("regions"),
-                schedule: joins?.includes("schedule"),
-            },
+            select: UserRouting.selects,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
@@ -63,30 +68,12 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
-        const result = await prisma.user.findUniqueOrThrow({
+        const result = await prisma.user.findFirstOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
+                deleted: req.user?.admin ? undefined : false,
             },
-            select: {
-                id: true,
-                email: true,
-                first_name: true,
-                last_name: true,
-                last_login: true,
-                date_added: true,
-                phone: true,
-                address_id: true,
-                student: true,
-                super_student: true,
-                admin: true,
-                hash: false,
-                salt: false,
-                address: true,
-                regions: joins?.includes("regions"),
-                schedule: joins?.includes("schedule"),
-            },
+            select: UserRouting.selects,
         });
 
         return res.status(200).json(result);
@@ -112,28 +99,8 @@ export class UserRouting extends Routing {
         // Voer een poging uit om de gebruiker toe te voegen.
         const result = prisma.user.create({
             data: user,
-            select: {
-                id: true,
-                email: true,
-                first_name: true,
-                last_name: true,
-                last_login: true,
-                date_added: true,
-                phone: true,
-                address_id: true,
-                student: true,
-                super_student: true,
-                admin: true,
-                hash: false,
-                salt: false,
-                address: true,
-            },
+            select: UserRouting.selects,
         });
-
-        // Ga na of het resultaat geldig is.
-        if (result === undefined) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
 
         return res.status(201).json(result);
     }
@@ -160,22 +127,7 @@ export class UserRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            select: {
-                id: true,
-                email: true,
-                first_name: true,
-                last_name: true,
-                last_login: true,
-                date_added: true,
-                phone: true,
-                address_id: true,
-                student: true,
-                super_student: true,
-                admin: true,
-                hash: false,
-                salt: false,
-                address: true,
-            },
+            select: UserRouting.selects,
         });
 
         return res.status(200).json(result);
@@ -183,35 +135,25 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        // TODO: delete cascade in the database!
-        await prisma.userRegion.deleteMany({
-            where: {
-                user_id: Parser.number(req.params["id"]),
-            },
-        });
+        if (Parser.bool(req.body["hardDelete"], false)) {
+            await prisma.user.delete({
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+                select: UserRouting.selects,
+            });
+        } else {
+            await prisma.user.update({
+                data: {
+                    deleted: true,
+                },
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+                select: UserRouting.selects,
+            });
+        }
 
-        const result = await prisma.user.delete({
-            where: {
-                id: Parser.number(req.params["id"]),
-            },
-            select: {
-                id: true,
-                email: true,
-                first_name: true,
-                last_name: true,
-                last_login: true,
-                date_added: true,
-                phone: true,
-                address_id: true,
-                student: true,
-                super_student: true,
-                admin: true,
-                hash: false,
-                salt: false,
-                address: true,
-            },
-        });
-
-        return res.status(200).json(result);
+        return res.status(200).json({});
     }
 }

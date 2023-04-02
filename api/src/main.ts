@@ -17,7 +17,11 @@ import session from "express-session";
 import { initializePassport } from "./passport";
 import dotenv from "dotenv";
 import { GarbageRouting } from "./routes/garbage";
+
 import { FileRouter } from "./routes/file";
+
+import { ProgressRouting } from "./routes/progress";
+
 
 const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
@@ -68,7 +72,11 @@ app.use("/garbage", new GarbageRouting().toRouter());
 app.use("/action", new ActionRouting().toRouter());
 app.use("/syndicus", new SyndicusRouting().toRouter());
 app.use("/round", new RoundRouting().toRouter());
+
 app.use("/file", FileRouter);
+
+app.use("/progress", new ProgressRouting().toRouter());
+
 
 // Finally, an error handler
 app.use(ErrorHandler.handle);
