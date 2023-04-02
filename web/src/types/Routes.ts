@@ -41,6 +41,8 @@ export class Routes implements TableEntity<Routes> {
    * @returns The sorted list.
    */
   static sort(data: Routes[], header_ids: number[], header_orders: boolean[]) {
+    // this return is to satisfy the linter.
+    return data && header_ids && header_orders;
     // TODO: sorted API call
   }
 

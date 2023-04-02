@@ -43,6 +43,8 @@ export class Building implements TableEntity<Building> {
     header_ids: number[],
     header_orders: boolean[],
   ) {
+    // this return is to satisfy the linter.
+    return data && header_ids && header_orders;
     // TODO: sorted API call
   }
 
