@@ -1,9 +1,19 @@
 <template>
   <div class="d-flex flex-row-reverse">
-    <v-btn prepend-icon="mdi-plus" color="primary" class="mr-3" :to="{name: 'round_new'}">
+    <v-btn
+      prepend-icon="mdi-plus"
+      color="primary"
+      class="mr-3"
+      :to="{ name: 'round_new' }"
+    >
       Nieuwe ronde maken
     </v-btn>
-    <v-btn prepend-icon="mdi-plus" color="primary" class="mr-3" :to="{name: 'round_plan'}">
+    <v-btn
+      prepend-icon="mdi-plus"
+      color="primary"
+      class="mr-3"
+      :to="{ name: 'round_plan' }"
+    >
       Nieuwe ronde Plannen
     </v-btn>
   </div>

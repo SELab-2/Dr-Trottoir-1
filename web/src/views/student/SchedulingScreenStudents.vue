@@ -87,7 +87,7 @@ const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
 const snackbar = ref(false);
 function start_round() {
   // TODO: start the round in the database
-  router.push("/rondes/detail");
+  router.push({ name: "round_detail", params: { id: 0 } });
 }
 
 const calculateProgress = (done: number, toDo: number) => {

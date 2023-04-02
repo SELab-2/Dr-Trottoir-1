@@ -35,14 +35,14 @@
               :items="rounds"
             ></v-select>
             <v-spacer></v-spacer>
-            
-              <v-btn :to="{name : 'round_new'}"
-                v-if="selectedRound"
-                prepend-icon="mdi-pencil"
-                color="primary"
-                >Bewerk ronde</v-btn
-              >
 
+            <v-btn
+              :to="{ name: 'round_new' }"
+              v-if="selectedRound"
+              prepend-icon="mdi-pencil"
+              color="primary"
+              >Bewerk ronde</v-btn
+            >
           </v-card-actions>
           <v-list v-if="selectedRound">
             <v-list-item v-for="building in buildings" :key="building.name">

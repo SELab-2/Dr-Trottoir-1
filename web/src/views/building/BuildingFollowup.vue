@@ -27,7 +27,14 @@
       <BuildingData id="1" />
       <div class="centre px-4 mb-4">
         <h2>Bezoek ({{ formatDate(selectedDate) }})</h2>
-        <button @click="router.push('/account/2/false')">
+        <button
+          @click="
+            router.push({
+              name: 'account_settings',
+              params: { id: 2, isadmin: 'false' },
+            })
+          "
+        >
           <Avatar
             :name="get(selectedBuilding, formatDate(selectedDate)).student"
             size="40"
@@ -78,7 +85,9 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { formatDate } from "@/assets/scripts/format";
 import { ref } from "vue";
-import router from "@/router";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 // reactive component which will store the current user
 const selectedBuilding = ref<String>("");

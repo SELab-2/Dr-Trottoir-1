@@ -1,6 +1,11 @@
 <template>
   <div class="d-flex flex-row-reverse">
-    <v-btn prepend-icon="mdi-plus" color="primary" class="mr-3" :to="{name: 'user_new'}">
+    <v-btn
+      prepend-icon="mdi-plus"
+      color="primary"
+      class="mr-3"
+      :to="{ name: 'user_new' }"
+    >
       Nieuwe Gebruiker
     </v-btn>
   </div>

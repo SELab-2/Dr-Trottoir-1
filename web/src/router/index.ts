@@ -1,27 +1,27 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 // General Pages
-import LoginScreen from "@/views/LoginScreen.vue";
+import LoginScreen from "@/views/account/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 
 // Account Pages
-import AccountSettings from "@/views/AccountSettings.vue";
-import UserCreation from "@/views/UserCreation.vue";
+import AccountSettings from "@/views/account/AccountSettings.vue";
+import UserCreation from "@/views/account/UserCreation.vue";
 
 // Student Pages
-import SchedulingScreenStudent from "@/views/SchedulingScreenStudents.vue";
+import SchedulingScreenStudent from "@/views/student/SchedulingScreenStudents.vue";
 
 // Round Pages
-import RoundFollowup from "@/views/Followup.vue";
-import RoundMaker from "@/views/RoundMaker.vue";
-import RoundDetail from "@/views/RoundDetail.vue";
-import RoundPlanner from "@/views/RoundPlanner.vue";
+import RoundFollowup from "@/views/RoundFollowup.vue";
+import RoundMaker from "@/views/round/RoundMaker.vue";
+import RoundDetail from "@/views/round/RoundDetail.vue";
+import RoundPlanner from "@/views/round/RoundPlanner.vue";
 
 // Building Pages
-import BuildingMaker from "@/views/BuildingMaker.vue";
-import BuildingSceen from "@/views/BuildingScreen.vue";
-import BuildingFollowup from "@/views/BuildingFollowup.vue";
-import GarbageMaker from "@/views/GarbageMaker.vue";
+import BuildingMaker from "@/views/building/BuildingMaker.vue";
+import BuildingSceen from "@/views/building/BuildingScreen.vue";
+import BuildingFollowup from "@/views/building/BuildingFollowup.vue";
+import GarbageMaker from "@/views/building/GarbageMaker.vue";
 
 // Dashboard Pages
 import UserOverview from "@/views/dashboard/Users.vue";
