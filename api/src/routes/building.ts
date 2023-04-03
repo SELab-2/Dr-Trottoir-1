@@ -94,6 +94,16 @@ export class BuildingRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
+            select: {
+                id: true,
+                name: true,
+                ivago_id: true,
+                syndicus_id: true,
+                address_id: true,
+                manual_id: true,
+                hash: false,
+                deleted: true,
+            },
         });
 
         return res.status(200).json(result);
