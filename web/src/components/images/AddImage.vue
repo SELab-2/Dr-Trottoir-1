@@ -8,7 +8,7 @@
             <v-img
               cover
               :src="preview"
-              lazySrc="../assets/images/defaultImage.png"
+              lazySrc="../../assets/images/defaultImage.png"
               v-model="preview"
             ></v-img>
           </v-col>
