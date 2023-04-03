@@ -21,14 +21,15 @@
 </template>
 
 <script lang="ts" setup>
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const props = defineProps({
+import Action from "@/components/models/Action";
+
+defineProps({
   icon: String,
   size: {
     type: String,
     default: "x-large",
   },
-  items: Array,
+  items: Array<Action>,
 });
 </script>
 

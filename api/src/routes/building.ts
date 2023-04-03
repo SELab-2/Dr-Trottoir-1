@@ -103,7 +103,7 @@ export class BuildingRouting extends Routing {
                 manual_id: true,
                 hash: false,
                 deleted: true,
-            }
+            },
         });
 
         return res.status(200).json(result);
