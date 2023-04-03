@@ -1,44 +1,63 @@
 import passport from "passport";
 import passportLocal from "passport-local";
 import { prisma } from "./prisma";
-import { pbkdf2Async } from "./crypto";
 import crypto from "crypto";
-import { User } from "@selab-2/groep-1-orm";
-
-const CRYPTO_ITERATIONS = 310000;
-const CRYPTO_KEY_LENGTH = 32;
-const CRYPTO_DIGEST = "sha256";
+import { APIError } from "./errors/api_error";
+import { APIErrorCode } from "./errors/api_error_code";
+import { SerializableUser } from "./types";
 
 export function initializePassport() {
     passport.use(
         new passportLocal.Strategy(async (email, password, cb) => {
-            const user = await prisma.user.findUniqueOrThrow({
+            const user = await prisma.user.findFirstOrThrow({
                 where: {
                     email: email,
+                    deleted: false,
                 },
             });
 
-            const hash = await pbkdf2Async(
-                password,
-                user.salt,
-                CRYPTO_ITERATIONS,
-                CRYPTO_KEY_LENGTH,
-                CRYPTO_DIGEST,
-            );
+            const hash = crypto
+                .createHash("sha256")
+                .update(password + user.salt)
+                .digest("hex");
 
-            const target = await pbkdf2Async(
-                password,
-                user.salt,
-                CRYPTO_ITERATIONS,
-                CRYPTO_KEY_LENGTH,
-                CRYPTO_DIGEST,
-            );
-
-            if (!crypto.timingSafeEqual(hash, target)) {
-                return cb(null, false);
+            if (
+                !crypto.timingSafeEqual(
+                    Buffer.from(hash),
+                    Buffer.from(user.hash),
+                )
+            ) {
+                return cb(new APIError(APIErrorCode.FORBIDDEN), undefined);
             }
 
-            return cb(null, user);
+            const result = await prisma.user.findUniqueOrThrow({
+                where: {
+                    email: email,
+                },
+                select: {
+                    id: true,
+                    email: true,
+                    first_name: true,
+                    last_name: true,
+                    last_login: true,
+                    date_added: true,
+                    phone: true,
+                    address_id: true,
+                    student: true,
+                    super_student: true,
+                    admin: true,
+                    hash: false,
+                    salt: false,
+                    address: true,
+                    syndicus: {
+                        select: {
+                            id: true,
+                        },
+                    },
+                },
+            });
+
+            return cb(null, result);
         }),
     );
 
@@ -46,7 +65,7 @@ export function initializePassport() {
         done(null, user);
     });
 
-    passport.deserializeUser(async (user: User, done) => {
+    passport.deserializeUser(async (user: SerializableUser, done) => {
         done(null, user);
     });
 }
