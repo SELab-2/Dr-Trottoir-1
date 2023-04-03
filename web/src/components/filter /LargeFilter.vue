@@ -125,7 +125,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import Filterdata from "@/components/models/Filterdata";
+import Filterdata from "@/components/filter /Filterdata.js";
 
 // The filter data is emitted with the 'onUpdate' tag
 const props = defineProps({

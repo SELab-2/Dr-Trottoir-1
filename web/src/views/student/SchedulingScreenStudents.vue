@@ -77,7 +77,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import StartRoundPopup from "@/components/StartRoundPopupContent.vue";
+import StartRoundPopup from "@/components/popups/StartRoundPopupContent.vue.js";
 import router from "@/router";
 
 // https://stackoverflow.com/questions/1643320/get-month-name-from-date

@@ -34,11 +34,11 @@
 
 <script lang="ts" setup>
 import Round from "@/components/models/Round";
-import RoundCard from "@/components/RoundCard.vue";
-import LargeFilter from "@/components/LargeFilter.vue";
+import RoundCard from "@/components/cards/RoundCard.vue.js";
+import LargeFilter from "@/components/filter /LargeFilter.vue.js";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import Filterdata from "@/components/models/Filterdata";
+import Filterdata from "@/components/filter /Filterdata.js";
 import { date_to_hh_mm } from "@/assets/scripts/format";
 
 const router = useRouter();

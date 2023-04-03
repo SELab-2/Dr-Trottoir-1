@@ -26,7 +26,7 @@
 
 <script lang="ts" setup>
 // TODO: should this really be a class on its own?
-import RoundedButton from "@/components/RoundedButton.vue";
+import RoundedButton from "@/components/buttons/RoundedButton.vue.js";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps({
   id: String,
