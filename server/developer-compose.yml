@@ -10,13 +10,13 @@ services:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
         volumes:
-            - '~/volumes/postgresql:/var/lib/postgresql/data'
+            - './volumes/postgresql:/var/lib/postgresql/data'
         restart: always
         networks:
-            main:
+            selab2:
                 ipv4_address: 10.0.0.3
         ports:
-            - "2002:5432"
+            - "5432:5432"
 
     imgproxy:
         container_name: imgproxy
@@ -30,9 +30,9 @@ services:
             IMGPROXY_JPEG_PROGRESSIVE: 'true'
             IMGPROXY_BIND: ":8081"
         volumes:
-            - '~/volumes/imgproxy:/images:ro'
+            - './volumes/imgproxy:/images:ro'
         networks:
-            main:
+            selab2:
                 ipv4_address: 10.0.0.4
 
     api:
@@ -43,7 +43,7 @@ services:
             DATABASE_URL: "postgresql://postgres:postgres@10.0.0.3:5432/main"
         restart: always
         networks:
-            main:
+            selab2:
                 ipv4_address: 10.0.0.5
         ports:
             - "8080:8080"
@@ -53,7 +53,7 @@ services:
         hostname: frontend
         build: ../web/
         networks:
-            main:
+            selab2:
                 ipv4_address: 10.0.0.6
         env_file:
             - .env
@@ -62,8 +62,8 @@ services:
             - "3000:3000"
 
 networks:
-    main:
-        name: main
+    selab2:
+        name: selab2
         ipam:
             config:
                 - subnet: 10.0.0.0/24
