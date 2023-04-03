@@ -28,8 +28,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.AVATAR,
         sortable: false,
-        // TODO: removed header_id and changed account redirect to id 0, making an issue to fix this
-        route_to: `/account/0/false`,
       },
       {
         id: 1,
@@ -38,7 +36,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/account/0/false`,
       },
       {
         id: 2,
@@ -47,7 +44,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.student,
         type: RowType.BOOLEAN,
         sortable: true,
-        route_to: "",
       },
       {
         id: 3,
@@ -56,7 +52,6 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.super_student,
         type: RowType.BOOLEAN,
         sortable: true,
-        route_to: "",
       },
       {
         id: 4,
@@ -65,18 +60,8 @@ export class User implements TableEntity<User> {
         get: (e: User) => e.admin,
         type: RowType.BOOLEAN,
         sortable: true,
-        route_to: "",
       },
-      {
-        id: 5,
-        name: "",
-        fit: true,
-        get: () => "mdi-account-cog-outline",
-        type: RowType.ICONBUTTON,
-        sortable: false,
-        route_to: `/account/0/false`,
-      },
-    ];
+    ].map((e) => new Header<User>(e));
   }
 
   static random(): Array<User> {
@@ -90,5 +75,9 @@ export class User implements TableEntity<User> {
         admin: chance().bool(),
       });
     });
+  }
+
+  route(): string {
+    return `/account/${this.id}/false`; // TODO: bizarre routing?
   }
 }
