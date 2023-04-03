@@ -89,16 +89,10 @@ async function closeSession(
     session: supertest.SuperTest<any>,
     cookies: string,
 ) {
-    // Toegevoegde user terug verwijderen
-    let res = await session
+    // Toegevoegde user terug verwijderen, dit verwijdert automatisch ook de syndicus (via cascade delete)
+    const res = await session
         .delete("/user/" + syndicus.user_id)
-        .send({hardDelete: true})
-        .set("Cookie", [cookies]);
-    expect(res.status).toEqual(200);
-    expect(res.body).toEqual({});
-
-    res = await session
-        .delete("/syndicus/" + syndicus.id)
+        .send({ hardDelete: true })
         .set("Cookie", [cookies]);
     expect(res.status).toEqual(200);
     expect(res.body).toEqual({});
@@ -115,7 +109,7 @@ describe("Successful tests", () => {
     });
 
     afterAll(async () => {
-        closeSession(session, cookies);
+        await closeSession(session, cookies);
     });
 
     test("Test searching existing syndicus", async () => {
@@ -127,10 +121,8 @@ describe("Successful tests", () => {
     });
 
     test("Test updating existing syndicus", async () => {
-        let res = await session
-            .get("/user")
-            .set("Cookie", [cookies]);
-        expect(res.status).toEqual(200)
+        let res = await session.get("/user").set("Cookie", [cookies]);
+        expect(res.status).toEqual(200);
         const users = res.body;
         expect(users.length).toBeGreaterThan(0);
         const user = users[0];
@@ -142,11 +134,97 @@ describe("Successful tests", () => {
 
         res = await session
             .patch("/syndicus/" + syndicus.id)
-            .send({user_id: user.id})
+            .send({ user_id: user.id })
             .set("Cookie", [cookies]);
         expect(res.status).toEqual(200);
         expect(res.body).toEqual(updatedSyndicus);
-    })
-})
+    });
+});
+
+describe("Unsuccessful tests", () => {
+    let session: supertest.SuperTest<any>;
+    let cookies: string;
+
+    beforeAll(async () => {
+        const session_cookies = await prepareSession();
+        session = session_cookies[0];
+        cookies = session_cookies[1];
+    });
+
+    afterAll(async () => {
+        await closeSession(session, cookies);
+    });
+
+    test("Test authorization", async () => {
+        let res = await session.get("/syndicus");
+        expect(res.status).toEqual(403);
+        expect(res.forbidden).toEqual(true);
+
+        res = await session.get("/syndicus/" + syndicus.id);
+        expect(res.status).toEqual(403);
+        expect(res.forbidden).toEqual(true);
+
+        res = await session.post("/syndicus").send(syndicusToCreate);
+        expect(res.status).toEqual(403);
+        expect(res.forbidden).toEqual(true);
+
+        res = await session
+            .patch("/syndicus/" + syndicus.id)
+            .send({ user_id: 1 });
+        expect(res.status).toEqual(403);
+        expect(res.forbidden).toEqual(true);
+
+        res = await session.delete("/syndicus/" + syndicus.id);
+        expect(res.status).toEqual(403);
+        expect(res.forbidden).toEqual(true);
+    });
+
+    // Deze test probeert de id's van user te wijzigen naar onbestaande id's
+    test("Test changing id to unexisting id", async () => {
+        const res = await session
+            .patch("/syndicus/" + syndicus.id)
+            .send({ user_id: 0 })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(500);
+    });
+
+    // Deze test probeert requests uit te voeren op een onbestaande syndicus. Aangezien de id's in de databank beginnen
+    // vanaf 1 gebruik ik hier het onbestaande id 0
+    test("Test using an unexisting syndicus", async () => {
+        let res = await session.get("/syndicus/0").set("Cookie", [cookies]);
+        expect(res.status).toEqual(404);
+        expect(res.notFound).toEqual(true);
+
+        res = await session
+            .patch("/syndicus/0")
+            .send({ user_id: syndicus.user_id })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(404);
+        expect(res.notFound).toEqual(true);
+
+        res = await session.delete("/syndicus/0").set("Cookie", [cookies]);
+        expect(res.status).toEqual(404);
+        expect(res.notFound).toEqual(true);
+    });
+
+    // Deze test gebruikt foute types bij het aanpassen van een schedule
+    test("Test using wrong type", async () => {
+        // string in plaats van int
+        let res = await session
+            .patch("/syndicus/" + syndicus.id)
+            .send({ user_id: "one" })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(400);
+        expect(res.badRequest).toEqual(true);
+
+        // boolean in plaats van int
+        res = await session
+            .patch("/syndicus/" + syndicus.id)
+            .send({ user_id: true })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(400);
+        expect(res.badRequest).toEqual(true);
+    });
+});
 
 app.close();
