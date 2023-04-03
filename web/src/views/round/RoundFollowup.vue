@@ -9,7 +9,7 @@
         :sort_items="sort_items"
         :filter_items="filter_options"
         class="mx-1 mb-3"
-        @onUpdate="(new_data: Filterdata) => filter_data = new_data"
+        @onUpdate="(new_data: FilterData) => filter_data = new_data"
       />
       <RoundCard
         v-for="(round, i) in filtered_data()"
@@ -38,7 +38,7 @@ import RoundCard from "@/components/cards/RoundCard.vue";
 import LargeFilter from "@/components/filter /LargeFilter.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import Filterdata from "@/components/filter /Filterdata.js";
+import FilterData from "@/components/filter /FilterData";
 import { date_to_hh_mm } from "@/assets/scripts/format";
 
 const router = useRouter();
@@ -191,7 +191,7 @@ const filter_options = ["Klaar", "Bezig", "Niet begonnen", "Opmerkingen"];
 const sort_items = ["Voortgang", "Gebouwen"];
 
 // All the filter options
-const filter_data = ref<Filterdata>({
+const filter_data = ref<FilterData>({
   query: "",
   search_label: query_labels[0],
   sort_by: sort_items[0],

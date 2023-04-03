@@ -9,7 +9,7 @@
         :label="search_placeholder()"
         v-model="filter_data.query"
         @update:model-value="
-          help(filter_data.query);
+          console.log(filter_data.query);
           $emit('onUpdate', filter_data);
         "
         variant="underlined"
@@ -125,7 +125,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import Filterdata from "@/components/filter /Filterdata.js";
+import FilterData from "@/components/filter /FilterData";
 
 // The filter data is emitted with the 'onUpdate' tag
 const props = defineProps({
@@ -171,7 +171,7 @@ const s_day = ref<string>(props.start_date.toISOString().substring(0, 10));
 const e_day = ref<string>(props.end_date.toISOString().substring(0, 10));
 
 // The filter data is emitted with the 'onUpdate' tag
-const filter_data = ref<Filterdata>({
+const filter_data = ref<FilterData>({
   // The search querry in the main search bar
   query: "",
   // The selcted value to seach by
@@ -186,8 +186,4 @@ const filter_data = ref<Filterdata>({
   start_day: props.start_date,
   end_day: props.end_date,
 });
-
-function help(thing: any) {
-  console.log(thing);
-}
 </script>

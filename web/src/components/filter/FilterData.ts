@@ -1,4 +1,4 @@
-export default interface Filterdata {
+export default interface FilterData {
   query: String;
   search_label: String;
   sort_by: String;
