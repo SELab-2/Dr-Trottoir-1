@@ -29,9 +29,10 @@ process.env["DISABLE_AUTH"] = "false";
 async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
     // Sessie starten en inloggen om autorisatie te krijgen
     const session = request(app);
-    const resultLogin = await session
-        .post("/auth/login")
-        .send({ username: "jens.pots@ugent.be", password: "password" });
+    const resultLogin = await session.post("/auth/login").send({
+        username: "administrator@trottoir.be",
+        password: "password",
+    });
     expect(resultLogin.status).toBe(302);
     expect(resultLogin.headers).toHaveProperty("set-cookie");
 
