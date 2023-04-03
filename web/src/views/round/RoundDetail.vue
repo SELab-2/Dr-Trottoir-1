@@ -181,7 +181,7 @@
 <script lang="ts" setup>
 import Round from "@/components/models/Round";
 import Avatar from "@/components/Avatar.vue";
-import StartRoundPopup from "@/components/popups/StartRoundPopupContent.vue.js";
+import StartRoundPopup from "@/components/popups/StartRoundPopupContent.vue";
 import { ref } from "vue";
 import router from "@/router";
 import RoundBuilding from "@/components/models/RoundBuilding";

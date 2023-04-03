@@ -12,7 +12,7 @@ import UserCreation from "@/views/account/UserCreation.vue";
 import SchedulingScreenStudent from "@/views/student/SchedulingScreenStudents.vue";
 
 // Round Pages
-import RoundFollowup from "@/views/RoundFollowup.vue";
+import RoundFollowup from "@/views/round/RoundFollowup.vue";
 import RoundMaker from "@/views/round/RoundMaker.vue";
 import RoundDetail from "@/views/round/RoundDetail.vue";
 import RoundPlanner from "@/views/round/RoundPlanner.vue";

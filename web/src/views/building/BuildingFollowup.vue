@@ -78,8 +78,8 @@
 </template>
 
 <script lang="ts" setup>
-import BuildingData from "@/components/forms/BuildingData.vue.js";
-import ImageCard from "@/components/cards/ImageCard.vue.js";
+import BuildingData from "@/components/forms/BuildingData.vue";
+import ImageCard from "@/components/cards/ImageCard.vue";
 import Avatar from "@/components/Avatar.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";

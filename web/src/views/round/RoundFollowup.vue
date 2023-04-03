@@ -34,8 +34,8 @@
 
 <script lang="ts" setup>
 import Round from "@/components/models/Round";
-import RoundCard from "@/components/cards/RoundCard.vue.js";
-import LargeFilter from "@/components/filter /LargeFilter.vue.js";
+import RoundCard from "@/components/cards/RoundCard.vue";
+import LargeFilter from "@/components/filter /LargeFilter.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import Filterdata from "@/components/filter /Filterdata.js";

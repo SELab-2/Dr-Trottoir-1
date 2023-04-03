@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import RoundedButton from "@/components/buttons/RoundedButton.vue.js";
+import RoundedButton from "@/components/buttons/RoundedButton.vue";
 
 defineProps({
   img: String,

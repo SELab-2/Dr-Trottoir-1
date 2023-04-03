@@ -100,10 +100,10 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import BuildingData from "@/components/forms/BuildingData.vue.js";
-import RoundedButton from "@/components/buttons/RoundedButton.vue.js";
-import ImageCard from "@/components/cards/ImageCard.vue.js";
-import AddButton from "@/components/buttons/AddButton.vue.js";
+import BuildingData from "@/components/forms/BuildingData.vue";
+import RoundedButton from "@/components/buttons/RoundedButton.vue";
+import ImageCard from "@/components/cards/ImageCard.vue";
+import AddButton from "@/components/buttons/AddButton.vue";
 
 // reactive state to show the drawer or not
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
