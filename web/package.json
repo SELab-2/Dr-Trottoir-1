@@ -2,11 +2,12 @@
   "name": "web",
   "version": "0.0.0",
   "scripts": {
+    "dev": "vite",
+    "prebuild": "npx prettier --check . && npx eslint src --max-warnings 0",
     "build": "vue-tsc --noEmit && vite build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "npx prettier --write . && npx eslint src",
     "dev": "vite",
-    "pretest": "npx prettier --check . && npx eslint src --max-warnings 0",
     "preview": "vite preview --port 3000 --host",
     "test": "jest __tests__"
   },
