@@ -70,23 +70,10 @@
     <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
     <v-overlay v-model="snackbar">
       <v-snackbar v-model="snackbar" timeout="-1" elevation="24" color="white">
-        <v-card prepend-icon="mdi-exclamation" variant="flat">
-          <template v-slot:title> Start ronde </template>
-          <p class="mx-3">
-            Je staat op het punt een ronde te starten. Het huidige tijdstip zal
-            opgeslagen worden als start tijdstip. Ben je zeker dat je de ronde
-            wilt starten?
-          </p>
-          <div class="d-flex flex-row-reverse ma-3">
-            <router-link to="/rondes/detail">
-              <v-btn color="success"> Start ronde </v-btn>
-            </router-link>
-
-            <v-btn @click="snackbar = false" color="error" class="mr-3">
-              Annuleer
-            </v-btn>
-          </div>
-        </v-card>
+        <StartRoundPopup
+          :oncancel="() => (snackbar = !snackbar)"
+          :onsubmit="() => start_round()"
+        />
       </v-snackbar>
     </v-overlay>
   </v-card>
@@ -94,11 +81,18 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import StartRoundPopup from "@/components/StartRoundPopupContent.vue";
+import router from "@/router";
 
 // https://stackoverflow.com/questions/1643320/get-month-name-from-date
 const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
 
+// logic for starting a round with a warning popup
 const snackbar = ref(false);
+function start_round() {
+  // TODO: start the round in the database
+  router.push("/rondes/detail");
+}
 
 const calculateProgress = (done: number, toDo: number) => {
   return Math.round((done / toDo) * 100);

@@ -19,15 +19,11 @@ export class User implements TableEntity<User> {
     return User.headers();
   }
 
-  detailPageUrl(): string {
-    return `/account/${this.id}/false`;
-  }
-
   static headers(): Array<Header<User>> {
     return [
       {
         id: 0,
-        name: "Portret",
+        name: "",
         fit: true,
         get: (e: User) => e.first_name + " " + e.last_name,
         type: RowType.AVATAR,
@@ -65,23 +61,7 @@ export class User implements TableEntity<User> {
         type: RowType.BOOLEAN,
         sortable: true,
       },
-      {
-        id: 5,
-        name: "",
-        fit: true,
-        get: () => "mdi-text-box-edit-outline",
-        type: RowType.ICON,
-        sortable: false,
-      },
-      {
-        id: 6,
-        name: "",
-        fit: true,
-        get: () => "mdi-trash-can-outline",
-        type: RowType.ICON,
-        sortable: false,
-      },
-    ];
+    ].map((e) => new Header<User>(e));
   }
 
   static random(): Array<User> {
@@ -95,5 +75,9 @@ export class User implements TableEntity<User> {
         admin: chance().bool(),
       });
     });
+  }
+
+  route(): string {
+    return `/account/${this.id}/false`; // TODO: bizarre routing?
   }
 }
