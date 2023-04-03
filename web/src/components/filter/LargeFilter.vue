@@ -8,10 +8,7 @@
       <v-text-field
         :label="search_placeholder()"
         v-model="filter_data.query"
-        @update:model-value="
-          console.log(filter_data.query);
-          $emit('onUpdate', filter_data);
-        "
+        @update:model-value="$emit('onUpdate', filter_data)"
         variant="underlined"
       />
     </template>
@@ -125,7 +122,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import FilterData from "@/components/filter /FilterData";
+import FilterData from "@/components/filter/FilterData";
 
 // The filter data is emitted with the 'onUpdate' tag
 const props = defineProps({

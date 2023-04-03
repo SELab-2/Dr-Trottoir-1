@@ -64,7 +64,7 @@ const routes = [
 
       // Round
       {
-        path: "/rondes",
+        path: "/ronde",
         name: "round_followup",
         component: RoundFollowup,
         meta: {
