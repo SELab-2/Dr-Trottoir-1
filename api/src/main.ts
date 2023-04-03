@@ -21,8 +21,15 @@ import { GarbageRouting } from "./routes/garbage";
 import { UserRegionRouting } from "./routes/user_region";
 import { ProgressRouting } from "./routes/progress";
 
-const PORT_NUMBER = 8080;
+// const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
+
+let PORT_NUMBER: number;
+if (process.env.NODE_ENV === "test") {
+    PORT_NUMBER = 8083;
+} else {
+    PORT_NUMBER = 8080;
+}
 
 const app = express();
 
