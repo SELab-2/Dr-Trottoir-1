@@ -68,7 +68,7 @@ async function getSessionAndCookies(): Promise<
     const session = request(app);
     const resultLogin = await session
         .post("/auth/login")
-        .send({ username: "jens.pots@ugent.be", password: "password" });
+        .send({ username: "administrator@trottoir.be", password: "password" });
     expect(resultLogin.status).toBe(302);
     expect(resultLogin.headers).toHaveProperty("set-cookie");
 
