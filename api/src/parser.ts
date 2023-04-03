@@ -7,12 +7,12 @@ import { APIErrorCode } from "./errors/api_error_code";
  */
 export class Parser {
     static bool(
-        input: string | undefined,
+        input: string | boolean | undefined,
         otherwise: boolean | undefined = undefined,
     ): boolean | undefined {
-        if (input === "true") {
+        if (input === "true" || input === true) {
             return true;
-        } else if (input === "false") {
+        } else if (input === "false" || input === false) {
             return false;
         } else if (input) {
             throw new APIError(APIErrorCode.BAD_REQUEST);

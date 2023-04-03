@@ -51,7 +51,7 @@ model User {
 
     // Relaties
     regions         UserRegion[]
-    Syndicus        Syndicus[]
+    syndicus        Syndicus[]
     schedule        Schedule[]
     uploaded_images Image[]
 

@@ -8,7 +8,7 @@ RUN npm ci
 
 COPY . .
 RUN npx prisma generate
-RUN npx tsc
+RUN npm run build
 
 FROM node:19-alpine3.16 AS production
 WORKDIR /app
