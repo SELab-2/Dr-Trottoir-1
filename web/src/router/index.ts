@@ -19,7 +19,7 @@ import RoundPlanner from "@/views/round/RoundPlanner.vue";
 
 // Building Pages
 import BuildingMaker from "@/views/building/BuildingMaker.vue";
-import BuildingSceen from "@/views/building/BuildingScreen.vue";
+import BuildingScreen from "@/views/building/BuildingScreen.vue";
 import BuildingFollowup from "@/views/building/BuildingFollowup.vue";
 import GarbageMaker from "@/views/building/GarbageMaker.vue";
 
@@ -100,7 +100,7 @@ const routes = [
       {
         path: "/gebouw/:id",
         name: "building_id",
-        component: BuildingSceen,
+        component: BuildingScreen,
         props: true,
         meta: {
           title: "",
