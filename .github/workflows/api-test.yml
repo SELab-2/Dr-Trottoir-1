@@ -1,8 +1,13 @@
-name: PostgreSQL service
-on: push
-
+name: API Test
+on:
+    workflow_dispatch:
+    pull_request:
+        branches:
+            - 'develop'
+            - 'main'
+            - 'api/**'
 jobs:
-    container-job:
+    api-test:
         runs-on: [ self-hosted ]
         defaults:
             run:
