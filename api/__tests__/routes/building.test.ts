@@ -39,9 +39,10 @@ process.env["DISABLE_AUTH"] = "false";
 async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
     // Sessie starten en inloggen voor autorisatie
     const session = request(app);
-    const resultLogin = await session
-        .post("/auth/login")
-        .send({ username: "jens.pots@ugent.be", password: "password" });
+    const resultLogin = await session.post("/auth/login").send({
+        username: "administrator@trottoir.be",
+        password: "password",
+    });
     expect(resultLogin.status).toEqual(302);
     expect(resultLogin.headers).toHaveProperty("set-cookie");
 
@@ -69,6 +70,7 @@ async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
     building.id = resultAdd.body.id;
     building.syndicus.id = buildingToCreate.syndicus_id;
     building.syndicus.user_id = user.id;
+    building.manual.id = 1;
     delete user.address;
     delete user.regions;
     building.syndicus.user = user;
