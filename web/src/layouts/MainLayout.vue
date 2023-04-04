@@ -5,6 +5,7 @@
         :temporary="!permanentDrawer"
         :permanent="!!permanentDrawer"
         v-model="drawer"
+        class="sidebar"
       >
         <v-list density="compact" nav>
           <v-list-item lines="two" @click="showAccount = !showAccount">
@@ -72,18 +73,10 @@
           <div v-if="isSuperStudent">
             <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
 
-            <router-link to="/studenten">
-              <v-list-item
-                prepend-icon="mdi-account-school"
-                title="Studenten"
-                value="studenten"
-              />
-            </router-link>
-
-            <router-link to="/rondes">
+            <router-link to="/opvolging">
               <v-list-item
                 prepend-icon="mdi-transit-detour"
-                title="Rondes"
+                title="Opvolging"
                 value="rondes"
               />
             </router-link>
@@ -102,15 +95,22 @@
           </div>
 
           <div v-if="isSyndicus">
-            <p class="pa-2 font-weight-medium text-caption">Gebouwbeheer</p>
+            <p class="pa-2 font-weight-medium text-caption">Mijn gebouwen</p>
 
-            <router-link to="/gebouwen">
-              <v-list-item
-                prepend-icon="mdi-file-cabinet"
-                title="Mijn Gebouwen"
-                value="gebouwen"
-              />
-            </router-link>
+            <div v-for="buildingid of [1, 2]" :key="buildingid">
+              <router-link
+                :to="{
+                  name: 'Gebouw detail',
+                  params: { id: buildingid, date: today },
+                }"
+              >
+                <v-list-item
+                  prepend-icon="mdi-file-cabinet"
+                  :title="'Gebouw ' + buildingid"
+                  value="gebouwen"
+                />
+              </router-link>
+            </div>
 
             <div class="py-2">
               <v-divider />
@@ -172,9 +172,11 @@
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
-
+import { formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+
+const today = formatDate(new Date());
 
 // reactive state to show the drawer or not
 const drawer = ref(true);
@@ -231,5 +233,10 @@ a {
 
 .flex {
   display: flex;
+}
+
+.sidebar {
+  position: fixed !important;
+  height: 100vh !important;
 }
 </style>
