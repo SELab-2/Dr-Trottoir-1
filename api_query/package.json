@@ -1,13 +1,14 @@
 {
-  "name": "@selab-2/groep-1-query-builder",
-  "version": "1.0.0",
-  "description": "Package to interact with the APi.",
+  "name": "@selab-2/groep-1-query",
+  "version": "1.0.1",
+  "description": "Package to interact with the API.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "lint": "npx prettier --write . && npx eslint src",
     "pretest": "npx prettier --check . && npx eslint src --max-warnings 0",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

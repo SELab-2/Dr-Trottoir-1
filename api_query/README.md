@@ -1,6 +1,6 @@
 # Query Builder
 
-Om eenvoudig te interageren met de API wordt een eenvoudige abstractie voorzien.
+Om te interageren met de API wordt een eenvoudige abstractie voorzien.
 
 ```typescript
 // Alle studenten die zich hebben aangemeld sinds 2020-01-01.
@@ -28,7 +28,7 @@ De basis wordt gevormd door de abstracte klasse `Query`.
  * Result: Een type die het resultaat modeleert.
  */
 export abstract class Query<Parameters, Result> {
-  // Het overeenkomende endpoint van onze API
+  // Endpoint van dit model in onze API.
   abstract endpoint: string;
 
   // Geef de resulterende URL voor een query op basis van gegeven parameters.
@@ -84,7 +84,7 @@ const usersOrErr: User[] | APIError = new UserQuery().execute({
 });
 ```
 
-Heb je reeds een identifier van een resource, dan kan je deze onmiddelijk opvragen.
+Heb je reeds een identifier van een resource, dan kan je deze ook onmiddelijk opvragen.
 
 ```typescript
 const userOrErr: User | APIError = new UserQuery().executeOne(id);

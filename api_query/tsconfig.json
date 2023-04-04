@@ -72,5 +72,4 @@
     "ts-node": {
         "files": true
     },
-    "files": ["src/types/index.d.ts"]
 }
