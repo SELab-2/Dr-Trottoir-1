@@ -51,7 +51,7 @@ model User {
 
     // Relaties
     regions         UserRegion[]
-    Syndicus        Syndicus[]
+    syndicus        Syndicus[]
     schedule        Schedule[]
     uploaded_images Image[]
 
@@ -230,7 +230,7 @@ model RoundBuilding {
 // In dit model worden enkel de namen van de rondes bijgehouden.
 model Round {
     id   Int    @id @default(autoincrement())
-    name String
+    name String @unique
 
     buildings RoundBuilding[]
     schedule  Schedule[]

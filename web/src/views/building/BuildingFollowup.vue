@@ -1,221 +1,193 @@
 <template>
-  <div class="selector px-4">
-    <v-select
-      class="building-select"
-      label="Gebouw"
-      :items="buildings"
-      v-model="selectedBuilding"
-    />
-    <VueDatePicker
-      class="date-select"
-      v-model="selectedDate"
-      :enable-time-picker="false"
-      input-class-name="v-field__input"
-      :format="formatDate"
-    ></VueDatePicker>
-  </div>
-  <div class="building-info" v-if="selectedDate && selectedBuilding">
-    <div
-      v-if="get(selectedBuilding, formatDate(selectedDate)) === null"
-      class="centre text-center"
-    >
-      <v-icon icon="mdi-alert-circle" size="x-large" />
-      <h2>Geen data voor dit gebouw op {{ formatDate(selectedDate) }}.</h2>
-      <p>Selecteer een ander gebouw of kies een andere datum.</p>
-    </div>
-    <div v-else>
-      <BuildingData id="1" />
-      <div class="centre px-4 mb-4">
-        <h2>Bezoek ({{ formatDate(selectedDate) }})</h2>
-        <button
-          @click="
-            router.push({
-              name: 'account_settings',
-              params: { id: 2, isadmin: 'false' },
-            })
-          "
-        >
-          <Avatar
-            :name="get(selectedBuilding, formatDate(selectedDate)).student"
-            size="40"
-          />
-          {{ get(selectedBuilding, formatDate(selectedDate)).student }}
-        </button>
-        <div class="image-grid" style="margin-top: 10px">
-          <div
-            v-for="image in images"
-            :key="String(image.url)"
-            style="position: relative"
-          >
-            <ImageCard
-              :img="String(image.url)"
-              btn-icon="mdi-email-arrow-right"
-              btn-text="Send report"
-            />
-          </div>
-        </div>
-        <h3 v-if="get(selectedBuilding, formatDate(selectedDate)).comments">
-          Opmerkingen
-        </h3>
-        <div class="image-grid" style="margin-top: 10px">
-          <div
-            v-for="comment in get(selectedBuilding, formatDate(selectedDate))
-              .comments"
-            :key="comment.title"
-            style="position: relative"
-          >
-            <ImageCard
-              :title="comment.title"
-              :text="comment.comment"
-              btn-icon="mdi-email-arrow-right"
-              btn-text="Send report"
-            />
-          </div>
-        </div>
+  <v-row class="mt-1">
+    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%" />
+    <v-col cols="7" style="min-width: 400px">
+      <LargeFilter
+        :search_by_labels="query_labels"
+        :sort_items="sort_items"
+        :filter_items="filter_options"
+        class="mx-1 mb-3"
+        @onUpdate="(new_data: Filterdata) => {filter_data = new_data; filterIndex++;}"
+      />
+      <div v-for="(building, id) in filter()" :key="id + ':' + filterIndex">
+        <building-card :building="building" />
       </div>
-    </div>
-  </div>
+      <v-spacer></v-spacer>
+    </v-col>
+    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%">
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts" setup>
-import BuildingData from "@/components/forms/BuildingData.vue";
-import ImageCard from "@/components/cards/ImageCard.vue";
-import Avatar from "@/components/Avatar.vue";
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-import { formatDate } from "@/assets/scripts/format";
+import LargeFilter from "@/components/filter/LargeFilter.vue";
+import Filterdata from "@/components/filter/FilterData";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { createDate, formatDate } from "@/assets/scripts/date";
+import BuildingCard from "@/components/building/BuildingCard.vue";
 
-const router = useRouter();
+const query_labels = ["Gebouw", "Syndicus", "Adres"];
+const filter_options = ["Opmerkingen"];
+const sort_items: string[] = [];
 
-// reactive component which will store the current user
-const selectedBuilding = ref<String>("");
-const selectedDate = ref<Date>(new Date());
+// All the filter options
+const filter_data = ref<Filterdata>({
+  query: "",
+  search_label: query_labels[0],
+  sort_by: "",
+  sort_ascending: true,
+  filters: [],
+  start_day: formatDate(new Date()),
+  end_day: formatDate(new Date()),
+});
 
-function get(buildingName: String, buildingDate: String) {
-  for (let building of mockbuildingdata) {
-    if (building.name === buildingName && building.date === buildingDate) {
-      return building;
-    }
-  }
-  return null;
-}
+const filterIndex = ref<number>(0);
 
 // TODO: mockdata, remove in future
-const buildings: string[] = [
-  "Eiffeltoren",
-  "Taj Mahal",
-  "Machu Picchu",
-  "Piramide",
-  "Atomium",
-  "Toren van Pisa",
-];
-
-const mockbuildingdata: any[] = [
+const buildings: any[] = [
   {
-    id: "0",
+    id: 1,
     name: "Eiffeltoren",
-    date: "15/3/2023",
-    student: "Mats Van Belle",
-    comments: [
+    syndicus: "Mats Van Belle",
+    adres: "Examplestreet -2",
+    expanded: false,
+    data: [
       {
-        title: "Kapotte deur",
-        comment: "De deur in de berging is kapot",
+        comments: true,
+        date: "15/3/2023",
+      },
+      {
+        comments: false,
+        date: "13/3/2023",
       },
     ],
   },
   {
-    id: "1",
-    name: "Piramide",
-    date: "15/3/2023",
-    student: "Brent Matthys",
+    id: 2,
+    name: "Taj Mahal",
+    syndicus: "Brent Matthys",
+    adres: "Nieuwestraat 8",
+    data: [
+      {
+        comments: true,
+        date: "15/3/2023",
+      },
+      {
+        comments: false,
+        date: "27/3/2023",
+      },
+    ],
   },
   {
-    id: "2",
-    name: "Atomium",
-    date: "13/3/2023",
-    student: "Jens Pots",
-    comments: [
+    id: 3,
+    name: "Machu Picchu",
+    syndicus: "Arne Vanheule",
+    adres: "Voorbeeldstraat 22",
+    data: [
       {
-        title: "Lelijk",
-        comment: "...",
+        comments: true,
+        date: "15/3/2023",
+      },
+    ],
+  },
+  {
+    id: 4,
+    name: "Toren van Pisa",
+    syndicus: "Mats Van Belle",
+    adres: "Italiëwegel 345",
+    data: [
+      {
+        comments: false,
+        date: "07/3/2023",
+      },
+      {
+        comments: false,
+        date: "27/3/2023",
       },
     ],
   },
 ];
 
-const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
-  {
-    time: new Date(),
-    about: "Aankomst",
-    url: "https://unsplash.com/photos/gMnA1dUkmkM/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8NXx8YmFzZW1lbnR8ZW58MHx8fHwxNjc4NzgxMTgw&force=true&w=640",
-  },
-  {
-    time: new Date(),
-    about: null,
-    url: "https://unsplash.com/photos/Tb4bUf6z9gI/download?force=true&w=640",
-  },
-  {
-    time: new Date(),
-    about: null,
-    url: "https://unsplash.com/photos/u_khkgVDmxA/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Mnx8YmFzZW1lbnR8ZW58MHx8fHwxNjc4NzgxMTgw&force=true&w=640",
-  },
-  {
-    time: new Date(),
-    about: null,
-    url: "https://unsplash.com/photos/Tac8FvqAnEw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Mjh8fGJhc2VtZW50fGVufDB8fHx8MTY3ODgwMTI1OQ&force=true&w=640",
-  },
-  {
-    time: new Date(),
-    about: "Vertrek",
-    url: "https://unsplash.com/photos/sSRGytOhIkQ/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjc4ODMyNDEy&force=true&w=640",
-  },
-]);
+function filter_query(building: {
+  name: string;
+  syndicus: string;
+  adres: string;
+}): boolean {
+  let search_by: string = "";
+  switch (filter_data.value.search_label) {
+    case query_labels[0]:
+      search_by = building.name.toLowerCase();
+      break;
+    case query_labels[1]:
+      search_by = building.syndicus.toLowerCase();
+      break;
+    case query_labels[2]:
+      search_by = building.adres.toLowerCase();
+      break;
+  }
+  return (
+    search_by.includes(filter_data.value.query.toLowerCase()) ||
+    filter_data.value.query.length == 0
+  );
+}
+
+function filter() {
+  const result: any[] = [];
+  // filtering
+  buildings.forEach((elem) => {
+    const building = { ...elem };
+
+    if (filter_query(building)) {
+      const data = [];
+      building.data.forEach((datum: { comments: boolean; date: string }) => {
+        let can_add = true;
+
+        can_add =
+          can_add &&
+          createDate(datum.date) <= createDate(filter_data.value.end_day);
+        can_add =
+          can_add &&
+          createDate(datum.date) >= createDate(filter_data.value.start_day);
+
+        for (let filter of filter_data.value.filters) {
+          if (filter === filter_options[0]) {
+            can_add = can_add && datum.comments;
+          }
+        }
+        if (can_add) {
+          data.push(datum);
+        }
+      });
+
+      if (
+        data.length === 0 &&
+        filter_data.value.end_day === filter_data.value.start_day
+      ) {
+        data.push({ date: filter_data.value.start_day, comments: false });
+      }
+
+      data.sort((a, b) => {
+        return a.date > b.date ? 1 : -1;
+      });
+
+      if (!filter_data.value.sort_ascending) {
+        data.reverse();
+      }
+
+      building.data = data;
+
+      result.push(building);
+    }
+  });
+
+  result.sort((a, b) => (a.name > b.name ? 1 : -1));
+
+  if (!filter_data.value.sort_ascending) {
+    result.reverse();
+  }
+
+  return result;
+}
 </script>
 
-<style scoped lang="scss">
-.v-container {
-  padding-top: 0;
-}
-
-.selector {
-  width: 100%;
-  display: flex;
-}
-
-.building-select {
-  width: 40%;
-}
-
-.date-select {
-  width: 20%;
-  min-width: 140px;
-}
-
-.centre {
-  max-width: 800px;
-  margin: auto;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.image-grid {
-  display: grid;
-  gap: 10px;
-
-  @media (min-width: 1000px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  @media (min-width: 500px) and (max-width: 1000px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media (max-width: 500px) {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-}
-</style>
+<style scoped lang="scss"></style>

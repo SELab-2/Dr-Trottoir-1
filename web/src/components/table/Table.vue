@@ -14,7 +14,10 @@
             <v-btn
               v-if="header.sortable"
               variant="plain"
-              icon="mdi-chevron-down"
+              :icon="
+                header.order == 'asc' ? 'mdi-chevron-up' : 'mdi-chevron-down'
+              "
+              @click="() => sort(header)"
               size="small"
             ></v-btn>
           </div>
@@ -27,36 +30,26 @@
           v-bind:key="header.id"
           v-for="header in headers"
           :class="{ fit: header.fit }"
+          style="cursor: pointer"
+          @click="router.push(item.route())"
         >
           <div
             v-if="header.type === RowType.IMAGE"
             style="display: flex; align-items: center"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
           >
             <img :src="header.get(item)" class="image" alt="Portrait" />
           </div>
           <div
             v-if="header.type === RowType.AVATAR"
             style="display: flex; align-items: center"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
           >
             <Avatar :name="header.get(item)" size="default" />
           </div>
-          <div
-            v-if="header.type === RowType.CHECKBOX"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
-          >
+          <div v-if="header.type === RowType.CHECKBOX">
             <input type="checkbox" v-model="item.student" />
           </div>
           <!-- Check or cross icon for boolean-->
-          <div
-            v-if="header.type === RowType.BOOLEAN"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
-          >
+          <div v-if="header.type === RowType.BOOLEAN">
             <v-icon
               :icon="bool_icon(header.get(item))"
               :color="bool_color(header.get(item))"
@@ -67,14 +60,8 @@
             variant="plain"
             v-bind:icon="header.get(item)"
             size="small"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
           ></v-btn>
-          <p
-            v-if="header.type === RowType.TEXT"
-            @click="route_to(header.route_to)"
-            :class="actual_route(header.route_to) ? 'clickable' : ''"
-          >
+          <p v-if="header.type === RowType.TEXT">
             {{ header.get(item) }}
           </p>
         </td>
@@ -86,9 +73,19 @@
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
 import { RowType } from "@/components/table/RowType";
+import { ref } from "vue";
+import { Header } from "@/components/table/Header";
 import router from "@/router";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const props = defineProps(["entries", "headers"]);
+
+const props = defineProps({
+  entries: { type: Array<any>, require: true },
+  headers: { type: Array<Header<any>>, require: true, default: [] },
+  sort: { type: Function, require: true, default: () => {} },
+});
+
+const entries = ref(props.entries);
+
+const headers = ref(props.headers);
 
 function bool_icon(bool: boolean): string {
   return bool ? "mdi-check" : "mdi-close";
@@ -98,14 +95,16 @@ function bool_color(bool: boolean): string {
   return bool ? "success" : "red";
 }
 
-function actual_route(route: string): boolean {
-  return route !== "";
-}
+function sort(header: Header<any>) {
+  // Reset all other headers to `null` order.
+  headers.value?.forEach((e) => {
+    if (e != header) {
+      e.order = null;
+    }
+  });
 
-function route_to(route: string) {
-  if (actual_route(route)) {
-    router.push(route);
-  }
+  // Sort the actual entries using the specific comparator.
+  header.sort(entries.value ?? []);
 }
 </script>
 

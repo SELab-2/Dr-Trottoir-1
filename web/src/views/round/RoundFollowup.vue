@@ -39,7 +39,7 @@ import LargeFilter from "@/components/filter/LargeFilter.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
-import { date_to_hh_mm } from "@/assets/scripts/format";
+import { formatDate, date_to_hh_mm } from "@/assets/scripts/format";
 
 const router = useRouter();
 
@@ -197,8 +197,8 @@ const filter_data = ref<FilterData>({
   sort_by: sort_items[0],
   sort_ascending: true,
   filters: [],
-  start_day: new Date(),
-  end_day: new Date(),
+  start_day: formatDate(new Date()),
+  end_day: formatDate(new Date()),
 });
 
 function filter_query(round: Round): boolean {

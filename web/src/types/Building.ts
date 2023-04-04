@@ -27,7 +27,6 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
         type: RowType.AVATAR,
         sortable: false,
-        route_to: `/account/0/false`,
       },
       {
         id: 3,
@@ -36,7 +35,6 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/account/0/false`,
       },
       {
         id: 0,
@@ -45,8 +43,6 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.name,
         type: RowType.TEXT,
         sortable: true,
-        // TODO: removed header_id and changed building redirect to id 0, making an issue to fix this
-        route_to: `/gebouw/0`,
       },
       {
         id: 1,
@@ -55,9 +51,8 @@ export class Building implements TableEntity<Building> {
         get: (e: Building) => e.address,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/gebouw/0`,
       },
-    ];
+    ].map((e) => new Header<Building>(e));
   }
 
   static random(): Array<Building> {
@@ -70,5 +65,9 @@ export class Building implements TableEntity<Building> {
         syndicus_ln: chance().last(),
       });
     });
+  }
+
+  route(): string {
+    return `/gebouw/${this.id}`;
   }
 }

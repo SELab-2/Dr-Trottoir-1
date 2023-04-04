@@ -1,4 +1,4 @@
-export default interface Action {
+export default interface Button {
   title: string;
   clicked: void;
 }

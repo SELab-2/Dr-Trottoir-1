@@ -19,6 +19,7 @@ import RoundPlanner from "@/views/round/RoundPlanner.vue";
 
 // Building Pages
 import BuildingMaker from "@/views/building/BuildingMaker.vue";
+import BuildingDetail from "@/views/building/BuildingDetail.vue";
 import BuildingScreen from "@/views/building/BuildingScreen.vue";
 import BuildingFollowup from "@/views/building/BuildingFollowup.vue";
 import GarbageMaker from "@/views/building/GarbageMaker.vue";
@@ -64,7 +65,7 @@ const routes = [
 
       // Round
       {
-        path: "/ronde",
+        path: "/ronde/overzicht",
         name: "round_followup",
         component: RoundFollowup,
         meta: {
@@ -106,6 +107,14 @@ const routes = [
           title: "",
         },
       },
+
+      {
+        path: "/gebouw/:id/:date",
+        name: "building_id_detail",
+        component: BuildingDetail,
+        props: true,
+      },
+
       {
         path: "/gebouw/nieuw",
         name: "building_new",
@@ -115,7 +124,7 @@ const routes = [
         },
       },
       {
-        path: "/gebouwen",
+        path: "/gebouw/overzicht",
         name: "building_followup",
         component: BuildingFollowup,
         meta: {

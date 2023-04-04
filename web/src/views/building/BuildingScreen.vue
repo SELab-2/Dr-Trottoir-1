@@ -100,7 +100,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import BuildingData from "@/components/forms/BuildingData.vue";
+import BuildingData from "@/components/building/BuildingData.vue";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import ImageCard from "@/components/cards/ImageCard.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
@@ -111,7 +111,7 @@ defineProps({
   id: String,
 });
 
-const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
+const images = ref<Array<{ about: string | null; time: Date; url: string }>>([
   {
     time: new Date(),
     about: "Aankomst",

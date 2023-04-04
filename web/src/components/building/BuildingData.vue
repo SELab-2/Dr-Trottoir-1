@@ -6,7 +6,15 @@
   />
   <div id="building-screen" class="px-4">
     <div class="general-info-main">
-      <h1 class="building-name">El Paradisio</h1>
+      <div class="d-flex justify-space-between">
+        <h1 class="building-name">El Paradisio</h1>
+        <RoundedButton
+          v-if="isSyndicus"
+          @clicked="toEdit"
+          icon="mdi-pencil"
+          class="mt-2"
+        />
+      </div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor
@@ -26,8 +34,16 @@
 
 <script lang="ts" setup>
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
+import router from "@/router";
+
+const isSyndicus = true;
+
+function toEdit() {
+  router.push({ name: "building_new" });
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const props = defineProps({
+defineProps({
   id: String,
 });
 </script>

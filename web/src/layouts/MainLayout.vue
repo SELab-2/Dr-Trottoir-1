@@ -96,14 +96,22 @@
           </div>
 
           <div v-if="isSyndicus">
-            <p class="pa-2 font-weight-medium text-caption">Gebouwbeheer</p>
+            <p class="pa-2 font-weight-medium text-caption">Mijn gebouwen</p>
 
-            <v-list-item
-              :to="{ name: 'building_id', params: { id: 0 } }"
-              prepend-icon="mdi-file-cabinet"
-              title="Mijn Gebouwen"
-              value="gebouwen"
-            />
+            <div v-for="buildingid of [1, 2]" :key="buildingid">
+              <router-link
+                :to="{
+                  name: 'building_id_detail',
+                  params: { id: buildingid, date: today },
+                }"
+              >
+                <v-list-item
+                  prepend-icon="mdi-file-cabinet"
+                  :title="'Gebouw ' + buildingid"
+                  value="gebouwen"
+                />
+              </router-link>
+            </div>
 
             <div class="py-2">
               <v-divider />
@@ -162,9 +170,11 @@
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
-
+import { formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+
+const today = formatDate(new Date());
 
 // reactive state to show the drawer or not
 const drawer = ref(true);

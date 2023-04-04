@@ -1,7 +1,7 @@
 <template>
-  <button id="button">
-    <v-icon v-if="props.icon" color="#333333" :icon="props.icon" size="small" />
-    <p v-if="props.value">{{ props.value }}</p>
+  <button id="button" @click="$emit('clicked')">
+    <v-icon v-if="icon" color="#333333" :icon="icon" size="small" />
+    <p v-if="value">{{ value }}</p>
   </button>
 </template>
 
@@ -22,7 +22,7 @@
 </style>
 
 <script lang="ts" setup>
-const props = defineProps({
+defineProps({
   icon: String,
   value: String,
 });
