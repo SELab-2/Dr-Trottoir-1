@@ -10,6 +10,8 @@ export type GarbageQueryParameters = {
     action_id: number;
     syndicus_id: number;
     round_id: number;
+    sort: string[];
+    ord: string[];
 };
 
 export class GarbageQuery extends Query<GarbageQueryParameters, Garbage> {

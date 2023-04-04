@@ -7,11 +7,15 @@ export type UserQueryParameters = {
     student: boolean;
     super_student: boolean;
     admin: boolean;
+    deleted: boolean;
     login_before: Date;
     login_after: Date;
     added_before: Date;
     added_after: Date;
     name: string;
+    region_id: number;
+    sort: string[];
+    ord: string[];
 };
 
 export class UserQuery extends Query<UserQueryParameters, User> {
