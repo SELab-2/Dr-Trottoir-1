@@ -107,11 +107,11 @@ import AddButton from "@/components/AddButton.vue";
 
 // reactive state to show the drawer or not
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const props = defineProps({
+defineProps({
   id: String,
 });
 
-const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
+const images = ref<Array<{ about: string | null; time: Date; url: string }>>([
   {
     time: new Date(),
     about: "Aankomst",
@@ -139,13 +139,14 @@ const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
   },
 ]);
 
-const comments = ref<Array<{ title: String; comment: String }>>([
+const comments = ref<Array<{ title: string; comment: string }>>([
   {
     title: "Kapotte deur",
     comment: "De deur in de berging is kapot",
   },
 ]);
 
+// TODO: this should become an actual redirect to page
 function foto() {
   console.log("foto");
 }
@@ -157,11 +158,11 @@ function opmerking() {
 const actions = [
   {
     title: "Foto toevoegen",
-    clicked: foto,
+    clicked: foto(),
   },
   {
     title: "Opmerking toevoegen",
-    clicked: opmerking,
+    clicked: opmerking(),
   },
 ];
 </script>

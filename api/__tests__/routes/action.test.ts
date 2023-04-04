@@ -17,9 +17,10 @@ describe("Test ActionRouting successful requests", () => {
     // worden de cookies bewaard.
     beforeEach(async () => {
         session = request(app);
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
+        const resultLogin = await session.post("/auth/login").send({
+            username: "administrator@trottoir.be",
+            password: "password",
+        });
         expect(resultLogin.status).toBe(302);
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 
@@ -131,9 +132,10 @@ describe("Test ActionRouting unsuccessful requests", () => {
         const session = await request(app);
 
         // Eerst moet er ingelogd worden om autorisatie te krijgen.
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
+        const resultLogin = await session.post("/auth/login").send({
+            username: "administrator@trottoir.be",
+            password: "password",
+        });
         expect(resultLogin.status).toBe(302);
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 
@@ -164,9 +166,10 @@ describe("Test ActionRouting unsuccessful requests", () => {
         const session = await request(app);
 
         // Eerst moet er ingelogd worden om autorisatie te krijgen.
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
+        const resultLogin = await session.post("/auth/login").send({
+            username: "administrator@trottoir.be",
+            password: "password",
+        });
         expect(resultLogin.status).toBe(302);
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 

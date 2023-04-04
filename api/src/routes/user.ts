@@ -58,6 +58,12 @@ export class UserRouting extends Routing {
                         contains: Parser.string(req.query["name"], ""),
                     },
                 },
+                // get all users assigned to a certain region
+                regions: {
+                    some: {
+                        region_id: Parser.number(req.query["region_id"]),
+                    },
+                },
             },
             select: UserRouting.selects,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
@@ -89,15 +95,17 @@ export class UserRouting extends Routing {
 
         // We kiezen een willekeurige salt, berekenen de hash-waarde, en slaan
         // deze tenslotte op in hun corresponderende velden.
+        const password = req.body.password;
+        delete req.body.password;
         const user: User = req.body;
         user.salt = crypto.randomBytes(32).toString();
         user.hash = crypto
             .createHash("sha256")
-            .update(req.body.password + user.salt)
+            .update(password + user.salt)
             .digest("hex");
 
         // Voer een poging uit om de gebruiker toe te voegen.
-        const result = prisma.user.create({
+        const result = await prisma.user.create({
             data: user,
             select: UserRouting.selects,
         });

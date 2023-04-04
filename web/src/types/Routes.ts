@@ -29,7 +29,6 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.student_fn + " " + e.student_ln,
         type: RowType.AVATAR,
         sortable: false,
-        route_to: `/account/0/false`,
       },
       {
         id: 4,
@@ -38,7 +37,6 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.student_fn + " " + e.student_ln,
         type: RowType.TEXT,
         sortable: true,
-        route_to: `/account/0/false`,
       },
       {
         id: 0,
@@ -56,7 +54,6 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.buildings,
         type: RowType.TEXT,
         sortable: true,
-        route_to: "",
       },
       {
         id: 2,
@@ -65,7 +62,6 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.date,
         type: RowType.TEXT,
         sortable: true,
-        route_to: "",
       },
       {
         id: 4,
@@ -74,9 +70,8 @@ export class Routes implements TableEntity<Routes> {
         get: (e: Routes) => e.finished,
         type: RowType.BOOLEAN,
         sortable: true,
-        route_to: "",
       },
-    ];
+    ].map((e) => new Header<Routes>(e));
   }
 
   static random(): Array<Routes> {
@@ -91,5 +86,9 @@ export class Routes implements TableEntity<Routes> {
         finished: chance().bool(),
       });
     });
+  }
+
+  route(): string {
+    throw new Error("Route does not exist.");
   }
 }
