@@ -7,6 +7,7 @@
     "build": "vue-tsc --noEmit && vite build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "npx prettier --write . && npx eslint src",
+    "dev": "vite",
     "preview": "vite preview --port 3000 --host",
     "test": "jest __tests__"
   },
