@@ -111,7 +111,7 @@ defineProps({
   id: String,
 });
 
-const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
+const images = ref<Array<{ about: string | null; time: Date; url: string }>>([
   {
     time: new Date(),
     about: "Aankomst",

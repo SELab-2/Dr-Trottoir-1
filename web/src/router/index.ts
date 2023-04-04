@@ -8,12 +8,13 @@ import Users from "@/views/dashboard/Users.vue";
 import Buildings from "@/views/dashboard/Buildings.vue";
 import Routes from "@/views/dashboard/Routes.vue";
 import BuildingFollowup from "@/views/BuildingFollowup.vue";
-import RoundFollowup from "@/views/Followup.vue";
+import FollowUp from "@/views/Followup.vue";
 import RoundMaker from "@/views/RoundMaker.vue";
 import AccountSettings from "@/views/AccountSettings.vue";
 import RoundDetail from "@/views/RoundDetail.vue";
 import RoundPlanner from "@/views/RoundPlanner.vue";
 import BuildingMaker from "@/views/BuildingMaker.vue";
+import BuildingDetail from "@/views/BuildingDetail.vue";
 import GarbageMaker from "@/views/GarbageMaker.vue";
 
 const routes = [
@@ -52,11 +53,6 @@ const routes = [
         component: BuildingSceen,
         props: true,
       },
-      {
-        path: "/dashboard/gebouwen/nieuw",
-        name: "Gebouw aanmaken",
-        component: BuildingMaker,
-      },
       //{
       //  path: "/ronde/:id",
       //  name: "Ronde",
@@ -65,13 +61,19 @@ const routes = [
       //},
       {
         path: "/gebouwen",
-        name: "Opvolgen van gebouwen",
+        name: "Gebouw opvolging",
         component: BuildingFollowup,
+      },
+      {
+        path: "/gebouwen/:id/:date",
+        name: "Gebouw detail",
+        component: BuildingDetail,
+        props: true,
       },
       {
         path: "/opvolging",
         name: "Opvolging",
-        component: RoundFollowup,
+        component: FollowUp,
       },
       {
         path: "/rondes/plannen",
