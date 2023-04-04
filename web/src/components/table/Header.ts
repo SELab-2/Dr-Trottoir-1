@@ -3,7 +3,7 @@ import { RowType } from "@/components/table/RowType";
 /**
  * Models a column in a table for a generic type T.
  */
-export abstract class Header<T> {
+export class Header<T> {
   // A unique integer
   id: number;
 
@@ -22,7 +22,28 @@ export abstract class Header<T> {
   // Whether this column can be sorted
   sortable: boolean = false;
 
-  // The route to link to
-  // if the empty string is given, it will not route
-  route_to: string;
+  // Whether the values in the list are sorted using this header.
+  order: "asc" | "desc" | null = null;
+
+  // Partial constructor
+  constructor(init?: Partial<Header<T>>) {
+    Object.assign(this, init);
+  }
+
+  // TODO: replace with API call.
+  // Sorts an array of T's using this specific field.
+  sort(elements: Array<T>) {
+    let flip = 1;
+
+    if (this.order == "asc") {
+      this.order = "desc";
+      flip = -1;
+    } else {
+      this.order = "asc";
+    }
+
+    elements.sort((a: T, b: T) => {
+      return (this.get(b) > this.get(a) ? -1 : 1) * flip;
+    });
+  }
 }

@@ -1,5 +1,5 @@
 <template>
-  <button id="button">
+  <button id="button" @click="$emit('clicked')">
     <v-icon v-if="icon" color="#333333" :icon="icon" size="small" />
     <p v-if="value">{{ value }}</p>
   </button>

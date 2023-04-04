@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-import Action from "@/components/models/Action";
+import Button from "@/components/models/Button";
 
 defineProps({
   icon: String,
@@ -29,7 +29,7 @@ defineProps({
     type: String,
     default: "x-large",
   },
-  items: Array<Action>,
+  items: Array<Button>,
 });
 </script>
 
