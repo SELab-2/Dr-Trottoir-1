@@ -1,4 +1,4 @@
-name: API Test
+name: API Query Builder Test
 on:
     workflow_dispatch:
     pull_request:

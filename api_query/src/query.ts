@@ -48,7 +48,7 @@ export abstract class Query<Parameters, Result> {
 
             return json;
         } catch (e) {
-            return { code: 503, message: "Service Unavailable" }
+            return { code: 503, message: "Service Unavailable" };
         }
     }
 
@@ -69,7 +69,7 @@ export abstract class Query<Parameters, Result> {
 
             return json;
         } catch (e) {
-            return { code: 503, message: "Service Unavailable" }
+            return { code: 503, message: "Service Unavailable" };
         }
     }
 }

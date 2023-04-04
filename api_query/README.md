@@ -5,20 +5,20 @@ Om te interageren met de API wordt een eenvoudige abstractie voorzien.
 ```typescript
 // Alle studenten die zich hebben aangemeld sinds 2020-01-01.
 const users: Array<User | APIError> = new UserQuery().url({
-  student: true,
-  login_after: new Date("2020-01-01"),
+    student: true,
+    login_after: new Date("2020-01-01"),
 });
 ```
 
 ## Installatie
 
-We publiceren deze *query builder* als `@selab-2/groep-1-orm` in de GitHub NPM package registry.
+We publiceren deze _query builder_ als `@selab-2/groep-1-orm` in de GitHub NPM package registry.
 
 ```shell
 npm install @selab-2/groep-1-query@MAJOR.MINOR.PATCH
 ```
 
-Je dient de `API_SERVER_ADDRESS` *environment variabel* in te stellen met de URL van de server, bijvoorbeeld `http://localhost:8080`. 
+Je dient de `API_SERVER_ADDRESS` _environment variabel_ in te stellen met de URL van de server, bijvoorbeeld `http://localhost:8080`.
 
 ## Werking
 
@@ -30,17 +30,19 @@ De basis wordt gevormd door de abstracte klasse `Query`.
  * Result: Een type die het resultaat modeleert.
  */
 export abstract class Query<Parameters, Result> {
-  // Endpoint van dit model in onze API.
-  abstract endpoint: string;
+    // Endpoint van dit model in onze API.
+    abstract endpoint: string;
 
-  // Geef de resulterende URL voor een query op basis van gegeven parameters.
-  url(query: Partial<Parameters>): string;
+    // Geef de resulterende URL voor een query op basis van gegeven parameters.
+    url(query: Partial<Parameters>): string;
 
-  // Verkrijg een element per identifier.
-  async executeOne(id: number): Promise<Result | APIError>;
+    // Verkrijg een element per identifier.
+    async executeOne(id: number): Promise<Result | APIError>;
 
-  // Verkrijg alle resultaten die voldoen aan de parameters.
-  async execute(query: Partial<Parameters>): Promise<Array<Result> | APIError>;
+    // Verkrijg alle resultaten die voldoen aan de parameters.
+    async execute(
+        query: Partial<Parameters>,
+    ): Promise<Array<Result> | APIError>;
 }
 ```
 
@@ -48,24 +50,24 @@ Stel dat we een `BuildingQuery` klasse willen implementeren die verschillende ge
 
 ```typescript
 export type BuildingQueryParameters = {
-  take: number;
-  skip: number;
-  name: string;
-  ivage_id: string;
-  syndicus_id: number;
-  deleted: boolean;
-  sort: string[];
-  ord: Array<"asc" | "desc">;
+    take: number;
+    skip: number;
+    name: string;
+    ivage_id: string;
+    syndicus_id: number;
+    deleted: boolean;
+    sort: string[];
+    ord: Array<"asc" | "desc">;
 };
 ```
 
 Deze komt één-op-één overeen met de `key=value`'s die verwacht worden door de API. Merk op dat we hier dus uitsluitend `snake_case` gebruiken in plaats van `camelCase`.
 
-We erven nu van `Query` over, en hoeven uitsluitend nog de *endpoint* van ons model op te geven.
+We erven nu van `Query` over, en hoeven uitsluitend nog de _endpoint_ van ons model op te geven.
 
 ```typescript
 export class BuildingQuery extends Query<BuildingQueryParameters, Building> {
-  endpoint = "building";
+    endpoint = "building";
 }
 ```
 

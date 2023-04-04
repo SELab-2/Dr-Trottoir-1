@@ -71,5 +71,5 @@
     "exclude": ["node_modules"] /* Stuff we don't want to compile. */,
     "ts-node": {
         "files": true
-    },
+    }
 }
