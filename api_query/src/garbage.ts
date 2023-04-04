@@ -10,8 +10,8 @@ export type GarbageQueryParameters = {
     action_id: number;
     syndicus_id: number;
     round_id: number;
-}
+};
 
 export class GarbageQuery extends Query<GarbageQueryParameters, Garbage> {
-    endpoint = "garbage"
+    endpoint = "garbage";
 }
