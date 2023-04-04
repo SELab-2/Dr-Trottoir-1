@@ -8,7 +8,9 @@ export abstract class Query<Parameters, Result> {
 
         for (const [key, value] of Object.entries(query)) {
             if (value instanceof Date) {
-                url += `${key}=${value.toISOString()}`;
+                url += `${key}=${value.toISOString()}&`;
+            } else if (value instanceof Array<string>) {
+                url += `${key}=${value.join(",")}&`;
             } else {
                 url += `${key}=${value}&`;
             }

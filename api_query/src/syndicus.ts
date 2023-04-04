@@ -11,7 +11,7 @@ export type SyndicusQueryParameters = {
     name: string;
     user: number;
     sort: string[];
-    ord: string[];
+    ord: Array<"asc" | "desc">;
 };
 
 export class SyndicusQuery extends Query<SyndicusQueryParameters, Syndicus> {

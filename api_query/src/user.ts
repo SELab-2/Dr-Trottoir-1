@@ -15,7 +15,7 @@ export type UserQueryParameters = {
     name: string;
     region_id: number;
     sort: string[];
-    ord: string[];
+    ord: Array<"asc" | "desc">;
 };
 
 export class UserQuery extends Query<UserQueryParameters, User> {

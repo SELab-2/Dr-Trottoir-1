@@ -6,7 +6,7 @@ export type RoundQueryParameters = {
     skip: number;
     name: string;
     sort: string[];
-    ord: string[];
+    ord: Array<"asc" | "desc">;
 };
 
 export class RoundQuery extends Query<RoundQueryParameters, Round> {

@@ -12,7 +12,7 @@ export type ScheduleQueryParameters = {
     user_name: string;
     round: string;
     sort: string[];
-    ord: string[];
+    ord: Array<"asc" | "desc">;
 };
 
 export class ScheduleQuery extends Query<ScheduleQueryParameters, Schedule> {

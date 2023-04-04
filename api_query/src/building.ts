@@ -9,7 +9,7 @@ export type BuildingQueryParameters = {
     syndicus_id: number;
     deleted: boolean;
     sort: string[];
-    ord: string[];
+    ord: Array<"asc" | "desc">;
 };
 
 export class BuildingQuery extends Query<BuildingQueryParameters, Building> {

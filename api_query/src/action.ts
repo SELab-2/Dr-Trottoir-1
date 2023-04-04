@@ -6,7 +6,7 @@ export type ActionQueryParameters = {
     skip: number;
     description: string;
     sort: string[];
-    ord: string[];
+    ord: Array<"asc" | "desc">;
 };
 
 export class ActionQuery extends Query<ActionQueryParameters, Action> {
