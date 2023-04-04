@@ -13,21 +13,22 @@ const router = express.Router();
 //Auth for a post request: only admin and super_student can make post request
 const isAuthPost = (req: Request, res: Response, next: NextFunction) => {
   const { user } = req;
-  if (process.env.DISABLE_AUTH === "false" && (!user || user.student)) {
-     throw new APIError(APIErrorCode.FORBIDDEN);
+  if (process.env.DISABLE_AUTH === "false" && user && (user.super_student || user.admin || user.syndicus)) {
+    next();
+  } else {
+    throw new APIError(APIErrorCode.FORBIDDEN);
   }
-  next();
 };
 
 //Auth for get request: you have to be a user to make a get request
 const isAuthGet = (req: Request, res: Response, next: NextFunction) => {
   const { user } = req;
-  if (process.env.DISABLE_AUTH === "false" && (!user)) {
+  if (process.env.DISABLE_AUTH === "false" && !user) {
      throw new APIError(APIErrorCode.FORBIDDEN);
   }
   next();
 };
-
+ 
 //create multer object (get request will download the file)
 //(multer saves files to direcotry files, with random name)
 // const fileUpload = multer({
