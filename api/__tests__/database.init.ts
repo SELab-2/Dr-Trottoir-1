@@ -11,11 +11,11 @@ export async function initialiseDatabase() {
     await initialiseAddress();
     await initialiseUser();
     await initialiseUserRegion();
+    await initialiseSyndicus();
     await initialiseFile();
     await initialiseImage();
     await initialiseBuilding();
     await initialiseBuildingImages();
-    await initialiseSyndicus();
     await initialiseAction();
     await initialiseGarbage();
     await initialiseRound();
@@ -29,9 +29,15 @@ export async function initialiseDatabase() {
  * Deletes all data from the database, preserving the schema
  */
 export async function deleteDatabaseData() {
-    await prisma.region.deleteMany({});
-    await prisma.user.deleteMany({});
-    await prisma.userRegion.deleteMany({});
+    await prisma.region.deleteMany({});     // automatically deletes UserRegion entries
+    await prisma.user.deleteMany({});       // automatically deletes Syndicus and Schedule entries
+    await prisma.file.deleteMany({});
+    await prisma.image.deleteMany({});
+    await prisma.building.deleteMany({});   // automatically deletes other table entries
+    await prisma.address.deleteMany({});
+    await prisma.action.deleteMany({});
+    await prisma.round.deleteMany({});      // automatically deletes RoundBuilding and Schedule entries
+
 }
 
 async function initialiseRegion() {
