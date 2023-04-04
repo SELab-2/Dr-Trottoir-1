@@ -3,6 +3,9 @@ import { prisma } from "../src/prisma";
 import crypto from "crypto";
 import { FileLocation, ProgressImageType } from "@selab-2/groep-1-orm";
 
+/**
+ * Assuming the schema is loaded in, fills the database
+ */
 export async function initialiseDatabase() {
     await initialiseRegion();
     await initialiseAddress();
@@ -22,24 +25,31 @@ export async function initialiseDatabase() {
     await initialiseProgressImage();
 }
 
+/**
+ * Deletes all data from the database, preserving the schema
+ */
+export async function deleteDatabaseData() {
+    await prisma.region.deleteMany({});
+    await prisma.user.deleteMany({});
+    await prisma.userRegion.deleteMany({});
+}
+
 async function initialiseRegion() {
     const region1 = {
         name: "Region 1",
-        deleted: false,
     };
 
     const region2 = {
         name: "Region 2",
-        deleted: false,
     };
 
     const region3 = {
         name: "Region 3",
-        deleted: false,
     };
 
     await prisma.region.createMany({
         data: [region1, region2, region3],
+        skipDuplicates: true,
     });
 }
 

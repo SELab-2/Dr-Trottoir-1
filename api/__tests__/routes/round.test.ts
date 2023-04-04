@@ -3,7 +3,7 @@ import { obtainSession } from "../util";
 import supertest from "supertest";
 import { Prisma } from "@selab-2/groep-1-orm";
 import { prisma } from "../../src/prisma";
-import { initialiseDatabase } from "../database.init";
+import { deleteDatabaseData, initialiseDatabase } from "../database.init";
 
 // setup the database with mock fields
 beforeAll(async () => {});
@@ -12,13 +12,9 @@ describe("Succesful tests", () => {
     let session: supertest.SuperTest<any>;
     beforeAll(async () => {
         // delete all data
-        await prisma.$executeRaw(
-            Prisma.sql`select 'truncate table \"' || tablename || '\" cascade;' from pg_tables;\n`,
-        );
-
-        // load new data
+        await deleteDatabaseData();
+        // load fresh data
         await initialiseDatabase();
-
         session = await obtainSession();
     });
 
