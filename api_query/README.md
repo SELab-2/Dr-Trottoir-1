@@ -18,7 +18,7 @@ We publiceren deze _query builder_ als `@selab-2/groep-1-orm` in de GitHub NPM p
 npm install @selab-2/groep-1-query@MAJOR.MINOR.PATCH
 ```
 
-Je dient de `API_SERVER_ADDRESS` _environment variabel_ in te stellen met de URL van de server, bijvoorbeeld `http://localhost:8080`.
+Je dient de `API_SERVER_ADDRESS` _environment variabel_ in te stellen met de URL van de server, bijvoorbeeld `http://localhost:8080/`.
 
 ## Werking
 

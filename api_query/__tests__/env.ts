@@ -1,3 +1,3 @@
-process.env.API_SERVER_ADDRESS = "http://localhost:8080/";
+process.env.API_SERVER_ADDRESS = "/";
 
 export {};
