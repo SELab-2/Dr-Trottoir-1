@@ -9,10 +9,11 @@ import { APIError } from "./api_error";
 export abstract class Query<Parameters, Result> {
     // Endpoint van dit model in onze API.
     abstract endpoint: string;
+    server = process.env["API_SERVER_ADDRESS"];
 
     // Geef de resulterende URL voor een query op basis van gegeven parameters.
     url(query: Partial<Parameters>): string {
-        let url = "/" + this.endpoint + "?";
+        let url = this.server + this.endpoint + "?";
 
         for (const [key, value] of Object.entries(query)) {
             if (value instanceof Date) {
@@ -30,37 +31,45 @@ export abstract class Query<Parameters, Result> {
     // Verkrijg een element per identifier.
     async executeOne(id: number): Promise<Result | APIError> {
         if (Number.isNaN(id)) {
-            throw new Error("Invalid Query");
+            return { code: 400, message: "Bad Request" };
         }
 
-        const url = "/" + this.endpoint + "/" + id;
-        const res = await fetch(url);
-        const json = await res.json();
+        try {
+            const url = this.server + this.endpoint + "/" + id;
+            const res = await fetch(url);
+            const json = await res.json();
 
-        if (!res.ok) {
-            return {
-                code: res.status,
-                message: json["message"] ?? "Unknown",
-            } satisfies APIError;
+            if (!res.ok) {
+                return {
+                    code: res.status,
+                    message: json["message"] ?? "Unknown",
+                } satisfies APIError;
+            }
+
+            return json;
+        } catch (e) {
+            return { code: 503, message: "Service Unavailable" }
         }
-
-        return json;
     }
 
     // Verkrijg alle resultaten die voldoen aan de parameters.
     async execute(
         query: Partial<Parameters>,
     ): Promise<Array<Result> | APIError> {
-        const res = await fetch(this.url(query));
-        const json = await res.json();
+        try {
+            const res = await fetch(this.url(query));
+            const json = await res.json();
 
-        if (!res.ok) {
-            return {
-                code: res.status,
-                message: json["message"] ?? "Unknown",
-            } satisfies APIError;
+            if (!res.ok) {
+                return {
+                    code: res.status,
+                    message: json["message"] ?? "Unknown",
+                } satisfies APIError;
+            }
+
+            return json;
+        } catch (e) {
+            return { code: 503, message: "Service Unavailable" }
         }
-
-        return json;
     }
 }

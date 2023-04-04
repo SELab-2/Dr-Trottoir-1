@@ -1,4 +1,6 @@
 {
     "preset": "ts-jest",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupFiles": ["<rootDir>/__tests__/env.ts"],
+    "testMatch": ["<rootDir>/__tests__/*.test.ts"]
 }
