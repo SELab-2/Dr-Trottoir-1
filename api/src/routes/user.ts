@@ -96,7 +96,7 @@ export class UserRouting extends Routing {
         // We kiezen een willekeurige salt, berekenen de hash-waarde, en slaan
         // deze tenslotte op in hun corresponderende velden.
         const user: User = req.body;
-        user.salt = crypto.randomBytes(32).toString();
+        user.salt = crypto.randomBytes(32).toString("hex");
         user.hash = crypto
             .createHash("sha256")
             .update(req.body.password + user.salt)

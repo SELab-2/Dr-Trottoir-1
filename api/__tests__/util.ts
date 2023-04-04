@@ -2,10 +2,10 @@
 import request from "supertest";
 // @ts-ignore
 import supertest from "supertest";
-import app from "../../src/main";
+import app from "../src/main";
 import assert = require("assert");
 
-export async function obtainSession(): Promise<[supertest.SuperTest<[any]>]> {
+export async function obtainSession(): Promise<supertest.SuperTest<any>> {
     const session = request(app);
     const login = await session.post("/auth/login").send({
         username: "administrator@trottoir.be",
@@ -16,5 +16,5 @@ export async function obtainSession(): Promise<[supertest.SuperTest<[any]>]> {
     assert(login.status === 302);
     assert(login.headers["set-cookie"]);
 
-    return [session];
+    return session;
 }

@@ -1,11 +1,24 @@
-import app from "../../src/main";
-import { obtainSession } from "./util";
+import { obtainSession } from "../util";
 // @ts-ignore
 import supertest from "supertest";
+import { Prisma } from "@selab-2/groep-1-orm";
+import { prisma } from "../../src/prisma";
+import { initialiseDatabase } from "../database.init";
+
+// setup the database with mock fields
+beforeAll(async () => {});
 
 describe("Succesful tests", () => {
     let session: supertest.SuperTest<any>;
     beforeAll(async () => {
+        // delete all data
+        await prisma.$executeRaw(
+            Prisma.sql`select 'truncate table \"' || tablename || '\" cascade;' from pg_tables;\n`,
+        );
+
+        // load new data
+        await initialiseDatabase();
+
         session = await obtainSession();
     });
 
@@ -28,5 +41,7 @@ describe("Unsuccessful tests", () => {
 
     test("Add a non-existent building to the round", () => {});
 
-    test("", () => {});
+    test("Student attempt to create a round", () => {});
+    test("Student attempt to alter a round", () => {});
+    test("Student attempt to delete a round", () => {});
 });
