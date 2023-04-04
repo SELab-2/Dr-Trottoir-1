@@ -59,7 +59,7 @@ docker compose --file=developer-compose.yml down
 De diensten zijn lokaal beschikbaar op volgende adressen:
 | Dienst   | Adres(:poort) |
 |----------|---------------|
-| Databank | 10.0.0.3:2002 |
+| Databank | 10.0.0.3:5432 |
 | ImgProxy | 10.0.0.4:8081 |
 | API      | 10.0.0.5:8080 |
 | Frontend | 10.0.0.6:3000 |
