@@ -89,6 +89,6 @@ export class Routes implements TableEntity<Routes> {
   }
 
   route(): string {
-    throw new Error("Route does not exist.");
+    return `/ronde/${this.id}`; 
   }
 }
