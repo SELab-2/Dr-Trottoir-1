@@ -33,17 +33,17 @@
 </template>
 
 <script lang="ts" setup>
-import RoundedButton from "@/components/RoundedButton.vue";
+import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import router from "@/router";
 
 const isSyndicus = true;
 
 function toEdit() {
-  router.push("/dashboard/gebouwen/nieuw");
+  router.push({ name: "building_new" });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const props = defineProps({
+defineProps({
   id: String,
 });
 </script>

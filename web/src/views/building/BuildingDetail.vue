@@ -17,7 +17,14 @@
     <div v-else>
       <div class="centre px-4 mb-4">
         <h2>Bezoek ({{ formatDate(selectedDate) }})</h2>
-        <button @click="router.push('/account/2/false')">
+        <button
+          @click="
+            router.push({
+              name: 'account_id',
+              params: { id: 2, isadmin: 'false' },
+            })
+          "
+        >
           <Avatar :name="get().student" size="40" />
           {{ get().student }}
         </button>
@@ -55,8 +62,8 @@
 </template>
 
 <script lang="ts" setup>
-import BuildingData from "@/components/BuildingData.vue";
-import ImageCard from "@/components/ImageCard.vue";
+import BuildingData from "@/components/building/BuildingData.vue";
+import ImageCard from "@/components/cards/ImageCard.vue";
 import Avatar from "@/components/Avatar.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -79,7 +86,7 @@ function get(): any {
 
 function change() {
   router.push({
-    name: "Gebouw detail",
+    name: "building_id_detail",
     params: { id: props.id, date: formatDate(selectedDate.value) },
   });
 }

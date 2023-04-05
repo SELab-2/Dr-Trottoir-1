@@ -86,7 +86,7 @@ const comments = ref<Boolean>(false);
 function atClick(date: string) {
   if (props.building) {
     router.push({
-      name: "Gebouw detail",
+      name: "building_id_detail",
       params: { id: props.building.id, date: date },
     });
   }
