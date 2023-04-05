@@ -181,9 +181,7 @@ describe("Unsuccessful tests", () => {
 
     // Deze test probeert de id's van user te wijzigen naar onbestaande id's
     test("Test changing id to unexisting id", async () => {
-        let res = await session
-            .get("/user/0")
-            .set("Cookie", [cookies]);
+        let res = await session.get("/user/0").set("Cookie", [cookies]);
         expect(res.status).toEqual(404);
         expect(res.notFound).toEqual(true);
 
