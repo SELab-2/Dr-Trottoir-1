@@ -1,36 +1,23 @@
 import { createRouter, createWebHistory } from "vue-router";
-
-// General Pages
 import LoginScreen from "@/views/account/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
-
-// Account Pages
 import AccountSettings from "@/views/account/AccountSettings.vue";
 import UserCreation from "@/views/account/UserCreation.vue";
-
-// Student Pages
 import SchedulingScreenStudent from "@/views/student/SchedulingScreenStudents.vue";
-
-// Round Pages
 import RoundFollowup from "@/views/round/RoundFollowup.vue";
 import RoundMaker from "@/views/round/RoundMaker.vue";
 import RoundDetail from "@/views/round/RoundDetail.vue";
 import RoundPlanner from "@/views/round/RoundPlanner.vue";
-
-// Building Pages
 import BuildingMaker from "@/views/building/BuildingMaker.vue";
 import BuildingDetail from "@/views/building/BuildingDetail.vue";
 import BuildingScreen from "@/views/building/BuildingScreen.vue";
 import BuildingFollowup from "@/views/building/BuildingFollowup.vue";
 import GarbageMaker from "@/views/building/GarbageMaker.vue";
-
-// Dashboard Pages
 import UserOverview from "@/views/dashboard/Users.vue";
 import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
 
 const routes = [
-  // General
   {
     path: "/",
     component: LoginScreen,
@@ -41,7 +28,6 @@ const routes = [
     name: "dashboard",
     component: MainLayout,
     children: [
-      //Account
       {
         // TODO: isadmin should be removed when authentication is in order
         path: "/account/settings/:id/:isadmin",
@@ -52,8 +38,6 @@ const routes = [
           title: "",
         },
       },
-
-      // Student
       {
         path: "/planning",
         name: "student_planning",
@@ -62,8 +46,6 @@ const routes = [
           title: "Planning student",
         },
       },
-
-      // Round
       {
         path: "/ronde/overzicht",
         name: "round_followup",
@@ -96,8 +78,6 @@ const routes = [
           title: "Ronde maken",
         },
       },
-
-      // Building
       {
         path: "/gebouw/:id",
         name: "building_id",
@@ -107,14 +87,12 @@ const routes = [
           title: "",
         },
       },
-
       {
         path: "/gebouw/:id/:date",
         name: "building_id_detail",
         component: BuildingDetail,
         props: true,
       },
-
       {
         path: "/gebouw/nieuw",
         name: "building_new",
@@ -136,8 +114,6 @@ const routes = [
         name: "garbage_plan",
         component: GarbageMaker,
       },
-
-      // Routes for the dashboard
       {
         path: "gebruikers",
         component: UserOverview,
