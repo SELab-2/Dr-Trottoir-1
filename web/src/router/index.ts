@@ -24,9 +24,8 @@ const routes = [
     name: "login",
   },
   {
-    path: "/dashboard",
-    name: "dashboard",
     component: MainLayout,
+    path: "/", // Unreachable, as intended.
     children: [
       {
         // TODO: isadmin should be removed when authentication is in order
@@ -37,6 +36,7 @@ const routes = [
         meta: {
           title: "",
         },
+
       },
       {
         path: "/planning",
@@ -71,7 +71,7 @@ const routes = [
         },
       },
       {
-        path: "ronde/nieuw",
+        path: "/ronde/nieuw",
         name: "round_new",
         component: RoundMaker,
         meta: {
@@ -115,7 +115,7 @@ const routes = [
         component: GarbageMaker,
       },
       {
-        path: "gebruikers",
+        path: "/account",
         component: UserOverview,
         name: "user_overview",
         meta: {
@@ -123,7 +123,7 @@ const routes = [
         },
       },
       {
-        path: "gebruikers/nieuw",
+        path: "/account/nieuw",
         name: "user_new",
         component: UserCreation,
         meta: {
@@ -131,7 +131,7 @@ const routes = [
         },
       },
       {
-        path: "gebouwen",
+        path: "/gebouw",
         component: BuildingOverview,
         name: "building_overview",
         meta: {
@@ -139,7 +139,7 @@ const routes = [
         },
       },
       {
-        path: "rondes",
+        path: "/ronde",
         component: RoundOverview,
         name: "round_overview",
         meta: {
