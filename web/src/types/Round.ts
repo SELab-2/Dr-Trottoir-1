@@ -89,6 +89,6 @@ export class Routes implements TableEntity<Routes> {
   }
 
   route(): string {
-    return `/ronde/${this.id}`; 
+    return `/ronde/${this.id}`;
   }
 }
