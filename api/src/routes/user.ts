@@ -161,7 +161,6 @@ export class UserRouting extends Routing {
                 select: UserRouting.selects,
             });
         }
-
         return res.status(200).json({});
     }
 }
