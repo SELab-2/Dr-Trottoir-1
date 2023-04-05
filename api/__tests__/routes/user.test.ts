@@ -1,8 +1,7 @@
 import app from "../../src/main";
-// @ts-ignore
-import request from "supertest";
-// @ts-ignore
 import supertest from "supertest";
+import request from "supertest";
+import { describe, expect, test } from "@jest/globals";
 
 // De gebruiker die voor het uitvoeren van de testen toegevoegd en verwijderd zal worden aan de databank.
 const userToCreate = {
@@ -65,7 +64,9 @@ process.env["DISABLE_AUTH"] = "false";
 
 // Voor de testen uitgevoerd worden, moet de sessie gestart worden en moet autorisatie verkregen en bewaard worden.
 // Daarnaast moeten bepaalde waarden aan de databank toegevoegd worden die gebruikt zullen worden in de testen.
-async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
+async function prepareSession(): Promise<
+    [supertest.SuperTest<supertest.Test>, string]
+> {
     // Sessie starten en inloggen om autorisatie te krijgen
     const session = request(app);
     const resultLogin = await session.post("/auth/login").send({
@@ -92,7 +93,7 @@ async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
 }
 
 async function closeSession(
-    session: supertest.SuperTest<any>,
+    session: supertest.SuperTest<supertest.Test>,
     cookies: string,
 ) {
     const resultDelete = await session
@@ -103,7 +104,7 @@ async function closeSession(
 }
 
 describe("Test UserRouting successful requests", () => {
-    let session: any;
+    let session: supertest.SuperTest<supertest.Test>;
     let cookies: string;
 
     beforeAll(async () => {
@@ -164,7 +165,7 @@ describe("Test UserRouting successful requests", () => {
 });
 
 describe("Test UserRouting unsuccessful requests", () => {
-    let session: any;
+    let session: supertest.SuperTest<supertest.Test>;
     let cookies: string;
 
     beforeAll(async () => {
