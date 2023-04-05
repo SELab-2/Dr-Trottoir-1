@@ -2,6 +2,17 @@
 
 # exit 1 => Could not enter orm directory
 # exit 2 => Could not enter mock directory
+ONLY_SCHEMA=0
+while getopts ":s" option; do
+    case $option in
+        s) # schema
+            ONLY_SCHEMA=1
+            ;;
+        *)
+            ;;
+    esac
+done
+
 
 # set the DB schema
 cd ../orm || exit 1
@@ -13,6 +24,11 @@ fi
 cp ../server/developer.env .env
 npm install
 npx prisma db push
+
+if [ $ONLY_SCHEMA -eq 1 ]; then
+    exit
+fi
+
 
 # load the mock data
 cd ../mock || exit 2
