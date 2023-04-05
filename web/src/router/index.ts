@@ -36,7 +36,6 @@ const routes = [
         meta: {
           title: "",
         },
-
       },
       {
         path: "/planning",

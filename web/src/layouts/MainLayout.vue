@@ -210,13 +210,14 @@ function roles(): string {
   return str;
 }
 
-const threasholdWidth: number = 750;
-// permanentdrawer
-const permanentDrawer = ref<Boolean>(window.innerWidth > threasholdWidth);
-function onResize() {
-  permanentDrawer.value = window.innerWidth > threasholdWidth;
-}
-window.addEventListener("resize", onResize);
+const thresholdWidth: number = 750;
+
+const permanentDrawer = ref<Boolean>(window.innerWidth > thresholdWidth);
+
+window.addEventListener(
+  "resize",
+  () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
+);
 </script>
 
 <style lang="scss">
