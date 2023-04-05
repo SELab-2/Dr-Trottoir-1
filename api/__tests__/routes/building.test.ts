@@ -1,7 +1,6 @@
 import app from "../../src/main";
-// @ts-ignore
 import request from "supertest";
-// @ts-ignore
+import { describe, expect, test } from "@jest/globals";
 import supertest from "supertest";
 
 const buildingToCreate = {

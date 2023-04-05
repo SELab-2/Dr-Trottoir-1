@@ -1,8 +1,7 @@
 import app from "../../src/main";
-// @ts-ignore
 import request from "supertest";
-// @ts-ignore
 import supertest from "supertest";
+import { describe, expect, test } from "@jest/globals";
 
 // Schedule die toegevoegd zal worden om mee te werken bij de testen
 const scheduleToCreate = {

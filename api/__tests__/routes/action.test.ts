@@ -1,6 +1,7 @@
 import app from "../../src/main";
-// @ts-ignore
 import request from "supertest";
+import { describe, expect, test } from "@jest/globals";
+import supertest from "supertest";
 
 /*
 Deze testen controleren dat de route de juiste statuscodes geeft bij het uitvoeren van een geldig request
@@ -10,7 +11,7 @@ door entries die uit de databank verwijderd zijn. De data waarmee gewerkt wordt,
 aanwezig zijn. Deze data wordt op het einde van de test weer verwijderd uit de databank.
  */
 describe("Test ActionRouting successful requests", () => {
-    let session: any;
+    let session: supertest.SuperTest<supertest.Test>;
     let cookies: string;
 
     // Voor elke test wordt een sessie gestart, wordt er ingelogd om autorisatie te krijgen en
