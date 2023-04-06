@@ -6,26 +6,33 @@ De client side van dit project is een applicatie geschreven in het [Vue](https:/
 
 ## Uitvoeren
 
-We maken gebruik van [npm](https://www.npmjs.com/) voor het compileren en uitvoeren van de code. Door het uitvoeren van... 
+We maken gebruik van [npm](https://www.npmjs.com/) voor het compileren en uitvoeren van de code. Door het uitvoeren van...
+
 ```bash
 npm install
 ```
+
 ...in de `/web` map zal npm de nodige module's en packages installeren.
 
 ### Compileren en uitvoeren voor development
 
 We kunnen nu de web applicatie opstarten voor development.
+
 ```bash
 npm run dev
 ```
+
 Dit start normaal een [Vite](https://vitejs.dev/) server op het lokaal address [http://localhost:3000/](http://localhost:3000/).
 De vite server zorgt ervoor dat de applicatie uitgevoerd wordt.
 
 De applicatie kan ook simpelweg gebuild worden zonder uit te voeren op een Vite server.
+
 ```bash
 npm run build
 ```
+
 Om zeker te zijn dat er geen build error's aanwezig zijn gebruik je `npm run build`.
+
 ### Linting
 
 De linter toont error's en warnings in de code. Hiernaast wordt de code herschikt naar de stijl standaard van de linter.
@@ -92,15 +99,13 @@ VUE_APP_IMGPROXY_ROOT=<string>
 
 Je hoeft zelf geen beeldverwerking toe te passen bij het uploaden van afbeeldingen, want dit gebeurt als het ware _just in time_ bij het downloaden.
 
-
-
 ### Router
 
 Nieuwe pagina's worden teogevoegd in `/web/src/router/index.ts`. Hierbij zijn er 2 aandachtspunten.
 
 1. Als een pagina gebruik wilt maken van de algemene layout moet het als kind worden toegevoegd aan de `MainLayout`.
 2. Bij het gebruik van de algemene layout, dient er een titel opgegeven te worden in het `meta.title` veld.
-Deze titel wordt dan in de topbar van de algemene layout gerenderd.
+   Deze titel wordt dan in de topbar van de algemene layout gerenderd.
 
 ```ts
 const routes = [
@@ -170,7 +175,7 @@ export abstract class Header<T> {
   order: "asc" | "desc" | null = null;
 
   // TODO: replace with API call.
-  // Sorts an array of T's using this specific field. 
+  // Sorts an array of T's using this specific field.
   sort(elements: Array<T>) {
     let flip = 1;
 
@@ -190,6 +195,7 @@ export abstract class Header<T> {
 
 Tenslotte dient een klasse wiens objecten we wensen weer te geven ook te voldoen aan het protocol `TableEntity<T>`. Dit komt in essentie overeen met een functie die alle vereiste kolommen specificeert, een lijst van `Header<T>` objecten dus.
 Een implementatie hiervan is terug te vinden in `/web/src/types/User.ts`.
+
 ```typescript
 export abstract class TableEntity<T> {
   abstract headers(): Array<Header<T>>;
@@ -210,5 +216,6 @@ import { User } from "@/types/User";
 ```
 
 ### Query builder
+
 Er kan vanuit de frontend eenvoudig geïntrageerd worden met de API doormiddel van de [query builder](http://exaple.com).
 TODO: fix link zodra query builder op develop staat.
