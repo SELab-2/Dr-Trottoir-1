@@ -9,7 +9,7 @@ import { APIError } from "./api_error";
 export abstract class Query<Parameters, Result> {
     // Endpoint van dit model in onze API.
     abstract endpoint: string;
-    server = process.env["API_SERVER_ADDRESS"];
+    server = process.env["API_SERVER_ADDRESS"] ?? process.env["VUE_APP_API_SERVER_ADDRESS"] ?? "";
 
     // Geef de resulterende URL voor een query op basis van gegeven parameters.
     url(query: Partial<Parameters>): string {
@@ -18,7 +18,7 @@ export abstract class Query<Parameters, Result> {
         for (const [key, value] of Object.entries(query)) {
             if (value instanceof Date) {
                 url += `${key}=${value.toISOString()}&`;
-            } else if (value instanceof Array<string>) {
+            } else if (value instanceof Array) {
                 url += `${key}=${value.join(",")}&`;
             } else {
                 url += `${key}=${value}&`;
@@ -43,7 +43,7 @@ export abstract class Query<Parameters, Result> {
                 return {
                     code: res.status,
                     message: json["message"] ?? "Unknown",
-                } satisfies APIError;
+                };
             }
 
             return json;
@@ -64,7 +64,7 @@ export abstract class Query<Parameters, Result> {
                 return {
                     code: res.status,
                     message: json["message"] ?? "Unknown",
-                } satisfies APIError;
+                };
             }
 
             return json;
