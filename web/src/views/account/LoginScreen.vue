@@ -34,7 +34,11 @@
           </span>
         </p>
         <!-- Login button -->
-        <v-btn prepend-icon="mdi-login" color="success" to="/planning"
+        <!-- TODO: should link to correct page for which user authenticated, now default student  -->
+        <v-btn
+          prepend-icon="mdi-login"
+          color="success"
+          :to="{ name: 'student_planning' }"
           >Login</v-btn
         >
       </div>

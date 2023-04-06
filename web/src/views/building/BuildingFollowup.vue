@@ -20,11 +20,11 @@
 </template>
 
 <script lang="ts" setup>
-import LargeFilter from "@/components/LargeFilter.vue";
-import Filterdata from "@/components/models/Filterdata";
+import LargeFilter from "@/components/filter/LargeFilter.vue";
+import Filterdata from "@/components/filter/FilterData";
 import { ref } from "vue";
 import { createDate, formatDate } from "@/assets/scripts/date";
-import BuildingCard from "@/components/BuildingCard.vue";
+import BuildingCard from "@/components/building/BuildingCard.vue";
 
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
 const filter_options = ["Opmerkingen"];

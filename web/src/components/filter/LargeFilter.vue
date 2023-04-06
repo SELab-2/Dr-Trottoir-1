@@ -8,10 +8,7 @@
       <v-text-field
         :label="search_placeholder()"
         v-model="filter_data.query"
-        @update:model-value="
-          help(filter_data.query);
-          $emit('onUpdate', filter_data);
-        "
+        @update:model-value="$emit('onUpdate', filter_data)"
         variant="underlined"
       />
     </template>
@@ -125,7 +122,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import Filterdata from "@/components/models/Filterdata";
+import FilterData from "@/components/filter/FilterData";
 import { formatDate } from "@/assets/scripts/date";
 
 // The filter data is emitted with the 'onUpdate' tag
@@ -172,7 +169,7 @@ const s_day = ref<string>(props.start_date.toISOString().substring(0, 10));
 const e_day = ref<string>(props.end_date.toISOString().substring(0, 10));
 
 // The filter data is emitted with the 'onUpdate' tag
-const filter_data = ref<Filterdata>({
+const filter_data = ref<FilterData>({
   // The search querry in the main search bar
   query: "",
   // The selcted value to seach by
@@ -187,9 +184,4 @@ const filter_data = ref<Filterdata>({
   start_day: formatDate(props.start_date),
   end_day: formatDate(props.end_date),
 });
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function help(thing: any) {
-  //console.log(thing);
-}
 </script>

@@ -109,10 +109,10 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import MultiAddImage from "@/components/MultiAddImage.vue";
+import MultiAddImage from "@/components/images/MultiAddImage.vue";
 import Address2 from "@/components/models/Address2";
 import Building from "@/components/models/Building";
-import AddressForm from "../components/AddressForm.vue";
+import AddressForm from "../../components/forms/AddressForm.vue";
 //import defaultImg from "../assets/images/defaultImage.png";
 
 const dummyMap = ref(null);

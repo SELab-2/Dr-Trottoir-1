@@ -184,9 +184,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import ContactForm from "@/components/ContactForm.vue";
+import ContactForm from "@/components/forms/ContactForm.vue";
 import Address from "@/components/models/Address";
-import AddressFrom from "@/components/AddressForm.vue";
+import AddressFrom from "@/components/forms/AddressForm.vue";
 import Contact from "@/components/models/Contact";
 import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
