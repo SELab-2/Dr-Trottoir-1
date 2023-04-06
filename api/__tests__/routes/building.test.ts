@@ -23,6 +23,7 @@ const building = {
     address: undefined,
     manual: {
         id: 1,
+        name: "dummy.pdf",
         path: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         location: "EXTERNAL",
     },
