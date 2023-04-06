@@ -1,7 +1,7 @@
 import { prisma } from "../src/prisma";
 // @ts-ignore
 import crypto from "crypto";
-import { FileLocation, ProgressImageType } from "@selab-2/groep-1-orm";
+import { FileLocation, Prisma, ProgressImageType } from "@selab-2/groep-1-orm";
 
 /**
  * Assuming the schema is loaded in, fills the database
@@ -10,34 +10,35 @@ export async function initialiseDatabase() {
     await initialiseRegion();
     await initialiseAddress();
     await initialiseUser();
-    await initialiseUserRegion();
-    await initialiseSyndicus();
-    await initialiseFile();
-    await initialiseImage();
-    await initialiseBuilding();
-    await initialiseBuildingImages();
-    await initialiseAction();
-    await initialiseGarbage();
-    await initialiseRound();
-    await initialiseRoundBuilding();
-    await initialiseSchedule();
-    await initialiseProgress();
-    await initialiseProgressImage();
+    // await initialiseUserRegion();
+    // await initialiseSyndicus();
+    // await initialiseFile();
+    // await initialiseImage();
+    // await initialiseBuilding();
+    // await initialiseBuildingImages();
+    // await initialiseAction();
+    // await initialiseGarbage();
+    // await initialiseRound();
+    // await initialiseRoundBuilding();
+    // await initialiseSchedule();
+    // await initialiseProgress();
+    // await initialiseProgressImage();
 }
 
 /**
  * Deletes all data from the database, preserving the schema
  */
 export async function deleteDatabaseData() {
-    await prisma.region.deleteMany({});     // automatically deletes UserRegion entries
-    await prisma.user.deleteMany({});       // automatically deletes Syndicus and Schedule entries
-    await prisma.file.deleteMany({});
-    await prisma.image.deleteMany({});
-    await prisma.building.deleteMany({});   // automatically deletes other table entries
-    await prisma.address.deleteMany({});
-    await prisma.action.deleteMany({});
-    await prisma.round.deleteMany({});      // automatically deletes RoundBuilding and Schedule entries
+    const result: Array<{ table_name: string }> = await prisma.$queryRaw(
+        Prisma.sql`SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'`,
+    );
 
+    for (const entry of result) {
+        const table = entry["table_name"];
+        await prisma.$queryRawUnsafe(
+            `TRUNCATE public.${table} RESTART IDENTITY CASCADE`,
+        );
+    }
 }
 
 async function initialiseRegion() {
@@ -100,22 +101,28 @@ async function initialiseUser() {
         .createHash("sha256")
         .update("student" + student_salt)
         .digest("hex");
-    const student = {
-        email: "student@trottoir.be",
-        first_name: "Dirk",
-        last_name: "De Student",
-        date_added: timestamp,
-        last_login: timestamp,
-        phone: "0123456789",
-        address_id: 1,
 
-        student: true,
-        super_student: false,
-        admin: false,
-
-        salt: student_salt,
-        hash: student_hash,
-    };
+    // create student
+    await prisma.user.create({
+        data: {
+            email: "student@trottoir.be",
+            first_name: "Dirk",
+            last_name: "De Student",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "0123456789",
+            student: true,
+            super_student: false,
+            admin: false,
+            salt: student_salt,
+            hash: student_hash,
+            address: {
+                connect: {
+                    id: 1,
+                },
+            },
+        },
+    });
 
     const ss_salt = crypto.randomBytes(32).toString("hex");
     const ss_hash = crypto
@@ -123,69 +130,89 @@ async function initialiseUser() {
         .update("student" + ss_salt)
         .digest("hex");
 
-    const superStudent = {
-        email: "superstudent@trottoir.be",
-        first_name: "Toon",
-        last_name: "De Superstudent",
-        date_added: timestamp,
-        last_login: timestamp,
-        phone: "9876543210",
-        address_id: 2,
+    // create super student
+    await prisma.user.create({
+        data: {
+            email: "superstudent@trottoir.be",
+            first_name: "Toon",
+            last_name: "De Superstudent",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "9876543210",
+            student: false,
+            super_student: true,
+            admin: false,
 
-        student: false,
-        super_student: true,
-        admin: false,
+            salt: ss_salt,
+            hash: ss_hash,
 
-        salt: ss_salt,
-        hash: ss_hash,
-    };
+            address: {
+                connect: {
+                    id: 2,
+                },
+            },
+        },
+    });
 
     const admin_salt = crypto.randomBytes(32).toString("hex");
     const admin_hash = crypto
         .createHash("sha256")
         .update("student" + admin_salt)
         .digest("hex");
-    const admin = {
-        email: "administrator@trottoir.be",
-        first_name: "Mario",
-        last_name: "De Administrator",
-        date_added: timestamp,
-        last_login: timestamp,
-        phone: "6549873210",
-        address_id: 2,
 
-        student: false,
-        super_student: false,
-        admin: true,
+    // create admin
+    await prisma.user.create({
+        data: {
+            email: "administrator@trottoir.be",
+            first_name: "Mario",
+            last_name: "De Administrator",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "6549873210",
 
-        salt: admin_salt,
-        hash: admin_hash,
-    };
+            student: false,
+            super_student: false,
+            admin: true,
 
+            salt: admin_salt,
+            hash: admin_hash,
+
+            address: {
+                connect: {
+                    id: 3,
+                },
+            },
+        },
+    });
+
+    // create syndicus
     const syndicus_salt = crypto.randomBytes(32).toString("hex");
     const syndicus_hash = crypto
         .createHash("sha256")
         .update("syndicus" + syndicus_salt)
         .digest("hex");
-    const syndicus = {
-        email: "syndicus@trottoir.be",
-        first_name: "Simon",
-        last_name: "De Syndicus",
-        date_added: timestamp,
-        last_login: timestamp,
-        phone: "7894561230",
-        address_id: 1,
+    await prisma.user.create({
+        data: {
+            email: "syndicus@trottoir.be",
+            first_name: "Simon",
+            last_name: "De Syndicus",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "7894561230",
 
-        student: false,
-        super_student: false,
-        admin: false,
+            student: false,
+            super_student: false,
+            admin: false,
 
-        salt: syndicus_salt,
-        hash: syndicus_hash,
-    };
+            salt: syndicus_salt,
+            hash: syndicus_hash,
 
-    await prisma.user.createMany({
-        data: [student, superStudent, admin, syndicus],
+            address: {
+                connect: {
+                    id: 3,
+                },
+            },
+        },
     });
 }
 
