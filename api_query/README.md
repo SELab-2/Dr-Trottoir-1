@@ -37,12 +37,18 @@ export abstract class Query<Parameters, Result> {
     url(query: Partial<Parameters>): string;
 
     // Verkrijg een element per identifier.
-    async executeOne(id: number): Promise<Result | APIError>;
+    async getOne(id: number): Promise<Result | APIError>;
 
     // Verkrijg alle resultaten die voldoen aan de parameters.
-    async execute(
-        query: Partial<Parameters>,
+    async getAll(
+        query: Partial<Parameters> = {},
     ): Promise<Array<Result> | APIError>;
+
+    // Update een element.  
+    async updateOne(element: Partial<Result>): Promise<Result | APIError>;
+    
+    // Verwijder een element.
+    async deleteOne(element: Partial<Result>, hard = false): Promise<void | APIError>;
 }
 ```
 
@@ -74,7 +80,7 @@ export class BuildingQuery extends Query<BuildingQueryParameters, Building> {
 Dankzij de `Query::execute` methode kunnen we onmiddelijk onze resultaten verkrijgen.
 
 ```typescript
-const usersOrErr: User[] | APIError = new UserQuery().execute({
+const usersOrErr: User[] | APIError = new UserQuery().getAll({
     take: 0,
     skip: 5,
     added_after: date,
@@ -91,5 +97,5 @@ const usersOrErr: User[] | APIError = new UserQuery().execute({
 Heb je reeds een identifier van een resource, dan kan je deze ook onmiddelijk opvragen.
 
 ```typescript
-const userOrErr: User | APIError = new UserQuery().executeOne(id);
+const userOrErr: User | APIError = new UserQuery().getOne(id);
 ```

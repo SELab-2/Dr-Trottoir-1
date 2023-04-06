@@ -72,7 +72,7 @@ export abstract class Query<Parameters, Result> {
      * HTTP error voorvalt, wordt deze opgevangen en teruggegeven.
      */
     async getAll(
-        query: Partial<Parameters>,
+        query: Partial<Parameters> = {},
     ): Promise<Array<Result> | APIError> {
         try {
             const res = await fetch(this.url(query), {
