@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-4">
+  <HFillWrapper margin="mx-4">
     <v-card class="mt-4" prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
       <v-row class="py-0 my-0">
@@ -97,9 +97,9 @@
 
     <!-- Account creation button -->
     <div class="d-flex flex-row-reverse my-3">
-      <v-btn color="success" prepend-icon="mdi-check"> Maak account</v-btn>
+      <v-btn color="success" prepend-icon="mdi-check" to="settings/0/false"> Maak account</v-btn>
     </div>
-  </div>
+  </HFillWrapper>
 </template>
 
 <script lang="ts" setup>
@@ -108,6 +108,7 @@ import Address from "@/components/models/Address";
 import AddressForm from "@/components/forms/AddressForm.vue";
 import Contact from "@/components/models/Contact";
 import ContactForm from "@/components/forms/ContactForm.vue";
+import HFillWrapper from "@/layouts/hfill/HFillWrapper.vue";
 
 // define the spacing for the input fields
 const spacing: String = "mx-5";
