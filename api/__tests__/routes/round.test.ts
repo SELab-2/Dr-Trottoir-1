@@ -1,26 +1,33 @@
-import { obtainSession } from "../util";
 // @ts-ignore
-import supertest from "supertest";
-import { Prisma } from "@selab-2/groep-1-orm";
-import { prisma } from "../../src/prisma";
-import { deleteDatabaseData, initialiseDatabase } from "../database.init";
+import { Response, supertest } from "supertest";
+import {
+    deleteDatabaseData,
+    initialiseDatabase,
+    restoreTables,
+} from "../database.init";
+import { Testrunner } from "../testrunner";
 
 // setup the database with mock fields
-beforeAll(async () => {});
+beforeAll(async () => {
+    await deleteDatabaseData();
+    await initialiseDatabase();
+});
 
 describe("Succesful tests", () => {
-    let session: supertest.SuperTest<any>;
+    let testRunner: Testrunner;
     beforeAll(async () => {
-        // delete all data
-        await deleteDatabaseData();
-        // load fresh data
-        await initialiseDatabase();
-        session = await obtainSession();
+        testRunner = await Testrunner.newInstance();
     });
 
-    test("Create a new round", () => {});
+    test("Create a new round", async () => {
+        await testRunner.post("/round", { name: "Test round" });
+        await restoreTables("round");
+    });
 
-    test("List all rounds", () => {});
+    test("List all rounds", async () => {
+        const expected = [{}];
+        await testRunner.get("/round", expected);
+    });
 
     test("List details about specific round", () => {});
 
@@ -31,6 +38,10 @@ describe("Succesful tests", () => {
     test("Change the name of the round", () => {});
 
     test("Remove a round", () => {});
+
+    afterAll(() => {
+        testRunner.close();
+    });
 });
 describe("Unsuccessful tests", () => {
     test("Set non-unique name for the round", () => {});

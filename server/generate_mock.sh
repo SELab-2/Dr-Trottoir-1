@@ -15,7 +15,7 @@ done
 
 
 # set the DB schema
-cd ../orm || exit 1
+cd ../orm || >&2 echo "Could not enter orm directory!" && exit 1
 # backup the .env if it exists
 if [[ -f ".env" ]]; then
     cp .env .env.bak
@@ -31,7 +31,7 @@ fi
 
 
 # load the mock data
-cd ../mock || exit 2
+cd ../mock || >&2 echo "Unable to enter the mock directory!" && exit 2
 # backup the .env if it exists
 if [[ -f ".env" ]]; then
     cp .env .env.bak

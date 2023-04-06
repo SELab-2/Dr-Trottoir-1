@@ -6,23 +6,50 @@ import { FileLocation, Prisma, ProgressImageType } from "@selab-2/groep-1-orm";
 /**
  * Assuming the schema is loaded in, fills the database
  */
-export async function initialiseDatabase() {
-    await initialiseRegion();
+
+const initialiseFunctions: { [name: string]: () => Promise<any> } = {
+    address: initialiseAddress,
+    user: initialiseUser,
+    region: initialiseRegion,
+    user_region: initialiseUserRegion,
+    syndicus: initialiseSyndicus,
+    file: initialiseFile,
+    image: initialiseImage,
+    building: initialiseBuilding,
+    building_image: initialiseBuildingImages,
+    action: initialiseAction,
+    garbage: initialiseGarbage,
+    round: initialiseRound,
+    round_building: initialiseRoundBuilding,
+    schedule: initialiseSchedule,
+    progress: initialiseProgress,
+    progress_image: initialiseProgressImage,
+};
+
+export async function initialiseDatabase(): Promise<void> {
     await initialiseAddress();
     await initialiseUser();
-    // await initialiseUserRegion();
-    // await initialiseSyndicus();
-    // await initialiseFile();
-    // await initialiseImage();
-    // await initialiseBuilding();
-    // await initialiseBuildingImages();
-    // await initialiseAction();
-    // await initialiseGarbage();
-    // await initialiseRound();
-    // await initialiseRoundBuilding();
-    // await initialiseSchedule();
-    // await initialiseProgress();
-    // await initialiseProgressImage();
+    await initialiseRegion();
+    await initialiseUserRegion();
+    await initialiseSyndicus();
+    await initialiseFile();
+    await initialiseImage();
+    await initialiseBuilding();
+    await initialiseBuildingImages();
+    await initialiseAction();
+    await initialiseGarbage();
+    await initialiseRound();
+    await initialiseRoundBuilding();
+    await initialiseSchedule();
+    await initialiseProgress();
+    await initialiseProgressImage();
+}
+
+export async function restoreTables(...tables: string[]) {
+    for (const table of tables) {
+        await prisma.$queryRawUnsafe(`TRUNCATE ${table} CASCADE`);
+        await initialiseFunctions[table]();
+    }
 }
 
 /**
@@ -157,7 +184,7 @@ async function initialiseUser() {
     const admin_salt = crypto.randomBytes(32).toString("hex");
     const admin_hash = crypto
         .createHash("sha256")
-        .update("student" + admin_salt)
+        .update("password" + admin_salt)
         .digest("hex");
 
     // create admin
