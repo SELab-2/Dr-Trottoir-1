@@ -12,6 +12,6 @@
   </v-row>
 </template>
 <script setup lang="ts">
-import HFill from "@/components/HFill.vue";
+import HFill from "@/layouts/hfill/HFill.vue";
 defineProps({ margin: { type: String, default: "ma-3" } });
 </script>

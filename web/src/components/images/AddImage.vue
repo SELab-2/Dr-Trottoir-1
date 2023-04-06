@@ -1,44 +1,46 @@
 <template>
-  <div>
-    <v-container>
-      <v-form>
-        <v-row>
-          <v-col cols="3">
-            <!-- preview image -->
-            <v-img
-              cover
-              :src="preview"
-              lazySrc="../../assets/images/defaultImage.png"
-              v-model="preview"
-            ></v-img>
-          </v-col>
-          <v-col>
-            <!-- ask image -->
-            <v-file-input
-              single
-              v-model="image"
-              label="Select Image"
-              accept="image/*"
-              prepend-inner-icon="mdi-image"
-              prepend-icon=""
-              @change="previewImage"
-            ></v-file-input>
-            <v-textarea
-              label="Comments"
-              rows="3"
-              v-model="comments"
-            ></v-textarea>
-            <v-text-field label="Image Label" v-model="label"></v-text-field>
-          </v-col>
-        </v-row>
-        <!--
-        <div class="d-flex justify-end">
-          <v-btn @click="submit">Afbeelding toevoegen</v-btn>
-        </div>
-        -->
-      </v-form>
-    </v-container>
-  </div>
+  <v-card class="ma-1">
+    <!-- preview image -->
+    <v-img
+      cover
+      :src="preview"
+      lazySrc="@/assets/images/defaultImage.png"
+      v-model="preview"
+      max-height="300px"
+    >
+      <v-toolbar color="rgba(0, 0, 0, 0)" class="mt-2 pt-2">
+        <template v-slot:append>
+          <v-file-input
+            single
+            v-model="image"
+            accept="image/*"
+            prepend-icon=""
+            prepend-inner-icon="mdi-image"
+            append-inner-icon="mdi-upload"
+            @change="previewImage"
+            variant="solo"
+          />
+        </template>
+      </v-toolbar>
+    </v-img>
+    <v-textarea
+      label="Commentaar"
+      rows="3"
+      v-model="comments"
+      class="mx-4 mt-3"
+    />
+
+    <v-card-actions>
+      <v-btn
+        @click="$emit('delete', id)"
+        v-show="id != 0"
+        color="error"
+        prepend-icon="mdi-delete"
+      >
+        Verwijder afbeelding
+      </v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -46,11 +48,10 @@
 //   name: "HelpView",
 // };
 import { ref } from "vue";
-
 const preview = ref("");
 const image = ref([]);
-const label = ref("");
 const comments = ref("");
+defineProps({ id: { type: Number, require: true } });
 // function to preview image
 //TODO: type warning
 const previewImage = () => {
