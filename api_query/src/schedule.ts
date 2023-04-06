@@ -8,7 +8,7 @@ export type ScheduleQueryParameters = {
     before: Date;
     after: Date;
     user_id: number;
-    rounded_id: number;
+    round_id: number;
     user_name: string;
     round: string;
     sort: string[];

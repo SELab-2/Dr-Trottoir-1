@@ -44,11 +44,14 @@ export abstract class Query<Parameters, Result> {
         query: Partial<Parameters> = {},
     ): Promise<Array<Result> | APIError>;
 
-    // Update een element.  
+    // Update een element.
     async updateOne(element: Partial<Result>): Promise<Result | APIError>;
-    
+
     // Verwijder een element.
-    async deleteOne(element: Partial<Result>, hard = false): Promise<void | APIError>;
+    async deleteOne(
+        element: Partial<Result>,
+        hard = false,
+    ): Promise<void | APIError>;
 }
 ```
 

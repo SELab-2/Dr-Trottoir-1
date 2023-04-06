@@ -5,7 +5,7 @@ export type BuildingQueryParameters = {
     take: number;
     skip: number;
     name: string;
-    ivage_id: string;
+    ivago_id: string;
     syndicus_id: number;
     deleted: boolean;
     sort: string[];
