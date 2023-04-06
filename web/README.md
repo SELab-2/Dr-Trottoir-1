@@ -6,11 +6,11 @@ De client side van dit project is een applicatie geschreven in het [Vue](https:/
 
 ## Uitvoeren
 
-We maken gebruik van [npm](https://www.npmjs.com/) voor het compileren en uitvoeren van de code. Door het uitvoeren van 
+We maken gebruik van [npm](https://www.npmjs.com/) voor het compileren en uitvoeren van de code. Door het uitvoeren van... 
 ```bash
 npm install
 ```
-in de `/web` map zal npm de nodige module's en packages installeren.
+...in de `/web` map zal npm de nodige module's en packages installeren.
 
 ### Compileren en uitvoeren voor development
 
@@ -36,7 +36,7 @@ npm run lint
 
 ### Verdere documentatie
 
-Verdere documentatie over het gebruik van Vite met npm kan men [hier](https://vitejs.dev/config/) vinden.
+Verdere documentatie over het gebruik van Vite met npm is [hier](https://vitejs.dev/config/) terug te vinden.
 
 ## Code
 
@@ -208,3 +208,7 @@ import Table from "@/components/table/Table.vue";
 import { User } from "@/types/User";
 </script>
 ```
+
+### Query builder
+Er kan vanuit de frontend eenvoudig geïntrageerd worden met de API doormiddel van de [query builder](http://exaple.com).
+TODO: fix link zodra query builder op develop staat.
