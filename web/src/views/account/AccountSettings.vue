@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-4">
+  <HFillWrapper margin="mx-4">
     <!-- Top section with profile picture and edit button-->
     <div class="d-flex">
       <v-list-item
@@ -36,7 +36,7 @@
         <v-col
           cols="1"
           style="min-width: 100px; max-width: 100%"
-          class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
+          class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-4"
         >
           <!-- Text input field for the first name -->
           <v-text-field
@@ -50,7 +50,7 @@
         <v-col
           cols="1"
           style="min-width: 100px; max-width: 100%"
-          class="flex-grow-1 flex-shrink-0 py-0 my-0 mr-5"
+          class="flex-grow-1 flex-shrink-0 py-0 my-0 mr-4"
         >
           <!-- Text input field for the last name -->
           <v-text-field
@@ -181,7 +181,7 @@
         >
       </div>
     </v-card>
-  </div>
+  </HFillWrapper>
 </template>
 <script lang="ts" setup>
 import ContactForm from "@/components/forms/ContactForm.vue";
@@ -190,23 +190,19 @@ import AddressFrom from "@/components/forms/AddressForm.vue";
 import Contact from "@/components/models/Contact";
 import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
+import HFillWrapper from "@/layouts/hfill/HFillWrapper.vue";
 
 // define the spacing for the input fields
-const spacing: String = "mx-5";
-
+const spacing: String = "mx-4";
 const props = defineProps(["gebruikerid", "isadmin"]);
 const isAdmin = ref<Boolean>(props.isadmin === "true");
-
 // reactive state for name
 const firstname = ref("Mats");
 const lastname = ref("Van Belle");
-
 // reactive state for the roles
 const roles = ref<String[]>(["Student", "Superstudent"]);
-
 // reactive state to keep track if we are edeting or not
 const edit = ref(false);
-
 // contact data
 const default_phone = "+32 412 34 56 78";
 const default_email = "mats.vanbelle@example.com";
@@ -214,7 +210,6 @@ const contact = ref<Contact>({
   phone: default_phone,
   email: default_email,
 });
-
 // address data
 const address = ref<Address>({
   street: "Krijgslaan",
@@ -222,16 +217,13 @@ const address = ref<Address>({
   city: "Gent",
   zip_code: 9000,
 });
-
 // reactive states for the new password
 const password1 = ref("");
 const password2 = ref("");
 const showPsswd = ref(false);
-
 // reactive state for the submission
 const confirm_psswd = ref("");
 const show_confirm = ref(false);
-
 // state for the remove password
 const remove_psswd = ref("");
 const show_remove = ref(false);
