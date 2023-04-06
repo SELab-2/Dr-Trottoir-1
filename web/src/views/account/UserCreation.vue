@@ -97,7 +97,9 @@
 
     <!-- Account creation button -->
     <div class="d-flex flex-row-reverse my-3">
-      <v-btn color="success" prepend-icon="mdi-check" to="settings/0/false"> Maak account</v-btn>
+      <v-btn color="success" prepend-icon="mdi-check" to="settings/0/false">
+        Maak account</v-btn
+      >
     </div>
   </HFillWrapper>
 </template>
