@@ -2,16 +2,17 @@ import passport from "passport";
 import passportLocal from "passport-local";
 import { prisma } from "./prisma";
 import crypto from "crypto";
-import { User } from "@selab-2/groep-1-orm";
 import { APIError } from "./errors/api_error";
 import { APIErrorCode } from "./errors/api_error_code";
+import { SerializableUser } from "./types";
 
 export function initializePassport() {
     passport.use(
         new passportLocal.Strategy(async (email, password, cb) => {
-            const user = await prisma.user.findUniqueOrThrow({
+            const user = await prisma.user.findFirstOrThrow({
                 where: {
                     email: email,
+                    deleted: false,
                 },
             });
 
@@ -26,7 +27,7 @@ export function initializePassport() {
                     Buffer.from(user.hash),
                 )
             ) {
-                return cb(new APIError(APIErrorCode.FORBIDDEN), null);
+                return cb(new APIError(APIErrorCode.FORBIDDEN), undefined);
             }
 
             const result = await prisma.user.findUniqueOrThrow({
@@ -48,6 +49,11 @@ export function initializePassport() {
                     hash: false,
                     salt: false,
                     address: true,
+                    syndicus: {
+                        select: {
+                            id: true,
+                        },
+                    },
                 },
             });
 
@@ -59,7 +65,7 @@ export function initializePassport() {
         done(null, user);
     });
 
-    passport.deserializeUser(async (user: User, done) => {
+    passport.deserializeUser(async (user: SerializableUser, done) => {
         done(null, user);
     });
 }

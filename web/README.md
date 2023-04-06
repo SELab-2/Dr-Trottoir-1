@@ -1,10 +1,12 @@
-# Frameworks en bibliotheken
+# Web
+
+## Frameworks en bibliotheken
 
 De client side van dit project is een applicatie geschreven in het [Vue](https://vuejs.org/) framework. We hebben ervoor gekozen om [Typescript](https://www.typescriptlang.org/) te gebruiken zodat onze code getypeerd is. Hiernaast maken we gebruik van [Vuetify](https://vuetifyjs.com/en/) zodat de UI uniform is. Tot slot gebruiken we het CSS framework [Sass](https://sass-lang.com/) voor de grafische vormgeving waar vuetify niet in staat tot zou zijn.
 
 # Uitvoeren
 
-[Npm](https://www.npmjs.com/) wordt gebruikt voor het compileren en uitvoeren van de code.
+We maken gebruik van [npm](https://www.npmjs.com/) gebruikt voor het compileren en uitvoeren van de code.
 
 ## Node modules
 
@@ -12,7 +14,6 @@ Npm kan niks doen zolang het niet over de nodige module's beschikt. In het besta
 Men kan de modules als volgt installeren.
 
 ```bash
-# installeer de node modules
 npm install
 ```
 
@@ -24,11 +25,6 @@ Men kan Nodejs [hier](https://nodejs.org/en/download/) downloaden.
 ## Compileren en uitvoeren voor development
 
 Eenmaal de node modules geïnstalleerd zijn kan men de applicatie compileren en uitvoeren voor development.
-
-```bash
-npm run dev
-```
-
 Dit start normaal een [Vite](https://vitejs.dev/) server op het lokaal address [http://localhost:3000/](http://localhost:3000/).
 De vite server zorgt ervoor dat de applicatie uitgevoerd wordt.
 
