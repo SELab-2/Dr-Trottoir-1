@@ -76,7 +76,6 @@ model UserRegion {
 // Hier wordt het pad naar een bestand bijgehouden.
 model File {
     id   Int    @id @default(autoincrement())
-    name String
     path String
 
     // Gebruiker die de file geupload heeft.

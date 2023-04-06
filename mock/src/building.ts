@@ -67,7 +67,6 @@ export async function createBuilding() {
             },
             manual: {
                 create: {
-                    name: "dummy.pdf",
                     path: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
                     location: "EXTERNAL",
                 },
