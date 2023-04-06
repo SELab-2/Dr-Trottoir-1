@@ -2,7 +2,11 @@
   <div class="background">
     <div class="form">
       <!-- Display the Dr. troittoir logo above the login form -->
-      <v-img class="banner-logo" contain src="@/assets/images/drtroittoir_logo_black.png"></v-img>
+      <v-img
+        class="banner-logo"
+        contain
+        src="@/assets/images/drtroittoir_logo_black.png"
+      ></v-img>
       <br />
 
       <!-- The input field for the e-mail -->
@@ -38,7 +42,7 @@
         <v-btn
           prepend-icon="mdi-login"
           color="success"
-          @click="attemptLogin"
+          @click="useAuthStore().logIn(email, password)"
           >Login</v-btn
         >
       </div>
@@ -62,7 +66,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { User } from "@selab-2/groep-1-orm"
+import { useAuthStore } from "@/stores/auth";
 
 // reactive email state
 const email = ref("");
@@ -75,35 +79,6 @@ const showPsswd = ref(false);
 
 // reactive state to check if the snackbar must be shown or not
 const snackbar = ref(false);
-
-async function attemptLogin() {
-  // Send an authentication request.
-  await fetch("http://localhost:8080/auth/login/", {
-    method: "POST",
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      username: "administrator@trottoir.be",
-      password: "password",
-    }),
-    redirect: "manual",
-    credentials: "include",
-  });
-
-  // Retrieve the current user.
-  const res = await fetch("http://localhost:8080/auth", {
-    credentials: 'include',
-  });
-
-  // TODO: Save in a store.
-  try {
-    console.log(await res.text());
-  } catch (e) {
-    console.log(e);
-  }
-}
 </script>
 
 <style lang="scss">

@@ -47,17 +47,15 @@ app.use(
 );
 
 // Helmet adds many headers for more secure connections
-// app.use(helmet({
-//   crossOriginEmbedderPolicy: false,
-//   crossOriginResourcePolicy: false,
-//   crossOriginOpenerPolicy: false,
-// }));
+app.use(helmet());
 
 // Support for CORS
-app.use(cors({
-  origin: "http://localhost:3000",
-  credentials: true,
-}))
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+        credentials: true,
+    }),
+);
 
 // Morgan logs and prints all incoming requests
 app.use(morgan("dev"));
