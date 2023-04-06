@@ -20,6 +20,7 @@ import { RegionRouting } from "./routes/region";
 import { GarbageRouting } from "./routes/garbage";
 import { UserRegionRouting } from "./routes/user_region";
 import { ProgressRouting } from "./routes/progress";
+import cors from "cors";
 
 // const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
@@ -46,7 +47,17 @@ app.use(
 );
 
 // Helmet adds many headers for more secure connections
-app.use(helmet());
+// app.use(helmet({
+//   crossOriginEmbedderPolicy: false,
+//   crossOriginResourcePolicy: false,
+//   crossOriginOpenerPolicy: false,
+// }));
+
+// Support for CORS
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}))
 
 // Morgan logs and prints all incoming requests
 app.use(morgan("dev"));
