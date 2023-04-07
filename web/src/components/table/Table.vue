@@ -114,7 +114,7 @@ function sort(header: Header<any>) {
   cursor: pointer
 
 tr:nth-child(even)
-  background-color: #f8f8f8
+  background-color: #ffffff
 
 td
   vertical-align: middle

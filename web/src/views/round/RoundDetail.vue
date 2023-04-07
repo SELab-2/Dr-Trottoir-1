@@ -1,5 +1,6 @@
 <template>
   <v-card
+    color="background"
     :title="mockround.name"
     :subtitle="date_to_dd_MM_yyyy(mockround.due_date)"
     variant="flat"
