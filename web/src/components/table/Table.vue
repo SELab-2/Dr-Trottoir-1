@@ -113,8 +113,8 @@ function sort(header: Header<any>) {
 .clickable
   cursor: pointer
 
-tr:nth-child(even)
-  background-color: #ffffff
+tr:nth-child(even), th
+  background-color: #F5F5F5
 
 td
   vertical-align: middle
