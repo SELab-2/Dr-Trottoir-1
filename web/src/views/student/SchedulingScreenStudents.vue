@@ -15,7 +15,7 @@
         </v-chip>
       </template>
       <!-- Round cards -->
-      <v-card
+      <BorderCard
         v-for="round in day.rounds"
         :key="round.name"
         class="mb-3 mx-1"
@@ -68,8 +68,7 @@
             Bezig {{ round.buildings_done }}/{{ round.buildings }}
           </v-chip>
         </template>
-      </v-card>
-      <v-divider thickness="2" />
+      </BorderCard>
 
       <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
       <v-overlay v-model="snackbar">
@@ -94,6 +93,7 @@ import { ref } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import { useRouter } from "vue-router";
 import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
+import BorderCard from "@/components/cards/BorderCard.vue";
 
 // the router constant
 const router = useRouter();
