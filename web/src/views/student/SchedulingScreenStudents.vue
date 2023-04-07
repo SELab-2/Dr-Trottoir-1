@@ -67,6 +67,7 @@
             </v-chip>
           </template>
         </v-card>
+        <v-divider thickness="2"/>
 
       <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
       <v-overlay v-model="snackbar">
@@ -74,22 +75,12 @@
           v-model="snackbar"
           timeout="-1"
           elevation="24"
-          color="white"
+          color="background"
         >
-          <v-card prepend-icon="mdi-exclamation" variant="flat">
-            <template v-slot:title> Start ronde </template>
-            <p class="mx-3">
-              Je staat op het punt een ronde te starten. Het huidige tijdstip
-              zal opgeslagen worden als start tijdstip. Ben je zeker dat je de
-              ronde wilt starten?
-            </p>
-            <div class="d-flex flex-row-reverse ma-3">
-                <v-btn color="success" @click="redirect_to_detail()"> Start ronde </v-btn>
-              <v-btn @click="snackbar = false" color="error" class="mr-3">
-                Annuleer
-              </v-btn>
-            </div>
-          </v-card>
+          <StartRoundPopupContent
+            :oncancel="() => snackbar = false"
+            :onsubmit="() => redirect_to_detail()"
+          />
         </v-snackbar>
       </v-overlay>
     </v-card>
@@ -100,6 +91,7 @@
 import { ref } from "vue";
 import HFillWrapper from "@/layouts/hfill/HFillWrapper.vue";
 import { useRouter } from "vue-router";
+import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
 
 // the router constant
 const router = useRouter();
