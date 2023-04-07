@@ -23,10 +23,16 @@
         >
           <!-- Time -->
           <template v-slot:subtitle>
-            {{ round.deadline.getHours() }}:{{
+            <v-chip 
+              label
+              prepend-icon="mdi-clock-time-ten-outline"
+              variant="text" 
+              size="compact"
+            >
+              {{ round.deadline.getHours() }}:{{
               ("0" + round.deadline.getUTCMinutes()).slice(-2)
             }}
-            <v-icon icon="mdi-clock-time-ten-outline"></v-icon>
+            </v-chip>
           </template>
 
           <!-- Status -->
