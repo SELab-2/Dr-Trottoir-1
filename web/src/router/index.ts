@@ -114,8 +114,8 @@ const routes = [
         name: "contact_syndicus",
         component: ContactSyndicus,
         meta: {
-          title: 'Contacteer syndicus'
-        }
+          title: "Contacteer syndicus",
+        },
       },
       {
         path: "/vuilnis/plannen",
