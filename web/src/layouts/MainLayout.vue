@@ -8,7 +8,7 @@
         class="sidebar"
       >
         <v-list density="compact" nav>
-          <v-list-item lines="two" @click="showAccount = !showAccount">
+          <v-list-item lines="two">
             <template v-slot:prepend>
               <Avatar :name="studentName" />
             </template>
@@ -17,22 +17,10 @@
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
                 <v-list-item-subtitle>{{ roles() }}</v-list-item-subtitle>
               </div>
-              <v-btn
-                v-if="!showAccount"
-                variant="plain"
-                icon="mdi-chevron-down"
-                size="small"
-              />
-              <v-btn
-                v-else
-                variant="plain"
-                icon="mdi-chevron-up"
-                size="small"
-              />
             </div>
           </v-list-item>
 
-          <div v-if="showAccount">
+          <div>
             <v-list-item
               :to="{ name: 'login' }"
               prepend-icon="mdi-account-cancel"
