@@ -6,33 +6,19 @@
         style="min-width: 100px; max-width: 100%"
         class="flex-grow-1 flex-shrink-0 py-0 my-0"
       >
-        <v-select
-          label="Syndicus"
-          v-model="syndicus_data"
-          :items="mock_syndici_data"
-          item-value="syndicus"
-          item-title="syndicus"
-          return-object
-          prepend-inner-icon="mdi-account"
-          variant="solo"
-        >
-        </v-select>
-      </v-col> </v-row
-    ><v-row class="py-0 my-0">
-      <v-col
-        cols="1"
-        style="min-width: 100px; max-width: 100%"
-        class="flex-grow-1 flex-shrink-0 py-0 my-0"
-      >
-        <v-select
+        <v-autocomplete
           label="Gebouw"
+          :items="mock_buildings"
           v-model="building"
-          :items="syndicus_data?.buildings"
-          return-object
-          prepend-inner-icon="mdi-office-building"
           variant="solo"
-        >
-        </v-select>
+          prepend-inner-icon="mdi-office-building"
+          ><template v-slot:item="{ props, item }">
+            <v-list-item
+              v-bind="props"
+              :title="item.raw"
+              :subtitle="mock_synidcus"
+            ></v-list-item> </template
+        ></v-autocomplete>
       </v-col>
       <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
         <v-select
@@ -49,13 +35,43 @@
       </v-col>
     </v-row>
     <v-row class="py-0 my-0">
-      <v-text-field
-        prepend-inner-icon="mdi-text-short"
-        variant="solo"
-        label="Onderwerp"
-        :model-value="selected_template.subject"
+      <v-col
+        cols="1"
+        style="min-width: 100px; max-width: 100%"
+        class="flex-grow-1 flex-shrink-0 py-0 my-0"
       >
-      </v-text-field>
+        <!-- TODO: this is for mock, should be one function -->
+        <v-text-field
+          v-if="!building"
+          prepend-inner-icon="mdi-account"
+          readonly
+          label="Syndicus"
+          variant="solo"
+        ></v-text-field>
+        <v-text-field
+          v-else
+          prepend-inner-icon="mdi-account"
+          label="Syndicus"
+          v-model="mock_synidcus"
+          readonly
+          variant="solo"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row class="py-0 my-0">
+      <v-col
+        cols="1"
+        style="min-width: 100px; max-width: 100%"
+        class="flex-grow-1 flex-shrink-0 py-0 my-0"
+      >
+        <v-text-field
+          prepend-inner-icon="mdi-text-short"
+          variant="solo"
+          label="Onderwerp"
+          :model-value="selected_template.subject"
+        >
+        </v-text-field>
+      </v-col>
     </v-row>
     <v-row class="py-0 my-0"
       ><v-col
@@ -65,19 +81,20 @@
       >
         <v-textarea
           prepend-inner-icon="mdi-text-long"
-          rows="20"
+          rows="17"
           label="Uitleg"
           variant="solo"
           :model-value="selected_template.content"
         ></v-textarea
       ></v-col>
       <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
-        <v-img
-          src="../assets/images/defaultImage.png"
-          cover
-          height="96%"
-        ></v-img
-      ></v-col>
+        <v-card>
+          <v-img src="../assets/images/defaultImage.png" cover></v-img
+          ><v-card-actions class="d-flex my-2"
+            ><v-spacer></v-spacer><v-btn prepend-icon="mdi-upload">Uploaden</v-btn></v-card-actions
+          >
+        </v-card></v-col
+      >
     </v-row>
     <v-card-actions class="d-flex">
       <v-spacer></v-spacer>
@@ -90,17 +107,10 @@
 import Template from "@/components/models/Template";
 import { ref, computed, reactive } from "vue";
 
-// TODO: remove when implementing the API
-interface SyndicusData {
-  syndicus: string;
-  buildings: string[];
-}
-
-//TODO this would be given to the component with props
-const mock_data = "De deur in de berging is kapot.";
-
-const syndicus_data = ref<SyndicusData | null>(null);
-const building = ref<String>("");
+const mock_synidcus: string = "Syndicus 1";
+const mock_buildings = ["Upkot Zuid", "Vooruit", "Shopping Zuid"];
+const building = ref<string>("");
+const mock_comment: string = "De deur in de berging is kapot.";
 
 const templates: Template[] = reactive([
   { name: "Andere", subject: "", content: "" },
@@ -109,7 +119,7 @@ const templates: Template[] = reactive([
     subject: computed(() => `Opmerking: ${building.value}`),
     content: computed(
       () =>
-        `Beste ${syndicus_data.value?.syndicus},\n\nWe hebben het volgende opgemerkt in uw gebouw(${building.value}):\n\t${mock_data}\nDit is ook te zien op foto in bijlage.\n\nMet vriendelijke groeten,\nDr Trottoir team`,
+        `Beste ${mock_synidcus},\n\nWe hebben het volgende opgemerkt in uw gebouw(${building.value}):\n\t${mock_comment}\nDit is ook te zien op foto in bijlage.\n\nMet vriendelijke groeten,\nDr Trottoir team`,
     ),
   },
   {
@@ -117,7 +127,7 @@ const templates: Template[] = reactive([
     subject: computed(() => `Klacht: ${building.value}`),
     content: computed(
       () =>
-        `Beste ${syndicus_data.value?.syndicus},\n\nWe hebben het volgende opgemerkt in uw gebouw(${building.value}):\n\t${mock_data}\nDit is ook te zien op foto in bijlage.\n\nMet vriendelijke groeten,\nDr Trottoir team`,
+        `Beste ${mock_synidcus},\n\nWe hebben het volgende opgemerkt in uw gebouw(${building.value}):\n\t${mock_comment}\nDit is ook te zien op foto in bijlage.\n\nMet vriendelijke groeten,\nDr Trottoir team`,
     ),
   },
   {
@@ -125,21 +135,10 @@ const templates: Template[] = reactive([
     subject: computed(() => `Schade: ${building.value}`),
     content: computed(
       () =>
-        `Beste ${syndicus_data.value?.syndicus},\n\nWe hebben het volgende opgemerkt in uw gebouw(${building.value}):\n\t${mock_data}\nDit is ook te zien op foto in bijlage.\n\nMet vriendelijke groeten,\nDr Trottoir team`,
+        `Beste ${mock_synidcus},\n\nWe hebben het volgende opgemerkt in uw gebouw(${building.value}):\n\t${mock_comment}\nDit is ook te zien op foto in bijlage.\n\nMet vriendelijke groeten,\nDr Trottoir team`,
     ),
   },
 ]);
 
 const selected_template = ref<Template>(templates[0]);
-
-const mock_syndici_data = [
-  {
-    syndicus: "Bert Kappellen",
-    buildings: ["Upkot Zwijnaarde", "Home Astrid", "Home Benedictijntjes"],
-  },
-  {
-    syndicus: "Tijbe Habils",
-    buildings: ["Home sterre", "Upkot Zuid"],
-  },
-];
 </script>
