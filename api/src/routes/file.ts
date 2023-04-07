@@ -62,8 +62,9 @@ router.post(
             // return the saved file as JSON
             res.json(result);
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ error: "Failed to save file" });
+            //console.error(err);
+            throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
+            //res.status(500).json({ error: "Failed to save file" });
         }
     },
 );
@@ -71,10 +72,11 @@ router.post(
 //Auth for get request: you have to be a user to make a get request
 const isAuthGet = (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;
-    if (process.env.DISABLE_AUTH === "false" && !user) {
-        throw new APIError(APIErrorCode.FORBIDDEN);
+    if (process.env.DISABLE_AUTH || user){
+        next();
+    }else {
+        throw new APIError(APIErrorCode.UNAUTHORIZED);
     }
-    next();
 };
 
 // file get route
