@@ -16,37 +16,36 @@ import { createVuetify, ThemeDefinition } from "vuetify";
 const drTrottoirLight: ThemeDefinition = {
   dark: false,
   colors: {
-    background: '#F5F5F5', // white
-    'on-background': '#000000', // black
+    "background": "#F5F5F5", // white
+    "on-background": "#000000", // black
 
-    surface: '#FFFFFF', // grey-lighten-4
-    'on-surface': '#000000',
+    "surface": "#FFFFFF", // grey-lighten-4
+    "on-surface": "#000000",
 
-    primary: '#1867C0', // blue
-    'on-primary': '#FFFFFF', // white
+    "primary": "#1867C0", // blue
+    "on-primary": "#FFFFFF", // white
 
-    secondary: '#009688', // teal
-    'on-secondary': '#FFFFFF', // white
+    "secondary": "#009688", // teal
+    "on-secondary": "#FFFFFF", // white
 
-    warning: '#FF9800', // orange
-    'on-warning': '#FFFFFF', // white
+    "warning": "#FF9800", // orange
+    "on-warning": "#FFFFFF", // white
 
-    error: '#B00020', // red
-    'on-error': '#FFFFFF', // white
+    "error": "#B00020", // red
+    "on-error": "#FFFFFF", // white
 
-    success: '#4CAF50', // green
-    'on-success': '#FFFFFF', // white
-  }
-}
-
+    "success": "#4CAF50", // green
+    "on-success": "#FFFFFF", // white
+  },
+};
 
 export default createVuetify({
   theme: {
-    defaultTheme: 'drTrottoirLight',
+    defaultTheme: "drTrottoirLight",
     themes: {
       drTrottoirLight,
-    }
-  }
+    },
+  },
   /*theme: {
     themes: {
       light: {

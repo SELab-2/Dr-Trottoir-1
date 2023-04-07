@@ -152,7 +152,7 @@
         </template>
       </v-navigation-drawer>
 
-      <v-app-bar prominent elevation="0" color="background"> 
+      <v-app-bar prominent elevation="0" color="background">
         <div class="px-4">
           <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
         </div>

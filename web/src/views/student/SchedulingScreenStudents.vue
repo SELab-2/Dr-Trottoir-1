@@ -63,7 +63,6 @@
           </template>
         </v-card>
       </router-link>
-      <v-divider thickness="2"/>
 
       <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
       <v-overlay v-model="snackbar">
