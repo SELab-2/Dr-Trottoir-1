@@ -40,8 +40,10 @@ const isAuthPost = (req: Request, res: Response, next: NextFunction) => {
         (user && (user.super_student || user.admin || user.syndicus))
     ) {
         next();
-    } else {
+    } else if (user) {
         throw new APIError(APIErrorCode.FORBIDDEN);
+    } else {
+        throw new APIError(APIErrorCode.UNAUTHORIZED);
     }
 };
 
