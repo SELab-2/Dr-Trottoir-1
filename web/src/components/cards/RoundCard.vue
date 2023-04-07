@@ -52,7 +52,7 @@
         }}
       </v-chip>
     </template>
-    <v-chip label color="brown" class="ml-3">
+    <v-chip v-if="round_start" label color="brown" class="ml-3">
       <v-icon icon="mdi-office-building"></v-icon>
       {{ total_buildings }}
     </v-chip>
