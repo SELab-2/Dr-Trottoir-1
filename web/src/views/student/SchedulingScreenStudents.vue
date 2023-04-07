@@ -91,7 +91,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import HFillWrapper from "@/layouts/hfill/HFillWrapper.vue";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import { useRouter } from "vue-router";
 import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
 

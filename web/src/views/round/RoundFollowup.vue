@@ -32,7 +32,7 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import { formatDate, date_to_hh_mm } from "@/assets/scripts/format";
-import HFillWrapper from "@/layouts/hfill/HFillWrapper.vue";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
 // the router constant
 const router = useRouter();

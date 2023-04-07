@@ -3,15 +3,12 @@
     But only when the screen is broad enough.
 -->
 <template>
-  <v-row>
-    <HFill />
-    <v-col style="min-width: 65%" :class="margin">
-      <slot></slot>
-    </v-col>
-    <HFill />
-  </v-row>
+  <div class="d-flex justify-center">
+    <div style="width: 800px;" :class="margin">
+      <slot />
+    </div>
+  </div>
 </template>
 <script setup lang="ts">
-import HFill from "@/layouts/hfill/HFill.vue";
 defineProps({ margin: { type: String, default: "ma-3" } });
 </script>

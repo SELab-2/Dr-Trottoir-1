@@ -17,7 +17,7 @@ import Filterdata from "@/components/filter/FilterData";
 import { ref } from "vue";
 import { createDate, formatDate } from "@/assets/scripts/date";
 import BuildingCard from "@/components/building/BuildingCard.vue";
-import HFillWrapper from "@/layouts/hfill/HFillWrapper.vue";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
 const filter_options = ["Opmerkingen"];
