@@ -87,11 +87,12 @@
           :model-value="selected_template.content"
         ></v-textarea
       ></v-col>
-      <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
-        <v-card>
-          <v-img src="../assets/images/defaultImage.png" cover></v-img
+      <v-col cols="3" class="flex-grow-1 flex-shrink-0 py-0 my-0">
+        <v-card max-height="100%">
+          <v-img src="../../assets/images/defaultImage.png" cover></v-img
           ><v-card-actions class="d-flex my-2"
-            ><v-spacer></v-spacer><v-btn prepend-icon="mdi-upload">Uploaden</v-btn></v-card-actions
+            ><v-spacer></v-spacer
+            ><v-btn prepend-icon="mdi-upload">Uploaden</v-btn></v-card-actions
           >
         </v-card></v-col
       >
@@ -106,6 +107,11 @@
 <script lang="ts" setup>
 import Template from "@/components/models/Template";
 import { ref, computed, reactive } from "vue";
+
+// API in place
+//defineProps({
+//  building_id: String,
+//})
 
 const mock_synidcus: string = "Syndicus 1";
 const mock_buildings = ["Upkot Zuid", "Vooruit", "Shopping Zuid"];
