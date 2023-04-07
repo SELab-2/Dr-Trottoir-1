@@ -1,10 +1,12 @@
 <template>
   <HFillWrapper>
+    <!-- Day cards-->
     <v-card
       v-for="day in days"
       :key="day.name"
       :title="day.name"
       variant="flat"
+      color="background"
     >
       <template v-slot:append>
         <v-chip label prepend-icon="mdi-calendar-month-outline" variant="text">
@@ -61,6 +63,7 @@
           </template>
         </v-card>
       </router-link>
+      <v-divider thickness="2"/>
 
       <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
       <v-overlay v-model="snackbar">

@@ -6,6 +6,7 @@
         :permanent="!!permanentDrawer"
         v-model="drawer"
         class="sidebar"
+        color="background"
       >
         <v-list density="compact" nav>
           <v-list-item lines="two" @click="showAccount = !showAccount">
@@ -151,7 +152,7 @@
         </template>
       </v-navigation-drawer>
 
-      <v-app-bar prominent elevation="0">
+      <v-app-bar prominent elevation="0" color="background"> 
         <div class="px-4">
           <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
         </div>
