@@ -1,72 +1,101 @@
 <template>
-  <div v-if="building">
-    <v-card
-      class="mt-3 mx-1"
-      @click="
+  <v-card 
+    :clickable="building.data.length === 1"
+    class="mx-1 mb-3"
+    v-if="building"
+    @click="
         () => {
-          if (building && building.data.length === 1) {
+          if (building) {
             atClick(building.data[0].date);
           }
         }
       "
-    >
-      <template v-slot:prepend>
+  >
+    <v-row class="flex-nowrap">
+      <v-col cols="2" class="flex-grow-0 flex-shrink-0">
+        <!-- The image -->
         <v-img
           cover
           src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
           class="prepend-img"
+          
         />
-      </template>
-      <template v-slot:title>
-        {{ building.name }}
-        <v-icon end v-if="comments"> mdi-comment-alert-outline </v-icon>
-      </template>
-      <template v-slot:subtitle>
-        <Avatar
-          :name="building.syndicus"
-          size="x-small"
-          :key="building.syndicus"
-        />
-        {{ building.syndicus }} <br />
-        <v-chip label color="brown" class="mt-4">
-          <v-icon icon="mdi-office-building-marker-outline"></v-icon>
-          <p class="ml-2">{{ building.adres }}</p>
-        </v-chip>
-      </template>
-      <template v-slot:append>
-        <v-chip
-          label
-          color="blue"
-          class="ml-3 align-top"
-          v-if="building.data.length === 1"
+      </v-col>
+      <v-col class="flex-grow-1 flex-shrink-0" style="min-width: 100px; max-width: 100%;">
+        <!-- The content -->
+        <v-card variant="flat" size="compact">
+          <!-- Title -->
+          <template v-slot:title>
+            {{ building.name }}
+            <v-icon end v-if="comments"> mdi-comment-alert-outline </v-icon>
+          </template>
+          <!-- Subtitle -->
+          <template v-slot:subtitle>
+            <Avatar
+              :name="building.syndicus"
+              size="x-small"
+              :key="building.syndicus"
+            />
+            {{ building.syndicus }} <br>
+            <v-chip label color="brown" class="mt-4">
+              <v-icon icon="mdi-office-building-marker-outline"></v-icon>
+              <p class="ml-2">{{ building.adres }}</p>
+            </v-chip>
+            
+          </template>
+
+          
+          <template v-slot:append>
+            <!-- Date -->
+            <v-chip
+              label
+              color="blue"
+              class="ml-3 align-top"
+              v-if="building.data.length === 1"
+            >
+              <v-icon icon="mdi-calendar-clock"></v-icon>
+              <p class="ml-2">{{ building.data[0].date }}</p>
+            </v-chip>
+            <!-- Date expansion button-->
+            <v-btn
+              @click.stop="expanded = !expanded"
+              :icon="expanded ? 'mdi-menu-up' : 'mdi-menu-down'"
+              class="dropdown-button"
+              variant="text"
+              v-else
+            />
+          </template>
+          
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-expand-transition v-on:click.stop>
+      <div v-show="building.data.length > 1 && expanded">
+        <v-divider></v-divider>
+        <div
+          
+          class="w-100 px-4 py-2"
         >
-          <v-icon icon="mdi-calendar-clock"></v-icon>
-          <p class="ml-2">{{ building.data[0].date }}</p>
-        </v-chip>
-        <v-icon
-          @click="expanded = !expanded"
-          :icon="expanded ? 'mdi-menu-up' : 'mdi-menu-down'"
-          class="dropdown-button"
-          v-else
-        />
-      </template>
-    </v-card>
-    <div v-if="building.data.length > 1 && expanded">
-      <div
-        v-for="(datum, id) of building.data"
-        :key="id"
-        class="w-100 px-2 pt-1"
-      >
-        <v-chip label color="black" class="w-100" @click="atClick(datum.date)">
-          <v-icon color="blue" icon="mdi-calendar-clock"></v-icon>
-          <p class="ml-2">{{ datum.date }}</p>
-          <v-icon end color="black" v-if="datum.comments">
-            mdi-comment-alert-outline
-          </v-icon>
-        </v-chip>
-      </div>
-    </div>
-  </div>
+          <v-chip
+            v-if="building.data.length > 1 && expanded"
+            v-for="(datum, id) of building.data"
+            :key="id"
+            label
+            class="w-100"
+            @click="atClick(datum.date)"
+            variant="text"
+          >
+            <v-icon color="blue" icon="mdi-calendar-clock"></v-icon>
+            <p class="ml-2">{{ datum.date }}</p>
+            <v-icon end color="black" v-if="datum.comments">
+              mdi-comment-alert-outline
+            </v-icon>
+          </v-chip>
+        </div>
+      </div>       
+    </v-expand-transition>
+      
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -95,9 +124,7 @@ function atClick(date: string) {
 
 <style scoped lang="scss">
 .prepend-img {
-  aspect-ratio: 1;
-  width: 105px;
-  border-radius: 5px;
+  height: 100%;
 }
 
 .dropdown-button {

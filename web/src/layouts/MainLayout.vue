@@ -176,9 +176,6 @@ const isSuperStudent = ref(true);
 const isSyndicus = ref(true);
 const isAdmin = ref(true);
 
-// show account settings
-const showAccount = ref(false);
-
 // account display settings
 const studentName: string = "Jens Pots";
 function roles(): string {
