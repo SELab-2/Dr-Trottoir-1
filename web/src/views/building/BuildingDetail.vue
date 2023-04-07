@@ -105,10 +105,6 @@ const mockbuilding = {
   ],
 };
 
-function log() {
-  console.log("JA");
-}
-
 const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
   {
     time: new Date(),
