@@ -13,11 +13,13 @@
         </v-chip>
       </template>
       <!-- Round cards -->
-      <router-link v-for="round in day.rounds" :key="round.name" to="/ronde/0">
         <v-card
+          v-for="round in day.rounds" 
+          :key="round.name"
           class="mb-3 mx-1"
           :title="round.name"
           prepend-icon="mdi-transit-detour"
+          @click="redirect_to_detail()"
         >
           <!-- Time -->
           <template v-slot:subtitle>
@@ -34,8 +36,7 @@
                 calculateProgress(round.buildings_done, round.buildings) === 0
               "
               color="primary"
-              @click="snackbar = !snackbar"
-              v-on:click.prevent
+              v-on:click.stop="snackbar = !snackbar"
               :variant="
                 round.name == 'Sterre' || round.name == 'Korenmarkt'
                   ? 'flat'
@@ -60,7 +61,6 @@
             </v-chip>
           </template>
         </v-card>
-      </router-link>
 
       <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
       <v-overlay v-model="snackbar">
@@ -78,10 +78,7 @@
               ronde wilt starten?
             </p>
             <div class="d-flex flex-row-reverse ma-3">
-              <router-link to="/ronde/0">
-                <v-btn color="success"> Start ronde </v-btn>
-              </router-link>
-
+                <v-btn color="success" @click="redirect_to_detail()"> Start ronde </v-btn>
               <v-btn @click="snackbar = false" color="error" class="mr-3">
                 Annuleer
               </v-btn>
@@ -96,6 +93,14 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import HFillWrapper from "@/layouts/hfill/HFillWrapper.vue";
+import { useRouter } from "vue-router";
+
+// the router constant
+const router = useRouter();
+
+function redirect_to_detail() {
+  router.push({ name: "round_detail", params: { id: 0 } });
+}
 
 // https://stackoverflow.com/questions/1643320/get-month-name-from-date
 const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
