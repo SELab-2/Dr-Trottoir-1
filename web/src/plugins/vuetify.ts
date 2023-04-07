@@ -16,10 +16,10 @@ import { createVuetify, ThemeDefinition } from "vuetify";
 const drTrottoirLight: ThemeDefinition = {
   dark: false,
   colors: {
-    background: '#FFFFFF', // white
+    background: '#F5F5F5', // white
     'on-background': '#000000', // black
 
-    surface: '#F5F5F5', // grey-lighten-4
+    surface: '#FFFFFF', // grey-lighten-4
     'on-surface': '#000000',
 
     primary: '#1867C0', // blue
