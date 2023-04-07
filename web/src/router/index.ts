@@ -1,125 +1,158 @@
 import { createRouter, createWebHistory } from "vue-router";
-import LoginScreen from "@/views/LoginScreen.vue";
-import BuildingSceen from "@/views/BuildingScreen.vue";
-import UserCreation from "@/views/UserCreation.vue";
+import LoginScreen from "@/views/account/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
-import SchedulingScreenStudent from "@/views/SchedulingScreenStudents.vue";
-import Users from "@/views/dashboard/Users.vue";
-import Buildings from "@/views/dashboard/Buildings.vue";
-import Routes from "@/views/dashboard/Routes.vue";
-import BuildingFollowup from "@/views/BuildingFollowup.vue";
-import RoundFollowup from "@/views/Followup.vue";
-import RoundMaker from "@/views/RoundMaker.vue";
-import AccountSettings from "@/views/AccountSettings.vue";
-import RoundDetail from "@/views/RoundDetail.vue";
-import RoundPlanner from "@/views/RoundPlanner.vue";
-import BuildingMaker from "@/views/BuildingMaker.vue";
-import ContactSyndicus from "@/views/ContactSyndicus.vue";
-import GarbageMaker from "@/views/GarbageMaker.vue";
+import AccountSettings from "@/views/account/AccountSettings.vue";
+import UserCreation from "@/views/account/UserCreation.vue";
+import SchedulingScreenStudent from "@/views/student/SchedulingScreenStudents.vue";
+import RoundFollowup from "@/views/round/RoundFollowup.vue";
+import RoundMaker from "@/views/round/RoundMaker.vue";
+import RoundDetail from "@/views/round/RoundDetail.vue";
+import RoundPlanner from "@/views/round/RoundPlanner.vue";
+import BuildingMaker from "@/views/building/BuildingMaker.vue";
+import BuildingDetail from "@/views/building/BuildingDetail.vue";
+import BuildingScreen from "@/views/building/BuildingScreen.vue";
+import BuildingFollowup from "@/views/building/BuildingFollowup.vue";
+import GarbageMaker from "@/views/building/GarbageMaker.vue";
+import UserOverview from "@/views/dashboard/Users.vue";
+import BuildingOverview from "@/views/dashboard/Buildings.vue";
+import RoundOverview from "@/views/dashboard/Round.vue";
+import ContactSyndicus from "@/views/contact/ContactSyndicus.vue";
 
 const routes = [
   {
     path: "/",
     component: LoginScreen,
+    name: "login",
   },
   {
-    path: "/dashboard",
-    name: "dashboard",
     component: MainLayout,
+    path: "/", // Unreachable, as intended.
     children: [
       {
+        // TODO: isadmin should be removed when authentication is in order
+        path: "/account/settings/:id/:isadmin",
+        name: "account_settings",
+        component: AccountSettings,
+        props: true,
+        meta: {
+          title: "",
+        },
+      },
+      {
         path: "/planning",
-        name: "Planningsoverzicht",
+        name: "student_planning",
         component: SchedulingScreenStudent,
+        meta: {
+          title: "Planning student",
+        },
       },
       {
-        path: "/dashboard/gebruikers",
-        component: Users,
-        name: "Gebruikers",
+        path: "/ronde/overzicht",
+        name: "round_followup",
+        component: RoundFollowup,
+        meta: {
+          title: "Opvolging rondes",
+        },
       },
       {
-        path: "/dashboard/gebouwen",
-        component: Buildings,
-        name: "Gebouwen",
+        path: "/ronde/:id",
+        name: "round_detail",
+        component: RoundDetail,
+        meta: {
+          title: "",
+        },
       },
       {
-        path: "/dashboard/rondes",
-        component: Routes,
-        name: "Rondes",
+        path: "/ronde/plannen",
+        name: "round_plan",
+        component: RoundPlanner,
+        meta: {
+          title: "Ronde plannen",
+        },
+      },
+      {
+        path: "/ronde/nieuw",
+        name: "round_new",
+        component: RoundMaker,
+        meta: {
+          title: "Ronde maken",
+        },
       },
       {
         path: "/gebouw/:id",
-        name: "Gebouw",
-        component: BuildingSceen,
+        name: "building_id",
+        component: BuildingScreen,
+        props: true,
+        meta: {
+          title: "",
+        },
+      },
+      {
+        path: "/gebouw/:id/:date",
+        name: "building_id_detail",
+        component: BuildingDetail,
         props: true,
       },
       {
-        path: "/dashboard/gebouwen/nieuw",
-        name: "Gebouw aanmaken",
+        path: "/gebouw/nieuw",
+        name: "building_new",
         component: BuildingMaker,
+        meta: {
+          title: "Nieuw gebouw",
+        },
       },
-      //{
-      //  path: "/ronde/:id",
-      //  name: "Ronde",
-      //  component: TODO detailpagina ronde,
-      //  props: true,
-      //},
       {
-        path: "/gebouwen",
-        name: "Opvolgen van gebouwen",
+        path: "/gebouw/overzicht",
+        name: "building_followup",
         component: BuildingFollowup,
-      },
-      {
-        path: "/opvolging",
-        name: "Opvolging",
-        component: RoundFollowup,
-      },
-      {
-        path: "/rondes/plannen",
-        name: "Ronde plannen",
-        component: RoundPlanner,
-      },
-      {
-        path: "/account/:gebruikerid/:isadmin",
-        name: "Account instellingen",
-        component: AccountSettings,
-        props: true,
-      },
-      {
-        path: "/dashboard/rondes/nieuw",
-        name: "Nieuwe ronde",
-        component: RoundMaker,
-      },
-      {
-        path: "/dashboard/gebouwen/nieuw",
-        name: "Nieuw gebouw",
-        component: BuildingMaker,
-      },
-      {
-        path: "/dashboard/gebruikers/nieuw",
-        name: "Nieuwe gebruiker",
-        component: UserCreation,
-      },
-      {
-        path: "/rondes/detail",
-        name: "Detail van ronde",
-        component: RoundDetail,
-        props: true,
-      },
-      {
-        path: "/dashboard/rondes/plannen",
-        name: "Ronde Planner",
-        component: RoundPlanner,
+        meta: {
+          title: "Gebouwen",
+        },
       },
       {
         path: "/contact",
-        name: "Contact syndicus",
+        name: "contact_syndicus",
         component: ContactSyndicus,
+        meta: {
+          title: 'Contacteer syndicus'
+        }
       },
       {
-        path: "/dashboard/garbage",
-        name: "Garbage",
+        path: "/vuilnis/plannen",
+        name: "garbage_plan",
         component: GarbageMaker,
+      },
+      {
+        path: "/account",
+        component: UserOverview,
+        name: "user_overview",
+        meta: {
+          title: "Gebruikers",
+        },
+      },
+      {
+        path: "/account/nieuw",
+        name: "user_new",
+        component: UserCreation,
+        meta: {
+          title: "Nieuwe gebruiker",
+        },
+      },
+      {
+        path: "/gebouw",
+        component: BuildingOverview,
+        name: "building_overview",
+        meta: {
+          title: "Gebouwen",
+        },
+      },
+      {
+        path: "/ronde",
+        component: RoundOverview,
+        name: "round_overview",
+        meta: {
+          title: "Rondes",
+        },
       },
     ],
   },

@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import RoundedButton from "@/components/RoundedButton.vue";
+import RoundedButton from "@/components/buttons/RoundedButton.vue";
 
 defineProps({
   img: String,
@@ -29,6 +29,8 @@ defineProps({
   btnIcon: String,
   btnText: String,
 });
+
+defineEmits(["clicked"]);
 </script>
 
 <style scoped lang="scss">

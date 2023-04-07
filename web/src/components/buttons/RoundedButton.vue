@@ -1,5 +1,5 @@
 <template>
-  <button id="button">
+  <button id="button" @click="$emit('clicked')">
     <v-icon v-if="icon" color="#333333" :icon="icon" size="small" />
     <p v-if="value">{{ value }}</p>
   </button>
@@ -22,8 +22,7 @@
 </style>
 
 <script lang="ts" setup>
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const props = defineProps({
+defineProps({
   icon: String,
   value: String,
 });

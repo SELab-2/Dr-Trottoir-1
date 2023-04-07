@@ -8,10 +8,7 @@
       <v-text-field
         :label="search_placeholder()"
         v-model="filter_data.query"
-        @update:model-value="
-          help(filter_data.query);
-          $emit('onUpdate', filter_data);
-        "
+        @update:model-value="$emit('onUpdate', filter_data)"
         variant="underlined"
       />
     </template>
@@ -36,7 +33,7 @@
               variant="solo"
               v-model="s_day"
               @update:model-value="
-                filter_data.start_day = new Date(s_day);
+                filter_data.start_day = formatDate(new Date(s_day));
                 $emit('onUpdate', filter_data);
               "
             />
@@ -48,12 +45,12 @@
               variant="solo"
               v-model="e_day"
               @update:model-value="
-                filter_data.end_day = new Date(e_day);
+                filter_data.end_day = formatDate(new Date(e_day));
                 $emit('onUpdate', filter_data);
               "
             />
           </v-col>
-          <v-col>
+          <v-col v-if="search_by_labels.length > 1">
             <v-select
               variant="solo"
               label="Zoekcategorie"
@@ -84,7 +81,7 @@
             />
           </v-col>
           <!-- Search order column -->
-          <v-col v-if="sort_items.length != 0">
+          <v-col>
             <v-radio-group
               v-model="filter_data.sort_by"
               color="primary"
@@ -125,7 +122,8 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import Filterdata from "@/components/models/Filterdata";
+import FilterData from "@/components/filter/FilterData";
+import { formatDate } from "@/assets/scripts/date";
 
 // The filter data is emitted with the 'onUpdate' tag
 const props = defineProps({
@@ -171,7 +169,7 @@ const s_day = ref<string>(props.start_date.toISOString().substring(0, 10));
 const e_day = ref<string>(props.end_date.toISOString().substring(0, 10));
 
 // The filter data is emitted with the 'onUpdate' tag
-const filter_data = ref<Filterdata>({
+const filter_data = ref<FilterData>({
   // The search querry in the main search bar
   query: "",
   // The selcted value to seach by
@@ -183,11 +181,7 @@ const filter_data = ref<Filterdata>({
   // The currently selected filters
   filters: props.selected_filters,
   // The start and end date
-  start_day: props.start_date,
-  end_day: props.end_date,
+  start_day: formatDate(props.start_date),
+  end_day: formatDate(props.end_date),
 });
-
-function help(thing: any) {
-  console.log(thing);
-}
 </script>

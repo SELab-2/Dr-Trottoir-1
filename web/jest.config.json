@@ -1,0 +1,9 @@
+{
+  "collectCoverage": true,
+  "moduleFileExtensions": ["js", "ts", "json", "vue"],
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  },
+  "setupFiles": ["<rootDir>/__tests__/env.ts"],
+  "testMatch": ["<rootDir>/__tests__/*.test.ts"]
+}
