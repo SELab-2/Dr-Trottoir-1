@@ -29,7 +29,7 @@
     </div>
 
     <!-- Section with the contact info -->
-    <v-card class="mt-4" prepend-icon="mdi-account-details">
+    <BorderCard class="mt-4" prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
       <!-- Name, only shows when the admin wants to edit -->
       <v-row class="py-0 my-0" v-if="isAdmin && edit">
@@ -69,10 +69,10 @@
         @onUpdate="(newContact) => (contact = newContact)"
       >
       </ContactForm>
-    </v-card>
+    </BorderCard>
 
     <!-- Section with the adress -->
-    <v-card class="mt-4" prepend-icon="mdi-map-marker">
+    <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
       <template v-slot:title> Adres </template>
       <AddressFrom
         :class="edit ? spacing : 'mx-10'"
@@ -83,10 +83,10 @@
         :zip_code="address.zip_code"
         @onUpdate="(newAddress) => (address = newAddress)"
       ></AddressFrom>
-    </v-card>
+    </BorderCard>
 
     <!-- Section to pick the roles -->
-    <v-card v-if="isAdmin" class="mt-4" prepend-icon="mdi-account-multiple">
+    <BorderCard v-if="isAdmin" class="mt-4" prepend-icon="mdi-account-multiple">
       <template v-slot:title> Rollen </template>
       <v-select
         v-if="edit"
@@ -104,10 +104,10 @@
           :title="'- ' + String(role)"
         ></v-list-item>
       </v-list>
-    </v-card>
+    </BorderCard>
 
     <!-- Section to set new password -->
-    <v-card v-if="edit" class="mt-4" prepend-icon="mdi-lock">
+    <BorderCard v-if="edit" class="mt-4" prepend-icon="mdi-lock">
       <template v-slot:title> Nieuw wachtwoord </template>
       <v-list density="compact" :class="spacing">
         <v-text-field
@@ -129,10 +129,10 @@
           bg
         ></v-text-field>
       </v-list>
-    </v-card>
+    </BorderCard>
 
     <!-- Section that allows to save the settings -->
-    <v-card v-if="edit" class="my-4" prepend-icon="mdi-check">
+    <BorderCard v-if="edit" class="my-4" prepend-icon="mdi-check">
       <template v-slot:title> Sla bewerkingen op </template>
       <div class="d-flex">
         <v-text-field
@@ -154,11 +154,10 @@
           >Sla op</v-btn
         >
       </div>
-    </v-card>
-    <v-divider :thickness="3" />
+    </BorderCard>
 
     <!-- Section that allows to remove the account -->
-    <v-card v-if="edit" class="my-4" prepend-icon="mdi-delete">
+    <BorderCard v-if="edit" class="my-4" prepend-icon="mdi-delete">
       <template v-slot:title> Verwijder account </template>
       <div class="d-flex">
         <v-text-field
@@ -180,7 +179,7 @@
           >Verwijder account</v-btn
         >
       </div>
-    </v-card>
+    </BorderCard>
   </HFillWrapper>
 </template>
 <script lang="ts" setup>
@@ -191,6 +190,7 @@ import Contact from "@/components/models/Contact";
 import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
+import BorderCard from "@/components/cards/BorderCard.vue";
 
 // define the spacing for the input fields
 const spacing: String = "mx-4";
