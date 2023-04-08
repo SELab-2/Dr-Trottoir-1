@@ -51,22 +51,34 @@
                 : 'elevated'
             "
             :disabled="round.name == 'Sterre' || round.name == 'Korenmarkt'"
+            prepend-icon="mdi-play-circle-outline"
           >
             Start ronde</v-btn
           >
-          <v-chip
+          <v-btn
             v-else-if="
               calculateProgress(round.buildings_done, round.buildings) === 100
             "
+            :ripple="false"
+            :clickable="false"
+            variant="tonal"
             label
             color="success"
+            prepend-icon="mdi-check"
           >
-            <v-icon icon="mdi-check"></v-icon>
             Klaar
-          </v-chip>
-          <v-chip v-else label color="warning">
+          </v-btn>
+          <v-btn 
+            v-else 
+            label 
+            color="warning"
+            :ripple="false"
+            :clickable="false"
+            variant="tonal"
+            prepend-icon="mdi-progress-clock"
+          >
             Bezig {{ round.buildings_done }}/{{ round.buildings }}
-          </v-chip>
+          </v-btn>
         </template>
       </BorderCard>
 
