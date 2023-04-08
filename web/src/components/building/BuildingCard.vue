@@ -1,7 +1,6 @@
 <template>
   <BorderCard
-    v-if="building"
-    :clickable="building.data.length === 1"
+    :clickable="building!.data.length === 1"
     class="mx-1 mb-3"
     @click="
       () => {
@@ -28,20 +27,20 @@
         <v-card variant="flat" size="compact">
           <!-- Title -->
           <template v-slot:title>
-            {{ building.name }}
+            {{ building!.name }}
             <v-icon end v-if="comments"> mdi-comment-alert-outline </v-icon>
           </template>
           <!-- Subtitle -->
           <template v-slot:subtitle>
             <Avatar
-              :name="building.syndicus"
+              :name="building!.syndicus"
               size="x-small"
-              :key="building.syndicus"
+              :key="building!.syndicus"
             />
-            {{ building.syndicus }} <br />
+            {{ building!.syndicus }} <br />
             <v-chip label color="brown" class="mt-4">
               <v-icon icon="mdi-office-building-marker-outline"></v-icon>
-              <p class="ml-2">{{ building.adres }}</p>
+              <p class="ml-2">{{ building!.adres }}</p>
             </v-chip>
           </template>
 
@@ -51,10 +50,10 @@
               label
               color="blue"
               class="ml-3 align-top"
-              v-if="building.data.length === 1"
+              v-if="building!.data.length === 1"
             >
               <v-icon icon="mdi-calendar-clock"></v-icon>
-              <p class="ml-2">{{ building.data[0].date }}</p>
+              <p class="ml-2">{{ building!.data[0].date }}</p>
             </v-chip>
             <!-- Date expansion button-->
             <v-btn
@@ -69,12 +68,14 @@
       </v-col>
     </v-row>
     <v-expand-transition v-on:click.stop>
-      <div v-show="building.data.length > 1 && expanded">
+      <div v-show="building!.data.length > 1 && expanded">
         <v-divider></v-divider>
-        <div class="w-100 px-4 py-2">
+        <div
+          class="w-100 px-4 py-2"
+          v-if="building!.data.length > 1 && expanded"
+        >
           <v-chip
-            v-if="building.data.length > 1 && expanded"
-            v-for="(datum, id) of building.data"
+            v-for="(datum, id) of building!.data"
             :key="id"
             label
             class="w-100"

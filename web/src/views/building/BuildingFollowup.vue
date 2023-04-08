@@ -23,7 +23,6 @@ import { createDate, formatDate } from "@/assets/scripts/date";
 import BuildingCard from "@/components/building/BuildingCard.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
-
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
 const filter_options = ["Opmerkingen"];
 const sort_items: string[] = [];

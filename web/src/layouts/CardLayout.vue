@@ -1,10 +1,9 @@
 <template>
   <!-- Set default style and pass attributes -->
   <v-card
-
     variant="flat"
     v-bind="{ ...$attrs }"
-    style="border: rgba(189, 189, 189, 0.50) 1px solid;"
+    style="border: rgba(189, 189, 189, 0.5) 1px solid"
   >
     <!-- Pass all the slots -->
     <template v-for="(_, slotName) in $slots" #[slotName]>
