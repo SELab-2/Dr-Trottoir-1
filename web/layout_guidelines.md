@@ -59,8 +59,35 @@ Probeer op intiütieve plaatsen de andere kleuren te gebruiken. Bijvoorbeeld
 - Bevestingen: color `success`
 - Annuleren: color `error`
 
+## Layout
+Onderstaande 3 componenten zijn aangepast zodat ze mooi bij het thema aansluilten.
+
+### MainLayout
+Elke pagina (met uitzondering van de login pagina) maakt gebruik van de `MainLayout`. Zie de `router` sectie in `/web/README.md` voor meer info.
+
+### Cards
+Vuetify [v-card](https://vuetifyjs.com/en/components/cards/) biedt slots aan om titels, subtitels, icoontjes, etc. eenvoudig toe te voegen op een intiütieve plaats. We gebruiken `v-card` dan ook uitgebreid doorheen de applicatie. Indien je een card gebruikt om informatie te groeperen, maak dan gebruik van de `/web/layout/LayoutCard.vue` component. Dit is een wrapper component voor de v-card, gestijld in het thema.
+
+### Divider
+i.p.v. `v-divider` gebruik je `/web/layout/LayoutDivider.vue`. Deze component is gestijld in het thema.
+
 ## Compositie
-Vuetify [v-card](https://vuetifyjs.com/en/components/cards/) biedt slots aan om titels, subtitels, icoontjes, etc. eenvoudig toe te voegen op een intiütieve plaats.
+
+### Laag0: Spacing
+Indien de content van je pagina niet de hele breedte hoeft in te nemen kan je 
+hem wrappen met `/web/layout/HFillWrapper.vue`. Deze zorgt dat de content horizontaal gecentreerd staat. Bij het kleiner maken van het scherm wordt de content pas kleiner zodra die niet meer op het scherm past.
+
+### Laag1: background
+Deze laag bevat geen elevation, of omranding. Typisch plaatsen we hier 
+algemene titels, knoppen, info, of helemaal niks rechstreeks op.
+
+### Laag2: Surface (v-card)
+(margin 3 t.o.v. rand van laag 1)
+Vaak wil je stukjes informatie bundelen, dit kan je doen met de `LayoutCard`.
+Plaats hierin je titel, icoontjes etc. De `layoutCard` zorgt voor de stijl van het thema.
+
+### Laag3: Content
+Soms komen er componenten in een card terecht (textvelden etc.). Zorg ervoor dat deze margin 4 hebben met de rand van de card.
 
 ## Input velden
 Doorheen de applicatie maken we overal gebruik van dezelfde input velden.
