@@ -97,7 +97,7 @@
 import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import BorderCard from "@/components/cards/BorderCard.vue";
+import BorderCard from "@/layouts/BorderCard.vue";
 
 const router = useRouter();
 

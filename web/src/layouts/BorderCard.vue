@@ -1,7 +1,7 @@
 <template>
   <!-- Set default style and pass attributes -->
   <v-card
-    style="border: #bdbdbd 1px solid"
+    style="border: rgba(189, 189, 189, 0.68) 1px solid"
     variant="flat"
     v-bind="{ ...$attrs }"
   >

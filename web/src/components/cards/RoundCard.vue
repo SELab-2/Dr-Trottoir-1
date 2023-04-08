@@ -67,7 +67,7 @@
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
-import BorderCard from "@/components/cards/BorderCard.vue";
+import BorderCard from "@/layouts/BorderCard.vue";
 
 // TODO: maybe too much props to give to a component, could be changed to an object in the future
 // Default props for this component

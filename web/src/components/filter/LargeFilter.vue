@@ -124,7 +124,7 @@
 import { ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import { formatDate } from "@/assets/scripts/date";
-import BorderCard from "@/components/cards/BorderCard.vue";
+import BorderCard from "@/layouts/BorderCard.vue";
 
 // The filter data is emitted with the 'onUpdate' tag
 const props = defineProps({
