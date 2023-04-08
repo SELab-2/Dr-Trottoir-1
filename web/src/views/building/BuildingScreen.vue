@@ -100,10 +100,10 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import BuildingData from "@/components/BuildingData.vue";
-import RoundedButton from "@/components/RoundedButton.vue";
-import ImageCard from "@/components/ImageCard.vue";
-import AddButton from "@/components/AddButton.vue";
+import BuildingData from "@/components/building/BuildingData.vue";
+import RoundedButton from "@/components/buttons/RoundedButton.vue";
+import ImageCard from "@/components/cards/ImageCard.vue";
+import AddButton from "@/components/buttons/AddButton.vue";
 
 // reactive state to show the drawer or not
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -111,7 +111,7 @@ defineProps({
   id: String,
 });
 
-const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
+const images = ref<Array<{ about: string | null; time: Date; url: string }>>([
   {
     time: new Date(),
     about: "Aankomst",

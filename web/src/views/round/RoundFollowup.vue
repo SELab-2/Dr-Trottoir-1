@@ -9,7 +9,7 @@
         :sort_items="sort_items"
         :filter_items="filter_options"
         class="mx-1 mb-3"
-        @onUpdate="(new_data: Filterdata) => filter_data = new_data"
+        @onUpdate="(new_data: FilterData) => filter_data = new_data"
       />
       <RoundCard
         v-for="(round, i) in filtered_data()"
@@ -34,17 +34,17 @@
 
 <script lang="ts" setup>
 import Round from "@/components/models/Round";
-import RoundCard from "@/components/RoundCard.vue";
-import LargeFilter from "@/components/LargeFilter.vue";
+import RoundCard from "@/components/cards/RoundCard.vue";
+import LargeFilter from "@/components/filter/LargeFilter.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import Filterdata from "@/components/models/Filterdata";
-import { date_to_hh_mm } from "@/assets/scripts/format";
+import FilterData from "@/components/filter/FilterData";
+import { formatDate, date_to_hh_mm } from "@/assets/scripts/format";
 
 const router = useRouter();
 
 function redirect_to_detail() {
-  router.push({ path: "/rondes/detail" });
+  router.push({ name: "round_detail", params: { id: 0 } });
 }
 
 function round_has_comments(round: Round): boolean {
@@ -191,14 +191,14 @@ const filter_options = ["Klaar", "Bezig", "Niet begonnen", "Opmerkingen"];
 const sort_items = ["Voortgang", "Gebouwen"];
 
 // All the filter options
-const filter_data = ref<Filterdata>({
+const filter_data = ref<FilterData>({
   query: "",
   search_label: query_labels[0],
   sort_by: sort_items[0],
   sort_ascending: true,
   filters: [],
-  start_day: new Date(),
-  end_day: new Date(),
+  start_day: formatDate(new Date()),
+  end_day: formatDate(new Date()),
 });
 
 function filter_query(round: Round): boolean {

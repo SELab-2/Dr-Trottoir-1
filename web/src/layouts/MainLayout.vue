@@ -33,15 +33,19 @@
           </v-list-item>
 
           <div v-if="showAccount">
-            <router-link to="/">
-              <v-list-item
-                prepend-icon="mdi-account-cancel"
-                title="Afmelden"
-                value="logout"
-              />
-            </router-link>
+            <v-list-item
+              :to="{ name: 'login' }"
+              prepend-icon="mdi-account-cancel"
+              title="Afmelden"
+              value="logout"
+            />
 
-            <router-link to="/account/0/true">
+            <router-link
+              :to="{
+                name: 'account_settings',
+                params: { id: 0, isadmin: 'true' },
+              }"
+            >
               <v-list-item
                 prepend-icon="mdi-cog"
                 title="Account"
@@ -57,13 +61,12 @@
           <div v-if="isStudent">
             <p class="pa-2 font-weight-medium text-caption">Overzicht</p>
 
-            <router-link to="/planning">
-              <v-list-item
-                prepend-icon="mdi-calendar-edit"
-                title="Planning"
-                value="schedule"
-              />
-            </router-link>
+            <v-list-item
+              :to="{ name: 'student_planning' }"
+              prepend-icon="mdi-calendar-edit"
+              title="Planning"
+              value="schedule"
+            />
 
             <div class="py-2">
               <v-divider />
@@ -73,21 +76,19 @@
           <div v-if="isSuperStudent">
             <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
 
-            <router-link to="/opvolging">
-              <v-list-item
-                prepend-icon="mdi-transit-detour"
-                title="Opvolging"
-                value="rondes"
-              />
-            </router-link>
+            <v-list-item
+              :to="{ name: 'round_followup' }"
+              prepend-icon="mdi-transit-detour"
+              title="Opvolging"
+              value="rondes"
+            />
 
-            <router-link to="/gebouwen">
-              <v-list-item
-                prepend-icon="mdi-domain"
-                title="Gebouwen"
-                value="gebouwen"
-              />
-            </router-link>
+            <v-list-item
+              :to="{ name: 'building_followup' }"
+              prepend-icon="mdi-domain"
+              title="Gebouwen"
+              value="gebouwen"
+            />
 
             <div class="py-2">
               <v-divider />
@@ -95,15 +96,22 @@
           </div>
 
           <div v-if="isSyndicus">
-            <p class="pa-2 font-weight-medium text-caption">Gebouwbeheer</p>
+            <p class="pa-2 font-weight-medium text-caption">Mijn gebouwen</p>
 
-            <router-link to="/gebouwen">
-              <v-list-item
-                prepend-icon="mdi-file-cabinet"
-                title="Mijn Gebouwen"
-                value="gebouwen"
-              />
-            </router-link>
+            <div v-for="buildingid of [1, 2]" :key="buildingid">
+              <router-link
+                :to="{
+                  name: 'building_id_detail',
+                  params: { id: buildingid, date: today },
+                }"
+              >
+                <v-list-item
+                  prepend-icon="mdi-file-cabinet"
+                  :title="'Gebouw ' + buildingid"
+                  value="gebouwen"
+                />
+              </router-link>
+            </div>
 
             <div class="py-2">
               <v-divider />
@@ -113,29 +121,26 @@
           <div v-if="isAdmin">
             <p class="pa-2 font-weight-medium text-caption">Administratie</p>
 
-            <router-link to="/dashboard/gebruikers">
-              <v-list-item
-                prepend-icon="mdi-account-supervisor"
-                title="Gebruikers"
-                value="users"
-              ></v-list-item>
-            </router-link>
+            <v-list-item
+              :to="{ name: 'user_overview' }"
+              prepend-icon="mdi-account-supervisor"
+              title="Gebruikers"
+              value="users"
+            ></v-list-item>
 
-            <router-link to="/dashboard/gebouwen">
-              <v-list-item
-                prepend-icon="mdi-office-building-outline"
-                title="Gebouwen"
-                value="buildings"
-              ></v-list-item>
-            </router-link>
+            <v-list-item
+              :to="{ name: 'building_overview' }"
+              prepend-icon="mdi-office-building-outline"
+              title="Gebouwen"
+              value="buildings"
+            ></v-list-item>
 
-            <router-link to="/dashboard/rondes">
-              <v-list-item
-                prepend-icon="mdi-map-legend"
-                title="Routes"
-                value="routes"
-              ></v-list-item>
-            </router-link>
+            <v-list-item
+              :to="{ name: 'round_overview' }"
+              prepend-icon="mdi-map-legend"
+              title="Rondes"
+              value="rounds"
+            ></v-list-item>
           </div>
         </v-list>
 
@@ -152,7 +157,7 @@
         </div>
 
         <v-toolbar-title class="font-weight-medium">
-          {{ route.name }}
+          {{ route.meta.title }}
         </v-toolbar-title>
 
         <v-spacer />
@@ -165,9 +170,11 @@
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
-
+import { formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+
+const today = formatDate(new Date());
 
 // reactive state to show the drawer or not
 const drawer = ref(true);
@@ -203,13 +210,14 @@ function roles(): string {
   return str;
 }
 
-const threasholdWidth: Number = 750;
-// permanentdrawer
-const permanentDrawer = ref<Boolean>(window.innerWidth > threasholdWidth);
-function onResize() {
-  permanentDrawer.value = window.innerWidth > threasholdWidth;
-}
-window.addEventListener("resize", onResize);
+const thresholdWidth: number = 750;
+
+const permanentDrawer = ref<Boolean>(window.innerWidth > thresholdWidth);
+
+window.addEventListener(
+  "resize",
+  () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
+);
 </script>
 
 <style lang="scss">

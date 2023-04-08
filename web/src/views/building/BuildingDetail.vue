@@ -1,38 +1,32 @@
 <template>
-  <div class="selector px-4">
-    <v-select
-      class="building-select"
-      label="Gebouw"
-      :items="buildings"
-      v-model="selectedBuilding"
-    />
+  <div class="building-info">
+    <BuildingData :id="id" />
     <VueDatePicker
-      class="date-select"
+      class="date"
       v-model="selectedDate"
       :enable-time-picker="false"
       input-class-name="v-field__input"
       :format="formatDate"
-    ></VueDatePicker>
-  </div>
-  <div class="building-info" v-if="selectedDate && selectedBuilding">
-    <div
-      v-if="get(selectedBuilding, formatDate(selectedDate)) === null"
-      class="centre text-center"
-    >
+      @update:model-value="change"
+    />
+    <div v-if="get() === null" class="centre text-center">
       <v-icon icon="mdi-alert-circle" size="x-large" />
-      <h2>Geen data voor dit gebouw op {{ formatDate(selectedDate) }}.</h2>
+      <h2>Geen gegevens voor dit gebouw op {{ formatDate(selectedDate) }}.</h2>
       <p>Selecteer een ander gebouw of kies een andere datum.</p>
     </div>
     <div v-else>
-      <BuildingData id="1" />
       <div class="centre px-4 mb-4">
         <h2>Bezoek ({{ formatDate(selectedDate) }})</h2>
-        <button @click="router.push('/account/2/false')">
-          <Avatar
-            :name="get(selectedBuilding, formatDate(selectedDate)).student"
-            size="40"
-          />
-          {{ get(selectedBuilding, formatDate(selectedDate)).student }}
+        <button
+          @click="
+            router.push({
+              name: 'account_id',
+              params: { id: 2, isadmin: 'false' },
+            })
+          "
+        >
+          <Avatar :name="get().student" size="40" />
+          {{ get().student }}
         </button>
         <div class="image-grid" style="margin-top: 10px">
           <div
@@ -47,13 +41,10 @@
             />
           </div>
         </div>
-        <h3 v-if="get(selectedBuilding, formatDate(selectedDate)).comments">
-          Opmerkingen
-        </h3>
+        <h3 v-if="get().comments">Opmerkingen</h3>
         <div class="image-grid" style="margin-top: 10px">
           <div
-            v-for="comment in get(selectedBuilding, formatDate(selectedDate))
-              .comments"
+            v-for="comment in get().comments"
             :key="comment.title"
             style="position: relative"
           >
@@ -71,70 +62,47 @@
 </template>
 
 <script lang="ts" setup>
-import BuildingData from "@/components/BuildingData.vue";
-import ImageCard from "@/components/ImageCard.vue";
+import BuildingData from "@/components/building/BuildingData.vue";
+import ImageCard from "@/components/cards/ImageCard.vue";
 import Avatar from "@/components/Avatar.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { formatDate } from "@/assets/scripts/format";
+import { createDate, formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
 import router from "@/router";
 
-// reactive component which will store the current user
-const selectedBuilding = ref<String>("");
-const selectedDate = ref<Date>(new Date());
+const props = defineProps({
+  id: String,
+  date: String,
+});
+const selectedDate = ref<Date>(createDate(String(props.date)));
 
-function get(buildingName: String, buildingDate: String) {
-  for (let building of mockbuildingdata) {
-    if (building.name === buildingName && building.date === buildingDate) {
-      return building;
-    }
+function get(): any {
+  if (formatDate(selectedDate.value) === mockbuilding.date) {
+    return mockbuilding;
   }
   return null;
 }
 
-// TODO: mockdata, remove in future
-const buildings: string[] = [
-  "Eiffeltoren",
-  "Taj Mahal",
-  "Machu Picchu",
-  "Piramide",
-  "Atomium",
-  "Toren van Pisa",
-];
+function change() {
+  router.push({
+    name: "building_id_detail",
+    params: { id: props.id, date: formatDate(selectedDate.value) },
+  });
+}
 
-const mockbuildingdata: any[] = [
-  {
-    id: "0",
-    name: "Eiffeltoren",
-    date: "15/3/2023",
-    student: "Mats Van Belle",
-    comments: [
-      {
-        title: "Kapotte deur",
-        comment: "De deur in de berging is kapot",
-      },
-    ],
-  },
-  {
-    id: "1",
-    name: "Piramide",
-    date: "15/3/2023",
-    student: "Brent Matthys",
-  },
-  {
-    id: "2",
-    name: "Atomium",
-    date: "13/3/2023",
-    student: "Jens Pots",
-    comments: [
-      {
-        title: "Lelijk",
-        comment: "...",
-      },
-    ],
-  },
-];
+const mockbuilding = {
+  id: "0",
+  name: "Eiffeltoren",
+  date: "15/3/2023",
+  student: "Mats Van Belle",
+  comments: [
+    {
+      title: "Kapotte deur",
+      comment: "De deur in de berging is kapot",
+    },
+  ],
+};
 
 const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
   {
@@ -166,27 +134,17 @@ const images = ref<Array<{ about: String | null; time: Date; url: String }>>([
 </script>
 
 <style scoped lang="scss">
-.v-container {
-  padding-top: 0;
-}
-
-.selector {
-  width: 100%;
-  display: flex;
-}
-
-.building-select {
-  width: 40%;
-}
-
-.date-select {
-  width: 20%;
-  min-width: 140px;
-}
-
 .centre {
   max-width: 800px;
   margin: auto;
+}
+
+.date {
+  width: 20%;
+  min-width: 140px;
+  position: absolute;
+  top: 80px;
+  right: 20px;
 }
 
 .text-center {
