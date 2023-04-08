@@ -6,9 +6,11 @@
         :permanent="!!permanentDrawer"
         v-model="drawer"
         class="sidebar"
+        style="border-right: rgba(189, 189, 189, 0.5) 1px solid"
+        color="background"
       >
         <v-list density="compact" nav>
-          <v-list-item lines="two" @click="showAccount = !showAccount">
+          <v-list-item lines="two">
             <template v-slot:prepend>
               <Avatar :name="studentName" />
             </template>
@@ -17,22 +19,10 @@
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
                 <v-list-item-subtitle>{{ roles() }}</v-list-item-subtitle>
               </div>
-              <v-btn
-                v-if="!showAccount"
-                variant="plain"
-                icon="mdi-chevron-down"
-                size="small"
-              />
-              <v-btn
-                v-else
-                variant="plain"
-                icon="mdi-chevron-up"
-                size="small"
-              />
             </div>
           </v-list-item>
 
-          <div v-if="showAccount">
+          <div>
             <v-list-item
               :to="{ name: 'login' }"
               prepend-icon="mdi-account-cancel"
@@ -55,7 +45,7 @@
           </div>
 
           <div class="py-2">
-            <v-divider />
+            <DividerLayout />
           </div>
 
           <div v-if="isStudent">
@@ -69,7 +59,7 @@
             />
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
@@ -91,7 +81,7 @@
             />
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
@@ -114,7 +104,7 @@
             </div>
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
@@ -151,7 +141,7 @@
         </template>
       </v-navigation-drawer>
 
-      <v-app-bar prominent elevation="0">
+      <v-app-bar prominent elevation="0" color="background">
         <div class="px-4">
           <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
         </div>
@@ -173,6 +163,7 @@ import Avatar from "@/components/Avatar.vue";
 import { formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+import DividerLayout from "@/layouts/DividerLayout.vue";
 
 const today = formatDate(new Date());
 
@@ -187,9 +178,6 @@ const isStudent = ref(true);
 const isSuperStudent = ref(true);
 const isSyndicus = ref(true);
 const isAdmin = ref(true);
-
-// show account settings
-const showAccount = ref(false);
 
 // account display settings
 const studentName: string = "Jens Pots";
@@ -220,7 +208,7 @@ window.addEventListener(
 );
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 a {
   text-decoration: none;
   color: black;

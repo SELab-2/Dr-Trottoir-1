@@ -1,5 +1,5 @@
 <template>
-  <div class="background">
+  <div class="background" color="background">
     <div class="form">
       <!-- Display the Dr. troittoir logo above the login form -->
       <v-img contain src="@/assets/images/drtroittoir_logo.png"></v-img>
