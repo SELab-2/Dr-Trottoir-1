@@ -112,7 +112,7 @@ import AddressForm from "@/components/forms/AddressForm.vue";
 import Contact from "@/components/models/Contact";
 import ContactForm from "@/components/forms/ContactForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
-import BorderCard from "@/layouts/BorderCard.vue";
+import BorderCard from "@/layouts/CardLayout.vue";
 
 // define the spacing for the input fields
 const spacing: String = "mx-5";

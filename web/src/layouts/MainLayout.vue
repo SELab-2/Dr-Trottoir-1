@@ -6,6 +6,7 @@
         :permanent="!!permanentDrawer"
         v-model="drawer"
         class="sidebar"
+        style="border-right: rgba(189, 189, 189, 0.50) 1px solid;"
         color="background"
       >
         <v-list density="compact" nav>
@@ -44,7 +45,7 @@
           </div>
 
           <div class="py-2">
-            <v-divider />
+            <DividerLayout />
           </div>
 
           <div v-if="isStudent">
@@ -58,7 +59,7 @@
             />
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
@@ -80,7 +81,7 @@
             />
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
@@ -103,7 +104,7 @@
             </div>
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
@@ -162,6 +163,7 @@ import Avatar from "@/components/Avatar.vue";
 import { formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+import DividerLayout from "@/layouts/DividerLayout.vue";
 
 const today = formatDate(new Date());
 
@@ -206,7 +208,7 @@ window.addEventListener(
 );
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 a {
   text-decoration: none;
   color: black;
@@ -223,5 +225,6 @@ a {
 .sidebar {
   position: fixed !important;
   height: 100vh !important;
+
 }
 </style>

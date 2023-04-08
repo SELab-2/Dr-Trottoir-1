@@ -100,7 +100,7 @@ import Address2 from "@/components/models/Address2";
 import Building from "@/components/models/Building";
 import AddressForm from "../../components/forms/AddressForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
-import BorderCard from "@/layouts/BorderCard.vue";
+import BorderCard from "@/layouts/CardLayout.vue";
 
 const dummyMap = ref(null);
 const address2 = ref<Address2>({

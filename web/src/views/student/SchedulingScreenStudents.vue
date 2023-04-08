@@ -93,7 +93,7 @@ import { ref } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import { useRouter } from "vue-router";
 import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
-import BorderCard from "@/layouts/BorderCard.vue";
+import BorderCard from "@/layouts/CardLayout.vue";
 
 // the router constant
 const router = useRouter();
