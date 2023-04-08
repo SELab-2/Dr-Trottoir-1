@@ -1,5 +1,5 @@
 <template>
-  <v-card
+  <BorderCard
     v-if="building"
     :clickable="building.data.length === 1"
     class="mx-1 mb-3"
@@ -90,13 +90,14 @@
         </div>
       </div>
     </v-expand-transition>
-  </v-card>
+  </BorderCard>
 </template>
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import BorderCard from "@/components/cards/BorderCard.vue";
 
 const router = useRouter();
 
