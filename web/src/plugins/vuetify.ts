@@ -22,6 +22,8 @@ const drTrottoirLight: ThemeDefinition = {
     "surface": "#FFFFFF", // grey-lighten-4
     "on-surface": "#000000",
 
+    "border": "#BDBDBD",
+
     "primary": "#1867C0", // blue
     "on-primary": "#FFFFFF", // white
 
