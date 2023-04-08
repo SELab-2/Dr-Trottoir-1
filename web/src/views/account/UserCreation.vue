@@ -1,7 +1,7 @@
 <template>
   <HFillWrapper margin="mx-4">
     <!-- Personal info -->
-    <BorderCard class="mt-4" prepend-icon="mdi-account-details">
+    <BorderCard prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
       <v-row class="py-0 my-0">
         <v-col

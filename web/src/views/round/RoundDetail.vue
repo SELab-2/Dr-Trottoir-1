@@ -187,7 +187,6 @@ import router from "@/router";
 import RoundBuilding from "@/components/models/RoundBuilding";
 import { date_to_hh_mm, date_to_dd_MM_yyyy } from "@/assets/scripts/format";
 import BorderCard from "@/components/cards/BorderCard.vue";
-import { useRouter } from "vue-router";
 
 // add the role, will be replaced with actual athentication
 // TODO: replace with actual authentication

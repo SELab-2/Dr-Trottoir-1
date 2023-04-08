@@ -1,7 +1,7 @@
 <template>
   <HFillWrapper>
     <!-- card met alle info over het gebouw -->
-    <v-card prepend-icon="mdi-home" class="mb-4 px-4" title="Gebouw info">
+    <BorderCard prepend-icon="mdi-home" class="mb-3 px-4" title="Gebouw info">
       <v-text-field
         required
         type="text"
@@ -26,10 +26,10 @@
         v-model="building.manual"
         label="Manual"
       ></v-file-input>
-    </v-card>
+    </BorderCard>
 
     <!-- card met alle info over de locatie -->
-    <v-card class="mb-4">
+    <BorderCard class="mb-3">
       <v-img
         src="@/assets/images/dummyMap.png"
         v-model="dummyMap"
@@ -70,18 +70,17 @@
           @onUpdate="(newAddress) => (address2 = newAddress)"
         ></AddressForm>
       </div>
-    </v-card>
+    </BorderCard>
 
-    <v-card prepend-icon="mdi-image">
+    <BorderCard prepend-icon="mdi-image">
       <!-- v-card met alle extra afbeeldingen -->
       <template v-slot:title> Extra afbeeldigen </template>
       <v-card-item>
         <MultiAddImage @form-submitted="handleMultiImages"> </MultiAddImage>
         <div ref="container"></div>
       </v-card-item>
-    </v-card>
-    <v-divider :thickness="5" class="pa-md-4 mx-lg-auto"></v-divider>
-    <div class="d-flex flex-row-reverse">
+    </BorderCard>
+    <div class="d-flex flex-row-reverse mt-3">
       <v-btn
         @click="submit"
         to="/gebouw/0"
@@ -101,6 +100,7 @@ import Address2 from "@/components/models/Address2";
 import Building from "@/components/models/Building";
 import AddressForm from "../../components/forms/AddressForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
+import BorderCard from "@/components/cards/BorderCard.vue";
 
 const dummyMap = ref(null);
 const address2 = ref<Address2>({

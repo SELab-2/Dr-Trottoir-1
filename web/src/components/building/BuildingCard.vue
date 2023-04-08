@@ -1,8 +1,8 @@
 <template>
   <v-card
+    v-if="building"
     :clickable="building.data.length === 1"
     class="mx-1 mb-3"
-    v-if="building"
     @click="
       () => {
         if (building) {
