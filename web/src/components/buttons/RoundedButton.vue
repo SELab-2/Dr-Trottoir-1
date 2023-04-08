@@ -1,5 +1,13 @@
 <template>
-  <button id="button" @click="$emit('clicked')">
+  <button
+    id="button"
+    @click="
+      {
+        route();
+        $emit('clicked');
+      }
+    "
+  >
     <v-icon v-if="icon" color="#333333" :icon="icon" size="small" />
     <p v-if="value">{{ value }}</p>
   </button>
@@ -22,8 +30,16 @@
 </style>
 
 <script lang="ts" setup>
-defineProps({
+import router from "@/router";
+
+const props = defineProps({
   icon: String,
   value: String,
+  route: String,
+  params: Object,
 });
+
+function route() {
+  router.push({ name: props.route, params: props.params });
+}
 </script>

@@ -38,6 +38,7 @@
               :img="String(image.url)"
               btn-icon="mdi-email-arrow-right"
               btn-text="Send report"
+              route-name="contact_syndicus"
             />
           </div>
         </div>
@@ -53,6 +54,7 @@
               :text="comment.comment"
               btn-icon="mdi-email-arrow-right"
               btn-text="Send report"
+              route-name="contact_syndicus"
             />
           </div>
         </div>

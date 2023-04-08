@@ -13,7 +13,12 @@
     </v-card-item>
   </v-card>
   <div style="position: absolute; bottom: 20px; right: 10px" v-if="btnText">
-    <RoundedButton :icon="btnIcon" :value="btnText"></RoundedButton>
+    <RoundedButton
+      :icon="btnIcon"
+      :value="btnText"
+      :route="routeName"
+      :params="routeParams"
+    ></RoundedButton>
   </div>
 </template>
 
@@ -28,6 +33,8 @@ defineProps({
   textIcon: String,
   btnIcon: String,
   btnText: String,
+  routeName: String,
+  routeParams: Object,
 });
 
 defineEmits(["clicked"]);
