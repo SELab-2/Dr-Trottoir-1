@@ -1,6 +1,7 @@
 <template>
-  <div class="mx-4">
-    <v-card class="mt-4" prepend-icon="mdi-account-details">
+  <HFillWrapper margin="mx-4">
+    <!-- Personal info -->
+    <BorderCard prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
       <v-row class="py-0 my-0">
         <v-col
@@ -39,11 +40,11 @@
         @onUpdate="(newContact) => (contact = newContact)"
       >
       </ContactForm>
-    </v-card>
+    </BorderCard>
 
     <!-- Address input form of the user -->
     <!-- Section with the adress -->
-    <v-card class="mt-4" prepend-icon="mdi-map-marker">
+    <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
       <template v-slot:title> Adres </template>
       <AddressForm
         :class="spacing"
@@ -53,10 +54,10 @@
         :zip_code="address.zip_code"
         @onUpdate="(newAddress) => (address = newAddress)"
       ></AddressForm>
-    </v-card>
+    </BorderCard>
 
     <!-- Text input field for the password-->
-    <v-card class="mt-4" prepend-icon="mdi-lock">
+    <BorderCard class="mt-4" prepend-icon="mdi-lock">
       <template v-slot:title> Wachtwoord </template>
       <v-list density="compact" :class="spacing">
         <v-text-field
@@ -80,10 +81,10 @@
           bg
         ></v-text-field>
       </v-list>
-    </v-card>
+    </BorderCard>
 
     <!-- Selection box to determine the roles -->
-    <v-card class="mt-4" prepend-icon="mdi-account-multiple">
+    <BorderCard class="mt-4" prepend-icon="mdi-account-multiple">
       <template v-slot:title> Rollen </template>
       <v-select
         :class="spacing"
@@ -93,13 +94,15 @@
         multiple
         v-model="roles"
       ></v-select>
-    </v-card>
+    </BorderCard>
 
     <!-- Account creation button -->
     <div class="d-flex flex-row-reverse my-3">
-      <v-btn color="success" prepend-icon="mdi-check"> Maak account</v-btn>
+      <v-btn color="success" prepend-icon="mdi-check" to="settings/0/false">
+        Maak account</v-btn
+      >
     </div>
-  </div>
+  </HFillWrapper>
 </template>
 
 <script lang="ts" setup>
@@ -108,6 +111,8 @@ import Address from "@/components/models/Address";
 import AddressForm from "@/components/forms/AddressForm.vue";
 import Contact from "@/components/models/Contact";
 import ContactForm from "@/components/forms/ContactForm.vue";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
+import BorderCard from "@/layouts/CardLayout.vue";
 
 // define the spacing for the input fields
 const spacing: String = "mx-5";

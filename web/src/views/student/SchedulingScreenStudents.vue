@@ -1,94 +1,111 @@
 <template>
-  <!-- Day cards -->
-  <v-card
-    v-for="day in days"
-    :key="day.name"
-    class="mx-4 mt-4"
-    :title="day.name"
-    variant="flat"
-  >
-    <template v-slot:append>
-      <v-chip label prepend-icon="mdi-calendar-month-outline" variant="text">
-        {{ day.rounds[0].deadline.getDate() }}
-        {{ formatter.format(day.rounds[0].deadline) }}
-      </v-chip>
-    </template>
-    <!-- Round cards -->
-
+  <HFillWrapper>
+    <!-- Day cards-->
     <v-card
-      v-for="round in day.rounds"
-      :key="round.name"
-      class="ma-3"
-      :title="round.name"
-      prepend-icon="mdi-transit-detour"
-      :to="{ name: 'round_detail', params: { id: 0 } }"
+      v-for="day in days"
+      :key="day.name"
+      :title="day.name"
+      variant="flat"
+      color="background"
     >
-      <!-- Time -->
-      <template v-slot:subtitle>
-        {{ round.deadline.getHours() }}:{{
-          ("0" + round.deadline.getUTCMinutes()).slice(-2)
-        }}
-        <v-icon icon="mdi-clock-time-ten-outline"></v-icon>
-      </template>
-
-      <!-- Status -->
       <template v-slot:append>
-        <v-btn
-          v-if="calculateProgress(round.buildings_done, round.buildings) === 0"
-          color="primary"
-          @click="snackbar = !snackbar"
-          v-on:click.prevent
-          :variant="
-            round.name == 'Sterre' || round.name == 'Korenmarkt'
-              ? 'flat'
-              : 'elevated'
-          "
-          :disabled="round.name == 'Sterre' || round.name == 'Korenmarkt'"
-        >
-          Start ronde</v-btn
-        >
-        <v-chip
-          v-else-if="
-            calculateProgress(round.buildings_done, round.buildings) === 100
-          "
-          label
-          color="success"
-        >
-          <v-icon icon="mdi-check"></v-icon>
-          Klaar
-        </v-chip>
-        <v-chip v-else label color="warning">
-          Bezig {{ round.buildings_done }}/{{ round.buildings }}
+        <v-chip label prepend-icon="mdi-calendar-month-outline" variant="text">
+          {{ day.rounds[0].deadline.getDate() }}
+          {{ formatter.format(day.rounds[0].deadline) }}
         </v-chip>
       </template>
-    </v-card>
+      <!-- Round cards -->
+      <BorderCard
+        v-for="round in day.rounds"
+        :key="round.name"
+        class="mb-3 mx-1"
+        :title="round.name"
+        prepend-icon="mdi-transit-detour"
+        @click="redirect_to_detail()"
+      >
+        <!-- Time -->
+        <template v-slot:subtitle>
+          <v-chip
+            label
+            prepend-icon="mdi-clock-time-ten-outline"
+            variant="text"
+            size="compact"
+          >
+            {{ round.deadline.getHours() }}:{{
+              ("0" + round.deadline.getUTCMinutes()).slice(-2)
+            }}
+          </v-chip>
+        </template>
 
-    <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
-    <v-overlay v-model="snackbar">
-      <v-snackbar v-model="snackbar" timeout="-1" elevation="24" color="white">
-        <StartRoundPopup
-          :oncancel="() => (snackbar = !snackbar)"
-          :onsubmit="() => start_round()"
-        />
-      </v-snackbar>
-    </v-overlay>
-  </v-card>
+        <!-- Status -->
+        <template v-slot:append>
+          <v-btn
+            v-if="
+              calculateProgress(round.buildings_done, round.buildings) === 0
+            "
+            color="primary"
+            v-on:click.stop="snackbar = !snackbar"
+            :variant="
+              round.name == 'Sterre' || round.name == 'Korenmarkt'
+                ? 'flat'
+                : 'elevated'
+            "
+            :disabled="round.name == 'Sterre' || round.name == 'Korenmarkt'"
+          >
+            Start ronde</v-btn
+          >
+          <v-chip
+            v-else-if="
+              calculateProgress(round.buildings_done, round.buildings) === 100
+            "
+            label
+            color="success"
+          >
+            <v-icon icon="mdi-check"></v-icon>
+            Klaar
+          </v-chip>
+          <v-chip v-else label color="warning">
+            Bezig {{ round.buildings_done }}/{{ round.buildings }}
+          </v-chip>
+        </template>
+      </BorderCard>
+
+      <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
+      <v-overlay v-model="snackbar">
+        <v-snackbar
+          v-model="snackbar"
+          timeout="-1"
+          elevation="24"
+          color="background"
+        >
+          <StartRoundPopupContent
+            :oncancel="() => (snackbar = false)"
+            :onsubmit="() => redirect_to_detail()"
+          />
+        </v-snackbar>
+      </v-overlay>
+    </v-card>
+  </HFillWrapper>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import StartRoundPopup from "@/components/popups/StartRoundPopupContent.vue";
-import router from "@/router";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
+import { useRouter } from "vue-router";
+import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
+import BorderCard from "@/layouts/CardLayout.vue";
+
+// the router constant
+const router = useRouter();
+
+function redirect_to_detail() {
+  router.push({ name: "round_detail", params: { id: 0 } });
+}
 
 // https://stackoverflow.com/questions/1643320/get-month-name-from-date
 const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
 
-// logic for starting a round with a warning popup
 const snackbar = ref(false);
-function start_round() {
-  // TODO: start the round in the database
-  router.push({ name: "round_detail", params: { id: 0 } });
-}
 
 const calculateProgress = (done: number, toDo: number) => {
   return Math.round((done / toDo) * 100);
