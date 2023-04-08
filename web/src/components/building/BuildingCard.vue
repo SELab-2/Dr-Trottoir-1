@@ -69,7 +69,7 @@
     </v-row>
     <v-expand-transition v-on:click.stop>
       <div v-show="building!.data.length > 1 && expanded">
-        <v-divider></v-divider>
+        <DividerLayout/>
         <div
           class="w-100 px-4 py-2"
           v-if="building!.data.length > 1 && expanded"
@@ -99,6 +99,7 @@ import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import BorderCard from "@/layouts/CardLayout.vue";
+import DividerLayout from "@/layouts/DividerLayout.vue";
 
 const router = useRouter();
 
