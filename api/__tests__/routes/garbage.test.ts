@@ -49,16 +49,14 @@ async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
     // Een nieuwe action toevoegen om te gebruiken bij de testen
     let res = await session
         .post("/action")
-        .send({description: "Action for testing"})
+        .send({ description: "Action for testing" })
         .set("Cookie", [cookies]);
     expect(res.status).toEqual(201);
     garbageToCreate.action_id = res.body.id;
     garbage.action_id = res.body.id;
 
     // Een willekeurig gebouw nemen om te gebruiken bij de testen
-    res = await session
-        .get("/building")
-        .set("Cookie", [cookies]);
+    res = await session.get("/building").set("Cookie", [cookies]);
     expect(res.status).toEqual(200);
     const buildings = res.body;
     expect(buildings.length).toBeGreaterThan(0);
@@ -90,12 +88,12 @@ async function closeSession(
     cookies: string,
 ) {
     let res = await session
-        .delete("/action/" + garbage.action_id)
+        .delete("/garbage/" + garbage.id)
         .set("Cookie", [cookies]);
     expect(res.status).toEqual(200);
 
     res = await session
-        .delete("/garbage/" + garbage.id)
+        .delete("/action/" + garbage.action_id)
         .set("Cookie", [cookies]);
     expect(res.status).toEqual(200);
 }
@@ -137,7 +135,119 @@ describe("Successful tests", () => {
             .set("Cookie", [cookies]);
         expect(res.status).toEqual(200);
         expect(res.body).toEqual(updatedGarbage);
-    })
-})
+    });
+});
 
-app.close()
+describe("Unsuccessful tests", () => {
+    let session: supertest.SuperTest<any>;
+    let cookies: string;
+
+    beforeAll(async () => {
+        const session_cookies = await prepareSession();
+        session = session_cookies[0];
+        cookies = session_cookies[1];
+    });
+
+    afterAll(async () => {
+        await closeSession(session, cookies);
+    });
+
+    test("Test Authorization", async () => {
+        let res = await session.get("/garbage");
+        expect(res.status).toEqual(403);
+        expect(res.forbidden).toEqual(true);
+
+        res = await session.get("/garbage/" + garbage.id);
+        expect(res.status).toEqual(403);
+        expect(res.forbidden).toEqual(true);
+
+        res = await session.post("/garbage").send(garbageToCreate);
+        expect(res.status).toEqual(403);
+        expect(res.forbidden).toEqual(true);
+
+        res = await session
+            .patch("/garbage/" + garbage.id)
+            .send({ pickup_time: "2023-02-02T00:00:00.000Z" });
+        expect(res.status).toEqual(403);
+        expect(res.forbidden).toEqual(true);
+
+        res = await session.delete("/garbage/" + garbage.id);
+        expect(res.status).toEqual(403);
+        expect(res.forbidden).toEqual(true);
+    });
+
+    test("Test change id to unexisting id", async () => {
+        let res = await session
+            .patch("/garbage/" + garbage.id)
+            .send({ action_id: 0 })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(500);
+
+        res = await session
+            .patch("/garbage/" + garbage.id)
+            .send({ building_id: 0 })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(500);
+    });
+
+    test("Test using an unexisting garbage", async () => {
+        let res = await session.get("/garbage/0").set("Cookie", [cookies]);
+        expect(res.status).toEqual(404);
+        expect(res.notFound).toEqual(true);
+
+        res = await session
+            .patch("/garbage/0")
+            .send({ pickup_time: "2023-02-02T00:00:00.000Z" })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(404);
+        expect(res.notFound).toEqual(true);
+
+        res = await session.delete("/garbage/0").set("Cookie", [cookies]);
+        expect(res.status).toEqual(404);
+        expect(res.notFound).toEqual(true);
+    });
+
+    test("Test using wrong types", async () => {
+        // string in plaats van date
+        let res = await session
+            .patch("/garbage/" + garbage.id)
+            .send({ pickup_time: "date" })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(400);
+        expect(res.badRequest).toEqual(true);
+
+        // getal in plaats van date
+        res = await session
+            .patch("/garbage/" + garbage.id)
+            .send({ pickup_time: 2023 })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(400);
+        expect(res.badRequest).toEqual(true);
+
+        // boolean in plaats van date
+        res = await session
+            .patch("/garbage/" + garbage.id)
+            .send({ pickup_time: true })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(400);
+        expect(res.badRequest).toEqual(true);
+
+        // string in plaats van getal
+        res = await session
+            .patch("/garbage/" + garbage.id)
+            .send({ action_id: "one" })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(400);
+        expect(res.badRequest).toEqual(true);
+
+        // boolean in plaats van getal
+        res = await session
+            .patch("/garbage/" + garbage.id)
+            .send({ action_id: true })
+            .set("Cookie", [cookies]);
+        expect(res.status).toEqual(400);
+        expect(res.badRequest).toEqual(true);
+    });
+});
+
+app.close();
