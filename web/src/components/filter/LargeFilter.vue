@@ -30,7 +30,7 @@
             <v-text-field
               label="Eerste dag"
               type="date"
-              variant="solo"
+              variant="outlined"
               v-model="s_day"
               @update:model-value="
                 filter_data.start_day = formatDate(new Date(s_day));
@@ -42,7 +42,7 @@
             <v-text-field
               label="Laatste dag"
               type="date"
-              variant="solo"
+              variant="outlined"
               v-model="e_day"
               @update:model-value="
                 filter_data.end_day = formatDate(new Date(e_day));
@@ -52,7 +52,7 @@
           </v-col>
           <v-col v-if="search_by_labels.length > 1">
             <v-select
-              variant="solo"
+            variant="outlined"
               label="Zoekcategorie"
               :items="search_by_labels"
               v-model="filter_data.search_label"
