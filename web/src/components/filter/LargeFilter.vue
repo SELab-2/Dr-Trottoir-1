@@ -24,7 +24,7 @@
     </template>
     <v-expand-transition>
       <div v-show="dropdown">
-        <v-divider class="mb-3 border-opacity-100" color="border" />
+        <DividerLayout class="mb-3"/>
         <v-row class="mx-0">
           <v-col>
             <v-text-field
@@ -125,6 +125,7 @@ import { ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import { formatDate } from "@/assets/scripts/date";
 import BorderCard from "@/layouts/CardLayout.vue";
+import DividerLayout from "@/layouts/DividerLayout.vue";
 
 // The filter data is emitted with the 'onUpdate' tag
 const props = defineProps({
