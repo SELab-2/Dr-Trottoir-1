@@ -81,35 +81,34 @@
         :icon="building_status_icon(building)"
         icon-color="white"
       >
-        <router-link :to="{ name: 'building_id', params: { id: 3 } }">
-          <BorderCard
-            width="100%"
-            :title="building.name"
-            :subtitle="building.address"
+        <BorderCard
+          width="100%"
+          :title="building.name"
+          :subtitle="building.address"
+          @click="router.push({ name: 'building_id', params: { id: 3 } })"
+        >
+          <template v-slot:append>
+            <v-card-title>{{ building_time_range(building) }}</v-card-title>
+          </template>
+          <v-chip
+            prepend-icon="mdi-camera"
+            label
+            color="success"
+            class="pa-2 ma-2"
+            v-if="building.amount_of_pics > 0"
           >
-            <template v-slot:append>
-              <v-card-title>{{ building_time_range(building) }}</v-card-title>
-            </template>
-            <v-chip
-              prepend-icon="mdi-camera"
-              label
-              color="success"
-              class="pa-2 ma-2"
-              v-if="building.amount_of_pics > 0"
-            >
-              {{ building.amount_of_pics }} foto's geupload
-            </v-chip>
-            <v-chip
-              prepend-icon="mdi-comment"
-              label
-              color="red"
-              class="pa-2 ma-2"
-              v-if="building.comments"
-            >
-              Opmerkingen beschikbaar
-            </v-chip>
-          </BorderCard>
-        </router-link>
+            {{ building.amount_of_pics }} foto's geupload
+          </v-chip>
+          <v-chip
+            prepend-icon="mdi-comment"
+            label
+            color="red"
+            class="pa-2 ma-2"
+            v-if="building.comments"
+          >
+            Opmerkingen beschikbaar
+          </v-chip>
+        </BorderCard>
       </v-timeline-item>
 
       <!-- The end card as last on the timeline-->
@@ -188,6 +187,7 @@ import router from "@/router";
 import RoundBuilding from "@/components/models/RoundBuilding";
 import { date_to_hh_mm, date_to_dd_MM_yyyy } from "@/assets/scripts/format";
 import BorderCard from "@/components/cards/BorderCard.vue";
+import { useRouter } from "vue-router";
 
 // add the role, will be replaced with actual athentication
 // TODO: replace with actual authentication

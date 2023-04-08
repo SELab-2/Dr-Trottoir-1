@@ -1,15 +1,15 @@
 <template>
-  <v-card 
+  <v-card
     :clickable="building.data.length === 1"
     class="mx-1 mb-3"
     v-if="building"
     @click="
-        () => {
-          if (building) {
-            atClick(building.data[0].date);
-          }
+      () => {
+        if (building) {
+          atClick(building.data[0].date);
         }
-      "
+      }
+    "
   >
     <v-row class="flex-nowrap">
       <v-col cols="2" class="flex-grow-0 flex-shrink-0">
@@ -18,10 +18,12 @@
           cover
           src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
           class="prepend-img"
-          
         />
       </v-col>
-      <v-col class="flex-grow-1 flex-shrink-0" style="min-width: 100px; max-width: 100%;">
+      <v-col
+        class="flex-grow-1 flex-shrink-0"
+        style="min-width: 100px; max-width: 100%"
+      >
         <!-- The content -->
         <v-card variant="flat" size="compact">
           <!-- Title -->
@@ -36,15 +38,13 @@
               size="x-small"
               :key="building.syndicus"
             />
-            {{ building.syndicus }} <br>
+            {{ building.syndicus }} <br />
             <v-chip label color="brown" class="mt-4">
               <v-icon icon="mdi-office-building-marker-outline"></v-icon>
               <p class="ml-2">{{ building.adres }}</p>
             </v-chip>
-            
           </template>
 
-          
           <template v-slot:append>
             <!-- Date -->
             <v-chip
@@ -65,17 +65,13 @@
               v-else
             />
           </template>
-          
         </v-card>
       </v-col>
     </v-row>
     <v-expand-transition v-on:click.stop>
       <div v-show="building.data.length > 1 && expanded">
         <v-divider></v-divider>
-        <div
-          
-          class="w-100 px-4 py-2"
-        >
+        <div class="w-100 px-4 py-2">
           <v-chip
             v-if="building.data.length > 1 && expanded"
             v-for="(datum, id) of building.data"
@@ -92,9 +88,8 @@
             </v-icon>
           </v-chip>
         </div>
-      </div>       
+      </div>
     </v-expand-transition>
-      
   </v-card>
 </template>
 

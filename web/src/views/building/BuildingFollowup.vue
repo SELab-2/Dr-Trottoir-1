@@ -7,7 +7,11 @@
       class="mx-1 mb-3"
       @onUpdate="(new_data: Filterdata) => {filter_data = new_data; filterIndex++;}"
     />
-    <building-card :building="building" v-for="(building, id) in filter()" :key="id + ':' + filterIndex"/>
+    <building-card
+      :building="building"
+      v-for="(building, id) in filter()"
+      :key="id + ':' + filterIndex"
+    />
   </HFillWrapper>
 </template>
 

@@ -4,7 +4,7 @@
 -->
 <template>
   <div class="d-flex justify-center">
-    <div style="width: 800px;" :class="margin">
+    <div style="width: 800px" :class="margin">
       <slot />
     </div>
   </div>

@@ -24,7 +24,7 @@
     </template>
     <v-expand-transition>
       <div v-show="dropdown">
-        <v-divider class="mb-3 border-opacity-100" color="border"/>
+        <v-divider class="mb-3 border-opacity-100" color="border" />
         <v-row class="mx-0">
           <v-col>
             <v-text-field
