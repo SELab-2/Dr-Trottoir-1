@@ -8,7 +8,8 @@
     "test:unit": "vue-cli-service test:unit",
     "lint": "npx prettier --write src && npx eslint src",
     "preview": "vite preview --port 3000 --host",
-    "test": "jest __tests__"
+    "test": "jest __tests__",
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@bitpatty/imgproxy-url-builder": "^1.2.1",
@@ -33,6 +34,7 @@
     "@types/webfontloader": "^1.6.35",
     "@vitejs/plugin-vue": "^3.0.3",
     "@vue/eslint-config-typescript": "^11.0.0",
+    "cypress": "^12.9.0",
     "dotenv": "^16.0.3",
     "eslint": "^8.22.0",
     "eslint-plugin-vue": "^9.3.0",

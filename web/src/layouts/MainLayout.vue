@@ -25,6 +25,7 @@
           <div>
             <v-list-item
               :to="{ name: 'login' }"
+              class="logout"
               prepend-icon="mdi-account-cancel"
               title="Afmelden"
               value="logout"

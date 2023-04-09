@@ -12,6 +12,7 @@
       <!-- The input field for the e-mail -->
       <v-text-field
         v-model="email"
+        class="email"
         :prepend-inner-icon="'mdi-email'"
         label="E-mail"
         type="text"
@@ -21,6 +22,7 @@
       <!-- The input field for the password -->
       <v-text-field
         v-model="password"
+        class="password"
         :prepend-inner-icon="'mdi-lock'"
         :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
         :type="showPsswd ? 'text' : 'password'"
@@ -40,6 +42,7 @@
         <!-- Login button -->
         <!-- TODO: should link to correct page for which user authenticated, now default student  -->
         <v-btn
+          class="login"
           prepend-icon="mdi-login"
           color="success"
           @click="useAuthStore().logIn(email, password)"
