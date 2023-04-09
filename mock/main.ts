@@ -1,39 +1,16 @@
-import {
-    createUser,
-    createRegion,
-    createUserRegion,
-    addDefaultAdministrator,
-} from "./src/user";
-import {
-    createBuilding,
-    createAction,
-    createGarbage,
-    createBuildingImages,
-} from "./src/building";
-import { createRound, createRoundBuilding } from "./src/round";
-import {
-    createSchedule,
-    createProgress,
-    createProgressImage,
-} from "./src/schedule";
 import dotenv from "dotenv";
+import {
+    deleteDatabaseData,
+    initialiseDatabase,
+} from "../api/__tests__/utilities/database.utility";
 
 dotenv.config();
 
 async function main() {
-    await createUser();
-    await createRegion();
-    await createBuilding();
-    await createUserRegion();
-    await createAction();
-    await createGarbage();
-    await createRound();
-    await createRoundBuilding();
-    await createSchedule();
-    await createBuildingImages();
-    await createProgress();
-    await createProgressImage();
-    await addDefaultAdministrator();
+    console.log("Purging existing data");
+    await deleteDatabaseData();
+    console.log("Loading new data");
+    await initialiseDatabase();
 }
 
 // Actually call main
