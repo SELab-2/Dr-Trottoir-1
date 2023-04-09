@@ -1,4 +1,4 @@
-import { APIError } from "./api_error";
+import { QueryError } from "./query_error";
 
 /**
  * Abstractie overheen onze API voor client side queries uit te voeren.
@@ -13,7 +13,47 @@ export abstract class Query<Parameters, Result> {
         process.env.VUE_APP_API_SERVER_ADDRESS ??
         "";
 
-    // Geef de resulterende URL voor een query op basis van gegeven parameters.
+    /**
+     * Convenience function die een request maakt en het resultaat als JSON
+     * terug geeft.
+     * @param url Waarheen de request gestuurd wordt.
+     * @param method "GET", "POST", "PATCH", "DELETE", etc.
+     * @throwd QueryError
+     */
+    private async fetchJSON(url: string, method = "GET"): Promise<any | null> {
+        let res: Response | null = null;
+        let json: any = null;
+
+        try {
+            res = await fetch(url, {
+                method: method,
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                redirect: "error",
+            });
+        } catch (e) {
+            throw new QueryError(503, "Service Unavailable");
+        }
+
+        try {
+            json = await res.json();
+        } catch (e) {
+            throw new QueryError(500, "Internal Server Error");
+        }
+
+        if (!res.ok) {
+            throw new QueryError(res.status, json["message"] ?? "Unknown");
+        }
+
+        return json;
+    }
+
+    /**
+     * Bepaal de URL op basis van de gegeven parameters.
+     */
     url(query: Partial<Parameters>): string {
         let url = this.server + this.endpoint + "?";
 
@@ -32,78 +72,31 @@ export abstract class Query<Parameters, Result> {
 
     /**
      * Vraag een element op met een specifieke identifier. Indien een een HTTP
-     * error voorvalt, wordt deze opgevangen en teruggegeven.
+     * error voorvalt, wordt deze opgevangen en teruggegeven
+     * @throws QueryError
      */
-    async getOne(id: number): Promise<Result | APIError> {
+    async getOne(id: number): Promise<Result> {
         if (Number.isNaN(id)) {
-            return { code: 400, message: "Bad Request" };
+            throw new QueryError(400, "Bad Request");
         }
 
-        try {
-            const url = this.server + this.endpoint + "/" + id;
-
-            const res = await fetch(url, {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                redirect: "error",
-            });
-
-            const json = await res.json();
-
-            if (!res.ok) {
-                return {
-                    code: res.status,
-                    message: json["message"] ?? "Unknown",
-                };
-            }
-
-            return json;
-        } catch (e) {
-            return { code: 503, message: "Service Unavailable" };
-        }
+        return this.fetchJSON(this.server + this.endpoint + "/" + id);
     }
 
     /**
      * Vraag alle elementen op die voldoen aan de gegeven parameters. Indien een
      * HTTP error voorvalt, wordt deze opgevangen en teruggegeven.
+     * @throws QueryError
      */
-    async getAll(
-        query: Partial<Parameters> = {},
-    ): Promise<Array<Result> | APIError> {
-        try {
-            const res = await fetch(this.url(query), {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                redirect: "error",
-            });
-
-            const json = await res.json();
-
-            if (!res.ok) {
-                return {
-                    code: res.status,
-                    message: json["message"] ?? "Unknown",
-                };
-            }
-
-            return json;
-        } catch (e) {
-            return { code: 503, message: "Service Unavailable" };
-        }
+    async getAll(query: Partial<Parameters> = {}): Promise<Array<Result>> {
+        return this.fetchJSON(this.url(query));
     }
 
     /**
      * Update een specifiek element via HTTP PATCH.
+     * @throws QueryError
      */
-    async updateOne(element: Partial<Result>): Promise<Result | APIError> {
+    async updateOne(element: Partial<Result>): Promise<Result> {
         throw new Error("Not Implemented");
     }
 
@@ -111,11 +104,9 @@ export abstract class Query<Parameters, Result> {
      * Verwijder een element via HTTP DELETE. Indien een "hard delete"
      * uitgevoerd te worden dient dit expliciet opgegeven te worden als
      * argument.
+     * @throws QueryError
      */
-    async deleteOne(
-        element: Partial<Result>,
-        hard = false,
-    ): Promise<void | APIError> {
+    async deleteOne(element: Partial<Result>, hard = false): Promise<void> {
         throw new Error("Not Implemented");
     }
 }
