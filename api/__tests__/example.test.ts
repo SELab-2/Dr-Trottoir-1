@@ -94,6 +94,7 @@ describe("Example test suite", () => {
     });
 
     afterAll(() => {
+        // close the app to release all resources
         app.close();
     });
 });

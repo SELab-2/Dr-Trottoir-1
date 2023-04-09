@@ -1,5 +1,5 @@
 import request from "supertest";
-import "jest-expect-message";
+import { expect } from "@jest/globals";
 
 /**
  * Describes different authentication levels.
@@ -71,9 +71,7 @@ export class Testrunner {
         const cookie = await this.authenticate(authLevel);
 
         const response = await this.server.get(url).set("Cookie", [cookie]);
-        expect(response.statusCode, "Authentication level is too low", {
-            showPrefix: false,
-        }).toEqual(statusCode);
+        expect(response.statusCode).toEqual(statusCode);
 
         this.verifyBody(expectedData, response.body);
 
@@ -196,8 +194,6 @@ export class Testrunner {
         }
 
         // verify that expected stuff is received
-        expect(body.length, "Received too much or too little data!", {
-            showPrefix: false,
-        }).toEqual(expected.length);
+        expect(body.length).toEqual(expected.length);
     }
 }
