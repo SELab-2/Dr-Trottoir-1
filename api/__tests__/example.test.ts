@@ -8,21 +8,27 @@ import app from "../src/main";
 import {
     deleteDatabaseData,
     initialiseDatabase,
+    restoreTables,
 } from "../../mock/src/database";
 
 describe("Example test suite", () => {
     let testRunner: Testrunner;
 
+    /**
+     * Acquire a reference to the server and create the Testrunner
+     * Also set the whole database up cleanly ONCE
+     */
     beforeAll(async () => {
+        const server = request(app);
+        testRunner = new Testrunner(server);
+
         // clean the database
         await deleteDatabaseData();
         await initialiseDatabase();
-
-        const server = request(app);
-        testRunner = new Testrunner(server);
     });
 
     test("Example GET", async () => {
+        // define values that are expected from GET /action
         const expected = [
             {
                 id: 1,
@@ -34,6 +40,7 @@ describe("Example test suite", () => {
             },
         ];
 
+        // let the runner run
         await testRunner.get(
             "/action",
             expected,
@@ -51,6 +58,9 @@ describe("Example test suite", () => {
             newAction,
             AuthenticationLevel.ADMINISTRATOR,
         );
+
+        // clean up after ourselves
+        await restoreTables("action");
     });
 
     test("Example PATCH", async () => {
@@ -58,6 +68,7 @@ describe("Example test suite", () => {
             id: 1,
             description: "Update!",
         };
+
         await testRunner.patch(
             "/action/1",
             updatedAction,
@@ -66,7 +77,20 @@ describe("Example test suite", () => {
     });
 
     test("Example DELETE", async () => {
-        await testRunner.delete("/action/3", AuthenticationLevel.ADMINISTRATOR);
+        // first delete garbage that is connected to this action, then action itself
+        await testRunner.delete(
+            "/garbage/2",
+            AuthenticationLevel.ADMINISTRATOR,
+        );
+
+        await testRunner.delete("/action/2", AuthenticationLevel.ADMINISTRATOR);
+    });
+
+    afterEach(async () => {
+        // clean up after ourselves
+        // The tests must be kept idempotent => make sure you restore all tables you (might) have changed!
+        // Also be very careful with the order of the restoration of tables!
+        await restoreTables("action", "garbage");
     });
 
     afterAll(() => {
