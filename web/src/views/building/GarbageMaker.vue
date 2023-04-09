@@ -9,26 +9,26 @@
         ></v-select>
       </v-col>
       <v-col>
-        <v-select v-model="action" :items="actions" label="Action"></v-select>
+        <v-select v-model="action" :items="actions" label="Actie"></v-select>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
-        <v-select v-model="frequency" :items="frequencys" label="Frequency"></v-select>
+        <v-select v-model="frequency" :items="frequencys" label="Frequentie"></v-select>
       </v-col>
       <v-col>
-        <v-text-field v-model="startDate" label="Start Date" type="date"></v-text-field>
+        <v-text-field v-model="startDate" label="Start Datum" type="date"></v-text-field>
       </v-col>
       <v-col v-if="frequency !== 'enkel'">
         <v-text-field
           v-model="endDate"
           v-if="frequency !== 'enkel'"
-          label="End Date"
+          label="Einde Datum"
           type="date"
         ></v-text-field>
       </v-col>
       <v-col>
-        <v-text-field v-model="time" label="Time" type="time"></v-text-field>
+        <v-text-field v-model="time" label="Tijd" type="time"></v-text-field>
       </v-col>
     </v-row>
 
