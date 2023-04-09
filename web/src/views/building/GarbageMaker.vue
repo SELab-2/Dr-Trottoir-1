@@ -1,11 +1,34 @@
 <template>
   <div>
-    <v-select v-model="garbageType" :items="garbageTypes" label="Garbage Type"></v-select>
-    <v-select v-model="action" :items="actions" label="Action"></v-select>
-    <v-text-field v-model="startDate" label="Start Date" type="date"></v-text-field>
-    <v-text-field v-model="endDate" label="End Date" type="date"></v-text-field>
-    <v-select v-model="day" :items="days" label="Day"></v-select>
-    <v-text-field v-model="time" label="Time" type="time"></v-text-field>
+    <v-row>
+      <v-col>
+        <v-select
+          v-model="garbageType"
+          :items="garbageTypes"
+          label="Garbage Type"
+        ></v-select>
+      </v-col>
+      <v-col>
+        <v-select v-model="action" :items="actions" label="Action"></v-select>
+      </v-col>
+      <v-col>
+        <v-select v-model="day" :items="days" label="Day"></v-select>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-text-field v-model="startDate" label="Start Date" type="date"></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field v-model="endDate" label="End Date" type="date"></v-text-field>
+      </v-col>
+      <v-col>
+        <v-select v-model="frequency" :items="frequencys" label="Frequency"></v-select>
+      </v-col>
+      <v-col>
+        <v-text-field v-model="time" label="Time" type="time"></v-text-field>
+      </v-col>
+    </v-row>
 
     <v-btn @click="add">Add</v-btn>
     <v-btn @click="submit">Submit</v-btn>
@@ -20,7 +43,7 @@
 
     <v-list>
       <v-list-item v-for="day in detailedDays" :key="day.id">
-        <v-list-item-title>{{ day.details }}</v-list-item-title>
+        <v-list-item-title>{{ day.day }}</v-list-item-title>
         <v-btn @click="deleteDay(day.id)">Delete</v-btn>
       </v-list-item>
     </v-list>
@@ -28,37 +51,72 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { scheduler } from "timers/promises";
+import { ref } from "vue";
 
-const garbageTypes = ['REST', 'PMD', 'GFT',"Papier"];
-const actions = ['buiten zetten', 'binnen halen'];
-const days = ['Maanday', 'Dinsdag', 'Donderdag'];
+interface Schedule {
+  id: number;
+  summary: string;
+  start: Date;
+  end: Date;
+  day: string;
+  garbageType: string;
+  action: string;
+  time: string;
+}
 
-const garbageType = ref('');
-const action = ref('');
-const startDate = ref('');
-const endDate = ref('');
-const day = ref('');
-const time = ref('');
+interface DetailedDay {
+  id: number;
+  scheduleId: number;
+  date: Date;
+  day: string;
+  garbageType: string;
+  action: string;
+  time: string;
+}
+
+const garbageTypes = ["REST", "PMD", "GFT", "Papier"];
+const actions = ["buiten zetten", "binnen halen"];
+const days = [
+  "Maanday",
+  "Dinsdag",
+  "Woensdag",
+  "Donderdag",
+  "Vrijdag",
+  "Zaterdag",
+  "Zondag",
+];
+const frequencys = ["enkel", "wekelijks", "maandelijks"];
+
+const garbageType = ref("");
+const action = ref("");
+const startDate = ref("");
+const endDate = ref("");
+const day = ref("");
+const time = ref("");
+const frequency = ref("");
 
 //nu nog een string voor het simple te houden
-const summary = ref<Array<{ id: number; summary: string }>>([]);
-const detailedDays = ref<Array<{ id: number; details: string }>>([]);
+const summary = ref<Array<Schedule>>([]);
+const detailedDays = ref<Array<DetailedDay>>([]);
 
-let idCounter = 0;
+let scheduleCounter = 0;
+let dayCounter = 0;
 
 function add() {
-  const scheduleSummary = {
-    id: idCounter++,
+  const scheduleSummary: Schedule = {
+    id: scheduleCounter,
     summary: `${startDate.value} - ${endDate.value}, ${garbageType.value}, ${time.value}, ${action.value}`,
     start: new Date(startDate.value),
     end: new Date(endDate.value),
     day: day.value,
+    garbageType: garbageType.value,
+    action: action.value,
+    time: time.value,
   };
   summary.value.push(scheduleSummary);
 
   // Calculate all separate days
-  // simple version
   const start = new Date(startDate.value);
   const end = new Date(endDate.value);
   const oneDay = 24 * 60 * 60 * 1000;
@@ -66,21 +124,31 @@ function add() {
   for (let d = start; d <= end; d.setTime(d.getTime() + oneDay)) {
     if (days[d.getDay()] === day.value) {
       detailedDays.value.push({
-        id: idCounter++,
-        details: `${d.toISOString().slice(0, 10)}, ${garbageType.value}, ${time.value}, ${action.value}`,
+        id: dayCounter++,
+        scheduleId: scheduleCounter,
+        date: d,
+        day: days[d.getDay()],
+        garbageType: garbageType.value,
+        action: action.value,
+        time: time.value,
       });
     }
   }
+  scheduleCounter++;
 }
-
 function deleteSummary(id: number) {
-  console.log("delete");
+  const correspondingSummary = summary.value.find(
+    (schedule) => schedule.id === id
+  ) as Schedule;
+  if (correspondingSummary) {
+    detailedDays.value = detailedDays.value.filter((day) => day.scheduleId !== id);
+  }
+  summary.value = summary.value.filter((schedule) => schedule.id !== id);
 }
-
 
 function submit() {
-  console.log('All days:');
-  detailedDays.value.forEach(day => console.log(day.details));
+  console.log("All days:");
+  detailedDays.value.forEach((day) => console.log(day.date));
 }
 
 function clearAll() {
@@ -89,7 +157,6 @@ function clearAll() {
 }
 
 function deleteDay(id: number) {
-  detailedDays.value = detailedDays.value.filter(day => day.id !== id);
+  detailedDays.value = detailedDays.value.filter((day) => day.id !== id);
 }
-
 </script>
