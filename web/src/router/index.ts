@@ -19,7 +19,6 @@ import RoundOverview from "@/views/dashboard/Round.vue";
 import ContactSyndicus from "@/views/contact/ContactSyndicus.vue";
 import Auth from "@/views/dev/Auth.vue";
 
-
 const routes = [
   {
     path: "/",
