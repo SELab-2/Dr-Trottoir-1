@@ -1,184 +1,95 @@
 <template>
-  <v-container>
-    <div v-for="(schedule, index) in schedules" :key="index">
-      <v-row>
-        <v-col>
-          <v-select
-            v-model="schedule.garbageType"
-            :items="garbageTypes"
-            label="Vuilnis Type"
-            outlined
-            dense
-          ></v-select>
-        </v-col>
+  <div>
+    <v-select v-model="garbageType" :items="garbageTypes" label="Garbage Type"></v-select>
+    <v-select v-model="action" :items="actions" label="Action"></v-select>
+    <v-text-field v-model="startDate" label="Start Date" type="date"></v-text-field>
+    <v-text-field v-model="endDate" label="End Date" type="date"></v-text-field>
+    <v-select v-model="day" :items="days" label="Day"></v-select>
+    <v-text-field v-model="time" label="Time" type="time"></v-text-field>
 
-        <v-col >
-          <v-select
-            v-model="schedule.action"
-            :items="actions"
-            label="Actie"
-            outlined
-            dense
-          ></v-select>
-        </v-col>
+    <v-btn @click="add">Add</v-btn>
+    <v-btn @click="submit">Submit</v-btn>
+    <v-btn @click="clearAll">Clear All</v-btn>
 
-        <v-col>
-          <v-text-field
-            v-model="schedule.startDate"
-            label="Start Datum"
-            type="date"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
+    <v-list>
+      <v-list-item v-for="schedule in summary" :key="schedule.id">
+        <v-list-item-title>{{ schedule.summary }}</v-list-item-title>
+        <v-btn @click="deleteSummary(schedule.id)">Delete</v-btn>
+      </v-list-item>
+    </v-list>
 
-        <v-col>
-          <v-text-field
-            v-model="schedule.endDate"
-            label="Einde Datum"
-            type="date"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
-
-        <v-col>
-          <v-select
-            v-model="schedule.frequency"
-            :items="frequencies"
-            label="Frequenctie"
-            outlined
-            dense
-          ></v-select>
-        </v-col>
-
-        <v-col>
-          <v-select
-            v-model="schedule.day"
-            :items="days"
-            label="Dag"
-            outlined
-            dense
-          ></v-select>
-        </v-col>
-
-        <v-col>
-          <v-text-field
-            v-model="schedule.time"
-            label="Tijd"
-            type="time"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
-      </v-row>
-    </div>
-
-    <v-row justify="center">
-        <v-btn color="primary" @click="addSchedule">+</v-btn>
-    </v-row>
-
-    <v-row>
-      <v-col cols="12">
-        <h4>Schedules:</h4>
-        <v-list>
-          <v-list-item
-            v-for="(schedule, index) in sortedSchedules"
-            :key="index"
-          >
-            <v-list-item-content>
-              <div class="d-flex align-center">
-                <div :style="{backgroundColor: getColor(schedule.garbageType), borderRadius: '50%', width: '20px', height: '20px'}"></div>
-                {{ schedule.day }} - {{ schedule.garbageType }} - {{
-                  schedule.action
-                }} - Start: {{ schedule.startDate }} - End: {{
-                  schedule.endDate
-                }} - {{ schedule.frequency }} - Time: {{ schedule.time }}
-              </div>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-col>
-    </v-row>
-  </v-container>
+    <v-list>
+      <v-list-item v-for="day in detailedDays" :key="day.id">
+        <v-list-item-title>{{ day.details }}</v-list-item-title>
+        <v-btn @click="deleteDay(day.id)">Delete</v-btn>
+      </v-list-item>
+    </v-list>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import {ref, reactive, computed } from "vue";
+import { ref } from 'vue';
 
-interface Schedule {
-  garbageType: string;
-  action: string;
-  startDate: string;
-  endDate: string;
-  frequency: string;
-  day: string;
-  time: string;
-}
-const schedules = reactive<Schedule[]>([
-  {
-    garbageType: "",
-    action: "",
-    startDate: "",
-    endDate: "",
-    frequency: "",
-    day: "",
-    time: "",
-  },
-]);
+const garbageTypes = ['REST', 'PMD', 'GFT',"Papier"];
+const actions = ['buiten zetten', 'binnen halen'];
+const days = ['Maanday', 'Dinsdag', 'Donderdag'];
 
-const garbageTypes = [
-  "Vuilnis type 1",
-  "Vuilnis type 2",
-  "Vuilnis type 3",
-  "Vuilnis type 4",
-  "Vuilnis type 5",
-];
-const actions = ["Actie 1", "Actie 2-"];
-const frequencies = ["1", "2", "4"];
-const days = [
-  "M",
-  "D",
-  "W",
-  "D",
-  "V",
-  "Z",
-  "Z",
-];
+const garbageType = ref('');
+const action = ref('');
+const startDate = ref('');
+const endDate = ref('');
+const day = ref('');
+const time = ref('');
 
-function addSchedule() {
-  schedules.push({
-    garbageType: "",
-    action: "",
-    startDate: "",
-    endDate: "",
-    frequency: "",
-    day: "",
-    time: "",
-  });
-}
+//nu nog een string voor het simple te houden
+const summary = ref<Array<{ id: number; summary: string }>>([]);
+const detailedDays = ref<Array<{ id: number; details: string }>>([]);
 
-const sortedSchedules = computed(() => {
-  return schedules.slice().sort((a, b) => {
-    return a.day.localeCompare(b.day);
-  });
-});
+let idCounter = 0;
 
-function getColor(garbageType: string) {
-  switch (garbageType) {
-    case "Vuilnis type 1":
-      return "#F44336";
-    case "Vuilnis type 2":
-      return "#4CAF50";
-    case "Vuilnis type 3":
-      return "#FF9800";
-    case "Vuilnis type 4":
-      return "#2196F3";
-    case "Vuilnis type 5":
-      return "#9C27B0";
-    default:
-      return "#000000";
+function add() {
+  const scheduleSummary = {
+    id: idCounter++,
+    summary: `${startDate.value} - ${endDate.value}, ${garbageType.value}, ${time.value}, ${action.value}`,
+    start: new Date(startDate.value),
+    end: new Date(endDate.value),
+    day: day.value,
+  };
+  summary.value.push(scheduleSummary);
+
+  // Calculate all separate days
+  // simple version
+  const start = new Date(startDate.value);
+  const end = new Date(endDate.value);
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  for (let d = start; d <= end; d.setTime(d.getTime() + oneDay)) {
+    if (days[d.getDay()] === day.value) {
+      detailedDays.value.push({
+        id: idCounter++,
+        details: `${d.toISOString().slice(0, 10)}, ${garbageType.value}, ${time.value}, ${action.value}`,
+      });
+    }
   }
+}
+
+function deleteSummary(id: number) {
+  console.log("delete");
+}
+
+
+function submit() {
+  console.log('All days:');
+  detailedDays.value.forEach(day => console.log(day.details));
+}
+
+function clearAll() {
+  summary.value = [];
+  detailedDays.value = [];
+}
+
+function deleteDay(id: number) {
+  detailedDays.value = detailedDays.value.filter(day => day.id !== id);
 }
 
 </script>
