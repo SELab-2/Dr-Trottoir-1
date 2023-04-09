@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-4">
+  <HFillWrapper margin="mx-4">
     <!-- Top section with profile picture and edit button-->
     <div class="d-flex">
       <v-list-item
@@ -29,14 +29,14 @@
     </div>
 
     <!-- Section with the contact info -->
-    <v-card class="mt-4" prepend-icon="mdi-account-details">
+    <BorderCard class="mt-4" prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
       <!-- Name, only shows when the admin wants to edit -->
       <v-row class="py-0 my-0" v-if="isAdmin && edit">
         <v-col
           cols="1"
           style="min-width: 100px; max-width: 100%"
-          class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
+          class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-4"
         >
           <!-- Text input field for the first name -->
           <v-text-field
@@ -50,7 +50,7 @@
         <v-col
           cols="1"
           style="min-width: 100px; max-width: 100%"
-          class="flex-grow-1 flex-shrink-0 py-0 my-0 mr-5"
+          class="flex-grow-1 flex-shrink-0 py-0 my-0 mr-4"
         >
           <!-- Text input field for the last name -->
           <v-text-field
@@ -69,10 +69,10 @@
         @onUpdate="(newContact) => (contact = newContact)"
       >
       </ContactForm>
-    </v-card>
+    </BorderCard>
 
     <!-- Section with the adress -->
-    <v-card class="mt-4" prepend-icon="mdi-map-marker">
+    <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
       <template v-slot:title> Adres </template>
       <AddressFrom
         :class="edit ? spacing : 'mx-10'"
@@ -83,10 +83,10 @@
         :zip_code="address.zip_code"
         @onUpdate="(newAddress) => (address = newAddress)"
       ></AddressFrom>
-    </v-card>
+    </BorderCard>
 
     <!-- Section to pick the roles -->
-    <v-card v-if="isAdmin" class="mt-4" prepend-icon="mdi-account-multiple">
+    <BorderCard v-if="isAdmin" class="mt-4" prepend-icon="mdi-account-multiple">
       <template v-slot:title> Rollen </template>
       <v-select
         v-if="edit"
@@ -104,10 +104,10 @@
           :title="'- ' + String(role)"
         ></v-list-item>
       </v-list>
-    </v-card>
+    </BorderCard>
 
     <!-- Section to set new password -->
-    <v-card v-if="edit" class="mt-4" prepend-icon="mdi-lock">
+    <BorderCard v-if="edit" class="mt-4" prepend-icon="mdi-lock">
       <template v-slot:title> Nieuw wachtwoord </template>
       <v-list density="compact" :class="spacing">
         <v-text-field
@@ -129,10 +129,10 @@
           bg
         ></v-text-field>
       </v-list>
-    </v-card>
+    </BorderCard>
 
     <!-- Section that allows to save the settings -->
-    <v-card v-if="edit" class="my-4" prepend-icon="mdi-check">
+    <BorderCard v-if="edit" class="my-4" prepend-icon="mdi-check">
       <template v-slot:title> Sla bewerkingen op </template>
       <div class="d-flex">
         <v-text-field
@@ -154,11 +154,10 @@
           >Sla op</v-btn
         >
       </div>
-    </v-card>
-    <v-divider :thickness="3" />
+    </BorderCard>
 
     <!-- Section that allows to remove the account -->
-    <v-card v-if="edit" class="my-4" prepend-icon="mdi-delete">
+    <BorderCard v-if="edit" class="my-4" prepend-icon="mdi-delete">
       <template v-slot:title> Verwijder account </template>
       <div class="d-flex">
         <v-text-field
@@ -180,8 +179,8 @@
           >Verwijder account</v-btn
         >
       </div>
-    </v-card>
-  </div>
+    </BorderCard>
+  </HFillWrapper>
 </template>
 <script lang="ts" setup>
 import ContactForm from "@/components/forms/ContactForm.vue";
@@ -190,23 +189,20 @@ import AddressFrom from "@/components/forms/AddressForm.vue";
 import Contact from "@/components/models/Contact";
 import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
+import BorderCard from "@/layouts/CardLayout.vue";
 
 // define the spacing for the input fields
-const spacing: String = "mx-5";
-
+const spacing: String = "mx-4";
 const props = defineProps(["gebruikerid", "isadmin"]);
 const isAdmin = ref<Boolean>(props.isadmin === "true");
-
 // reactive state for name
 const firstname = ref("Mats");
 const lastname = ref("Van Belle");
-
 // reactive state for the roles
 const roles = ref<String[]>(["Student", "Superstudent"]);
-
 // reactive state to keep track if we are edeting or not
 const edit = ref(false);
-
 // contact data
 const default_phone = "+32 412 34 56 78";
 const default_email = "mats.vanbelle@example.com";
@@ -214,7 +210,6 @@ const contact = ref<Contact>({
   phone: default_phone,
   email: default_email,
 });
-
 // address data
 const address = ref<Address>({
   street: "Krijgslaan",
@@ -222,16 +217,13 @@ const address = ref<Address>({
   city: "Gent",
   zip_code: 9000,
 });
-
 // reactive states for the new password
 const password1 = ref("");
 const password2 = ref("");
 const showPsswd = ref(false);
-
 // reactive state for the submission
 const confirm_psswd = ref("");
 const show_confirm = ref(false);
-
 // state for the remove password
 const remove_psswd = ref("");
 const show_remove = ref(false);

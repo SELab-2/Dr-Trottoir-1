@@ -1,6 +1,6 @@
 <template>
   <!-- Card that lets you select the round -->
-  <v-card>
+  <BorderCard>
     <template v-slot:prepend v-if="search_by_labels.length != 0">
       <v-icon icon="mdi-magnify"></v-icon>
     </template>
@@ -24,7 +24,7 @@
     </template>
     <v-expand-transition>
       <div v-show="dropdown">
-        <v-divider class="mb-3" />
+        <DividerLayout class="mb-3" />
         <v-row class="mx-0">
           <v-col>
             <v-text-field
@@ -118,12 +118,14 @@
         </v-row>
       </div>
     </v-expand-transition>
-  </v-card>
+  </BorderCard>
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import { formatDate } from "@/assets/scripts/date";
+import BorderCard from "@/layouts/CardLayout.vue";
+import DividerLayout from "@/layouts/DividerLayout.vue";
 
 // The filter data is emitted with the 'onUpdate' tag
 const props = defineProps({
