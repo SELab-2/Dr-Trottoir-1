@@ -1,15 +1,12 @@
 import request from "supertest";
 import "jest-expect-message";
 
-const credentials = {
-    username: "administrator@trottoir.be",
-    password: "password",
-};
-
 /**
  * Describes different authentication levels.
  *
- * Default authentication level is UNAUTHORIZED
+ * Default authentication level is UNAUTHORIZED.
+ *
+ * AuthenticationLevel gets specified in the test to run the test suite at that Authentication level.
  */
 export enum AuthenticationLevel {
     UNAUTHORIZED,
@@ -48,14 +45,12 @@ const credentialsMap: {
 export class Testrunner {
     // reference to the server
     private readonly server: request.SuperTest<request.Test>;
-    private fail: boolean;
 
     /**
      * @param server reference to the server wrapped in SuperTest
      */
     public constructor(server: request.SuperTest<any>) {
         this.server = server;
-        this.fail = false;
     }
 
     /**

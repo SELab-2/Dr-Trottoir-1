@@ -1,106 +1,157 @@
 import { PrismaClient } from "@selab-2/groep-1-orm";
-import { Chance } from "chance";
 import crypto from "crypto";
 
 const prisma = new PrismaClient();
-const chance = new Chance();
 
-/*
-Bij het toevoegen van een nieuwe gebruiker aan de databank wordt ook een nieuw adres aangemaakt. Een nieuw adres kan
-enkel via deze functie of via de functie createBuilding in de databank geplaatst worden, dus niet via een aparte functie.
- */
-export async function createUser() {
-    const password = "password";
-    const salt = crypto.randomBytes(32).toString("hex");
+export async function initialiseUser() {
+    const timestamp: Date = new Date(Date.UTC(2023, 4, 4, 12, 0, 0));
+
+    const student_salt = crypto.randomBytes(32).toString("hex");
+    const student_hash = crypto
+        .createHash("sha256")
+        .update("student" + student_salt)
+        .digest("hex");
+
+    // create student
     await prisma.user.create({
         data: {
-            first_name: chance.first(),
-            last_name: chance.last(),
-            phone: chance.phone(),
-            admin: chance.bool(),
-            super_student: chance.bool(),
-            student: chance.bool(),
-            last_login: chance.date(),
-            date_added: chance.date(),
-            email: chance.email(),
-            salt: salt,
-            hash: crypto
-                .createHash("sha256")
-                .update(password + salt)
-                .digest("hex"),
-            address: {
-                create: {
-                    city: "Gent",
-                    street: chance.street(),
-                    number: chance.integer({ min: 1, max: 200 }),
-                    zip_code: chance.integer({ min: 1000, max: 9999 }),
-                    latitude: chance.latitude(),
-                    longitude: chance.longitude(),
-                },
-            },
-        },
-    });
-}
-
-export async function createRegion() {
-    await prisma.region.create({
-        data: {
-            name: chance.city(),
-        },
-    });
-}
-
-/*
-Om een gebruiker te koppelen aan een regio worden willekeurig bestaande waarden genomen uit de tabellen "user" en "region".
- */
-export async function createUserRegion() {
-    const users = await prisma.user.findMany();
-    const regions = await prisma.region.findMany();
-    const numUsers = users.length;
-    const numRegions = regions.length;
-    const user = users[chance.integer({ min: 0, max: numUsers - 1 })];
-    const region = regions[chance.integer({ min: 0, max: numRegions - 1 })];
-    await prisma.userRegion.create({
-        data: {
-            user: {
-                connect: { id: user.id },
-            },
-            region: {
-                connect: { id: region.id },
-            },
-        },
-    });
-}
-
-export async function addDefaultAdministrator() {
-    const password = "password";
-    const salt = "ExtraSalt";
-    await prisma.user.create({
-        data: {
-            first_name: "Administrator",
-            last_name: "Administrator",
-            phone: chance.phone(),
-            admin: true,
-            super_student: true,
+            email: "student@trottoir.be",
+            first_name: "Dirk",
+            last_name: "De Student",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "0123456789",
             student: true,
-            last_login: chance.date(),
-            date_added: chance.date(),
-            email: "administrator@trottoir.be",
-            salt: salt,
-            hash: crypto
-                .createHash("sha256")
-                .update(password + salt)
-                .digest("hex"),
+            super_student: false,
+            admin: false,
+            salt: student_salt,
+            hash: student_hash,
             address: {
-                create: {
-                    city: "Gent",
-                    street: chance.street(),
-                    number: chance.integer({ min: 1, max: 200 }),
-                    zip_code: chance.integer({ min: 1000, max: 9999 }),
-                    latitude: chance.latitude(),
-                    longitude: chance.longitude(),
+                connect: {
+                    id: 1,
                 },
             },
         },
+    });
+
+    const ss_salt = crypto.randomBytes(32).toString("hex");
+    const ss_hash = crypto
+        .createHash("sha256")
+        .update("super_student" + ss_salt)
+        .digest("hex");
+
+    // create super student
+    await prisma.user.create({
+        data: {
+            email: "superstudent@trottoir.be",
+            first_name: "Toon",
+            last_name: "De Superstudent",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "9876543210",
+            student: false,
+            super_student: true,
+            admin: false,
+
+            salt: ss_salt,
+            hash: ss_hash,
+
+            address: {
+                connect: {
+                    id: 2,
+                },
+            },
+        },
+    });
+
+    const admin_salt = crypto.randomBytes(32).toString("hex");
+    const admin_hash = crypto
+        .createHash("sha256")
+        .update("administrator" + admin_salt)
+        .digest("hex");
+
+    // create admin
+    await prisma.user.create({
+        data: {
+            email: "administrator@trottoir.be",
+            first_name: "Mario",
+            last_name: "De Administrator",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "6549873210",
+
+            student: false,
+            super_student: false,
+            admin: true,
+
+            salt: admin_salt,
+            hash: admin_hash,
+
+            address: {
+                connect: {
+                    id: 3,
+                },
+            },
+        },
+    });
+
+    // create syndicus
+    const syndicus_salt = crypto.randomBytes(32).toString("hex");
+    const syndicus_hash = crypto
+        .createHash("sha256")
+        .update("syndicus" + syndicus_salt)
+        .digest("hex");
+    await prisma.user.create({
+        data: {
+            email: "syndicus@trottoir.be",
+            first_name: "Simon",
+            last_name: "De Syndicus",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "7894561230",
+
+            student: false,
+            super_student: false,
+            admin: false,
+
+            salt: syndicus_salt,
+            hash: syndicus_hash,
+
+            address: {
+                connect: {
+                    id: 3,
+                },
+            },
+        },
+    });
+}
+
+export async function initialiseUserRegion() {
+    const entry = {
+        user_id: 1,
+        region_id: 1,
+    };
+
+    const entry2 = {
+        user_id: 2,
+        region_id: 2,
+    };
+
+    await prisma.userRegion.createMany({
+        data: [entry, entry2],
+    });
+}
+
+export async function initialiseSyndicus() {
+    const syndicus1 = {
+        user_id: 4,
+    };
+
+    const syndicus2 = {
+        user_id: 1,
+    };
+
+    await prisma.syndicus.createMany({
+        data: [syndicus1, syndicus2],
     });
 }

@@ -1,36 +1,33 @@
-import { PrismaClient } from '@selab-2/groep-1-orm'
-import { Chance } from "chance";
+import { PrismaClient } from "@selab-2/groep-1-orm";
 
-const prisma = new PrismaClient()
-const chance = new Chance();
+const prisma = new PrismaClient();
 
-export async function createRound() {
-    await prisma.round.create({
-        data: {
-            name: chance.word()
-        }
-    })
+export async function initialiseRound() {
+    const r1 = {
+        name: "Round 1",
+    };
+
+    const r2 = {
+        name: "Round 2",
+    };
+
+    await prisma.round.createMany({
+        data: [r1, r2],
+    });
 }
 
-/*
-Bij het koppelen van een gebouw aan een ronde worden bestaande gebouwen en rondes gebruikt. Deze worden willekeurig
-gekozen uit de tabellen.
- */
-export async function createRoundBuilding() {
-    const buildings = await prisma.building.findMany();
-    const rounds = await prisma.round.findMany();
-    const maxBuilding = buildings.length - 1;
-    const maxRound = rounds.length - 1;
-    const building = buildings[chance.integer({min: 0, max: maxBuilding})];
-    const round = rounds[chance.integer({min: 0, max: maxRound})];
-    await prisma.roundBuilding.create({
-        data: {
-            round: {
-                connect: {id: round.id}
-            },
-            building: {
-                connect: {id: building.id}
-            }
-        }
-    })
+export async function initialiseRoundBuilding() {
+    const e1 = {
+        round_id: 1,
+        building_id: 1,
+    };
+
+    const e2 = {
+        round_id: 2,
+        building_id: 2,
+    };
+
+    await prisma.roundBuilding.createMany({
+        data: [e1, e2],
+    });
 }

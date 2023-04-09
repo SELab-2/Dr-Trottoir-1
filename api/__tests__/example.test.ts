@@ -8,10 +8,11 @@ import app from "../src/main";
 import {
     deleteDatabaseData,
     initialiseDatabase,
-} from "./utilities/database.utility";
+} from "../../mock/src/database";
 
 describe("Example test suite", () => {
     let testRunner: Testrunner;
+
     beforeAll(async () => {
         // clean the database
         await deleteDatabaseData();
