@@ -1,5 +1,5 @@
 <template>
-  <v-card variant="flat" class="mx-4">
+  <v-container>
     <v-row class="py-0 my-0">
       <v-col
         cols="1"
@@ -104,7 +104,7 @@
       <v-spacer></v-spacer>
       <v-btn color="primary" prepend-icon="mdi-send">Versturen</v-btn>
     </v-card-actions>
-  </v-card>
+  </v-container>
 </template>
 
 <script lang="ts" setup>
