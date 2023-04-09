@@ -14,35 +14,47 @@
     </v-row>
     <v-row>
       <v-col>
+        <v-select v-model="frequency" :items="frequencys" label="Frequency"></v-select>
+      </v-col>
+      <v-col>
         <v-text-field v-model="startDate" label="Start Date" type="date"></v-text-field>
       </v-col>
-      <v-col>
-        <v-text-field v-model="endDate" label="End Date" type="date"></v-text-field>
-      </v-col>
-      <v-col>
-        <v-select v-model="frequency" :items="frequencys" label="Frequency"></v-select>
+      <v-col v-if="frequency !== 'enkel'">
+        <v-text-field
+          v-model="endDate"
+          v-if="frequency !== 'enkel'"
+          label="End Date"
+          type="date"
+        ></v-text-field>
       </v-col>
       <v-col>
         <v-text-field v-model="time" label="Time" type="time"></v-text-field>
       </v-col>
     </v-row>
 
-    <v-btn @click="add">Add</v-btn>
-    <v-btn @click="submit">Submit</v-btn>
+    <v-btn
+      @click="add"
+      :disabled="
+        garbageType === undefined ||
+        action === undefined ||
+        startDate === '' ||
+        endDate === '' ||
+        time === ''
+      "
+      >Add</v-btn
+    >
+    <v-btn @click="submit" :disabled="detailedDays.length === 0">Submit</v-btn>
     <v-btn @click="clearAll">Clear All</v-btn>
 
     <v-spacer></v-spacer>
-    <v-slide-group class="pt-4">
+    <v-slide-group class="pt-4" show-arrows>
       <v-slide-group-item v-for="schedule in summary" :key="schedule.id">
         <v-card>
           <v-card-title> {{ schedule.garbageType }} </v-card-title>
-          <v-card-subtitle> {{ schedule.action }}</v-card-subtitle>
           <div class="pa-4">
-            <div><strong>Period:</strong> {{ schedule.start }} - {{ schedule.end }}</div>
-            <!--
-            <div><strong>Start:</strong> {{ schedule.start.getDay() }}-{{ schedule.start.getMonth()}}-{{ schedule.start.getFullYear()}}</div>
-            <div><strong>Start:</strong> {{ schedule.end.getDay() }}-{{ schedule.end.getMonth()}}-{{ schedule.end.getFullYear()}}</div>
-            -->
+            <div><strong>Action:</strong> {{ schedule.action }}</div>
+            <div><strong>Start:</strong> {{ schedule.start.toDateString() }}</div>
+            <div><strong>End:</strong> {{ schedule.end.toDateString() }}</div>
             <div><strong>Type:</strong> {{ schedule.garbageType }}</div>
             <div><strong>Action:</strong> {{ schedule.action }}</div>
             <div><strong>Time:</strong> {{ schedule.time }}</div>
@@ -57,9 +69,7 @@
     <v-list>
       <v-list-item v-for="day in detailedDays" :key="day.id">
         <v-row>
-          <v-col
-            >{{ day.date }}-{{ day.date.getMonth() }}-{{ day.date.getFullYear() }}</v-col
-          >
+          <v-col>{{ day.date.toDateString() }}</v-col>
           <v-col>{{ day.garbageType }}</v-col>
           <v-col>{{ day.action }}</v-col>
           <v-col>{{ day.time }}</v-col>
@@ -104,12 +114,12 @@ const frequencyDict: Record<string, number> = {
   maandelijks: 28,
 };
 
-const garbageType = ref("");
-const action = ref("");
+const garbageType = ref<string>();
+const action = ref<string>();
 const startDate = ref("");
 const endDate = ref("");
 const time = ref("");
-const frequency = ref("");
+const frequency = ref<string>("enkel");
 
 //nu nog een string voor het simple te houden
 const summary = ref<Array<Schedule>>([]);
@@ -119,37 +129,39 @@ let scheduleCounter = 0;
 let dayCounter = 0;
 
 function add() {
-  if (frequency.value === "enkel") {
-    endDate.value = startDate.value;
-  }
-  const scheduleSummary: Schedule = {
-    id: scheduleCounter,
-    start: new Date(startDate.value),
-    end: new Date(endDate.value),
-    garbageType: garbageType.value,
-    action: action.value,
-    time: time.value,
-    frequency: frequency.value,
-  };
-  summary.value.push(scheduleSummary);
-
-  // Calculate all separate days
-  const start = new Date(startDate.value);
-  const end = new Date(endDate.value);
-  const frequencyCount = frequencyDict[frequency.value];
-  //elke dag berekenen afhankelijk van de frequentie
-  for (let d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {
-    console.log(d);
-    detailedDays.value.push({
-      id: dayCounter++,
-      scheduleId: scheduleCounter,
-      date: new Date(d),
-      garbageType: garbageType.value,
-      action: action.value,
+  if (garbageType && action && startDate && endDate && time && frequency) {
+    if (frequency.value === "enkel") {
+      endDate.value = startDate.value;
+    }
+    const scheduleSummary: Schedule = {
+      id: scheduleCounter,
+      start: new Date(startDate.value),
+      end: new Date(endDate.value),
+      garbageType: garbageType.value!,
+      action: action.value!,
       time: time.value,
-    });
+      frequency: frequency.value,
+    };
+    summary.value.push(scheduleSummary);
+
+    // Calculate all separate days
+    const start = new Date(startDate.value);
+    const end = new Date(endDate.value);
+    const frequencyCount = frequencyDict[frequency.value];
+    //elke dag berekenen afhankelijk van de frequentie
+    for (let d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {
+      console.log(d);
+      detailedDays.value.push({
+        id: dayCounter++,
+        scheduleId: scheduleCounter,
+        date: new Date(d),
+        garbageType: garbageType.value!,
+        action: action.value!,
+        time: time.value,
+      });
+    }
+    scheduleCounter++;
   }
-  scheduleCounter++;
 }
 function deleteSummary(id: number) {
   const correspondingSummary = summary.value.find(
