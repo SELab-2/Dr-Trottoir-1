@@ -1,7 +1,21 @@
-import { createUser, createRegion, createUserRegion } from "./src/user";
-import { createBuilding, createAction, createGarbage, createBuildingImages } from "./src/building";
+import {
+    createUser,
+    createRegion,
+    createUserRegion,
+    addDefaultAdministrator,
+} from "./src/user";
+import {
+    createBuilding,
+    createAction,
+    createGarbage,
+    createBuildingImages,
+} from "./src/building";
 import { createRound, createRoundBuilding } from "./src/round";
-import { createSchedule, createProgress, createProgressImage } from "./src/schedule";
+import {
+    createSchedule,
+    createProgress,
+    createProgressImage,
+} from "./src/schedule";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -19,6 +33,7 @@ async function main() {
     await createBuildingImages();
     await createProgress();
     await createProgressImage();
+    await addDefaultAdministrator();
 }
 
 // Actually call main

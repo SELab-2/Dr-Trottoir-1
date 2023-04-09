@@ -16,10 +16,21 @@ import crypto from "crypto";
 import session from "express-session";
 import { initializePassport } from "./passport";
 import dotenv from "dotenv";
+import { RegionRouting } from "./routes/region";
 import { GarbageRouting } from "./routes/garbage";
+import { UserRegionRouting } from "./routes/user_region";
+import { ProgressRouting } from "./routes/progress";
+import cors from "cors";
 
-const PORT_NUMBER = 8080;
+// const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
+
+let PORT_NUMBER: number;
+if (process.env.NODE_ENV === "test") {
+    PORT_NUMBER = 8083;
+} else {
+    PORT_NUMBER = 8080;
+}
 
 const app = express();
 
@@ -37,6 +48,14 @@ app.use(
 
 // Helmet adds many headers for more secure connections
 app.use(helmet());
+
+// Support for CORS
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+        credentials: true,
+    }),
+);
 
 // Morgan logs and prints all incoming requests
 app.use(morgan("dev"));
@@ -63,10 +82,13 @@ app.use("/auth", new AuthRouting().toRouter());
 app.use("/user", new UserRouting().toRouter());
 app.use("/building", new BuildingRouting().toRouter());
 app.use("/schedule", new ScheduleRouting().toRouter());
+app.use("/region", new RegionRouting().toRouter());
 app.use("/garbage", new GarbageRouting().toRouter());
 app.use("/action", new ActionRouting().toRouter());
 app.use("/syndicus", new SyndicusRouting().toRouter());
 app.use("/round", new RoundRouting().toRouter());
+app.use("/user_region", new UserRegionRouting().toRouter());
+app.use("/progress", new ProgressRouting().toRouter());
 
 // Finally, an error handler
 app.use(ErrorHandler.handle);

@@ -14,6 +14,9 @@ model Region {
     id   Int    @id @default(autoincrement())
     name String @unique
 
+    // Soft delete
+    deleted Boolean @default(false)
+
     users UserRegion[]
 
     @@map("region")
@@ -32,7 +35,7 @@ model User {
     phone      String
 
     address_id Int
-    address    Address @relation(fields: [address_id], references: [id])
+    address    Address @relation(fields: [address_id], references: [id], onDelete: Restrict)
 
     // Rollen
     student       Boolean
@@ -43,10 +46,14 @@ model User {
     hash String
     salt String
 
+    // Soft delete
+    deleted Boolean @default(false)
+
     // Relaties
-    regions  UserRegion[]
-    Syndicus Syndicus[]
-    schedule Schedule[]
+    regions         UserRegion[]
+    syndicus        Syndicus[]
+    schedule        Schedule[]
+    uploaded_images Image[]
 
     @@map("user")
 }
@@ -57,10 +64,10 @@ model UserRegion {
     id Int @id @default(autoincrement())
 
     user_id Int
-    user    User @relation(fields: [user_id], references: [id])
+    user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
     region_id Int
-    region    Region @relation(fields: [region_id], references: [id])
+    region    Region @relation(fields: [region_id], references: [id], onDelete: Cascade)
 
     @@map("user_region")
 }
@@ -70,15 +77,32 @@ model File {
     id Int @id @default(autoincrement())
 
     path      String
-    buildings Building[] // Vereist?
+    buildings Building[]
+    location  FileLocation
 
     @@map("file")
 }
 
+// Geeft aan waar een bestand zich bevindt op het web
+enum FileLocation {
+    EXTERNAL // Externe server, absolute padnaam
+    IMGPROXY // Onze eigen ImgProxy instantie, relatieve padnaam
+    STATIC_FILES // De static file endpoint van onze web server, relatieve padnaam
+    FILE_SERVER // File endpoint van onze API, relatieve padnaam
+
+    @@map("image_location")
+}
+
 // Bij een afbeelding kan de tijd optioneel opgeslagen worden waarop de foto genomen werd.
 model Image {
-    id   Int       @id @default(autoincrement())
-    time DateTime?
+    id       Int          @id @default(autoincrement())
+    time     DateTime     @default(now())
+    location FileLocation
+    path     String
+
+    // Gebruiker die het bestand geupload heeft.
+    user_id Int?
+    user    User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
 
     buildings BuildingImages[]
     progress  ProgressImage[]
@@ -110,10 +134,10 @@ model BuildingImages {
     id Int @id @default(autoincrement())
 
     building_id Int
-    building    Building @relation(fields: [building_id], references: [id])
+    building    Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
 
     image_id Int
-    image    Image @relation(fields: [image_id], references: [id])
+    image    Image @relation(fields: [image_id], references: [id], onDelete: Cascade)
 
     @@map("building_image")
 }
@@ -126,14 +150,19 @@ model Building {
     name     String
     ivago_id String
 
-    syndicus_id Int
-    syndicus    Syndicus @relation(fields: [syndicus_id], references: [id])
+    syndicus_id Int?
+    syndicus    Syndicus? @relation(fields: [syndicus_id], references: [id], onDelete: SetNull)
 
     address_id Int
-    address    Address @relation(fields: [address_id], references: [id])
+    address    Address @relation(fields: [address_id], references: [id], onDelete: Restrict)
 
-    manual_id Int
-    manual    File @relation(fields: [manual_id], references: [id])
+    manual_id Int?
+    manual    File? @relation(fields: [manual_id], references: [id], onDelete: SetNull)
+
+    deleted Boolean @default(false)
+
+    // Wachtwoord voor publieke link voor bewoners
+    hash String? @unique
 
     images   BuildingImages[]
     garbage  Garbage[]
@@ -148,7 +177,7 @@ model Syndicus {
     id Int @id @default(autoincrement())
 
     user_id Int
-    user    User @relation(fields: [user_id], references: [id])
+    user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
     building Building[]
 
@@ -175,10 +204,10 @@ model Garbage {
     pickup_time DateTime
 
     action_id Int
-    action    Action @relation(fields: [action_id], references: [id])
+    action    Action @relation(fields: [action_id], references: [id], onDelete: Restrict)
 
     building_id Int
-    building    Building @relation(fields: [building_id], references: [id])
+    building    Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
 
     @@map("garbage")
 }
@@ -188,10 +217,12 @@ model RoundBuilding {
     id Int @id @default(autoincrement())
 
     round_id Int
-    round    Round @relation(fields: [round_id], references: [id])
+    round    Round @relation(fields: [round_id], references: [id], onDelete: Cascade)
 
     building_id Int
-    building    Building @relation(fields: [building_id], references: [id])
+    building    Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
+
+    deleted Boolean @default(false)
 
     @@map("round_building")
 }
@@ -199,7 +230,7 @@ model RoundBuilding {
 // In dit model worden enkel de namen van de rondes bijgehouden.
 model Round {
     id   Int    @id @default(autoincrement())
-    name String
+    name String @unique
 
     buildings RoundBuilding[]
     schedule  Schedule[]
@@ -213,10 +244,12 @@ model Schedule {
     day DateTime
 
     user_id Int
-    user    User @relation(fields: [user_id], references: [id])
+    user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
     round_id Int
-    round    Round @relation(fields: [round_id], references: [id])
+    round    Round @relation(fields: [round_id], references: [id], onDelete: Cascade)
+
+    deleted Boolean @default(false)
 
     progress Progress[]
 
@@ -240,10 +273,12 @@ model Progress {
     departure DateTime
 
     building_id Int
-    building    Building @relation(fields: [building_id], references: [id])
+    building    Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
 
-    schedule_id Int
-    schedule    Schedule @relation(fields: [schedule_id], references: [id])
+    schedule_id Int?
+    schedule    Schedule? @relation(fields: [schedule_id], references: [id], onDelete: SetNull)
+
+    deleted Boolean @default(false)
 
     images ProgressImage[]
 
@@ -258,10 +293,12 @@ model ProgressImage {
     description String
 
     image_id Int
-    image    Image @relation(fields: [image_id], references: [id])
+    image    Image @relation(fields: [image_id], references: [id], onDelete: Cascade)
 
     progress_id Int
-    progress    Progress @relation(fields: [progress_id], references: [id])
+    progress    Progress @relation(fields: [progress_id], references: [id], onDelete: Cascade)
+
+    deleted Boolean @default(false)
 
     @@map("progress_image")
 }

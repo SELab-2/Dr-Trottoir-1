@@ -1,8 +1,8 @@
-import { PrismaClient } from '@selab-2/groep-1-orm'
+import { PrismaClient } from "@selab-2/groep-1-orm";
 import { Chance } from "chance";
 import crypto from "crypto";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 const chance = new Chance();
 
 /*
@@ -11,7 +11,7 @@ enkel via deze functie of via de functie createBuilding in de databank geplaatst
  */
 export async function createUser() {
     const password = "password";
-    const salt = crypto.randomBytes(32).toString();
+    const salt = crypto.randomBytes(32).toString("hex");
     await prisma.user.create({
         data: {
             first_name: chance.first(),
@@ -24,27 +24,30 @@ export async function createUser() {
             date_added: chance.date(),
             email: chance.email(),
             salt: salt,
-            hash: crypto.createHash('sha256').update(password+salt).digest('hex'),
+            hash: crypto
+                .createHash("sha256")
+                .update(password + salt)
+                .digest("hex"),
             address: {
                 create: {
                     city: "Gent",
                     street: chance.street(),
-                    number: chance.integer({min: 1, max: 200}),
-                    zip_code: chance.integer({min: 1000, max: 9999}),
+                    number: chance.integer({ min: 1, max: 200 }),
+                    zip_code: chance.integer({ min: 1000, max: 9999 }),
                     latitude: chance.latitude(),
                     longitude: chance.longitude(),
-                }
-            }
-        }
-    })
+                },
+            },
+        },
+    });
 }
 
 export async function createRegion() {
     await prisma.region.create({
         data: {
-            name: chance.city()
-        }
-    })
+            name: chance.city(),
+        },
+    });
 }
 
 /*
@@ -55,16 +58,49 @@ export async function createUserRegion() {
     const regions = await prisma.region.findMany();
     const numUsers = users.length;
     const numRegions = regions.length;
-    const user = users[chance.integer({min: 0, max: numUsers-1})];
-    const region = regions[chance.integer({min: 0, max: numRegions-1})];
+    const user = users[chance.integer({ min: 0, max: numUsers - 1 })];
+    const region = regions[chance.integer({ min: 0, max: numRegions - 1 })];
     await prisma.userRegion.create({
         data: {
             user: {
-                connect: {id: user.id}
+                connect: { id: user.id },
             },
             region: {
-                connect: {id: region.id}
-            }
-        }
-    })
+                connect: { id: region.id },
+            },
+        },
+    });
+}
+
+export async function addDefaultAdministrator() {
+    const password = "password";
+    const salt = "ExtraSalt";
+    await prisma.user.create({
+        data: {
+            first_name: "Administrator",
+            last_name: "Administrator",
+            phone: chance.phone(),
+            admin: true,
+            super_student: true,
+            student: true,
+            last_login: chance.date(),
+            date_added: chance.date(),
+            email: "administrator@trottoir.be",
+            salt: salt,
+            hash: crypto
+                .createHash("sha256")
+                .update(password + salt)
+                .digest("hex"),
+            address: {
+                create: {
+                    city: "Gent",
+                    street: chance.street(),
+                    number: chance.integer({ min: 1, max: 200 }),
+                    zip_code: chance.integer({ min: 1000, max: 9999 }),
+                    latitude: chance.latitude(),
+                    longitude: chance.longitude(),
+                },
+            },
+        },
+    });
 }

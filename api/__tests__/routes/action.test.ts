@@ -1,6 +1,7 @@
 import app from "../../src/main";
-// @ts-ignore
 import request from "supertest";
+import { describe, expect, test } from "@jest/globals";
+import supertest from "supertest";
 
 /*
 Deze testen controleren dat de route de juiste statuscodes geeft bij het uitvoeren van een geldig request
@@ -10,16 +11,17 @@ door entries die uit de databank verwijderd zijn. De data waarmee gewerkt wordt,
 aanwezig zijn. Deze data wordt op het einde van de test weer verwijderd uit de databank.
  */
 describe("Test ActionRouting successful requests", () => {
-    let session: any;
+    let session: supertest.SuperTest<supertest.Test>;
     let cookies: string;
 
     // Voor elke test wordt een sessie gestart, wordt er ingelogd om autorisatie te krijgen en
     // worden de cookies bewaard.
     beforeEach(async () => {
         session = request(app);
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
+        const resultLogin = await session.post("/auth/login").send({
+            username: "administrator@trottoir.be",
+            password: "password",
+        });
         expect(resultLogin.status).toBe(302);
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 
@@ -131,9 +133,10 @@ describe("Test ActionRouting unsuccessful requests", () => {
         const session = await request(app);
 
         // Eerst moet er ingelogd worden om autorisatie te krijgen.
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
+        const resultLogin = await session.post("/auth/login").send({
+            username: "administrator@trottoir.be",
+            password: "password",
+        });
         expect(resultLogin.status).toBe(302);
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 
@@ -164,9 +167,10 @@ describe("Test ActionRouting unsuccessful requests", () => {
         const session = await request(app);
 
         // Eerst moet er ingelogd worden om autorisatie te krijgen.
-        const resultLogin = await session
-            .post("/auth/login")
-            .send({ username: "jens.pots@ugent.be", password: "password" });
+        const resultLogin = await session.post("/auth/login").send({
+            username: "administrator@trottoir.be",
+            password: "password",
+        });
         expect(resultLogin.status).toBe(302);
         expect(resultLogin.headers).toHaveProperty("set-cookie");
 

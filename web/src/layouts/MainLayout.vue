@@ -6,9 +6,11 @@
         :permanent="!!permanentDrawer"
         v-model="drawer"
         class="sidebar"
+        style="border-right: rgba(189, 189, 189, 0.5) 1px solid"
+        color="background"
       >
         <v-list density="compact" nav>
-          <v-list-item lines="two" @click="showAccount = !showAccount">
+          <v-list-item lines="two">
             <template v-slot:prepend>
               <Avatar :name="studentName" />
             </template>
@@ -17,32 +19,23 @@
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
                 <v-list-item-subtitle>{{ roles() }}</v-list-item-subtitle>
               </div>
-              <v-btn
-                v-if="!showAccount"
-                variant="plain"
-                icon="mdi-chevron-down"
-                size="small"
-              />
-              <v-btn
-                v-else
-                variant="plain"
-                icon="mdi-chevron-up"
-                size="small"
-              />
             </div>
           </v-list-item>
 
-          <div v-if="showAccount">
-            <router-link to="/">
-              <v-list-item
-                class="logout"
-                prepend-icon="mdi-account-cancel"
-                title="Afmelden"
-                value="logout"
-              />
-            </router-link>
+          <div>
+            <v-list-item
+              :to="{ name: 'login' }"
+              prepend-icon="mdi-account-cancel"
+              title="Afmelden"
+              value="logout"
+            />
 
-            <router-link to="/account/0/true">
+            <router-link
+              :to="{
+                name: 'account_settings',
+                params: { id: 0, isadmin: 'true' },
+              }"
+            >
               <v-list-item
                 prepend-icon="mdi-cog"
                 title="Account"
@@ -52,91 +45,92 @@
           </div>
 
           <div class="py-2">
-            <v-divider />
+            <DividerLayout />
           </div>
 
           <div v-if="isStudent">
             <p class="pa-2 font-weight-medium text-caption">Overzicht</p>
 
-            <router-link to="/planning">
-              <v-list-item
-                prepend-icon="mdi-calendar-edit"
-                title="Planning"
-                value="schedule"
-              />
-            </router-link>
+            <v-list-item
+              :to="{ name: 'student_planning' }"
+              prepend-icon="mdi-calendar-edit"
+              title="Planning"
+              value="schedule"
+            />
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
           <div v-if="isSuperStudent">
             <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
 
-            <router-link to="/opvolging">
-              <v-list-item
-                prepend-icon="mdi-transit-detour"
-                title="Opvolging"
-                value="rondes"
-              />
-            </router-link>
+            <v-list-item
+              :to="{ name: 'round_followup' }"
+              prepend-icon="mdi-transit-detour"
+              title="Opvolging"
+              value="rondes"
+            />
 
-            <router-link to="/gebouwen">
-              <v-list-item
-                prepend-icon="mdi-domain"
-                title="Gebouwen"
-                value="gebouwen"
-              />
-            </router-link>
+            <v-list-item
+              :to="{ name: 'building_followup' }"
+              prepend-icon="mdi-domain"
+              title="Gebouwen"
+              value="gebouwen"
+            />
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
           <div v-if="isSyndicus">
-            <p class="pa-2 font-weight-medium text-caption">Gebouwbeheer</p>
+            <p class="pa-2 font-weight-medium text-caption">Mijn gebouwen</p>
 
-            <router-link to="/gebouwen">
-              <v-list-item
-                prepend-icon="mdi-file-cabinet"
-                title="Mijn Gebouwen"
-                value="gebouwen"
-              />
-            </router-link>
+            <div v-for="buildingid of [1, 2]" :key="buildingid">
+              <router-link
+                :to="{
+                  name: 'building_id_detail',
+                  params: { id: buildingid, date: today },
+                }"
+              >
+                <v-list-item
+                  prepend-icon="mdi-file-cabinet"
+                  :title="'Gebouw ' + buildingid"
+                  value="gebouwen"
+                />
+              </router-link>
+            </div>
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
           <div v-if="isAdmin">
             <p class="pa-2 font-weight-medium text-caption">Administratie</p>
 
-            <router-link to="/dashboard/gebruikers">
-              <v-list-item
-                prepend-icon="mdi-account-supervisor"
-                title="Gebruikers"
-                value="users"
-              ></v-list-item>
-            </router-link>
+            <v-list-item
+              :to="{ name: 'user_overview' }"
+              prepend-icon="mdi-account-supervisor"
+              title="Gebruikers"
+              value="users"
+            ></v-list-item>
 
-            <router-link to="/dashboard/gebouwen">
-              <v-list-item
-                prepend-icon="mdi-office-building-outline"
-                title="Gebouwen"
-                value="buildings"
-              ></v-list-item>
-            </router-link>
+            <v-list-item
+              :to="{ name: 'building_overview' }"
+              prepend-icon="mdi-office-building-outline"
+              title="Gebouwen"
+              value="buildings"
+            ></v-list-item>
 
-            <router-link to="/dashboard/rondes">
-              <v-list-item
-                prepend-icon="mdi-map-legend"
-                title="Routes"
-                value="routes"
-              ></v-list-item>
-            </router-link>
+            <v-list-item
+              :to="{ name: 'round_overview' }"
+              prepend-icon="mdi-map-legend"
+              title="Rondes"
+              value="rounds"
+            ></v-list-item>
           </div>
         </v-list>
 
@@ -147,13 +141,13 @@
         </template>
       </v-navigation-drawer>
 
-      <v-app-bar prominent elevation="0">
+      <v-app-bar prominent elevation="0" color="background">
         <div class="px-4">
           <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
         </div>
 
         <v-toolbar-title class="font-weight-medium">
-          {{ route.name }}
+          {{ route.meta.title }}
         </v-toolbar-title>
 
         <v-spacer />
@@ -166,9 +160,12 @@
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
-
+import { formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+import DividerLayout from "@/layouts/DividerLayout.vue";
+
+const today = formatDate(new Date());
 
 // reactive state to show the drawer or not
 const drawer = ref(true);
@@ -181,9 +178,6 @@ const isStudent = ref(true);
 const isSuperStudent = ref(true);
 const isSyndicus = ref(true);
 const isAdmin = ref(true);
-
-// show account settings
-const showAccount = ref(false);
 
 // account display settings
 const studentName: string = "Jens Pots";
@@ -204,16 +198,17 @@ function roles(): string {
   return str;
 }
 
-const threasholdWidth: Number = 750;
-// permanentdrawer
-const permanentDrawer = ref<Boolean>(window.innerWidth > threasholdWidth);
-function onResize() {
-  permanentDrawer.value = window.innerWidth > threasholdWidth;
-}
-window.addEventListener("resize", onResize);
+const thresholdWidth: number = 750;
+
+const permanentDrawer = ref<Boolean>(window.innerWidth > thresholdWidth);
+
+window.addEventListener(
+  "resize",
+  () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
+);
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 a {
   text-decoration: none;
   color: black;

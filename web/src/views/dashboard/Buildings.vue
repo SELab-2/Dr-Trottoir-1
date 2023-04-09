@@ -1,9 +1,14 @@
 <template>
-  <router-link to="/dashboard/gebouwen/nieuw" class="d-flex flex-row-reverse">
-    <v-btn prepend-icon="mdi-plus" color="primary" class="mr-3">
+  <div class="d-flex flex-row-reverse">
+    <v-btn
+      prepend-icon="mdi-plus"
+      color="primary"
+      class="mr-3"
+      :to="{ name: 'building_new' }"
+    >
       Nieuw Gebouw
     </v-btn>
-  </router-link>
+  </div>
   <Table
     v-bind:entries="Building.random()"
     v-bind:headers="Building.headers()"

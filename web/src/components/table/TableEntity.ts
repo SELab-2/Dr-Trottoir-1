@@ -5,7 +5,13 @@ import { Header } from "@/components/table/Header";
  * protocol.
  */
 export abstract class TableEntity<T> {
+  /**
+   * The configuration objecs for this entity. See `Header.ts` for more info.
+   */
   abstract headers(): Array<Header<T>>;
 
-  abstract detailPageUrl(): string;
+  /**
+   * The route to follow when clicking on the row.
+   */
+  abstract route(): string;
 }
