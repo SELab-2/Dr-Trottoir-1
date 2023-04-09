@@ -48,41 +48,122 @@ const credentialsMap: {
 export class Testrunner {
     // reference to the server
     private readonly server: request.SuperTest<request.Test>;
+    private fail: boolean;
 
-    /** Testrunner has a private to ensure the only way to create Testrunner class is through the Singleton.
-     *
+    /**
+     * @param server reference to the server wrapped in SuperTest
      */
     public constructor(server: request.SuperTest<any>) {
         this.server = server;
+        this.fail = false;
     }
 
     /**
-     * Aquires authentication and performs a GET request to the passed URL.
+     * Acquires authentication if required and performs a GET request to the passed URL.
+     * Also performs verification of the response.
      * @param url url to test
      * @param expectedData data that must be received
-     * @param authenticationLevel expected level of authentication
+     * @param authLevel authentication level to run the method under
+     * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
+     * @return the Response object for further testing, should it be required.
      */
     get = async (
         url: string,
-        expectedData: {}[],
-        authenticationLevel: AuthenticationLevel,
-    ) => {
-        const cookie = await this.authenticate(authenticationLevel);
+        expectedData: {}[] = [],
+        authLevel: AuthenticationLevel = AuthenticationLevel.UNAUTHORIZED,
+        statusCode: number = 200,
+    ): Promise<request.Response> => {
+        const cookie = await this.authenticate(authLevel);
 
         const response = await this.server.get(url).set("Cookie", [cookie]);
-        expect(response.statusCode, "Authorisation level is too low", {
+        expect(response.statusCode, "Authentication level is too low", {
             showPrefix: false,
-        }).toEqual(200);
+        }).toEqual(statusCode);
 
-        // verify everything that is required is received
-        for (const item of response.body) {
-            expect(expectedData).toContainEqual(item);
-        }
+        this.verifyBody(expectedData, response.body);
 
-        // verify that only stuff that is required is received
-        expect(response.body.length, "Received too much or too little data!", {
-            showPrefix: false,
-        }).toEqual(expectedData.length);
+        return response;
+    };
+
+    /**
+     * Acquires authentication if required and performs a POST request to the passed URL.
+     * Also performs verification on the response.
+     * @param url URL to POST to
+     * @param data data to be sent
+     * @param authLevel authentication level to run the method under
+     * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
+     * @return the Response object for further testing, should it be required.
+     */
+    post = async (
+        url: string,
+        data: {},
+        authLevel: AuthenticationLevel = AuthenticationLevel.UNAUTHORIZED,
+        statusCode: number = 201,
+    ): Promise<request.Response> => {
+        const cookie = await this.authenticate(authLevel);
+
+        const response = await this.server
+            .post(url)
+            .send(data)
+            .set("Cookie", [cookie]);
+        expect(response.statusCode).toEqual(statusCode);
+
+        // drop the id, as we cannot predict that
+        delete response.body["id"];
+
+        this.verifyBody([data], [response.body]);
+
+        return response;
+    };
+
+    /**
+     * Acquires authentication if required and performs a PATCH request to the URL.
+     * Also performs verification on the response.
+     * @param url URL to PATCH to
+     * @param data data to be sent
+     * @param authLevel authentication level to run the method under
+     * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
+     * @return the Response object for further testing, should it be required.
+     */
+    patch = async (
+        url: string,
+        data: {},
+        authLevel: AuthenticationLevel = AuthenticationLevel.UNAUTHORIZED,
+        statusCode: number = 200,
+    ) => {
+        const cookie = await this.authenticate(authLevel);
+
+        const response = await this.server
+            .patch(url)
+            .send(data)
+            .set("Cookie", [cookie]);
+
+        expect(response.statusCode).toEqual(statusCode);
+        this.verifyBody([data], [response.body]);
+
+        return response;
+    };
+
+    /**
+     * Acquires authentication if required and performs a DELETE  request to the URL.
+     * Also performs verification on the response.
+     * @param url URL to perform DELETE on
+     * @param authLevel authentication level to run the method under
+     * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
+     * @return the Response object for further testing, should it be required.
+     */
+    delete = async (
+        url: string,
+        authLevel: AuthenticationLevel = AuthenticationLevel.UNAUTHORIZED,
+        statusCode: number = 200,
+    ): Promise<request.Response> => {
+        const cookie = await this.authenticate(authLevel);
+
+        const response = await this.server.delete(url).set("Cookie", [cookie]);
+
+        expect(response.statusCode).toEqual(statusCode);
+
+        return response;
     };
 
     /**
@@ -95,9 +176,7 @@ export class Testrunner {
         if (authLevel === AuthenticationLevel.UNAUTHORIZED) {
             return "";
         }
-
         const credentials = credentialsMap[authLevel];
-        console.log(credentials);
         const response = await this.server
             .post("/auth/login")
             .send(credentials);
@@ -108,4 +187,22 @@ export class Testrunner {
 
         return response.headers["set-cookie"].pop().split(";")[0];
     };
+
+    /**
+     * Verifies that the received body of the API call contains the expected values
+     * @param expected list of expected values
+     * @param body the actual body
+     * @private
+     */
+    private verifyBody(expected: {}[], body: {}[]) {
+        // verify that everything, that is expected, is also received
+        for (const item of body) {
+            expect(expected).toContainEqual(item);
+        }
+
+        // verify that expected stuff is received
+        expect(body.length, "Received too much or too little data!", {
+            showPrefix: false,
+        }).toEqual(expected.length);
+    }
 }
