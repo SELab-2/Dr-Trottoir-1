@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <HFillWrapper>
     <v-row class="py-0 my-0">
       <v-col
         cols="1"
@@ -104,12 +104,13 @@
       <v-spacer></v-spacer>
       <v-btn color="primary" prepend-icon="mdi-send">Versturen</v-btn>
     </v-card-actions>
-  </v-container>
+  </HFillWrapper>
 </template>
 
 <script lang="ts" setup>
 import Template from "@/components/models/Template";
 import { ref, computed, reactive } from "vue";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
 // API in place
 //defineProps({

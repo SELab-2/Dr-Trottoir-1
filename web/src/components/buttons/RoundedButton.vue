@@ -10,6 +10,12 @@
   >
     <v-icon v-if="icon" color="#333333" :icon="icon" size="small" />
     <p v-if="value">{{ value }}</p>
+    <v-icon
+      v-if="props.route"
+      color="#333333"
+      icon="mdi-chevron-right"
+      size="small"
+    />
   </button>
 </template>
 
@@ -40,6 +46,8 @@ const props = defineProps({
 });
 
 function route() {
-  router.push({ name: props.route, params: props.params });
+  if (props.route) {
+    router.push({ name: props.route, params: props.params });
+  }
 }
 </script>

@@ -37,7 +37,7 @@
             <ImageCard
               :img="String(image.url)"
               btn-icon="mdi-email-arrow-right"
-              btn-text="Send report"
+              btn-text="Stuur rapport"
               route-name="contact_syndicus"
             />
           </div>
@@ -53,7 +53,7 @@
               :title="comment.title"
               :text="comment.comment"
               btn-icon="mdi-email-arrow-right"
-              btn-text="Send report"
+              btn-text="Stuur rapport"
               route-name="contact_syndicus"
             />
           </div>
