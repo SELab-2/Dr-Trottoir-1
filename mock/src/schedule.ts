@@ -1,8 +1,6 @@
 import { PrismaClient, ProgressImageType } from "@selab-2/groep-1-orm";
-import { Chance } from "chance";
 
 const prisma = new PrismaClient();
-const chance = new Chance();
 
 export async function initialiseSchedule() {
     const timestamp: Date = new Date(Date.UTC(2023, 4, 4, 12, 0, 0));

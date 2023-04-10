@@ -1,9 +1,8 @@
-import { PrismaClient } from "@selab-2/groep-1-orm";
-import { Chance } from "chance";
 import crypto from "crypto";
 
+import { PrismaClient } from "@selab-2/groep-1-orm";
+
 const prisma = new PrismaClient();
-const chance = new Chance();
 
 /*
 Bij het aanmaken van een nieuw gebouw worden ook nieuwe waarden toegevoegd aan de databank in de tabellen van

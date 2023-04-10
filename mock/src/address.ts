@@ -1,4 +1,6 @@
-import { prisma } from "../../api/src/prisma";
+import { PrismaClient } from "@selab-2/groep-1-orm";
+
+const prisma = new PrismaClient();
 
 export async function initialiseAddress() {
     const address1 = {

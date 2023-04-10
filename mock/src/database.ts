@@ -1,5 +1,4 @@
-import { prisma } from "../../api/src/prisma";
-import { Prisma } from "@selab-2/groep-1-orm";
+import { Prisma, PrismaClient } from "@selab-2/groep-1-orm";
 import { initialiseRegion } from "./region";
 import { initialiseAddress } from "./address";
 import {
@@ -16,6 +15,8 @@ import {
 import { initialiseRound, initialiseRoundBuilding } from "./round";
 import { initialiseFile, initialiseImage } from "./file";
 import { initialiseAction, initialiseGarbage } from "./garbage";
+
+const prisma = new PrismaClient();
 
 /**
  * Assuming the schema is loaded in, fills the database
