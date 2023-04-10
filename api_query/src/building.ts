@@ -1,4 +1,4 @@
-import { Building, Prisma } from "@selab-2/groep-1-orm";
+import { Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 
 export type BuildingQueryParameters = {
@@ -29,32 +29,33 @@ const includeUser = {
         hash: false,
         salt: false,
     },
-}
+};
 
-const buildingAllInfo = Prisma.validator<Prisma.BuildingArgs>()({
+type BuildingAllInfo = Prisma.BuildingGetPayload<{
     select: {
-        id: true,
-        name: true,
-        ivago_id: true,
-        deleted: true,
-        hash: false,
-        address: true,
+        id: true;
+        name: true;
+        ivago_id: true;
+        deleted: true;
+        hash: false;
+        address: true;
         syndicus: {
             include: {
-                user: includeUser,
-            },
-        },
-        manual: true,
+                user: typeof includeUser;
+            };
+        };
+        manual: true;
         images: {
             include: {
-                image: true,
-            },
-        },
-    },
-});
+                image: true;
+            };
+        };
+    };
+}>;
 
-type BuildingAllInfo = Prisma.BuildingGetPayload<typeof buildingAllInfo>;
-
-export class BuildingQuery extends Query<BuildingQueryParameters, BuildingAllInfo> {
+export class BuildingQuery extends Query<
+    BuildingQueryParameters,
+    BuildingAllInfo
+> {
     endpoint = "building";
 }
