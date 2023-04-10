@@ -1,4 +1,4 @@
-import { Garbage } from "@selab-2/groep-1-orm";
+import { Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 
 export type GarbageQueryParameters = {
@@ -14,6 +14,25 @@ export type GarbageQueryParameters = {
     ord: Array<"asc" | "desc">;
 };
 
-export class GarbageQuery extends Query<GarbageQueryParameters, Garbage> {
+type GarbageAllInfo = Prisma.GarbageGetPayload<{
+    include: {
+        action: true;
+        building: {
+            select: {
+                id: true;
+                name: true;
+                ivago_id: true;
+                deleted: true;
+                hash: false;
+                address: true;
+            };
+        };
+    };
+}>;
+
+export class GarbageQuery extends Query<
+    GarbageQueryParameters,
+    GarbageAllInfo
+> {
     endpoint = "garbage";
 }
