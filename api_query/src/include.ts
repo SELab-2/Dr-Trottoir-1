@@ -17,7 +17,7 @@ function includeUser(includeAddress: boolean) {
             hash: false,
             salt: false,
         },
-    }
+    };
 }
 
 export const includeUserWithoutAddress = includeUser(false);
