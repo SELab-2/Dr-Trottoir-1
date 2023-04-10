@@ -19,7 +19,7 @@ jobs:
                 uses: actions/checkout@v3
             -   uses: actions/setup-node@v3
                 with:
-                    node-version: '16.x'
+                    node-version: '19.x'
                     registry-url: 'https://npm.pkg.github.com'
                     scope: '@selab-2'
             -   name: "Install dependencies"
@@ -32,3 +32,5 @@ jobs:
                     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: "Verify the code compiles"
                 run: npm run build
+                env:
+                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

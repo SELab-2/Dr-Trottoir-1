@@ -1,8 +1,5 @@
 import crypto from "crypto";
-
-import { PrismaClient } from "@selab-2/groep-1-orm";
-
-const prisma = new PrismaClient();
+import { prisma } from "./prisma";
 
 /*
 Bij het aanmaken van een nieuw gebouw worden ook nieuwe waarden toegevoegd aan de databank in de tabellen van

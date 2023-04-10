@@ -1,6 +1,5 @@
-import { PrismaClient } from "@selab-2/groep-1-orm";
+import { prisma } from "./prisma";
 
-const prisma = new PrismaClient();
 export async function initialiseAction() {
     const action1 = {
         description: "action 1",

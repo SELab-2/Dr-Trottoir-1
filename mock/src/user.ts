@@ -1,7 +1,5 @@
-import { PrismaClient } from "@selab-2/groep-1-orm";
 import crypto from "crypto";
-
-const prisma = new PrismaClient();
+import { prisma } from "./prisma";
 
 export async function initialiseUser() {
     const timestamp: Date = new Date(Date.UTC(2023, 4, 4, 12, 0, 0));

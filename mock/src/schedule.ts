@@ -1,6 +1,5 @@
-import { PrismaClient, ProgressImageType } from "@selab-2/groep-1-orm";
-
-const prisma = new PrismaClient();
+import { ProgressImageType } from "@selab-2/groep-1-orm";
+import { prisma } from "./prisma";
 
 export async function initialiseSchedule() {
     const timestamp: Date = new Date(Date.UTC(2023, 4, 4, 12, 0, 0));

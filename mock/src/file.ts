@@ -1,6 +1,5 @@
-import { FileLocation, PrismaClient } from "@selab-2/groep-1-orm";
-
-const prisma = new PrismaClient();
+import { FileLocation } from "@selab-2/groep-1-orm";
+import { prisma } from "./prisma";
 
 export async function initialiseFile() {
     const file1 = {
