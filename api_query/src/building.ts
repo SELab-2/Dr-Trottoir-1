@@ -1,6 +1,6 @@
 import { Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
-import { includeUser } from "./include";
+import { includeUserWithoutAddress } from "./include";
 
 export type BuildingQueryParameters = {
     take: number;
@@ -23,7 +23,7 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
         address: true;
         syndicus: {
             include: {
-                user: typeof includeUser;
+                user: typeof includeUserWithoutAddress;
             };
         };
         manual: true;

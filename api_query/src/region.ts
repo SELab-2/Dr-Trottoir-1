@@ -1,6 +1,6 @@
 import { Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
-import { includeUser } from "./include";
+import { includeUserWithoutAddress } from "./include";
 
 export type RegionQueryParameters = {
     take: number;
@@ -14,7 +14,7 @@ type RegionWithUsers = Prisma.RegionGetPayload<{
     include: {
         users: {
             include: {
-                user: typeof includeUser;
+                user: typeof includeUserWithoutAddress;
             };
         };
     };

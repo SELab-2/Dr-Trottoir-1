@@ -1,6 +1,6 @@
 import { Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
-import { includeUser, selectBuilding } from "./include";
+import { includeUserWithoutAddress, selectBuilding } from "./include";
 
 export type ProgressQueryParameters = {
     take: number;
@@ -23,7 +23,7 @@ type ProgressAllInfo = Prisma.ProgressGetPayload<{
         schedule: {
             include: {
                 round: true;
-                user: typeof includeUser;
+                user: typeof includeUserWithoutAddress;
             };
         };
         images: true;
