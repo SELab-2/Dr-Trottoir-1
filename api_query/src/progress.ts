@@ -1,5 +1,6 @@
-import { Progress } from "@selab-2/groep-1-orm";
+import { Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
+import { includeUser, selectBuilding } from "./include";
 
 export type ProgressQueryParameters = {
     take: number;
@@ -16,6 +17,22 @@ export type ProgressQueryParameters = {
     user: number;
 };
 
-export class ProgressQuery extends Query<ProgressQueryParameters, Progress> {
+type ProgressAllInfo = Prisma.ProgressGetPayload<{
+    include: {
+        building: typeof selectBuilding;
+        schedule: {
+            include: {
+                round: true;
+                user: typeof includeUser;
+            };
+        };
+        images: true;
+    };
+}>;
+
+export class ProgressQuery extends Query<
+    ProgressQueryParameters,
+    ProgressAllInfo
+> {
     endpoint = "progress";
 }
