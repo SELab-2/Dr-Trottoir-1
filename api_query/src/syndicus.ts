@@ -1,5 +1,6 @@
-import { Syndicus } from "@selab-2/groep-1-orm";
+import { Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
+import {includeUserWithAddress, includeBuilding} from "./include";
 
 export type SyndicusQueryParameters = {
     take: number;
@@ -14,6 +15,13 @@ export type SyndicusQueryParameters = {
     ord: Array<"asc" | "desc">;
 };
 
-export class SyndicusQuery extends Query<SyndicusQueryParameters, Syndicus> {
+type SyndicusAllInfo = Prisma.SyndicusGetPayload<{
+    include: {
+        user: typeof includeUserWithAddress;
+        building: typeof includeBuilding;
+    }
+}>;
+
+export class SyndicusQuery extends Query<SyndicusQueryParameters, SyndicusAllInfo> {
     endpoint = "syndicus";
 }

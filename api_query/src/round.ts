@@ -1,6 +1,6 @@
 import { Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
-import {selectBuilding} from "./include";
+import {includeBuilding} from "./include";
 
 export type RoundQueryParameters = {
     take: number;
@@ -14,7 +14,7 @@ type RoundWithBuildings = Prisma.RoundGetPayload<{
     include: {
         buildings: {
             include: {
-                building: typeof selectBuilding;
+                building: typeof includeBuilding;
             }
         }
     }

@@ -1,6 +1,6 @@
 import { Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
-import { selectBuilding } from "./include";
+import { includeBuilding } from "./include";
 
 export type GarbageQueryParameters = {
     take: number;
@@ -18,7 +18,7 @@ export type GarbageQueryParameters = {
 type GarbageAllInfo = Prisma.GarbageGetPayload<{
     include: {
         action: true;
-        building: typeof selectBuilding;
+        building: typeof includeBuilding;
     };
 }>;
 

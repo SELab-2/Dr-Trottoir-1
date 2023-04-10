@@ -24,7 +24,7 @@ export const includeUserWithoutAddress = includeUser(false);
 
 export const includeUserWithAddress = includeUser(true);
 
-export const selectBuilding = {
+export const includeBuilding = {
     select: {
         id: true,
         name: true,
