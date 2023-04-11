@@ -99,12 +99,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
 import BuildingData from "@/components/building/BuildingData.vue";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import ImageCard from "@/components/cards/ImageCard.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 // reactive state to show the drawer or not
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 defineProps({
@@ -148,21 +150,26 @@ const comments = ref<Array<{ title: string; comment: string }>>([
 
 // TODO: this should become an actual redirect to page
 function foto() {
-  console.log("foto");
+  router.push({ path: "foto" });
 }
 
 function opmerking() {
   console.log("opmerking");
 }
 
-const actions = [
+interface MenuItem {
+  title: string;
+  clicked: () => void;
+}
+
+const actions: MenuItem[] = [
   {
     title: "Foto toevoegen",
-    clicked: foto(),
+    clicked: foto,
   },
   {
     title: "Opmerking toevoegen",
-    clicked: opmerking(),
+    clicked: opmerking,
   },
 ];
 </script>
