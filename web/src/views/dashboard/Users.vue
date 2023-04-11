@@ -15,4 +15,10 @@
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
 import { User } from "@/types/User";
+import { UserQuery } from "../../../../api_query/src/user";
+
+process.env.API_SERVER_ADDRESS = "/"
+process.env.VUE_APP_API_SERVER_ADDRESS = "/"
+
+const usersOrErr: User[] | APIError = new UserQuery().getAll();
 </script>

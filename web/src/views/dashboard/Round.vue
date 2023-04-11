@@ -26,4 +26,11 @@
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
 import { Routes } from "@/types/Round.js";
+
+import { RoundQuery } from "../../../../api_query/src/round";
+
+process.env.API_SERVER_ADDRESS = "/"
+process.env.VUE_APP_API_SERVER_ADDRESS = "/"
+
+const usersOrErr: User[] | APIError = new RoundQuery().getAll();
 </script>
