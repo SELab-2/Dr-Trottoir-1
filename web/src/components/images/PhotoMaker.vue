@@ -1,19 +1,22 @@
 <template>
-  <div>
+  <v-card class="card">
     <v-container>
+      <h2 v-if="showPhoto">Foto toevoegen</h2>
+      <h2 v-else class="pb-4">Opmerking toevoegen</h2>
       <v-form>
         <v-img
           cover
-          v-if="imageUrl"
+          v-if="imageUrl && showPhoto"
           :src="imageUrl"
           aspect-ratio="1/1"
           :with="300"
         ></v-img>
-        <div class="d-flex justify-center align-center py-5">
+        <div class="d-flex justify-center align-center py-5" v-if="showPhoto">
           <v-btn block variant="outlined"> Maak foto</v-btn>
         </div>
 
         <v-file-input
+          v-if="showPhoto"
           single
           v-model="photo.image"
           label="Selecteer afbeelding"
@@ -34,16 +37,38 @@
           v-model="photo.comments"
         ></v-textarea>
       </v-form>
-      <div class="d-flex flex-row-reverse my-3">
-        <v-btn prepend-icon="mdi-plus"> Toevoegen </v-btn>
+      <div class="d-flex flex-row my-3">
+        <v-btn
+          prepend-icon="mdi-delete"
+          color="error"
+          class="mx-2"
+          @click="$emit('cancel')"
+        >
+          Annuleer
+        </v-btn>
+        <v-btn
+          prepend-icon="mdi-plus"
+          color="success"
+          class="mx-2"
+          @click="$emit('confirm', photo)"
+        >
+          Toevoegen
+        </v-btn>
       </div>
     </v-container>
-  </div>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
 import Photo from "@/components/models/Photo";
+import { ref } from "vue";
+
+defineProps({
+  showPhoto: {
+    type: Boolean,
+    default: true,
+  },
+});
 
 const photo = ref<Photo>({
   image: [],
@@ -54,7 +79,7 @@ const photo = ref<Photo>({
 const imageUrl = ref("");
 
 /*TODO: fix typing here, commented this for deadline 1
-  Should be added in <v-file-input> 
+  Should be added in <v-file-input>
     @change="previewImage"
 
 const previewImage = (event) => {
@@ -100,16 +125,7 @@ const previewImage = (event) => {
 </script>
 
 <style scoped>
-.d-flex {
-  display: flex;
-}
-.justify-center {
-  justify-content: center;
-}
-.align-center {
-  align-items: center;
-}
-.pad {
-  padding: 15px;
+.card {
+  max-width: 350px;
 }
 </style>

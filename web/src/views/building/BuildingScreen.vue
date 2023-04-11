@@ -96,6 +96,13 @@
     </div>
   </div>
   <AddButton icon="mdi-plus" :items="actions" />
+  <v-overlay v-model="showOverlay" class="align-center justify-center">
+    <PhotoMaker
+      @cancel="showOverlay = false"
+      @confirm="showOverlay = false"
+      :show-photo="showPhotoInOverlay"
+    />
+  </v-overlay>
 </template>
 
 <script lang="ts" setup>
@@ -103,15 +110,17 @@ import BuildingData from "@/components/building/BuildingData.vue";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import ImageCard from "@/components/cards/ImageCard.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
+import PhotoMaker from "@/components/images/PhotoMaker.vue";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
-const router = useRouter();
 // reactive state to show the drawer or not
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 defineProps({
   id: String,
 });
+
+const showOverlay = ref(false);
+const showPhotoInOverlay = ref(true);
 
 const images = ref<Array<{ about: string | null; time: Date; url: string }>>([
   {
@@ -148,13 +157,14 @@ const comments = ref<Array<{ title: string; comment: string }>>([
   },
 ]);
 
-// TODO: this should become an actual redirect to page
 function foto() {
-  router.push({ path: "foto" });
+  showOverlay.value = true;
+  showPhotoInOverlay.value = true;
 }
 
 function opmerking() {
-  console.log("opmerking");
+  showOverlay.value = true;
+  showPhotoInOverlay.value = false;
 }
 
 interface MenuItem {
