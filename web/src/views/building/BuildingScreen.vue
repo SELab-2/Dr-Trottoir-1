@@ -75,7 +75,7 @@
             btn-text="Bewerken"
           />
         </div>
-        <ImageCard title="TOEVOEGEN" title-icon="mdi-plus" />
+        <ImageCard title="TOEVOEGEN" title-icon="mdi-plus" @click='foto'/>
       </div>
       <h3>Opmerkingen</h3>
       <div class="image-grid" style="margin-top: 10px">
@@ -91,7 +91,7 @@
             btn-text="Bewerken"
           />
         </div>
-        <ImageCard title="TOEVOEGEN" title-icon="mdi-plus" />
+        <ImageCard title="TOEVOEGEN" title-icon="mdi-plus" @click='opmerking' />
       </div>
     </div>
   </div>
