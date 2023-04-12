@@ -17,9 +17,8 @@
 import Table from "@/components/table/Table.vue";
 import { User } from "@/types/User";
 import { UserQuery } from "../../../../api_query/src/user";
+import { APIError } from "@selab-2/groep-1-query/dist/api_error";
 
-process.env.API_SERVER_ADDRESS = "/"
-process.env.VUE_APP_API_SERVER_ADDRESS = "/"
-
-const usersOrErr: User[] | APIError = new UserQuery().getAll();
+const usersOrErr: User[] | APIError = await new UserQuery().getAll();
+console.log(usersOrErr);
 </script>
