@@ -16,7 +16,7 @@ const router = express.Router();
 // });
 
 //creates multer object (get request will show file in browser)
-//(multer saves files to direcotry files, with the original name)
+//(multer saves files to directory files, with the original name)
 const fileUpload = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
@@ -62,9 +62,7 @@ router.post(
             // return the saved file as JSON
             res.json(result);
         } catch (err) {
-            //console.error(err);
-            throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
-            //res.status(500).json({ error: "Failed to save file" });
+            throw new APIError(APIErrorCode.FAILED_TO_SAVE_FILE);
         }
     },
 );
@@ -90,16 +88,14 @@ router.get("/:id", isAuthGet, async (req: Request, res: Response) => {
         });
 
         if (!result) {
-            res.status(404).json({ error: "File not found" });
-            return;
+            throw new APIError(APIErrorCode.FILE_NOT_FOUND);
         }
 
         // Send the file to the client
         const dirname = path.resolve();
         res.sendFile(path.join(dirname, result.path));
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to retrieve file" });
+        throw new APIError(APIErrorCode.FAILED_TO_RETRIEVE_FILE)
     }
 });
 

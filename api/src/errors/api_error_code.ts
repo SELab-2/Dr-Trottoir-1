@@ -10,6 +10,9 @@ export enum APIErrorCode {
     METHOD_NOT_ALLOWED = 405,
     CONFLICT = 409,
     INTERNAL_SERVER_ERROR = 500,
+    FAILED_TO_SAVE_FILE = 500,
+    FILE_NOT_FOUND = 404,
+    FAILED_TO_RETRIEVE_FILE = 500,
 }
 
 /**
@@ -32,6 +35,12 @@ export function errorMessage(code: APIErrorCode): string {
             return "Method not allowed";
         case APIErrorCode.INTERNAL_SERVER_ERROR:
             return "Internal Server Error";
+        case APIErrorCode.FAILED_TO_SAVE_FILE:
+            return "failed to save file";
+        case APIErrorCode.FILE_NOT_FOUND:
+            return "file not found";
+        case APIErrorCode.FAILED_TO_RETRIEVE_FILE:
+            return "failed to retrieve file";
         default:
             console.log(`ERROR: an unknown error message was raised: ${code}`);
             return "Internal Server Error";
