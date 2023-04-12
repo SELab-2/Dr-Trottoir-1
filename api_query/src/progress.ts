@@ -1,4 +1,4 @@
-import { Prisma } from "@selab-2/groep-1-orm";
+import { Progress, Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithoutAddress, includeBuilding } from "./include";
 
@@ -32,7 +32,8 @@ type ProgressAllInfo = Prisma.ProgressGetPayload<{
 
 export class ProgressQuery extends Query<
     ProgressQueryParameters,
-    ProgressAllInfo
+    ProgressAllInfo,
+    Progress
 > {
     endpoint = "progress";
 }

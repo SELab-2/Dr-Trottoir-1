@@ -1,4 +1,4 @@
-import { Prisma } from "@selab-2/groep-1-orm";
+import { Round, Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeBuilding } from "./include";
 
@@ -22,7 +22,8 @@ type RoundWithBuildings = Prisma.RoundGetPayload<{
 
 export class RoundQuery extends Query<
     RoundQueryParameters,
-    RoundWithBuildings
+    RoundWithBuildings,
+    Round
 > {
     endpoint = "round";
 }

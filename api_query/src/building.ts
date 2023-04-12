@@ -13,6 +13,7 @@ export type BuildingQueryParameters = {
     ord: Array<"asc" | "desc">;
 };
 
+// Het type dat het resultaat van een GET request modelleert.
 type BuildingAllInfo = Prisma.BuildingGetPayload<{
     select: {
         id: true;
@@ -35,9 +36,24 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
     };
 }>;
 
+// Het type dat het resultaat van een PATCH request modelleert.
+type BuildingWithoutHash = Prisma.BuildingGetPayload<{
+    select: {
+        id: true;
+        name: true;
+        ivago_id: true;
+        syndicus_id: true;
+        address_id: true;
+        manual_id: true;
+        hash: false;
+        deleted: true;
+    };
+}>;
+
 export class BuildingQuery extends Query<
     BuildingQueryParameters,
-    BuildingAllInfo
+    BuildingAllInfo,
+    BuildingWithoutHash
 > {
     endpoint = "building";
 }

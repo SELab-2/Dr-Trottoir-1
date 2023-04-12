@@ -3,10 +3,11 @@ import { QueryError } from "./query_error";
 /**
  * Abstractie overheen onze API voor client side queries uit te voeren.
  *
- * Parameters: Een type die de interface van de API modeleert.
- * Result: Een type die het resultaat modeleert.
+ * Parameters: Een type die de interface van de API modelleert.
+ * ResultGet: Een type die het resultaat van een GET request modelleert.
+ * ResultPatch: Een type die het resultaat van een PATCH request modelleert.
  */
-export abstract class Query<Parameters, Result> {
+export abstract class Query<Parameters, ResultGet, ResultPatch> {
     abstract endpoint: string;
     server =
         process.env.API_SERVER_ADDRESS ??
@@ -18,22 +19,39 @@ export abstract class Query<Parameters, Result> {
      * terug geeft.
      * @param url Waarheen de request gestuurd wordt.
      * @param method "GET", "POST", "PATCH", "DELETE", etc.
+     * @param body De velden in de databank met hun nieuwe waarde.
      * @throwd QueryError
      */
-    private async fetchJSON(url: string, method = "GET"): Promise<any | null> {
+    private async fetchJSON(
+        url: string,
+        method = "GET",
+        body = {},
+    ): Promise<any | null> {
         let res: Response | null = null;
         let json: any = null;
 
+        const options: {
+            method: string;
+            headers: HeadersInit;
+            credentials: RequestCredentials;
+            redirect: RequestRedirect;
+            body?: BodyInit;
+        } = {
+            method: method,
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            redirect: "error",
+            body: JSON.stringify(body),
+        };
+        if (method === "GET") {
+            delete options.body;
+        }
+
         try {
-            res = await fetch(url, {
-                method: method,
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                redirect: "error",
-            });
+            res = await fetch(url, options);
         } catch (e) {
             throw new QueryError(503, "Service Unavailable");
         }
@@ -75,7 +93,7 @@ export abstract class Query<Parameters, Result> {
      * error voorvalt, wordt deze opgevangen en teruggegeven
      * @throws QueryError
      */
-    async getOne(id: number): Promise<Result> {
+    async getOne(id: number): Promise<ResultGet> {
         if (Number.isNaN(id)) {
             throw new QueryError(400, "Bad Request");
         }
@@ -88,7 +106,7 @@ export abstract class Query<Parameters, Result> {
      * HTTP error voorvalt, wordt deze opgevangen en teruggegeven.
      * @throws QueryError
      */
-    async getAll(query: Partial<Parameters> = {}): Promise<Array<Result>> {
+    async getAll(query: Partial<Parameters> = {}): Promise<Array<ResultGet>> {
         return this.fetchJSON(this.url(query));
     }
 
@@ -96,8 +114,15 @@ export abstract class Query<Parameters, Result> {
      * Update een specifiek element via HTTP PATCH.
      * @throws QueryError
      */
-    async updateOne(element: Partial<Result>): Promise<Result> {
-        throw new Error("Not Implemented");
+    async updateOne(element: Partial<ResultPatch>): Promise<ResultPatch> {
+        const index = Object.keys(element).indexOf("id");
+        const id = Object.entries(element)[index][1];
+        if (Number.isNaN(id)) {
+            throw new QueryError(400, "Bad Request");
+        }
+        const url = this.server + this.endpoint + "/" + id;
+
+        return this.fetchJSON(url, "PATCH", element);
     }
 
     /**
@@ -106,7 +131,7 @@ export abstract class Query<Parameters, Result> {
      * argument.
      * @throws QueryError
      */
-    async deleteOne(element: Partial<Result>, hard = false): Promise<void> {
+    async deleteOne(element: Partial<ResultGet>, hard = false): Promise<void> {
         throw new Error("Not Implemented");
     }
 }

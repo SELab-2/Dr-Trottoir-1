@@ -43,6 +43,10 @@ type UserAllInfo = Prisma.UserGetPayload<{
     };
 }>;
 
-export class UserQuery extends Query<UserQueryParameters, UserAllInfo> {
+export class UserQuery extends Query<
+    UserQueryParameters,
+    UserAllInfo,
+    UserAllInfo
+> {
     endpoint = "user";
 }
