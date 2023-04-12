@@ -38,7 +38,7 @@
         variant="plain"
         @click="submit"
         :disabled="detailedDays.length === 0"
-        >Versturen</v-btn
+        >Inplannen</v-btn
       >
       <v-btn
         class="mx-1"
