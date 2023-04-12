@@ -33,13 +33,7 @@ export const useAuthStore = defineStore("auth", () => {
         credentials: "include",
       });
 
-      // Retrieve current user identifier.
-      const res = await fetch("http://localhost:8080/auth", {
-        credentials: "include",
-      });
-
-      // Assign result to the current store
-      auth.value = await res.json();
+      await getAuth();
     } catch (e) {
       // Fallback error. TODO: expand error handling.
       auth.value = { code: 500, message: "Internal Server Error" };
@@ -53,5 +47,20 @@ export const useAuthStore = defineStore("auth", () => {
     throw new Error("Not Implemented"); // TODO
   }
 
-  return { auth, logIn, logOut };
+  async function getAuth(): Promise<void> {
+    try {
+      // Retrieve current user identifier.
+      const res = await fetch("http://localhost:8080/auth", {
+        credentials: "include",
+      });
+
+      // Assign result to the current store
+      auth.value = await res.json();
+    } catch (e) {
+      // Fallback error. TODO: expand error handling.
+      auth.value = { code: 500, message: "Internal Server Error" };
+    }
+  }
+
+  return { auth, logIn, logOut, getAuth };
 });

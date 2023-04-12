@@ -17,6 +17,8 @@ import UserOverview from "@/views/dashboard/Users.vue";
 import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
 import Auth from "@/views/dev/Auth.vue";
+import { useAuthStore } from '@/stores/auth'
+import { APIError } from '@selab-2/groep-1-query/dist/api_error'
 
 const routes = [
   {
@@ -41,6 +43,7 @@ const routes = [
         props: true,
         meta: {
           title: "",
+          requiresAuth: true
         },
       },
       {
@@ -49,6 +52,7 @@ const routes = [
         component: SchedulingScreenStudent,
         meta: {
           title: "Planning student",
+          requiresAuth: true
         },
       },
       {
@@ -57,6 +61,7 @@ const routes = [
         component: RoundFollowup,
         meta: {
           title: "Opvolging rondes",
+          requiresAuth: true
         },
       },
       {
@@ -65,6 +70,7 @@ const routes = [
         component: RoundDetail,
         meta: {
           title: "",
+          requiresAuth: true
         },
       },
       {
@@ -73,6 +79,7 @@ const routes = [
         component: RoundPlanner,
         meta: {
           title: "Ronde plannen",
+          requiresAuth: true
         },
       },
       {
@@ -81,6 +88,7 @@ const routes = [
         component: RoundMaker,
         meta: {
           title: "Ronde maken",
+          requiresAuth: true
         },
       },
       {
@@ -90,6 +98,7 @@ const routes = [
         props: true,
         meta: {
           title: "",
+          requiresAuth: true
         },
       },
       {
@@ -97,6 +106,10 @@ const routes = [
         name: "building_id_detail",
         component: BuildingDetail,
         props: true,
+        meta: {
+          title: "",
+          requiresAuth: true
+        },
       },
       {
         path: "/gebouw/nieuw",
@@ -104,6 +117,7 @@ const routes = [
         component: BuildingMaker,
         meta: {
           title: "Nieuw gebouw",
+          requiresAuth: true
         },
       },
       {
@@ -111,13 +125,18 @@ const routes = [
         name: "building_followup",
         component: BuildingFollowup,
         meta: {
-          title: "Gebouwen",
+          title: "Opvolging gebouwen",
+          requiresAuth: true
         },
       },
       {
         path: "/vuilnis/plannen",
         name: "garbage_plan",
         component: GarbageMaker,
+        meta: {
+          title: "",
+          requiresAuth: true
+        },
       },
       {
         path: "/account",
@@ -125,6 +144,7 @@ const routes = [
         name: "user_overview",
         meta: {
           title: "Gebruikers",
+          requiresAuth: true
         },
       },
       {
@@ -133,6 +153,7 @@ const routes = [
         component: UserCreation,
         meta: {
           title: "Nieuwe gebruiker",
+          requiresAuth: true
         },
       },
       {
@@ -141,6 +162,7 @@ const routes = [
         name: "building_overview",
         meta: {
           title: "Gebouwen",
+          requiresAuth: true
         },
       },
       {
@@ -149,6 +171,7 @@ const routes = [
         name: "round_overview",
         meta: {
           title: "Rondes",
+          requiresAuth: true
         },
       },
     ],
@@ -158,6 +181,24 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach(async (to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  await useAuthStore().getAuth();
+  const auth = useAuthStore().auth;
+
+  // @ts-ignore TODO: a better way to check if auth is of type APIError
+  if (!auth || auth.message != null){
+    if(requiresAuth) {
+      next("/");
+    }
+    else {
+      next();
+    }
+  }
+  next();
+
 });
 
 export default router;
