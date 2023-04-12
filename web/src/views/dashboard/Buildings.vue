@@ -28,7 +28,7 @@ async function loadBuildings(): Promise<Building[]> {
   const buildingsOrErr: Building[] | APIError = await new BuildingQuery().getAll();
   // @ts-ignore
   if (buildingsOrErr.message == null) {
-    let array = []
+    let array = [];
     for (let building of buildingsOrErr)
     {
       array.push(new Building(building));

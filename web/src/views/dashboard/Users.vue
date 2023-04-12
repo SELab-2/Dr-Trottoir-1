@@ -25,7 +25,7 @@ async function loadUsers(): Promise<User[]> {
   const usersOrErr: User[] | APIError = await new UserQuery().getAll();
   // @ts-ignore
   if (usersOrErr.message == null) {
-    let array = []
+    let array = [];
     for (let user of usersOrErr)
     {
       array.push(new User(user));

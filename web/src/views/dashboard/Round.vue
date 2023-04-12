@@ -27,6 +27,7 @@
 import Table from "@/components/table/Table.vue";
 import { Schedule } from "@/types/Schedule";
 import { ScheduleQuery } from "../../../../api_query/src/schedule";
+import { ProgressQuery } from "../../../../api_query/src/progress";
 import { APIError } from "@selab-2/groep-1-query/dist/api_error";
 import { ref } from "vue";
 
@@ -37,9 +38,35 @@ async function loadSchedules(): Promise<Round[]> {
   // @ts-ignore
   if (schedulesOrErr.message == null) {
     let array = []
-    for (let schedule of schedulesOrErr)
+    for (let schedule of schedulesOrErr) {
+      let s: Schedule = new Schedule(schedule);
+      let progress:Progress[]  = await loadProgress(s.id);
+      let schedule_done: boolean = true;
+      for (let p of progress) {
+        if (!p.departure) {
+          schedule_done = false;
+          break;
+        }
+      }
+      s.finished = schedule_done;
+      array.push(s);
+    }
+    return array;
+  }
+  return [];
+}
+
+async function loadProgress(schedule: number): Promise<Progress> {
+  const progressOrErr: Progress[] | APIError = await new ProgressQuery().getAll(
     {
-      array.push(new Schedule(schedule));
+      schedule: schedule,
+    });
+  // @ts-ignore
+  if (progressOrErr.message == null) {
+    let array = [];
+    for (let progress of progressOrErr)
+    {
+      array.push(progress);
     }
     return array;
   }

@@ -90,6 +90,6 @@ export class Schedule implements TableEntity<Schedule> {
   }
 
   route(): string {
-    return `/ronde/${this.id}`;
+    return `/schema/${this.id}`;
   }
 }
