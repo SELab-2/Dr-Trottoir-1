@@ -10,7 +10,8 @@
     </v-btn>
   </div>
   <!-- hier moet usersOrError komen -->
-  <Table v-bind:entries="User.random()" v-bind:headers="User.headers()"></Table>
+  <Table v-bind:entries="users" v-bind:headers="User.headers()"></Table>
+  <p v-if='!loading'>{{users}}</p>
 </template>
 
 <script setup lang="ts">
@@ -18,7 +19,20 @@ import Table from "@/components/table/Table.vue";
 import { User } from "@/types/User";
 import { UserQuery } from "../../../../api_query/src/user";
 import { APIError } from "@selab-2/groep-1-query/dist/api_error";
+import { ref } from "vue";
 
-const usersOrErr: User[] | APIError = await new UserQuery().getAll();
-console.log(usersOrErr);
+const users = ref<User[]>(await loadUsers());
+const loading = ref<boolean>(true);
+
+async function loadUsers(): Promise<User[]>{
+  const usersOrErr: User[] | APIError = await new UserQuery().getAll();
+  // @ts-ignore
+  if(usersOrErr.message == null)
+  {
+    return usersOrErr;
+  }
+  return [];
+}
+
+console.log(users.value)
 </script>
