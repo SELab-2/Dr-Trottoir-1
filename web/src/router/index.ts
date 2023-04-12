@@ -35,8 +35,7 @@ const routes = [
     path: "/", // Unreachable, as intended.
     children: [
       {
-        // TODO: isadmin should be removed when authentication is in order
-        path: "/account/settings/:id/:isadmin",
+        path: "/account/settings/:id",
         name: "account_settings",
         component: AccountSettings,
         props: true,

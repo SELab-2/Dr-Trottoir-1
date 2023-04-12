@@ -33,7 +33,7 @@
             <router-link
               :to="{
                 name: 'account_settings',
-                params: { id: 0, isadmin: 'true' },
+                params: { id: 0 },
               }"
             >
               <v-list-item
@@ -177,25 +177,28 @@ const drawer = ref(true);
 const route = useRoute();
 
 // roles to know what to show
-const isStudent = ref(true);
-const isSuperStudent = ref(true);
-const isSyndicus = ref(true);
-const isAdmin = ref(true);
+// @ts-ignore
+const isStudent: Boolean = useAuthStore().auth?.student;
+// @ts-ignore
+const isSuperStudent: Boolean = useAuthStore().auth?.super_student;
+const isSyndicus = true; // TODO: check for syndicus
+// @ts-ignore
+const isAdmin: Boolean = useAuthStore().auth?.admin;
 
 // account display settings
 const studentName: string = "Jens Pots";
 function roles(): string {
   let str = "";
-  if (isStudent.value) {
+  if (isStudent) {
     str += "student ";
   }
-  if (isSuperStudent.value) {
+  if (isSuperStudent) {
     str += "superstudent ";
   }
-  if (isSyndicus.value) {
+  if (isSyndicus) {
     str += "syndicus ";
   }
-  if (isAdmin.value) {
+  if (isAdmin) {
     str += "admin ";
   }
   return str;
