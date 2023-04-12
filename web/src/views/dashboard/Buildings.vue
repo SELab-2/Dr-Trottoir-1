@@ -9,6 +9,7 @@
       Nieuw Gebouw
     </v-btn>
   </div>
+  <!-- hier moet buildingsOrError komen -->
   <Table
     v-bind:entries="Building.random()"
     v-bind:headers="Building.headers()"
@@ -24,6 +25,6 @@ import { BuildingQuery } from "../../../../api_query/src/building";
 process.env.API_SERVER_ADDRESS = "/"
 process.env.VUE_APP_API_SERVER_ADDRESS = "/"
 
-const usersOrErr: User[] | APIError = new BuildingQuery().getAll();
+const buildingsOrErr: Building[] | APIError = new BuildingQuery().getAll();
 
 </script>

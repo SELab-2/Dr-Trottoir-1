@@ -9,6 +9,7 @@
       Nieuwe Gebruiker
     </v-btn>
   </div>
+  <!-- hier moet usersOrError komen -->
   <Table v-bind:entries="User.random()" v-bind:headers="User.headers()"></Table>
 </template>
 

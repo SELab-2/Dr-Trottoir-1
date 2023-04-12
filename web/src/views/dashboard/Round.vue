@@ -17,6 +17,7 @@
       Nieuwe ronde Plannen
     </v-btn>
   </div>
+  <!-- hier moet roundsOrError komen -->
   <Table
     v-bind:entries="Routes.random()"
     v-bind:headers="Routes.headers()"
@@ -32,5 +33,5 @@ import { RoundQuery } from "../../../../api_query/src/round";
 process.env.API_SERVER_ADDRESS = "/"
 process.env.VUE_APP_API_SERVER_ADDRESS = "/"
 
-const usersOrErr: User[] | APIError = new RoundQuery().getAll();
+const roundsOrErr: Round[] | APIError = new RoundQuery().getAll();
 </script>
