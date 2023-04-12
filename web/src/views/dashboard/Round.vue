@@ -17,30 +17,29 @@
       Nieuwe ronde Plannen
     </v-btn>
   </div>
-  {{ rounds[0] }}
   <Table
-    v-bind:entries="Round.random()"
-    v-bind:headers="Round.headers()"
+    v-bind:entries="schedules"
+    v-bind:headers="Schedule.headers()"
   ></Table>
 </template>
 
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
-import { Round } from "@/types/Round.js";
-import { RoundQuery } from "../../../../api_query/src/round";
+import { Schedule } from "@/types/Schedule";
+import { ScheduleQuery } from "../../../../api_query/src/schedule";
 import { APIError } from "@selab-2/groep-1-query/dist/api_error";
 import { ref } from "vue";
 
-const rounds = ref<Round[]>(await loadRounds());
+const schedules = ref<Schedule[]>(await loadSchedules());
 
-async function loadRounds(): Promise<Round[]> {
-  const roundsOrErr: Round[] | APIError = await new RoundQuery().getAll();
+async function loadSchedules(): Promise<Round[]> {
+  const schedulesOrErr: Schedule[] | APIError = await new ScheduleQuery().getAll();
   // @ts-ignore
-  if (roundsOrErr.message == null) {
+  if (schedulesOrErr.message == null) {
     let array = []
-    for (let round of roundsOrErr)
+    for (let schedule of schedulesOrErr)
     {
-      array.push(new Round(round));
+      array.push(new Schedule(schedule));
     }
     return array;
   }

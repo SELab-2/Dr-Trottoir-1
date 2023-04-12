@@ -1,13 +1,14 @@
 import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
+import { User } from "./User"
 import chance from "chance";
 
 export class Building implements TableEntity<Building> {
   id: number;
   name: string;
   address: { street: string, number: number };
-  syndicus : { user: { first_name: string, last_name: string } }
+  syndicus : { user: User };
 
   public constructor(init?: Partial<Building>) {
     Object.assign(this, init);
