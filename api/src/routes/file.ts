@@ -20,10 +20,10 @@ const router = express.Router();
 const fileUpload = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
-            if (process.env.LOCAL_FILE_PATH !== undefined){
+            if (process.env.LOCAL_FILE_PATH !== undefined) {
                 cb(null, process.env.LOCAL_FILE_PATH as string);
-            }else {
-                cb(null, 'files');
+            } else {
+                cb(null, "files");
             }
         },
         filename: function (req, file, cb) {
@@ -70,9 +70,9 @@ router.post(
 //Auth for get request: you have to be a user to make a get request
 const isAuthGet = (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;
-    if (process.env.DISABLE_AUTH || user){
+    if (process.env.DISABLE_AUTH || user) {
         next();
-    }else {
+    } else {
         throw new APIError(APIErrorCode.UNAUTHORIZED);
     }
 };
@@ -86,16 +86,11 @@ router.get("/:id", isAuthGet, async (req: Request, res: Response) => {
                 id: Parser.number(req.params["id"]),
             },
         });
-
-        if (!result) {
-            throw new APIError(APIErrorCode.FILE_NOT_FOUND);
-        }
-
         // Send the file to the client
         const dirname = path.resolve();
         res.sendFile(path.join(dirname, result.path));
     } catch (err) {
-        throw new APIError(APIErrorCode.FAILED_TO_RETRIEVE_FILE)
+        throw new APIError(APIErrorCode.FAILED_TO_RETRIEVE_FILE);
     }
 });
 
