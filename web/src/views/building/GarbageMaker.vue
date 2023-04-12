@@ -14,10 +14,18 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-select v-model="frequency" :items="frequencys" label="Frequentie"></v-select>
+        <v-select
+          v-model="frequency"
+          :items="frequencys"
+          label="Frequentie"
+        ></v-select>
       </v-col>
       <v-col>
-        <v-text-field v-model="startDate" label="Start Datum" type="date"></v-text-field>
+        <v-text-field
+          v-model="startDate"
+          label="Start Datum"
+          type="date"
+        ></v-text-field>
       </v-col>
       <v-col v-if="frequency !== 'enkel'">
         <v-text-field
@@ -62,11 +70,17 @@
         <v-card color="grey-lighten-1" variant="flat" class="mx-1">
           <template v-slot:title> {{ schedule.garbageType }}</template>
           <template v-slot:append>
-            <v-icon color="red" @click="deleteSummary(schedule.id)" icon="mdi-close" />
+            <v-icon
+              color="red"
+              @click="deleteSummary(schedule.id)"
+              icon="mdi-close"
+            />
           </template>
           <div class="pa-4">
             <div><strong>Actie:</strong> {{ schedule.action }}</div>
-            <div><strong>Start:</strong> {{ schedule.start.toDateString() }}</div>
+            <div>
+              <strong>Start:</strong> {{ schedule.start.toDateString() }}
+            </div>
             <div><strong>Einde:</strong> {{ schedule.end.toDateString() }}</div>
             <div><strong>Type:</strong> {{ schedule.garbageType }}</div>
             <div><strong>Actie:</strong> {{ schedule.action }}</div>
@@ -93,7 +107,11 @@
           <td>{{ day.action }}</td>
           <td>{{ day.time }}</td>
           <td>
-            <v-icon color="red" icon="mdi-close" @click="deleteDay(day.id)"></v-icon>
+            <v-icon
+              color="red"
+              icon="mdi-close"
+              @click="deleteDay(day.id)"
+            ></v-icon>
           </td>
         </tr>
       </tbody>
@@ -150,8 +168,8 @@ let dayCounter = 0;
 function add() {
   if (
     !(
-      garbageType === undefined ||
-      action === undefined ||
+      garbageType.value === undefined ||
+      action.value === undefined ||
       startDate.value === "" ||
       (endDate.value === "" && frequency.value !== "enkel") ||
       time.value === ""
@@ -197,10 +215,12 @@ function add() {
 }
 function deleteSummary(id: number) {
   const correspondingSummary = summary.value.find(
-    (schedule) => schedule.id === id
+    (schedule) => schedule.id === id,
   ) as Schedule;
   if (correspondingSummary) {
-    detailedDays.value = detailedDays.value.filter((day) => day.scheduleId !== id);
+    detailedDays.value = detailedDays.value.filter(
+      (day) => day.scheduleId !== id,
+    );
   }
   summary.value = summary.value.filter((schedule) => schedule.id !== id);
 }
