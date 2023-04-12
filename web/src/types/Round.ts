@@ -3,7 +3,7 @@ import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import chance from "chance";
 
-export class Routes implements TableEntity<Routes> {
+export class Round implements TableEntity<Round> {
   id: number;
   name: string;
   buildings: number;
@@ -12,21 +12,22 @@ export class Routes implements TableEntity<Routes> {
   student_ln: string;
   finished: boolean;
 
-  public constructor(init?: Partial<Routes>) {
+
+  public constructor(init?: Partial<Round>) {
     Object.assign(this, init);
   }
 
-  headers(): Array<Header<Routes>> {
-    return Routes.headers();
+  headers(): Array<Header<Round>> {
+    return Round.headers();
   }
 
-  static headers(): Array<Header<Routes>> {
+  static headers(): Array<Header<Round>> {
     return [
       {
         id: 3,
         name: "",
         fit: true,
-        get: (e: Routes) => e.student_fn + " " + e.student_ln,
+        get: (e: Round) => e.student_fn + " " + e.student_ln,
         type: RowType.AVATAR,
         sortable: false,
       },
@@ -34,7 +35,7 @@ export class Routes implements TableEntity<Routes> {
         id: 4,
         name: "Student",
         fit: false,
-        get: (e: Routes) => e.student_fn + " " + e.student_ln,
+        get: (e: Round) => e.student_fn + " " + e.student_ln,
         type: RowType.TEXT,
         sortable: true,
       },
@@ -42,7 +43,7 @@ export class Routes implements TableEntity<Routes> {
         id: 0,
         name: "Ronde",
         fit: false,
-        get: (e: Routes) => e.name,
+        get: (e: Round) => e.name,
         type: RowType.TEXT,
         sortable: true,
         route_to: `/rondes/detail`,
@@ -51,7 +52,7 @@ export class Routes implements TableEntity<Routes> {
         id: 1,
         name: "Gebouwen",
         fit: false,
-        get: (e: Routes) => e.buildings,
+        get: (e: Round) => e.buildings,
         type: RowType.TEXT,
         sortable: true,
       },
@@ -59,7 +60,7 @@ export class Routes implements TableEntity<Routes> {
         id: 2,
         name: "Datum",
         fit: false,
-        get: (e: Routes) => e.date,
+        get: (e: Round) => e.date,
         type: RowType.TEXT,
         sortable: true,
       },
@@ -67,16 +68,16 @@ export class Routes implements TableEntity<Routes> {
         id: 4,
         name: "Klaar",
         fit: true,
-        get: (e: Routes) => e.finished,
+        get: (e: Round) => e.finished,
         type: RowType.BOOLEAN,
         sortable: true,
       },
-    ].map((e) => new Header<Routes>(e));
+    ].map((e) => new Header<Round>(e));
   }
 
-  static random(): Array<Routes> {
+  static random(): Array<Round> {
     return [...Array(100).keys()].map(() => {
-      return new Routes({
+      return new Round({
         id: chance().integer(),
         name: chance().sentence({ words: 4 }),
         buildings: chance().integer({ max: 10, min: 3 }),

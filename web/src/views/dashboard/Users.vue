@@ -9,7 +9,6 @@
       Nieuwe Gebruiker
     </v-btn>
   </div>
-  <!-- hier moet usersOrError komen -->
   <Table v-bind:entries="users" v-bind:headers="User.headers()"></Table>
 </template>
 

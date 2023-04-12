@@ -9,9 +9,8 @@
       Nieuw Gebouw
     </v-btn>
   </div>
-  <!-- hier moet buildingsOrError komen -->
   <Table
-    v-bind:entries="Building.random()"
+    v-bind:entries="buildings"
     v-bind:headers="Building.headers()"
   ></Table>
 </template>
@@ -19,4 +18,23 @@
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
 import { Building } from "@/types/Building";
+import { BuildingQuery } from "../../../../api_query/src/building";
+import { APIError } from "@selab-2/groep-1-query/dist/api_error";
+import { ref } from "vue";
+
+const buildings = ref<Building[]>(await loadBuildings());
+
+async function loadBuildings(): Promise<Building[]> {
+  const buildingsOrErr: Building[] | APIError = await new BuildingQuery().getAll();
+  // @ts-ignore
+  if (buildingsOrErr.message == null) {
+    let array = []
+    for (let building of buildingsOrErr)
+    {
+      array.push(new Building(building));
+    }
+    return array;
+  }
+  return [];
+}
 </script>
