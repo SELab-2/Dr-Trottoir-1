@@ -64,3 +64,8 @@ export const useAuthStore = defineStore("auth", () => {
 
   return { auth, logIn, logOut, getAuth };
 });
+
+export const validAuth = (auth: User | APIError | null) => {
+  // @ts-ignore TODO: a better way to check if auth is of type APIError
+  return !(!auth || auth.message != null);
+};

@@ -17,8 +17,7 @@ import UserOverview from "@/views/dashboard/Users.vue";
 import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
 import Auth from "@/views/dev/Auth.vue";
-import { useAuthStore } from '@/stores/auth'
-import { APIError } from '@selab-2/groep-1-query/dist/api_error'
+import { useAuthStore, validAuth } from '@/stores/auth'
 
 const routes = [
   {
@@ -188,8 +187,7 @@ router.beforeEach(async (to, from, next) => {
   await useAuthStore().getAuth();
   const auth = useAuthStore().auth;
 
-  // @ts-ignore TODO: a better way to check if auth is of type APIError
-  if (!auth || auth.message != null){
+  if (!validAuth(auth)){
     if(requiresAuth) {
       next("/");
     }
@@ -197,7 +195,10 @@ router.beforeEach(async (to, from, next) => {
       next();
     }
   }
-  next();
+  else {
+    // TODO: check administrator, syndicus & superstudent pages
+    next();
+  }
 
 });
 
