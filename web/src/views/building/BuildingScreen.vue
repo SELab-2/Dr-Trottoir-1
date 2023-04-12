@@ -111,6 +111,7 @@ import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import ImageCard from "@/components/cards/ImageCard.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
 import PhotoMaker from "@/components/images/PhotoMaker.vue";
+import Button from "@/components/models/Button";
 import { ref } from "vue";
 
 // reactive state to show the drawer or not
@@ -157,22 +158,17 @@ const comments = ref<Array<{ title: string; comment: string }>>([
   },
 ]);
 
-function foto() {
+function foto(): void {
   showOverlay.value = true;
   showPhotoInOverlay.value = true;
 }
 
-function opmerking() {
+function opmerking(): void {
   showOverlay.value = true;
   showPhotoInOverlay.value = false;
 }
 
-interface MenuItem {
-  title: string;
-  clicked: () => void;
-}
-
-const actions: MenuItem[] = [
+const actions: Button[] = [
   {
     title: "Foto toevoegen",
     clicked: foto,
