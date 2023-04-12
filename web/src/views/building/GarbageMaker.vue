@@ -49,7 +49,7 @@
     <v-spacer></v-spacer>
     <v-slide-group class="pt-4" show-arrows>
       <v-slide-group-item v-for="schedule in summary" :key="schedule.id">
-        <v-card>
+        <v-card variant="flat" class="mx-1">
           <v-card-title> {{ schedule.garbageType }} </v-card-title>
           <div class="pa-4">
             <div><strong>Action:</strong> {{ schedule.action }}</div>
@@ -66,19 +66,27 @@
       </v-slide-group-item>
     </v-slide-group>
 
-    <v-list>
-      <v-list-item v-for="day in detailedDays" :key="day.id">
-        <v-row>
-          <v-col>{{ day.date.toDateString() }}</v-col>
-          <v-col>{{ day.garbageType }}</v-col>
-          <v-col>{{ day.action }}</v-col>
-          <v-col>{{ day.time }}</v-col>
-          <v-col cols="2">
-            <v-btn @click="deleteDay(day.id)">Delete</v-btn>
-          </v-col>
-        </v-row>
-      </v-list-item>
-    </v-list>
+    <v-table>
+      <thead>
+        <tr>
+          <th class="text-left">Day</th>
+          <th class="text-left">Vuilnis type</th>
+          <th class="text-left">Actie</th>
+          <th class="text-left">Tijd</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="day in detailedDays" :key="day.id">
+          <td>{{ day.date.toDateString() }}</td>
+          <td>{{ day.garbageType }}</td>
+          <td>{{ day.action }}</td>
+          <td>{{ day.time }}</td>
+          <td>
+            <v-icon icon="mdi-cancel" @click="deleteDay(day.id)"></v-icon>
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
   </div>
 </template>
 
@@ -119,7 +127,7 @@ const action = ref<string>();
 const startDate = ref("");
 const endDate = ref("");
 const time = ref("");
-const frequency = ref<string>("enkel");
+const frequency = ref<string>("wekelijks");
 
 //nu nog een string voor het simple te houden
 const summary = ref<Array<Schedule>>([]);
