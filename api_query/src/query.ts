@@ -89,7 +89,7 @@ export abstract class Query<Parameters, ResultGet, ResultPatch> {
     }
 
     /**
-     * Vraag een element op met een specifieke identifier. Indien een een HTTP
+     * Vraag een element op met een specifieke identifier. Indien een HTTP-
      * error voorvalt, wordt deze opgevangen en teruggegeven
      * @throws QueryError
      */
@@ -103,7 +103,7 @@ export abstract class Query<Parameters, ResultGet, ResultPatch> {
 
     /**
      * Vraag alle elementen op die voldoen aan de gegeven parameters. Indien een
-     * HTTP error voorvalt, wordt deze opgevangen en teruggegeven.
+     * HTTP-error voorvalt, wordt deze opgevangen en teruggegeven.
      * @throws QueryError
      */
     async getAll(query: Partial<Parameters> = {}): Promise<Array<ResultGet>> {
@@ -116,22 +116,42 @@ export abstract class Query<Parameters, ResultGet, ResultPatch> {
      */
     async updateOne(element: Partial<ResultPatch>): Promise<ResultPatch> {
         const index = Object.keys(element).indexOf("id");
+
+        if (index === -1) {
+            throw new QueryError(400, "Bad Request");
+        }
+
         const id = Object.entries(element)[index][1];
+        const url = this.server + this.endpoint + "/" + id;
+
         if (Number.isNaN(id)) {
             throw new QueryError(400, "Bad Request");
         }
-        const url = this.server + this.endpoint + "/" + id;
 
         return this.fetchJSON(url, "PATCH", element);
     }
 
     /**
      * Verwijder een element via HTTP DELETE. Indien een "hard delete"
-     * uitgevoerd te worden dient dit expliciet opgegeven te worden als
+     * uitgevoerd moet worden, dient dit expliciet opgegeven te worden als
      * argument.
      * @throws QueryError
      */
     async deleteOne(element: Partial<ResultGet>, hard = false): Promise<void> {
-        throw new Error("Not Implemented");
+        const index = Object.keys(element).indexOf("id");
+
+        if (index === -1) {
+            throw new QueryError(400, "Bad Request");
+        }
+
+        const entries = Object.entries(element);
+        const id = entries[index][1];
+        const url = this.server + this.endpoint + "/" + id;
+
+        if (Number.isNaN(id)) {
+            throw new QueryError(400, "Bad Request");
+        }
+
+        return this.fetchJSON(url, "DELETE", { hardDelete: hard });
     }
 }
