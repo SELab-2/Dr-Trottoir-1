@@ -1,14 +1,14 @@
 import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
-import { User } from "./User"
+import { User } from "./User";
 import chance from "chance";
 
 export class Building implements TableEntity<Building> {
   id: number;
   name: string;
-  address: { street: string, number: number };
-  syndicus : { user: User };
+  address: { street: string; number: number };
+  syndicus: { user: User };
 
   public constructor(init?: Partial<Building>) {
     Object.assign(this, init);
@@ -24,7 +24,8 @@ export class Building implements TableEntity<Building> {
         id: 2,
         name: "",
         fit: true,
-        get: (e: Building) => e.syndicus.user.first_name + " " + e.syndicus.user.last_name,
+        get: (e: Building) =>
+          e.syndicus.user.first_name + " " + e.syndicus.user.last_name,
         type: RowType.AVATAR,
         sortable: false,
       },
@@ -32,7 +33,8 @@ export class Building implements TableEntity<Building> {
         id: 3,
         name: "Syndicus",
         fit: false,
-        get: (e: Building) => e.syndicus.user.first_name + " " + e.syndicus.user.last_name,
+        get: (e: Building) =>
+          e.syndicus.user.first_name + " " + e.syndicus.user.last_name,
         type: RowType.TEXT,
         sortable: true,
       },

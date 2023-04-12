@@ -17,10 +17,7 @@
       Nieuwe ronde Plannen
     </v-btn>
   </div>
-  <Table
-    v-bind:entries="schedules"
-    v-bind:headers="Schedule.headers()"
-  ></Table>
+  <Table v-bind:entries="schedules" v-bind:headers="Schedule.headers()"></Table>
 </template>
 
 <script setup lang="ts">
@@ -33,22 +30,29 @@ import { ref } from "vue";
 
 const schedules = ref<Schedule[]>(await loadSchedules());
 
-async function loadSchedules(): Promise<Round[]> {
-  const schedulesOrErr: Schedule[] | APIError = await new ScheduleQuery().getAll();
-  // @ts-ignore
+async function loadSchedules(): Promise<Schedule[]> {
+  const schedulesOrErr: Schedule[] | APIError =
+    await new ScheduleQuery().getAll();
   if (schedulesOrErr.message == null) {
-    let array = []
+    let array = [];
     for (let schedule of schedulesOrErr) {
       let s: Schedule = new Schedule(schedule);
-      let progress:Progress[]  = await loadProgress(s.id);
-      let schedule_done: boolean = true;
-      for (let p of progress) {
-        if (!p.departure) {
-          schedule_done = false;
-          break;
+      // Every building in the round has to be finished for the whole round to be finished
+      let progress: [] = await loadProgress(s.id);
+      s.progress = progress;
+      if (progress.length < s.round.buildings.length) {
+        // not all buildings have been visited
+        s.finished = false;
+      } else {
+        s.finished = true;
+        for (let p of progress) {
+          if (!p.departure) {
+            // building is being visited, but has not been finished yet
+            s.finished = false;
+            break;
+          }
         }
       }
-      s.finished = schedule_done;
       array.push(s);
     }
     return array;
@@ -56,16 +60,13 @@ async function loadSchedules(): Promise<Round[]> {
   return [];
 }
 
-async function loadProgress(schedule: number): Promise<Progress> {
-  const progressOrErr: Progress[] | APIError = await new ProgressQuery().getAll(
-    {
-      schedule: schedule,
-    });
-  // @ts-ignore
+async function loadProgress(schedule: number): Promise<[]> {
+  const progressOrErr: [] | APIError = await new ProgressQuery().getAll({
+    schedule: schedule,
+  });
   if (progressOrErr.message == null) {
     let array = [];
-    for (let progress of progressOrErr)
-    {
+    for (let progress of progressOrErr) {
       array.push(progress);
     }
     return array;

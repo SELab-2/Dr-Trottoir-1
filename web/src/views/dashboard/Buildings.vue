@@ -9,10 +9,7 @@
       Nieuw Gebouw
     </v-btn>
   </div>
-  <Table
-    v-bind:entries="buildings"
-    v-bind:headers="Building.headers()"
-  ></Table>
+  <Table v-bind:entries="buildings" v-bind:headers="Building.headers()"></Table>
 </template>
 
 <script setup lang="ts">
@@ -25,12 +22,11 @@ import { ref } from "vue";
 const buildings = ref<Building[]>(await loadBuildings());
 
 async function loadBuildings(): Promise<Building[]> {
-  const buildingsOrErr: Building[] | APIError = await new BuildingQuery().getAll();
-  // @ts-ignore
+  const buildingsOrErr: Building[] | APIError =
+    await new BuildingQuery().getAll();
   if (buildingsOrErr.message == null) {
     let array = [];
-    for (let building of buildingsOrErr)
-    {
+    for (let building of buildingsOrErr) {
       array.push(new Building(building));
     }
     return array;

@@ -23,11 +23,9 @@ const users = ref<User[]>(await loadUsers());
 
 async function loadUsers(): Promise<User[]> {
   const usersOrErr: User[] | APIError = await new UserQuery().getAll();
-  // @ts-ignore
   if (usersOrErr.message == null) {
     let array = [];
-    for (let user of usersOrErr)
-    {
+    for (let user of usersOrErr) {
       array.push(new User(user));
     }
     return array;

@@ -12,7 +12,6 @@ export class Round implements TableEntity<Round> {
   student_ln: string;
   finished: boolean;
 
-
   public constructor(init?: Partial<Round>) {
     Object.assign(this, init);
   }
