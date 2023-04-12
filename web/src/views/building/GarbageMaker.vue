@@ -32,41 +32,51 @@
       </v-col>
     </v-row>
 
-    <v-btn
-      @click="add"
-      :disabled="
-        garbageType === undefined ||
-        action === undefined ||
-        startDate === '' ||
-        endDate === '' ||
-        time === ''
-      "
-      >Add</v-btn
-    >
-    <v-btn @click="submit" :disabled="detailedDays.length === 0">Submit</v-btn>
-    <v-btn @click="clearAll">Clear All</v-btn>
+    <div class="d-flex flex-row-reverse">
+      <v-btn
+        class="mx-1"
+        variant="plain"
+        @click="submit"
+        :disabled="detailedDays.length === 0"
+        >Versturen</v-btn
+      >
+      <v-btn
+        class="mx-1"
+        @click="add"
+        variant="plain"
+        :disabled="
+          garbageType === undefined ||
+          action === undefined ||
+          startDate === '' ||
+          (endDate === '' && frequency !== 'enkel') ||
+          time === ''
+        "
+        >Toevoegen</v-btn
+      >
+      <v-btn variant="plain" @click="clearAll">Alles verwijderen</v-btn>
+    </div>
 
     <v-spacer></v-spacer>
     <v-slide-group class="pt-4" show-arrows>
       <v-slide-group-item v-for="schedule in summary" :key="schedule.id">
-        <v-card variant="flat" class="mx-1">
-          <v-card-title> {{ schedule.garbageType }} </v-card-title>
+        <v-card color="grey-lighten-1" variant="flat" class="mx-1">
+          <template v-slot:title> {{ schedule.garbageType }}</template>
+          <template v-slot:append>
+            <v-icon color="red" @click="deleteSummary(schedule.id)" icon="mdi-close" />
+          </template>
           <div class="pa-4">
-            <div><strong>Action:</strong> {{ schedule.action }}</div>
+            <div><strong>Actie:</strong> {{ schedule.action }}</div>
             <div><strong>Start:</strong> {{ schedule.start.toDateString() }}</div>
-            <div><strong>End:</strong> {{ schedule.end.toDateString() }}</div>
+            <div><strong>Einde:</strong> {{ schedule.end.toDateString() }}</div>
             <div><strong>Type:</strong> {{ schedule.garbageType }}</div>
-            <div><strong>Action:</strong> {{ schedule.action }}</div>
-            <div><strong>Time:</strong> {{ schedule.time }}</div>
+            <div><strong>Actie:</strong> {{ schedule.action }}</div>
+            <div><strong>Tijd:</strong> {{ schedule.time }}</div>
           </div>
-          <v-card-actions>
-            <v-btn @click="deleteSummary(schedule.id)">Delete</v-btn>
-          </v-card-actions>
         </v-card>
       </v-slide-group-item>
     </v-slide-group>
 
-    <v-table>
+    <v-table v-if="detailedDays.length > 0">
       <thead>
         <tr>
           <th class="text-left">Day</th>
@@ -82,7 +92,7 @@
           <td>{{ day.action }}</td>
           <td>{{ day.time }}</td>
           <td>
-            <v-icon icon="mdi-cancel" @click="deleteDay(day.id)"></v-icon>
+            <v-icon color="red" icon="mdi-close" @click="deleteDay(day.id)"></v-icon>
           </td>
         </tr>
       </tbody>
@@ -169,6 +179,12 @@ function add() {
       });
     }
     scheduleCounter++;
+
+    garbageType.value = undefined;
+    action.value = undefined;
+    startDate.value = "";
+    endDate.value = "";
+    time.value = "";
   }
 }
 function deleteSummary(id: number) {
@@ -184,6 +200,7 @@ function deleteSummary(id: number) {
 function submit() {
   console.log("All days:");
   detailedDays.value.forEach((day) => console.log(day.date));
+  clearAll();
 }
 
 function clearAll() {
