@@ -11,7 +11,6 @@
   </div>
   <!-- hier moet usersOrError komen -->
   <Table v-bind:entries="users" v-bind:headers="User.headers()"></Table>
-  <p v-if='!loading'>{{users}}</p>
 </template>
 
 <script setup lang="ts">
@@ -22,17 +21,18 @@ import { APIError } from "@selab-2/groep-1-query/dist/api_error";
 import { ref } from "vue";
 
 const users = ref<User[]>(await loadUsers());
-const loading = ref<boolean>(true);
 
-async function loadUsers(): Promise<User[]>{
+async function loadUsers(): Promise<User[]> {
   const usersOrErr: User[] | APIError = await new UserQuery().getAll();
   // @ts-ignore
-  if(usersOrErr.message == null)
-  {
-    return usersOrErr;
+  if (usersOrErr.message == null) {
+    let array = []
+    for (let user of usersOrErr)
+    {
+      array.push(new User(user));
+    }
+    return array;
   }
   return [];
 }
-
-console.log(users.value)
 </script>
