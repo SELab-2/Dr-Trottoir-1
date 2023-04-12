@@ -83,6 +83,7 @@
           <th class="text-left">Vuilnis type</th>
           <th class="text-left">Actie</th>
           <th class="text-left">Tijd</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -147,42 +148,52 @@ let scheduleCounter = 0;
 let dayCounter = 0;
 
 function add() {
-  if (frequency.value === "enkel") {
-    endDate.value = startDate.value;
-  }
-  const scheduleSummary: Schedule = {
-    id: scheduleCounter,
-    start: new Date(startDate.value),
-    end: new Date(endDate.value),
-    garbageType: garbageType.value!,
-    action: action.value!,
-    time: time.value,
-    frequency: frequency.value,
-  };
-  summary.value.push(scheduleSummary);
-
-  // Calculate all separate days
-  const start = new Date(startDate.value);
-  const end = new Date(endDate.value);
-  let frequencyCount = frequencyDict[frequency.value];
-  //elke dag berekenen afhankelijk van de frequentie
-  for (let d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {
-    detailedDays.value.push({
-      id: dayCounter++,
-      scheduleId: scheduleCounter,
-      date: new Date(d),
+  if (
+    !(
+      garbageType === undefined ||
+      action === undefined ||
+      startDate.value === "" ||
+      (endDate.value === "" && frequency.value !== "enkel") ||
+      time.value === ""
+    )
+  ) {
+    if (frequency.value === "enkel") {
+      endDate.value = startDate.value;
+    }
+    const scheduleSummary: Schedule = {
+      id: scheduleCounter,
+      start: new Date(startDate.value),
+      end: new Date(endDate.value),
       garbageType: garbageType.value!,
       action: action.value!,
       time: time.value,
-    });
-  }
-  scheduleCounter++;
+      frequency: frequency.value,
+    };
+    summary.value.push(scheduleSummary);
 
-  garbageType.value = undefined;
-  action.value = undefined;
-  startDate.value = "";
-  endDate.value = "";
-  time.value = "";
+    // Calculate all separate days
+    const start = new Date(startDate.value);
+    const end = new Date(endDate.value);
+    let frequencyCount = frequencyDict[frequency.value];
+    //elke dag berekenen afhankelijk van de frequentie
+    for (let d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {
+      detailedDays.value.push({
+        id: dayCounter++,
+        scheduleId: scheduleCounter,
+        date: new Date(d),
+        garbageType: garbageType.value!,
+        action: action.value!,
+        time: time.value,
+      });
+    }
+    scheduleCounter++;
+
+    garbageType.value = undefined;
+    action.value = undefined;
+    startDate.value = "";
+    endDate.value = "";
+    time.value = "";
+  }
 }
 function deleteSummary(id: number) {
   const correspondingSummary = summary.value.find(
