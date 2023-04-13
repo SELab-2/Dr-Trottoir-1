@@ -18,8 +18,7 @@ export const useAuthStore = defineStore("auth", () => {
    */
   async function logIn(username: string, password: string): Promise<void> {
     try {
-      // Login Attempt. TODO: use dynamic URL using .env vars
-      await fetch("http://localhost:8080/auth/login/", {
+      await fetch(process.env.VUE_APP_API_SERVER_ADDRESS + "auth/login/", {
         method: "POST",
         headers: {
           "Accept": "application/json",
@@ -50,7 +49,7 @@ export const useAuthStore = defineStore("auth", () => {
   async function getAuth(): Promise<void> {
     try {
       // Retrieve current user identifier.
-      const res = await fetch("http://localhost:8080/auth", {
+      const res = await fetch(process.env.VUE_APP_API_SERVER_ADDRESS + "auth", {
         credentials: "include",
       });
 
