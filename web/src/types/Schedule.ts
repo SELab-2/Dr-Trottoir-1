@@ -74,20 +74,6 @@ export class Schedule implements TableEntity<Schedule> {
     ].map((e) => new Header<Schedule>(e));
   }
 
-  static random(): Array<Schedule> {
-    return [...Array(100).keys()].map(() => {
-      return new Schedule({
-        id: chance().integer(),
-        // name: chance().sentence({ words: 4 }),
-        // buildings: chance().integer({ max: 10, min: 3 }),
-        // date: String(chance().date({ string: true, american: false })),
-        // student_fn: chance().first(),
-        // student_ln: chance().last(),
-        // finished: chance().bool(),
-      });
-    });
-  }
-
   route(): string {
     return `/ronde/${this.id}`;
   }

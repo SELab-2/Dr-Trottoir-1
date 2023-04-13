@@ -64,18 +64,6 @@ export class User implements TableEntity<User> {
     ].map((e) => new Header<User>(e));
   }
 
-  static random(): Array<User> {
-    return [...Array(100).keys()].map(() => {
-      return new User({
-        id: chance().integer(),
-        first_name: chance().first(),
-        last_name: chance().last(),
-        student: chance().bool(),
-        super_student: chance().bool(),
-        admin: chance().bool(),
-      });
-    });
-  }
 
   route(): string {
     return `/account/settings/${this.id}/false`;

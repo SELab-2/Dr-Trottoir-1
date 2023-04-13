@@ -57,18 +57,6 @@ export class Building implements TableEntity<Building> {
     ].map((e) => new Header<Building>(e));
   }
 
-  static random(): Array<Building> {
-    return [...Array(100).keys()].map(() => {
-      return new Building({
-        id: chance().integer(),
-        name: chance().sentence({ words: 4 }),
-        // address: chance().address(),
-        // syndicus_fn: chance().first(),
-        // syndicus_ln: chance().last(),
-      });
-    });
-  }
-
   route(): string {
     return `/gebouw/${this.id}`;
   }
