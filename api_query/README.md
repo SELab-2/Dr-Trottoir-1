@@ -25,7 +25,7 @@ Je dient de `API_SERVER_ADDRESS` _environment variabel_ in te stellen met de URL
 De basis wordt gevormd door de abstracte klasse `Query`.
 
 ```typescript
-import {QueryError} from "./query_error";
+import { QueryError } from "./query_error";
 
 /**
  * Parameters: Een type die de interface van de API modelleert.
@@ -39,7 +39,7 @@ export abstract class Query<
     PostParameters,
     ResultGet,
     ResultPost,
-    ResultPatch
+    ResultPatch,
 > {
     // Endpoint van dit model in onze API.
     abstract endpoint: string;
@@ -56,10 +56,14 @@ export abstract class Query<
     ): Promise<Array<ResultGet> | QueryError>;
 
     // Voeg een nieuw element toe.
-    async addOne(element: Partial<PostParameters>): Promise<ResultPost | QueryError>
+    async addOne(
+        element: Partial<PostParameters>,
+    ): Promise<ResultPost | QueryError>;
 
     // Update een element.
-    async updateOne(element: Partial<ResultPatch>): Promise<ResultPatch | QueryError>;
+    async updateOne(
+        element: Partial<ResultPatch>,
+    ): Promise<ResultPatch | QueryError>;
 
     // Verwijder een element.
     async deleteOne(
