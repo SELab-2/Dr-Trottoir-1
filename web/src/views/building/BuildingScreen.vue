@@ -1,65 +1,7 @@
 <template>
   <BuildingData :id="id" />
   <div id="building-screen" class="px-4">
-    <v-container class="schedule">
-      <v-row>
-        <v-col class="schedule-date" cols="3">
-          <h2>Woe</h2>
-          <h1>15</h1>
-        </v-col>
-        <v-col>
-          <v-card class="schedule-action d-flex">
-            <p class="me-auto" style="font-weight: 500; font-size: 22px">GFT</p>
-            <p>07u30</p>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="schedule-date" cols="3" />
-        <v-col>
-          <v-card class="schedule-action d-flex">
-            <p class="me-auto" style="font-weight: 500; font-size: 22px">
-              REST
-            </p>
-            <p>07u45</p>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row class="py-4"><v-divider /></v-row>
-      <v-row>
-        <v-col class="schedule-date" cols="3">
-          <h2>Dond</h2>
-          <h1>16</h1>
-        </v-col>
-        <v-col>
-          <v-card class="schedule-action d-flex">
-            <p class="me-auto" style="font-weight: 500; font-size: 22px">
-              GLAS
-            </p>
-            <p>08u10</p>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row class="py-4"><v-divider /></v-row>
-      <v-row>
-        <v-col class="schedule-date" cols="3">
-          <h2>Vrij</h2>
-          <h1>17</h1>
-        </v-col>
-        <v-col>
-          <v-card class="schedule-action d-flex">
-            <p class="me-auto" style="font-weight: 500; font-size: 22px">PMD</p>
-            <p>09u40</p>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row class="py-4">
-        <RoundedButton
-          style="margin: auto"
-          icon="mdi-chevron-down"
-        ></RoundedButton>
-      </v-row>
-    </v-container>
+    <GarbageSchedule />
 
     <div>
       <h2>Huidig bezoek</h2>
@@ -104,9 +46,8 @@ import BuildingData from "@/components/building/BuildingData.vue";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import ImageCard from "@/components/cards/ImageCard.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
+import GarbageSchedule from "@/components/building/GarbageSchedule.vue";
 
-// reactive state to show the drawer or not
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 defineProps({
   id: String,
 });
