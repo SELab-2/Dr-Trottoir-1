@@ -20,7 +20,7 @@ import LargeFilter from "@/components/filter/LargeFilter.vue";
 import Filterdata from "@/components/filter/FilterData";
 import { ref } from "vue";
 import { createDate, formatDate } from "@/assets/scripts/date";
-import BuildingCard from "@/components/building/BuildingCard.vue";
+import BuildingCard from "@/components/cards/BuildingCard.vue.js";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
