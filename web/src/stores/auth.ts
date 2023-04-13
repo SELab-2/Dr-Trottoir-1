@@ -7,6 +7,7 @@ import { APIError } from "@selab-2/groep-1-query/dist/api_error";
  * Pinia store which holds an object which corresponds to the currently
  * logged-in user. May also be an instance of APIError, or simply null.
  */
+
 export const useAuthStore = defineStore("auth", () => {
   /* The state of this store. */
   const auth: Ref<User | APIError | null> = ref(null);
