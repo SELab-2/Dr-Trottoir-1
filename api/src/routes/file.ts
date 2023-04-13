@@ -36,7 +36,8 @@ const fileUpload = multer({
 const isAuthPost = (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;
     if (
-        process.env.DISABLE_AUTH ||
+        (process.env.DISABLE_AUTH !== undefined &&
+            process.env.DISABLE_AUTH == "true") ||
         (user && (user.super_student || user.admin || user.syndicus))
     ) {
         next();
@@ -70,7 +71,11 @@ router.post(
 //Auth for get request: you have to be a user to make a get request
 const isAuthGet = (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;
-    if (process.env.DISABLE_AUTH || user) {
+    if (process.env.DISABLE_AUTH !== undefined && process.env.DISABLE_AUTH) {
+        console.log(
+            process.env.DISABLE_AUTH !== undefined && process.env.DISABLE_AUTH,
+        );
+        console.log("disable auth: " + process.env.DISABLE_AUTH);
         next();
     } else {
         throw new APIError(APIErrorCode.UNAUTHORIZED);
@@ -78,20 +83,44 @@ const isAuthGet = (req: Request, res: Response, next: NextFunction) => {
 };
 
 // file get route
-router.get("/:id", isAuthGet, async (req: Request, res: Response) => {
-    try {
-        // Look up the file in the database using Prisma
-        const result = await prisma.file.findUniqueOrThrow({
-            where: {
-                id: Parser.number(req.params["id"]),
-            },
-        });
-        // Send the file to the client
-        const dirname = path.resolve();
-        res.sendFile(path.join(dirname, result.path));
-    } catch (err) {
-        throw new APIError(APIErrorCode.FAILED_TO_RETRIEVE_FILE);
-    }
-});
+router.get(
+    "/:id",
+    (req: Request, res: Response, next: NextFunction) => {
+        // Check authentication
+        const { user } = req;
+        if (
+            !(
+                (process.env.DISABLE_AUTH !== undefined &&
+                    process.env.DISABLE_AUTH === "true") ||
+                user
+            )
+        ) {
+            throw new APIError(APIErrorCode.UNAUTHORIZED);
+        }
+
+        // Continue if authenticated
+        next();
+    },
+    async (req: Request, res: Response) => {
+        try {
+            // Look up the file in the database using Prisma
+            const result = await prisma.file.findUnique({
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+
+            if (!result) {
+                throw new APIError(APIErrorCode.FILE_NOT_FOUND);
+            }
+            // Send the file to the client
+            const dirname = path.resolve();
+            const full_path = path.join(dirname, result.path);
+            res.sendFile(full_path);
+        } catch (err) {
+            throw new APIError(APIErrorCode.FAILED_TO_RETRIEVE_FILE);
+        }
+    },
+);
 
 export { router as FileRouter };
