@@ -36,6 +36,7 @@ async function loadSchedules(): Promise<Schedule[]> {
   if (schedulesOrErr.message == null) {
     let array = [];
     for (let schedule of schedulesOrErr) {
+      schedule.day = new Date(schedule.day).toLocaleDateString();
       let s: Schedule = new Schedule(schedule);
       // Every building in the round has to be finished for the whole round to be finished
       let progress: [] = await loadProgress(s.id);

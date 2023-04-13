@@ -6,7 +6,7 @@ import chance from "chance";
 
 export class Schedule implements TableEntity<Schedule> {
   id: number;
-  day: Date;
+  day: string;
   user: User;
   round: { name: string; buildings: [] };
   finished: boolean;
