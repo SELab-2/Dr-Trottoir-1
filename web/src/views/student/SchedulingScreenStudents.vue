@@ -122,9 +122,9 @@ const calculateProgress = (buildings: Building[]) => {
 type UpdatedSchedule = Schedule & { round: Round & { buildings: Building[] } };
 
 // TODO change (used for testing)
-const today = new Date("2023-04-02T18:47:29.939Z");
+const today = new Date("2023-04-01T18:47:29.939Z");
 const tomorrow = new Date("2023-04-02T18:47:29.939Z");
-const overmorrow = new Date("2023-04-02T18:47:29.939Z");
+const overmorrow = new Date("2023-04-01T18:47:29.939Z");
 /**
 const today = new Date();
 const tomorrow = new Date(new Date().setDate(today.getDate() + 1));
