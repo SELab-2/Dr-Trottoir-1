@@ -2,7 +2,6 @@ import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import { User } from "./User";
-import chance from "chance";
 
 export class Building implements TableEntity<Building> {
   id: number;

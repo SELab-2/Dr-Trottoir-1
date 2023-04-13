@@ -16,21 +16,20 @@
 import Table from "@/components/table/Table.vue";
 import { Building } from "@/types/Building";
 import { BuildingQuery } from "../../../../api_query/src/building";
-import { APIError } from "@selab-2/groep-1-query/dist/api_error";
 import { ref } from "vue";
 
 const buildings = ref<Building[]>(await loadBuildings());
 
 async function loadBuildings(): Promise<Building[]> {
-  const buildingsOrErr: Building[] | APIError =
-    await new BuildingQuery().getAll();
-  if (buildingsOrErr.message == null) {
+  try {
+    const buildingsOrErr: Building[] = await new BuildingQuery().getAll();
     let array = [];
     for (let building of buildingsOrErr) {
       array.push(new Building(building));
     }
     return array;
+  } catch (e) {
+    return [];
   }
-  return [];
 }
 </script>

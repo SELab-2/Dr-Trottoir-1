@@ -2,7 +2,6 @@ import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import { User } from "./User";
-import chance from "chance";
 
 export class Schedule implements TableEntity<Schedule> {
   id: number;
@@ -10,7 +9,6 @@ export class Schedule implements TableEntity<Schedule> {
   user: User;
   round: { name: string; buildings: [] };
   finished: boolean;
-  progress: [];
 
   public constructor(init?: Partial<Schedule>) {
     Object.assign(this, init);

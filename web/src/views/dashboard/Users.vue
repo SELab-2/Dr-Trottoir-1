@@ -16,20 +16,20 @@
 import Table from "@/components/table/Table.vue";
 import { User } from "@/types/User";
 import { UserQuery } from "../../../../api_query/src/user";
-import { APIError } from "@selab-2/groep-1-query/dist/api_error";
 import { ref } from "vue";
 
 const users = ref<User[]>(await loadUsers());
 
 async function loadUsers(): Promise<User[]> {
-  const usersOrErr: User[] | APIError = await new UserQuery().getAll();
-  if (usersOrErr.message == null) {
+  try {
+    const usersOrErr: User[] = await new UserQuery().getAll();
     let array = [];
     for (let user of usersOrErr) {
       array.push(new User(user));
     }
     return array;
+  } catch (e) {
+    return [];
   }
-  return [];
 }
 </script>

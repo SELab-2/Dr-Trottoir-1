@@ -25,22 +25,19 @@ import Table from "@/components/table/Table.vue";
 import { Schedule } from "@/types/Schedule";
 import { ScheduleQuery } from "../../../../api_query/src/schedule";
 import { ProgressQuery } from "../../../../api_query/src/progress";
-import { APIError } from "@selab-2/groep-1-query/dist/api_error";
 import { ref } from "vue";
 
 const schedules = ref<Schedule[]>(await loadSchedules());
 
 async function loadSchedules(): Promise<Schedule[]> {
-  const schedulesOrErr: Schedule[] | APIError =
-    await new ScheduleQuery().getAll();
-  if (schedulesOrErr.message == null) {
+  try {
+    const schedulesOrErr: Schedule[] = await new ScheduleQuery().getAll();
     let array = [];
     for (let schedule of schedulesOrErr) {
       schedule.day = new Date(schedule.day).toLocaleDateString();
       let s: Schedule = new Schedule(schedule);
       // Every building in the round has to be finished for the whole round to be finished
       let progress: [] = await loadProgress(s.id);
-      s.progress = progress;
       if (progress.length < s.round.buildings.length) {
         // not all buildings have been visited
         s.finished = false;
@@ -57,21 +54,23 @@ async function loadSchedules(): Promise<Schedule[]> {
       array.push(s);
     }
     return array;
+  } catch (e) {
+    return [];
   }
-  return [];
 }
 
 async function loadProgress(schedule: number): Promise<[]> {
-  const progressOrErr: [] | APIError = await new ProgressQuery().getAll({
-    schedule: schedule,
-  });
-  if (progressOrErr.message == null) {
+  try {
+    const progressOrErr: [] = await new ProgressQuery().getAll({
+      schedule: schedule,
+    });
     let array = [];
     for (let progress of progressOrErr) {
       array.push(progress);
     }
     return array;
+  } catch (e) {
+    return [];
   }
-  return [];
 }
 </script>

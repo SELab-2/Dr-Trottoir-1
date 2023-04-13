@@ -1,7 +1,6 @@
 import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
-import chance from "chance";
 
 export class User implements TableEntity<User> {
   id: number;
@@ -63,7 +62,6 @@ export class User implements TableEntity<User> {
       },
     ].map((e) => new Header<User>(e));
   }
-
 
   route(): string {
     return `/account/settings/${this.id}/false`;
