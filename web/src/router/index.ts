@@ -71,8 +71,9 @@ const routes = [
         path: "/ronde/:id/plannen",
         name: "round_plan",
         component: RoundPlanner,
-        props: true,
-        meta: {},
+        meta: {
+          title: "Ronde plannen",
+        },
       },
       {
         path: "/ronde/nieuw",

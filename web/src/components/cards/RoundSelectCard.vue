@@ -10,7 +10,9 @@
       </div>
     </template>
     <template v-slot:subtitle
-      ><v-icon class="ml-1" icon="mdi-account"></v-icon>{{ name }}</template
+      ><Avatar class="mx-1" size="x-small" :name="name" /><v-subtitle>{{
+        name
+      }}</v-subtitle></template
     >
 
     <div class="d-flex mb-2 ml-4">
@@ -28,6 +30,7 @@
 
 <script setup lang="ts">
 import BorderCard from "@/layouts/CardLayout.vue";
+import Avatar from "@/components/Avatar.vue";
 
 defineProps({
   name: String,
