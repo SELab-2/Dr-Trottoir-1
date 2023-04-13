@@ -67,6 +67,11 @@
         </BorderCard>
       </v-card>
     </div>
+    <div class="centre text-center pa-5" v-if="emptySchedule()">
+      <v-icon icon="mdi-alert-circle" size="x-large" />
+      <h3>Geen planning voor de komende 3 dagen.</h3>
+      <p>Check bij je superstudent indien je denkt dat dit niet klopt.</p>
+    </div>
 
     <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
     <v-overlay v-model="snackbar">
@@ -117,9 +122,9 @@ const calculateProgress = (buildings: Building[]) => {
 type UpdatedSchedule = Schedule & { round: Round & { buildings: Building[] } };
 
 // TODO change (used for testing)
-const today = new Date("2023-04-01T18:47:29.939Z");
+const today = new Date("2023-04-02T18:47:29.939Z");
 const tomorrow = new Date("2023-04-02T18:47:29.939Z");
-const overmorrow = new Date("2023-04-01T18:47:29.939Z");
+const overmorrow = new Date("2023-04-02T18:47:29.939Z");
 /**
 const today = new Date();
 const tomorrow = new Date(new Date().setDate(today.getDate() + 1));
@@ -159,5 +164,14 @@ async function loadSchedule(day: Date): Promise<UpdatedSchedule[]> {
   }
   // TODO: handle error messages
   return [];
+}
+
+function emptySchedule(): boolean {
+  for (const day of days) {
+    if (day.schedule.length > 0) {
+      return false;
+    }
+  }
+  return true;
 }
 </script>
