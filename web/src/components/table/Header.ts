@@ -31,7 +31,7 @@ export class Header<T> {
   }
 
   // Action to perform when clicked on.
-  onClick: ((e: T) => void) | null = null;
+  onClick: (e: T, list: Array<T | null>) => void = () => {};
 
   // TODO: replace with API call.
   // Sorts an array of T's using this specific field.

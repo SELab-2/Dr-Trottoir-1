@@ -24,7 +24,7 @@
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody v-if="entries">
       <tr v-for="item in entries?.filter((e) => e !== null)" :key="item.id">
         <td
           v-bind:key="header.id"
@@ -60,7 +60,7 @@
             variant="plain"
             v-bind:icon="header.get(item)"
             size="small"
-            @click="() => header.onClick(item)"
+            @click="() => header.onClick(item, entries!)"
           ></v-btn>
           <p v-if="header.type === RowType.TEXT">
             {{ header.get(item) }}
@@ -110,7 +110,6 @@ function sort(header: Header<any>) {
 </script>
 
 <style lang="sass" scoped>
-
 .clickable
   cursor: pointer
 
