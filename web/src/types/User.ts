@@ -2,7 +2,6 @@ import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import chance from "chance";
-import { formatDate } from '@/assets/scripts/date'
 
 export class User implements TableEntity<User> {
   id: number;
@@ -78,11 +77,11 @@ export class User implements TableEntity<User> {
     });
   }
 
-  route(): { name: string, params: { id: number, isadmin: boolean } } {
+  route(): { name: string; params: { id: number; isadmin: boolean } } {
     return {
-      name: 'account_settings',
+      name: "account_settings",
       params: { id: this.id, isadmin: false },
-    }
+    };
     // TODO: remove :isadmin when auth is in frontend
   }
 }

@@ -13,5 +13,5 @@ export abstract class TableEntity<T> {
   /**
    * The route to follow when clicking on the row.
    */
-  abstract route(): { name: string, params: object };
+  abstract route(): { name: string; params: object };
 }

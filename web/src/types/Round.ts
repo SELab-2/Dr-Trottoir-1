@@ -2,7 +2,6 @@ import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import chance from "chance";
-import { formatDate } from '@/assets/scripts/date'
 
 export class Routes implements TableEntity<Routes> {
   id: number;
@@ -89,10 +88,10 @@ export class Routes implements TableEntity<Routes> {
     });
   }
 
-  route(): { name: string, params: { id: number } } {
+  route(): { name: string; params: { id: number } } {
     return {
-      name: 'round_detail',
+      name: "round_detail",
       params: { id: this.id },
-    }
+    };
   }
 }
