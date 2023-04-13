@@ -115,7 +115,7 @@ const routes = [
         },
       },
       {
-        path: "/vuilnis/plannen",
+        path: "/gebouw/:id/afvalschema",
         name: "garbage_plan",
         component: GarbageMaker,
       },

@@ -1,6 +1,67 @@
 # Web
 
+Deze webapplicatie is geschreven in Vue/TypeScript.
+## Environments
+
+### Development
+
+#### API
+
+Deze webapplicatie maakt gebruik van de RESTful API gedefinieerd in `api`. Tijdens het ontwikkelen dien jezelf te voorzien van een eigen instantie, alsook een bijhorende databank.
+
+De locatie van de API geef je aan met behulp van de volgende _environment variable_.
+
+```
+VUE_APP_API_SERVER_ADDRESS=[url]
+```
+
+#### Formatting
+
+De *continuous integration* testen gaan na of je code conform de Prettier-stijl is, en of ESLint waarschuwingen genereert. Indien deze niet slagen, dan kan jouw code niet in `develop` gebracht worden.
+
+Je code formatteren en eventuele fouten opsporen doe je aan de hand van
+
+```
+npm run lint
+```
+
+#### Development Server
+
+Vite voorziet een HMR server.
+
+```shell
+npm run dev
+```
+
+#### Preview Server
+
+Je kan de applicatie transpileren en lokaal "hosten" om een *deployment* te simuleren.
+
+```shell
+npm run preview
+```
+
+### Deployment
+
+#### Genereren artifacts
+
+Om de applicatie te transpileren naar een JavaScript binary maak je gebruik van
+
+```
+npm run build
+```
+
+Om deze in te zetten kan je gebruik te maken van eender welke webserver zoals nginx, apache, of serve.
+
 ## Technologieën
+
+### Sass
+
+We maken gebruik van Sass als CSS preprocessor.
+
+### Vuetify
+
+Vuetify is een componentenbibliotheek gebaseerd op de *Material Design guidelines*.
 
 ### ImgProxy
 
@@ -44,3 +105,30 @@ VUE_APP_IMGPROXY_ROOT=<string>
 #### Uploads
 
 Je hoeft zelf geen beeldverwerking toe te passen bij het uploaden van afbeeldingen, want dit gebeurt als het ware _just in time_ bij het downloaden.
+
+
+### Paradigma's
+
+#### Authenticatie
+
+```
+TODO
+```
+
+#### Generieke tabel
+
+```
+TODO
+```
+
+#### Stores (Pinia)
+
+```
+TODO
+```
+
+#### Vue Router
+
+```
+TODO
+```
