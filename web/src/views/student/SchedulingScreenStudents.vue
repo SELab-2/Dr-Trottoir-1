@@ -45,11 +45,7 @@
             "
             color="primary"
             v-on:click.stop="snackbar = !snackbar"
-            :variant="
-              round.name == 'Sterre' || round.name == 'Korenmarkt'
-                ? 'flat'
-                : 'elevated'
-            "
+            variant="tonal"
             :disabled="round.name == 'Sterre' || round.name == 'Korenmarkt'"
             prepend-icon="mdi-play-circle-outline"
           >
@@ -68,9 +64,9 @@
           >
             Klaar
           </v-btn>
-          <v-btn 
-            v-else 
-            label 
+          <v-btn
+            v-else
+            label
             color="warning"
             :ripple="false"
             :clickable="false"

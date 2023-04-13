@@ -22,7 +22,7 @@ const drTrottoirLight: ThemeDefinition = {
     "surface": "#FFFFFF", // white
     "on-surface": "#000000",
 
-    "border": "#616161", //grey-darken-2
+    "border": "#BDBDBDFF", //grey-darken-2
 
     "primary": "#1867C0", // blue
     "on-primary": "#FFFFFF", // white
@@ -51,11 +51,11 @@ export default createVuetify({
   defaults: {
     // global outlined is too much, bad idea.
     // only set for the components you want outlined
-    VTextField: { variant: 'outlined' },
-    VTextarea: { variant: 'outlined' },
-    VSelect: { variant: 'outlined' },
-    VFileInput: { variant: 'outlined' },
-    VAutocomplete: { variant: 'outlined' },
+    VTextField: { variant: "outlined" },
+    VTextarea: { variant: "outlined" },
+    VSelect: { variant: "outlined" },
+    VFileInput: { variant: "outlined" },
+    VAutocomplete: { variant: "outlined" },
   },
   /*theme: {
     themes: {

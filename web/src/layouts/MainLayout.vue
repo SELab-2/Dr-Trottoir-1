@@ -6,7 +6,7 @@
         :permanent="!!permanentDrawer"
         v-model="drawer"
         class="sidebar"
-        style="border-right: rgba(97,97,97, 0.5) 1px solid"
+        style="border: rgba(189, 189, 189, 0.5) 1px solid"
         color="background"
       >
         <v-list density="compact" nav>

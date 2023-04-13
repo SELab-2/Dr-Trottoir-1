@@ -11,7 +11,12 @@
     <!-- Set round name as title -->
     <template v-slot:title>
       {{ round_name }}
-      <v-icon end v-if="round_comments" icon="mdi-comment-alert-outline" size="small"/>
+      <v-icon
+        end
+        v-if="round_comments"
+        icon="mdi-comment-alert-outline"
+        size="small"
+      />
     </template>
 
     <!-- Set student as subtitle -->
