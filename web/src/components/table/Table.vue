@@ -1,4 +1,4 @@
-<template>
+<template :key="props.entries">
   <v-table>
     <thead>
       <tr>
@@ -25,7 +25,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in entries" :key="item.id">
+      <tr v-for="item in entries?.filter((e) => e !== null)" :key="item.id">
         <td
           v-bind:key="header.id"
           v-for="header in headers"
@@ -60,6 +60,7 @@
             variant="plain"
             v-bind:icon="header.get(item)"
             size="small"
+            @click="() => header.onClick(item)"
           ></v-btn>
           <p v-if="header.type === RowType.TEXT">
             {{ header.get(item) }}
