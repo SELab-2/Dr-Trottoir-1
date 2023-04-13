@@ -16,12 +16,18 @@ import GarbageMaker from "@/views/building/GarbageMaker.vue";
 import UserOverview from "@/views/dashboard/Users.vue";
 import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
+import Auth from "@/views/dev/Auth.vue";
 
 const routes = [
   {
     path: "/",
     component: LoginScreen,
     name: "login",
+  },
+  {
+    path: "/dev/auth",
+    component: Auth,
+    name: "auth",
   },
   {
     component: MainLayout,
@@ -109,7 +115,7 @@ const routes = [
         },
       },
       {
-        path: "/vuilnis/plannen",
+        path: "/gebouw/:id/afvalschema",
         name: "garbage_plan",
         component: GarbageMaker,
       },

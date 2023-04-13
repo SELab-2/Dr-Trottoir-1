@@ -2,7 +2,11 @@
   <div class="background" color="background">
     <div class="form">
       <!-- Display the Dr. troittoir logo above the login form -->
-      <v-img contain src="@/assets/images/drtroittoir_logo.png"></v-img>
+      <v-img
+        class="banner-logo"
+        contain
+        src="@/assets/images/drtroittoir_logo_black.png"
+      ></v-img>
       <br />
 
       <!-- The input field for the e-mail -->
@@ -38,7 +42,7 @@
         <v-btn
           prepend-icon="mdi-login"
           color="success"
-          :to="{ name: 'student_planning' }"
+          @click="useAuthStore().logIn(email, password)"
           >Login</v-btn
         >
       </div>
@@ -62,6 +66,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
 // reactive email state
 const email = ref("");
@@ -75,6 +80,7 @@ const showPsswd = ref(false);
 // reactive state to check if the snackbar must be shown or not
 const snackbar = ref(false);
 </script>
+
 <style lang="scss">
 // backgroud div. Nedded to center form div
 .background {
