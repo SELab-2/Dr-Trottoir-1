@@ -25,11 +25,22 @@ Je dient de `API_SERVER_ADDRESS` _environment variabel_ in te stellen met de URL
 De basis wordt gevormd door de abstracte klasse `Query`.
 
 ```typescript
+import {QueryError} from "./query_error";
+
 /**
- * Parameters: Een type die de interface van de API modeleert.
- * Result: Een type die het resultaat modeleert.
+ * Parameters: Een type die de interface van de API modelleert.
+ * PostParameters: Een type die de body van een POST request modelleert.
+ * ResultGet: Een type die het resultaat van een GET request modelleert.
+ * ResultPost: Een type die het resultaat van een POST request modelleert.
+ * ResultPatch: Een type die het resultaat van een PATCH request modelleert.
  */
-export abstract class Query<Parameters, Result> {
+export abstract class Query<
+    Parameters,
+    PostParameters,
+    ResultGet,
+    ResultPost,
+    ResultPatch
+> {
     // Endpoint van dit model in onze API.
     abstract endpoint: string;
 
@@ -37,25 +48,28 @@ export abstract class Query<Parameters, Result> {
     url(query: Partial<Parameters>): string;
 
     // Verkrijg een element per identifier.
-    async getOne(id: number): Promise<Result | APIError>;
+    async getOne(id: number): Promise<ResultGet | QueryError>;
 
     // Verkrijg alle resultaten die voldoen aan de parameters.
     async getAll(
         query: Partial<Parameters> = {},
-    ): Promise<Array<Result> | APIError>;
+    ): Promise<Array<ResultGet> | QueryError>;
+
+    // Voeg een nieuw element toe.
+    async addOne(element: Partial<PostParameters>): Promise<ResultPost | QueryError>
 
     // Update een element.
-    async updateOne(element: Partial<Result>): Promise<Result | APIError>;
+    async updateOne(element: Partial<ResultPatch>): Promise<ResultPatch | QueryError>;
 
     // Verwijder een element.
     async deleteOne(
-        element: Partial<Result>,
+        element: Partial<ResultGet>,
         hard = false,
-    ): Promise<void | APIError>;
+    ): Promise<void | QueryError>;
 }
 ```
 
-Stel dat we een `BuildingQuery` klasse willen implementeren die verschillende gebouwen op kan vragen. We definiëren eerst het `BuildingQueryParameters` type.
+Stel dat we een `BuildingQuery` klasse willen implementeren die verschillende gebouwen op kan vragen. We definiëren eerst de types `BuildingQueryParameters`, `BuildingAllInfo` en `BuildingWithoutHash` die nodig zijn om van `Query` te kunnen erven.
 
 ```typescript
 export type BuildingQueryParameters = {
@@ -68,6 +82,41 @@ export type BuildingQueryParameters = {
     sort: string[];
     ord: Array<"asc" | "desc">;
 };
+
+type BuildingAllInfo = Prisma.BuildingGetPayload<{
+    select: {
+        id: true;
+        name: true;
+        ivago_id: true;
+        deleted: true;
+        hash: false;
+        address: true;
+        syndicus: {
+            include: {
+                user: typeof includeUserWithoutAddress;
+            };
+        };
+        manual: true;
+        images: {
+            include: {
+                image: true;
+            };
+        };
+    };
+}>;
+
+type BuildingWithoutHash = Prisma.BuildingGetPayload<{
+    select: {
+        id: true;
+        name: true;
+        ivago_id: true;
+        syndicus_id: true;
+        address_id: true;
+        manual_id: true;
+        hash: false;
+        deleted: true;
+    };
+}>;
 ```
 
 Deze komt één-op-één overeen met de `key=value`'s die verwacht worden door de API. Merk op dat we hier dus uitsluitend `snake_case` gebruiken in plaats van `camelCase`.
@@ -75,7 +124,13 @@ Deze komt één-op-één overeen met de `key=value`'s die verwacht worden door d
 We erven nu van `Query` over, en hoeven uitsluitend nog de _endpoint_ van ons model op te geven.
 
 ```typescript
-export class BuildingQuery extends Query<BuildingQueryParameters, Building> {
+export class BuildingQuery extends Query<
+    BuildingQueryParameters,
+    BuildingWithoutHash,
+    BuildingAllInfo,
+    BuildingAllInfo,
+    BuildingWithoutHash
+> {
     endpoint = "building";
 }
 ```
