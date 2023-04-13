@@ -1,90 +1,94 @@
 <template>
   <HFillWrapper>
     <!-- Day cards-->
-    <v-card
+    <div
       v-for="day in days"
       :key="day.name"
-      :title="day.name"
-      variant="flat"
-      color="background"
     >
-      <template v-slot:append>
-        <v-chip label prepend-icon="mdi-calendar-month-outline" variant="text">
-          {{ day.rounds[0].deadline.getDate() }}
-          {{ formatter.format(day.rounds[0].deadline) }}
-        </v-chip>
-      </template>
-      <!-- Round cards -->
-      <BorderCard
-        v-for="round in day.rounds"
-        :key="round.name"
-        class="mb-3 mx-1"
-        :title="round.name"
-        prepend-icon="mdi-transit-detour"
-        @click="redirect_to_detail()"
+      <v-card
+        v-if='day.schedule.length > 0'
+        :title="day.name"
+        variant="flat"
+        color="background"
       >
-        <!-- Time -->
-        <template v-slot:subtitle>
-          <v-chip
-            label
-            prepend-icon="mdi-clock-time-ten-outline"
-            variant="text"
-            size="compact"
-          >
-            {{ round.deadline.getHours() }}:{{
-              ("0" + round.deadline.getUTCMinutes()).slice(-2)
-            }}
-          </v-chip>
-        </template>
-
-        <!-- Status -->
         <template v-slot:append>
-          <v-btn
-            v-if="
-              calculateProgress(round.buildings_done, round.buildings) === 0
-            "
-            color="primary"
-            v-on:click.stop="snackbar = !snackbar"
-            :variant="
-              round.name == 'Sterre' || round.name == 'Korenmarkt'
-                ? 'flat'
-                : 'elevated'
-            "
-            :disabled="round.name == 'Sterre' || round.name == 'Korenmarkt'"
-          >
-            Start ronde</v-btn
-          >
-          <v-chip
-            v-else-if="
-              calculateProgress(round.buildings_done, round.buildings) === 100
-            "
-            label
-            color="success"
-          >
-            <v-icon icon="mdi-check"></v-icon>
-            Klaar
-          </v-chip>
-          <v-chip v-else label color="warning">
-            Bezig {{ round.buildings_done }}/{{ round.buildings }}
+          <v-chip label prepend-icon="mdi-calendar-month-outline" variant="text">
+            {{ day.day.getDate() }}
+            {{ formatter.format(day.day) }}
           </v-chip>
         </template>
-      </BorderCard>
-
-      <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
-      <v-overlay v-model="snackbar">
-        <v-snackbar
-          v-model="snackbar"
-          timeout="-1"
-          elevation="24"
-          color="background"
+        <!-- Round cards -->
+        <BorderCard
+          v-for="schedule in day.schedule"
+          :key="schedule.round.name"
+          class="mb-3 mx-1"
+          :title="schedule.round.name"
+          prepend-icon="mdi-transit-detour"
+          @click="redirect_to_detail()"
         >
-          <StartRoundPopupContent
-            :oncancel="() => (snackbar = false)"
-            :onsubmit="() => redirect_to_detail()"
-          />
-        </v-snackbar>
-      </v-overlay>
-    </v-card>
+          <!-- Time -->
+          <template v-slot:subtitle>
+            <v-chip
+              label
+              prepend-icon="mdi-clock-time-ten-outline"
+              variant="text"
+              size="compact"
+            >
+              {{ new Date(schedule.day).getHours() }}:{{
+                ("0" + new Date(schedule.day).getUTCMinutes()).slice(-2)
+              }}
+            </v-chip>
+          </template>
+
+          <!-- Status -->
+          <template v-slot:append>
+            <v-btn
+              v-if="
+                calculateProgress(schedule.round.buildings) === 0
+              "
+              color="primary"
+              v-on:click.stop="snackbar = !snackbar"
+              :variant="
+                day.day != today
+                  ? 'flat'
+                  : 'elevated'
+              "
+              :disabled="day.day != today"
+            >
+              Start ronde</v-btn
+            >
+            <v-chip
+              v-else-if="
+                calculateProgress(round.buildings) === 100
+              "
+              label
+              color="success"
+            >
+              <v-icon icon="mdi-check"></v-icon>
+              Klaar
+            </v-chip>
+            <v-chip v-else label color="warning">
+              Bezig {{ 0 }}/{{ schedule.round.buildings.length }}
+            </v-chip>
+          </template>
+        </BorderCard>
+      </v-card>
+    </div>
+
+    <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
+    <v-overlay v-model="snackbar">
+      <v-snackbar
+        v-model="snackbar"
+        timeout="-1"
+        elevation="24"
+        color="background"
+      >
+        <StartRoundPopupContent
+          :oncancel="() => (snackbar = false)"
+          :onsubmit="() => redirect_to_detail()"
+        />
+      </v-snackbar>
+    </v-overlay>
   </HFillWrapper>
 </template>
 
@@ -92,6 +96,11 @@
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
+import { ScheduleQuery } from "@selab-2/groep-1-query/dist/schedule";
+import { Schedule } from "@selab-2/groep-1-orm";
+import { Round } from "@selab-2/groep-1-orm";
+import { Building } from "@selab-2/groep-1-orm";
+import { APIError } from "@selab-2/groep-1-query/dist/api_error";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
@@ -107,55 +116,51 @@ const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
 
 const snackbar = ref(false);
 
-const calculateProgress = (done: number, toDo: number) => {
-  return Math.round((done / toDo) * 100);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const calculateProgress = (buildings) => {
+  return 0; // TODO: calculate the amount of buildings done
 };
 
-const days = ref({
-  monday: {
+// TODO change (used for testing)
+const today = new Date("2023-04-01T18:47:29.939Z");
+const tomorrow = new Date("2023-04-02T18:47:29.939Z");
+const overmorrow = new Date("2023-04-01T18:47:29.939Z");
+/**
+const today = new Date();
+const tomorrow = new Date(new Date().setDate(today.getDate() + 1));
+const overmorrow = new Date(new Date().setDate(today.getDate() + 2));
+ **/
+const days: {name: string, day: Date, schedule: Schedule[]} = [
+  {
     name: "Vandaag",
-    rounds: [
-      {
-        name: "Grote Markt",
-        deadline: new Date(2023, 2, 6, 10, 30),
-        buildings: 5,
-        buildings_done: 5,
-      },
-      {
-        name: "Vrijdagsmarkt",
-        deadline: new Date(2023, 2, 6, 12, 45),
-        buildings: 5,
-        buildings_done: 3,
-      },
-      {
-        name: "Overpoort",
-        deadline: new Date(2023, 2, 6, 15, 30),
-        buildings: 5,
-        buildings_done: 0,
-      },
-    ],
+    day: today,
+    schedule: await loadSchedule(today)
   },
-  tuesday: {
+  {
     name: "Morgen",
-    rounds: [
-      {
-        name: "Korenmarkt",
-        deadline: new Date(2023, 2, 7, 10, 0),
-        buildings: 5,
-        buildings_done: 0,
-      },
-    ],
+    day: tomorrow,
+    schedule: await loadSchedule(tomorrow)
   },
-  wednesday: {
-    name: "Maandag",
-    rounds: [
-      {
-        name: "Sterre",
-        deadline: new Date(2023, 2, 8, 15, 30),
-        buildings: 5,
-        buildings_done: 0,
-      },
-    ],
+  {
+    name: "Overmorgen",
+    day: overmorrow,
+    schedule: await loadSchedule(overmorrow)
   },
-});
+]
+console.log(days);
+
+async function loadSchedule(day: Date): Promise<(Schedule & {round: Round & {buildings: Building[]}})[]> {
+  const date = new Date(day);
+  const shedulesOrError: Schedule[] | APIError = await new ScheduleQuery().getAll({
+    user_id: 58, // TODO change (used for testing)
+    after: new Date(date.setHours(0,0,0,0)),
+    before: new Date(date.setHours(23,59,59,999))
+  });
+  // @ts-ignore
+  if (shedulesOrError.message == null) {
+    return shedulesOrError;
+  }
+  // TODO: handle error messages
+  return [];
+}
 </script>
