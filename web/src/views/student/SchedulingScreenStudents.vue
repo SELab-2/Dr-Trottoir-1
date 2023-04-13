@@ -1,18 +1,19 @@
 <template>
   <HFillWrapper>
     <!-- Day cards-->
-    <div
-      v-for="day in days"
-      :key="day.name"
-    >
+    <div v-for="day in days" :key="day.name">
       <v-card
-        v-if='day.schedule.length > 0'
+        v-if="day.schedule.length > 0"
         :title="day.name"
         variant="flat"
         color="background"
       >
         <template v-slot:append>
-          <v-chip label prepend-icon="mdi-calendar-month-outline" variant="text">
+          <v-chip
+            label
+            prepend-icon="mdi-calendar-month-outline"
+            variant="text"
+          >
             {{ day.day.getDate() }}
             {{ formatter.format(day.day) }}
           </v-chip>
@@ -43,24 +44,16 @@
           <!-- Status -->
           <template v-slot:append>
             <v-btn
-              v-if="
-                calculateProgress(schedule.round.buildings) === 0
-              "
+              v-if="calculateProgress(schedule.round.buildings) === 0"
               color="primary"
               v-on:click.stop="snackbar = !snackbar"
-              :variant="
-                day.day != today
-                  ? 'flat'
-                  : 'elevated'
-              "
+              :variant="day.day != today ? 'flat' : 'elevated'"
               :disabled="day.day != today"
             >
               Start ronde</v-btn
             >
             <v-chip
-              v-else-if="
-                calculateProgress(round.buildings) === 100
-              "
+              v-else-if="calculateProgress(schedule.round.buildings) === 100"
               label
               color="success"
             >
@@ -117,9 +110,11 @@ const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
 const snackbar = ref(false);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const calculateProgress = (buildings) => {
+const calculateProgress = (buildings: Building[]) => {
   return 0; // TODO: calculate the amount of buildings done
 };
+
+type UpdatedSchedule = Schedule & { round: Round & { buildings: Building[] } };
 
 // TODO change (used for testing)
 const today = new Date("2023-04-01T18:47:29.939Z");
@@ -130,34 +125,36 @@ const today = new Date();
 const tomorrow = new Date(new Date().setDate(today.getDate() + 1));
 const overmorrow = new Date(new Date().setDate(today.getDate() + 2));
  **/
-const days: {name: string, day: Date, schedule: Schedule[]} = [
+const days: { name: string; day: Date; schedule: UpdatedSchedule[] }[] = [
   {
     name: "Vandaag",
     day: today,
-    schedule: await loadSchedule(today)
+    schedule: await loadSchedule(today),
   },
   {
     name: "Morgen",
     day: tomorrow,
-    schedule: await loadSchedule(tomorrow)
+    schedule: await loadSchedule(tomorrow),
   },
   {
     name: "Overmorgen",
     day: overmorrow,
-    schedule: await loadSchedule(overmorrow)
+    schedule: await loadSchedule(overmorrow),
   },
-]
+];
 console.log(days);
 
-async function loadSchedule(day: Date): Promise<(Schedule & {round: Round & {buildings: Building[]}})[]> {
+async function loadSchedule(day: Date): Promise<UpdatedSchedule[]> {
   const date = new Date(day);
-  const shedulesOrError: Schedule[] | APIError = await new ScheduleQuery().getAll({
-    user_id: 58, // TODO change (used for testing)
-    after: new Date(date.setHours(0,0,0,0)),
-    before: new Date(date.setHours(23,59,59,999))
-  });
+  const shedulesOrError: Schedule[] | APIError =
+    await new ScheduleQuery().getAll({
+      user_id: 58, // TODO change (used for testing)
+      after: new Date(date.setHours(0, 0, 0, 0)),
+      before: new Date(date.setHours(23, 59, 59, 999)),
+    });
   // @ts-ignore
   if (shedulesOrError.message == null) {
+    // @ts-ignore
     return shedulesOrError;
   }
   // TODO: handle error messages
