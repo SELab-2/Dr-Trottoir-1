@@ -2,6 +2,7 @@ import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import chance from "chance";
+import { formatDate } from "@/assets/scripts/date";
 
 export class Building implements TableEntity<Building> {
   id: number;
@@ -67,7 +68,10 @@ export class Building implements TableEntity<Building> {
     });
   }
 
-  route(): string {
-    return `/gebouw/${this.id}`;
+  route(): { name: string; params: { id: number; date: string } } {
+    return {
+      name: "building_id_detail",
+      params: { id: this.id, date: formatDate(new Date()) },
+    };
   }
 }
