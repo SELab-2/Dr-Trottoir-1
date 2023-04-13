@@ -1,334 +1,130 @@
 <template>
-  <v-card variant="flat">
-    <!-- Select input fields -->
-
-    <v-card-actions class="d-flex ml-3">
-      <!-- Buttons to select if the user wants to plan for multiple days or not -->
-      <v-btn
-        @click="
-          () => {
-            selected_multiple = false;
-            selected_end_day = '';
-            reset_planning();
-          }
-        "
-        :active="!selected_multiple"
-        >Enkel</v-btn
-      >
-      <v-btn
-        @click="
-          () => {
-            selected_multiple = true;
-            reset_planning();
-          }
-        "
-        :active="selected_multiple"
-        >Meerdere</v-btn
-      >
-    </v-card-actions>
-    <v-row class="py-0 my-0">
-      <v-col
-        cols="1"
-        style="min-width: 100px; max-width: 100%"
-        class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
-      >
-        <v-select
-          label="Student"
-          :items="mock_students"
-          type="text"
-          variant="solo"
-          prepend-inner-icon="mdi-account"
-          v-model="selected_student"
-          required
-        ></v-select>
-      </v-col>
-
-      <!-- TODO: implement check to see if start and end date dont crossover -->
-      <v-col
-        cols="3"
-        style="min-width: 100px; max-width: 100%"
-        class="flex-grow-0 flex-shrink-1 py-0 my-0"
-        ><div class="d-flex">
-          <v-text-field
-            label="Datum"
-            type="date"
-            variant="solo"
-            multiple
-            v-model="selected_start_day"
-            @update:model-value="reset_planning()"
-          /><v-text-field
-            class="ml-1"
-            v-if="selected_multiple"
-            label="Datum"
-            type="date"
-            variant="solo"
-            multiple
-            v-model="selected_end_day"
-            @update:model-value="reset_planning()"
-          />
-        </div>
-      </v-col>
-      <v-col
-        cols="3"
-        style="min-width: 100px; max-width: 100%"
-        class="flex-grow-0 flex-shrink-0 py-0 my-0 mr-5"
-      >
-        <v-text-field
-          label="Start"
-          type="time"
-          variant="solo"
-          v-model="selected_time"
-        />
-      </v-col> </v-row
-    ><v-row class="py-0 my-0">
-      <v-col
-        cols="1"
-        style="min-width: 100px; max-width: 100%"
-        class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
-      >
-        <v-select
-          label="Template ronde"
-          :items="mock_rounds"
-          v-model="selected_round"
-          item-value="name"
-          item-title="name"
-          return-object
-          type="text"
-          variant="solo"
-          prepend-inner-icon="mdi-transit-detour"
-          required
-          @update:model-value="reset_planning()"
-        ></v-select>
-      </v-col>
-      <v-col
-        cols="3"
-        style="min-width: 100px; max-width: 100%"
-        class="flex-grow-0 flex-shrink-0 py-0 my-0"
-      >
-        <!-- TODO: currently 55px on this button to make it fit the theme, maybe css in future? -->
-        <!-- TODO: fix this router link to load in dynamicly -->
-        <v-btn
-          to="/rondes/nieuw"
-          min-width="100%"
-          min-height="55px"
-          prepend-icon="mdi-pencil"
-          left
-          max-width="100%"
-          >Bewerken</v-btn
+  <div>
+    <HFillWrapper margin="mx-4 mb-4">
+      <BorderCard>
+        <v-row class="py-0 my-4 mx-2">
+          <v-col
+            cols="1"
+            style="min-width: 100px; max-width: 100%"
+            class="flex-grow-1 flex-shrink-0 py-0 my-0"
+            ><v-autocomplete
+              prepend-inner-icon="mdi-account"
+              label="Student"
+              :items="[
+                'California',
+                'Colorado',
+                'Florida',
+                'Georgia',
+                'Texas',
+                'Wyoming',
+              ]"
+              variant="solo"
+            ></v-autocomplete></v-col
+        ></v-row>
+        <v-row class="py-0 my-4 mx-2">
+          <v-col cols="3" class="flex-grow-0 flex-shrink-0"
+            ><v-select
+              prepend-inner-icon="mdi-replay"
+              variant="solo"
+              label="Frequentie"
+              v-model="frequency"
+              :items="frequencys"
+              @update:model-value="frequencyCheck()"
+            ></v-select></v-col
+          ><v-col
+            cols="1"
+            style="min-width: 100px; max-width: 100%"
+            class="flex-grow-1 flex-shrink-0"
+            ><div v-if="!multipleday">
+              <v-text-field
+                prepend-inner-icon="mdi-calendar"
+                label="Startdatum"
+                variant="solo"
+                type="date"
+                v-model="startDate"
+              ></v-text-field>
+            </div>
+            <div class="d-flex justify-space-between" v-else>
+              <v-text-field
+                v-model="startDate"
+                prepend-inner-icon="mdi-calendar"
+                variant="solo"
+                class="mr-2"
+                type="date"
+                label="Startdatum"
+              ></v-text-field
+              ><v-text-field
+                v-model="endDate"
+                prepend-inner-icon="mdi-calendar"
+                variant="solo"
+                class="ml-2"
+                type="date"
+                label="Einddatum"
+              ></v-text-field></div></v-col
+          ><v-col cols="3" class="flex-grow-0 flex-shrink-0"
+            ><v-text-field
+              prepend-inner-icon="mdi-clock-time-two-outline"
+              label="Starttijd"
+              variant="solo"
+              type="time"
+            ></v-text-field
+          ></v-col>
+        </v-row>
+        <v-card-actions
+          ><v-spacer></v-spacer
+          ><v-btn prepend-icon="mdi-check"
+            >Ronde inplannen</v-btn
+          ></v-card-actions
         >
-      </v-col>
-      <v-col
-        cols="3"
-        style="min-width: 100px; max-width: 100%"
-        class="flex-grow-0 flex-shrink-0 py-0 my-0 mr-5"
-      >
-        <!-- TODO: Fix router link so there's a pushback to this page once a round is created?-->
-        <v-btn
-          to="/rondes/nieuw"
-          min-height="55px"
-          min-width="100%"
-          prepend-icon="mdi-plus"
-          max-width="100%"
-          >Nieuwe maken</v-btn
-        >
-      </v-col>
-    </v-row>
-
-    <!-- View selected rounds -->
-    <div v-if="selected_round">
-      <v-card
-        v-for="(planned, index) in planning"
-        v-bind:key="index"
-        class="py-0 my-5 mx-5"
-      >
-        <!-- Give user a warning with tooltip + icon -->
-        <!-- Use this when trying to plan a building in a round that's already planned in -->
-        <!-- TODO: currently this uses substring as warning for show, should be an API call -->
-        <template v-if="selected_round.name.includes('rote')" v-slot:prepend>
-          <v-tooltip :text="`Gebouw(en) ingepland op ${planned.date}`"
-            ><template v-slot:activator="{ props }">
-              <v-icon
-                v-bind="props"
-                color="error"
-                icon="mdi-alert"
-              ></v-icon></template
-          ></v-tooltip>
-        </template>
-
-        <!-- Icons for showing extra info about the building -->
-        <template v-else v-slot:prepend>
-          <v-icon color="green" icon="mdi-transit-detour"></v-icon>
-        </template>
-        <template v-slot:title>
-          <v-card-title>{{
-            selected_multiple ? planned.date : selected_round.name
-          }}</v-card-title> </template
-        ><template v-slot:subtitle>
-          <v-card-subtitle>{{
-            selected_multiple ? selected_round.name : planned.date
-          }}</v-card-subtitle>
-        </template>
-        <template v-slot:append>
-          <v-icon
-            v-if="planned.showinfo"
-            class="ml-2"
-            color="primary"
-            icon="mdi-pencil"
-            @click="planned.edit = !planned.edit"
-          ></v-icon>
-          <v-icon
-            class="ml-2"
-            :icon="planned.showinfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-            @click="() => (planned.showinfo = !planned.showinfo)"
-          ></v-icon>
-          <v-icon
-            class="ml-2"
-            color="error"
-            icon="mdi-close"
-            @click="remove_from_planning(index)"
-          ></v-icon>
-        </template>
-
-        <!-- Show the expand, where users can quickly alter their rounds -->
-        <v-expand-transition>
-          <div v-show="planned.showinfo">
-            <v-divider></v-divider>
-
-            <v-card
-              v-for="(building, bindex) in planned.round?.buildings"
-              v-bind:key="bindex"
-              class="ml-3 my-1"
-              variant="flat"
-            >
-              <!-- TODO: currently this uses building.comments as warning, should be an API call -->
-              <template v-if="building.comments" v-slot:prepend>
-                <v-tooltip :text="`Gebouw al ingepland op ${planned.date}`"
-                  ><template v-slot:activator="{ props }">
-                    <v-icon
-                      v-bind="props"
-                      color="error"
-                      icon="mdi-alert"
-                    ></v-icon></template
-                ></v-tooltip>
-              </template>
-
-              <template v-else v-slot:prepend>
-                <v-icon color="green" icon="mdi-office-building"></v-icon>
-              </template>
-              <template v-slot:title>
-                <v-card-title>{{ building.name }}</v-card-title> </template
-              ><template v-slot:subtitle>
-                <v-card-subtitle>{{ building.address }}</v-card-subtitle>
-              </template>
-              <template v-slot:append
-                ><v-icon
-                  v-if="planned.edit"
-                  icon="mdi-close"
-                  color="error"
-                  @click="planned.round?.buildings.splice(bindex, 1)"
-                ></v-icon
-              ></template>
-            </v-card>
-          </div>
-        </v-expand-transition>
-      </v-card>
-    </div>
-    <div v-else>
-      <v-card
-        prepend-icon="mdi-information"
-        title="Nog geen ronde geselecteerd"
-        variant="flat"
-      ></v-card>
-    </div>
-    <v-card-actions class="d-flex">
-      <v-spacer></v-spacer>
-      <!-- TODO fill in correct link, router pushback to previous page or reload this one? -->
-      <v-btn
-        :disabled="
-          !(
-            selected_student &&
-            selected_round &&
-            selected_start_day &&
-            selected_time
-          )
-        "
-        to="/todo"
-        prepend-icon="mdi-check"
-        color="primary"
-        >Ronde(s) inplannen</v-btn
-      >
-    </v-card-actions>
-  </v-card>
+      </BorderCard>
+    </HFillWrapper>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import BorderCard from "@/layouts/CardLayout.vue";
 import Round from "@/components/models/Round";
 import RoundPlanning from "@/components/models/RoundPlanning";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
-const selected_multiple = ref<boolean>(false);
-const selected_student = ref<string>("");
-const selected_start_day = ref<string>(
-  new Date().toISOString().substring(0, 10),
-);
-const selected_end_day = ref<string>("");
-const selected_time = ref<string>("");
-const selected_round = ref<Round | null>(null);
+const frequencys = ["enkel", "wekelijks", "tweewekelijks", "maandelijks"];
+const frequencyDict: Record<string, number> = {
+  enkel: 1,
+  wekelijks: 7,
+  tweewekelijks: 14,
+  maandelijks: 28,
+};
+const startDate = ref<string>(new Date().toISOString().substring(0, 10));
+const endDate = ref("");
+const time = ref("");
+const frequency = ref<string>(frequencys[0]);
 
-/**
- * Gives all the dates in a range
- * @param start startdate in string format
- * @param end enddate in string format
- */
-function getDateRange(start: string, end: string): string[] {
-  if (!end) {
-    return [start];
+const multipleday = ref<boolean>(false);
+
+let dayCounter = 0;
+
+function frequencyCheck() {
+  if (frequency.value == frequencys[0]) {
+    multipleday.value = false;
   } else {
-    let dates: string[] = [];
-    let current_date = new Date(start);
-    let end_date = new Date(end);
-    while (current_date <= end_date) {
-      dates.push(current_date.toISOString().substring(0, 10));
-      current_date.setDate(current_date.getDate() + 1);
-    }
-
-    return dates;
+    endDate.value = "";
+    multipleday.value = true;
   }
 }
 
-// List gets updated when the user updates input field
-let planning = ref<RoundPlanning[]>([]);
-
-function remove_from_planning(index: number) {
-  planning.value.splice(index, 1);
-}
-
-/**
- * Would be better if this was a computed property
- * The extra fields in RoutePlanning dont allow for this
- */
-function reset_planning() {
-  planning.value = [];
-  for (let curr_date of getDateRange(
-    selected_start_day.value,
-    selected_end_day.value,
-  )) {
-    planning.value.push({
-      date: curr_date,
-      round: selected_round.value,
-      showinfo: false,
-      edit: false,
-    });
+function add() {
+  if (frequency.value === "enkel") {
+    endDate.value = startDate.value;
   }
+  const start = new Date(startDate.value);
+  const end = new Date(endDate.value);
+  let frequencyCount = frequencyDict[frequency.value];
+  for (const d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {}
+  startDate.value = "";
+  endDate.value = "";
+  time.value = "";
 }
-
-const mock_students = ref<string[]>([
-  "Michael",
-  "Christopher",
-  "Jessica",
-  "Matthew",
-  "Ashley",
-]);
 
 const mock_rounds = [
   {
@@ -471,3 +267,9 @@ const mock_rounds = [
   },
 ];
 </script>
+
+<style lang="sass">
+.flex
+  display: flex
+  gap: 20px
+</style>
