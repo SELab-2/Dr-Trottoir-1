@@ -88,7 +88,10 @@ export class Routes implements TableEntity<Routes> {
     });
   }
 
-  route(): string {
-    return `/ronde/${this.id}`;
+  route(): { name: string; params: { id: number } } {
+    return {
+      name: "round_detail",
+      params: { id: this.id },
+    };
   }
 }
