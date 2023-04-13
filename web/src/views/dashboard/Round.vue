@@ -19,12 +19,12 @@
   </div>
   <!-- hier moet roundsOrError komen -->
   <Table
-    v-bind:entries="Routes.random()"
-    v-bind:headers="Routes.headers()"
+    v-bind:entries="RoundEntity.random()"
+    v-bind:headers="RoundEntity.headers()"
   ></Table>
 </template>
 
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
-import { Routes } from "@/types/Round.js";
+import { RoundEntity } from "@/types/RoundEntity.js";
 </script>

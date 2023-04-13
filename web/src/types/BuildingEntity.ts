@@ -3,28 +3,28 @@ import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import chance from "chance";
 
-export class Building implements TableEntity<Building> {
+export class BuildingEntity implements TableEntity<BuildingEntity> {
   id: number;
   name: string;
   address: string;
   syndicus_fn: string;
   syndicus_ln: string;
 
-  public constructor(init?: Partial<Building>) {
+  public constructor(init?: Partial<BuildingEntity>) {
     Object.assign(this, init);
   }
 
-  headers(): Array<Header<Building>> {
-    return Building.headers();
+  headers(): Array<Header<BuildingEntity>> {
+    return BuildingEntity.headers();
   }
 
-  static headers(): Array<Header<Building>> {
+  static headers(): Array<Header<BuildingEntity>> {
     return [
       {
         id: 2,
         name: "",
         fit: true,
-        get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
+        get: (e: BuildingEntity) => e.syndicus_fn + " " + e.syndicus_ln,
         type: RowType.AVATAR,
         sortable: false,
       },
@@ -32,7 +32,7 @@ export class Building implements TableEntity<Building> {
         id: 3,
         name: "Syndicus",
         fit: false,
-        get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
+        get: (e: BuildingEntity) => e.syndicus_fn + " " + e.syndicus_ln,
         type: RowType.TEXT,
         sortable: true,
       },
@@ -40,7 +40,7 @@ export class Building implements TableEntity<Building> {
         id: 0,
         name: "Gebouw",
         fit: false,
-        get: (e: Building) => e.name,
+        get: (e: BuildingEntity) => e.name,
         type: RowType.TEXT,
         sortable: true,
       },
@@ -48,16 +48,16 @@ export class Building implements TableEntity<Building> {
         id: 1,
         name: "Adres",
         fit: false,
-        get: (e: Building) => e.address,
+        get: (e: BuildingEntity) => e.address,
         type: RowType.TEXT,
         sortable: true,
       },
-    ].map((e) => new Header<Building>(e));
+    ].map((e) => new Header<BuildingEntity>(e));
   }
 
-  static random(): Array<Building> {
+  static random(): Array<BuildingEntity> {
     return [...Array(100).keys()].map(() => {
-      return new Building({
+      return new BuildingEntity({
         id: chance().integer(),
         name: chance().sentence({ words: 4 }),
         address: chance().address(),

@@ -89,11 +89,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
-import { useRouter } from "vue-router";
 import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
 
 // the router constant
 const router = useRouter();

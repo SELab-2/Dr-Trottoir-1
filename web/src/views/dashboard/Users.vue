@@ -10,26 +10,27 @@
     </v-btn>
   </div>
   <!-- hier moet usersOrError komen -->
-  <Table v-bind:entries="users" v-bind:headers="User.headers()"></Table>
+  <Table v-bind:entries="users" v-bind:headers="UserEntity.headers()"></Table>
 </template>
 
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
-import { User } from "@/types/User";
-import { UserQuery } from "../../../../api_query/src/user";
+import { UserEntity } from "@/types/UserEntity";
+import { User } from "@selab-2/groep-1-orm";
+import { UserQuery } from "@selab-2/groep-1-query/dist/user";
 import { APIError } from "@selab-2/groep-1-query/dist/api_error";
 import { ref } from "vue";
 
-const users = ref<User[]>(await loadUsers());
+const users = ref<UserEntity[]>(await loadUsers());
 
-async function loadUsers(): Promise<User[]> {
+async function loadUsers(): Promise<UserEntity[]> {
   const usersOrErr: User[] | APIError = await new UserQuery().getAll();
   // @ts-ignore
   if (usersOrErr.message == null) {
     let array = []
     for (let user of usersOrErr)
     {
-      array.push(new User(user));
+      array.push(new UserEntity(user));
     }
     return array;
   }
