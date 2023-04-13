@@ -38,10 +38,7 @@
           </span>
         </p>
         <!-- Login button -->
-        <v-btn
-          prepend-icon="mdi-login"
-          color="success"
-          @click="logIn"
+        <v-btn prepend-icon="mdi-login" color="success" @click="logIn"
           >Login</v-btn
         >
       </div>
@@ -66,7 +63,7 @@
 <script lang="ts" setup>
 import { useAuthStore } from "@/stores/auth";
 import { ref } from "vue";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
@@ -82,10 +79,10 @@ const showPsswd = ref(false);
 // reactive state to check if the snackbar must be shown or not
 const snackbar = ref(false);
 
-async function logIn(){
+async function logIn() {
   await useAuthStore().logIn(email.value, password.value);
   // TODO: should link to correct page for which user authenticated, now default student
-  await router.push({ name: 'student_planning' });
+  await router.push({ name: "student_planning" });
 }
 </script>
 

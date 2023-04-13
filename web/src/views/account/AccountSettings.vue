@@ -191,7 +191,7 @@ import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from "@/stores/auth";
 
 // define the spacing for the input fields
 const spacing: String = "mx-4";

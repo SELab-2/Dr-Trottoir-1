@@ -24,7 +24,7 @@
 
           <div>
             <v-list-item
-              @click='logOut'
+              @click="logOut"
               prepend-icon="mdi-account-cancel"
               title="Afmelden"
               value="logout"
@@ -162,9 +162,9 @@
 import Avatar from "@/components/Avatar.vue";
 import { formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from "@/stores/auth";
 
 const router = useRouter();
 
@@ -213,9 +213,9 @@ window.addEventListener(
   () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
 );
 
-async function logOut(){
+async function logOut() {
   //await useAuthStore().logOut(); TODO wait until implemented
-  await router.push({ name: 'login' });
+  await router.push({ name: "login" });
 }
 </script>
 

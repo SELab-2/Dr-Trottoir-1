@@ -17,7 +17,7 @@ import UserOverview from "@/views/dashboard/Users.vue";
 import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
 import Auth from "@/views/dev/Auth.vue";
-import { useAuthStore, validAuth } from '@/stores/auth'
+import { useAuthStore, validAuth } from "@/stores/auth";
 
 const routes = [
   {
@@ -41,7 +41,7 @@ const routes = [
         props: true,
         meta: {
           title: "",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -50,7 +50,7 @@ const routes = [
         component: SchedulingScreenStudent,
         meta: {
           title: "Planning student",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -59,7 +59,7 @@ const routes = [
         component: RoundFollowup,
         meta: {
           title: "Opvolging rondes",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -68,7 +68,7 @@ const routes = [
         component: RoundDetail,
         meta: {
           title: "",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -77,7 +77,7 @@ const routes = [
         component: RoundPlanner,
         meta: {
           title: "Ronde plannen",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -86,7 +86,7 @@ const routes = [
         component: RoundMaker,
         meta: {
           title: "Ronde maken",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -96,7 +96,7 @@ const routes = [
         props: true,
         meta: {
           title: "",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -106,7 +106,7 @@ const routes = [
         props: true,
         meta: {
           title: "",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -115,7 +115,7 @@ const routes = [
         component: BuildingMaker,
         meta: {
           title: "Nieuw gebouw",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -124,7 +124,7 @@ const routes = [
         component: BuildingFollowup,
         meta: {
           title: "Opvolging gebouwen",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -133,7 +133,7 @@ const routes = [
         component: GarbageMaker,
         meta: {
           title: "",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -142,7 +142,7 @@ const routes = [
         name: "user_overview",
         meta: {
           title: "Gebruikers",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -151,7 +151,7 @@ const routes = [
         component: UserCreation,
         meta: {
           title: "Nieuwe gebruiker",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -160,7 +160,7 @@ const routes = [
         name: "building_overview",
         meta: {
           title: "Gebouwen",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
       {
@@ -169,7 +169,7 @@ const routes = [
         name: "round_overview",
         meta: {
           title: "Rondes",
-          requiresAuth: true
+          requiresAuth: true,
         },
       },
     ],
@@ -182,23 +182,20 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   await useAuthStore().getAuth();
   const auth = useAuthStore().auth;
 
-  if (!validAuth(auth)){
-    if(requiresAuth) {
+  if (!validAuth(auth)) {
+    if (requiresAuth) {
       next("/");
-    }
-    else {
+    } else {
       next();
     }
-  }
-  else {
+  } else {
     // TODO: check administrator, syndicus & superstudent pages
     next();
   }
-
 });
 
 export default router;
