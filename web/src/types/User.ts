@@ -77,7 +77,10 @@ export class User implements TableEntity<User> {
     });
   }
 
-  route(): string {
-    return `/account/settings/${this.id}`;
+  route(): { name: string; params: { id: number } } {
+    return {
+      name: "account_settings",
+      params: { id: this.id },
+    };
   }
 }
