@@ -7,7 +7,7 @@ describe('example to-do app', () => {
     cy.get('.email').type('administrator@trottoir.be')
     cy.get('.password').type('password')
     cy.get('.login').click()
-    cy.get('.logout').click()
+    // cy.get('.logout').click()
   })
 
   it('log in failed: incorrect password', () =>{
