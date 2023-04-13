@@ -18,6 +18,22 @@ export type UserQueryParameters = {
     ord: Array<"asc" | "desc">;
 };
 
+// Het type dat de body van een POST request modelleert.
+type UserPostParameters = {
+    email: string;
+    first_name: string;
+    last_name: string;
+    date_added: Date;
+    last_login: Date;
+    phone: string;
+    address_id: number;
+    student: boolean;
+    super_student: boolean;
+    admin: boolean;
+    deleted: boolean;
+    password: string;
+};
+
 type UserAllInfo = Prisma.UserGetPayload<{
     select: {
         id: true;
@@ -45,6 +61,8 @@ type UserAllInfo = Prisma.UserGetPayload<{
 
 export class UserQuery extends Query<
     UserQueryParameters,
+    UserPostParameters,
+    UserAllInfo,
     UserAllInfo,
     UserAllInfo
 > {

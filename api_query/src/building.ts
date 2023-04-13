@@ -36,7 +36,7 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
     };
 }>;
 
-// Het type dat het resultaat van een PATCH request modelleert.
+// Het type dat het resultaat van een PATCH request of de body van een POST request modelleert.
 type BuildingWithoutHash = Prisma.BuildingGetPayload<{
     select: {
         id: true;
@@ -52,6 +52,8 @@ type BuildingWithoutHash = Prisma.BuildingGetPayload<{
 
 export class BuildingQuery extends Query<
     BuildingQueryParameters,
+    BuildingWithoutHash,
+    BuildingAllInfo,
     BuildingAllInfo,
     BuildingWithoutHash
 > {

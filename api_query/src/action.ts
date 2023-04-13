@@ -9,6 +9,12 @@ export type ActionQueryParameters = {
     ord: Array<"asc" | "desc">;
 };
 
-export class ActionQuery extends Query<ActionQueryParameters, Action, Action> {
+export class ActionQuery extends Query<
+    ActionQueryParameters,
+    Action,
+    Action,
+    Action,
+    Action
+> {
     endpoint = "action";
 }

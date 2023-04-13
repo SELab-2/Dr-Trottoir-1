@@ -4,10 +4,18 @@ import { QueryError } from "./query_error";
  * Abstractie overheen onze API voor client side queries uit te voeren.
  *
  * Parameters: Een type die de interface van de API modelleert.
+ * PostParameters: Een type die de body van een POST request modelleert.
  * ResultGet: Een type die het resultaat van een GET request modelleert.
+ * ResultPost: Een type die het resultaat van een POST request modelleert.
  * ResultPatch: Een type die het resultaat van een PATCH request modelleert.
  */
-export abstract class Query<Parameters, ResultGet, ResultPatch> {
+export abstract class Query<
+    Parameters,
+    PostParameters,
+    ResultGet,
+    ResultPost,
+    ResultPatch,
+> {
     abstract endpoint: string;
     server =
         process.env.API_SERVER_ADDRESS ??
@@ -108,6 +116,14 @@ export abstract class Query<Parameters, ResultGet, ResultPatch> {
      */
     async getAll(query: Partial<Parameters> = {}): Promise<Array<ResultGet>> {
         return this.fetchJSON(this.url(query));
+    }
+
+    /**
+     * Voeg een nieuw element toe via HTTP POST.
+     * @throws QueryError
+     */
+    async addOne(element: Partial<PostParameters>): Promise<ResultPost> {
+        return this.fetchJSON(this.server + this.endpoint, "POST", element);
     }
 
     /**
