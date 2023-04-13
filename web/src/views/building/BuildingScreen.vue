@@ -100,7 +100,7 @@
     <PhotoMaker
       @cancel="showOverlay = false"
       @confirm="showOverlay = false"
-      :show-photo="showPhotoInOverlay"
+      :is-photo="showPhotoInOverlay"
     />
   </v-overlay>
 </template>
