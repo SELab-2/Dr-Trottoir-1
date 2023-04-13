@@ -68,12 +68,11 @@ const routes = [
         },
       },
       {
-        path: "/ronde/plannen",
+        path: "/ronde/:id/plannen",
         name: "round_plan",
         component: RoundPlanner,
-        meta: {
-          title: "Ronde plannen",
-        },
+        props: true,
+        meta: {},
       },
       {
         path: "/ronde/nieuw",

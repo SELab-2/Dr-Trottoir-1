@@ -1,7 +1,7 @@
 <template>
   <div>
     <HFillWrapper margin="mx-4 mb-4">
-      <BorderCard>
+      <BorderCard :title="`Inplannen voor ${roundName}`">
         <v-row class="py-0 my-4 mx-2">
           <v-col
             cols="1"
@@ -18,6 +18,7 @@
                 'Texas',
                 'Wyoming',
               ]"
+              v-model="student"
               variant="solo"
             ></v-autocomplete></v-col
         ></v-row>
@@ -67,16 +68,29 @@
               label="Starttijd"
               variant="solo"
               type="time"
+              v-model="time"
             ></v-text-field
           ></v-col>
         </v-row>
         <v-card-actions
-          ><v-spacer></v-spacer
+          ><v-btn prepend-icon="mdi-plus" @click="updateRounds()"
+            >Toevoegen</v-btn
+          >
+          <v-spacer></v-spacer
           ><v-btn prepend-icon="mdi-check"
             >Ronde inplannen</v-btn
           ></v-card-actions
         >
       </BorderCard>
+      <RoundSelectCard
+        v-for="(round, i) in rounds"
+        :key="i"
+        @remove="removeFromRounds(i)"
+        :name="round.name"
+        :date="round.date"
+        :time="round.time"
+      >
+      </RoundSelectCard>
     </HFillWrapper>
   </div>
 </template>
@@ -84,10 +98,13 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import BorderCard from "@/layouts/CardLayout.vue";
-import Round from "@/components/models/Round";
-import RoundPlanning from "@/components/models/RoundPlanning";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
+import RoundSelectCard from "@/components/cards/RoundSelectCard.vue";
 
+// TODO: rondenaam opvragen door id en die hierboven invullen, temporary variabele
+const roundName = "Ronde zuid";
+
+const student = ref<string>("");
 const frequencys = ["enkel", "wekelijks", "tweewekelijks", "maandelijks"];
 const frequencyDict: Record<string, number> = {
   enkel: 1,
@@ -96,13 +113,39 @@ const frequencyDict: Record<string, number> = {
   maandelijks: 28,
 };
 const startDate = ref<string>(new Date().toISOString().substring(0, 10));
-const endDate = ref("");
-const time = ref("");
+const endDate = ref<string>("");
+const time = ref<string>("");
 const frequency = ref<string>(frequencys[0]);
 
 const multipleday = ref<boolean>(false);
 
-let dayCounter = 0;
+interface plannedRound {
+  date: string;
+  name: string;
+  time: string;
+}
+
+let rounds = ref<plannedRound[]>([]);
+
+function updateRounds() {
+  if (frequency.value === "enkel") {
+    endDate.value = startDate.value;
+  }
+  const start = new Date(startDate.value);
+  const end = new Date(endDate.value);
+
+  let frequencyCount = frequencyDict[frequency.value];
+  for (const d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {
+    rounds.value.push({
+      name: student.value,
+      date: d.toISOString().substring(0, 10),
+      time: time.value,
+    });
+  }
+  startDate.value = "";
+  endDate.value = "";
+  time.value = "";
+}
 
 function frequencyCheck() {
   if (frequency.value == frequencys[0]) {
@@ -113,159 +156,9 @@ function frequencyCheck() {
   }
 }
 
-function add() {
-  if (frequency.value === "enkel") {
-    endDate.value = startDate.value;
-  }
-  const start = new Date(startDate.value);
-  const end = new Date(endDate.value);
-  let frequencyCount = frequencyDict[frequency.value];
-  for (const d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {}
-  startDate.value = "";
-  endDate.value = "";
-  time.value = "";
+function removeFromRounds(index: number) {
+  rounds.value.splice(index, 1);
 }
-
-const mock_rounds = [
-  {
-    name: "Grote Markt",
-    start: "13:30",
-    end: "14:00",
-    started: true,
-    student: "Emma",
-    comments: true,
-    current_building: 5,
-    buildings: [
-      {
-        name: "Smith",
-        address: "Gent, Belgium",
-        deltatime: "10 min",
-        comments: false,
-        amount_of_pics: 5,
-      },
-      {
-        name: "Johnson",
-        address: "Brussels, Belgium",
-        deltatime: "35 min",
-        comments: false,
-        amount_of_pics: 2,
-      },
-      {
-        name: "Smith",
-        address: "Gent, Belgium",
-        deltatime: "10 min",
-        comments: true,
-        amount_of_pics: 5,
-      },
-      {
-        name: "Johnson",
-        address: "Brussels, Belgium",
-        deltatime: "35 min",
-        comments: false,
-        amount_of_pics: 2,
-      },
-      {
-        name: "Brown",
-        address: "Antwerp, Belgium",
-        deltatime: "25 min",
-        comments: true,
-        amount_of_pics: 4,
-      },
-    ],
-  },
-  {
-    name: "Vrijdagmarkt",
-    start: "16:00",
-    end: "",
-    started: true,
-    student: "Sophie",
-    comments: false,
-    current_building: 1,
-    buildings: [
-      {
-        name: "Garcia",
-        address: "Bruges, Belgium",
-        deltatime: "15 min",
-        comments: false,
-        amount_of_pics: 3,
-      },
-      {
-        name: "Miller",
-        address: "Leuven, Belgium",
-        deltatime: "20 min",
-        comments: false,
-        amount_of_pics: 2,
-      },
-      {
-        name: "Clark",
-        address: "Ostend, Belgium",
-        deltatime: "30 min",
-        comments: false,
-        amount_of_pics: 4,
-      },
-      {
-        name: "Miller",
-        address: "Leuven, Belgium",
-        deltatime: "20 min",
-        comments: false,
-        amount_of_pics: 2,
-      },
-      {
-        name: "Clark",
-        address: "Ostend, Belgium",
-        deltatime: "30 min",
-        comments: false,
-        amount_of_pics: 4,
-      },
-      {
-        name: "Miller",
-        address: "Leuven, Belgium",
-        deltatime: "20 min",
-        comments: false,
-        amount_of_pics: 2,
-      },
-      {
-        name: "Clark",
-        address: "Ostend, Belgium",
-        deltatime: "30 min",
-        comments: false,
-        amount_of_pics: 4,
-      },
-    ],
-  },
-  {
-    name: "Korenmarkt",
-    start: "16:15",
-    end: "",
-    student: "Alex",
-    started: false,
-    comments: false,
-    current_building: 0,
-    buildings: [
-      {
-        name: "Wilson",
-        address: "Veldstraat, Belgium",
-        deltatime: "5 min",
-        comments: false,
-        amount_of_pics: 3,
-      },
-      {
-        name: "Moore",
-        address: "Liege, Belgium",
-        deltatime: "45 min",
-        comments: false,
-        amount_of_pics: 5,
-      },
-      {
-        name: "Anderson",
-        address: "Mons, Belgium",
-        deltatime: "30 min",
-        comments: false,
-        amount_of_pics: 2,
-      },
-    ],
-  },
-];
 </script>
 
 <style lang="sass">

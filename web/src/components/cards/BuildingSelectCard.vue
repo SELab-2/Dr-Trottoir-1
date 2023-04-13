@@ -26,40 +26,41 @@
       />
     </template>
     <v-expand-transition>
-    <v-table v-show="garbageinfo" class="mx-2 my-2" density="compact">
-      <thead>
-        <tr>
-          <th
-            v-for="day in ['MA', 'DI', 'WO', 'DO', 'VR', 'ZA', 'ZO']"
-            class="text-center"
-          >
-            {{ day }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in ['REST', 'GFT', 'PMD', 'PAPIER']" :key="item">
-          <td class="text-center" v-for="afval in 7">
-            <v-chip v-if="afval%2 == 0">{{ item }}</v-chip>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
+      <v-table v-show="garbageinfo" class="mx-2 my-2" density="compact">
+        <thead>
+          <tr>
+            <th
+              v-for="day in ['MA', 'DI', 'WO', 'DO', 'VR', 'ZA', 'ZO']"
+              :key="day"
+              class="text-center"
+            >
+              {{ day }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in ['REST', 'GFT', 'PMD', 'PAPIER']" :key="item">
+            <td class="text-center" v-for="afval in 7" :key="afval">
+              <v-chip v-if="afval % 2 == 0">{{ item }}</v-chip>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
     </v-expand-transition>
   </BorderCard>
 </template>
 
 <script setup lang="ts">
 import BorderCard from "@/layouts/CardLayout.vue";
-import GarbageCard from "@/components/cards/GarbageCard.vue";
 
-const props = defineProps({
+defineProps({
   name: String,
   address: String,
   id: String,
-  garbageinfo : {
-    type: Boolean, 
-    default: true}
+  garbageinfo: {
+    type: Boolean,
+    default: true,
+  },
 });
 </script>
 

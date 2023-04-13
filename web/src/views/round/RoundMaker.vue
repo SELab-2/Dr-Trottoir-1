@@ -26,6 +26,7 @@
       </border-card>
       <building-select-card
         v-for="(building, i) in round"
+        :key="i"
         @remove="deleteBuildingFromRound(i, building)"
         @up="moveBuildingUp(i)"
         @down="moveBuildingDown(i)"
