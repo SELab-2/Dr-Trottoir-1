@@ -17,7 +17,7 @@ import UserOverview from "@/views/dashboard/Users.vue";
 import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
 import Auth from "@/views/dev/Auth.vue";
-import { useAuthStore, validAuth } from "@/stores/auth";
+import { useAuthStore } from "@/stores/auth";
 
 const routes = [
   {
@@ -182,11 +182,13 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  if (!useAuthStore().auth){
+    await useAuthStore().getAuth();
+  }
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-  await useAuthStore().getAuth();
   const auth = useAuthStore().auth;
 
-  if (!validAuth(auth)) {
+  if (!auth) {
     if (requiresAuth) {
       next("/");
     } else {

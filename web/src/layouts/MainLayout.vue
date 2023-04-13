@@ -177,13 +177,10 @@ const drawer = ref(true);
 const route = useRoute();
 
 // roles to know what to show
-// @ts-ignore
-const isStudent: Boolean = useAuthStore().auth?.student;
-// @ts-ignore
-const isSuperStudent: Boolean = useAuthStore().auth?.super_student;
+const isStudent: Boolean = useAuthStore().auth!.student;
+const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
 const isSyndicus = true; // TODO: check for syndicus
-// @ts-ignore
-const isAdmin: Boolean = useAuthStore().auth?.admin;
+const isAdmin: Boolean = useAuthStore().auth!.admin;
 
 // account display settings
 const studentName: string = "Jens Pots";

@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
 import { User } from "@selab-2/groep-1-orm";
-import { APIError } from "@selab-2/groep-1-query/dist/api_error";
 
 /**
  * Pinia store which holds an object which corresponds to the currently
@@ -9,7 +8,7 @@ import { APIError } from "@selab-2/groep-1-query/dist/api_error";
  */
 export const useAuthStore = defineStore("auth", () => {
   /* The state of this store. */
-  const auth: Ref<User | APIError | null> = ref(null);
+  const auth: Ref<User | null> = ref(null);
 
   /**
    * Attempt to log-in using a simple API call.
@@ -35,7 +34,7 @@ export const useAuthStore = defineStore("auth", () => {
       await getAuth();
     } catch (e) {
       // Fallback error. TODO: expand error handling.
-      auth.value = { code: 500, message: "Internal Server Error" };
+      console.log({ code: 500, message: "Internal Server Error" });
     }
   }
 
@@ -54,17 +53,17 @@ export const useAuthStore = defineStore("auth", () => {
       });
 
       // Assign result to the current store
-      auth.value = await res.json();
+      if (res.status == 200) {
+        auth.value = await res.json();
+      } else {
+        // Fallback error. TODO: expand error handling.
+        console.log(res.json());
+      }
     } catch (e) {
       // Fallback error. TODO: expand error handling.
-      auth.value = { code: 500, message: "Internal Server Error" };
+      console.log({ code: 500, message: "Internal Server Error" });
     }
   }
 
   return { auth, logIn, logOut, getAuth };
 });
-
-export const validAuth = (auth: User | APIError | null) => {
-  // @ts-ignore TODO: a better way to check if auth is of type APIError
-  return !(!auth || auth.message != null);
-};
