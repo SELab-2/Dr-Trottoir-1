@@ -19,7 +19,7 @@
 import LargeFilter from "@/components/filter/LargeFilter.vue";
 import Filterdata from "@/components/filter/FilterData";
 import { ref } from "vue";
-import { createDate, formatDate } from "@/assets/scripts/date";
+import { createDate } from "@/assets/scripts/date";
 import BuildingCard from "@/components/cards/BuildingCard.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
@@ -34,8 +34,8 @@ const filter_data = ref<Filterdata>({
   sort_by: "",
   sort_ascending: true,
   filters: [],
-  start_day: formatDate(new Date()),
-  end_day: formatDate(new Date()),
+  start_day: new Date().toLocaleDateString("nl"),
+  end_day: new Date().toLocaleDateString("nl"),
 });
 
 const filterIndex = ref<number>(0);

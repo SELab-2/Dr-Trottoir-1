@@ -161,12 +161,11 @@
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
-import { formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 
-const today = formatDate(new Date());
+const today = new Date().toLocaleDateString("nl");
 
 // reactive state to show the drawer or not
 const drawer = ref(true);

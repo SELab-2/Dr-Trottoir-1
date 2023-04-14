@@ -2,7 +2,7 @@
   <v-card
     color="background"
     :title="mockround.name"
-    :subtitle="date_to_dd_MM_yyyy(mockround.due_date)"
+    :subtitle="mockround.due_date.toLocaleDateString('nl')"
     variant="flat"
     class="ma-1"
   >
@@ -185,7 +185,7 @@ import StartRoundPopup from "@/components/popups/StartRoundPopupContent.vue";
 import { ref } from "vue";
 import router from "@/router";
 import RoundBuilding from "@/components/models/RoundBuilding";
-import { date_to_hh_mm, date_to_dd_MM_yyyy } from "@/assets/scripts/format";
+import { date_to_hh_mm } from "@/assets/scripts/format";
 import BorderCard from "@/layouts/CardLayout.vue";
 
 // add the role, will be replaced with actual athentication
