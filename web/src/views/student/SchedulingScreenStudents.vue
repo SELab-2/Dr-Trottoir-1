@@ -151,18 +151,20 @@ console.log(days);
 
 async function loadSchedule(day: Date): Promise<UpdatedSchedule[]> {
   const date = new Date(day);
-  const shedulesOrError: Schedule[] | APIError =
-    await new ScheduleQuery().getAll({
-      user_id: 58, // TODO change (used for testing)
-      after: new Date(date.setHours(0, 0, 0, 0)),
-      before: new Date(date.setHours(23, 59, 59, 999)),
-    });
-  // @ts-ignore
-  if (shedulesOrError.message == null) {
-    // @ts-ignore
-    return shedulesOrError;
+  try {
+    const schedules: Schedule[]  =
+      await new ScheduleQuery().getAll({
+        user_id: 58, // TODO change (used for testing)
+        after: new Date(date.setHours(0, 0, 0, 0)),
+        before: new Date(date.setHours(23, 59, 59, 999)),
+      });
+      return schedules as UpdatedSchedule[];
   }
-  // TODO: handle error messages
+  catch (e) {
+    // TODO: handle error messages
+    alert(e);
+  }
+
   return [];
 }
 
