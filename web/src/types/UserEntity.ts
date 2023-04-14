@@ -77,11 +77,10 @@ export class UserEntity implements TableEntity<UserEntity> {
     });
   }
 
-  route(): { name: string; params: { id: number; isadmin: boolean } } {
+  route(): { name: string; params: { id: number } } {
     return {
       name: "account_settings",
-      params: { id: this.id, isadmin: false },
+      params: { id: this.id },
     };
-    // TODO: remove :isadmin when auth is in frontend
   }
 }
