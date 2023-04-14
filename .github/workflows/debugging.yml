@@ -80,5 +80,11 @@ jobs:
                     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: "Verify the code compiles"
                 run: npm run build
-            -   name: "Cleanup"
-                uses: ./.github/workflows/cleanup.yml
+
+    cleanup:
+        if: ${{ always() }}
+        needs: [debugging-run, lint_test]
+        runs-on: [self-hosted]
+        steps:
+            -   run: scripts/cleanup.sh
+                shell: bash
