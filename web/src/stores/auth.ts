@@ -78,7 +78,7 @@ export const useAuthStore = defineStore("auth", () => {
         );
 
         // Assign result to the current store
-        if (res.status == 200) {
+        if (res.ok) {
           auth.value = await res.json();
         } else {
           // Fallback error. TODO: expand error handling.
