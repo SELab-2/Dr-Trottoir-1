@@ -82,7 +82,7 @@ export const useAuthStore = defineStore("auth", () => {
           auth.value = await res.json();
         } else {
           // Fallback error. TODO: expand error handling.
-          console.log(res.json());
+          console.log(await res.json());
           auth.value = null;
         }
       }
