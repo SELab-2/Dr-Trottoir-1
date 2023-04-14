@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/account/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
@@ -24,11 +25,27 @@ const routes = [
     path: "/",
     component: LoginScreen,
     name: "login",
+    meta: {
+      auth: (
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
   },
   {
     path: "/dev/auth",
     component: Auth,
     name: "auth",
+    meta: {
+      auth: (
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
   },
   {
     component: MainLayout,
@@ -41,7 +58,12 @@ const routes = [
         props: true,
         meta: {
           title: "",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student || superstudent || syndicus || admin,
         },
       },
       {
@@ -50,7 +72,12 @@ const routes = [
         component: SchedulingScreenStudent,
         meta: {
           title: "Planning student",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student,
         },
       },
       {
@@ -59,7 +86,12 @@ const routes = [
         component: RoundFollowup,
         meta: {
           title: "Opvolging rondes",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
       {
@@ -68,7 +100,12 @@ const routes = [
         component: RoundDetail,
         meta: {
           title: "",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student || superstudent || admin,
         },
       },
       {
@@ -77,7 +114,12 @@ const routes = [
         component: RoundPlanner,
         meta: {
           title: "Ronde plannen",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
       {
@@ -86,7 +128,12 @@ const routes = [
         component: RoundMaker,
         meta: {
           title: "Ronde maken",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
       {
@@ -96,7 +143,12 @@ const routes = [
         props: true,
         meta: {
           title: "",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student,
         },
       },
       {
@@ -106,7 +158,12 @@ const routes = [
         props: true,
         meta: {
           title: "",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || syndicus || admin,
         },
       },
       {
@@ -115,7 +172,12 @@ const routes = [
         component: BuildingMaker,
         meta: {
           title: "Nieuw gebouw",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
       {
@@ -124,7 +186,12 @@ const routes = [
         component: BuildingFollowup,
         meta: {
           title: "Opvolging gebouwen",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
       {
@@ -133,7 +200,12 @@ const routes = [
         component: GarbageMaker,
         meta: {
           title: "",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student || superstudent || syndicus || admin,
         },
       },
       {
@@ -142,7 +214,12 @@ const routes = [
         name: "user_overview",
         meta: {
           title: "Gebruikers",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => admin,
         },
       },
       {
@@ -151,7 +228,12 @@ const routes = [
         component: UserCreation,
         meta: {
           title: "Nieuwe gebruiker",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => admin,
         },
       },
       {
@@ -160,7 +242,12 @@ const routes = [
         name: "building_overview",
         meta: {
           title: "Gebouwen",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => admin,
         },
       },
       {
@@ -169,7 +256,12 @@ const routes = [
         name: "round_overview",
         meta: {
           title: "Rondes",
-          requiresAuth: true,
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
     ],
@@ -185,18 +277,42 @@ router.beforeEach(async (to, from, next) => {
   if (!useAuthStore().auth) {
     await useAuthStore().getAuth();
   }
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+
+  const checkAuth = to.meta.auth as (
+    student: boolean,
+    superstudent: boolean,
+    syndicus: boolean,
+    admin: boolean,
+  ) => boolean;
+  if (!checkAuth) {
+    console.error("Route has no authentication function.");
+  }
+
   const auth = useAuthStore().auth;
 
   if (!auth) {
-    if (requiresAuth) {
+    const checked: boolean = checkAuth(false, false, false, false);
+    if (!checked) {
       next("/");
     } else {
       next();
     }
   } else {
-    // TODO: check administrator, syndicus & superstudent pages
-    next();
+    const isStudent = true;
+    const isSuperStudent = true;
+    const isSyndicus = true;
+    const isAdmin = true;
+    const checked: boolean = checkAuth(
+      isStudent,
+      isSuperStudent,
+      isSyndicus,
+      isAdmin,
+    );
+    if (!checked) {
+      next("/");
+    } else {
+      next();
+    }
   }
 });
 
