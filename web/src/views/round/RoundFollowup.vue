@@ -11,8 +11,10 @@
       v-for="(round, i) in filtered_data()"
       :key="i"
       :round_name="round.name"
-      :round_start="round.start_time? round.start_time.toLocaleTimeString('nl') : ''"
-      :round_end="round.end_time? round.end_time.toLocaleTimeString('nl'): ''"
+      :round_start="
+        round.start_time ? round.start_time.toLocaleTimeString('nl') : ''
+      "
+      :round_end="round.end_time ? round.end_time.toLocaleTimeString('nl') : ''"
       :round_started="round.start_time ? true : false"
       :student_name="round.student"
       :building_index="completed_buildings(round)"
