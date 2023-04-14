@@ -1,0 +1,16 @@
+name: Cleanup
+on:
+    workflow_call:
+
+jobs:
+    cleanup:
+        name: "Clean up the artifacts"
+        runs-on: [self-hosted]
+        steps:
+            - name: "Clean up docker artifacts"
+              run: |
+                  docker system prune -af
+                  docker network prune -f
+                  docker volume prune -f
+                  docker container prune -f
+                  docker image prune -af

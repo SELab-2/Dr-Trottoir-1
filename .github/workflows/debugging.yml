@@ -1,0 +1,84 @@
+name: Debugging runs
+on:
+    workflow_dispatch:
+    push:
+    pull_request:
+        branches:
+            - 'develop'
+            - 'main'
+            - 'api/**'
+jobs:
+    debugging-run:
+        runs-on: [ self-hosted ]
+        defaults:
+            run:
+                working-directory: ./api
+        env:
+            DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/main"
+            NODE_ENV: "test"
+
+        services:
+            postgres:
+                image: postgres
+                # Set health checks to wait until postgres has started
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
+                env:
+                    POSTGRES_DB: main
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+        steps:
+            -   name: "Checkout the repo code"
+                uses: actions/checkout@v3
+            -   uses: actions/setup-node@v3
+                with:
+                    node-version: '16.x'
+                    registry-url: 'https://npm.pkg.github.com'
+                    scope: '@selab-2'
+            -   name: "List contents"
+                run: ls -lR
+            -   name: "Clean install"
+                run: npm ci
+                env:
+                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            -   name: "Setup the database"
+                working-directory: ./orm
+                run: |
+                    npm install
+                    npx prisma db push
+                    cd ../mock
+                    npm install
+                    npm run start
+            -   name: "Execute tests"
+                run: npm run test
+
+    lint_test:
+        runs-on: [ self-hosted ]
+        defaults:
+            run:
+                working-directory: ./api
+        steps:
+            -   name: "Checkout"
+                uses: actions/checkout@v3
+            -   uses: actions/setup-node@v3
+                with:
+                    node-version: '16.x'
+                    registry-url: 'https://npm.pkg.github.com'
+                    scope: '@selab-2'
+            -   name: "Install dependencies"
+                run: npm ci
+                env:
+                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            -   name: "Check for linting and errors"
+                run: npm run lint
+                env:
+                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            -   name: "Verify the code compiles"
+                run: npm run build
+            -   name: "Cleanup"
+                uses: ./.github/workflows/cleanup.yml
