@@ -88,15 +88,44 @@
     <!-- Section to pick the roles -->
     <BorderCard v-if="isAdmin" class="mt-4" prepend-icon="mdi-account-multiple">
       <template v-slot:title> Rollen </template>
-      <v-select
-        v-if="edit"
-        :class="spacing"
-        chips
-        label="Rollen"
-        :items="['Student', 'Superstudent', 'Syndicus', 'Admin']"
-        multiple
-        v-model="roles"
-      ></v-select>
+      <v-row v-if="edit" class="ml-1 mb-0">
+        <v-col>
+          <v-checkbox
+            v-model="roles"
+            label="Student"
+            value="Student"
+            color="primary"
+            density="compact"
+            hide-details
+          />
+          <v-checkbox
+            v-model="roles"
+            label="Superstudent"
+            value="Superstudent"
+            color="primary"
+            density="compact"
+            hide-details
+          />
+        </v-col>
+        <v-col>
+          <v-checkbox
+            v-model="roles"
+            label="Syndicus"
+            value="Syndicus"
+            color="primary"
+            density="compact"
+            hide-details
+          />
+          <v-checkbox
+            v-model="roles"
+            label="Admin"
+            value="Admin"
+            color="primary"
+            density="compact"
+            hide-details
+          />
+        </v-col>
+      </v-row>
       <v-list lines="one" density="compact" v-if="!edit" class="mx-10">
         <v-list-item
           v-for="role in roles"
