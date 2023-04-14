@@ -33,7 +33,7 @@ async function loadSchedules(): Promise<Schedule[]> {
     const schedulesOrErr: Schedule[] = await new ScheduleQuery().getAll();
     let array: Schedule[] = [];
     for (let schedule of schedulesOrErr) {
-      schedule.day = new Date(schedule.day).toLocaleDateString();
+      schedule.day = new Date(schedule.day).toLocaleDateString("nl");
       let s: Schedule = new Schedule(schedule);
       // Every building in the round has to be finished for the whole round to be finished
       let progress: [] = await loadProgress(s.id);

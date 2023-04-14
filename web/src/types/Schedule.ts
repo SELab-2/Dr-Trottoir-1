@@ -72,7 +72,10 @@ export class Schedule implements TableEntity<Schedule> {
     ].map((e) => new Header<Schedule>(e));
   }
 
-  route(): string {
-    return `/ronde/${this.id}`;
+  route(): { name: string; params: { id: number } } {
+    return {
+      name: "round_detail",
+      params: { id: this.id },
+    };
   }
 }

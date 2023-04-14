@@ -3,6 +3,7 @@ import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import { User } from "./User";
 
+
 export class Building implements TableEntity<Building> {
   id: number;
   name: string;
@@ -56,7 +57,10 @@ export class Building implements TableEntity<Building> {
     ].map((e) => new Header<Building>(e));
   }
 
-  route(): string {
-    return `/gebouw/${this.id}`;
+  route(): { name: string; params: { id: number; date: string } } {
+    return {
+      name: "building_id_detail",
+      params: { id: this.id, date: new Date().toLocaleDateString("nl") },
+    };
   }
 }
