@@ -53,7 +53,7 @@ export const useAuthStore = defineStore("auth", () => {
       await getAuth();
     } catch (e) {
       // Fallback error. TODO: expand error handling.
-      console.log({ code: 500, message: "Internal Server Error" });
+      alert("Internal Server Error (logging In)");
     }
   }
 
@@ -81,14 +81,14 @@ export const useAuthStore = defineStore("auth", () => {
         if (res.ok) {
           auth.value = await res.json();
         } else {
-          // Fallback error. TODO: expand error handling.
-          console.log(await res.json());
+          // Fallback APIError
           auth.value = null;
         }
       }
     } catch (e) {
+      console.log(e);
       // Fallback error. TODO: expand error handling.
-      console.log({ code: 500, message: "Internal Server Error" });
+      alert("Internal Server Error (fetching Auth)");
       auth.value = null;
     }
   }
