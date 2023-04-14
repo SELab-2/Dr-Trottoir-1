@@ -183,7 +183,8 @@ const isSyndicus = true; // TODO: check for syndicus
 const isAdmin: Boolean = useAuthStore().auth!.admin;
 
 // account display settings
-const studentName: string = "Jens Pots";
+const studentName: string =
+  useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
 function roles(): string {
   let str = "";
   if (isStudent) {

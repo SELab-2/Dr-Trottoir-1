@@ -12,7 +12,7 @@ const defaultUser: User = {
   phone: "+000000000",
   address_id: 0,
   student: true,
-  super_student: true,
+  super_student: false,
   admin: true,
   hash: "?",
   salt: "?",
