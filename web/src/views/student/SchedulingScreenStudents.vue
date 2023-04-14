@@ -25,7 +25,10 @@
           class="mb-3 mx-1"
           :title="schedule.round.name"
           prepend-icon="mdi-transit-detour"
-          @click="redirect_to_detail()"
+          @click="
+            current_id = schedule.round_id;
+            redirect_to_detail();
+          "
         >
           <!-- Time -->
           <template v-slot:subtitle>
@@ -44,16 +47,19 @@
           <!-- Status -->
           <template v-slot:append>
             <v-btn
-              v-if="calculateProgress(schedule.round.buildings) === 0"
+              v-if="schedule.progress === 0"
               color="primary"
-              v-on:click.stop="snackbar = !snackbar"
-              :variant="day.day != today ? 'flat' : 'elevated'"
-              :disabled="day.day != today"
+              v-on:click.stop="
+                snackbar = !snackbar;
+                current_id = schedule.round_id;
+              "
+              :variant="day.day !== today ? 'flat' : 'elevated'"
+              :disabled="day.day !== today"
             >
               Start ronde</v-btn
             >
             <v-chip
-              v-else-if="calculateProgress(schedule.round.buildings) === 100"
+              v-else-if="schedule.progress === schedule.round.buildings.length"
               label
               color="success"
             >
@@ -61,7 +67,9 @@
               Klaar
             </v-chip>
             <v-chip v-else label color="warning">
-              Bezig {{ 0 }}/{{ schedule.round.buildings.length }}
+              Bezig {{ schedule.progress }}/{{
+                schedule.round.buildings.length
+              }}
             </v-chip>
           </template>
         </BorderCard>
@@ -94,32 +102,50 @@
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
-import { ScheduleQuery } from "@selab-2/groep-1-query/dist/schedule";
-import { Schedule } from "@selab-2/groep-1-orm";
-import { Round } from "@selab-2/groep-1-orm";
-import { Building } from "@selab-2/groep-1-orm";
-import { APIError } from "@selab-2/groep-1-query/dist/api_error";
+import { ScheduleQuery, ProgressQuery } from "@selab-2/groep-1-query";
+import { Schedule, Round, Building, Progress } from "@selab-2/groep-1-orm";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
 // the router constant
 const router = useRouter();
 
+const snackbar = ref(false);
+const current_id = ref(0);
 function redirect_to_detail() {
-  router.push({ name: "round_detail", params: { id: 0 } });
+  router.push({ name: "round_detail", params: { id: current_id.value } });
 }
 
 // https://stackoverflow.com/questions/1643320/get-month-name-from-date
 const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
 
-const snackbar = ref(false);
+async function calculateProgress(
+  buildings: { building: Building }[],
+  id: number,
+  date: Date,
+): Promise<number> {
+  const progresses: Progress[] = await new ProgressQuery().getAll({
+    user: useAuthStore().auth!.id,
+    schedule: id,
+    arrived_after: new Date(date.setHours(0, 0, 0, 0)),
+    left_before: new Date(date.setHours(23, 59, 59, 999)),
+  });
+  let matched = 0;
+  for (const building of buildings) {
+    for (const progress of progresses) {
+      if (progress.building_id == building.building.id) {
+        matched += 1;
+      }
+    }
+  }
+  return matched;
+}
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const calculateProgress = (buildings: Building[]) => {
-  return 0; // TODO: calculate the amount of buildings done
+type UpdatedSchedule = Schedule & {
+  progress: number;
+  round: Round & { buildings: { building: Building }[] };
 };
-
-type UpdatedSchedule = Schedule & { round: Round & { buildings: Building[] } };
 
 // TODO change (used for testing)
 const today = new Date("2023-04-01T18:47:29.939Z");
@@ -147,20 +173,25 @@ const days: { name: string; day: Date; schedule: UpdatedSchedule[] }[] = [
     schedule: await loadSchedule(overmorrow),
   },
 ];
-console.log(days);
 
 async function loadSchedule(day: Date): Promise<UpdatedSchedule[]> {
   const date = new Date(day);
   try {
-    const schedules: Schedule[]  =
-      await new ScheduleQuery().getAll({
-        user_id: 58, // TODO change (used for testing)
-        after: new Date(date.setHours(0, 0, 0, 0)),
-        before: new Date(date.setHours(23, 59, 59, 999)),
-      });
-      return schedules as UpdatedSchedule[];
-  }
-  catch (e) {
+    const schedules: UpdatedSchedule[] = (await new ScheduleQuery().getAll({
+      user_id: 58, // TODO change (used for testing)
+      //user_id: useAuthStore().auth!.id,
+      after: new Date(date.setHours(0, 0, 0, 0)),
+      before: new Date(date.setHours(23, 59, 59, 999)),
+    })) as UpdatedSchedule[];
+    for (let schedule of schedules) {
+      schedule.progress = await calculateProgress(
+        schedule.round.buildings,
+        schedule.id,
+        date,
+      );
+    }
+    return schedules;
+  } catch (e) {
     // TODO: handle error messages
     alert(e);
   }
