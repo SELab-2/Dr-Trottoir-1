@@ -6,7 +6,7 @@
         class="me-auto"
         lines="two"
         :title="`${firstname} ${lastname}`"
-        subtitle="Superstudent"
+        :subtitle="roles.join(' ')"
       >
         <template v-slot:prepend>
           <Avatar :name="`${firstname} ${lastname}`" />
@@ -213,40 +213,51 @@
 </template>
 <script lang="ts" setup>
 import ContactForm from "@/components/forms/ContactForm.vue";
-import Address from "@/components/models/Address";
 import AddressFrom from "@/components/forms/AddressForm.vue";
 import Contact from "@/components/models/Contact";
 import Avatar from "@/components/Avatar.vue";
-import { ref } from "vue";
+import { Ref, ref } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import { useAuthStore } from "@/stores/auth";
+import { getRoles } from "@/assets/scripts/roles";
+import { UserQuery } from "@selab-2/groep-1-query";
+import { User, Address } from "@selab-2/groep-1-orm";
 
 // define the spacing for the input fields
 const spacing: String = "mx-4";
-defineProps(["gebruikerid"]);
+const props = defineProps(["id"]);
 // @ts-ignore
 const isAdmin: Boolean = useAuthStore().auth?.admin;
+
+const user: Ref<User & { address: Address }> = ref({});
+try {
+  user.value = await new UserQuery().getOne(props.id);
+} catch (e) {
+  alert(e);
+}
+
 // reactive state for name
-const firstname = ref("Mats");
-const lastname = ref("Van Belle");
+const firstname = ref(user.value.first_name);
+const lastname = ref(user.value.last_name);
 // reactive state for the roles
-const roles = ref<String[]>(["Student", "Superstudent"]);
+const roles = ref<String[]>(getRoles(user.value));
+
 // reactive state to keep track if we are edeting or not
 const edit = ref(false);
 // contact data
-const default_phone = "+32 412 34 56 78";
-const default_email = "mats.vanbelle@example.com";
+const default_phone = user.value.phone;
+const default_email = user.value.email;
 const contact = ref<Contact>({
   phone: default_phone,
   email: default_email,
 });
 // address data
 const address = ref<Address>({
-  street: "Krijgslaan",
-  number: 281,
-  city: "Gent",
-  zip_code: 9000,
+  street: user.value.address.street,
+  number: user.value.address.number,
+  city: user.value.address.city,
+  zip_code: user.value.address.zip_code,
 });
 // reactive states for the new password
 const password1 = ref("");
