@@ -1,9 +1,5 @@
 <template>
-  <v-overlay
-    :model-value="true"
-    persistent
-    class="align-center justify-center"
-  >
+  <v-overlay :model-value="true" persistent class="align-center justify-center">
     <v-progress-circular
       color="primary"
       indeterminate

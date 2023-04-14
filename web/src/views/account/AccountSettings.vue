@@ -12,20 +12,20 @@
           <Avatar :name="`${firstname} ${lastname}`" />
         </template>
       </v-list-item>
-      <div v-if='isAdmin || id == user_id'>
+      <div v-if="isAdmin || id == user_id">
         <v-btn
           v-if="!edit"
           prepend-icon="mdi-pencil"
           @click="edit = !edit"
           color="primary"
-        >Bewerk Account</v-btn
+          >Bewerk Account</v-btn
         >
         <v-btn
           v-else
           prepend-icon="mdi-close"
           @click="edit = !edit"
           color="warning"
-        >Annuleer aanpassingen</v-btn
+          >Annuleer aanpassingen</v-btn
         >
       </div>
     </div>
@@ -182,7 +182,7 @@
           @click="edit = !edit"
           color="success"
           class="mx-5 my-3"
-        >Sla op</v-btn
+          >Sla op</v-btn
         >
       </div>
     </BorderCard>
@@ -207,7 +207,7 @@
           @click="edit = !edit"
           color="error"
           class="mx-5 my-3"
-        >Verwijder account</v-btn
+          >Verwijder account</v-btn
         >
       </div>
     </BorderCard>
@@ -221,7 +221,7 @@ import ContactForm from "@/components/forms/ContactForm.vue";
 import AddressFrom from "@/components/forms/AddressForm.vue";
 import Contact from "@/components/models/Contact";
 import Avatar from "@/components/Avatar.vue";
-import { Ref, ref  } from "vue";
+import { Ref, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { getRoles } from "@/assets/scripts/roles";
 import { UserQuery } from "@selab-2/groep-1-query";
@@ -240,8 +240,8 @@ try {
 } catch (e) {
   alert(e);
 }
-//const delay = ms => new Promise(res => setTimeout(res, ms));
-//await delay(5000);
+const delay = ms => new Promise(res => setTimeout(res, ms));
+await delay(5000);
 
 // reactive state for name
 const firstname = ref(user.value.first_name);
