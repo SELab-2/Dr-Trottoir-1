@@ -32,11 +32,9 @@ jobs:
                 #                run: npm run test
                 env:
                     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    cleanup:
-        if: ${{ always() }}
-        needs: web-lint
-        runs-on: self-hosted
-        steps:
-            -   run: scripts/cleanup.sh -p
+            -   name: "Cleanup"
+                if: always()
+                run: |
+                    chmod +x ../scripts/cleanup.sh
+                    ../scripts/cleanup.sh -p
                 shell: bash

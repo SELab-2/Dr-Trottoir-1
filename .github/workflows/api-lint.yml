@@ -32,11 +32,10 @@ jobs:
                     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: "Verify the code compiles"
                 run: npm run build
-
-    cleanup:
-        if: ${{ always() }}
-        needs: lint-build
-        runs-on: self-hosted
-        steps:
-            -   run: scripts/cleanup.sh -p
+            -   name: "Cleanup"
+                if: always()
+                run: |
+                    chmod +x ../scripts/cleanup.sh
+                    ../scripts/cleanup.sh -p
                 shell: bash
+

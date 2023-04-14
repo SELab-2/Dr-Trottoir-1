@@ -30,11 +30,9 @@ jobs:
                     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: "Execute tests"
                 run: npm run test
-
-    cleanup:
-        if: ${{ always() }}
-        needs: [ api-test ]
-        runs-on: [ self-hosted ]
-        steps:
-            -   run: scripts/cleanup.sh -pd
+            -   name: "Cleanup"
+                if: always()
+                run: |
+                    chmod +x ../scripts/cleanup.sh
+                    ../scripts/cleanup.sh -p
                 shell: bash
