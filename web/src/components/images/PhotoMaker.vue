@@ -70,6 +70,4 @@ const photo = ref<Photo>({
   comments: "",
   label: "",
 });
-
-const imageUrl = ref("");
 </script>
