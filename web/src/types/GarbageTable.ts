@@ -64,7 +64,7 @@ export class GarbageTable extends TableEntity<DetailedDay> {
     return GarbageTable.headers();
   }
 
-  route(): string {
+  route():  { name: string; params: object; } {
     throw new Error("Method not implemented.");
   }
 }
