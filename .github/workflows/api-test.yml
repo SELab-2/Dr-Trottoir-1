@@ -32,8 +32,6 @@ jobs:
                     POSTGRES_USER: postgres
                     POSTGRES_PASSWORD: postgres
         steps:
-            -   name: "List contents"
-                run: ls -lR
             -   name: "Checkout the repo code"
                 uses: actions/checkout@v3
             -   uses: actions/setup-node@v3

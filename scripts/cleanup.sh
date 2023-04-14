@@ -14,11 +14,7 @@ done
 
 if [ "$PURGE_DOCKER" = true ] ; then
     # remove all docker artifacts
-    docker system prune -af
-    docker network prune -f
-    docker volume prune -f
-    docker container prune -f
-    docker image prune -af
+    docker system prune -af --volumes
 fi
 
 if [ "$PURGE_RUNNER" = true ] ; then
