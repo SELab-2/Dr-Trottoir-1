@@ -11,12 +11,15 @@
     />
     <div v-if="get() === null" class="centre text-center">
       <v-icon icon="mdi-alert-circle" size="x-large" />
-      <h2>Geen gegevens voor dit gebouw op {{ selectedDate.toLocaleDateString('nl') }}.</h2>
+      <h2>
+        Geen gegevens voor dit gebouw op
+        {{ selectedDate.toLocaleDateString("nl") }}.
+      </h2>
       <p>Selecteer een ander gebouw of kies een andere datum.</p>
     </div>
     <div v-else>
       <div class="centre px-4 mb-4">
-        <h2>Bezoek ({{ selectedDate.toLocaleDateString('nl') }})</h2>
+        <h2>Bezoek ({{ selectedDate.toLocaleDateString("nl") }})</h2>
         <button
           @click="
             router.push({
@@ -83,10 +86,10 @@ const format = (date: Date) => {
   const year = date.getFullYear();
 
   return `${day}/${month}/${year}`;
-}
+};
 
 function get(): any {
-  if (selectedDate.value.toLocaleDateString('nl') === mockbuilding.date) {
+  if (selectedDate.value.toLocaleDateString("nl") === mockbuilding.date) {
     return mockbuilding;
   }
   return null;
@@ -95,7 +98,7 @@ function get(): any {
 function change() {
   router.push({
     name: "building_id_detail",
-    params: { id: props.id, date: selectedDate.value.toLocaleDateString('nl') },
+    params: { id: props.id, date: selectedDate.value.toLocaleDateString("nl") },
   });
 }
 

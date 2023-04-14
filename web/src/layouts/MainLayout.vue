@@ -164,7 +164,7 @@ import { ref } from "vue";
 import { useRoute } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 
-const today = new Date().toLocaleDateString('nl');
+const today = new Date().toLocaleDateString("nl");
 
 // reactive state to show the drawer or not
 const drawer = ref(true);

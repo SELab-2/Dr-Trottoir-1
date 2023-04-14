@@ -34,8 +34,8 @@ const filter_data = ref<Filterdata>({
   sort_by: "",
   sort_ascending: true,
   filters: [],
-  start_day: new Date().toLocaleDateString('nl'),
-  end_day: new Date().toLocaleDateString('nl'),
+  start_day: new Date().toLocaleDateString("nl"),
+  end_day: new Date().toLocaleDateString("nl"),
 });
 
 const filterIndex = ref<number>(0);
