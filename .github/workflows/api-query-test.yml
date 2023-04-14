@@ -36,5 +36,5 @@ jobs:
         needs: [ api-test ]
         runs-on: [ self-hosted ]
         steps:
-            -   run: scripts/cleanup.sh -p
+            -   run: scripts/cleanup.sh -pd
                 shell: bash

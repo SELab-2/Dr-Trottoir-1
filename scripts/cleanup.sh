@@ -1,23 +1,28 @@
 #!/usr/bin/env bash
 
-PURGE=false
+PURGE_RUNNER=false
+PURGE_DOCKER=false
 
-while getopts "p" flag
+while getopts "pd" flag
 do
     case "${flag}" in
-        p) PURGE=true;;
+        p) PURGE_RUNNER=true;;
+        d) PURGE_DOCKER=true;;
         *) ;;
     esac
 done
 
-# remove all docker artifacts
-docker system prune -af
-docker network prune -f
-docker volume prune -f
-docker container prune -f
-docker image prune -af
+if [ "$PURGE_DOCKER" = true ] ; then
+    # remove all docker artifacts
+    docker system prune -af
+    docker network prune -f
+    docker volume prune -f
+    docker container prune -f
+    docker image prune -af
+fi
 
-if [ "$PURGE" = true ] ; then
+if [ "$PURGE_RUNNER" = true ] ; then
+    # Purge all files runner stores
     echo "Purging runner files"
     rm -rf ./*
 fi
