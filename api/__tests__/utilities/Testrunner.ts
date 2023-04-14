@@ -1,5 +1,7 @@
 import request from "supertest";
 import { expect } from "@jest/globals";
+import { constants } from "http2";
+import * as http2 from "http2";
 
 /**
  * Describes different authentication levels.
@@ -45,6 +47,8 @@ const credentialsMap: {
 export class Testrunner {
     // reference to the server
     private readonly server: request.SuperTest<request.Test>;
+    private authenticationLevel: AuthenticationLevel =
+        AuthenticationLevel.UNAUTHORIZED;
 
     /**
      * @param server reference to the server wrapped in SuperTest
@@ -53,22 +57,24 @@ export class Testrunner {
         this.server = server;
     }
 
+    authLevel = (authLevel: AuthenticationLevel) => {
+        this.authenticationLevel = authLevel;
+    };
+
     /**
      * Acquires authentication if required and performs a GET request to the passed URL.
      * Also performs verification of the response.
      * @param url url to test
      * @param expectedData data that must be received
-     * @param authLevel authentication level to run the method under
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
      */
     get = async (
         url: string,
         expectedData: {}[] = [],
-        authLevel: AuthenticationLevel = AuthenticationLevel.UNAUTHORIZED,
-        statusCode: number = 200,
+        statusCode: number = constants.HTTP_STATUS_OK,
     ): Promise<request.Response> => {
-        const cookie = await this.authenticate(authLevel);
+        const cookie = await this.authenticate();
 
         const response = await this.server.get(url).set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
@@ -83,17 +89,15 @@ export class Testrunner {
      * Also performs verification on the response.
      * @param url URL to POST to
      * @param data data to be sent
-     * @param authLevel authentication level to run the method under
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
      */
     post = async (
         url: string,
         data: {},
-        authLevel: AuthenticationLevel = AuthenticationLevel.UNAUTHORIZED,
-        statusCode: number = 201,
+        statusCode: number = constants.HTTP_STATUS_CREATED,
     ): Promise<request.Response> => {
-        const cookie = await this.authenticate(authLevel);
+        const cookie = await this.authenticate();
 
         const response = await this.server
             .post(url)
@@ -114,17 +118,15 @@ export class Testrunner {
      * Also performs verification on the response.
      * @param url URL to PATCH to
      * @param data data to be sent
-     * @param authLevel authentication level to run the method under
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
      */
     patch = async (
         url: string,
         data: {},
-        authLevel: AuthenticationLevel = AuthenticationLevel.UNAUTHORIZED,
-        statusCode: number = 200,
+        statusCode: number = constants.HTTP_STATUS_OK,
     ) => {
-        const cookie = await this.authenticate(authLevel);
+        const cookie = await this.authenticate();
 
         const response = await this.server
             .patch(url)
@@ -141,16 +143,14 @@ export class Testrunner {
      * Acquires authentication if required and performs a DELETE  request to the URL.
      * Also performs verification on the response.
      * @param url URL to perform DELETE on
-     * @param authLevel authentication level to run the method under
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
      */
     delete = async (
         url: string,
-        authLevel: AuthenticationLevel = AuthenticationLevel.UNAUTHORIZED,
-        statusCode: number = 200,
+        statusCode: number = constants.HTTP_STATUS_OK,
     ): Promise<request.Response> => {
-        const cookie = await this.authenticate(authLevel);
+        const cookie = await this.authenticate();
 
         const response = await this.server.delete(url).set("Cookie", [cookie]);
 
@@ -162,20 +162,18 @@ export class Testrunner {
     /**
      * Obtains cookies from the server for authentication
      */
-    private authenticate = async (
-        authLevel: AuthenticationLevel,
-    ): Promise<string> => {
+    private authenticate = async (): Promise<string> => {
         // if unauthorized, no cookies are set
-        if (authLevel === AuthenticationLevel.UNAUTHORIZED) {
+        if (this.authenticationLevel === AuthenticationLevel.UNAUTHORIZED) {
             return "";
         }
-        const credentials = credentialsMap[authLevel];
+        const credentials = credentialsMap[this.authenticationLevel];
         const response = await this.server
             .post("/auth/login")
             .send(credentials);
 
         // verify we got the correct response
-        expect(response.status).toEqual(302);
+        expect(response.status).toEqual(constants.HTTP_STATUS_FOUND);
         expect(response.headers).toHaveProperty("set-cookie");
 
         return response.headers["set-cookie"].pop().split(";")[0];

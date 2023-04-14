@@ -9,8 +9,12 @@ export async function initialiseAction() {
         description: "action 2",
     };
 
+    const action3 = {
+        description: "Unlinked action",
+    };
+
     await prisma.action.createMany({
-        data: [action1, action2],
+        data: [action1, action2, action3],
     });
 }
 
