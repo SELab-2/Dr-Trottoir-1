@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
 import { Building } from "@/types/Building";
-import { BuildingQuery } from "../../../../api_query/src/building";
+import { BuildingQuery } from "@selab-2/groep-1-query";
 import { ref } from "vue";
 
 const buildings = ref<Building[]>(await loadBuildings());
@@ -23,12 +23,13 @@ const buildings = ref<Building[]>(await loadBuildings());
 async function loadBuildings(): Promise<Building[]> {
   try {
     const buildingsOrErr: Building[] = await new BuildingQuery().getAll();
-    let array = [];
+    let array: Building[] = [];
     for (let building of buildingsOrErr) {
       array.push(new Building(building));
     }
     return array;
   } catch (e) {
+    alert("Kon gebouwen niet ophalen, probeer het later opnieuw.");
     return [];
   }
 }

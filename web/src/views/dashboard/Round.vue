@@ -23,8 +23,7 @@
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
 import { Schedule } from "@/types/Schedule";
-import { ScheduleQuery } from "../../../../api_query/src/schedule";
-import { ProgressQuery } from "../../../../api_query/src/progress";
+import { ScheduleQuery, ProgressQuery } from "@selab-2/groep-1-query";
 import { ref } from "vue";
 
 const schedules = ref<Schedule[]>(await loadSchedules());
@@ -32,7 +31,7 @@ const schedules = ref<Schedule[]>(await loadSchedules());
 async function loadSchedules(): Promise<Schedule[]> {
   try {
     const schedulesOrErr: Schedule[] = await new ScheduleQuery().getAll();
-    let array = [];
+    let array: Schedule[] = [];
     for (let schedule of schedulesOrErr) {
       schedule.day = new Date(schedule.day).toLocaleDateString();
       let s: Schedule = new Schedule(schedule);
@@ -55,21 +54,23 @@ async function loadSchedules(): Promise<Schedule[]> {
     }
     return array;
   } catch (e) {
+    alert("Kon rondes niet ophalen, probeer het later opnieuw.");
     return [];
   }
 }
 
-async function loadProgress(schedule: number): Promise<[]> {
+async function loadProgress(schedule_id: number): Promise<[]> {
   try {
     const progressOrErr: [] = await new ProgressQuery().getAll({
-      schedule: schedule,
+      schedule: schedule_id,
     });
-    let array = [];
+    let array: [] = [];
     for (let progress of progressOrErr) {
       array.push(progress);
     }
     return array;
   } catch (e) {
+    alert("Kon rondevoortgang niet ophalen, probeer het later opnieuw.");
     return [];
   }
 }

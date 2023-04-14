@@ -21,7 +21,8 @@
   "author": "Groep 1",
   "license": "ISC",
   "dependencies": {
-    "@selab-2/groep-1-orm": "^1.0.10"
+    "@selab-2/groep-1-orm": "^1.0.10",
+    "@selab-2/groep-1-query": "^1.0.7"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

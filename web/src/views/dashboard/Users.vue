@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
 import { User } from "@/types/User";
-import { UserQuery } from "../../../../api_query/src/user";
+import { UserQuery } from "@selab-2/groep-1-query";
 import { ref } from "vue";
 
 const users = ref<User[]>(await loadUsers());
@@ -29,6 +29,7 @@ async function loadUsers(): Promise<User[]> {
     }
     return array;
   } catch (e) {
+    alert("Kon gebruikers niet ophalen, probeer het later opnieuw.");
     return [];
   }
 }
