@@ -3,7 +3,6 @@ import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import { User } from "./User";
 
-
 export class Building implements TableEntity<Building> {
   id: number;
   name: string;
