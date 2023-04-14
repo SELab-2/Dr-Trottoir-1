@@ -6,17 +6,17 @@
       v-model="selectedDate"
       :enable-time-picker="false"
       input-class-name="v-field__input"
-      :format="formatDate"
+      :format="format"
       @update:model-value="change"
     />
     <div v-if="get() === null" class="centre text-center">
       <v-icon icon="mdi-alert-circle" size="x-large" />
-      <h2>Geen gegevens voor dit gebouw op {{ formatDate(selectedDate) }}.</h2>
+      <h2>Geen gegevens voor dit gebouw op {{ selectedDate.toLocaleDateString('nl') }}.</h2>
       <p>Selecteer een ander gebouw of kies een andere datum.</p>
     </div>
     <div v-else>
       <div class="centre px-4 mb-4">
-        <h2>Bezoek ({{ formatDate(selectedDate) }})</h2>
+        <h2>Bezoek ({{ selectedDate.toLocaleDateString('nl') }})</h2>
         <button
           @click="
             router.push({
@@ -67,7 +67,7 @@ import ImageCard from "@/components/cards/ImageCard.vue";
 import Avatar from "@/components/Avatar.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { createDate, formatDate } from "@/assets/scripts/date";
+import { createDate } from "@/assets/scripts/date";
 import { ref } from "vue";
 import router from "@/router";
 
@@ -77,8 +77,16 @@ const props = defineProps({
 });
 const selectedDate = ref<Date>(createDate(String(props.date)));
 
+const format = (date: Date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
+
 function get(): any {
-  if (formatDate(selectedDate.value) === mockbuilding.date) {
+  if (selectedDate.value.toLocaleDateString('nl') === mockbuilding.date) {
     return mockbuilding;
   }
   return null;
@@ -87,7 +95,7 @@ function get(): any {
 function change() {
   router.push({
     name: "building_id_detail",
-    params: { id: props.id, date: formatDate(selectedDate.value) },
+    params: { id: props.id, date: selectedDate.value.toLocaleDateString('nl') },
   });
 }
 

@@ -32,7 +32,7 @@
               type="date"
               v-model="s_day"
               @update:model-value="
-                filter_data.start_day = formatDate(new Date(s_day));
+                filter_data.start_day = new Date(s_day).toLocaleDateString('nl');
                 $emit('onUpdate', filter_data);
               "
             />
@@ -43,7 +43,7 @@
               type="date"
               v-model="e_day"
               @update:model-value="
-                filter_data.end_day = formatDate(new Date(e_day));
+                filter_data.end_day = new Date(e_day).toLocaleDateString('nl');
                 $emit('onUpdate', filter_data);
               "
             />
@@ -120,7 +120,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
-import { formatDate } from "@/assets/scripts/date";
 import BorderCard from "@/layouts/CardLayout.vue";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 
@@ -180,7 +179,7 @@ const filter_data = ref<FilterData>({
   // The currently selected filters
   filters: props.selected_filters,
   // The start and end date
-  start_day: formatDate(props.start_date),
-  end_day: formatDate(props.end_date),
+  start_day: props.start_date.toLocaleDateString('nl'),
+  end_day: props.end_date.toLocaleDateString('nl'),
 });
 </script>

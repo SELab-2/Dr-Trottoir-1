@@ -11,8 +11,8 @@
       v-for="(round, i) in filtered_data()"
       :key="i"
       :round_name="round.name"
-      :round_start="date_to_hh_mm(round.start_time)"
-      :round_end="date_to_hh_mm(round.end_time)"
+      :round_start="round.start_time.toLocaleTimeString('nl')"
+      :round_end="round.end_time.toLocaleTimeString('nl')"
       :round_started="round.start_time ? true : false"
       :student_name="round.student"
       :building_index="completed_buildings(round)"
@@ -31,7 +31,6 @@ import LargeFilter from "@/components/filter/LargeFilter.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
-import { formatDate, date_to_hh_mm } from "@/assets/scripts/format";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
 // the router constant
@@ -191,8 +190,8 @@ const filter_data = ref<FilterData>({
   sort_by: sort_items[0],
   sort_ascending: true,
   filters: [],
-  start_day: formatDate(new Date()),
-  end_day: formatDate(new Date()),
+  start_day: new Date().toLocaleDateString("nl"),
+  end_day: new Date().toLocaleDateString("nl"),
 });
 
 function filter_query(round: Round): boolean {
