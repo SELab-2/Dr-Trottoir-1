@@ -154,7 +154,10 @@
 
         <v-spacer />
       </v-app-bar>
-      <Suspense>
+      <Suspense :key="route.fullPath">
+        <template #fallback>
+          <Loader />
+        </template>
         <router-view />
       </Suspense>
     </v-main>
@@ -168,6 +171,7 @@ import { useRoute, useRouter } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useAuthStore } from "@/stores/auth";
 import { getRoles } from "@/assets/scripts/roles";
+import Loader from '@/components/popups/Loader.vue'
 
 const router = useRouter();
 
