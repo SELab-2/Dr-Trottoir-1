@@ -298,10 +298,10 @@ router.beforeEach(async (to, from, next) => {
       next();
     }
   } else {
-    const isStudent = true;
-    const isSuperStudent = true;
-    const isSyndicus = true;
-    const isAdmin = true;
+    const isStudent = auth.student;
+    const isSuperStudent = auth.super_student;
+    const isSyndicus = true; // TODO
+    const isAdmin = auth.admin;
     const checked: boolean = checkAuth(
       isStudent,
       isSuperStudent,
