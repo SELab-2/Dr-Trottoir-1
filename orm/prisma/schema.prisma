@@ -75,7 +75,7 @@ model UserRegion {
 
 // Hier wordt het pad naar een bestand bijgehouden.
 model File {
-    id   Int    @id @default(autoincrement())
+    id   String @id @default(uuid())
     path String
 
     // Gebruiker die de file geupload heeft.
@@ -162,8 +162,8 @@ model Building {
     address_id Int
     address    Address @relation(fields: [address_id], references: [id], onDelete: Restrict)
 
-    manual_id Int?
-    manual    File? @relation(fields: [manual_id], references: [id], onDelete: SetNull)
+    manual_id String?
+    manual    File?   @relation(fields: [manual_id], references: [id], onDelete: SetNull)
 
     deleted Boolean @default(false)
 

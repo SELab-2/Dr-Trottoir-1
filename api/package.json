@@ -9,11 +9,9 @@
     "test": "jest -i"
   },
   "dependencies": {
-
-    "@types/multer": "^1.4.7",
     "@selab-2/groep-1-orm": "^1.0.10",
     "@types/date-arithmetic": "^4.1.1",
-
+    "@types/multer": "^1.4.7",
     "@types/passport": "^1.0.12",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
@@ -28,7 +26,8 @@
     "nodemon": "^2.0.21",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.5.0",
@@ -41,6 +40,7 @@
     "@types/node": "^18.14.1",
     "@types/passport-local": "^1.0.35",
     "@types/supertest": "^2.0.12",
+    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.54.0",
     "eslint": "^8.35.0",

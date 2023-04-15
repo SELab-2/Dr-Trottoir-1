@@ -32,7 +32,7 @@ router.post(
         const { user } = req;
         if (
             (process.env.DISABLE_AUTH !== undefined &&
-                process.env.DISABLE_AUTH == "true") ||
+                process.env.DISABLE_AUTH === "true") ||
             (user && (user.super_student || user.admin || user.syndicus))
         ) {
             next();
@@ -85,7 +85,6 @@ router.get(
                     id: Parser.number(req.params["id"]),
                 },
             });
-
             if (!result) {
                 throw new APIError(APIErrorCode.FILE_NOT_FOUND);
             }

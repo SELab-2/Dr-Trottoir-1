@@ -3,17 +3,7 @@ import request from "supertest";
 import supertest from "supertest";
 import { describe, expect, test } from "@jest/globals";
 import * as fs from "fs";
-
-//readSync /relpathSync
-//file lezen
-
-const file = {
-    id: undefined,
-    path: "/filee/blanc.png",
-    user_id: undefined,
-    user: undefined,
-    location: "FILE_SERVER",
-};
+import path from "path";
 
 process.env["DISABLE_AUTH"] = "false";
 process.env["LOCAL_FILE_PATH"] = "__tests__/files";
@@ -63,12 +53,14 @@ describe("Test FileRouting successful test", () => {
     afterAll(async () => {});
 
     test("should successfully upload a file", async () => {
+        const dirname = path.resolve();
+        const full_path = path.join(dirname, "__tests__/files/blanc.png");
         const response = await session
             .post("/file")
             .set("Cookie", [cookies])
             .field("path", fileToCreate.path)
             .field("location", fileToCreate.location)
-            .attach("file", "/home/ludovic/Pictures/blanc.png");
+            .attach("file", full_path);
 
         expect(response.status).toBe(200);
         id = response.body.id;
