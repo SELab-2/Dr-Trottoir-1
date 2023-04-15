@@ -34,9 +34,7 @@ type ScheduleAllInfo = Prisma.ScheduleGetPayload<{
 export class ScheduleQuery extends Query<
     ScheduleQueryParameters,
     Schedule,
-    ScheduleAllInfo,
-    Schedule,
-    Schedule
+    ScheduleAllInfo
 > {
     endpoint = "schedule";
 }

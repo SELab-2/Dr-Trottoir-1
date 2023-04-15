@@ -25,9 +25,7 @@ type SyndicusAllInfo = Prisma.SyndicusGetPayload<{
 export class SyndicusQuery extends Query<
     SyndicusQueryParameters,
     Syndicus,
-    SyndicusAllInfo,
-    Syndicus,
-    Syndicus
+    SyndicusAllInfo
 > {
     endpoint = "syndicus";
 }

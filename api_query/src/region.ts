@@ -23,9 +23,7 @@ type RegionWithUsers = Prisma.RegionGetPayload<{
 export class RegionQuery extends Query<
     RegionQueryParameters,
     Region,
-    RegionWithUsers,
-    Region,
-    Region
+    RegionWithUsers
 > {
     endpoint = "region";
 }

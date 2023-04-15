@@ -4,18 +4,10 @@ import { QueryError } from "./query_error";
  * Abstractie overheen onze API voor client side queries uit te voeren.
  *
  * Parameters: Een type die de interface van de API modelleert.
- * PostParameters: Een type die de body van een POST request modelleert.
- * ResultGet: Een type die het resultaat van een GET request modelleert.
- * ResultPost: Een type die het resultaat van een POST request modelleert.
- * ResultPatch: Een type die het resultaat van een PATCH request modelleert.
+ * Element: Een type die de body van een POST of PATCH request modelleert.
+ * Result: Een type die het resultaat van een request modelleert.
  */
-export abstract class Query<
-    Parameters,
-    PostParameters,
-    ResultGet,
-    ResultPost,
-    ResultPatch,
-> {
+export abstract class Query<Parameters, Element, Result> {
     abstract endpoint: string;
     server =
         process.env.API_SERVER_ADDRESS ??
@@ -101,7 +93,7 @@ export abstract class Query<
      * error voorvalt, wordt deze opgevangen en teruggegeven
      * @throws QueryError
      */
-    async getOne(id: number): Promise<ResultGet> {
+    async getOne(id: number): Promise<Result> {
         if (Number.isNaN(id)) {
             throw new QueryError(400, "Bad Request");
         }
@@ -114,7 +106,7 @@ export abstract class Query<
      * HTTP-error voorvalt, wordt deze opgevangen en teruggegeven.
      * @throws QueryError
      */
-    async getAll(query: Partial<Parameters> = {}): Promise<Array<ResultGet>> {
+    async getAll(query: Partial<Parameters> = {}): Promise<Array<Result>> {
         return this.fetchJSON(this.url(query));
     }
 
@@ -122,7 +114,7 @@ export abstract class Query<
      * Voeg een nieuw element toe via HTTP POST.
      * @throws QueryError
      */
-    async addOne(element: Partial<PostParameters>): Promise<ResultPost> {
+    async createOne(element: Partial<Element>): Promise<Result> {
         return this.fetchJSON(this.server + this.endpoint, "POST", element);
     }
 
@@ -130,7 +122,7 @@ export abstract class Query<
      * Update een specifiek element via HTTP PATCH.
      * @throws QueryError
      */
-    async updateOne(element: Partial<ResultPatch>): Promise<ResultPatch> {
+    async updateOne(element: Partial<Element>): Promise<Result> {
         const index = Object.keys(element).indexOf("id");
 
         if (index === -1) {
@@ -153,7 +145,7 @@ export abstract class Query<
      * argument.
      * @throws QueryError
      */
-    async deleteOne(element: Partial<ResultGet>, hard = false): Promise<void> {
+    async deleteOne(element: Partial<Element>, hard = false): Promise<void> {
         const index = Object.keys(element).indexOf("id");
 
         if (index === -1) {

@@ -33,9 +33,7 @@ type ProgressAllInfo = Prisma.ProgressGetPayload<{
 export class ProgressQuery extends Query<
     ProgressQueryParameters,
     Progress,
-    ProgressAllInfo,
-    Progress,
-    Progress
+    ProgressAllInfo
 > {
     endpoint = "progress";
 }

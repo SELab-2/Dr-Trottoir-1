@@ -25,9 +25,7 @@ type GarbageAllInfo = Prisma.GarbageGetPayload<{
 export class GarbageQuery extends Query<
     GarbageQueryParameters,
     Garbage,
-    GarbageAllInfo,
-    Garbage,
-    Garbage
+    GarbageAllInfo
 > {
     endpoint = "garbage";
 }

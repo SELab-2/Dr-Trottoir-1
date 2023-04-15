@@ -19,9 +19,7 @@ type UserRegionAllInfo = Prisma.UserRegionGetPayload<{
 export class UserRegionQuery extends Query<
     UserRegionQueryParameters,
     UserRegion,
-    UserRegionAllInfo,
-    UserRegion,
-    UserRegion
+    UserRegionAllInfo
 > {
     endpoint = "user_region";
 }

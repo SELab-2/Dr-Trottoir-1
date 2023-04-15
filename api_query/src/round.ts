@@ -23,9 +23,7 @@ type RoundWithBuildings = Prisma.RoundGetPayload<{
 export class RoundQuery extends Query<
     RoundQueryParameters,
     Round,
-    RoundWithBuildings,
-    Round,
-    Round
+    RoundWithBuildings
 > {
     endpoint = "round";
 }
