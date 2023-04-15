@@ -25,27 +25,24 @@ describe("Example test suite", () => {
         // clean the database
         await deleteDatabaseData();
         await initialiseDatabase();
+
+        // set the authentication level the runner should execute under
+        // This can also be set in the beforeEach hook, depending on your test suite
+        testRunner.authLevel(AuthenticationLevel.ADMINISTRATOR);
     });
 
     test("Example GET", async () => {
         // define values that are expected from GET /action
         const expected = [
-            {
-                id: 1,
-                description: "action 1",
-            },
-            {
-                id: 2,
-                description: "action 2",
-            },
+            { id: 1, description: "action 1" },
+            { id: 2, description: "action 2" },
         ];
 
         // let the runner run
-        await testRunner.get(
-            "/action",
-            expected,
-            AuthenticationLevel.ADMINISTRATOR,
-        );
+        await testRunner.get({
+            url: "/action",
+            expectedData: expected,
+        });
     });
 
     test("Example POST", async () => {
@@ -53,11 +50,10 @@ describe("Example test suite", () => {
             description: "new action",
         };
 
-        await testRunner.post(
-            "/action",
-            newAction,
-            AuthenticationLevel.ADMINISTRATOR,
-        );
+        await testRunner.post({
+            url: "/action",
+            data: newAction,
+        });
 
         // clean up after ourselves
         await restoreTables("action");
@@ -69,21 +65,22 @@ describe("Example test suite", () => {
             description: "Update!",
         };
 
-        await testRunner.patch(
-            "/action/1",
-            updatedAction,
-            AuthenticationLevel.ADMINISTRATOR,
-        );
+        await testRunner.patch({
+            url: "/action/1",
+            data: updatedAction,
+            // for succesful PATCH requests, expectedResponse should be equal to data
+            // for PATCH requests that are expected to fail, provide the expected response
+            expectedResponse: updatedAction,
+        });
     });
 
     test("Example DELETE", async () => {
         // first delete garbage that is connected to this action, then action itself
-        await testRunner.delete(
-            "/garbage/2",
-            AuthenticationLevel.ADMINISTRATOR,
-        );
+        await testRunner.delete({
+            url: "/garbage/2",
+        });
 
-        await testRunner.delete("/action/2", AuthenticationLevel.ADMINISTRATOR);
+        await testRunner.delete({ url: "/action/2" });
     });
 
     afterEach(async () => {
