@@ -1,6 +1,7 @@
 import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
+import chance from "chance";
 
 export class User implements TableEntity<User> {
   id: number;
@@ -63,11 +64,23 @@ export class User implements TableEntity<User> {
     ].map((e) => new Header<User>(e));
   }
 
-  route(): { name: string; params: { id: number; isadmin: boolean } } {
+  static random(): Array<User> {
+    return [...Array(100).keys()].map(() => {
+      return new User({
+        id: chance().integer(),
+        first_name: chance().first(),
+        last_name: chance().last(),
+        student: chance().bool(),
+        super_student: chance().bool(),
+        admin: chance().bool(),
+      });
+    });
+  }
+
+  route(): { name: string; params: { id: number } } {
     return {
       name: "account_settings",
-      params: { id: this.id, isadmin: false },
+      params: { id: this.id },
     };
-    // TODO: remove :isadmin when auth is in frontend
   }
 }

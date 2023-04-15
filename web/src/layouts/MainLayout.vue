@@ -24,7 +24,7 @@
 
           <div>
             <v-list-item
-              :to="{ name: 'login' }"
+              @click="logOut"
               prepend-icon="mdi-account-cancel"
               title="Afmelden"
               value="logout"
@@ -33,7 +33,7 @@
             <router-link
               :to="{
                 name: 'account_settings',
-                params: { id: 0, isadmin: 'true' },
+                params: { id: 0 },
               }"
             >
               <v-list-item
@@ -152,9 +152,8 @@
 
         <v-spacer />
       </v-app-bar>
-      <Suspense>
-        <router-view></router-view>
-      </Suspense>
+
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
@@ -162,32 +161,35 @@
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
+import { useAuthStore } from "@/stores/auth";
+const router = useRouter();
 const today = new Date().toLocaleDateString("nl");
 // reactive state to show the drawer or not
 const drawer = ref(true);
 // get the route object, needed to show the title
 const route = useRoute();
 // roles to know what to show
-const isStudent = ref(true);
-const isSuperStudent = ref(true);
-const isSyndicus = ref(true);
-const isAdmin = ref(true);
+const isStudent: Boolean = useAuthStore().auth!.student;
+const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
+const isSyndicus = true; // TODO: check for syndicus
+const isAdmin: Boolean = useAuthStore().auth!.admin;
 // account display settings
-const studentName: string = "Jens Pots";
+const studentName: string =
+  useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
 function roles(): string {
   let str = "";
-  if (isStudent.value) {
+  if (isStudent) {
     str += "student ";
   }
-  if (isSuperStudent.value) {
+  if (isSuperStudent) {
     str += "superstudent ";
   }
-  if (isSyndicus.value) {
+  if (isSyndicus) {
     str += "syndicus ";
   }
-  if (isAdmin.value) {
+  if (isAdmin) {
     str += "admin ";
   }
   return str;
@@ -198,6 +200,10 @@ window.addEventListener(
   "resize",
   () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
 );
+async function logOut() {
+  //await useAuthStore().logOut(); TODO wait until implemented
+  await router.push({ name: "login" });
+}
 </script>
 
 <style lang="scss" scoped>

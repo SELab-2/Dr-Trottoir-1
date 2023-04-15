@@ -28,6 +28,7 @@ import {
   Schedule as OrmSchedule,
 } from "@selab-2/groep-1-orm";
 import { ProgressQuery, ScheduleQuery } from "@selab-2/groep-1-query";
+
 const schedules: Schedule[] = await loadSchedules();
 async function loadSchedules(): Promise<Schedule[]> {
   try {
