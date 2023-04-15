@@ -1,7 +1,6 @@
 import request from "supertest";
 import { expect } from "@jest/globals";
 import { constants } from "http2";
-import * as http2 from "http2";
 
 /**
  * Describes different authentication levels.
@@ -39,6 +38,30 @@ const credentialsMap: {
     },
 };
 
+interface GetParameters {
+    url: string;
+    expectedData: {}[];
+    statusCode?: number;
+}
+
+interface PostParameters {
+    url: string;
+    data: {};
+    statusCode?: number;
+}
+
+interface PatchParameters {
+    url: string;
+    data: {};
+    expectedResponse: {};
+    statusCode?: number;
+}
+
+interface DeleteParameters {
+    url: string;
+    statusCode?: number;
+}
+
 /**
  * Class that encompasses all the common actions for running tests.
  *
@@ -69,17 +92,17 @@ export class Testrunner {
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
      */
-    get = async (
-        url: string,
-        expectedData: {}[] = [],
-        statusCode: number = constants.HTTP_STATUS_OK,
-    ): Promise<request.Response> => {
+    get = async ({
+        url,
+        expectedData = [],
+        statusCode = 200,
+    }: GetParameters): Promise<request.Response> => {
         const cookie = await this.authenticate();
 
         const response = await this.server.get(url).set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
 
-        this.verifyBody(expectedData, response.body);
+        this.verifyBody(expectedData, response);
 
         return response;
     };
@@ -92,11 +115,11 @@ export class Testrunner {
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
      */
-    post = async (
-        url: string,
-        data: {},
-        statusCode: number = constants.HTTP_STATUS_CREATED,
-    ): Promise<request.Response> => {
+    post = async ({
+        url,
+        data,
+        statusCode = constants.HTTP_STATUS_CREATED,
+    }: PostParameters): Promise<request.Response> => {
         const cookie = await this.authenticate();
 
         const response = await this.server
@@ -108,7 +131,7 @@ export class Testrunner {
         // drop the id, as we cannot predict that
         delete response.body["id"];
 
-        this.verifyBody([data], [response.body]);
+        this.verifyBody([data], response);
 
         return response;
     };
@@ -121,11 +144,12 @@ export class Testrunner {
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
      */
-    patch = async (
-        url: string,
-        data: {},
-        statusCode: number = constants.HTTP_STATUS_OK,
-    ) => {
+    patch = async ({
+        url,
+        data,
+        expectedResponse,
+        statusCode = 200,
+    }: PatchParameters) => {
         const cookie = await this.authenticate();
 
         const response = await this.server
@@ -134,7 +158,7 @@ export class Testrunner {
             .set("Cookie", [cookie]);
 
         expect(response.statusCode).toEqual(statusCode);
-        this.verifyBody([data], [response.body]);
+        this.verifyBody([expectedResponse], response);
 
         return response;
     };
@@ -146,10 +170,10 @@ export class Testrunner {
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
      */
-    delete = async (
-        url: string,
-        statusCode: number = constants.HTTP_STATUS_OK,
-    ): Promise<request.Response> => {
+    delete = async ({
+        url,
+        statusCode = constants.HTTP_STATUS_OK,
+    }: DeleteParameters): Promise<request.Response> => {
         const cookie = await this.authenticate();
 
         const response = await this.server.delete(url).set("Cookie", [cookie]);
@@ -182,16 +206,17 @@ export class Testrunner {
     /**
      * Verifies that the received body of the API call contains the expected values
      * @param expected list of expected values
-     * @param body the actual body
+     * @param response response to be verified
      * @private
      */
-    private verifyBody(expected: {}[], body: {}[]) {
-        // verify that everything, that is expected, is also received
-        for (const item of body) {
-            expect(expected).toContainEqual(item);
+    private verifyBody(expected: {}[], response: request.Response) {
+        if (response.body instanceof Array) {
+            for (const item of expected) {
+                expect(response.body).toContainEqual(item);
+            }
+        } else {
+            // if body is a single object, expected array should only contain a single element
+            expect(response.body).toEqual(expected[0]);
         }
-
-        // verify that expected stuff is received
-        expect(body.length).toEqual(expected.length);
     }
 }
