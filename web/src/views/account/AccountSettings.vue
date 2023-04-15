@@ -17,14 +17,14 @@
         prepend-icon="mdi-pencil"
         @click="edit = !edit"
         color="primary"
-        >Bewerk Account</v-btn
+      >Bewerk Account</v-btn
       >
       <v-btn
         v-else
         prepend-icon="mdi-close"
         @click="edit = !edit"
         color="warning"
-        >Annuleer aanpassingen</v-btn
+      >Annuleer aanpassingen</v-btn
       >
     </div>
 
@@ -180,7 +180,7 @@
           @click="edit = !edit"
           color="success"
           class="mx-5 my-3"
-          >Sla op</v-btn
+        >Sla op</v-btn
         >
       </div>
     </BorderCard>
@@ -205,7 +205,7 @@
           @click="edit = !edit"
           color="error"
           class="mx-5 my-3"
-          >Verwijder account</v-btn
+        >Verwijder account</v-btn
         >
       </div>
     </BorderCard>
@@ -220,13 +220,10 @@ import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
-import { useAuthStore } from "@/stores/auth";
-
 // define the spacing for the input fields
 const spacing: String = "mx-4";
-defineProps(["gebruikerid"]);
-// @ts-ignore
-const isAdmin: Boolean = useAuthStore().auth?.admin;
+const props = defineProps(["gebruikerid", "isadmin"]);
+const isAdmin = ref<Boolean>(props.isadmin === "true");
 // reactive state for name
 const firstname = ref("Mats");
 const lastname = ref("Van Belle");
