@@ -70,7 +70,7 @@ const emailRules = [
 
   // check for valid email syntax
   (email: string) => {
-    return /.+@.+\..+/.test(email) ? true : 'Ongeldig e-mail adres.';
+    return /^.+@.+\..+$/.test(email) ? true : 'Ongeldig e-mail adres.';
   }
 ]
 

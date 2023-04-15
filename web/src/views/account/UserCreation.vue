@@ -4,7 +4,7 @@
       <!-- Personal info -->
       <BorderCard prepend-icon="mdi-account-details">
         <template v-slot:title> Persoonlijke gegevens </template>
-        <v-row class="py-0 my-0">
+        <v-row class="py-0 my-0 mt-2">
           <v-col
             cols="1"
             style="min-width: 100px; max-width: 100%"
@@ -64,6 +64,7 @@
         <template v-slot:title> Wachtwoord </template>
         <v-list density="compact" :class="spacing">
           <v-text-field
+            class="mt-2"
             v-model="password1"
             :prepend-inner-icon="'mdi-lock'"
             :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
@@ -77,6 +78,7 @@
 
           <!-- Text input field for the password confirmation-->
           <v-text-field
+          class="mt-2"
             v-model="password2"
             :prepend-inner-icon="'mdi-lock'"
             :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
