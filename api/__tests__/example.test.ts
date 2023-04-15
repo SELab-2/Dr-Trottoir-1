@@ -9,7 +9,7 @@ import {
     deleteDatabaseData,
     initialiseDatabase,
     restoreTables,
-} from "../../mock/src/database";
+} from "./mock/database";
 
 describe("Example test suite", () => {
     let testRunner: Testrunner;

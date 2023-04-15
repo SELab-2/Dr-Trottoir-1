@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { deleteDatabaseData, initialiseDatabase } from "./src/database";
+import { deleteDatabaseData, initialiseDatabase } from "./database";
 
 dotenv.config();
 
