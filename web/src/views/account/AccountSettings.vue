@@ -163,47 +163,19 @@
       </v-list>
     </BorderCard>
 
-    <!-- Section that allows to save the settings -->
-    <BorderCard v-if="edit" class="my-4" prepend-icon="mdi-check">
-      <template v-slot:title> Sla bewerkingen op </template>
-      <div class="d-flex">
-        <v-text-field
-          class="mx-5 me-auto"
-          v-model="confirm_psswd"
-          :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="show_confirm ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="show_confirm ? 'text' : 'password'"
-          :label="isAdmin ? 'Jouw admin wachtwoord' : 'Huidig wachtwoord'"
-          @click:append-inner="show_confirm = !show_confirm"
-          bg
-        ></v-text-field>
-
+    <!-- Section that allows to save and remove the account -->
+    <div v-if="edit" class="my-4">
+      <div class="d-flex flex-row-reverse">
         <v-btn
           prepend-icon="mdi-check"
           @click="edit = !edit"
           color="success"
-          class="mx-5 my-3"
+          class="my-3"
           >Sla op</v-btn
         >
-      </div>
-    </BorderCard>
-
-    <!-- Section that allows to remove the account -->
-    <BorderCard v-if="edit" class="my-4" prepend-icon="mdi-delete">
-      <template v-slot:title> Verwijder account </template>
-      <div class="d-flex">
-        <v-text-field
-          class="mx-5 me-auto"
-          v-model="remove_psswd"
-          :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="show_remove ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="show_remove ? 'text' : 'password'"
-          :label="isAdmin ? 'Jouw admin wachtwoord' : 'Huidig wachtwoord'"
-          @click:append-inner="show_remove = !show_remove"
-          bg
-        ></v-text-field>
 
         <v-btn
+          v-if="isAdmin && id != user_id"
           prepend-icon="mdi-delete"
           @click="edit = !edit"
           color="error"
@@ -211,7 +183,7 @@
           >Verwijder account</v-btn
         >
       </div>
-    </BorderCard>
+    </div>
   </HFillWrapper>
 </template>
 
@@ -264,12 +236,6 @@ const address = ref(user.value?.address);
 const password1 = ref("");
 const password2 = ref("");
 const showPsswd = ref(false);
-// reactive state for the submission
-const confirm_psswd = ref("");
-const show_confirm = ref(false);
-// state for the remove password
-const remove_psswd = ref("");
-const show_remove = ref(false);
 </script>
 <style lang="sass" scoped>
 a
