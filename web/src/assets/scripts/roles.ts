@@ -1,6 +1,9 @@
 import { User } from "@selab-2/groep-1-orm";
 
-export function getRoles(user: User): string[] {
+export function getRoles(user: User | null): string[] {
+  if (!user) {
+    return [];
+  }
   const roles: string[] = [];
   if (user.student) {
     roles.push("Student");

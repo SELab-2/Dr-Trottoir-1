@@ -77,6 +77,7 @@
     <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
       <template v-slot:title> Adres </template>
       <AddressFrom
+        v-if="address"
         :class="edit ? spacing : 'mx-10'"
         :readonly="!edit"
         :street="String(address.street)"
@@ -231,40 +232,34 @@ import { User, Address } from "@selab-2/groep-1-orm";
 const spacing: String = "mx-4";
 const props = defineProps(["id"]);
 
-const isAdmin: Boolean = useAuthStore().auth?.admin;
-const user_id = useAuthStore().auth?.id;
+const isAdmin: Boolean = useAuthStore().auth!.admin;
+const user_id = useAuthStore().auth!.id;
 
-const user: Ref<User & { address: Address }> = ref({});
+const user: Ref<(User & { address: Address }) | null> = ref(null);
 try {
-  user.value = await new UserQuery().getOne(props.id);
+  user.value = (await new UserQuery().getOne(props.id)) as User & {
+    address: Address;
+  };
 } catch (e) {
   alert(e);
 }
-const delay = ms => new Promise(res => setTimeout(res, ms));
-await delay(5000);
 
 // reactive state for name
-const firstname = ref(user.value.first_name);
-const lastname = ref(user.value.last_name);
+const firstname = ref(user.value?.first_name);
+const lastname = ref(user.value?.last_name);
 // reactive state for the roles
 const roles = ref<String[]>(getRoles(user.value));
 
-// reactive state to keep track if we are edeting or not
+// reactive state to keep track if we are editing or not
 const edit = ref(false);
 // contact data
-const default_phone = user.value.phone;
-const default_email = user.value.email;
 const contact = ref<Contact>({
-  phone: default_phone,
-  email: default_email,
+  phone: user.value?.phone ? user.value?.phone : "",
+  email: user.value?.email ? user.value?.email : "",
 });
 // address data
-const address = ref<Address>({
-  street: user.value.address.street,
-  number: user.value.address.number,
-  city: user.value.address.city,
-  zip_code: user.value.address.zip_code,
-});
+const address = ref(user.value?.address);
+
 // reactive states for the new password
 const password1 = ref("");
 const password2 = ref("");

@@ -172,6 +172,7 @@ import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useAuthStore } from "@/stores/auth";
 import { getRoles } from "@/assets/scripts/roles";
 import Loader from "@/components/popups/Loader.vue";
+import { User } from "@selab-2/groep-1-orm";
 
 const router = useRouter();
 
@@ -189,7 +190,7 @@ const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
 const isSyndicus = true; // TODO: check for syndicus
 const isAdmin: Boolean = useAuthStore().auth!.admin;
 
-const roles = getRoles(useAuthStore().auth);
+const roles = getRoles(useAuthStore().auth as User);
 
 // account display settings
 const studentName: string =
