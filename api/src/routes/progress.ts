@@ -65,6 +65,7 @@ export class ProgressRouting extends Routing {
     async createOne(req: CustomRequest, res: express.Response) {
         const user = await prisma.progress.create({
             data: req.body,
+            include: ProgressRouting.includes,
         });
 
         return res.status(201).json(user);
@@ -77,6 +78,7 @@ export class ProgressRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
+            include: ProgressRouting.includes,
         });
 
         return res.status(200).json(result);

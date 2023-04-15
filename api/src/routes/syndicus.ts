@@ -62,6 +62,7 @@ export class SyndicusRouting extends Routing {
             data: {
                 user_id: parseInt(req.body["user_id"]),
             },
+            include: SyndicusRouting.includes,
         });
 
         return res.status(201).json(syndicus);
@@ -76,6 +77,7 @@ export class SyndicusRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
+            include: SyndicusRouting.includes,
         });
 
         return res.status(200).json(result);

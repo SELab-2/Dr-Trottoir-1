@@ -86,7 +86,7 @@ export class BuildingRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
         if (Parser.bool(req.body["hash"], false)) {
-            req.body = crypto.randomBytes(32).toString();
+            req.body.hash = crypto.randomBytes(32).toString();
         }
 
         const result = await prisma.building.update({
@@ -94,16 +94,7 @@ export class BuildingRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            select: {
-                id: true,
-                name: true,
-                ivago_id: true,
-                syndicus_id: true,
-                address_id: true,
-                manual_id: true,
-                hash: false,
-                deleted: true,
-            },
+            select: BuildingRouting.selects,
         });
 
         return res.status(200).json(result);
