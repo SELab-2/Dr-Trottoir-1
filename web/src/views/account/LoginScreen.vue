@@ -43,7 +43,7 @@
           prepend-icon="mdi-login"
           color="success"
           @click="useAuthStore().logIn(email, password)"
-        >Login</v-btn
+          >Login</v-btn
         >
       </div>
     </div>

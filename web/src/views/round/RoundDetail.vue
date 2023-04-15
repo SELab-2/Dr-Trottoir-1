@@ -140,7 +140,7 @@
         color="success"
         variant="elevated"
         @click="end_popup = true"
-      >Ronde beïndigen</v-btn
+        >Ronde beïndigen</v-btn
       >
       <!-- Show warning before ending -->
       <v-overlay v-model="end_popup">
