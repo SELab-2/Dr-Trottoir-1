@@ -1,6 +1,6 @@
 <template>
   <!-- TODO: Container around the card to show the edges a bit more, should be removed in the future -->
-  <v-card class="mb-3 mx-1 pb-2">
+  <BorderCard class="mb-3 mx-1 pb-2">
     <v-progress-linear
       absolute
       :model-value="progress()"
@@ -11,9 +11,12 @@
     <!-- Set round name as title -->
     <template v-slot:title>
       {{ round_name }}
-      <v-icon end v-if="round_comments" class=""
-        >mdi-comment-alert-outline</v-icon
-      >
+      <v-icon
+        end
+        v-if="round_comments"
+        icon="mdi-comment-alert-outline"
+        size="small"
+      />
     </template>
 
     <!-- Set student as subtitle -->
@@ -52,7 +55,7 @@
         }}
       </v-chip>
     </template>
-    <v-chip label color="brown" class="ml-3">
+    <v-chip v-if="round_start" label color="brown" class="ml-3">
       <v-icon icon="mdi-office-building"></v-icon>
       {{ total_buildings }}
     </v-chip>
@@ -62,11 +65,12 @@
     <v-chip v-if="round_end" label color="primary" class="ml-3">
       <v-icon icon="mdi-clock-check"></v-icon> {{ round_end }}
     </v-chip>
-  </v-card>
+  </BorderCard>
 </template>
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
+import BorderCard from "@/layouts/CardLayout.vue";
 
 // TODO: maybe too much props to give to a component, could be changed to an object in the future
 // Default props for this component

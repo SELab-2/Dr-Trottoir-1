@@ -6,9 +6,11 @@
         :permanent="!!permanentDrawer"
         v-model="drawer"
         class="sidebar"
+        style="border: rgba(189, 189, 189, 0.5) 1px solid"
+        color="background"
       >
         <v-list density="compact" nav>
-          <v-list-item lines="two" @click="showAccount = !showAccount">
+          <v-list-item lines="two">
             <template v-slot:prepend>
               <Avatar :name="studentName" />
             </template>
@@ -17,24 +19,12 @@
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
                 <v-list-item-subtitle>{{ roles() }}</v-list-item-subtitle>
               </div>
-              <v-btn
-                v-if="!showAccount"
-                variant="plain"
-                icon="mdi-chevron-down"
-                size="small"
-              />
-              <v-btn
-                v-else
-                variant="plain"
-                icon="mdi-chevron-up"
-                size="small"
-              />
             </div>
           </v-list-item>
 
-          <div v-if="showAccount">
+          <div>
             <v-list-item
-              :to="{ name: 'login' }"
+              @click="logOut"
               prepend-icon="mdi-account-cancel"
               title="Afmelden"
               value="logout"
@@ -43,7 +33,7 @@
             <router-link
               :to="{
                 name: 'account_settings',
-                params: { id: 0, isadmin: 'true' },
+                params: { id: 0 },
               }"
             >
               <v-list-item
@@ -55,7 +45,7 @@
           </div>
 
           <div class="py-2">
-            <v-divider />
+            <DividerLayout />
           </div>
 
           <div v-if="isStudent">
@@ -69,7 +59,7 @@
             />
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
@@ -91,7 +81,7 @@
             />
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
@@ -114,7 +104,7 @@
             </div>
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
@@ -151,7 +141,7 @@
         </template>
       </v-navigation-drawer>
 
-      <v-app-bar prominent elevation="0">
+      <v-app-bar prominent elevation="0" color="background">
         <div class="px-4">
           <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
         </div>
@@ -170,11 +160,14 @@
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
-import { formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import DividerLayout from "@/layouts/DividerLayout.vue";
+import { useAuthStore } from "@/stores/auth";
 
-const today = formatDate(new Date());
+const router = useRouter();
+
+const today = new Date().toLocaleDateString("nl");
 
 // reactive state to show the drawer or not
 const drawer = ref(true);
@@ -183,28 +176,26 @@ const drawer = ref(true);
 const route = useRoute();
 
 // roles to know what to show
-const isStudent = ref(true);
-const isSuperStudent = ref(true);
-const isSyndicus = ref(true);
-const isAdmin = ref(true);
-
-// show account settings
-const showAccount = ref(false);
+const isStudent: Boolean = useAuthStore().auth!.student;
+const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
+const isSyndicus = true; // TODO: check for syndicus
+const isAdmin: Boolean = useAuthStore().auth!.admin;
 
 // account display settings
-const studentName: string = "Jens Pots";
+const studentName: string =
+  useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
 function roles(): string {
   let str = "";
-  if (isStudent.value) {
+  if (isStudent) {
     str += "student ";
   }
-  if (isSuperStudent.value) {
+  if (isSuperStudent) {
     str += "superstudent ";
   }
-  if (isSyndicus.value) {
+  if (isSyndicus) {
     str += "syndicus ";
   }
-  if (isAdmin.value) {
+  if (isAdmin) {
     str += "admin ";
   }
   return str;
@@ -218,9 +209,14 @@ window.addEventListener(
   "resize",
   () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
 );
+
+async function logOut() {
+  //await useAuthStore().logOut(); TODO wait until implemented
+  await router.push({ name: "login" });
+}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 a {
   text-decoration: none;
   color: black;

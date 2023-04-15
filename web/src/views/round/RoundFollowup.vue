@@ -1,35 +1,29 @@
 <template>
-  <!-- Simple vlist that uses the custom component RoundCard -->
-  <v-row class="mt-1">
-    <!-- pump whitspace left -->
-    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%" />
-    <v-col cols="7" style="min-width: 400px">
-      <LargeFilter
-        :search_by_labels="query_labels"
-        :sort_items="sort_items"
-        :filter_items="filter_options"
-        class="mx-1 mb-3"
-        @onUpdate="(new_data: FilterData) => filter_data = new_data"
-      />
-      <RoundCard
-        v-for="(round, i) in filtered_data()"
-        :key="i"
-        :round_name="round.name"
-        :round_start="date_to_hh_mm(round.start_time)"
-        :round_end="date_to_hh_mm(round.end_time)"
-        :round_started="round.start_time ? true : false"
-        :student_name="round.student"
-        :building_index="completed_buildings(round)"
-        :total_buildings="round.buildings.length"
-        :round_comments="round_has_comments(round)"
-        @click="redirect_to_detail()"
-        style="cursor: pointer"
-      ></RoundCard>
-      <v-spacer></v-spacer>
-    </v-col>
-    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%">
-    </v-col>
-  </v-row>
+  <HFillWrapper>
+    <LargeFilter
+      :search_by_labels="query_labels"
+      :sort_items="sort_items"
+      :filter_items="filter_options"
+      class="mx-1 mb-3"
+      @onUpdate="(new_data: FilterData) => filter_data = new_data"
+    />
+    <RoundCard
+      v-for="(round, i) in filtered_data()"
+      :key="i"
+      :round_name="round.name"
+      :round_start="
+        round.start_time ? round.start_time.toLocaleTimeString('nl') : ''
+      "
+      :round_end="round.end_time ? round.end_time.toLocaleTimeString('nl') : ''"
+      :round_started="round.start_time ? true : false"
+      :student_name="round.student"
+      :building_index="completed_buildings(round)"
+      :total_buildings="round.buildings.length"
+      :round_comments="round_has_comments(round)"
+      @click="redirect_to_detail()"
+      style="cursor: pointer"
+    ></RoundCard>
+  </HFillWrapper>
 </template>
 
 <script lang="ts" setup>
@@ -39,8 +33,9 @@ import LargeFilter from "@/components/filter/LargeFilter.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
-import { formatDate, date_to_hh_mm } from "@/assets/scripts/format";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
+// the router constant
 const router = useRouter();
 
 function redirect_to_detail() {
@@ -197,8 +192,8 @@ const filter_data = ref<FilterData>({
   sort_by: sort_items[0],
   sort_ascending: true,
   filters: [],
-  start_day: formatDate(new Date()),
-  end_day: formatDate(new Date()),
+  start_day: new Date().toLocaleDateString("nl"),
+  end_day: new Date().toLocaleDateString("nl"),
 });
 
 function filter_query(round: Round): boolean {

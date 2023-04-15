@@ -1,30 +1,27 @@
 <template>
-  <v-row class="mt-1">
-    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%" />
-    <v-col cols="7" style="min-width: 400px">
-      <LargeFilter
-        :search_by_labels="query_labels"
-        :sort_items="sort_items"
-        :filter_items="filter_options"
-        class="mx-1 mb-3"
-        @onUpdate="(new_data: Filterdata) => {filter_data = new_data; filterIndex++;}"
-      />
-      <div v-for="(building, id) in filter()" :key="id + ':' + filterIndex">
-        <building-card :building="building" />
-      </div>
-      <v-spacer></v-spacer>
-    </v-col>
-    <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="max-width: 100%">
-    </v-col>
-  </v-row>
+  <HFillWrapper>
+    <LargeFilter
+      :search_by_labels="query_labels"
+      :sort_items="sort_items"
+      :filter_items="filter_options"
+      class="mx-1 mb-3"
+      @onUpdate="(new_data: Filterdata) => {filter_data = new_data; filterIndex++;}"
+    />
+    <building-card
+      :building="building"
+      v-for="(building, id) in filter()"
+      :key="id + ':' + filterIndex"
+    />
+  </HFillWrapper>
 </template>
 
 <script lang="ts" setup>
 import LargeFilter from "@/components/filter/LargeFilter.vue";
 import Filterdata from "@/components/filter/FilterData";
 import { ref } from "vue";
-import { createDate, formatDate } from "@/assets/scripts/date";
-import BuildingCard from "@/components/building/BuildingCard.vue";
+import { createDate } from "@/assets/scripts/date";
+import BuildingCard from "@/components/cards/BuildingCard.vue";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
 const filter_options = ["Opmerkingen"];
@@ -37,8 +34,8 @@ const filter_data = ref<Filterdata>({
   sort_by: "",
   sort_ascending: true,
   filters: [],
-  start_day: formatDate(new Date()),
-  end_day: formatDate(new Date()),
+  start_day: new Date().toLocaleDateString("nl"),
+  end_day: new Date().toLocaleDateString("nl"),
 });
 
 const filterIndex = ref<number>(0);

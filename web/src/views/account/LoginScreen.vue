@@ -1,8 +1,12 @@
 <template>
-  <div class="background">
+  <div class="background" color="background">
     <div class="form">
       <!-- Display the Dr. troittoir logo above the login form -->
-      <v-img contain src="@/assets/images/drtroittoir_logo.png"></v-img>
+      <v-img
+        class="banner-logo"
+        contain
+        src="@/assets/images/drtroittoir_logo_black.png"
+      ></v-img>
       <br />
 
       <!-- The input field for the e-mail -->
@@ -34,11 +38,7 @@
           </span>
         </p>
         <!-- Login button -->
-        <!-- TODO: should link to correct page for which user authenticated, now default student  -->
-        <v-btn
-          prepend-icon="mdi-login"
-          color="success"
-          :to="{ name: 'student_planning' }"
+        <v-btn prepend-icon="mdi-login" color="success" @click="logIn"
           >Login</v-btn
         >
       </div>
@@ -61,7 +61,11 @@
 </template>
 
 <script lang="ts" setup>
+import { useAuthStore } from "@/stores/auth";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 // reactive email state
 const email = ref("");
@@ -74,7 +78,14 @@ const showPsswd = ref(false);
 
 // reactive state to check if the snackbar must be shown or not
 const snackbar = ref(false);
+
+async function logIn() {
+  await useAuthStore().logIn(email.value, password.value);
+  // TODO: should link to correct page for which user authenticated, now default student
+  await router.push({ name: "student_planning" });
+}
 </script>
+
 <style lang="scss">
 // backgroud div. Nedded to center form div
 .background {

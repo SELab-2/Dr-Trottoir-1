@@ -1,7 +1,7 @@
 <template>
   <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
 
-  <v-card prepend-icon="mdi-exclamation" variant="flat">
+  <v-card prepend-icon="mdi-exclamation" variant="flat" color="background">
     <template v-slot:title> Start ronde </template>
     <p class="mx-3">
       Je staat op het punt een ronde te starten. Het huidige tijdstip zal
