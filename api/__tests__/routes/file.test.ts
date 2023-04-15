@@ -4,11 +4,8 @@ import supertest from "supertest";
 import { describe, expect, test } from "@jest/globals";
 import * as fs from "fs";
 
-const fileToCreate = {
-    path: "/filee/blanc.png",
-    location: "FILE_SERVER",
-    file: fs.createReadStream("/home/ludovic/Pictures/blanc.png"),
-};
+//readSync /relpathSync
+//file lezen
 
 const file = {
     id: undefined,
@@ -19,6 +16,19 @@ const file = {
 };
 
 process.env["DISABLE_AUTH"] = "false";
+process.env["LOCAL_FILE_PATH"] = "__tests__/files";
+
+const fileToCreate = {
+    path: "__tests__/files/blanc.png",
+    location: "FILE_SERVER",
+    file: fs.readFileSync("/home/ludovic/Pictures/blanc.png"),
+};
+
+const fileToCreateExternal = {
+    path: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    location: "EXTERNAL",
+    file: null,
+};
 
 async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
     // Sessie starten en inloggen om autorisatie te krijgen
@@ -33,54 +43,65 @@ async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
     // Deze constante zorgt ervoor dat de ingelogde gebruiker behouden blijft en dus autorisatie heeft.
     const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
 
-    // Een willekeurige ronde en gebruiker nemen om te gebruiken voor het maken van de schedule
-    // const user = await session.get("/user").set("Cookie", [cookies]);
-    // expect(user.status).toEqual(200);
-    // fileToCreate.user_id = user.body[0].id;
-    // //file.user_id = user.body[0].id;
-    // //delete user.body[0].regions;
-    // file.user = user.body[0];
-
-    // const resultAdd = await session
-    //     .post("/file")
-    //     .send(fileToCreate)
-    //     .set("Cookie", [cookies]);
-    // expect(resultAdd.status).toEqual(201);
-
     return [session, cookies];
 }
 
-describe("Test FileRouting successful tests", () => {
+//const request = supertest(app);
+
+describe("Test FileRouting successful test", () => {
     let session: any;
     let cookies: string;
+    let id: number;
+    let external_id: number;
 
     beforeAll(async () => {
         const session_cookies = await prepareSession();
         session = session_cookies[0];
         cookies = session_cookies[1];
     });
-    afterAll(async () => {
-        //await closeSession(session, cookies);
+
+    afterAll(async () => {});
+
+    test("should successfully upload a file", async () => {
+        const response = await session
+            .post("/file")
+            .set("Cookie", [cookies])
+            .field("path", fileToCreate.path)
+            .field("location", fileToCreate.location)
+            .attach("file", "/home/ludovic/Pictures/blanc.png");
+
+        expect(response.status).toBe(200);
+        id = response.body.id;
     });
 
-    test("Test adding file", async () => {
-        const resultAdd = await session
+    test("should successfully upload an external file", async () => {
+        const response = await session
             .post("/file")
-            .send(fileToCreate)
-            .set("Cookie", [cookies]);
-        expect(resultAdd.status).toEqual(200);
+            .set("Cookie", [cookies])
+            .field("path", fileToCreateExternal.path)
+            .field("location", fileToCreateExternal.location);
+
+        expect(response.status).toBe(200);
+        external_id = response.body.id;
     });
 
     test("Test searching existing file", async () => {
         const result = await session
-            .get("/file/" + "47")
+            .get("/file/" + id)
             .set("Cookie", [cookies]);
         expect(result.status).toEqual(200);
+    });
+
+    test("Test searching existing external file", async () => {
+        const result = await session
+            .get("/file/" + external_id)
+            .set("Cookie", [cookies]);
+        expect(result.status).toEqual(302);
         //expect(result.body).toEqual(file);
     });
 });
 
-describe("Test BuildingRouting unsuccessful tests", () => {
+describe("Test Filerouting unsuccessful tests", () => {
     let session: any;
     let cookies: string;
 
