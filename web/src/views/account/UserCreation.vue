@@ -95,15 +95,7 @@
       <!-- Selection box to determine the roles -->
       <BorderCard class="mt-4" prepend-icon="mdi-account-multiple">
         <template v-slot:title> Rollen </template>
-        <v-select
-          :class="spacing"
-          chips
-          label="Rollen"
-          :items="['Student', 'Superstudent', 'Syndicus', 'Admin']"
-          :rules="roleRules"
-          multiple
-          v-model="roles"
-        ></v-select>
+        <RolesForm v-model="roles"/>
       </BorderCard>
 
       <!-- Account creation button -->
@@ -130,6 +122,7 @@ import Contact from "@/components/models/Contact";
 import ContactForm from "@/components/forms/ContactForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
+import RolesForm from "@/components/forms/RolesForm.vue";
 
 // define the spacing for the input fields
 const spacing: String = "mx-5";

@@ -88,44 +88,7 @@
     <!-- Section to pick the roles -->
     <BorderCard v-if="isAdmin" class="mt-4" prepend-icon="mdi-account-multiple">
       <template v-slot:title> Rollen </template>
-      <v-row v-if="edit" class="ml-1 mb-0">
-        <v-col>
-          <v-checkbox
-            v-model="roles"
-            label="Student"
-            value="Student"
-            color="primary"
-            density="compact"
-            hide-details
-          />
-          <v-checkbox
-            v-model="roles"
-            label="Superstudent"
-            value="Superstudent"
-            color="primary"
-            density="compact"
-            hide-details
-          />
-        </v-col>
-        <v-col>
-          <v-checkbox
-            v-model="roles"
-            label="Syndicus"
-            value="Syndicus"
-            color="primary"
-            density="compact"
-            hide-details
-          />
-          <v-checkbox
-            v-model="roles"
-            label="Admin"
-            value="Admin"
-            color="primary"
-            density="compact"
-            hide-details
-          />
-        </v-col>
-      </v-row>
+      <RolesForm v-if="edit" v-model="roles"/>
       <v-list lines="one" density="compact" v-if="!edit" class="mx-10">
         <v-list-item
           v-for="role in roles"
@@ -221,6 +184,7 @@ import { ref } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import { useAuthStore } from "@/stores/auth";
+import RolesForm from "@/components/forms/RolesForm.vue";
 
 // define the spacing for the input fields
 const spacing: String = "mx-4";
