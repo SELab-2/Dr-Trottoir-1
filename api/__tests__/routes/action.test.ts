@@ -2,12 +2,12 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
+import { constants } from "http2";
 import {
     deleteDatabaseData,
     initialiseDatabase,
     restoreTables,
-} from "../../../mock/src/database";
-import { constants } from "http2";
+} from "../mock/database";
 
 describe("Succesful requests", () => {
     let runner: Testrunner;
