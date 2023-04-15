@@ -175,7 +175,7 @@ const nameRules = [
   (name: string) => {
     return name ? true : 'Geef een naam op.'
   }
-]
+];
 
 // password rules
 const psswd1Rules = [
@@ -188,7 +188,7 @@ const psswd1Rules = [
   (psswd: string) => {
     return psswd.length >= 8 ? true : 'Wachtwoord moet minimaal 8 tekens lang zijn.'
   },
-]
+];
 
 const psswd2Rules = [
   // check if psswd is present
@@ -200,14 +200,14 @@ const psswd2Rules = [
   (_: string) => {
     return password1.value == password2.value ? true : 'Wachtwoorden komen niet overeen.'
   },
-]
+];
 
 const roleRules = [
   // check if roles is not empty
   (roles: string[]) => {
     return roles.length > 0 ? true : 'Selecteer minimaal 1 rol.'
   }
-]
+];
 
 /* Form submition */
 
