@@ -220,13 +220,11 @@ import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
-import { useAuthStore } from "@/stores/auth";
 
 // define the spacing for the input fields
 const spacing: String = "mx-4";
-defineProps(["gebruikerid"]);
-// @ts-ignore
-const isAdmin: Boolean = useAuthStore().auth?.admin;
+const props = defineProps(["gebruikerid", "isadmin"]);
+const isAdmin = ref<Boolean>(props.isadmin === "true");
 // reactive state for name
 const firstname = ref("Mats");
 const lastname = ref("Van Belle");

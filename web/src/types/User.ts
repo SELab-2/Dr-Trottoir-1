@@ -63,10 +63,11 @@ export class User implements TableEntity<User> {
     ].map((e) => new Header<User>(e));
   }
 
-  route(): { name: string; params: { id: number } } {
+  route(): { name: string; params: { id: number; isadmin: boolean } } {
     return {
       name: "account_settings",
-      params: { id: this.id },
+      params: { id: this.id, isadmin: false },
     };
+    // TODO: remove :isadmin when auth is in frontend
   }
 }

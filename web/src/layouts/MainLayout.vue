@@ -24,7 +24,7 @@
 
           <div>
             <v-list-item
-              @click="logOut"
+              :to="{ name: 'login' }"
               prepend-icon="mdi-account-cancel"
               title="Afmelden"
               value="logout"
@@ -33,7 +33,7 @@
             <router-link
               :to="{
                 name: 'account_settings',
-                params: { id: 0 },
+                params: { id: 0, isadmin: 'true' },
               }"
             >
               <v-list-item
@@ -162,11 +162,8 @@
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
 import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
-import { useAuthStore } from "@/stores/auth";
-
-const router = useRouter();
 
 const today = new Date().toLocaleDateString("nl");
 
@@ -177,26 +174,25 @@ const drawer = ref(true);
 const route = useRoute();
 
 // roles to know what to show
-const isStudent: Boolean = useAuthStore().auth!.student;
-const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
-const isSyndicus = true; // TODO: check for syndicus
-const isAdmin: Boolean = useAuthStore().auth!.admin;
+const isStudent = ref(true);
+const isSuperStudent = ref(true);
+const isSyndicus = ref(true);
+const isAdmin = ref(true);
 
 // account display settings
-const studentName: string =
-  useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
+const studentName: string = "Jens Pots";
 function roles(): string {
   let str = "";
-  if (isStudent) {
+  if (isStudent.value) {
     str += "student ";
   }
-  if (isSuperStudent) {
+  if (isSuperStudent.value) {
     str += "superstudent ";
   }
-  if (isSyndicus) {
+  if (isSyndicus.value) {
     str += "syndicus ";
   }
-  if (isAdmin) {
+  if (isAdmin.value) {
     str += "admin ";
   }
   return str;
@@ -210,11 +206,6 @@ window.addEventListener(
   "resize",
   () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
 );
-
-async function logOut() {
-  //await useAuthStore().logOut(); TODO wait until implemented
-  await router.push({ name: "login" });
-}
 </script>
 
 <style lang="scss" scoped>
