@@ -61,7 +61,23 @@ export const useAuthStore = defineStore("auth", () => {
    * Attempt a logout, which will set the current state to null if successful.
    */
   async function logOut(): Promise<void> {
-    throw new Error("Not Implemented"); // TODO
+    try {
+      if (process.env.VUE_APP_DISABLE_AUTHENTICATION !== "true") {
+        await fetch(process.env.VUE_APP_API_SERVER_ADDRESS + "auth/logout/", {
+          method: "POST",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+          },
+          redirect: "manual",
+          credentials: "include",
+        });
+        auth.value = null;
+      }
+    } catch (e) {
+      // Fallback error. TODO: expand error handling.
+      alert("Internal Server Error (logging out)");
+    }
   }
 
   async function getAuth(): Promise<void> {
