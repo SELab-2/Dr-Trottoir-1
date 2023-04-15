@@ -9,7 +9,7 @@
       Nieuw Gebouw
     </v-btn>
   </div>
-    <Table v-bind:entries="buildings" v-bind:headers="Building.headers()"></Table>
+  <Table v-bind:entries="buildings" v-bind:headers="Building.headers()"></Table>
 </template>
 
 <script setup lang="ts">

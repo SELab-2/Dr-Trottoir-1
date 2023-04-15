@@ -35,7 +35,7 @@ async function loadSchedules(): Promise<Schedule[]> {
     const schedulesOrErr: OrmSchedule[] = await new ScheduleQuery().getAll();
     let array: Schedule[] = [];
     for (let schedule of schedulesOrErr) {
-      let s: Schedule = new Schedule(schedule);
+      let s: Schedule = new Schedule(schedule as unknown as Schedule);
       s.day = new Date(schedule.day).toLocaleDateString("nl");
       // Every building in the round has to be finished for the whole round to be finished
       let progress: OrmProgress[] = await loadProgress(s.id);

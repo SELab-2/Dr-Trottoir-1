@@ -152,8 +152,9 @@
 
         <v-spacer />
       </v-app-bar>
-
-      <router-view></router-view>
+      <Suspense>
+        <router-view />
+      </Suspense>
     </v-main>
   </v-app>
 </template>
