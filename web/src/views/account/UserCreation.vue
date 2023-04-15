@@ -197,13 +197,6 @@ const psswd2Rules = [
   },
 ];
 
-const roleRules = [
-  // check if roles is not empty
-  (roles: string[]) => {
-    return roles.length > 0 ? true : 'Selecteer minimaal 1 rol.'
-  }
-];
-
 /* Form submition */
 
 function submitForm(){
