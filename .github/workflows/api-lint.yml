@@ -30,8 +30,6 @@ jobs:
                 run: npm run lint
                 env:
                     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            -   name: "Debugging step: see if selab package is installed"
-                run: npm list
             -   name: "Verify the code compiles"
                 run: npm run build
                 env:

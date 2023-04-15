@@ -50,4 +50,3 @@ jobs:
                     npx prisma db push
             -   name: "Execute tests"
                 run: npm run test
-
