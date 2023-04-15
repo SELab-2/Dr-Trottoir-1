@@ -1,28 +1,28 @@
 {
-  "name": "@selab-2/groep-1-orm",
-  "version": "1.0.10",
-  "description": "Package containing the PrismaORM types of our database schema.",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "scripts": {
-    "test": "echo \"Warning: no tests specified. Continuing.\" && exit 0",
-    "prepare": "npx prisma generate"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SELab-2/Dr-Trottoir-1.git"
-  },
-  "bugs": {
-    "url": "https://github.com/SELab-2/Dr-Trottoir-1/issues"
-  },
-  "homepage": "https://github.com/SELab-2/Dr-Trottoir-1#readme",
-  "author": "Groep 1",
-  "license": "ISC",
-  "devDependencies": {
-    "prisma": "^4.11.0"
-  },
-  "dependencies": {
-    "@prisma/client": "^4.11.0",
-    "dotenv": "^16.0.3"
-  }
+    "name": "@selab-2/groep-1-orm",
+    "version": "1.0.10",
+    "description": "Package containing the PrismaORM types of our database schema.",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "test": "echo \"Warning: no tests specified. Continuing.\" && exit 0",
+        "prepare": "npx prisma generate"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/SELab-2/Dr-Trottoir-1.git"
+    },
+    "bugs": {
+        "url": "https://github.com/SELab-2/Dr-Trottoir-1/issues"
+    },
+    "homepage": "https://github.com/SELab-2/Dr-Trottoir-1#readme",
+    "author": "Groep 1",
+    "license": "ISC",
+    "devDependencies": {
+        "prisma": "^4.11.0"
+    },
+    "dependencies": {
+        "@prisma/client": "^4.11.0",
+        "dotenv": "^16.0.3"
+    }
 }

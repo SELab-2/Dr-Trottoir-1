@@ -15,14 +15,14 @@
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
 import { Building } from "@/types/Building";
+import { Building as OrmBuilding } from "@selab-2/groep-1-orm";
 import { BuildingQuery } from "@selab-2/groep-1-query";
-import { ref } from "vue";
 
-const buildings = ref<Building[]>(await loadBuildings());
+const buildings: Building[] = await loadBuildings();
 
 async function loadBuildings(): Promise<Building[]> {
   try {
-    const buildingsOrErr: Building[] = await new BuildingQuery().getAll();
+    const buildingsOrErr: OrmBuilding[] = await new BuildingQuery().getAll();
     let array: Building[] = [];
     for (let building of buildingsOrErr) {
       array.push(new Building(building));

@@ -23,20 +23,23 @@
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
 import { Schedule } from "@/types/Schedule";
-import { ScheduleQuery, ProgressQuery } from "@selab-2/groep-1-query";
-import { ref } from "vue";
+import {
+  Progress as OrmProgress,
+  Schedule as OrmSchedule,
+} from "@selab-2/groep-1-orm";
+import { ProgressQuery, ScheduleQuery } from "@selab-2/groep-1-query";
 
-const schedules = ref<Schedule[]>(await loadSchedules());
+const schedules: Schedule[] = await loadSchedules();
 
 async function loadSchedules(): Promise<Schedule[]> {
   try {
-    const schedulesOrErr: Schedule[] = await new ScheduleQuery().getAll();
+    const schedulesOrErr: OrmSchedule[] = await new ScheduleQuery().getAll();
     let array: Schedule[] = [];
     for (let schedule of schedulesOrErr) {
-      schedule.day = new Date(schedule.day).toLocaleDateString("nl");
       let s: Schedule = new Schedule(schedule);
+      s.day = new Date(schedule.day).toLocaleDateString("nl");
       // Every building in the round has to be finished for the whole round to be finished
-      let progress: [] = await loadProgress(s.id);
+      let progress: OrmProgress[] = await loadProgress(s.id);
       if (progress.length < s.round.buildings.length) {
         // not all buildings have been visited
         s.finished = false;
@@ -58,17 +61,11 @@ async function loadSchedules(): Promise<Schedule[]> {
     return [];
   }
 }
-
-async function loadProgress(schedule_id: number): Promise<[]> {
+async function loadProgress(schedule_id: number): Promise<OrmProgress[]> {
   try {
-    const progressOrErr: [] = await new ProgressQuery().getAll({
+    return await new ProgressQuery().getAll({
       schedule: schedule_id,
     });
-    let array: [] = [];
-    for (let progress of progressOrErr) {
-      array.push(progress);
-    }
-    return array;
   } catch (e) {
     alert("Kon rondevoortgang niet ophalen, probeer het later opnieuw.");
     return [];

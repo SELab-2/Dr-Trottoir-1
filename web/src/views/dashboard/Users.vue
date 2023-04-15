@@ -15,14 +15,14 @@
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
 import { User } from "@/types/User";
+import { User as OrmUser } from "@selab-2/groep-1-orm";
 import { UserQuery } from "@selab-2/groep-1-query";
-import { ref } from "vue";
 
-const users = ref<User[]>(await loadUsers());
+const users: User[] = await loadUsers();
 
 async function loadUsers(): Promise<User[]> {
   try {
-    const usersOrErr: User[] = await new UserQuery().getAll();
+    const usersOrErr: OrmUser[] = await new UserQuery().getAll();
     let array = [];
     for (let user of usersOrErr) {
       array.push(new User(user));
