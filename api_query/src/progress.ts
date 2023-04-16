@@ -26,7 +26,6 @@ type ProgressAllInfo = Prisma.ProgressGetPayload<{
                 user: typeof includeUserWithoutAddress;
             };
         };
-        images: true;
     };
 }>;
 
