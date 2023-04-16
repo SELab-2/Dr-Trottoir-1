@@ -56,7 +56,7 @@ jobs:
             -   name: "Cleanup"
                 if: always()
                 run: |
-                    chmod +x ../scripts/cleanup.sh
-                    ../scripts/cleanup.sh -p
+                    chmod +x ../server/cleanup.sh
+                    ../server/cleanup.sh -p
                 shell: bash
 
