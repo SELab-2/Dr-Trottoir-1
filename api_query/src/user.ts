@@ -20,6 +20,7 @@ export type UserQueryParameters = {
 
 // Het type dat de body van een POST en PATCH request modelleert.
 type Element = {
+    id: number;
     email: string;
     first_name: string;
     last_name: string;
