@@ -163,3 +163,23 @@ export abstract class Query<Parameters, Element, Result> {
         return this.fetchJSON(url, "DELETE", { hardDelete: hard });
     }
 }
+
+/**
+ * Infer the parameter type of Query object.
+ */
+export type Parameter<ConcreteQuery> = ConcreteQuery extends Query<
+    infer X,
+    infer Y
+>
+    ? Y
+    : never;
+
+/**
+ * Infer the return type of Query object.
+ */
+export type Result<ConcreteQuery> = ConcreteQuery extends Query<
+    infer X,
+    infer Y
+>
+    ? Y
+    : never;
