@@ -70,10 +70,7 @@
     <v-expand-transition v-on:click.stop>
       <div v-show="building!.data.length > 1 && expanded">
         <DividerLayout />
-        <div
-          class="w-100 px-4 py-2"
-          v-if="building!.data.length > 1 && expanded"
-        >
+        <div class="w-100 px-4 py-2" v-if="building!.data.length > 1">
           <v-chip
             v-for="(datum, id) of building!.data"
             :key="id"

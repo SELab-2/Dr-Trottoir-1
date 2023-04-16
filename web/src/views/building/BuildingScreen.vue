@@ -1,51 +1,11 @@
 <template>
   <BuildingData :id="id" />
-  <div id="building-screen" class="px-4">
-    <GarbageSchedule />
-
-    <div>
-      <h2>Huidig bezoek</h2>
-      <div class="image-grid" style="margin-top: 10px">
-        <div
-          v-for="image in images"
-          :key="String(image.url)"
-          style="position: relative"
-        >
-          <ImageCard
-            :img="String(image.url)"
-            btn-icon="mdi-pencil"
-            btn-text="Bewerken"
-          />
-        </div>
-        <ImageCard title="TOEVOEGEN" title-icon="mdi-plus" />
-      </div>
-      <h3>Opmerkingen</h3>
-      <div class="image-grid" style="margin-top: 10px">
-        <div
-          v-for="comment in comments"
-          :key="comment.title"
-          style="position: relative"
-        >
-          <ImageCard
-            :title="comment.title"
-            :text="comment.comment"
-            btn-icon="mdi-pencil"
-            btn-text="Bewerken"
-          />
-        </div>
-        <ImageCard title="TOEVOEGEN" title-icon="mdi-plus" />
-      </div>
-    </div>
-  </div>
-  <AddButton icon="mdi-plus" :items="actions" />
+  <GarbageSchedule />
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
 import BuildingData from "@/components/building/BuildingData.vue";
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
-import ImageCard from "@/components/cards/ImageCard.vue";
-import AddButton from "@/components/buttons/AddButton.vue";
 import GarbageSchedule from "@/components/building/GarbageSchedule.vue";
 
 defineProps({
