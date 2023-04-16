@@ -22,6 +22,8 @@ export class ImageRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
         const result = await prisma.image.findMany({
+            take: Parser.number(req.query["take"], 1024),
+            skip: Parser.number(req.query["skip"], 0),
             where: {
                 time: {
                     lte: Parser.date(req.query["before"]),
@@ -45,6 +47,7 @@ export class ImageRouting extends Routing {
                 },
             },
             include: ImageRouting.includes,
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.status(200).json(result);
