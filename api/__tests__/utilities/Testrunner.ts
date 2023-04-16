@@ -108,6 +108,15 @@ export class Testrunner {
     };
 
     /**
+     * Acquires authentication and performs a GET method on the URL, without doing any testing
+     * @param url URL to GET
+     */
+    getRaw = async (url: string) => {
+        const cookie = await this.authenticate();
+        return this.server.get(url).set("Cookie", [cookie]);
+    };
+
+    /**
      * Acquires authentication if required and performs a POST request to the passed URL.
      * Also performs verification on the response.
      * @param url URL to POST to
@@ -141,6 +150,7 @@ export class Testrunner {
      * Also performs verification on the response.
      * @param url URL to PATCH to
      * @param data data to be sent
+     * @param expectedResponse Dictionary of keys and values PATCH should receive
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
      */
