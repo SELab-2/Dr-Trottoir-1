@@ -8,7 +8,7 @@ describe("garbage", () => {
         ord: Array<"asc" | "desc">;
     };
 
-    class QueryTest extends Query<Type, never, never, never, never> {
+    class QueryTest extends Query<Type, never, never> {
         endpoint = "endpoint";
     }
 
