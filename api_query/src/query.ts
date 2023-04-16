@@ -114,9 +114,19 @@ export abstract class Query<Parameters, Result> {
 /**
  * Infer the parameter type of Query object.
  */
-export type Parameter<ConcreteQuery> = ConcreteQuery extends Query<infer X, infer Y> ? Y : never;
+export type Parameter<ConcreteQuery> = ConcreteQuery extends Query<
+    infer X,
+    infer Y
+>
+    ? Y
+    : never;
 
 /**
  * Infer the return type of Query object.
  */
-export type Result<ConcreteQuery> = ConcreteQuery extends Query<infer X, infer Y> ? Y : never;
+export type Result<ConcreteQuery> = ConcreteQuery extends Query<
+    infer X,
+    infer Y
+>
+    ? Y
+    : never;
