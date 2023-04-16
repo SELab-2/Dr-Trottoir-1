@@ -1,3 +1,12 @@
+/*
+ * Receives an object and prints it to an alert and the console.
+ */
+function handler(err: unknown): void {
+  const jsonString = JSON.stringify(err, Object.getOwnPropertyNames(err), 2);
+  console.log(jsonString);
+  alert(jsonString);
+}
+
 /**
  * Attempt to execute a function which may throw an exception. If it does, it
  * will be caught and shown in a browser alert in JSON and return `undefined`.
@@ -18,11 +27,10 @@
 export function tryOrAlert<T>(func: () => T): T | undefined {
   try {
     return func();
-  } catch (e) {
-    alert(JSON.stringify(e, null, 2));
+  } catch (err) {
+    handler(err);
   }
 }
-
 
 /**
  * Attempt to execute a function which may throw an exception. If it does, it
@@ -41,10 +49,12 @@ export function tryOrAlert<T>(func: () => T): T | undefined {
  * });
  * ```
  */
-export async function tryOrAlertAsync<T>(func: () => Promise<T>): Promise<T | undefined> {
+export async function tryOrAlertAsync<T>(
+  func: () => Promise<T>,
+): Promise<T | undefined> {
   try {
     return await func();
-  } catch (e) {
-    alert(JSON.stringify(e, null, 2));
+  } catch (err) {
+    handler(err);
   }
 }
