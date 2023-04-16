@@ -72,7 +72,8 @@ export const useAuthStore = defineStore("auth", () => {
           redirect: "manual",
           credentials: "include",
         });
-        auth.value = null;
+
+        await getAuth();
       }
     } catch (e) {
       // Fallback error. TODO: expand error handling.
