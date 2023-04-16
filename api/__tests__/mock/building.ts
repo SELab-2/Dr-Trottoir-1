@@ -7,7 +7,7 @@ syndicus, adres en bestand. Deze tabellen kunnen enkel via deze functie gevuld w
 create-functie. De tabel van adres kan echter wel nog aangevuld worden via de functie createUser in het bestand user.ts.
  */
 export async function initialiseBuilding() {
-    const password_b1 = crypto
+    const passwordB1 = crypto
         .createHash("sha256")
         .update("password_building1")
         .digest("hex");
@@ -17,10 +17,13 @@ export async function initialiseBuilding() {
         address_id: 1,
         manual_id: 1,
 
-        hash: password_b1,
+        deleted: false,
+        syndicus_id: 1,
+
+        hash: passwordB1,
     };
 
-    const password_b2 = crypto
+    const passwordB2 = crypto
         .createHash("sha256")
         .update("password_building2")
         .digest("hex");
@@ -29,11 +32,13 @@ export async function initialiseBuilding() {
         ivago_id: "ivago-2",
         address_id: 2,
         manual_id: 2,
+        deleted: false,
+        syndicus_id: 2,
 
-        hash: password_b2,
+        hash: passwordB2,
     };
 
-    const password_b3 = crypto
+    const passwordB3 = crypto
         .createHash("sha256")
         .update("password_building3")
         .digest("hex");
@@ -43,8 +48,10 @@ export async function initialiseBuilding() {
         ivago_id: "ivago-3",
         address_id: 3,
         manual_id: 3,
+        syndicus_id: 1,
+        deleted: true,
 
-        hash: password_b3,
+        hash: passwordB3,
     };
 
     await prisma.building.createMany({
