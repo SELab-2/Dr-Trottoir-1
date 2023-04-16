@@ -144,7 +144,7 @@
 
       <v-app-bar prominent elevation="0" color="background">
         <div class="px-4">
-          <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
+          <v-app-bar-nav-icon id="navbar-visible" variant="text" @click="drawer = !drawer" />
         </div>
 
         <v-toolbar-title class="font-weight-medium">

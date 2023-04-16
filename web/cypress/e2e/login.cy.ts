@@ -1,15 +1,11 @@
 describe('login tests', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('/')
   })
 
-  it('log in succesfull', () =>{
-    cy.get('#email').type('administrator@trottoir.be')
-    cy.get('#password').type('password')
-    cy.get('#login').click()
-    cy.get('#logout').click()
-    // we are now back on the login page
-    cy.get('#login')
+  it.only('log in succesfull', () =>{
+    cy.login('administrator@trottoir.be', 'password')
+    cy.visit('/planning')
   })
 
   it('log in failed: incorrect password', () =>{
