@@ -24,6 +24,7 @@
 
           <div>
             <v-list-item
+              id="logout"
               @click="logOut"
               prepend-icon="mdi-account-cancel"
               title="Afmelden"

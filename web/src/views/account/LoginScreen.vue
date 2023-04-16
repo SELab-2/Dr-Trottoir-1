@@ -12,7 +12,7 @@
       <!-- The input field for the e-mail -->
       <v-text-field
         v-model="email"
-        class="email"
+        id="email"
         :prepend-inner-icon="'mdi-email'"
         label="E-mail"
         type="text"
@@ -22,7 +22,7 @@
       <!-- The input field for the password -->
       <v-text-field
         v-model="password"
-        class="password"
+        id="password"
         :prepend-inner-icon="'mdi-lock'"
         :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
         :type="showPsswd ? 'text' : 'password'"
@@ -40,7 +40,7 @@
           </span>
         </p>
         <!-- Login button -->
-        <v-btn prepend-icon="mdi-login" color="success" @click="logIn"
+        <v-btn id="login" prepend-icon="mdi-login" color="success" @click="logIn"
           >Login</v-btn
         >
       </div>
