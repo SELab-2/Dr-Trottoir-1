@@ -20,6 +20,7 @@ import RoundOverview from "@/views/dashboard/Round.vue";
 import Auth from "@/views/dev/Auth.vue";
 import { useAuthStore } from "@/stores/auth";
 import TryOrAlert from "@/views/dev/TryOrAlert.vue";
+import Round from "@/views/round/Round.vue";
 
 const routes: any[] = [
   {
@@ -84,6 +85,20 @@ const routes: any[] = [
       },
       {
         path: "/ronde/:id",
+        name: "round",
+        component: Round,
+        meta: {
+          title: "",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student || superstudent || admin,
+        },
+      },
+      {
+        path: "/ronde/:id/:schedule",
         name: "round_detail",
         component: RoundDetail,
         meta: {

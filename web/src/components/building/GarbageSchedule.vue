@@ -43,8 +43,7 @@
 import 'v-calendar/style.css';
 import { Ref, ref } from "vue";
 import { GarbageQuery } from "@selab-2/groep-1-query/dist/garbage";
-import { ScheduleQuery } from "@selab-2/groep-1-query";
-import { Garbage, Schedule } from "@selab-2/groep-1-orm";
+import {Result, ScheduleQuery} from "@selab-2/groep-1-query";
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import Badge from "@/components/Badge.vue";
@@ -72,8 +71,9 @@ const attrs: Ref<Array<Annotations>> = ref([
   },
 ]);
 
-const garbage: Ref<Garbage[]> = ref([]);
-const schedule: Ref<Schedule[]> = ref([]);
+const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
+const schedule: Ref<Array<Result<ScheduleQuery>>> = ref([]);
+
 const date = ref(new Date());
 
 new GarbageQuery().getAll({}).then(result => {
@@ -81,7 +81,7 @@ new GarbageQuery().getAll({}).then(result => {
   attrs.value[0].dates = result.map(e => e.pickup_time);
 });
 
-new ScheduleQuery().getAll({}).then(result => {
+new ScheduleQuery().getAll({take: 1}).then(result => {
   schedule.value = result;
   attrs.value[1].dates = result.map(e => e.day);
 });

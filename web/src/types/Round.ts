@@ -90,7 +90,7 @@ export class Routes implements TableEntity<Routes> {
 
   route(): { name: string; params: { id: number } } {
     return {
-      name: "round_detail",
+      name: "round",
       params: { id: this.id },
     };
   }
