@@ -44,7 +44,7 @@ export function tryOrAlert<T>(func: () => T): T | undefined {
  * // Will show alert if y is zero and return undefined.
  * const x = await randomAsync();
  * const y = await randomAsync();
- * const result: number | undefined = await tryOrAlert<number>(async () => {
+ * const result: number | undefined = await tryOrAlertAsync<number>(async () => {
  *   return x / y;
  * });
  * ```
