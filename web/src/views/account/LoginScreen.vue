@@ -40,7 +40,11 @@
           </span>
         </p>
         <!-- Login button -->
-        <v-btn id="login" prepend-icon="mdi-login" color="success" @click="logIn"
+        <v-btn
+          id="login"
+          prepend-icon="mdi-login"
+          color="success"
+          @click="logIn"
           >Login</v-btn
         >
       </div>
