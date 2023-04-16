@@ -23,11 +23,6 @@ export class BuildingRouting extends Routing {
             },
         },
         manual: true,
-        images: {
-            include: {
-                image: true,
-            },
-        },
     };
 
     private static twoWeekDelta: { gte: Date; lte: Date } = {

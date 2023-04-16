@@ -14,7 +14,6 @@ export class ProgressRouting extends Routing {
                 user: includeUser(false),
             },
         },
-        images: true,
     };
 
     @Auth.authorization({ superStudent: true })

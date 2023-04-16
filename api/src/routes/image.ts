@@ -185,7 +185,7 @@ export class ImageRouting extends Routing {
         return result.image_id;
     }
 
-    @Auth.authorization({student: true})
+    @Auth.authorization({ student: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
         const type = req.query["type"];
 
@@ -204,7 +204,10 @@ export class ImageRouting extends Routing {
         }
     }
 
-    static async deleteBuildingImage(req: CustomRequest, res: express.Response) {
+    static async deleteBuildingImage(
+        req: CustomRequest,
+        res: express.Response,
+    ) {
         await prisma.buildingImages.delete({
             where: {
                 id: Parser.number(req.params["id"]),
@@ -214,7 +217,10 @@ export class ImageRouting extends Routing {
         return res.status(200).json({});
     }
 
-    static async deleteProgressImage(req: CustomRequest, res: express.Response) {
+    static async deleteProgressImage(
+        req: CustomRequest,
+        res: express.Response,
+    ) {
         if (Parser.bool(req.body["hardDelete"], false)) {
             await prisma.progressImage.delete({
                 where: {
