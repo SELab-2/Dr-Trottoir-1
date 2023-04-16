@@ -110,3 +110,13 @@ export abstract class Query<Parameters, Result> {
         throw new Error("Not Implemented");
     }
 }
+
+/**
+ * Infer the parameter type of Query object.
+ */
+export type Parameter<ConcreteQuery> = ConcreteQuery extends Query<infer X, infer Y> ? Y : never;
+
+/**
+ * Infer the return type of Query object.
+ */
+export type Result<ConcreteQuery> = ConcreteQuery extends Query<infer X, infer Y> ? Y : never;
