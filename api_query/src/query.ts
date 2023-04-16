@@ -169,9 +169,10 @@ export abstract class Query<Parameters, Element, Result> {
  */
 export type Parameter<ConcreteQuery> = ConcreteQuery extends Query<
     infer X,
-    infer Y
+    infer Y,
+    infer Z
 >
-    ? Y
+    ? Z
     : never;
 
 /**
@@ -179,7 +180,8 @@ export type Parameter<ConcreteQuery> = ConcreteQuery extends Query<
  */
 export type Result<ConcreteQuery> = ConcreteQuery extends Query<
     infer X,
-    infer Y
+    infer Y,
+    infer Z
 >
-    ? Y
+    ? Z
     : never;
