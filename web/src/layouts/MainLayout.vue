@@ -211,7 +211,7 @@ window.addEventListener(
 );
 
 async function logOut() {
-  //await useAuthStore().logOut(); TODO wait until implemented
+  await useAuthStore().logOut();
   await router.push({ name: "login" });
 }
 </script>
