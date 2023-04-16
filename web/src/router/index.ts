@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createRouter, createWebHistory } from "vue-router";
 import LoginScreen from "@/views/account/LoginScreen.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
@@ -17,30 +18,40 @@ import UserOverview from "@/views/dashboard/Users.vue";
 import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
 import Auth from "@/views/dev/Auth.vue";
+import { useAuthStore } from "@/stores/auth";
+import TryOrAlert from "@/views/dev/TryOrAlert.vue";
 
-const routes = [
+const routes: any[] = [
   {
     path: "/",
     component: LoginScreen,
     name: "login",
-  },
-  {
-    path: "/dev/auth",
-    component: Auth,
-    name: "auth",
+    meta: {
+      auth: (
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
   },
   {
     component: MainLayout,
     path: "/", // Unreachable, as intended.
     children: [
       {
-        // TODO: isadmin should be removed when authentication is in order
-        path: "/account/settings/:id/:isadmin",
+        path: "/account/settings/:id",
         name: "account_settings",
         component: AccountSettings,
         props: true,
         meta: {
           title: "",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student || superstudent || syndicus || admin,
         },
       },
       {
@@ -49,6 +60,12 @@ const routes = [
         component: SchedulingScreenStudent,
         meta: {
           title: "Planning student",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student,
         },
       },
       {
@@ -57,6 +74,12 @@ const routes = [
         component: RoundFollowup,
         meta: {
           title: "Opvolging rondes",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
       {
@@ -65,6 +88,12 @@ const routes = [
         component: RoundDetail,
         meta: {
           title: "",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student || superstudent || admin,
         },
       },
       {
@@ -73,6 +102,12 @@ const routes = [
         component: RoundPlanner,
         meta: {
           title: "Ronde plannen",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
       {
@@ -81,6 +116,12 @@ const routes = [
         component: RoundMaker,
         meta: {
           title: "Ronde maken",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
       {
@@ -90,6 +131,12 @@ const routes = [
         props: true,
         meta: {
           title: "",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student,
         },
       },
       {
@@ -97,6 +144,15 @@ const routes = [
         name: "building_id_detail",
         component: BuildingDetail,
         props: true,
+        meta: {
+          title: "",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || syndicus || admin,
+        },
       },
       {
         path: "/gebouw/nieuw",
@@ -104,6 +160,12 @@ const routes = [
         component: BuildingMaker,
         meta: {
           title: "Nieuw gebouw",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
       {
@@ -111,13 +173,28 @@ const routes = [
         name: "building_followup",
         component: BuildingFollowup,
         meta: {
-          title: "Gebouwen",
+          title: "Opvolging gebouwen",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
       {
         path: "/gebouw/:id/afvalschema",
         name: "garbage_plan",
         component: GarbageMaker,
+        meta: {
+          title: "",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student || superstudent || syndicus || admin,
+        },
       },
       {
         path: "/account",
@@ -125,6 +202,12 @@ const routes = [
         name: "user_overview",
         meta: {
           title: "Gebruikers",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => admin,
         },
       },
       {
@@ -133,6 +216,12 @@ const routes = [
         component: UserCreation,
         meta: {
           title: "Nieuwe gebruiker",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => admin,
         },
       },
       {
@@ -141,6 +230,12 @@ const routes = [
         name: "building_overview",
         meta: {
           title: "Gebouwen",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => admin,
         },
       },
       {
@@ -149,15 +244,97 @@ const routes = [
         name: "round_overview",
         meta: {
           title: "Rondes",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
     ],
   },
 ];
 
+const devRoutes: any[] = [
+  {
+    path: "/dev/auth",
+    component: Auth,
+    name: "auth",
+    meta: {
+      auth: (
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
+  },
+  {
+    path: "/dev/try",
+    component: TryOrAlert,
+    name: "try",
+    meta: {
+      auth: (
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
+  },
+];
+
+if (import.meta.env.MODE === "development") {
+  routes.push(...devRoutes);
+}
+
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+});
+
+router.beforeEach(async (to, from, next) => {
+  if (!useAuthStore().auth) {
+    await useAuthStore().getAuth();
+  }
+
+  const checkAuth = to.meta.auth as (
+    student: boolean,
+    superstudent: boolean,
+    syndicus: boolean,
+    admin: boolean,
+  ) => boolean;
+  if (!checkAuth) {
+    console.error("Route has no authentication function.");
+  }
+
+  const auth = useAuthStore().auth;
+
+  if (!auth) {
+    const checked: boolean = checkAuth(false, false, false, false);
+    if (!checked) {
+      next("/");
+    } else {
+      next();
+    }
+  } else {
+    const isStudent = auth.student;
+    const isSuperStudent = auth.super_student;
+    const isSyndicus = true; // TODO
+    const isAdmin = auth.admin;
+    const checked: boolean = checkAuth(
+      isStudent,
+      isSuperStudent,
+      isSyndicus,
+      isAdmin,
+    );
+    if (!checked) {
+      next("/");
+    } else {
+      next();
+    }
+  }
 });
 
 export default router;
