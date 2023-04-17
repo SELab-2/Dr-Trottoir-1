@@ -175,26 +175,24 @@ import Loader from "@/components/popups/Loader.vue";
 import { User } from "@selab-2/groep-1-orm";
 
 const router = useRouter();
-
 const today = new Date().toLocaleDateString("nl");
-
 // reactive state to show the drawer or not
 const drawer = ref(true);
-
 // get the route object, needed to show the title
 const route = useRoute();
-
 // roles to know what to show
 const isStudent: Boolean = useAuthStore().auth!.student;
 const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
 const isSyndicus = true; // TODO: check for syndicus
 const isAdmin: Boolean = useAuthStore().auth!.admin;
 
-const roles = getRoles(useAuthStore().auth as User);
-
 // account display settings
 const studentName: string =
   useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
+
+const roles = getRoles(useAuthStore().auth as User);
+
+// account display settings
 
 const id = useAuthStore().auth!.id;
 
@@ -204,7 +202,6 @@ window.addEventListener(
   "resize",
   () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
 );
-
 async function logOut() {
   await useAuthStore().logOut();
   await router.push({ name: "login" });
@@ -216,15 +213,12 @@ a {
   text-decoration: none;
   color: black;
 }
-
 .text {
   width: 80%;
 }
-
 .flex {
   display: flex;
 }
-
 .sidebar {
   position: fixed !important;
   height: 100vh !important;

@@ -196,6 +196,7 @@ import Contact from "@/components/models/Contact";
 import Avatar from "@/components/Avatar.vue";
 import { Ref, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
+
 import { getRoles } from "@/assets/scripts/roles";
 import { UserQuery } from "@selab-2/groep-1-query";
 import { User, Address } from "@selab-2/groep-1-orm";
