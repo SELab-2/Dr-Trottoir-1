@@ -12,7 +12,7 @@
           <Avatar :name="`${firstname} ${lastname}`" />
         </template>
       </v-list-item>
-      <div v-if="isAdmin || id == user_id">
+      <div v-if="isAdmin || account_id === user_id">
         <v-btn
           v-if="!edit"
           prepend-icon="mdi-pencil"
@@ -175,7 +175,7 @@
         >
 
         <v-btn
-          v-if="isAdmin && id != user_id"
+          v-if="isAdmin && account_id !== user_id"
           prepend-icon="mdi-delete"
           @click="edit = !edit"
           color="error"
@@ -202,7 +202,9 @@ import { User, Address } from "@selab-2/groep-1-orm";
 
 // define the spacing for the input fields
 const spacing: String = "mx-4";
+// get the account id from the route
 const props = defineProps(["id"]);
+const account_id = Number(props.id);
 
 const isAdmin: Boolean = useAuthStore().auth!.admin;
 const user_id = useAuthStore().auth!.id;
