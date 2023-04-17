@@ -47,6 +47,7 @@ interface GetParameters {
 interface PostParameters {
     url: string;
     data: {};
+    expectedResponse: {};
     statusCode?: number;
 }
 
@@ -101,7 +102,6 @@ export class Testrunner {
 
         const response = await this.server.get(url).set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
-
         this.verifyBody(expectedData, response);
 
         return response;
@@ -121,12 +121,14 @@ export class Testrunner {
      * Also performs verification on the response.
      * @param url URL to POST to
      * @param data data to be sent
+     * @param expectedResponse Response that should be received from the Request
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
      */
     post = async ({
         url,
         data,
+        expectedResponse,
         statusCode = constants.HTTP_STATUS_CREATED,
     }: PostParameters): Promise<request.Response> => {
         const cookie = await this.authenticate();
@@ -140,9 +142,14 @@ export class Testrunner {
         // drop the id, as we cannot predict that
         delete response.body["id"];
 
-        this.verifyBody([data], response);
+        this.verifyBody([expectedResponse], response);
 
         return response;
+    };
+
+    postRaw = async (url: string, data: object) => {
+        const cookie = await this.authenticate();
+        return this.server.post(url).set(data).set("Cookie", cookie);
     };
 
     /**
