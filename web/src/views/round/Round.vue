@@ -1,45 +1,45 @@
 <template>
   <HFillWrapper>
     <div class="space-y-8">
-      <div style="display: flex; gap: 8px; align-items: center">
-        <h1>Ronde Korenmarkt</h1>
-        <div class="flex-grow-1"></div>
-        <RoundedButton icon="mdi-pencil-plus" value="Kopieren"></RoundedButton>
-        <RoundedButton icon="mdi-pencil" value="Wijzigen"></RoundedButton>
-        <RoundedButton icon="mdi-calendar" value="Inplannen"></RoundedButton>
-      </div>
+      <h1>Ronde Korenmarkt</h1>
 
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
+      <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
+        <h2>Gebouwen</h2>
+        <div class="flex-grow-1"></div>
+        <RoundedButton icon="mdi-calendar" value="Wijzigen"></RoundedButton>
+      </div>
+
       <div class="grid">
         <img src="@/assets/images/dummyMap.png" class="map" alt="Map">
-        <div class="building-list space-y-8">
-          <CardLayout
-            class="building-card"
-            v-for="building in buildings"
-            v-bind:key="building.id"
-            @click="router.push({ name: 'building_id', params: { id: building.id } })"
-          >
-            <div>
-              <h3>{{building.name}}</h3>
-              <p>{{building.address.street}} {{building.address.number}}</p>
-              <p>{{building.address.zip_code}} {{building.address.city}} </p>
-            </div>
-            <div class="flex-grow-1"></div>
-            <v-icon icon="mdi-chevron-right"></v-icon>
-          </CardLayout>
-        </div>
+
+        <CardLayout
+          class="building-card"
+          v-for="building in buildings"
+          v-bind:key="building.id"
+          @click="router.push({ name: 'building_id', params: { id: building.id } })"
+        >
+          <div>
+            <h3>{{building.name}}</h3>
+            <p>{{building.address.street}} {{building.address.number}}</p>
+            <p>{{building.address.zip_code}} {{building.address.city}} </p>
+          </div>
+          <div class="flex-grow-1"></div>
+          <v-icon icon="mdi-chevron-right"></v-icon>
+        </CardLayout>
       </div>
+
+
 
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Planning</h2>
         <div class="flex-grow-1"></div>
-        <RoundedButton icon="mdi-calendar" value="Volledige planning"></RoundedButton>
+        <RoundedButton icon="mdi-calendar" value="Inplannen"></RoundedButton>
       </div>
 
       <div class="space-y-8">
         <CardLayout
-          :class="{ 'bg-green-lighten-4': schedule === schedules[0] }"
           class="building-card"
           v-for="schedule in schedules"
           v-bind:key="schedule.id"
@@ -50,7 +50,7 @@
             <p>{{schedule.user.first_name}} {{schedule.user.last_name}}</p>
           </div>
           <div class="flex-grow-1"></div>
-          <RoundedButton v-if="schedule === schedules[0]" icon="mdi-bicycle-cargo" value="Actief"></RoundedButton>
+          <RoundedButton class="bg-green-lighten-5" v-if="schedule === schedules[0]" icon="mdi-bicycle-cargo" value="Actief"></RoundedButton>
           <RoundedButton v-if="schedule === schedules[0]" icon="mdi-image" value="13"></RoundedButton>
           <RoundedButton v-if="schedule === schedules[0]" icon="mdi-note-edit-outline" value="10"></RoundedButton>
           <v-icon v-if="schedule === schedules[0]" icon="mdi-chevron-right"></v-icon>
@@ -70,7 +70,7 @@
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Afgelopen bezoeken</h2>
         <div class="flex-grow-1"></div>
-        <RoundedButton icon="mdi-calendar" value="Alle bezoeken"></RoundedButton>
+        <RoundedButton icon="mdi-history" value="Volledige geschiedenis"></RoundedButton>
       </div>
 
       <div class="space-y-8">
@@ -117,14 +117,15 @@ tryOrAlertAsync(async () => {
 
 <style scoped lang="sass">
 .map
+  grid-column: span 2 / span 2
   object-fit: cover
   width: 100%
-  aspect-ratio: 1
+  aspect-ratio: 3
   border-radius: 5px
 
 .grid
   display: grid
-  gap: 16px
+  gap: 8px
   grid-template-columns: repeat(2, minmax(0, 1fr))
 
 .space-y-8
@@ -137,10 +138,10 @@ tryOrAlertAsync(async () => {
   overflow: scroll
 
 .building-card
-  padding: 16px 0 16px 16px
+  padding: 24px 0 24px 24px
   display: flex
   align-items: center
-  gap: 16px
+  gap: 24px
 
 .schedule-card
   & > *
@@ -156,7 +157,7 @@ tryOrAlertAsync(async () => {
 
   .carousel
     display: flex
-    gap: 16px
+    gap: 24px
     overflow: scroll
 
   ul
