@@ -89,14 +89,15 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
+        let result;
         if (Parser.bool(req.body["hardDelete"], false)) {
-            await prisma.schedule.delete({
+            result = await prisma.schedule.delete({
                 where: {
                     id: Parser.number(req.params["id"]),
                 },
             });
         } else {
-            await prisma.schedule.update({
+            result = await prisma.schedule.update({
                 data: {
                     deleted: true,
                 },
@@ -106,6 +107,6 @@ export class ScheduleRouting extends Routing {
             });
         }
 
-        return res.status(200).json({});
+        return res.status(200).json(result);
     }
 }

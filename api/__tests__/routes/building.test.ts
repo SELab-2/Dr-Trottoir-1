@@ -312,7 +312,7 @@ describe("Building tests", () => {
         });
     });
     describe("Unsuccessful requests", () => {
-        describe("Correct authorisation", () => {
+        describe("Must have correct authorisation", () => {
             describe("Can't use any path unauthorized", () => {
                 beforeEach(() => {
                     runner.authLevel(AuthenticationLevel.UNAUTHORIZED);

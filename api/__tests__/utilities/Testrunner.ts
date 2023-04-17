@@ -61,6 +61,7 @@ interface PatchParameters {
 interface DeleteParameters {
     url: string;
     statusCode?: number;
+    data?: {};
 }
 
 /**
@@ -185,15 +186,20 @@ export class Testrunner {
      * Also performs verification on the response.
      * @param url URL to perform DELETE on
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
+     * @param data data/parameters to send with the Request, such as soft deletes
      * @return the Response object for further testing, should it be required.
      */
     delete = async ({
         url,
         statusCode = constants.HTTP_STATUS_OK,
+        data = {},
     }: DeleteParameters): Promise<request.Response> => {
         const cookie = await this.authenticate();
 
-        const response = await this.server.delete(url).set("Cookie", [cookie]);
+        const response = await this.server
+            .delete(url)
+            .send(data)
+            .set("Cookie", [cookie]);
 
         expect(response.statusCode).toEqual(statusCode);
 
