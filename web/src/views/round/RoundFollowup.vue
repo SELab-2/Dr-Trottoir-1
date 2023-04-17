@@ -7,8 +7,12 @@
       class="mx-1 mb-3"
       @onUpdate="(new_data: FilterData) => filter_data = new_data"
     />
-    <RoundCard
-      v-for="(round, i) in filtered_data()"
+    <v-card v-for="(schedule, i) in getSchedules()" :key="i"
+    >
+      {{ schedule }}
+    </v-card>
+    <!--<RoundCard
+      v-for="(schedule, i) in getSchedules()"
       :key="i"
       :round_name="round.name"
       :round_start="
@@ -22,7 +26,7 @@
       :round_comments="round_has_comments(round)"
       @click="redirect_to_detail()"
       style="cursor: pointer"
-    ></RoundCard>
+    ></RoundCard>-->
   </HFillWrapper>
 </template>
 
@@ -35,8 +39,27 @@ import { ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
+import { ScheduleQuery } from "@selab-2/groep-1-query";
+import { Schedule } from "@selab-2/groep-1-orm";
+
 // the router constant
 const router = useRouter();
+
+// filter props to pass to largefilter component
+const query_labels = ["Ronde", "Persoon"];
+const filter_options = ["Klaar", "Bezig", "Niet begonnen", "Opmerkingen"];
+const sort_items = ["Voortgang", "Gebouwen"];
+
+// All the filter options
+const filter_data = ref<FilterData>({
+  query: "",
+  search_label: query_labels[0],
+  sort_by: sort_items[0],
+  sort_ascending: true,
+  filters: [],
+  start_day: new Date(),
+  end_day: new Date(),
+});
 
 function redirect_to_detail() {
   router.push({ name: "round_detail", params: { id: 0 } });
@@ -61,140 +84,29 @@ function completed_buildings(round: Round): number {
   return count;
 }
 
-// TODO: mockdata for rounds, remove in future
-const mockrounds: Round[] = [
-  {
-    name: "Grote Markt",
-    due_date: new Date(2023, 2, 6, 13, 30),
-    start_time: new Date(2023, 2, 6, 13, 30),
-    end_time: new Date(2023, 2, 6, 14, 0),
-    student: "Emma",
-    buildings: [
-      {
-        name: "Garcia",
-        address: "Bruges, Belgium",
-        start_time: new Date(2023, 2, 6, 16, 0),
-        end_time: new Date(2023, 2, 6, 16, 10),
-        comments: true,
-        amount_of_pics: 5,
-      },
-      {
-        name: "Miller",
-        address: "Leuven, Belgium",
-        start_time: new Date(2023, 2, 6, 16, 20),
-        end_time: new Date(2023, 2, 6, 16, 30),
-        comments: false,
-        amount_of_pics: 2,
-      },
-    ],
-  },
-  {
-    name: "Vrijdagmarkt",
-    due_date: new Date(2023, 2, 6, 16, 0),
-    start_time: new Date(2023, 2, 6, 16, 0),
-    end_time: null,
-    student: "Sophie",
-    buildings: [
-      {
-        name: "Garcia",
-        address: "Bruges, Belgium",
-        start_time: new Date(2023, 2, 6, 16, 0),
-        end_time: new Date(2023, 2, 6, 16, 10),
-        comments: true,
-        amount_of_pics: 5,
-      },
-      {
-        name: "Miller",
-        address: "Leuven, Belgium",
-        start_time: null,
-        end_time: null,
-        comments: false,
-        amount_of_pics: 2,
-      },
-      {
-        name: "Clark",
-        address: "Ostend, Belgium",
-        start_time: null,
-        end_time: null,
-        comments: false,
-        amount_of_pics: 0,
-      },
-      {
-        name: "Garcia",
-        address: "Bruges, Belgium",
-        start_time: null,
-        end_time: null,
-        comments: true,
-        amount_of_pics: 5,
-      },
-      {
-        name: "Miller",
-        address: "Leuven, Belgium",
-        start_time: null,
-        end_time: null,
-        comments: false,
-        amount_of_pics: 2,
-      },
-      {
-        name: "Clark",
-        address: "Ostend, Belgium",
-        start_time: null,
-        end_time: null,
-        comments: false,
-        amount_of_pics: 0,
-      },
-    ],
-  },
-  {
-    name: "Korenmarkt",
-    due_date: new Date(2023, 2, 6, 12, 45),
-    start_time: null,
-    end_time: null,
-    student: "Alex",
-    buildings: [
-      {
-        name: "Garcia",
-        address: "Bruges, Belgium",
-        start_time: null,
-        end_time: null,
-        comments: true,
-        amount_of_pics: 5,
-      },
-      {
-        name: "Miller",
-        address: "Leuven, Belgium",
-        start_time: null,
-        end_time: null,
-        comments: false,
-        amount_of_pics: 2,
-      },
-      {
-        name: "Clark",
-        address: "Ostend, Belgium",
-        start_time: null,
-        end_time: null,
-        comments: false,
-        amount_of_pics: 0,
-      },
-    ],
-  },
-];
+/* Data fetching */
 
-// filter props to pass to largefilter component
-const query_labels = ["Ronde", "Persoon"];
-const filter_options = ["Klaar", "Bezig", "Niet begonnen", "Opmerkingen"];
-const sort_items = ["Voortgang", "Gebouwen"];
+async function getSchedules(): Promise<Schedule[]>{
+  try{
+    // get the schedules
+    const result: Schedule[] = (await new ScheduleQuery().getAll({
+      //after: filter_data.value.start_day,
+      //before: filter_data.value.end_day,
+      //sort: [filter_data.value.sort_by],
+      //ord: (filter_data.value.sort_ascending ? ['asc'] : ['desc']),
+    }))
+    console.log(result)
+    return result;
+  } catch(e){
+    // TODO: proper error handeling
+    alert(e)
+  }
+  return [];
+}
 
-// All the filter options
-const filter_data = ref<FilterData>({
-  query: "",
-  search_label: query_labels[0],
-  sort_by: sort_items[0],
-  sort_ascending: true,
-  filters: [],
-  start_day: new Date().toLocaleDateString("nl"),
-  end_day: new Date().toLocaleDateString("nl"),
-});
+
+
+/* Filtering 
 
 function filter_query(round: Round): boolean {
   let search_by: string = "";
@@ -284,5 +196,5 @@ function filtered_data(): Round[] {
     result.reverse();
   }
   return result;
-}
+}*/
 </script>
