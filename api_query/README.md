@@ -50,10 +50,7 @@ export abstract class Query<Parameters, Result> {
     async updateOne(element: Partial<Result>): Promise<Result>;
 
     // Verwijder een element.
-    async deleteOne(
-        element: Partial<Result>,
-        hard = false,
-    ): Promise<void>;
+    async deleteOne(element: Partial<Result>, hard = false): Promise<void>;
 }
 ```
 

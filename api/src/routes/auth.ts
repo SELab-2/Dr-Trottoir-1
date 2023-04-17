@@ -36,6 +36,15 @@ export class AuthRouting {
             }),
         );
 
+        router.post("/logout", (req, res, next) => {
+            req.logout(function (err) {
+                if (err) {
+                    return next(err);
+                }
+                res.redirect("/auth");
+            });
+        });
+
         return router;
     }
 }
