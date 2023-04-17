@@ -17,7 +17,9 @@
             <div class="flex">
               <div class="text">
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
-                <v-list-item-subtitle>{{ roles() }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{
+                  roles.join(" ")
+                }}</v-list-item-subtitle>
               </div>
             </div>
           </v-list-item>
@@ -33,7 +35,7 @@
             <router-link
               :to="{
                 name: 'account_settings',
-                params: { id: 0 },
+                params: { id: id },
               }"
             >
               <v-list-item
@@ -152,8 +154,12 @@
 
         <v-spacer />
       </v-app-bar>
-
-      <router-view></router-view>
+      <Suspense :key="route.fullPath">
+        <template #fallback>
+          <Loader />
+        </template>
+        <router-view />
+      </Suspense>
     </v-main>
   </v-app>
 </template>
@@ -164,6 +170,9 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useAuthStore } from "@/stores/auth";
+import { getRoles } from "@/assets/scripts/roles";
+import Loader from "@/components/popups/Loader.vue";
+import { User } from "@selab-2/groep-1-orm";
 
 const router = useRouter();
 
@@ -181,30 +190,16 @@ const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
 const isSyndicus = true; // TODO: check for syndicus
 const isAdmin: Boolean = useAuthStore().auth!.admin;
 
+const roles = getRoles(useAuthStore().auth as User);
+
 // account display settings
 const studentName: string =
   useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
-function roles(): string {
-  let str = "";
-  if (isStudent) {
-    str += "student ";
-  }
-  if (isSuperStudent) {
-    str += "superstudent ";
-  }
-  if (isSyndicus) {
-    str += "syndicus ";
-  }
-  if (isAdmin) {
-    str += "admin ";
-  }
-  return str;
-}
+
+const id = useAuthStore().auth!.id;
 
 const thresholdWidth: number = 750;
-
 const permanentDrawer = ref<Boolean>(window.innerWidth > thresholdWidth);
-
 window.addEventListener(
   "resize",
   () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
