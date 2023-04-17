@@ -2,13 +2,16 @@ import app from "../../src/main";
 import request from "supertest";
 import { describe, expect, test } from "@jest/globals";
 import supertest from "supertest";
+import { v4 as uuidv4 } from 'uuid';
+
+const uid = uuidv4();
 
 const buildingToCreate = {
     name: "BuildingName",
     ivago_id: "1234567890",
     syndicus_id: undefined,
     address_id: undefined,
-    manual_id: 1,
+    manual_id: uid,
 };
 
 const building = {
@@ -22,7 +25,7 @@ const building = {
     },
     address: undefined,
     manual: {
-        id: 1,
+        id: uid,
         path: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         location: "EXTERNAL",
     },
@@ -69,7 +72,7 @@ async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
     building.id = resultAdd.body.id;
     building.syndicus.id = buildingToCreate.syndicus_id;
     building.syndicus.user_id = user.id;
-    building.manual.id = 1;
+    building.manual.id = uid;
     delete user.address;
     delete user.regions;
     building.syndicus.user = user;
@@ -197,7 +200,7 @@ describe("Test BuildingRouting unsuccessful tests", () => {
 
         const resultManual = await session
             .patch("/building/" + building.id)
-            .send({ manual_id: 0 })
+            .send({ manual_id: '0' })
             .set("Cookie", [cookies]);
         expect(resultManual.status).toEqual(500);
     });
