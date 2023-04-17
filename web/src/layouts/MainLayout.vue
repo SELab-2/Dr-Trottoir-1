@@ -174,7 +174,6 @@ import { getRoles } from "@/assets/scripts/roles";
 import Loader from "@/components/popups/Loader.vue";
 import { User } from "@selab-2/groep-1-orm";
 
-
 const router = useRouter();
 const today = new Date().toLocaleDateString("nl");
 // reactive state to show the drawer or not
@@ -196,7 +195,6 @@ const roles = getRoles(useAuthStore().auth as User);
 // account display settings
 
 const id = useAuthStore().auth!.id;
-
 
 const thresholdWidth: number = 750;
 const permanentDrawer = ref<Boolean>(window.innerWidth > thresholdWidth);
