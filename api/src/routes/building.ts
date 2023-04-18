@@ -231,7 +231,7 @@ export class BuildingRouting extends Routing {
         return res.status(201).json(result);
     }
 
-    @Auth.authorization({superStudent: true})
+    @Auth.authorization({ superStudent: true })
     async deleteImage(req: CustomRequest, res: express.Response) {
         const result = await prisma.buildingImages.findUniqueOrThrow({
             where: {
