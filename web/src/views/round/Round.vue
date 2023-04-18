@@ -46,7 +46,7 @@
           @click="router.push({ name: 'round_detail', params: { id: schedule.round_id, schedule: schedule.id } })"
         >
           <div>
-            <h3>{{new Date(schedule.day).toLocaleString()}}</h3>
+            <h3>{{new Date(schedule.day).toLocaleDateString()}}</h3>
             <p>{{schedule.user.first_name}} {{schedule.user.last_name}}</p>
           </div>
           <div class="flex-grow-1"></div>
@@ -55,15 +55,6 @@
           <RoundedButton v-if="schedule === schedules[0]" icon="mdi-note-edit-outline" value="10"></RoundedButton>
           <v-icon v-if="schedule === schedules[0]" icon="mdi-chevron-right"></v-icon>
           <v-icon v-else icon="mdi-delete-outline"></v-icon>
-        </CardLayout>
-
-        <CardLayout class="building-card bg-grey-lighten-3">
-          <div>
-            <h3>Kies een datum</h3>
-            <p>Kies een student</p>
-          </div>
-          <div class="flex-grow-1"></div>
-          <v-icon icon="mdi-plus"></v-icon>
         </CardLayout>
       </div>
 
@@ -81,7 +72,7 @@
           @click="router.push({ name: 'round_detail', params: { id: schedule.round_id, schedule: schedule.id } })"
         >
           <div>
-            <h3>{{new Date(schedule.day).toLocaleString()}}</h3>
+            <h3>{{new Date(schedule.day).toLocaleDateString()}}</h3>
             <p>{{schedule.user.first_name}} {{schedule.user.last_name}}</p>
           </div>
           <div class="flex-grow-1"></div>
