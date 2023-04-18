@@ -107,7 +107,7 @@ import BorderCard from "@/layouts/CardLayout.vue";
 const router = useRouter();
 
 function redirect_to_detail() {
-  router.push({ name: "round_detail", params: { id: 0 } });
+  router.push({ name: "round_detail", params: { id: 0, schedule: 0 } });
 }
 
 // https://stackoverflow.com/questions/1643320/get-month-name-from-date

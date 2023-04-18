@@ -91,8 +91,8 @@
             <div v-for="buildingid of [1, 2]" :key="buildingid">
               <router-link
                 :to="{
-                  name: 'building_id_detail',
-                  params: { id: buildingid, date: today },
+                  name: 'building_id',
+                  params: { id: buildingid },
                 }"
               >
                 <v-list-item

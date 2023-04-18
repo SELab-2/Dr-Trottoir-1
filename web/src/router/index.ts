@@ -10,7 +10,6 @@ import RoundMaker from "@/views/round/RoundMaker.vue";
 import RoundDetail from "@/views/round/RoundDetail.vue";
 import RoundPlanner from "@/views/round/RoundPlanner.vue";
 import BuildingMaker from "@/views/building/BuildingMaker.vue";
-import BuildingDetail from "@/views/building/BuildingDetail.vue";
 import BuildingScreen from "@/views/building/BuildingScreen.vue";
 import BuildingFollowup from "@/views/building/BuildingFollowup.vue";
 import GarbageMaker from "@/views/building/GarbageMaker.vue";
@@ -152,21 +151,6 @@ const routes: any[] = [
             syndicus: boolean,
             admin: boolean,
           ) => student,
-        },
-      },
-      {
-        path: "/gebouw/:id/:date",
-        name: "building_id_detail",
-        component: BuildingDetail,
-        props: true,
-        meta: {
-          title: "",
-          auth: (
-            student: boolean,
-            superstudent: boolean,
-            syndicus: boolean,
-            admin: boolean,
-          ) => superstudent || syndicus || admin,
         },
       },
       {

@@ -2,13 +2,7 @@
   <BorderCard
     :clickable="building!.data.length === 1"
     class="mx-1 mb-3"
-    @click="
-      () => {
-        if (building) {
-          atClick(building.data[0].date);
-        }
-      }
-    "
+    @click="() => router.push({ name: 'building_id', params: { id: 0 }})"
   >
     <v-row class="flex-nowrap">
       <v-col cols="2" class="flex-grow-0 flex-shrink-0">
@@ -106,15 +100,6 @@ const props = defineProps({
 
 const expanded = ref<Boolean>(false);
 const comments = ref<Boolean>(false);
-
-function atClick(date: string) {
-  if (props.building) {
-    router.push({
-      name: "building_id_detail",
-      params: { id: props.building.id, date: date },
-    });
-  }
-}
 </script>
 
 <style scoped lang="scss">

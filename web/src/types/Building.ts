@@ -67,10 +67,10 @@ export class Building implements TableEntity<Building> {
     });
   }
 
-  route(): { name: string; params: { id: number; date: string } } {
+  route(): { name: string; params: { id: number } } {
     return {
-      name: "building_id_detail",
-      params: { id: this.id, date: new Date().toLocaleDateString("nl") },
+      name: "building_id",
+      params: { id: this.id },
     };
   }
 }
