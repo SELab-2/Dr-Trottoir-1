@@ -115,6 +115,32 @@ Je hoeft zelf geen beeldverwerking toe te passen bij het uploaden van afbeelding
 TODO
 ```
 
+#### Error Handling
+
+Momenteel worden onze errors opgevangen en via `console.log` en een HTML alert aan de ontwikkelaar weergegeven in afwachting van een uitbreiding van de user interface.
+
+Heb je (*non blocking*) code die een error kan opgooien, maak dan gebruik van de generieke hogere-orde functies `tryOrAlert` en `tryOrAlertAsync` functies aangeboden in `web/src/try.ts`.
+
+```typescript
+const x = random();
+const y = random();
+
+// Will show alert if y is zero and return undefined.
+const result: number | undefined = tryOrAlert<number>(() => {
+  return x / y;
+});
+```
+
+```typescript
+const x = await randomAsync();
+const y = await randomAsync();
+
+// Will show alert if y is zero and return undefined.
+const result: number | undefined = await tryOrAlertAsync<number>(async () => {
+    return x / y;
+});
+```
+
 #### Generieke tabel
 
 ```

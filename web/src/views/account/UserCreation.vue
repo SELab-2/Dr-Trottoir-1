@@ -117,22 +117,17 @@ import Contact from "@/components/models/Contact";
 import ContactForm from "@/components/forms/ContactForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
-
 // define the spacing for the input fields
 const spacing: String = "mx-5";
-
 // reactive first name state
 const first_name: string = "";
-
 // reactive last name state
 const last_name = ref("");
-
 // contact data
 const contact = ref<Contact>({
   phone: "",
   email: "",
 });
-
 // user address
 const address = ref<Address>({
   street: "",
@@ -140,16 +135,12 @@ const address = ref<Address>({
   city: "",
   zip_code: 0,
 });
-
 // reactive psswd1 state
 const password1 = ref("");
-
 // reactive password confirmation state
 const password2 = ref("");
-
 // reactive state to know if you must show both password fields or not
 const showPsswd = ref(false);
-
 // reactive array keeping track of all the roles for this new user
 const roles: Ref<String[]> = ref([]);
 </script>
