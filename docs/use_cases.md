@@ -1,5 +1,3 @@
-# **Use cases**
-
 # Student
 
 ## Student start met een ronde

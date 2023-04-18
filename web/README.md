@@ -142,7 +142,7 @@ const routes = [
         name: "example", // BESCHRIJVENDE NAAM
         component: MainLayout, // LINK NAAR JE VUE FILE
         meta: {
-          title: "Opvolging rondes", // TITEL VOOR TOPBAR
+          title: "example title", // TITEL VOOR TOPBAR
           auth: (
             student: boolean,
             superstudent: boolean,
