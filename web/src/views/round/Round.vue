@@ -96,12 +96,6 @@ tryOrAlertAsync(async () => {
   aspect-ratio: 1
   overflow: scroll
 
-.building-card
-  padding: 24px 0 24px 24px
-  display: flex
-  align-items: center
-  gap: 24px
-
 .schedule-card
   & > *
     margin-bottom: 8px

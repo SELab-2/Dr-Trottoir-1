@@ -1,12 +1,10 @@
 <template>
   <BuildingData :id="id" />
-  <GarbageSchedule />
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
 import BuildingData from "@/components/building/BuildingData.vue";
-import GarbageSchedule from "@/components/building/GarbageSchedule.vue";
 
 defineProps({
   id: String,

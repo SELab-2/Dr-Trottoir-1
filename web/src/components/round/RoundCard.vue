@@ -4,7 +4,7 @@
     @click="router.push({ name: 'round_detail', params: { id: schedule.round_id, schedule: schedule.id } })"
   >
     <div>
-      <h3>{{new Date(schedule.day).toLocaleDateString()}}</h3>
+      <h4>{{new Date(schedule.day).toLocaleDateString()}}</h4>
       <p>{{schedule.user.first_name}} {{schedule.user.last_name}}</p>
     </div>
     <div class="flex-grow-1"></div>
@@ -29,5 +29,14 @@ const props = defineProps<{
 </script>
 
 <style lang="sass">
+.space-y-8
+  & > *
+    margin-bottom: 8px
+
+.building-card
+  padding: 12px 0 12px 12px
+  display: flex
+  align-items: center
+  gap: 12px
 
 </style>

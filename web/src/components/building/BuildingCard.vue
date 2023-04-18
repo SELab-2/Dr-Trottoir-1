@@ -4,7 +4,7 @@
     @click="router.push({ name: 'building_id', params: { id: building.id } })"
   >
     <div>
-      <h3>{{building.name}}</h3>
+      <h4>{{building.name}}</h4>
       <p>{{building.address.street}} {{building.address.number}}</p>
       <p>{{building.address.zip_code}} {{building.address.city}} </p>
     </div>
