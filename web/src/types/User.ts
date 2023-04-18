@@ -77,8 +77,10 @@ export class User implements TableEntity<User> {
     });
   }
 
-  route(): string {
-    return `/account/settings/${this.id}/false`;
-    // TODO: remove :isadmin when auth is in frontend
+  route(): { name: string; params: { id: number } } {
+    return {
+      name: "account_settings",
+      params: { id: this.id },
+    };
   }
 }

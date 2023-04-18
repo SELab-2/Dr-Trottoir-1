@@ -1,7 +1,8 @@
 <template>
   <v-card
+    color="background"
     :title="mockround.name"
-    :subtitle="date_to_dd_MM_yyyy(mockround.due_date)"
+    :subtitle="mockround.due_date.toLocaleDateString('nl')"
     variant="flat"
     class="ma-1"
   >
@@ -15,7 +16,7 @@
         v-bind="props"
         class="text-body-2 mb-2 ml-3"
         :variant="isHovering ? 'elevated' : 'text'"
-        :to="{ name: 'account_settings', params: { id: 0, isadmin: 'false' } }"
+        :to="{ name: 'account_settings', params: { id: 0 } }"
       >
         <template v-slot:prepend>
           <Avatar :name="mockround.student" size="x-small" />
@@ -37,11 +38,11 @@
         :size="mockround.start_time ? 'large' : 'small'"
       >
         <!-- We started: same view for everyone -->
-        <v-card v-if="mockround.start_time">
+        <BorderCard v-if="mockround.start_time">
           <v-card-title>
             Start {{ date_to_hh_mm(mockround.start_time) }}
           </v-card-title>
-        </v-card>
+        </BorderCard>
         <!-- Student has other option when not started -->
         <v-btn
           v-else-if="current_role === 'Student'"
@@ -66,9 +67,9 @@
           </v-overlay>
         </v-btn>
         <!-- Last option: the round is not started yet-->
-        <v-card v-else>
+        <BorderCard v-else>
           <v-card-title> Nog niet gestart </v-card-title>
-        </v-card>
+        </BorderCard>
       </v-timeline-item>
 
       <v-timeline-item
@@ -80,35 +81,34 @@
         :icon="building_status_icon(building)"
         icon-color="white"
       >
-        <router-link :to="{ name: 'building_id', params: { id: 3 } }">
-          <v-card
-            width="100%"
-            :title="building.name"
-            :subtitle="building.address"
+        <BorderCard
+          width="100%"
+          :title="building.name"
+          :subtitle="building.address"
+          @click="router.push({ name: 'building_id', params: { id: 3 } })"
+        >
+          <template v-slot:append>
+            <v-card-title>{{ building_time_range(building) }}</v-card-title>
+          </template>
+          <v-chip
+            prepend-icon="mdi-camera"
+            label
+            color="success"
+            class="pa-2 ma-2"
+            v-if="building.amount_of_pics > 0"
           >
-            <template v-slot:append>
-              <v-card-title>{{ building_time_range(building) }}</v-card-title>
-            </template>
-            <v-chip
-              prepend-icon="mdi-camera"
-              label
-              color="success"
-              class="pa-2 ma-2"
-              v-if="building.amount_of_pics > 0"
-            >
-              {{ building.amount_of_pics }} foto's geupload
-            </v-chip>
-            <v-chip
-              prepend-icon="mdi-comment"
-              label
-              color="red"
-              class="pa-2 ma-2"
-              v-if="building.comments"
-            >
-              Opmerkingen beschikbaar
-            </v-chip>
-          </v-card>
-        </router-link>
+            {{ building.amount_of_pics }} foto's geupload
+          </v-chip>
+          <v-chip
+            prepend-icon="mdi-comment"
+            label
+            color="red"
+            class="pa-2 ma-2"
+            v-if="building.comments"
+          >
+            Opmerkingen beschikbaar
+          </v-chip>
+        </BorderCard>
       </v-timeline-item>
 
       <!-- The end card as last on the timeline-->
@@ -117,12 +117,12 @@
         :icon="mockround.end_time ? 'mdi-check' : 'mdi-close'"
         :size="mockround.end_time ? 'large' : 'small'"
       >
-        <!-- The student has -->
-        <v-card>
+        <!-- The student has ended -->
+        <BorderCard>
           <v-card-title>
             Einde {{ date_to_hh_mm(mockround.end_time) }}
           </v-card-title>
-        </v-card>
+        </BorderCard>
       </v-timeline-item>
     </v-timeline>
     <!-- Only show the finish button to the student if the round is already started and not finished-->
@@ -185,13 +185,12 @@ import StartRoundPopup from "@/components/popups/StartRoundPopupContent.vue";
 import { ref } from "vue";
 import router from "@/router";
 import RoundBuilding from "@/components/models/RoundBuilding";
-import { date_to_hh_mm, date_to_dd_MM_yyyy } from "@/assets/scripts/format";
-
+import { date_to_hh_mm } from "@/assets/scripts/format";
+import BorderCard from "@/layouts/CardLayout.vue";
 // add the role, will be replaced with actual athentication
 // TODO: replace with actual authentication
 const roles = ["Admin", "Student", "Superstudent", "Syndicus"];
 const current_role = ref(roles[0]);
-
 // state to keep track of the startround popup
 const start_popup = ref(false);
 function start_round() {
@@ -199,14 +198,12 @@ function start_round() {
   // we are already on the page, so refresh after the db update
   router.go(0);
 }
-
 const end_popup = ref(false);
 function close_round() {
   // TODO: close the round in the database
   // we are already on the page, so refresh after the db update
   router.go(0);
 }
-
 function building_time_range(building: RoundBuilding) {
   if (!building.start_time) {
     return "";
@@ -220,7 +217,6 @@ function building_time_range(building: RoundBuilding) {
   }
   return date_to_hh_mm(building.start_time);
 }
-
 function building_status_color(building: RoundBuilding): string {
   if (building.end_time) {
     return "success";
@@ -230,7 +226,6 @@ function building_status_color(building: RoundBuilding): string {
   }
   return "red";
 }
-
 function building_status_size(building: RoundBuilding): string {
   if (building.end_time) {
     return "large";
@@ -240,7 +235,6 @@ function building_status_size(building: RoundBuilding): string {
   }
   return "small";
 }
-
 function building_status_icon(building: RoundBuilding): string {
   if (building.end_time) {
     return "mdi-check";
@@ -250,7 +244,6 @@ function building_status_icon(building: RoundBuilding): string {
   }
   return "mdi-office-building";
 }
-
 function round_complete(round: Round): boolean {
   for (const building of round.buildings) {
     if (!building.end_time) {
@@ -259,7 +252,6 @@ function round_complete(round: Round): boolean {
   }
   return true;
 }
-
 const mockround: Round = {
   name: "Vrijdagmarkt",
   due_date: new Date(2023, 2, 6, 12, 45),

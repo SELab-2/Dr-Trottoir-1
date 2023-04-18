@@ -1,5 +1,5 @@
-import { Prisma } from "@selab-2/groep-1-orm";
-import { APIErrorCode } from "./api_error_code";
+import {Prisma} from "@selab-2/groep-1-orm";
+import {APIErrorCode} from "./api_error_code";
 
 /**
  * Returns an object which describes the returned error containing:
@@ -17,6 +17,11 @@ export function errorMessagePrismaClient(
                 code: APIErrorCode.CONFLICT,
                 detail: "Unique constraint failed",
             };
+        case "P2003":
+            return {
+                code: APIErrorCode.BAD_REQUEST,
+                detail: "Foreign key constraint failed",
+            }
         case "P2025":
             return {
                 code: APIErrorCode.NOT_FOUND,

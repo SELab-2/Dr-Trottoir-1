@@ -1,0 +1,38 @@
+name: API Query Builder Test
+on:
+    workflow_dispatch:
+    pull_request:
+        branches:
+            - 'develop'
+            - 'main'
+            - 'api/**'
+jobs:
+    api-test:
+        runs-on: [ self-hosted ]
+        defaults:
+            run:
+                working-directory: ./api_query
+        env:
+            DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/main"
+            NODE_ENV: "test"
+
+        steps:
+            -   name: "Checkout the repo code"
+                uses: actions/checkout@v3
+            -   uses: actions/setup-node@v3
+                with:
+                    node-version: '16.x'
+                    registry-url: 'https://npm.pkg.github.com'
+                    scope: '@selab-2'
+            -   name: "Clean install"
+                run: npm ci
+                env:
+                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            -   name: "Execute tests"
+                run: npm run test
+            -   name: "Cleanup"
+                if: always()
+                run: |
+                    chmod +x ../server/cleanup.sh
+                    ../server/cleanup.sh -p
+                shell: bash

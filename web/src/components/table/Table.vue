@@ -1,4 +1,4 @@
-<template>
+<template :key="props.entries">
   <v-table>
     <thead>
       <tr>
@@ -24,8 +24,8 @@
         </th>
       </tr>
     </thead>
-    <tbody>
-      <tr v-for="item in entries" :key="item.id">
+    <tbody v-if="entries">
+      <tr v-for="item in entries?.filter((e) => e !== null)" :key="item.id">
         <td
           v-bind:key="header.id"
           v-for="header in headers"
@@ -60,6 +60,7 @@
             variant="plain"
             v-bind:icon="header.get(item)"
             size="small"
+            @click="() => header.onClick(item, entries!)"
           ></v-btn>
           <p v-if="header.type === RowType.TEXT">
             {{ header.get(item) }}
@@ -109,12 +110,11 @@ function sort(header: Header<any>) {
 </script>
 
 <style lang="sass" scoped>
-
 .clickable
   cursor: pointer
 
-tr:nth-child(even)
-  background-color: #f8f8f8
+tr:nth-child(even), th
+  background-color: #F5F5F5
 
 td
   vertical-align: middle

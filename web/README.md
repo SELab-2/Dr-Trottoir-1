@@ -1,60 +1,68 @@
 # Web
 
-## Frameworks en bibliotheken
+Deze webapplicatie is geschreven in Vue/TypeScript.
+## Environments
 
-De client side van dit project is een applicatie geschreven in het [Vue](https://vuejs.org/) framework. We hebben ervoor gekozen om [Typescript](https://www.typescriptlang.org/) te gebruiken zodat onze code getypeerd is. Hiernaast maken we gebruik van [Vuetify](https://vuetifyjs.com/en/) zodat de UI uniform is. Tot slot gebruiken we het CSS framework [Sass](https://sass-lang.com/) voor de grafische vormgeving waar vuetify niet in staat tot zou zijn.
+### Development
 
-## Uitvoeren
+#### API
 
-We maken gebruik van [npm](https://www.npmjs.com/) voor het compileren en uitvoeren van de code. Door het uitvoeren van...
+Deze webapplicatie maakt gebruik van de RESTful API gedefinieerd in `api`. Tijdens het ontwikkelen dien jezelf te voorzien van een eigen instantie, alsook een bijhorende databank.
 
-```bash
-npm install
+De locatie van de API geef je aan met behulp van de volgende _environment variable_.
+
+```
+VUE_APP_API_SERVER_ADDRESS=[url]
 ```
 
-...in de `/web` map zal npm de nodige module's en packages installeren.
+#### Formatting
 
-### Compileren en uitvoeren voor development
+De *continuous integration* testen gaan na of je code conform de Prettier-stijl is, en of ESLint waarschuwingen genereert. Indien deze niet slagen, dan kan jouw code niet in `develop` gebracht worden.
 
-We kunnen nu de web applicatie opstarten voor development.
+Je code formatteren en eventuele fouten opsporen doe je aan de hand van
 
-```bash
-npm run dev
 ```
-
-Dit start normaal een [Vite](https://vitejs.dev/) server op het lokaal address [http://localhost:3000/](http://localhost:3000/).
-De vite server zorgt ervoor dat de applicatie uitgevoerd wordt.
-
-De applicatie kan ook simpelweg gebuild worden zonder uit te voeren op een Vite server.
-
-```bash
-npm run build
-```
-
-Om zeker te zijn dat er geen build error's aanwezig zijn gebruik je `npm run build`.
-
-### Linting
-
-De linter toont error's en warnings in de code. Hiernaast wordt de code herschikt naar de stijl standaard van de linter.
-
-```bash
 npm run lint
 ```
 
-### Verdere documentatie
+#### Development Server
 
-Verdere documentatie over het gebruik van Vite met npm is [hier](https://vitejs.dev/config/) terug te vinden.
+Vite voorziet een HMR server.
 
-## Code
+```shell
+npm run dev
+```
 
-Alle code voor de client applicatie is terug te vinden in de `/web` map. De code die de pagina's en routing van de applicatie definiëren zijn beschikbaar in de `/web/src` map. De belangrijkste mappen hierin zijn.
+#### Preview Server
 
-- `/web/src/components`: Bevat losse herbruikbare vue componenten.
-- `/web/src/views`: Bevat alle pagina's.
-- `/web/src/layouts`: Bevat algemene layouts die terugkomen in bijna elk scherm.
-- `/web/src/router`: Bevat de nodige code om de router correct te doen werken.
+Je kan de applicatie transpileren en lokaal "hosten" om een *deployment* te simuleren.
+
+```shell
+npm run preview
+```
+
+### Deployment
+
+#### Genereren artifacts
+
+Om de applicatie te transpileren naar een JavaScript binary maak je gebruik van
+
+```
+npm run build
+```
+
+Om deze in te zetten kan je gebruik te maken van eender welke webserver zoals nginx, apache, of serve.
+
 
 ## Technologieën
+
+### Sass
+
+We maken gebruik van [Sass](https://sass-lang.com/) als CSS preprocessor.
+
+### Vuetify
+
+[Vuetify](https://vuetifyjs.com/en/) is een componentenbibliotheek gebaseerd op de *Material Design guidelines*.
 
 ### ImgProxy
 
@@ -99,19 +107,31 @@ VUE_APP_IMGPROXY_ROOT=<string>
 
 Je hoeft zelf geen beeldverwerking toe te passen bij het uploaden van afbeeldingen, want dit gebeurt als het ware _just in time_ bij het downloaden.
 
+
 ### Router
 
-Nieuwe pagina's worden teogevoegd in `/web/src/router/index.ts`. Hierbij zijn er 2 aandachtspunten.
+Nieuwe pagina's worden teogevoegd in `/web/src/router/index.ts`. Hierbij zijn er enkele aandachtspunten.
 
 1. Als een pagina gebruik wilt maken van de algemene layout moet het als kind worden toegevoegd aan de `MainLayout`.
 2. Bij het gebruik van de algemene layout, dient er een titel opgegeven te worden in het `meta.title` veld.
    Deze titel wordt dan in de topbar van de algemene layout gerenderd.
+3. In de `meta` sectie wordt ook `meta.auth` toegevoegd. Dit zorgt ervoor dat een pagina enkel 
+beschikbaar is voor bepaalde rollen.
 
 ```ts
 const routes = [
   {
     path: "/",
     component: LoginScreen,
+    name: "login",
+    meta: {
+      auth: ( 
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
   },
   {
     component: MainLayout,
@@ -122,12 +142,43 @@ const routes = [
         name: "example", // BESCHRIJVENDE NAAM
         component: MainLayout, // LINK NAAR JE VUE FILE
         meta: {
-          title: "Planning student", // NAAM VAN DE TITEL VAN JE PAGINA
+          title: "Opvolging rondes", // TITEL VOOR TOPBAR
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin, // ROLLEN MET RECHTEN
         },
       },
     ],
   },
 ];
+```
+
+Verder wordt dit generiek afgehandeld voor elke route. Dit gebeurt `router.beforeEach((to, from, next) => {...}` functie. Hier kijken we via de useAuthStore() (zie sectie [authenticatie](#authenticatie)) welke rechten de gebruiker heeft en handelen we deze af.
+
+```Typescript
+if (!auth) {
+  const checked: boolean = checkAuth(false, false, false, false);
+  if (!checked) {
+    next("/");
+  } else {
+    next();
+  }
+} else {
+  const checked: boolean = checkAuth(
+    isStudent,
+    isSuperStudent,
+    isSyndicus,
+    isAdmin,
+  );
+  if (!checked) {
+    next("/");
+  } else {
+    next();
+  }
+}
 ```
 
 ### Generieke tabel
@@ -217,5 +268,71 @@ import { User } from "@/types/User";
 
 ### Query builder
 
-Er kan vanuit de frontend eenvoudig geïntrageerd worden met de API doormiddel van de [query builder](http://exaple.com).
-TODO: fix link zodra query builder op develop staat.
+Er kan vanuit de frontend eenvoudig geïntrageerd worden met de API door middel van de [query builder](https://github.com/SELab-2/Dr-Trottoir-1/tree/develop/api_query).
+
+
+### Error Handling
+
+Momenteel worden onze errors opgevangen en via `console.log` en een HTML alert aan de ontwikkelaar weergegeven in afwachting van een uitbreiding van de user interface.
+
+Heb je (*non blocking*) code die een error kan opgooien, maak dan gebruik van de generieke hogere-orde functies `tryOrAlert` en `tryOrAlertAsync` functies aangeboden in `web/src/try.ts`.
+
+```typescript
+const x = random();
+const y = random();
+
+// Will show alert if y is zero and return undefined.
+const result: number | undefined = tryOrAlert<number>(() => {
+  return x / y;
+});
+```
+
+```typescript
+const x = await randomAsync();
+const y = await randomAsync();
+
+// Will show alert if y is zero and return undefined.
+const result: number | undefined = await tryOrAlertAsync<number>(async () => {
+    return x / y;
+});
+```
+
+
+### Stores (Pinia)
+
+We maken gebruik van [Pinia](https://pinia.vuejs.org) om stores te voorzien, gezien dit de *de facto* standaard is voor Vue en zeer intuïtieve API aanbiedt. Hiervoor wordt een nieuwe directory `web/src/stores` voorzien.
+
+#### `useAuthStore`
+
+In `web/src/stores/auth.ts` wordt de `useAuthStore` aangeboden. Deze voorziet de *reactive* variabele `auth`, die een `User` object kan bevatten, of simpelweg `null`.
+`APIErrors` worden vooraf al afgehandeld door de `getAuth()` functie.
+
+Om een gebruiker aan te melden kunnen we gebruik maken van de `useAuthStore::logIn` functie. De browser zal zelf de sessie/cookies onderhouden, aangezien we gebruik maken van de `fetch` functionaliteit. 
+
+```typescript
+export const useAuthStore = defineStore("auth", () => {
+  const auth: Ref<User | null> = ref(null);
+
+  async function logIn(username: string, password: string): Promise<void>;
+
+  async function logOut(): Promise<void>;
+
+  return { auth, logIn, logOut };
+});
+```
+#### Authenticatie uitschakelen
+Om de authenticatie uit te schakelen kan men de volgende _environment variable_ instellen.
+```env
+VUE_APP_DISABLE_AUTHENTICATION=<true|false>
+```
+
+#### Debugging pagina
+Op de pagina `/dev/auth` kunnen we eenvoudig het aanmelden simuleren. Het resultaat wordt automatisch geupdatet met behulp van de `useAuthStore`. 
+
+
+### Authenticatie
+
+[De authStore](#useauthstore) abstractie maakt de authenticatie zeer eenvoudig. Alle velden kunnen alsvolgd opgevraagd worden. Hierbij kan je `student` vervangen door eender welk veld van de `User` klasse.
+```ts
+const isStudent: Boolean = useAuthStore().auth!.student;
+```

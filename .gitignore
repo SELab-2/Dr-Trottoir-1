@@ -1,3 +1,5 @@
+.idea
+
 # Created by https://www.toptal.com/developers/gitignore/api/windows,git,linux,macos,visualstudiocode,visualstudio,jetbrains,vim,nanoc,java,rust,venv,python,node,c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,git,linux,macos,visualstudiocode,visualstudio,jetbrains,vim,nanoc,java,rust,venv,python,node,c++
 
@@ -1031,3 +1033,5 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,git,linux,macos,visualstudiocode,visualstudio,jetbrains,vim,nanoc,java,rust,venv,python,node,c++
 
+# inclusions
+!scripts
