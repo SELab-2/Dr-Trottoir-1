@@ -3,7 +3,15 @@
     <div class="space-y-8">
       <h1>Ronde Korenmarkt</h1>
 
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum.
+      </p>
 
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Gebouwen</h2>
@@ -12,7 +20,7 @@
       </div>
 
       <div class="grid">
-        <img src="@/assets/images/dummyMap.png" class="map" alt="Map">
+        <img src="@/assets/images/dummyMap.png" class="map" alt="Map" />
         <BuildingCard
           v-for="building in buildings"
           :key="building.id"
@@ -38,7 +46,10 @@
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Afgelopen bezoeken</h2>
         <div class="flex-grow-1"></div>
-        <RoundedButton icon="mdi-history" value="Volledige geschiedenis"></RoundedButton>
+        <RoundedButton
+          icon="mdi-history"
+          value="Volledige geschiedenis"
+        ></RoundedButton>
       </div>
 
       <div class="space-y-8">
@@ -54,9 +65,9 @@
 </template>
 
 <script setup lang="ts">
-import {BuildingQuery, Result, ScheduleQuery} from "@selab-2/groep-1-query";
-import {ref, Ref} from "vue";
-import {tryOrAlertAsync} from "@/try";
+import { BuildingQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import { ref, Ref } from "vue";
+import { tryOrAlertAsync } from "@/try";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import RoundCard from "@/components/round/RoundCard.vue";
@@ -66,12 +77,12 @@ const buildings: Ref<Array<Result<BuildingQuery>>> = ref([]);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 
 tryOrAlertAsync(async () => {
-  buildings.value = await new BuildingQuery().getAll({take: 5});
+  buildings.value = await new BuildingQuery().getAll({ take: 5 });
 });
 
 tryOrAlertAsync(async () => {
-  schedules.value = await new ScheduleQuery().getAll({take: 5});
-})
+  schedules.value = await new ScheduleQuery().getAll({ take: 5 });
+});
 </script>
 
 <style scoped lang="sass">

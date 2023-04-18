@@ -167,8 +167,6 @@ import { useAuthStore } from "@/stores/auth";
 
 const router = useRouter();
 
-const today = new Date().toLocaleDateString("nl");
-
 // reactive state to show the drawer or not
 const drawer = ref(true);
 

@@ -1,5 +1,5 @@
 <template>
-  <p class="badge">{{props.value}}</p>
+  <p class="badge">{{ props.value }}</p>
 </template>
 
 <script setup lang="ts">

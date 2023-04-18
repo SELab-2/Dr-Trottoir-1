@@ -18,10 +18,10 @@
         </div>
 
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor
-          sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
+          ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua.
         </p>
 
         <div style="display: flex; gap: 16px; flex-wrap: wrap" class="mt-2">
@@ -31,18 +31,43 @@
         </div>
       </div>
 
-      <CardLayout style="display: flex; gap: 16px; align-items: center; border-radius: 10px; padding: 16px 0 16px 16px;">
-        <Avatar :name="building.syndicus?.user.first_name + ' ' + building.syndicus?.user.last_name"></Avatar>
+      <CardLayout
+        style="
+          display: flex;
+          gap: 16px;
+          align-items: center;
+          border-radius: 10px;
+          padding: 16px 0 16px 16px;
+        "
+      >
+        <Avatar
+          :name="
+            building.syndicus?.user.first_name +
+            ' ' +
+            building.syndicus?.user.last_name
+          "
+        ></Avatar>
 
         <div>
-          <p style="font-weight: 600; font-size: 16px; opacity: 90%">SYNDICUS</p>
-          <p style="font-weight: 500">{{ building.syndicus?.user.first_name + ' ' + building.syndicus?.user.last_name }}</p>
+          <p style="font-weight: 600; font-size: 16px; opacity: 90%">
+            SYNDICUS
+          </p>
+          <p style="font-weight: 500">
+            {{
+              building.syndicus?.user.first_name +
+              " " +
+              building.syndicus?.user.last_name
+            }}
+          </p>
         </div>
 
         <div style="flex-grow: 1"></div>
 
         <div style="display: flex; gap: 16px; flex-wrap: wrap">
-          <RoundedButton icon="mdi-phone" :value="building.syndicus?.user.phone" />
+          <RoundedButton
+            icon="mdi-phone"
+            :value="building.syndicus?.user.phone"
+          />
           <RoundedButton icon="mdi-mail" value="E-mail" />
         </div>
       </CardLayout>
@@ -51,14 +76,32 @@
         <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
           <h2>Taken</h2>
           <div class="flex-grow-1"></div>
-          <RoundedButton icon="mdi-calendar" value="17 Maart 2023 - 24 Maart 2023"></RoundedButton>
-          <RoundedButton icon="mdi-plus" value="Toevoegen" @click="() => router.push({ name: 'garbage_plan', params: { id: id } })"></RoundedButton>
+          <RoundedButton
+            icon="mdi-calendar"
+            value="17 Maart 2023 - 24 Maart 2023"
+          ></RoundedButton>
+          <RoundedButton
+            icon="mdi-plus"
+            value="Toevoegen"
+            @click="
+              () => router.push({ name: 'garbage_plan', params: { id: id } })
+            "
+          ></RoundedButton>
         </div>
         <div class="grid">
-          <CardLayout style="display: flex; align-items: center; padding: 16px 0 16px 16px; gap: 16px" v-for="action in garbage">
+          <CardLayout
+            style="
+              display: flex;
+              align-items: center;
+              padding: 16px 0 16px 16px;
+              gap: 16px;
+            "
+            v-for="action in garbage"
+            :key="action.id"
+          >
             <div>
-              <h4>{{action.action.description}}</h4>
-              <p>{{new Date(action.pickup_time).toLocaleString()}}</p>
+              <h4>{{ action.action.description }}</h4>
+              <p>{{ new Date(action.pickup_time).toLocaleString() }}</p>
             </div>
             <div class="flex-grow-1"></div>
             <v-icon icon="mdi-check" v-if="Math.random() < 0.5"></v-icon>
@@ -76,11 +119,20 @@
           <RoundedButton icon="mdi-plus" value="Toevoegen"></RoundedButton>
         </div>
 
-        <RoundCard :schedule="schedule" :status="'completed'" v-for="schedule in schedules" :key="schedule.id"></RoundCard>
+        <RoundCard
+          :schedule="schedule"
+          :status="'completed'"
+          v-for="schedule in schedules"
+          :key="schedule.id"
+        ></RoundCard>
         <RoundCard :schedule="schedules[0]" :status="'active'"></RoundCard>
-        <RoundCard :schedule="schedule" :status="'scheduled'" v-for="schedule in schedules" :key="schedule.id"></RoundCard>
+        <RoundCard
+          :schedule="schedule"
+          :status="'scheduled'"
+          v-for="schedule in schedules"
+          :key="schedule.id"
+        ></RoundCard>
       </div>
-
     </div>
   </HFillWrapper>
 </template>
@@ -102,7 +154,7 @@ const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
 
 tryOrAlertAsync(async () => {
-  const result = await new BuildingQuery().getAll({ take: 1 })
+  const result = await new BuildingQuery().getAll({ take: 1 });
   building.value = result.at(0) ?? null;
 });
 
@@ -112,7 +164,7 @@ tryOrAlertAsync(async () => {
 
 tryOrAlertAsync(async () => {
   garbage.value = await new GarbageQuery().getAll({});
-})
+});
 
 defineProps({
   id: String,
@@ -153,5 +205,4 @@ defineProps({
   gap: 8px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-
 </style>

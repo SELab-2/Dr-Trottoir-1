@@ -2,7 +2,7 @@
   <BorderCard
     :clickable="building!.data.length === 1"
     class="mx-1 mb-3"
-    @click="() => router.push({ name: 'building_id', params: { id: 0 }})"
+    @click="() => router.push({ name: 'building_id', params: { id: 0 } })"
   >
     <v-row class="flex-nowrap">
       <v-col cols="2" class="flex-grow-0 flex-shrink-0">
@@ -70,7 +70,9 @@
             :key="id"
             label
             class="w-100"
-            @click="atClick(datum.date)"
+            @click="
+              () => router.push({ name: 'building_id', params: { id: 0 } })
+            "
             variant="text"
           >
             <v-icon color="blue" icon="mdi-calendar-clock"></v-icon>
@@ -94,7 +96,7 @@ import DividerLayout from "@/layouts/DividerLayout.vue";
 
 const router = useRouter();
 
-const props = defineProps({
+defineProps({
   building: Object,
 });
 
