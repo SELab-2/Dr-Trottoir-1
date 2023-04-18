@@ -131,7 +131,7 @@
       <div class="d-flex flex-row-reverse">
         <v-btn
           prepend-icon="mdi-check"
-          @click="edit = !edit"
+          @click="handleSavePopup()"
           color="success"
           class="my-3"
           >Sla op</v-btn
@@ -140,7 +140,7 @@
         <v-btn
           v-if="isAdmin && account_id !== user_id"
           prepend-icon="mdi-delete"
-          @click="edit = !edit"
+          @click="handleRemovePopup()"
           color="error"
           class="mx-5 my-3"
           >Verwijder account</v-btn
@@ -148,6 +148,25 @@
       </div>
     </div>
   </HFillWrapper>
+
+  <CardPopup v-model="showPopup" :title="popupTitle" :prepend-icon="popupIcon" width="400">
+    <p class="mx-3">
+      {{ popupMsg }}
+    </p>
+    <v-card-actions>
+      <v-btn 
+        prepend-icon="mdi-close" 
+        color="error" 
+        @click="showPopup = false"
+        variant="elevated"
+      >
+        Annuleer
+      </v-btn>
+      <v-btn prepend-icon="mdi-check" color="success" @click="popupSubmit()">
+        {{ popupSubmitMsg }}
+      </v-btn>
+    </v-card-actions>
+  </CardPopup>
 </template>
 
 <script lang="ts" setup>
@@ -160,6 +179,7 @@ import Avatar from "@/components/Avatar.vue";
 import { Ref, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import RolesForm from "@/components/forms/RolesForm.vue";
+import CardPopup from "@/components/popups/CardPopup.vue";
 
 import { getRoles } from "@/assets/scripts/roles";
 import { UserQuery } from "@selab-2/groep-1-query";
@@ -203,6 +223,46 @@ const address = ref(user.value?.address);
 const password1 = ref("");
 const password2 = ref("");
 const showPsswd = ref(false);
+
+function handleRemove() {
+  // TODO: API-call to remove the account
+  showPopup.value = false;
+  edit.value = false;
+}
+
+function handleRemovePopup(){
+  popupIcon.value = "mdi-delete-alert-outline";
+  popupTitle.value = "Verwijder account";
+  popupMsg.value = "Je staat op het punt deze account permanent te verwijderen. Ben je zeker dat je wilt verdergaan?";
+  popupSubmitMsg.value = "Verwijder account";
+  popupSubmit.value = handleRemove;
+  showPopup.value = true;
+}
+
+function handleSave() {
+  // TODO: API-call to save the account
+  showPopup.value = false;
+  edit.value = false;
+}
+
+function handleSavePopup(){
+  popupIcon.value = "mdi-content-save-alert-outline";
+  popupTitle.value = "Bewaar aanpassingen";
+  popupMsg.value = "Je staat op het punt deze account permanent te bewerken. Ben je zeker dat je wilt verdergaan?";
+  popupSubmitMsg.value = "Bewaar aanpassingen";
+  popupSubmit.value = handleSave;
+  showPopup.value = true;
+}
+
+// popup content
+
+const showPopup = ref(false);
+const popupIcon = ref("")
+const popupTitle = ref("");
+const popupMsg = ref("");
+const popupSubmitMsg = ref("");
+const popupSubmit: Ref<() => void> = ref(() => {});
+
 </script>
 <style lang="sass" scoped>
 a
