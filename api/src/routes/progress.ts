@@ -6,12 +6,25 @@ import { prisma } from "../prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
 
 export class ProgressRouting extends Routing {
+    toRouter(): express.Router {
+        const router = super.toRouter();
+        router.post("/:id/image", this.createImage);
+        router.patch("/:id/image/:image_id", this.updateImage);
+        router.delete("/:id/image/:image_id", this.deleteImage);
+        return router;
+    }
+
     private static includes: Prisma.ProgressInclude = {
         building: selectBuilding(),
         schedule: {
             include: {
                 round: true,
                 user: includeUser(false),
+            },
+        },
+        images: {
+            include: {
+                image: true,
             },
         },
     };
@@ -98,6 +111,86 @@ export class ProgressRouting extends Routing {
                 },
                 where: {
                     id: Parser.number(req.params["id"]),
+                },
+            });
+        }
+
+        return res.status(200).json({});
+    }
+
+    @Auth.authorization({ student: true })
+    async createImage(req: CustomRequest, res: express.Response) {
+        const progress_id: number = Number(Parser.number(req.params["id"]));
+
+        await prisma.image.create({
+            data: {
+                time: req.body.time,
+                location: req.body.location,
+                path: req.body.path,
+                user_id: req.body.user_id,
+                progress: {
+                    create: [
+                        {
+                            type: req.body.type,
+                            description: req.body.description,
+                            progress_id: progress_id,
+                        },
+                    ],
+                },
+            },
+        });
+
+        const result = await prisma.progress.findUniqueOrThrow({
+            where: {
+                id: progress_id,
+            },
+            include: ProgressRouting.includes,
+        });
+
+        return res.status(201).json(result);
+    }
+
+    @Auth.authorization({ student: true })
+    async updateImage(req: CustomRequest, res: express.Response) {
+        await prisma.progressImage.update({
+            data: req.body,
+            where: {
+                id: Parser.number(req.params["image_id"]),
+            },
+        });
+
+        const result = await prisma.progress.findUniqueOrThrow({
+            where: {
+                id: Parser.number(req.params["id"]),
+            },
+            include: ProgressRouting.includes,
+        });
+
+        return res.status(200).json(result);
+    }
+
+    @Auth.authorization({ student: true })
+    async deleteImage(req: CustomRequest, res: express.Response) {
+        if (Parser.bool(req.body["hardDelete"], false)) {
+            const result = await prisma.progressImage.findUniqueOrThrow({
+                where: {
+                    id: Parser.number(req.params["image_id"]),
+                },
+            });
+
+            // Use cascade delete of Image
+            await prisma.image.delete({
+                where: {
+                    id: result.image_id,
+                },
+            });
+        } else {
+            await prisma.progressImage.update({
+                data: {
+                    deleted: true,
+                },
+                where: {
+                    id: Parser.number(req.params["image_id"]),
                 },
             });
         }

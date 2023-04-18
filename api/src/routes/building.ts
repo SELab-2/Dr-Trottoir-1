@@ -10,6 +10,13 @@ import crypto from "crypto";
 import * as dateMath from "date-arithmetic";
 
 export class BuildingRouting extends Routing {
+    toRouter(): express.Router {
+        const router = super.toRouter();
+        router.post("/:id/image", this.createImage);
+        router.delete("/:id/image/:image_id", this.deleteImage);
+        return router;
+    }
+
     private static selects: Prisma.BuildingSelect = {
         id: true,
         name: true,
@@ -23,6 +30,11 @@ export class BuildingRouting extends Routing {
             },
         },
         manual: true,
+        images: {
+            include: {
+                image: true,
+            },
+        },
     };
 
     private static twoWeekDelta: { gte: Date; lte: Date } = {
@@ -192,5 +204,48 @@ export class BuildingRouting extends Routing {
         }
 
         return res.json(result);
+    }
+
+    @Auth.authorization({ superStudent: true })
+    async createImage(req: CustomRequest, res: express.Response) {
+        const building_id: number = Number(Parser.number(req.params["id"]));
+        await prisma.image.create({
+            data: {
+                time: req.body.time,
+                location: req.body.location,
+                path: req.body.path,
+                user_id: req.body.user_id,
+                buildings: {
+                    create: [{ building_id: building_id }],
+                },
+            },
+        });
+
+        const result = await prisma.building.findUniqueOrThrow({
+            where: {
+                id: building_id,
+            },
+            select: BuildingRouting.selects,
+        });
+
+        return res.status(201).json(result);
+    }
+
+    @Auth.authorization({superStudent: true})
+    async deleteImage(req: CustomRequest, res: express.Response) {
+        const result = await prisma.buildingImages.findUniqueOrThrow({
+            where: {
+                id: Parser.number(req.params["image_id"]),
+            },
+        });
+
+        // Use cascade delete of Image
+        await prisma.image.delete({
+            where: {
+                id: result.image_id,
+            },
+        });
+
+        return res.status(200).json({});
     }
 }
