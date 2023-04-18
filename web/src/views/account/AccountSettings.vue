@@ -6,26 +6,28 @@
         class="me-auto"
         lines="two"
         :title="`${firstname} ${lastname}`"
-        subtitle="Superstudent"
+        :subtitle="roles.join(' ')"
       >
         <template v-slot:prepend>
           <Avatar :name="`${firstname} ${lastname}`" />
         </template>
       </v-list-item>
-      <v-btn
-        v-if="!edit"
-        prepend-icon="mdi-pencil"
-        @click="edit = !edit"
-        color="primary"
-        >Bewerk Account</v-btn
-      >
-      <v-btn
-        v-else
-        prepend-icon="mdi-close"
-        @click="edit = !edit"
-        color="warning"
-        >Annuleer aanpassingen</v-btn
-      >
+      <div v-if="isAdmin || account_id === user_id">
+        <v-btn
+          v-if="!edit"
+          prepend-icon="mdi-pencil"
+          @click="edit = !edit"
+          color="primary"
+          >Bewerk Account</v-btn
+        >
+        <v-btn
+          v-else
+          prepend-icon="mdi-close"
+          @click="edit = !edit"
+          color="warning"
+          >Annuleer aanpassingen</v-btn
+        >
+      </div>
     </div>
 
     <!-- Section with the contact info -->
@@ -75,6 +77,7 @@
     <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
       <template v-slot:title> Adres </template>
       <AddressFrom
+        v-if="address"
         :class="edit ? spacing : 'mx-10'"
         :readonly="!edit"
         :street="String(address.street)"
@@ -160,47 +163,19 @@
       </v-list>
     </BorderCard>
 
-    <!-- Section that allows to save the settings -->
-    <BorderCard v-if="edit" class="my-4" prepend-icon="mdi-check">
-      <template v-slot:title> Sla bewerkingen op </template>
-      <div class="d-flex">
-        <v-text-field
-          class="mx-5 me-auto"
-          v-model="confirm_psswd"
-          :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="show_confirm ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="show_confirm ? 'text' : 'password'"
-          :label="isAdmin ? 'Jouw admin wachtwoord' : 'Huidig wachtwoord'"
-          @click:append-inner="show_confirm = !show_confirm"
-          bg
-        ></v-text-field>
-
+    <!-- Section that allows to save and remove the account -->
+    <div v-if="edit" class="my-4">
+      <div class="d-flex flex-row-reverse">
         <v-btn
           prepend-icon="mdi-check"
           @click="edit = !edit"
           color="success"
-          class="mx-5 my-3"
+          class="my-3"
           >Sla op</v-btn
         >
-      </div>
-    </BorderCard>
-
-    <!-- Section that allows to remove the account -->
-    <BorderCard v-if="edit" class="my-4" prepend-icon="mdi-delete">
-      <template v-slot:title> Verwijder account </template>
-      <div class="d-flex">
-        <v-text-field
-          class="mx-5 me-auto"
-          v-model="remove_psswd"
-          :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="show_remove ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="show_remove ? 'text' : 'password'"
-          :label="isAdmin ? 'Jouw admin wachtwoord' : 'Huidig wachtwoord'"
-          @click:append-inner="show_remove = !show_remove"
-          bg
-        ></v-text-field>
 
         <v-btn
+          v-if="isAdmin && account_id !== user_id"
           prepend-icon="mdi-delete"
           @click="edit = !edit"
           color="error"
@@ -208,56 +183,63 @@
           >Verwijder account</v-btn
         >
       </div>
-    </BorderCard>
+    </div>
   </HFillWrapper>
 </template>
+
 <script lang="ts" setup>
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
+import BorderCard from "@/layouts/CardLayout.vue";
 import ContactForm from "@/components/forms/ContactForm.vue";
-import Address from "@/components/models/Address";
 import AddressFrom from "@/components/forms/AddressForm.vue";
 import Contact from "@/components/models/Contact";
 import Avatar from "@/components/Avatar.vue";
-import { ref } from "vue";
-import HFillWrapper from "@/layouts/HFillWrapper.vue";
-import BorderCard from "@/layouts/CardLayout.vue";
+import { Ref, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
+
+import { getRoles } from "@/assets/scripts/roles";
+import { UserQuery } from "@selab-2/groep-1-query";
+import { User, Address } from "@selab-2/groep-1-orm";
 
 // define the spacing for the input fields
 const spacing: String = "mx-4";
-defineProps(["gebruikerid"]);
-// @ts-ignore
-const isAdmin: Boolean = useAuthStore().auth?.admin;
+// get the account id from the route
+const props = defineProps(["id"]);
+const account_id = Number(props.id);
+
+const isAdmin: Boolean = useAuthStore().auth!.admin;
+const user_id = useAuthStore().auth!.id;
+
+
+const user: Ref<(User & { address: Address }) | null> = ref(null);
+try {
+  user.value = (await new UserQuery().getOne(props.id)) as User & {
+    address: Address;
+  };
+} catch (e) {
+  alert(e);
+}
+
 // reactive state for name
-const firstname = ref("Mats");
-const lastname = ref("Van Belle");
+const firstname = ref(user.value?.first_name);
+const lastname = ref(user.value?.last_name);
 // reactive state for the roles
-const roles = ref<String[]>(["Student", "Superstudent"]);
-// reactive state to keep track if we are edeting or not
+const roles = ref<String[]>(getRoles(user.value));
+
+// reactive state to keep track if we are editing or not
 const edit = ref(false);
 // contact data
-const default_phone = "+32 412 34 56 78";
-const default_email = "mats.vanbelle@example.com";
 const contact = ref<Contact>({
-  phone: default_phone,
-  email: default_email,
+  phone: user.value?.phone ? user.value?.phone : "",
+  email: user.value?.email ? user.value?.email : "",
 });
 // address data
-const address = ref<Address>({
-  street: "Krijgslaan",
-  number: 281,
-  city: "Gent",
-  zip_code: 9000,
-});
+const address = ref(user.value?.address);
+
 // reactive states for the new password
 const password1 = ref("");
 const password2 = ref("");
 const showPsswd = ref(false);
-// reactive state for the submission
-const confirm_psswd = ref("");
-const show_confirm = ref(false);
-// state for the remove password
-const remove_psswd = ref("");
-const show_remove = ref(false);
 </script>
 <style lang="sass" scoped>
 a

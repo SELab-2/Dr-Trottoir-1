@@ -1,14 +1,13 @@
 import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
-import chance from "chance";
+import { User } from "./User";
 
 export class Building implements TableEntity<Building> {
   id: number;
   name: string;
-  address: string;
-  syndicus_fn: string;
-  syndicus_ln: string;
+  address: { street: string; number: number };
+  syndicus: { user: User };
 
   public constructor(init?: Partial<Building>) {
     Object.assign(this, init);
@@ -24,7 +23,8 @@ export class Building implements TableEntity<Building> {
         id: 2,
         name: "",
         fit: true,
-        get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
+        get: (e: Building) =>
+          e.syndicus.user.first_name + " " + e.syndicus.user.last_name,
         type: RowType.AVATAR,
         sortable: false,
       },
@@ -32,7 +32,8 @@ export class Building implements TableEntity<Building> {
         id: 3,
         name: "Syndicus",
         fit: false,
-        get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
+        get: (e: Building) =>
+          e.syndicus.user.first_name + " " + e.syndicus.user.last_name,
         type: RowType.TEXT,
         sortable: true,
       },
@@ -48,23 +49,11 @@ export class Building implements TableEntity<Building> {
         id: 1,
         name: "Adres",
         fit: false,
-        get: (e: Building) => e.address,
+        get: (e: Building) => e.address.street + " " + e.address.number,
         type: RowType.TEXT,
         sortable: true,
       },
     ].map((e) => new Header<Building>(e));
-  }
-
-  static random(): Array<Building> {
-    return [...Array(100).keys()].map(() => {
-      return new Building({
-        id: chance().integer(),
-        name: chance().sentence({ words: 4 }),
-        address: chance().address(),
-        syndicus_fn: chance().first(),
-        syndicus_ln: chance().last(),
-      });
-    });
   }
 
   route(): { name: string; params: { id: number } } {
