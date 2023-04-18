@@ -52,9 +52,10 @@
           <h2>Taken</h2>
           <div class="flex-grow-1"></div>
           <RoundedButton icon="mdi-calendar" value="17 Maart 2023 - 24 Maart 2023"></RoundedButton>
+          <RoundedButton icon="mdi-plus" value="Toevoegen" @click="() => router.push({ name: 'garbage_plan', params: { id: id } })"></RoundedButton>
         </div>
         <div class="grid">
-          <CardLayout style="display: flex; align-items: center; padding: 12px" v-for="action in garbage">
+          <CardLayout style="display: flex; align-items: center; padding: 12px; gap: 12px" v-for="action in garbage">
             <div>
               <h4>{{action.action.description}}</h4>
               <p>{{new Date(action.pickup_time).toLocaleString()}}</p>
@@ -62,6 +63,7 @@
             <div class="flex-grow-1"></div>
             <v-icon icon="mdi-check" v-if="Math.random() < 0.5"></v-icon>
             <v-icon v-else icon="mdi-plus"></v-icon>
+            <v-icon icon="mdi-trash-can-outline"></v-icon>
           </CardLayout>
         </div>
       </div>
@@ -71,7 +73,7 @@
           <h2>Planning</h2>
           <div class="flex-grow-1"></div>
           <RoundedButton icon="mdi-calendar" value="Maart 2023"></RoundedButton>
-          <RoundedButton icon="mdi-plus" value="Inplannen"></RoundedButton>
+          <RoundedButton icon="mdi-plus" value="Toevoegen"></RoundedButton>
         </div>
 
         <RoundCard :schedule="schedule" :status="'completed'" v-for="schedule in schedules" :key="schedule.id"></RoundCard>

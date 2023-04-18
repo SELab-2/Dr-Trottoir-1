@@ -12,7 +12,7 @@
     <RoundedButton v-if="status != 'scheduled'" icon="mdi-image" value="13"></RoundedButton>
     <RoundedButton v-if="status != 'scheduled'" icon="mdi-note-edit-outline" value="10"></RoundedButton>
     <v-icon v-if="status != 'scheduled'" icon="mdi-chevron-right"></v-icon>
-    <v-icon v-else icon="mdi-delete-outline"></v-icon>
+    <v-icon v-else icon="mdi-trash-can-outline"></v-icon>
   </CardLayout>
 </template>
 
