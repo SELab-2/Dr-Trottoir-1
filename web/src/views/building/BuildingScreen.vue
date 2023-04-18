@@ -24,24 +24,24 @@
           ut labore et dolore magna aliqua.
         </p>
 
-        <div style="display: flex; gap: 12px; flex-wrap: wrap" class="mt-2">
+        <div style="display: flex; gap: 16px; flex-wrap: wrap" class="mt-2">
           <RoundedButton icon="mdi-map-search" value="Kaarten" />
           <RoundedButton icon="mdi-file-pdf-box" value="Handleiding" />
           <RoundedButton icon="mdi-lock" value="3142" />
         </div>
       </div>
 
-      <CardLayout style="display: flex; gap: 6px; align-items: center; border-radius: 10px; padding: 12px;">
+      <CardLayout style="display: flex; gap: 16px; align-items: center; border-radius: 10px; padding: 16px 0 16px 16px;">
         <Avatar :name="building.syndicus?.user.first_name + ' ' + building.syndicus?.user.last_name"></Avatar>
 
         <div>
-          <p style="font-weight: 600; font-size: 12px; opacity: 90%">SYNDICUS</p>
+          <p style="font-weight: 600; font-size: 16px; opacity: 90%">SYNDICUS</p>
           <p style="font-weight: 500">{{ building.syndicus?.user.first_name + ' ' + building.syndicus?.user.last_name }}</p>
         </div>
 
         <div style="flex-grow: 1"></div>
 
-        <div style="display: flex; gap: 12px; flex-wrap: wrap">
+        <div style="display: flex; gap: 16px; flex-wrap: wrap">
           <RoundedButton icon="mdi-phone" :value="building.syndicus?.user.phone" />
           <RoundedButton icon="mdi-mail" value="E-mail" />
         </div>
@@ -55,7 +55,7 @@
           <RoundedButton icon="mdi-plus" value="Toevoegen" @click="() => router.push({ name: 'garbage_plan', params: { id: id } })"></RoundedButton>
         </div>
         <div class="grid">
-          <CardLayout style="display: flex; align-items: center; padding: 12px; gap: 12px" v-for="action in garbage">
+          <CardLayout style="display: flex; align-items: center; padding: 16px 0 16px 16px; gap: 16px" v-for="action in garbage">
             <div>
               <h4>{{action.action.description}}</h4>
               <p>{{new Date(action.pickup_time).toLocaleString()}}</p>
@@ -70,7 +70,7 @@
 
       <div class="space-y-8">
         <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
-          <h2>Planning</h2>
+          <h2>Bezoeken</h2>
           <div class="flex-grow-1"></div>
           <RoundedButton icon="mdi-calendar" value="Maart 2023"></RoundedButton>
           <RoundedButton icon="mdi-plus" value="Toevoegen"></RoundedButton>
@@ -80,6 +80,7 @@
         <RoundCard :schedule="schedules[0]" :status="'active'"></RoundCard>
         <RoundCard :schedule="schedule" :status="'scheduled'" v-for="schedule in schedules" :key="schedule.id"></RoundCard>
       </div>
+
     </div>
   </HFillWrapper>
 </template>
@@ -128,7 +129,7 @@ defineProps({
 
 .space-y {
   & > * {
-    margin-bottom: 24px;
+    margin-bottom: 32px;
   }
 }
 
