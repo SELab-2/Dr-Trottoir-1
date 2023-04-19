@@ -1,6 +1,6 @@
 export default interface Building {
   name: String;
   ivagoId: String;
-  syndicus: String;
+  syndicus_id: number;
   manual: File[];
 }

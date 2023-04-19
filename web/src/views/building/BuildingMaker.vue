@@ -5,25 +5,32 @@
       <v-text-field
         required
         type="text"
-        v-model="building.name"
+        v-model="building_name"
         label="Building Name"
       ></v-text-field>
       <v-text-field
         required
         type="text"
-        v-model="building.ivagoId"
+        v-model="building_ivago_id"
         label="Ivago id"
       ></v-text-field>
-      <v-select
-        label="Syndicus"
-        :items="['Jeff', 'Elon', 'Tim', 'Bill', 'Warren', 'Steve']"
-        v-model="building.syndicus"
-      ></v-select>
+
+      <v-select label="Syndicus" :items="syndicusen" v-model="syndicus_id">
+        <template v-slot:item="{ props, item }">
+          <v-list-item v-bind="props" :title="item.id" :subtitle="item.id">
+            <p>{{ item.value.user.first_name + " " + item.value.user.last_name }}</p>
+          </v-list-item>
+        </template>
+
+        <template v-slot:selection="{ item }">
+          <p>{{ item.value.user.first_name + " " + item.value.user.last_name }}</p>
+        </template>
+      </v-select>
 
       <v-file-input
         prepend-icon=""
         prepend-inner-icon="mdi-file"
-        v-model="building.manual"
+        v-model="building_manual"
         label="Manual"
       ></v-file-input>
     </BorderCard>
@@ -66,9 +73,7 @@
           </v-col>
         </v-row>
         <!-- addres forum gebruiken -->
-        <AddressForm
-          @onUpdate="(newAddress) => (address2 = newAddress)"
-        ></AddressForm>
+        <AddressForm @onUpdate="(newAddress) => (address2 = newAddress)"></AddressForm>
       </div>
     </BorderCard>
 
@@ -94,13 +99,38 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { onMounted, ref, Ref } from "vue";
 import MultiAddImage from "@/components/images/MultiAddImage.vue";
 import Address2 from "@/components/models/Address2";
 import Building from "@/components/models/Building";
 import AddressForm from "../../components/forms/AddressForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
+import { Result, SyndicusQuery, BuildingQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
+
+interface SyndicusData {
+  id: number;
+  name: string;
+}
+
+let syndicusen: Ref<Result<SyndicusQuery>[]> = ref([]);
+
+async function getSyndicusen() {
+  tryOrAlertAsync(async () => {
+    syndicusen.value = await new SyndicusQuery().getAll();
+  });
+}
+
+onMounted(() => {
+  getSyndicusen();
+  //extractUserNames()
+});
+
+const syndicus_id: Ref<Result<SyndicusQuery>> = ref(null);
+const building_name = ref(null);
+const building_ivago_id = ref(null);
+const building_manual = ref([]);
 
 const dummyMap = ref(null);
 const address2 = ref<Address2>({
@@ -112,18 +142,28 @@ const address2 = ref<Address2>({
   longitude: 0,
 });
 
-const building = ref<Building>({
-  name: "",
-  ivagoId: "",
-  syndicus: "",
-  manual: [],
-});
-
 //TODO: handle multi image
 const handleMultiImages = () => {};
 //TODO: api request
+
+async function makeBuilding() {
+  tryOrAlertAsync(async () => {
+    await new BuildingQuery().createOne({
+      name: building_name,
+      ivago_id: "1",
+      syndicus_id: 88,
+      address_id: 66,
+    });
+  });
+}
+
+async function makeAddress() {
+}
+
 const submit = () => {
   try {
+    console.log(syndicus_id.value.id);
+
     //alle data zit in building
     //const response = await axios.post("", );
     //console.log(response.data);
