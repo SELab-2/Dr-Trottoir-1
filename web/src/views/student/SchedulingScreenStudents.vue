@@ -102,8 +102,8 @@
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
-import { ScheduleQuery, ProgressQuery } from "@selab-2/groep-1-query";
-import { Schedule, Round, Building, Progress } from "@selab-2/groep-1-orm";
+import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
+import { Building } from "@selab-2/groep-1-orm";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
@@ -121,11 +121,11 @@ function redirect_to_detail() {
 const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
 
 async function calculateProgress(
-  buildings: { building: Building }[],
+  buildings: ({ building: Building } & any)[], //TODO typing not correct yet
   id: number,
   date: Date,
 ): Promise<number> {
-  const progresses: Progress[] = await new ProgressQuery().getAll({
+  const progresses: Result<ProgressQuery>[] = await new ProgressQuery().getAll({
     user: useAuthStore().auth!.id,
     schedule: id,
     arrived_after: new Date(date.setHours(0, 0, 0, 0)),
@@ -142,21 +142,12 @@ async function calculateProgress(
   return matched;
 }
 
-type UpdatedSchedule = Schedule & {
-  progress: number;
-  round: Round & { buildings: { building: Building }[] };
-};
+type ProgressedSchedule = Result<ScheduleQuery> & { progress: number };
 
-// TODO change (used for testing)
-const today = new Date("2023-04-01T18:47:29.939Z");
-const tomorrow = new Date("2023-04-02T18:47:29.939Z");
-const overmorrow = new Date("2023-04-01T18:47:29.939Z");
-/**
 const today = new Date();
 const tomorrow = new Date(new Date().setDate(today.getDate() + 1));
 const overmorrow = new Date(new Date().setDate(today.getDate() + 2));
- **/
-const days: { name: string; day: Date; schedule: UpdatedSchedule[] }[] = [
+const days: { name: string; day: Date; schedule: ProgressedSchedule[] }[] = [
   {
     name: "Vandaag",
     day: today,
@@ -174,15 +165,14 @@ const days: { name: string; day: Date; schedule: UpdatedSchedule[] }[] = [
   },
 ];
 
-async function loadSchedule(day: Date): Promise<UpdatedSchedule[]> {
+async function loadSchedule(day: Date): Promise<ProgressedSchedule[]> {
   const date = new Date(day);
   try {
-    const schedules: UpdatedSchedule[] = (await new ScheduleQuery().getAll({
-      user_id: 58, // TODO change (used for testing)
-      //user_id: useAuthStore().auth!.id,
+    const schedules: ProgressedSchedule[] = (await new ScheduleQuery().getAll({
+      user_id: useAuthStore().auth!.id,
       after: new Date(date.setHours(0, 0, 0, 0)),
       before: new Date(date.setHours(23, 59, 59, 999)),
-    })) as UpdatedSchedule[];
+    })) as ProgressedSchedule[];
     for (let schedule of schedules) {
       schedule.progress = await calculateProgress(
         schedule.round.buildings,
