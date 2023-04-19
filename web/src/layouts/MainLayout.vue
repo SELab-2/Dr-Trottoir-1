@@ -17,7 +17,15 @@
             <div class="flex">
               <div class="text">
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
-                <v-list-item-subtitle>{{ roles() }}</v-list-item-subtitle>
+                <v-list-item-subtitle v-if="useAuthStore()?.auth?.admin">
+                  Admin
+                </v-list-item-subtitle>
+                <v-list-item-subtitle
+                  v-else-if="useAuthStore()?.auth?.super_student"
+                >
+                  Super Student
+                </v-list-item-subtitle>
+                <v-list-item-subtitle v-else> Student </v-list-item-subtitle>
               </div>
             </div>
           </v-list-item>
@@ -33,7 +41,7 @@
             <router-link
               :to="{
                 name: 'account_settings',
-                params: { id: 0 },
+                params: { id: id },
               }"
             >
               <v-list-item
@@ -152,8 +160,12 @@
 
         <v-spacer />
       </v-app-bar>
-
-      <router-view></router-view>
+      <Suspense :key="route.fullPath">
+        <template #fallback>
+          <Loader />
+        </template>
+        <router-view />
+      </Suspense>
     </v-main>
   </v-app>
 </template>
@@ -164,17 +176,14 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useAuthStore } from "@/stores/auth";
+import Loader from "@/components/popups/Loader.vue";
 
 const router = useRouter();
-
 const today = new Date().toLocaleDateString("nl");
-
 // reactive state to show the drawer or not
 const drawer = ref(true);
-
 // get the route object, needed to show the title
 const route = useRoute();
-
 // roles to know what to show
 const isStudent: Boolean = useAuthStore().auth!.student;
 const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
@@ -184,32 +193,17 @@ const isAdmin: Boolean = useAuthStore().auth!.admin;
 // account display settings
 const studentName: string =
   useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
-function roles(): string {
-  let str = "";
-  if (isStudent) {
-    str += "student ";
-  }
-  if (isSuperStudent) {
-    str += "superstudent ";
-  }
-  if (isSyndicus) {
-    str += "syndicus ";
-  }
-  if (isAdmin) {
-    str += "admin ";
-  }
-  return str;
-}
+
+// account display settings
+
+const id = useAuthStore().auth!.id;
 
 const thresholdWidth: number = 750;
-
 const permanentDrawer = ref<Boolean>(window.innerWidth > thresholdWidth);
-
 window.addEventListener(
   "resize",
   () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
 );
-
 async function logOut() {
   await useAuthStore().logOut();
   await router.push({ name: "login" });
@@ -221,15 +215,12 @@ a {
   text-decoration: none;
   color: black;
 }
-
 .text {
   width: 80%;
 }
-
 .flex {
   display: flex;
 }
-
 .sidebar {
   position: fixed !important;
   height: 100vh !important;
