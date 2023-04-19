@@ -22,7 +22,7 @@ export abstract class Query<Parameters, Element, Result> {
      * @param body De velden in de databank met hun nieuwe waarde.
      * @throwd QueryError
      */
-    private async fetchJSON(
+    protected async fetchJSON(
         url: string,
         method = "GET",
         body = {},
