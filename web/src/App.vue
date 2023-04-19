@@ -19,9 +19,6 @@
 
 <script lang="ts" setup>
 import Loader from "@/components/popups/Loader.vue";
-import { useRoute } from "vue-router";
-// get the route object, needed to show the title
-const route = useRoute();
 </script>
 
 <style lang="sass" scoped></style>
