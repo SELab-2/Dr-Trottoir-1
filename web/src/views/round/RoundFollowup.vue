@@ -5,28 +5,21 @@
       :sort_items="sort_items"
       :filter_items="filter_options"
       class="mx-1 mb-3"
-      @onUpdate="(new_data: FilterData) => filter_data = new_data"
+      @onUpdate="(new_data: FilterData) => handleFilterUpdate(new_data)"
     />
-    <v-card v-for="(schedule, i) in getSchedules()" :key="i"
-    >
-      {{ schedule }}
-    </v-card>
-    <!--<RoundCard
-      v-for="(schedule, i) in getSchedules()"
+    <RoundCard
+      v-for="(schedule, i) in schedules"
       :key="i"
-      :round_name="round.name"
-      :round_start="
-        round.start_time ? round.start_time.toLocaleTimeString('nl') : ''
-      "
-      :round_end="round.end_time ? round.end_time.toLocaleTimeString('nl') : ''"
-      :round_started="round.start_time ? true : false"
-      :student_name="round.student"
-      :building_index="completed_buildings(round)"
-      :total_buildings="round.buildings.length"
-      :round_comments="round_has_comments(round)"
+      :round_name="schedule.round.name"
+      round_start="TODO"
+      round_end="TODO"
+      :student_name="schedule.user.first_name"
+      :building_index="0"
+      :total_buildings="schedule.round.buildings.length"
+      :round_comments="false"
       @click="redirect_to_detail()"
       style="cursor: pointer"
-    ></RoundCard>-->
+    ></RoundCard>
   </HFillWrapper>
 </template>
 
@@ -35,12 +28,12 @@ import Round from "@/components/models/Round";
 import RoundCard from "@/components/cards/RoundCard.vue";
 import LargeFilter from "@/components/filter/LargeFilter.vue";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { Ref, ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
-import { ScheduleQuery } from "@selab-2/groep-1-query";
-import { Schedule } from "@selab-2/groep-1-orm";
+import { ScheduleQuery, Result } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 
 // the router constant
 const router = useRouter();
@@ -86,25 +79,37 @@ function completed_buildings(round: Round): number {
 
 /* Data fetching */
 
-async function getSchedules(): Promise<Schedule[]>{
-  try{
-    // get the schedules
-    const result: Schedule[] = (await new ScheduleQuery().getAll({
+/**
+ * Fetch all the schedules
+ */
+async function fetchSchedules(): Promise<Array<Result<ScheduleQuery>>> {
+  let result: Array<Result<ScheduleQuery>> = [];
+  await tryOrAlertAsync(async () => {
+    result = await new ScheduleQuery().getAll({
       //after: filter_data.value.start_day,
       //before: filter_data.value.end_day,
       //sort: [filter_data.value.sort_by],
       //ord: (filter_data.value.sort_ascending ? ['asc'] : ['desc']),
-    }))
-    console.log(result)
-    return result;
-  } catch(e){
-    // TODO: proper error handeling
-    alert(e)
-  }
-  return [];
+    });
+  });
+  console.log(result);
+  return result;
 }
 
+/**
+ * Update the schedules state with new schedules
+ */
+async function updadeSchedules(){
+  schedules.value = await fetchSchedules();
+}
 
+const schedules: Ref<Array<Result<ScheduleQuery>>> = ref(await fetchSchedules());
+
+/* Data filtering */
+function handleFilterUpdate(data: FilterData){
+  filter_data.value = data;
+  updadeSchedules();
+}
 
 /* Filtering 
 

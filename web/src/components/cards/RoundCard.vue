@@ -79,7 +79,6 @@ const props = defineProps({
   round_start: String,
   round_end: String,
   student_name: String,
-  round_started: { type: Boolean, required: true },
   total_buildings: { type: Number, required: true },
   building_index: { type: Number, required: true },
   round_comments: { type: Boolean, default: false },
