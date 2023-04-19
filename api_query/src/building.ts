@@ -27,6 +27,11 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
             };
         };
         manual: true;
+        images: {
+            include: {
+                image: true;
+            };
+        };
     };
 }>;
 
