@@ -6,8 +6,7 @@
         :permanent="!!permanentDrawer"
         v-model="drawer"
         class="sidebar"
-        style='position: fixed !important;
-               height: 100vh !important;'
+        style="position: fixed !important; height: 100vh !important"
         color="background"
       >
         <v-list density="compact" nav>
@@ -150,7 +149,12 @@
         </template>
       </v-navigation-drawer>
 
-      <v-app-bar prominent elevation="0" color="background" style='position: fixed !important;'>
+      <v-app-bar
+        prominent
+        elevation="0"
+        color="background"
+        style="position: fixed !important"
+      >
         <div class="px-4">
           <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
         </div>
