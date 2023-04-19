@@ -9,27 +9,21 @@
       Nieuw Gebouw
     </v-btn>
   </div>
-  <Table v-bind:entries="buildings" v-bind:headers="Building.headers()"></Table>
+  <Table
+    :entries="buildings"
+    :headers="Building.headers()"
+    :route="Building.route"
+  ></Table>
 </template>
 
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
 import { Building } from "@/types/Building";
-import { Building as OrmBuilding } from "@selab-2/groep-1-orm";
-import { BuildingQuery } from "@selab-2/groep-1-query";
+import { BuildingQuery, Result } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 
-const buildings: Building[] = await loadBuildings();
-async function loadBuildings(): Promise<Building[]> {
-  try {
-    const buildingsOrErr: OrmBuilding[] = await new BuildingQuery().getAll();
-    let array: Building[] = [];
-    for (let building of buildingsOrErr) {
-      array.push(new Building(building));
-    }
-    return array;
-  } catch (e) {
-    alert("Kon gebouwen niet ophalen, probeer het later opnieuw.");
-    return [];
-  }
-}
+const buildings: Array<Result<BuildingQuery>> =
+  (await tryOrAlertAsync<Array<Result<BuildingQuery>>>(async () => {
+    return await new BuildingQuery().getAll({});
+  })) ?? [];
 </script>

@@ -1,18 +1,21 @@
 <template>
-  <HFillWrapper margin="mx-4">
+  <HFillWrapper margin="mx-4" v-if="user !== null">
     <!-- Top section with profile picture and edit button-->
     <div class="d-flex">
       <v-list-item
         class="me-auto"
         lines="two"
-        :title="`${firstname} ${lastname}`"
-        :subtitle="roles.join(' ')"
+        :title="`${user.first_name} ${user.last_name}`"
       >
         <template v-slot:prepend>
-          <Avatar :name="`${firstname} ${lastname}`" />
+          <Avatar :name="`${user.first_name} ${user.last_name}`" />
         </template>
       </v-list-item>
-      <div v-if="isAdmin || account_id === user_id">
+      <div
+        v-if="
+          useAuthStore().auth?.admin || user?.id === useAuthStore().auth?.id
+        "
+      >
         <v-btn
           v-if="!edit"
           prepend-icon="mdi-pencil"
@@ -34,7 +37,7 @@
     <BorderCard class="mt-4" prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
       <!-- Name, only shows when the admin wants to edit -->
-      <v-row class="py-0 my-0" v-if="isAdmin && edit">
+      <v-row class="py-0 my-0" v-if="useAuthStore().auth?.admin && edit">
         <v-col
           cols="1"
           style="min-width: 100px; max-width: 100%"
@@ -42,7 +45,7 @@
         >
           <!-- Text input field for the first name -->
           <v-text-field
-            v-model="firstname"
+            v-model="user!.first_name"
             label="Voornaam"
             type="text"
             required
@@ -56,7 +59,7 @@
         >
           <!-- Text input field for the last name -->
           <v-text-field
-            v-model="lastname"
+            v-model="user!.last_name"
             label="Achternaam"
             type="text"
             required
@@ -64,11 +67,10 @@
         </v-col>
       </v-row>
       <ContactForm
-        :class="edit ? spacing : 'mx-10'"
+        :class="edit ? 'mx-4' : 'mx-10'"
         :readonly="!edit"
-        :phone="String(contact.phone)"
-        :email="String(contact.email)"
-        @onUpdate="(newContact) => (contact = newContact)"
+        :phone="user?.phone"
+        :email="user?.email"
       >
       </ContactForm>
     </BorderCard>
@@ -77,87 +79,77 @@
     <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
       <template v-slot:title> Adres </template>
       <AddressFrom
-        v-if="address"
-        :class="edit ? spacing : 'mx-10'"
+        :class="edit ? 'mx-4' : 'mx-10'"
         :readonly="!edit"
-        :street="String(address.street)"
-        :city="String(address.city)"
-        :number="address.number"
-        :zip_code="address.zip_code"
-        @onUpdate="(newAddress) => (address = newAddress)"
+        :street="user?.address.street"
+        :city="user?.address.city"
+        :number="user?.address.number"
+        :zip_code="user?.address.zip_code"
       ></AddressFrom>
     </BorderCard>
 
     <!-- Section to pick the roles -->
-    <BorderCard v-if="isAdmin" class="mt-4" prepend-icon="mdi-account-multiple">
+    <BorderCard
+      v-if="useAuthStore().auth?.admin"
+      class="mt-4"
+      prepend-icon="mdi-account-multiple"
+    >
       <template v-slot:title> Rollen </template>
-      <v-row v-if="edit" class="ml-1 mb-0">
+      <v-row class="ml-1 mb-0">
         <v-col>
           <v-checkbox
-            v-model="roles"
+            v-model="user!.student"
             label="Student"
             value="Student"
             color="primary"
             density="compact"
             hide-details
+            :disabled="!edit"
           />
           <v-checkbox
-            v-model="roles"
+            v-model="user!.super_student"
             label="Superstudent"
             value="Superstudent"
             color="primary"
             density="compact"
             hide-details
+            :disabled="!edit"
           />
         </v-col>
         <v-col>
           <v-checkbox
-            v-model="roles"
-            label="Syndicus"
-            value="Syndicus"
-            color="primary"
-            density="compact"
-            hide-details
-          />
-          <v-checkbox
-            v-model="roles"
+            v-model="user!.admin"
             label="Admin"
             value="Admin"
             color="primary"
             density="compact"
             hide-details
+            :disabled="!edit"
           />
         </v-col>
       </v-row>
-      <v-list lines="one" density="compact" v-if="!edit" class="mx-10">
-        <v-list-item
-          v-for="role in roles"
-          :key="String(role)"
-          :title="'- ' + String(role)"
-        ></v-list-item>
-      </v-list>
     </BorderCard>
 
     <!-- Section to set new password -->
     <BorderCard v-if="edit" class="mt-4" prepend-icon="mdi-lock">
       <template v-slot:title> Nieuw wachtwoord </template>
-      <v-list density="compact" :class="spacing">
+      <v-list density="compact" class="mx-4">
         <v-text-field
-          v-model="password1"
+          v-model="password"
           :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="showPsswd ? 'text' : 'password'"
+          :append-inner-icon="passwordHidden ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="passwordHidden ? 'text' : 'password'"
           label="Nieuw wachtwoord"
-          @click:append-inner="showPsswd = !showPsswd"
+          @click:append-inner="passwordHidden = !passwordHidden"
           bg
         ></v-text-field>
         <v-text-field
-          v-model="password2"
+          v-model="passwordCheck"
           :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="showPsswd ? 'text' : 'password'"
+          :append-inner-icon="passwordHidden ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="passwordHidden ? 'text' : 'password'"
           label="Bevestig nieuw wachtwoord"
-          @click:append-inner="showPsswd = !showPsswd"
+          @click:append-inner="passwordHidden = !passwordHidden"
           bg
         ></v-text-field>
       </v-list>
@@ -175,7 +167,9 @@
         >
 
         <v-btn
-          v-if="isAdmin && account_id !== user_id"
+          v-if="
+            useAuthStore().auth?.admin && user?.id !== useAuthStore().auth?.id
+          "
           prepend-icon="mdi-delete"
           @click="edit = !edit"
           color="error"
@@ -192,54 +186,25 @@ import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import ContactForm from "@/components/forms/ContactForm.vue";
 import AddressFrom from "@/components/forms/AddressForm.vue";
-import Contact from "@/components/models/Contact";
 import Avatar from "@/components/Avatar.vue";
 import { Ref, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
+import { Result, UserQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 
-import { getRoles } from "@/assets/scripts/roles";
-import { UserQuery } from "@selab-2/groep-1-query";
-import { User, Address } from "@selab-2/groep-1-orm";
-
-// define the spacing for the input fields
-const spacing: String = "mx-4";
-// get the account id from the route
 const props = defineProps(["id"]);
-const account_id = Number(props.id);
 
-const isAdmin: Boolean = useAuthStore().auth!.admin;
-const user_id = useAuthStore().auth!.id;
-
-const user: Ref<(User & { address: Address }) | null> = ref(null);
-try {
-  user.value = (await new UserQuery().getOne(props.id)) as User & {
-    address: Address;
-  };
-} catch (e) {
-  alert(e);
-}
-
-// reactive state for name
-const firstname = ref(user.value?.first_name);
-const lastname = ref(user.value?.last_name);
-// reactive state for the roles
-const roles = ref<String[]>(getRoles(user.value));
-
-// reactive state to keep track if we are editing or not
 const edit = ref(false);
-// contact data
-const contact = ref<Contact>({
-  phone: user.value?.phone ? user.value?.phone : "",
-  email: user.value?.email ? user.value?.email : "",
-});
-// address data
-const address = ref(user.value?.address);
+const password = ref("");
+const passwordCheck = ref("");
+const passwordHidden = ref(false);
+const user: Ref<Result<UserQuery> | null> = ref(null);
 
-// reactive states for the new password
-const password1 = ref("");
-const password2 = ref("");
-const showPsswd = ref(false);
+tryOrAlertAsync(async () => {
+  user.value = await new UserQuery().getOne(props.id);
+});
 </script>
+
 <style lang="sass" scoped>
 a
   text-decoration: none
