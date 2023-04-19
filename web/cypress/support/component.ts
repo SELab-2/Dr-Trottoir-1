@@ -15,6 +15,7 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+// import '@cypress/code-coverage/support'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
@@ -33,7 +34,27 @@ declare global {
   }
 }
 
-Cypress.Commands.add('mount', mount)
+import vuetify from "../../src/plugins/vuetify"
+import {loadFonts} from '../../src/plugins/webfontloader'
 
+loadFonts()
+
+Cypress.Commands.add("mount", (MountedComponent, options) => {
+
+  const root = document.getElementById("__cy_root");
+  // Vuetify styling
+  if (!root.classList.contains("v-application")) {
+    root.classList.add("v-application");
+  }
+  // Vuetify selector used for popup elements to attach to the DOM
+  root.setAttribute('data-app', 'true');
+
+  return mount(MountedComponent, {
+    global: {
+      plugins: [vuetify]
+    },
+    ...options, // To override values for specific tests
+  });
+});
 // Example use:
 // cy.mount(MyComponent)

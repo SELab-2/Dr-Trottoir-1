@@ -3,6 +3,7 @@ describe('login tests', () => {
     cy.visit('/')
   })
 
+  // TODO .only wegdoen wanneer api niet meer crasht bij foutieve login
   it.only('log in succesfull', () =>{
     cy.login('administrator@trottoir.be', 'password')
     cy.visit('/planning')
