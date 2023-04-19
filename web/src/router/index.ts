@@ -16,6 +16,7 @@ import GarbageMaker from "@/views/building/GarbageMaker.vue";
 import UserOverview from "@/views/dashboard/Users.vue";
 import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
+import ContactSyndicus from "@/views/contact/ContactSyndicus.vue";
 import Auth from "@/views/dev/Auth.vue";
 import { useAuthStore } from "@/stores/auth";
 import TryOrAlert from "@/views/dev/TryOrAlert.vue";
@@ -173,6 +174,20 @@ const routes: any[] = [
         component: BuildingFollowup,
         meta: {
           title: "Opvolging gebouwen",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
+        },
+      },
+      {
+        path: "/contact",
+        name: "contact_syndicus",
+        component: ContactSyndicus,
+        meta: {
+          title: "",
           auth: (
             student: boolean,
             superstudent: boolean,
