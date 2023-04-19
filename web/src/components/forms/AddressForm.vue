@@ -13,7 +13,7 @@
           label="Straat"
           type="text"
           required
-          :variant="readonly ? 'plain' : 'filled'"
+          :variant="readonly ? 'plain' : 'outlined'"
           :readonly="readonly"
           @update:model-value="$emit('onUpdate', address)"
         ></v-text-field>
@@ -25,7 +25,7 @@
           label="Huisnummer"
           :type="readonly ? 'text' : 'number'"
           required
-          :variant="readonly ? 'plain' : 'filled'"
+          :variant="readonly ? 'plain' : 'outlined'"
           :readonly="readonly"
           @update:model-value="$emit('onUpdate', address)"
         ></v-text-field>
@@ -45,7 +45,7 @@
           type="text"
           required
           @update:model-value="$emit('onUpdate', address)"
-          :variant="readonly ? 'plain' : 'filled'"
+          :variant="readonly ? 'plain' : 'outlined'"
           :readonly="readonly"
         ></v-text-field>
       </v-col>
@@ -57,7 +57,7 @@
           :type="readonly ? 'text' : 'number'"
           required
           @update:model-value="$emit('onUpdate', address)"
-          :variant="readonly ? 'plain' : 'filled'"
+          :variant="readonly ? 'plain' : 'outlined'"
           :readonly="readonly"
         ></v-text-field>
       </v-col>

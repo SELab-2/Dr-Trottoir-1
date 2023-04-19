@@ -1,5 +1,6 @@
-import { Schedule } from "@selab-2/groep-1-orm";
+import { Schedule, Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
+import { includeUserWithAddress, includeBuilding } from "./include";
 
 export type ScheduleQueryParameters = {
     take: number;
@@ -15,6 +16,25 @@ export type ScheduleQueryParameters = {
     ord: Array<"asc" | "desc">;
 };
 
-export class ScheduleQuery extends Query<ScheduleQueryParameters, Schedule> {
+type ScheduleAllInfo = Prisma.ScheduleGetPayload<{
+    include: {
+        user: typeof includeUserWithAddress;
+        round: {
+            include: {
+                buildings: {
+                    include: {
+                        building: typeof includeBuilding;
+                    };
+                };
+            };
+        };
+    };
+}>;
+
+export class ScheduleQuery extends Query<
+    ScheduleQueryParameters,
+    Schedule,
+    ScheduleAllInfo
+> {
     endpoint = "schedule";
 }
