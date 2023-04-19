@@ -1,81 +1,45 @@
 import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
-import { User } from "./User";
+import { Result, RoundQuery } from "@selab-2/groep-1-query";
 
-export class Schedule implements TableEntity<Schedule> {
-  id: number;
-  day: string;
-  user: User;
-  round: { name: string; buildings: [] };
-  finished: boolean;
-
-  public constructor(init?: Partial<Schedule>) {
-    Object.assign(this, init);
+export class RoundTable implements TableEntity<Result<RoundQuery>> {
+  headers(): Array<Header<Result<RoundQuery>>> {
+    return RoundTable.headers();
   }
 
-  headers(): Array<Header<Schedule>> {
-    return Schedule.headers();
-  }
-
-  static headers(): Array<Header<Schedule>> {
+  static headers(): Array<Header<Result<RoundQuery>>> {
     return [
       {
         id: 3,
-        name: "",
-        fit: true,
-        get: (e: Schedule) => e.user.first_name + " " + e.user.last_name,
-        type: RowType.AVATAR,
-        sortable: false,
+        name: "Naam",
+        fit: false,
+        get: (e: Result<RoundQuery>) => e.name,
+        type: RowType.TEXT,
+        sortable: true,
       },
       {
         id: 4,
-        name: "Student",
-        fit: false,
-        get: (e: Schedule) => e.user.first_name + " " + e.user.last_name,
-        type: RowType.TEXT,
-        sortable: true,
-      },
-      {
-        id: 0,
-        name: "Ronde",
-        fit: false,
-        get: (e: Schedule) => e.round.name,
-        type: RowType.TEXT,
-        sortable: true,
-        route_to: `/rondes/detail`,
-      },
-      {
-        id: 1,
         name: "Gebouwen",
         fit: false,
-        get: (e: Schedule) => e.round.buildings.length,
+        get: (e: Result<RoundQuery>) => e.buildings.length,
         type: RowType.TEXT,
         sortable: true,
       },
-      {
-        id: 2,
-        name: "Datum",
-        fit: false,
-        get: (e: Schedule) => e.day,
-        type: RowType.TEXT,
-        sortable: true,
-      },
-      {
-        id: 4,
-        name: "Klaar",
-        fit: true,
-        get: (e: Schedule) => e.finished,
-        type: RowType.BOOLEAN,
-        sortable: true,
-      },
-    ].map((e) => new Header<Schedule>(e));
+    ].map((e) => new Header<Result<RoundQuery>>(e));
   }
 
-  route(): { name: string; params: { id: number } } {
+  route(item: Result<RoundQuery>): { name: string; params: { id: number } } {
+    return RoundTable.route(item);
+  }
+
+  static route(item: Result<RoundQuery>): {
+    name: string;
+    params: { id: number };
+  } {
     return {
-      name: "round_detail",
-      params: { id: this.id },
+      name: "round",
+      params: { id: item.id },
     };
   }
 }

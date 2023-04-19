@@ -45,6 +45,7 @@ export class RoundRouting extends Routing {
     async createOne(req: CustomRequest, res: express.Response) {
         const round = await prisma.round.create({
             data: req.body,
+            include: RoundRouting.includes,
         });
 
         return res.status(201).json(round);
@@ -57,6 +58,7 @@ export class RoundRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
+            include: RoundRouting.includes,
         });
 
         return res.status(200).json(result);

@@ -17,9 +17,15 @@
             <div class="flex">
               <div class="text">
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
-                <v-list-item-subtitle>{{
-                  roles.join(" ")
-                }}</v-list-item-subtitle>
+                <v-list-item-subtitle v-if="useAuthStore()?.auth?.admin">
+                  Admin
+                </v-list-item-subtitle>
+                <v-list-item-subtitle
+                  v-else-if="useAuthStore()?.auth?.super_student"
+                >
+                  Super Student
+                </v-list-item-subtitle>
+                <v-list-item-subtitle v-else> Student </v-list-item-subtitle>
               </div>
             </div>
           </v-list-item>
@@ -94,8 +100,8 @@
             <div v-for="buildingid of [1, 2]" :key="buildingid">
               <router-link
                 :to="{
-                  name: 'building_id_detail',
-                  params: { id: buildingid, date: today },
+                  name: 'building_id',
+                  params: { id: buildingid },
                 }"
               >
                 <v-list-item
@@ -175,12 +181,9 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useAuthStore } from "@/stores/auth";
-import { getRoles } from "@/assets/scripts/roles";
 import Loader from "@/components/popups/Loader.vue";
-import { User } from "@selab-2/groep-1-orm";
 
 const router = useRouter();
-const today = new Date().toLocaleDateString("nl");
 // reactive state to show the drawer or not
 const drawer = ref(true);
 // get the route object, needed to show the title
@@ -194,8 +197,6 @@ const isAdmin: Boolean = useAuthStore().auth!.admin;
 // account display settings
 const studentName: string =
   useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
-
-const roles = getRoles(useAuthStore().auth as User);
 
 // account display settings
 

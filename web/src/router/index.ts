@@ -10,16 +10,17 @@ import RoundMaker from "@/views/round/RoundMaker.vue";
 import RoundDetail from "@/views/round/RoundDetail.vue";
 import RoundPlanner from "@/views/round/RoundPlanner.vue";
 import BuildingMaker from "@/views/building/BuildingMaker.vue";
-import BuildingDetail from "@/views/building/BuildingDetail.vue";
 import BuildingScreen from "@/views/building/BuildingScreen.vue";
 import BuildingFollowup from "@/views/building/BuildingFollowup.vue";
 import GarbageMaker from "@/views/building/GarbageMaker.vue";
 import UserOverview from "@/views/dashboard/Users.vue";
 import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
+import ContactSyndicus from "@/views/contact/ContactSyndicus.vue";
 import Auth from "@/views/dev/Auth.vue";
 import { useAuthStore } from "@/stores/auth";
 import TryOrAlert from "@/views/dev/TryOrAlert.vue";
+import Round from "@/views/round/Round.vue";
 
 const routes: any[] = [
   {
@@ -84,6 +85,20 @@ const routes: any[] = [
       },
       {
         path: "/ronde/:id",
+        name: "round",
+        component: Round,
+        meta: {
+          title: "",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student || superstudent || admin,
+        },
+      },
+      {
+        path: "/ronde/:id/:schedule",
         name: "round_detail",
         component: RoundDetail,
         meta: {
@@ -140,21 +155,6 @@ const routes: any[] = [
         },
       },
       {
-        path: "/gebouw/:id/:date",
-        name: "building_id_detail",
-        component: BuildingDetail,
-        props: true,
-        meta: {
-          title: "",
-          auth: (
-            student: boolean,
-            superstudent: boolean,
-            syndicus: boolean,
-            admin: boolean,
-          ) => superstudent || syndicus || admin,
-        },
-      },
-      {
         path: "/gebouw/nieuw",
         name: "building_new",
         component: BuildingMaker,
@@ -174,6 +174,20 @@ const routes: any[] = [
         component: BuildingFollowup,
         meta: {
           title: "Opvolging gebouwen",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
+        },
+      },
+      {
+        path: "/contact",
+        name: "contact_syndicus",
+        component: ContactSyndicus,
+        meta: {
+          title: "",
           auth: (
             student: boolean,
             superstudent: boolean,

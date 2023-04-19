@@ -1,178 +1,194 @@
 <template>
-  <BuildingData :id="id" />
-  <div id="building-screen" class="px-4">
-    <v-container class="schedule">
-      <v-row>
-        <v-col class="schedule-date" cols="3">
-          <h2>Woe</h2>
-          <h1>15</h1>
-        </v-col>
-        <v-col>
-          <v-card class="schedule-action d-flex">
-            <p class="me-auto" style="font-weight: 500; font-size: 22px">GFT</p>
-            <p>07u30</p>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="schedule-date" cols="3" />
-        <v-col>
-          <v-card class="schedule-action d-flex">
-            <p class="me-auto" style="font-weight: 500; font-size: 22px">
-              REST
-            </p>
-            <p>07u45</p>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row class="py-4"><v-divider /></v-row>
-      <v-row>
-        <v-col class="schedule-date" cols="3">
-          <h2>Dond</h2>
-          <h1>16</h1>
-        </v-col>
-        <v-col>
-          <v-card class="schedule-action d-flex">
-            <p class="me-auto" style="font-weight: 500; font-size: 22px">
-              GLAS
-            </p>
-            <p>08u10</p>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row class="py-4"><v-divider /></v-row>
-      <v-row>
-        <v-col class="schedule-date" cols="3">
-          <h2>Vrij</h2>
-          <h1>17</h1>
-        </v-col>
-        <v-col>
-          <v-card class="schedule-action d-flex">
-            <p class="me-auto" style="font-weight: 500; font-size: 22px">PMD</p>
-            <p>09u40</p>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row class="py-4">
-        <RoundedButton
-          style="margin: auto"
-          icon="mdi-chevron-down"
-        ></RoundedButton>
-      </v-row>
-    </v-container>
+  <HFillWrapper v-if="building !== null">
+    <div class="space-y">
+      <img
+        alt="banner"
+        id="banner"
+        src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
+      />
 
-    <div>
-      <h2>Huidig bezoek</h2>
-      <div class="image-grid" style="margin-top: 10px">
-        <div
-          v-for="image in images"
-          :key="String(image.url)"
-          style="position: relative"
-        >
-          <ImageCard
-            :img="String(image.url)"
-            btn-icon="mdi-pencil"
-            btn-text="Bewerken"
+      <div>
+        <div class="d-flex justify-space-between">
+          <h1 class="building-name">{{ building.name }}</h1>
+          <RoundedButton
+            @clicked="() => router.push({ name: 'building_new' })"
+            icon="mdi-pencil"
+            class="mt-2"
           />
         </div>
-        <ImageCard title="TOEVOEGEN" title-icon="mdi-plus" />
+
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
+          ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+
+        <div style="display: flex; gap: 16px; flex-wrap: wrap" class="mt-2">
+          <RoundedButton icon="mdi-map-search" value="Kaarten" />
+          <RoundedButton icon="mdi-file-pdf-box" value="Handleiding" />
+          <RoundedButton icon="mdi-lock" value="3142" />
+        </div>
       </div>
-      <h3>Opmerkingen</h3>
-      <div class="image-grid" style="margin-top: 10px">
-        <div
-          v-for="comment in comments"
-          :key="comment.title"
-          style="position: relative"
-        >
-          <ImageCard
-            :title="comment.title"
-            :text="comment.comment"
-            btn-icon="mdi-pencil"
-            btn-text="Bewerken"
-          />
+
+      <CardLayout
+        style="
+          display: flex;
+          gap: 16px;
+          align-items: center;
+          border-radius: 10px;
+          padding: 16px 0 16px 16px;
+        "
+      >
+        <Avatar
+          :name="
+            building.syndicus?.user.first_name +
+            ' ' +
+            building.syndicus?.user.last_name
+          "
+        ></Avatar>
+
+        <div>
+          <p style="font-weight: 600; font-size: 16px; opacity: 90%">
+            SYNDICUS
+          </p>
+          <p style="font-weight: 500">
+            {{
+              building.syndicus?.user.first_name +
+              " " +
+              building.syndicus?.user.last_name
+            }}
+          </p>
         </div>
-        <ImageCard title="TOEVOEGEN" title-icon="mdi-plus" />
+
+        <div style="flex-grow: 1"></div>
+
+        <div style="display: flex; gap: 16px; flex-wrap: wrap">
+          <RoundedButton
+            icon="mdi-phone"
+            :value="building.syndicus?.user.phone"
+          />
+          <RoundedButton icon="mdi-mail" value="E-mail" />
+        </div>
+      </CardLayout>
+
+      <div class="space-y-8">
+        <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
+          <h2>Taken</h2>
+          <div class="flex-grow-1"></div>
+          <RoundedButton
+            icon="mdi-calendar"
+            value="17 Maart 2023 - 24 Maart 2023"
+          ></RoundedButton>
+          <RoundedButton
+            icon="mdi-plus"
+            value="Toevoegen"
+            @click="
+              () => router.push({ name: 'garbage_plan', params: { id: id } })
+            "
+          ></RoundedButton>
+        </div>
+        <div class="grid">
+          <CardLayout
+            style="
+              display: flex;
+              align-items: center;
+              padding: 16px 0 16px 16px;
+              gap: 16px;
+            "
+            v-for="action in garbage"
+            :key="action.id"
+          >
+            <div>
+              <h4>{{ action.action.description }}</h4>
+              <p>{{ new Date(action.pickup_time).toLocaleString() }}</p>
+            </div>
+            <div class="flex-grow-1"></div>
+            <v-icon icon="mdi-check" v-if="Math.random() < 0.5"></v-icon>
+            <v-icon v-else icon="mdi-plus"></v-icon>
+            <v-icon icon="mdi-trash-can-outline"></v-icon>
+          </CardLayout>
+        </div>
+      </div>
+
+      <div class="space-y-8">
+        <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
+          <h2>Bezoeken</h2>
+          <div class="flex-grow-1"></div>
+          <RoundedButton icon="mdi-calendar" value="Maart 2023"></RoundedButton>
+          <RoundedButton icon="mdi-plus" value="Toevoegen"></RoundedButton>
+        </div>
+
+        <RoundCard
+          :schedule="schedule"
+          :status="'completed'"
+          v-for="schedule in schedules"
+          :key="schedule.id"
+        ></RoundCard>
+        <RoundCard :schedule="schedules[0]" :status="'active'"></RoundCard>
+        <RoundCard
+          :schedule="schedule"
+          :status="'scheduled'"
+          v-for="schedule in schedules"
+          :key="schedule.id"
+        ></RoundCard>
       </div>
     </div>
-  </div>
-  <AddButton icon="mdi-plus" :items="actions" />
+  </HFillWrapper>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import BuildingData from "@/components/building/BuildingData.vue";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
-import ImageCard from "@/components/cards/ImageCard.vue";
-import AddButton from "@/components/buttons/AddButton.vue";
+import router from "@/router";
+import Avatar from "@/components/Avatar.vue";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
+import CardLayout from "@/layouts/CardLayout.vue";
+import { BuildingQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import { Ref, ref } from "vue";
+import { tryOrAlertAsync } from "@/try";
+import RoundCard from "@/components/round/RoundCard.vue";
+import { GarbageQuery } from "@selab-2/groep-1-query/dist/garbage";
 
-// reactive state to show the drawer or not
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const building: Ref<Result<BuildingQuery> | null> = ref(null);
+const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
+const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
+
+tryOrAlertAsync(async () => {
+  const result = await new BuildingQuery().getAll({ take: 1 });
+  building.value = result.at(0) ?? null;
+});
+
+tryOrAlertAsync(async () => {
+  schedules.value = await new ScheduleQuery().getAll({});
+});
+
+tryOrAlertAsync(async () => {
+  garbage.value = await new GarbageQuery().getAll({});
+});
+
 defineProps({
   id: String,
 });
-
-const images = ref<Array<{ about: string | null; time: Date; url: string }>>([
-  {
-    time: new Date(),
-    about: "Aankomst",
-    url: "https://unsplash.com/photos/gMnA1dUkmkM/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8NXx8YmFzZW1lbnR8ZW58MHx8fHwxNjc4NzgxMTgw&force=true&w=640",
-  },
-  {
-    time: new Date(),
-    about: null,
-    url: "https://unsplash.com/photos/Tb4bUf6z9gI/download?force=true&w=640",
-  },
-  {
-    time: new Date(),
-    about: null,
-    url: "https://unsplash.com/photos/u_khkgVDmxA/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Mnx8YmFzZW1lbnR8ZW58MHx8fHwxNjc4NzgxMTgw&force=true&w=640",
-  },
-  {
-    time: new Date(),
-    about: null,
-    url: "https://unsplash.com/photos/Tac8FvqAnEw/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Mjh8fGJhc2VtZW50fGVufDB8fHx8MTY3ODgwMTI1OQ&force=true&w=640",
-  },
-  {
-    time: new Date(),
-    about: "Vertrek",
-    url: "https://unsplash.com/photos/sSRGytOhIkQ/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjc4ODMyNDEy&force=true&w=640",
-  },
-]);
-
-const comments = ref<Array<{ title: string; comment: string }>>([
-  {
-    title: "Kapotte deur",
-    comment: "De deur in de berging is kapot",
-  },
-]);
-
-// TODO: this should become an actual redirect to page
-function foto() {
-  console.log("foto");
-}
-
-function opmerking() {
-  console.log("opmerking");
-}
-
-const actions = [
-  {
-    title: "Foto toevoegen",
-    clicked: foto(),
-  },
-  {
-    title: "Opmerking toevoegen",
-    clicked: opmerking(),
-  },
-];
 </script>
 
-<style scoped lang="scss">
-@import "src/assets/styles/base";
+<style lang="scss" scoped>
+#banner {
+  width: 100%;
+  max-height: 34vh;
+  object-fit: cover;
+  border-radius: 5px;
+}
 
-ul {
-  list-style-type: none;
-  list-style-position: inside;
+.space-y {
+  & > * {
+    margin-bottom: 32px;
+  }
+}
+
+.space-y-8 {
+  & > * {
+    margin-bottom: 8px;
+  }
 }
 
 #building-screen {
@@ -184,30 +200,9 @@ ul {
   }
 }
 
-.schedule-action {
-  display: flex;
-  padding: 20px;
-}
-
-.schedule-date {
-  height: 90px;
-  padding-top: 0;
-}
-
-.image-grid {
+.grid {
   display: grid;
-  gap: 10px;
-
-  @media (min-width: 1000px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  @media (min-width: 500px) and (max-width: 1000px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media (max-width: 500px) {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 </style>

@@ -1,4 +1,4 @@
-import { Prisma } from "@selab-2/groep-1-orm";
+import { Syndicus, Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithAddress, includeBuilding } from "./include";
 
@@ -24,6 +24,7 @@ type SyndicusAllInfo = Prisma.SyndicusGetPayload<{
 
 export class SyndicusQuery extends Query<
     SyndicusQueryParameters,
+    Syndicus,
     SyndicusAllInfo
 > {
     endpoint = "syndicus";
