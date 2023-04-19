@@ -4,6 +4,6 @@ export default interface Filterdata {
   sort_by: string;
   sort_ascending: boolean;
   filters: string[];
-  start_day: string;
-  end_day: string;
+  start_day: Date;
+  end_day: Date;
 }
