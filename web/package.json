@@ -21,6 +21,7 @@
     "prettier": "^2.8.4",
     "roboto-fontface": "*",
     "sass": "^1.58.3",
+    "v-calendar": "^3.0.3",
     "vue": "^3.2.38",
     "vue-router": "^4.0.0",
     "vuetify": "^3.0.0",

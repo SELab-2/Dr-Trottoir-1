@@ -38,7 +38,7 @@ export class RoundTable implements TableEntity<Result<RoundQuery>> {
     params: { id: number };
   } {
     return {
-      name: "round_detail",
+      name: "round",
       params: { id: item.id },
     };
   }

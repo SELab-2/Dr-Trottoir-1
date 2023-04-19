@@ -11,8 +11,10 @@ import router from "../router";
 
 // Types
 import type { App } from "vue";
+import VCalendar from "v-calendar";
 
 export function registerPlugins(app: App) {
   loadFonts();
   app.use(vuetify).use(router);
+  app.use(VCalendar, {});
 }

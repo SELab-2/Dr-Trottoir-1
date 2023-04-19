@@ -99,8 +99,8 @@
             <div v-for="buildingid of [1, 2]" :key="buildingid">
               <router-link
                 :to="{
-                  name: 'building_id_detail',
-                  params: { id: buildingid, date: today },
+                  name: 'building_id',
+                  params: { id: buildingid },
                 }"
               >
                 <v-list-item
@@ -179,7 +179,6 @@ import { useAuthStore } from "@/stores/auth";
 import Loader from "@/components/popups/Loader.vue";
 
 const router = useRouter();
-const today = new Date().toLocaleDateString("nl");
 // reactive state to show the drawer or not
 const drawer = ref(true);
 // get the route object, needed to show the title
