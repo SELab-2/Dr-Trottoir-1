@@ -1,30 +1,21 @@
 import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
-import chance from "chance";
+import { BuildingQuery, Result } from "@selab-2/groep-1-query";
 
-export class Building implements TableEntity<Building> {
-  id: number;
-  name: string;
-  address: string;
-  syndicus_fn: string;
-  syndicus_ln: string;
-
-  public constructor(init?: Partial<Building>) {
-    Object.assign(this, init);
-  }
-
-  headers(): Array<Header<Building>> {
+export class Building implements TableEntity<Result<BuildingQuery>> {
+  headers(): Array<Header<Result<BuildingQuery>>> {
     return Building.headers();
   }
 
-  static headers(): Array<Header<Building>> {
+  static headers(): Array<Header<Result<BuildingQuery>>> {
     return [
       {
         id: 2,
         name: "",
         fit: true,
-        get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
+        get: (e: Result<BuildingQuery>) =>
+          e.syndicus?.user.first_name + " " + e.syndicus?.user.last_name,
         type: RowType.AVATAR,
         sortable: false,
       },
@@ -32,7 +23,8 @@ export class Building implements TableEntity<Building> {
         id: 3,
         name: "Syndicus",
         fit: false,
-        get: (e: Building) => e.syndicus_fn + " " + e.syndicus_ln,
+        get: (e: Result<BuildingQuery>) =>
+          e.syndicus?.user.first_name + " " + e.syndicus?.user.last_name,
         type: RowType.TEXT,
         sortable: true,
       },
@@ -40,7 +32,7 @@ export class Building implements TableEntity<Building> {
         id: 0,
         name: "Gebouw",
         fit: false,
-        get: (e: Building) => e.name,
+        get: (e: Result<BuildingQuery>) => e.name,
         type: RowType.TEXT,
         sortable: true,
       },
@@ -48,26 +40,28 @@ export class Building implements TableEntity<Building> {
         id: 1,
         name: "Adres",
         fit: false,
-        get: (e: Building) => e.address,
+        get: (e: Result<BuildingQuery>) =>
+          e.address.street + " " + e.address.number,
         type: RowType.TEXT,
         sortable: true,
       },
-    ].map((e) => new Header<Building>(e));
+    ].map((e) => new Header<Result<BuildingQuery>>(e));
   }
 
-  static random(): Array<Building> {
-    return [...Array(100).keys()].map(() => {
-      return new Building({
-        id: chance().integer(),
-        name: chance().sentence({ words: 4 }),
-        address: chance().address(),
-        syndicus_fn: chance().first(),
-        syndicus_ln: chance().last(),
-      });
-    });
+  route(item: Result<BuildingQuery>): {
+    name: string;
+    params: { id: number };
+  } {
+    return Building.route(item);
   }
 
-  route(): string {
-    return `/gebouw/${this.id}`;
+  static route(item: Result<BuildingQuery>): {
+    name: string;
+    params: { id: number };
+  } {
+    return {
+      name: "building_id",
+      params: { id: item.id },
+    };
   }
 }

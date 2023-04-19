@@ -38,11 +38,7 @@
           </span>
         </p>
         <!-- Login button -->
-        <!-- TODO: should link to correct page for which user authenticated, now default student  -->
-        <v-btn
-          prepend-icon="mdi-login"
-          color="success"
-          @click="useAuthStore().logIn(email, password)"
+        <v-btn prepend-icon="mdi-login" color="success" @click="logIn"
           >Login</v-btn
         >
       </div>
@@ -65,20 +61,23 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
-
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 // reactive email state
 const email = ref("");
-
 // reactive password state
 const password = ref("");
-
 // reactive state to check if the psswd must be shown or not
 const showPsswd = ref(false);
-
 // reactive state to check if the snackbar must be shown or not
 const snackbar = ref(false);
+async function logIn() {
+  await useAuthStore().logIn(email.value, password.value);
+  // TODO: should link to correct page for which user authenticated, now default student
+  await router.push({ name: "student_planning" });
+}
 </script>
 
 <style lang="scss">
@@ -90,7 +89,6 @@ const snackbar = ref(false);
   justify-content: center;
   align-items: center;
 }
-
 // div with input fields. Needed for responsive design
 .form {
   width: 600px;
@@ -98,7 +96,6 @@ const snackbar = ref(false);
   padding: 10px;
   align-content: center;
 }
-
 // makes the info text look like it's clickable
 .clickable-text {
   text-decoration: underline;

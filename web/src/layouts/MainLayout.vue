@@ -6,7 +6,7 @@
         :permanent="!!permanentDrawer"
         v-model="drawer"
         class="sidebar"
-        style="border-right: rgba(189, 189, 189, 0.5) 1px solid"
+        style="border: rgba(189, 189, 189, 0.5) 1px solid"
         color="background"
       >
         <v-list density="compact" nav>
@@ -17,14 +17,22 @@
             <div class="flex">
               <div class="text">
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
-                <v-list-item-subtitle>{{ roles() }}</v-list-item-subtitle>
+                <v-list-item-subtitle v-if="useAuthStore()?.auth?.admin">
+                  Admin
+                </v-list-item-subtitle>
+                <v-list-item-subtitle
+                  v-else-if="useAuthStore()?.auth?.super_student"
+                >
+                  Super Student
+                </v-list-item-subtitle>
+                <v-list-item-subtitle v-else> Student </v-list-item-subtitle>
               </div>
             </div>
           </v-list-item>
 
           <div>
             <v-list-item
-              :to="{ name: 'login' }"
+              @click="logOut"
               prepend-icon="mdi-account-cancel"
               title="Afmelden"
               value="logout"
@@ -33,7 +41,7 @@
             <router-link
               :to="{
                 name: 'account_settings',
-                params: { id: 0, isadmin: 'true' },
+                params: { id: id },
               }"
             >
               <v-list-item
@@ -91,8 +99,8 @@
             <div v-for="buildingid of [1, 2]" :key="buildingid">
               <router-link
                 :to="{
-                  name: 'building_id_detail',
-                  params: { id: buildingid, date: today },
+                  name: 'building_id',
+                  params: { id: buildingid },
                 }"
               >
                 <v-list-item
@@ -152,60 +160,53 @@
 
         <v-spacer />
       </v-app-bar>
-
-      <router-view></router-view>
+      <Suspense :key="route.fullPath">
+        <template #fallback>
+          <Loader />
+        </template>
+        <router-view />
+      </Suspense>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
-import { formatDate } from "@/assets/scripts/date";
 import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
+import { useAuthStore } from "@/stores/auth";
+import Loader from "@/components/popups/Loader.vue";
 
-const today = formatDate(new Date());
-
+const router = useRouter();
 // reactive state to show the drawer or not
 const drawer = ref(true);
-
 // get the route object, needed to show the title
 const route = useRoute();
-
 // roles to know what to show
-const isStudent = ref(true);
-const isSuperStudent = ref(true);
-const isSyndicus = ref(true);
-const isAdmin = ref(true);
+const isStudent: Boolean = useAuthStore().auth!.student;
+const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
+const isSyndicus = true; // TODO: check for syndicus
+const isAdmin: Boolean = useAuthStore().auth!.admin;
 
 // account display settings
-const studentName: string = "Jens Pots";
-function roles(): string {
-  let str = "";
-  if (isStudent.value) {
-    str += "student ";
-  }
-  if (isSuperStudent.value) {
-    str += "superstudent ";
-  }
-  if (isSyndicus.value) {
-    str += "syndicus ";
-  }
-  if (isAdmin.value) {
-    str += "admin ";
-  }
-  return str;
-}
+const studentName: string =
+  useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
+
+// account display settings
+
+const id = useAuthStore().auth!.id;
 
 const thresholdWidth: number = 750;
-
 const permanentDrawer = ref<Boolean>(window.innerWidth > thresholdWidth);
-
 window.addEventListener(
   "resize",
   () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
 );
+async function logOut() {
+  await useAuthStore().logOut();
+  await router.push({ name: "login" });
+}
 </script>
 
 <style lang="scss" scoped>
@@ -213,15 +214,12 @@ a {
   text-decoration: none;
   color: black;
 }
-
 .text {
   width: 80%;
 }
-
 .flex {
   display: flex;
 }
-
 .sidebar {
   position: fixed !important;
   height: 100vh !important;

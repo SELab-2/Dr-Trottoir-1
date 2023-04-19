@@ -17,6 +17,11 @@ export function errorMessagePrismaClient(
                 code: APIErrorCode.CONFLICT,
                 detail: "Unique constraint failed",
             };
+        case "P2003":
+            return {
+                code: APIErrorCode.BAD_REQUEST,
+                detail: "Foreign key constraint failed",
+            };
         case "P2025":
             return {
                 code: APIErrorCode.NOT_FOUND,
