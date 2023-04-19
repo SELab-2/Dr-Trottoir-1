@@ -52,6 +52,7 @@ export class RegionRouting extends Routing {
     async createOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.region.create({
             data: req.body,
+            include: RegionRouting.includes,
         });
 
         return res.status(201).json(result);
@@ -66,6 +67,7 @@ export class RegionRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
+            include: RegionRouting.includes,
         });
 
         return res.status(200).json(result);
