@@ -189,6 +189,12 @@ const routes: any[] = [
         component: ContactSyndicus,
         meta: {
           title: "Contacteer syndicus",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
         },
       },
       {
