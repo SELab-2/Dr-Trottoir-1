@@ -2,7 +2,7 @@ import app from "../../src/main";
 import request from "supertest";
 import { describe, expect, test } from "@jest/globals";
 import supertest from "supertest";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const uid = uuidv4();
 
@@ -200,7 +200,7 @@ describe("Test BuildingRouting unsuccessful tests", () => {
 
         const resultManual = await session
             .patch("/building/" + building.id)
-            .send({ manual_id: '0' })
+            .send({ manual_id: "0" })
             .set("Cookie", [cookies]);
         expect(resultManual.status).toEqual(500);
     });

@@ -41,8 +41,8 @@ async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
 describe("Test FileRouting successful test", () => {
     let session: any;
     let cookies: string;
-    let id: number;
-    let external_id: number;
+    let id: string;
+    let external_id: string;
 
     beforeAll(async () => {
         const session_cookies = await prepareSession();
