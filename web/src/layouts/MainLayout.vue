@@ -17,9 +17,15 @@
             <div class="flex">
               <div class="text">
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
-                <v-list-item-subtitle>{{
-                  roles.join(" ")
-                }}</v-list-item-subtitle>
+                <v-list-item-subtitle v-if="useAuthStore()?.auth?.admin">
+                  Admin
+                </v-list-item-subtitle>
+                <v-list-item-subtitle
+                  v-else-if="useAuthStore()?.auth?.super_student"
+                >
+                  Super Student
+                </v-list-item-subtitle>
+                <v-list-item-subtitle v-else> Student </v-list-item-subtitle>
               </div>
             </div>
           </v-list-item>
@@ -170,9 +176,7 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useAuthStore } from "@/stores/auth";
-import { getRoles } from "@/assets/scripts/roles";
 import Loader from "@/components/popups/Loader.vue";
-import { User } from "@selab-2/groep-1-orm";
 
 const router = useRouter();
 // reactive state to show the drawer or not
@@ -188,8 +192,6 @@ const isAdmin: Boolean = useAuthStore().auth!.admin;
 // account display settings
 const studentName: string =
   useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
-
-const roles = getRoles(useAuthStore().auth as User);
 
 // account display settings
 
