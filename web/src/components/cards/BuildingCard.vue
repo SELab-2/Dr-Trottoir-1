@@ -116,33 +116,34 @@ function full_address() {
   );
 }
 
-const can_expand =
-  props.start_date.toLocaleDateString("nl") !==
-  props.end_date.toLocaleDateString("nl");
-
 const expanded = ref<Boolean>(false);
 const comments = ref<Boolean>(false);
 
 let progresses: Ref<Result<ProgressQuery>[]> = ref([]);
 
+const can_expand: Ref<boolean> = ref(
+  props.start_date.toLocaleDateString("nl") !==
+    props.end_date.toLocaleDateString("nl"),
+);
+
 tryOrAlertAsync(async () => {
-  console.log(props.building?.address);
-  console.log(props.start_date);
   progresses.value = await new ProgressQuery().getAll({
     building: props.building?.id,
     arrived_after: props.start_date,
     arrived_before: props.end_date,
   });
-  console.log(progresses.value);
+  can_expand.value = can_expand.value && progresses.value.length > 0;
 });
 
 function route(date: Date) {
+  console.log(`TODO: link to ${date}`);
   if (props.building) {
     router.push({
-      name: "building_id_detail",
+      name: "building_id",
       params: {
         id: props.building.id,
-        date: new Date(date).toLocaleDateString("nl"),
+        // TODO change to different route with:
+        //  date: new Date(date).toLocaleDateString("nl"),
       },
     });
   }
