@@ -1,5 +1,6 @@
-import { Building } from "@selab-2/groep-1-orm";
+import { Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
+import { includeUserWithoutAddress } from "./include";
 
 export type BuildingQueryParameters = {
     take: number;
@@ -12,6 +13,31 @@ export type BuildingQueryParameters = {
     ord: Array<"asc" | "desc">;
 };
 
-export class BuildingQuery extends Query<BuildingQueryParameters, Building> {
+type BuildingAllInfo = Prisma.BuildingGetPayload<{
+    select: {
+        id: true;
+        name: true;
+        ivago_id: true;
+        deleted: true;
+        hash: false;
+        address: true;
+        syndicus: {
+            include: {
+                user: typeof includeUserWithoutAddress;
+            };
+        };
+        manual: true;
+        images: {
+            include: {
+                image: true;
+            };
+        };
+    };
+}>;
+
+export class BuildingQuery extends Query<
+    BuildingQueryParameters,
+    BuildingAllInfo
+> {
     endpoint = "building";
 }
