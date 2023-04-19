@@ -50,18 +50,18 @@ export class Building implements TableEntity<Result<BuildingQuery>> {
 
   route(item: Result<BuildingQuery>): {
     name: string;
-    params: { id: number; date: string };
+    params: { id: number };
   } {
     return Building.route(item);
   }
 
   static route(item: Result<BuildingQuery>): {
     name: string;
-    params: { id: number; date: string };
+    params: { id: number };
   } {
     return {
-      name: "building_id_detail",
-      params: { id: item.id, date: new Date().toLocaleDateString("nl") },
+      name: "building_id",
+      params: { id: item.id },
     };
   }
 }
