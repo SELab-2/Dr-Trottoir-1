@@ -19,25 +19,13 @@ import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
 import Auth from "@/views/dev/Auth.vue";
 import { useAuthStore } from "@/stores/auth";
+import TryOrAlert from "@/views/dev/TryOrAlert.vue";
 
-const routes = [
+const routes: any[] = [
   {
     path: "/",
     component: LoginScreen,
     name: "login",
-    meta: {
-      auth: (
-        student: boolean,
-        superstudent: boolean,
-        syndicus: boolean,
-        admin: boolean,
-      ) => true,
-    },
-  },
-  {
-    path: "/dev/auth",
-    component: Auth,
-    name: "auth",
     meta: {
       auth: (
         student: boolean,
@@ -268,8 +256,41 @@ const routes = [
   },
 ];
 
+const devRoutes: any[] = [
+  {
+    path: "/dev/auth",
+    component: Auth,
+    name: "auth",
+    meta: {
+      auth: (
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
+  },
+  {
+    path: "/dev/try",
+    component: TryOrAlert,
+    name: "try",
+    meta: {
+      auth: (
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
+  },
+];
+
+if (import.meta.env.MODE === "development") {
+  routes.push(...devRoutes);
+}
+
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
 

@@ -187,12 +187,10 @@ import router from "@/router";
 import RoundBuilding from "@/components/models/RoundBuilding";
 import { date_to_hh_mm } from "@/assets/scripts/format";
 import BorderCard from "@/layouts/CardLayout.vue";
-
 // add the role, will be replaced with actual athentication
 // TODO: replace with actual authentication
 const roles = ["Admin", "Student", "Superstudent", "Syndicus"];
 const current_role = ref(roles[0]);
-
 // state to keep track of the startround popup
 const start_popup = ref(false);
 function start_round() {
@@ -200,14 +198,12 @@ function start_round() {
   // we are already on the page, so refresh after the db update
   router.go(0);
 }
-
 const end_popup = ref(false);
 function close_round() {
   // TODO: close the round in the database
   // we are already on the page, so refresh after the db update
   router.go(0);
 }
-
 function building_time_range(building: RoundBuilding) {
   if (!building.start_time) {
     return "";
@@ -221,7 +217,6 @@ function building_time_range(building: RoundBuilding) {
   }
   return date_to_hh_mm(building.start_time);
 }
-
 function building_status_color(building: RoundBuilding): string {
   if (building.end_time) {
     return "success";
@@ -231,7 +226,6 @@ function building_status_color(building: RoundBuilding): string {
   }
   return "red";
 }
-
 function building_status_size(building: RoundBuilding): string {
   if (building.end_time) {
     return "large";
@@ -241,7 +235,6 @@ function building_status_size(building: RoundBuilding): string {
   }
   return "small";
 }
-
 function building_status_icon(building: RoundBuilding): string {
   if (building.end_time) {
     return "mdi-check";
@@ -251,7 +244,6 @@ function building_status_icon(building: RoundBuilding): string {
   }
   return "mdi-office-building";
 }
-
 function round_complete(round: Round): boolean {
   for (const building of round.buildings) {
     if (!building.end_time) {
@@ -260,7 +252,6 @@ function round_complete(round: Round): boolean {
   }
   return true;
 }
-
 const mockround: Round = {
   name: "Vrijdagmarkt",
   due_date: new Date(2023, 2, 6, 12, 45),
