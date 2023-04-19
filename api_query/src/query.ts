@@ -172,7 +172,18 @@ export type Parameter<ConcreteQuery> = ConcreteQuery extends Query<
     infer Y,
     infer Z
 >
-    ? Z
+    ? X
+    : never;
+
+/**
+ * Infer the element type of Query object.
+ */
+export type Element<ConcreteQuery> = ConcreteQuery extends Query<
+    infer X,
+    infer Y,
+    infer Z
+>
+    ? Y
     : never;
 
 /**
