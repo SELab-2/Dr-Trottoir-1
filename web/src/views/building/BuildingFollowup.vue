@@ -50,9 +50,8 @@ async function updateBuildings() {
   });
 }
 onMounted(() => {
-  updateBuildings()
-})
-
+  updateBuildings();
+});
 </script>
 
 <style scoped lang="scss"></style>

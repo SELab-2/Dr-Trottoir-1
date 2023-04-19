@@ -1,7 +1,7 @@
 <template>
   <BorderCard
     class="mx-1 mb-3"
-    v-on="!can_expand? {click: () => route(start_date)} : {}"
+    v-on="!can_expand ? { click: () => route(start_date) } : {}"
   >
     <v-row class="flex-nowrap">
       <v-col cols="2" class="flex-grow-0 flex-shrink-0">
@@ -140,7 +140,10 @@ function route(date: Date) {
   if (props.building) {
     router.push({
       name: "building_id_detail",
-      params: { id: props.building.id, date: new Date(date).toLocaleDateString('nl') },
+      params: {
+        id: props.building.id,
+        date: new Date(date).toLocaleDateString("nl"),
+      },
     });
   }
 }
