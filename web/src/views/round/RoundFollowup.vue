@@ -192,8 +192,8 @@ const filter_data = ref<FilterData>({
   sort_by: sort_items[0],
   sort_ascending: true,
   filters: [],
-  start_day: new Date().toLocaleDateString("nl"),
-  end_day: new Date().toLocaleDateString("nl"),
+  start_day: new Date(),
+  end_day: new Date(),
 });
 
 function filter_query(round: Round): boolean {

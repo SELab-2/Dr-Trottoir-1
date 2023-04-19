@@ -17,14 +17,21 @@
       Nieuwe ronde Plannen
     </v-btn>
   </div>
-  <!-- hier moet roundsOrError komen -->
   <Table
-    v-bind:entries="RoundEntity.random()"
-    v-bind:headers="RoundEntity.headers()"
+    :entries="rounds"
+    :headers="RoundTable.headers()"
+    :route="RoundTable.route"
   ></Table>
 </template>
 
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
-import { RoundEntity } from "@/types/RoundEntity.js";
+import { Result, RoundQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
+import { RoundTable } from "@/types/Schedule";
+
+const rounds: Array<Result<RoundQuery>> =
+  (await tryOrAlertAsync<Array<Result<RoundQuery>>>(async () => {
+    return await new RoundQuery().getAll({});
+  })) ?? [];
 </script>
