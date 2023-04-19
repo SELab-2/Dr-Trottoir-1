@@ -7,6 +7,12 @@
       class="mx-1 mb-3"
       @onUpdate="(new_data: FilterData) => handleFilterUpdate(new_data)"
     />
+    <v-card 
+      v-if="schedules.length === 0"
+      color="background" 
+      variant="flat" 
+      title="Er zijn geen rondes ingepland voor de geselecteerde data."
+    />
     <RoundCard
       v-for="(schedule, i) in schedules"
       :key="i"
@@ -31,6 +37,7 @@ import { useRouter } from "vue-router";
 import { Ref, ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
+import CardLayout from "@/layouts/CardLayout.vue";
 
 import { ScheduleQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
@@ -86,8 +93,8 @@ async function fetchSchedules(): Promise<Array<Result<ScheduleQuery>>> {
   let result: Array<Result<ScheduleQuery>> = [];
   await tryOrAlertAsync(async () => {
     result = await new ScheduleQuery().getAll({
-      //after: filter_data.value.start_day,
-      //before: filter_data.value.end_day,
+      after: filter_data.value.start_day,
+      before: filter_data.value.end_day,
       //sort: [filter_data.value.sort_by],
       //ord: (filter_data.value.sort_ascending ? ['asc'] : ['desc']),
     });
@@ -108,6 +115,10 @@ const schedules: Ref<Array<Result<ScheduleQuery>>> = ref(await fetchSchedules())
 /* Data filtering */
 function handleFilterUpdate(data: FilterData){
   filter_data.value = data;
+  // set at start of the day
+  filter_data.value.start_day.setHours(0,0,0,0);
+  // set at end of the day
+  filter_data.value.end_day.setHours(23,59,59,999);
   updadeSchedules();
 }
 
