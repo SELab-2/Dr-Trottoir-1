@@ -120,7 +120,7 @@ export class ProgressRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async createImage(req: CustomRequest, res: express.Response) {
-        const progress_id: number = Number(Parser.number(req.params["id"]));
+        const progress_id = Number(Parser.number(req.params["id"]));
 
         await prisma.image.create({
             data: {

@@ -208,7 +208,7 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createImage(req: CustomRequest, res: express.Response) {
-        const building_id: number = Number(Parser.number(req.params["id"]));
+        const building_id = Number(Parser.number(req.params["id"]));
         await prisma.image.create({
             data: {
                 time: req.body.time,
