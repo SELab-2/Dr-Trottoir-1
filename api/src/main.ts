@@ -20,6 +20,7 @@ import { RegionRouting } from "./routes/region";
 import { GarbageRouting } from "./routes/garbage";
 import { UserRegionRouting } from "./routes/user_region";
 import { ProgressRouting } from "./routes/progress";
+import { RoundBuildingRouting } from "./routes/round_building";
 import cors from "cors";
 
 // const PORT_NUMBER = 8080;
@@ -89,6 +90,7 @@ app.use("/syndicus", new SyndicusRouting().toRouter());
 app.use("/round", new RoundRouting().toRouter());
 app.use("/user_region", new UserRegionRouting().toRouter());
 app.use("/progress", new ProgressRouting().toRouter());
+app.use("/round_building", new RoundBuildingRouting().toRouter());
 
 // Finally, an error handler
 app.use(ErrorHandler.handle);
