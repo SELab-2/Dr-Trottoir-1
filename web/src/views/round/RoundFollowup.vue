@@ -11,7 +11,7 @@
       v-if="schedules.length === 0"
       color="background" 
       variant="flat" 
-      title="Er zijn geen rondes ingepland voor de geselecteerde data."
+      subtitle="Er zijn geen rondes ingepland voor de geselecteerde data."
     />
     <RoundCard
       v-for="(schedule, i) in schedules"
