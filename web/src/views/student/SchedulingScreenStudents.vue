@@ -114,7 +114,10 @@ const router = useRouter();
 const snackbar = ref(false);
 const current_id = ref(0);
 function redirect_to_detail() {
-  router.push({ name: "round_detail", params: { id: current_id.value } });
+  router.push({
+    name: "round_detail",
+    params: { id: current_id.value, schedule: 0 },
+  });
 }
 
 // https://stackoverflow.com/questions/1643320/get-month-name-from-date
