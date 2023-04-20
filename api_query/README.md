@@ -3,12 +3,14 @@
 Om te interageren met de API wordt een eenvoudige abstractie voorzien.
 
 ```typescript
-// Alle studenten die zich hebben aangemeld sinds 2020-01-01.
-const users: Array<User | APIError> = new UserQuery().url({
+// Alle studenten die zich hebben aangemeld sinds 20[README.md](README.md)20-01-01.
+const users: Array<User> = new UserQuery().url({
     student: true,
     login_after: new Date("2020-01-01"),
 });
 ```
+
+Eender waar kan een `QueryError` error opgegooid worden. Hou hier steeds rekening mee. Deze bevat onder andere een statuscode en beschrijving van de fout.
 
 ## Installatie
 
@@ -37,7 +39,7 @@ export abstract class Query<Parameters, Result> {
     url(query: Partial<Parameters>): string;
 
     // Verkrijg een element per identifier.
-    async getOne(id: number): Promise<Result | APIError>;
+    async getOne(id: number): Promise<Result>;
 
     // Verkrijg alle resultaten die voldoen aan de parameters.
     async getAll(
@@ -45,13 +47,10 @@ export abstract class Query<Parameters, Result> {
     ): Promise<Array<Result> | APIError>;
 
     // Update een element.
-    async updateOne(element: Partial<Result>): Promise<Result | APIError>;
+    async updateOne(element: Partial<Result>): Promise<Result>;
 
     // Verwijder een element.
-    async deleteOne(
-        element: Partial<Result>,
-        hard = false,
-    ): Promise<void | APIError>;
+    async deleteOne(element: Partial<Result>, hard = false): Promise<void>;
 }
 ```
 
@@ -80,7 +79,7 @@ export class BuildingQuery extends Query<BuildingQueryParameters, Building> {
 }
 ```
 
-Dankzij de `Query::execute` methode kunnen we onmiddelijk onze resultaten verkrijgen.
+Dankzij de `Query::getAll` methode kunnen we onmiddelijk onze resultaten verkrijgen.
 
 ```typescript
 const usersOrErr: User[] | APIError = new UserQuery().getAll({
@@ -100,5 +99,5 @@ const usersOrErr: User[] | APIError = new UserQuery().getAll({
 Heb je reeds een identifier van een resource, dan kan je deze ook onmiddelijk opvragen.
 
 ```typescript
-const userOrErr: User | APIError = new UserQuery().getOne(id);
+const userOrErr: User = new UserQuery().getOne(id);
 ```

@@ -6,7 +6,7 @@
         :permanent="!!permanentDrawer"
         v-model="drawer"
         class="sidebar"
-        style="border-right: rgba(189, 189, 189, 0.5) 1px solid"
+        style="position: fixed !important; height: 100vh !important"
         color="background"
       >
         <v-list density="compact" nav>
@@ -17,14 +17,22 @@
             <div class="flex">
               <div class="text">
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
-                <v-list-item-subtitle>{{ roles() }}</v-list-item-subtitle>
+                <v-list-item-subtitle v-if="useAuthStore()?.auth?.admin">
+                  Admin
+                </v-list-item-subtitle>
+                <v-list-item-subtitle
+                  v-else-if="useAuthStore()?.auth?.super_student"
+                >
+                  Super Student
+                </v-list-item-subtitle>
+                <v-list-item-subtitle v-else> Student </v-list-item-subtitle>
               </div>
             </div>
           </v-list-item>
 
           <div>
             <v-list-item
-              :to="{ name: 'login' }"
+              @click="logOut"
               prepend-icon="mdi-account-cancel"
               title="Afmelden"
               value="logout"
@@ -33,7 +41,7 @@
             <router-link
               :to="{
                 name: 'account_settings',
-                params: { id: 0, isadmin: 'true' },
+                params: { id: id },
               }"
             >
               <v-list-item
@@ -63,7 +71,7 @@
             </div>
           </div>
 
-          <div v-if="isSuperStudent">
+          <div v-if="isSuperStudent || isAdmin">
             <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
 
             <v-list-item
@@ -85,19 +93,19 @@
             </div>
           </div>
 
-          <div v-if="isSyndicus">
+          <div v-if="isAdmin && syndicusBuildings.length > 0">
             <p class="pa-2 font-weight-medium text-caption">Mijn gebouwen</p>
 
-            <div v-for="buildingid of [1, 2]" :key="buildingid">
+            <div v-for="building of syndicusBuildings" :key="building.id">
               <router-link
                 :to="{
-                  name: 'building_id_detail',
-                  params: { id: buildingid, date: today },
+                  name: 'building_id',
+                  params: { id: building.id },
                 }"
               >
                 <v-list-item
                   prepend-icon="mdi-file-cabinet"
-                  :title="'Gebouw ' + buildingid"
+                  :title="building.name"
                   value="gebouwen"
                 />
               </router-link>
@@ -108,7 +116,7 @@
             </div>
           </div>
 
-          <div v-if="isAdmin">
+          <div v-if="isSuperStudent || isAdmin">
             <p class="pa-2 font-weight-medium text-caption">Administratie</p>
 
             <v-list-item
@@ -141,7 +149,12 @@
         </template>
       </v-navigation-drawer>
 
-      <v-app-bar prominent elevation="0" color="background">
+      <v-app-bar
+        prominent
+        elevation="0"
+        color="background"
+        style="position: fixed !important"
+      >
         <div class="px-4">
           <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
         </div>
@@ -152,60 +165,54 @@
 
         <v-spacer />
       </v-app-bar>
-
-      <router-view></router-view>
+      <router-view :key="route.fullPath" />
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
-import { formatDate } from "@/assets/scripts/date";
-import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { Ref, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
+import { useAuthStore } from "@/stores/auth";
+import { BuildingQuery, Result } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 
-const today = formatDate(new Date());
-
+const router = useRouter();
 // reactive state to show the drawer or not
 const drawer = ref(true);
-
 // get the route object, needed to show the title
 const route = useRoute();
-
 // roles to know what to show
-const isStudent = ref(true);
-const isSuperStudent = ref(true);
-const isSyndicus = ref(true);
-const isAdmin = ref(true);
+const isStudent: Boolean = useAuthStore().auth!.student;
+const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
+const isAdmin: Boolean = useAuthStore().auth!.admin;
+const syndicusBuildings: Ref<Result<BuildingQuery>[]> = ref([]);
+
+tryOrAlertAsync(async () => {
+  syndicusBuildings.value = await new BuildingQuery().getAll({
+    syndicus_id: 89, // TODO: change id
+  });
+});
 
 // account display settings
-const studentName: string = "Jens Pots";
-function roles(): string {
-  let str = "";
-  if (isStudent.value) {
-    str += "student ";
-  }
-  if (isSuperStudent.value) {
-    str += "superstudent ";
-  }
-  if (isSyndicus.value) {
-    str += "syndicus ";
-  }
-  if (isAdmin.value) {
-    str += "admin ";
-  }
-  return str;
-}
+const studentName: string =
+  useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
+
+// account display settings
+const id = useAuthStore().auth!.id;
 
 const thresholdWidth: number = 750;
-
 const permanentDrawer = ref<Boolean>(window.innerWidth > thresholdWidth);
-
 window.addEventListener(
   "resize",
   () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
 );
+async function logOut() {
+  await useAuthStore().logOut();
+  await router.push({ name: "login" });
+}
 </script>
 
 <style lang="scss" scoped>
@@ -213,17 +220,10 @@ a {
   text-decoration: none;
   color: black;
 }
-
 .text {
   width: 80%;
 }
-
 .flex {
   display: flex;
-}
-
-.sidebar {
-  position: fixed !important;
-  height: 100vh !important;
 }
 </style>

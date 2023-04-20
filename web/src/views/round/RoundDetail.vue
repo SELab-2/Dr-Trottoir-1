@@ -1,329 +1,198 @@
 <template>
-  <v-card
-    color="background"
-    :title="mockround.name"
-    :subtitle="date_to_dd_MM_yyyy(mockround.due_date)"
-    variant="flat"
-    class="ma-1"
-  >
-    <!-- Select component to select the role, will be removed after auth -->
-    <template v-slot:append>
-      <v-select variant="solo" v-model="current_role" :items="roles" />
-    </template>
-    <!-- The name and avatar of the student -->
-    <v-hover v-slot="{ isHovering, props }">
-      <v-btn
-        v-bind="props"
-        class="text-body-2 mb-2 ml-3"
-        :variant="isHovering ? 'elevated' : 'text'"
-        :to="{ name: 'account_settings', params: { id: 0, isadmin: 'false' } }"
-      >
-        <template v-slot:prepend>
-          <Avatar :name="mockround.student" size="x-small" />
-        </template>
-        {{ mockround.student }}
-      </v-btn>
-    </v-hover>
-
-    <!-- The main timeline, containing all te stops -->
-    <v-timeline
-      truncate-line="both"
-      side="end"
-      density="compact"
-      class="mx-3 mb-1"
-    >
-      <v-timeline-item
-        :dot-color="mockround.start_time ? 'success' : 'red'"
-        :icon="mockround.start_time ? 'mdi-check' : 'mdi-close'"
-        :size="mockround.start_time ? 'large' : 'small'"
-      >
-        <!-- We started: same view for everyone -->
-        <BorderCard v-if="mockround.start_time">
-          <v-card-title>
-            Start {{ date_to_hh_mm(mockround.start_time) }}
-          </v-card-title>
-        </BorderCard>
-        <!-- Student has other option when not started -->
-        <v-btn
-          v-else-if="current_role === 'Student'"
-          color="success"
-          @click="start_popup = !start_popup"
+  <div v-if="data !== null">
+    <HFillWrapper>
+      <div class="space-y">
+        <div
+          style="
+            margin-left: 70px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          "
         >
-          Start ronde
+          <h2>{{ data.round.name }}</h2>
+          <div class="flex-grow-1"></div>
+          <RoundedButton
+            icon="mdi-calendar"
+            :value="new Date(data.day).toLocaleDateString()"
+          ></RoundedButton>
+          <RoundedButton
+            icon="mdi-account"
+            :value="data.user.first_name + ' ' + data.user.last_name"
+          ></RoundedButton>
+        </div>
 
-          <!-- Show warning before start -->
-          <v-overlay v-model="start_popup">
-            <v-snackbar
-              v-model="start_popup"
-              timeout="-1"
-              elevation="24"
-              color="white"
-            >
-              <StartRoundPopup
-                :oncancel="() => (start_popup = !start_popup)"
-                :onsubmit="() => start_round()"
-              />
-            </v-snackbar>
-          </v-overlay>
-        </v-btn>
-        <!-- Last option: the round is not started yet-->
-        <BorderCard v-else>
-          <v-card-title> Nog niet gestart </v-card-title>
-        </BorderCard>
-      </v-timeline-item>
+        <p style="margin-left: 70px">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
+        </p>
 
-      <v-timeline-item
-        width="100%"
-        v-for="building in mockround.buildings"
-        :key="building.name"
-        :dot-color="building_status_color(building)"
-        :size="building_status_size(building)"
-        :icon="building_status_icon(building)"
-        icon-color="white"
-      >
-        <BorderCard
-          width="100%"
-          :title="building.name"
-          :subtitle="building.address"
-          @click="router.push({ name: 'building_id', params: { id: 3 } })"
-        >
-          <template v-slot:append>
-            <v-card-title>{{ building_time_range(building) }}</v-card-title>
-          </template>
-          <v-chip
-            prepend-icon="mdi-camera"
-            label
-            color="success"
-            class="pa-2 ma-2"
-            v-if="building.amount_of_pics > 0"
+        <divider-layout class="my-8" style="margin-left: 70px"></divider-layout>
+
+        <v-timeline truncate-line="both" side="end" density="compact">
+          <v-timeline-item :dot-color="'success'" :icon="'mdi-check'">
+            <h3>Start: 12u00</h3>
+          </v-timeline-item>
+
+          <v-timeline-item
+            v-for="entry in data.round.buildings.map((e) => {
+              return {
+                building: e.building,
+                progress: progressItems.get(e.building_id),
+              };
+            })"
+            v-bind:key="entry.building.id"
+            :dot-color="'success'"
+            :icon="'mdi-check'"
+            :size="'large'"
           >
-            {{ building.amount_of_pics }} foto's geupload
-          </v-chip>
-          <v-chip
-            prepend-icon="mdi-comment"
-            label
-            color="red"
-            class="pa-2 ma-2"
-            v-if="building.comments"
+            <CardLayout class="pa-8 pb-0 space-y">
+              <div
+                style="
+                  align-items: center;
+                  display: flex;
+                  cursor: pointer;
+                  gap: 12px;
+                "
+                @click="
+                  router.push({
+                    name: 'building_id',
+                    params: { id: entry.building.id },
+                  })
+                "
+              >
+                <div>
+                  <h2>{{ entry.building.name }}</h2>
+                  <p>
+                    {{ entry.building.address.street }}
+                    {{ entry.building.address.number }}
+                  </p>
+                  <p>
+                    {{ entry.building.address.zip_code }}
+                    {{ entry.building.address.city }}
+                  </p>
+                </div>
+                <div class="flex-grow-1"></div>
+
+                <RoundedButton
+                  v-if="entry.progress"
+                  icon="mdi-clock-start"
+                  :value="new Date(entry.progress.arrival).toLocaleTimeString()"
+                ></RoundedButton>
+                <RoundedButton
+                  v-if="entry.progress"
+                  icon="mdi-clock-end"
+                  :value="
+                    new Date(entry.progress.departure).toLocaleTimeString()
+                  "
+                ></RoundedButton>
+
+                <v-icon icon="mdi-chevron-right"></v-icon>
+              </div>
+
+              <divider-layout v-if="entry.progress?.report"></divider-layout>
+
+              <div v-if="entry.progress?.report">
+                <div style="display: flex; align-items: center">
+                  <h3 class="mb-2">Notities</h3>
+                  <div class="flex-grow-1"></div>
+                </div>
+                <p>{{ entry.progress.report }}</p>
+                <RoundedButton
+                  icon="mdi-pencil"
+                  value="Bewerken"
+                  class="mt-4"
+                ></RoundedButton>
+              </div>
+
+              <divider-layout></divider-layout>
+
+              <div>
+                <h3 class="mb-2">Afbeeldingen</h3>
+                <div
+                  class="carousel"
+                  v-if="entry.progress?.images.length ?? 0 > 0"
+                >
+                  <div
+                    class="carousel-item"
+                    v-for="image in entry.progress?.images"
+                    :key="image.id"
+                  >
+                    <img
+                      src="https://unsplash.com/photos/u_khkgVDmxA/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Mnx8YmFzZW1lbnR8ZW58MHx8fHwxNjgxNzA5NzIx&force=true&w=640"
+                    />
+                    <p style="font-weight: 700; font-size: 14px" class="mt-2">
+                      {{ image.type }}
+                    </p>
+                    <p style="opacity: 90%">{{ image.description }}</p>
+                  </div>
+                </div>
+                <p v-else style="opacity: 75%">Geen foto's toegevoegd.</p>
+                <RoundedButton
+                  icon="mdi-plus"
+                  value="Toevoegen"
+                  class="mt-4"
+                ></RoundedButton>
+              </div>
+            </CardLayout>
+          </v-timeline-item>
+
+          <v-timeline-item
+            :tag="'TEST'"
+            :dot-color="'grey'"
+            :icon="'mdi-clock'"
           >
-            Opmerkingen beschikbaar
-          </v-chip>
-        </BorderCard>
-      </v-timeline-item>
-
-      <!-- The end card as last on the timeline-->
-      <v-timeline-item
-        :dot-color="mockround.end_time ? 'success' : 'red'"
-        :icon="mockround.end_time ? 'mdi-check' : 'mdi-close'"
-        :size="mockround.end_time ? 'large' : 'small'"
-      >
-        <!-- The student has ended -->
-        <BorderCard>
-          <v-card-title>
-            Einde {{ date_to_hh_mm(mockround.end_time) }}
-          </v-card-title>
-        </BorderCard>
-      </v-timeline-item>
-    </v-timeline>
-    <!-- Only show the finish button to the student if the round is already started and not finished-->
-    <v-card-actions
-      class="d-flex"
-      v-if="
-        current_role === 'Student' &&
-        mockround.start_time &&
-        !mockround.end_time
-      "
-    >
-      <v-spacer></v-spacer>
-      <v-btn
-        prepend-icon="mdi-check"
-        color="success"
-        variant="elevated"
-        @click="end_popup = true"
-        >Ronde beïndigen</v-btn
-      >
-      <!-- Show warning before ending -->
-      <v-overlay v-model="end_popup">
-        <v-snackbar
-          v-model="end_popup"
-          timeout="-1"
-          elevation="24"
-          color="white"
-        >
-          <v-card prepend-icon="mdi-exclamation" variant="flat">
-            <template v-slot:title> Beïndig ronde </template>
-
-            <p class="mx-3" v-if="round_complete(mockround)">
-              Je staat op het punt een ronde te beïndigen. Het huidige tijdstip
-              zal opgeslagen worden als eind tijdstip. Je zal acheraf geen
-              opmerkingen of foto's kunnen toevoegen. Ben je zeker dat je de
-              ronde wilt beïndigen?
-            </p>
-            <p class="mx-3" v-else>
-              Nog niet alle gebouwen van deze route zijn afgewerkt. Ben je zeker
-              dat je de ronde wilt beïndigen?
-            </p>
-            <div class="d-flex flex-row-reverse ma-3">
-              <v-btn color="success" @click="close_round()">
-                Beïndig ronde
-              </v-btn>
-              <v-btn @click="end_popup = false" color="error" class="mr-3">
-                Annuleer
-              </v-btn>
-            </div>
-          </v-card>
-        </v-snackbar>
-      </v-overlay>
-    </v-card-actions>
-  </v-card>
+            <h3>Einde: 14u00</h3>
+          </v-timeline-item>
+        </v-timeline>
+      </div>
+    </HFillWrapper>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import Round from "@/components/models/Round";
-import Avatar from "@/components/Avatar.vue";
-import StartRoundPopup from "@/components/popups/StartRoundPopupContent.vue";
-import { ref } from "vue";
+import { Ref, ref } from "vue";
+import DividerLayout from "@/layouts/DividerLayout.vue";
+import HFillWrapper from "@/layouts/HFillWrapper.vue";
+import CardLayout from "@/layouts/CardLayout.vue";
+import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
+import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import router from "@/router";
-import RoundBuilding from "@/components/models/RoundBuilding";
-import { date_to_hh_mm, date_to_dd_MM_yyyy } from "@/assets/scripts/format";
-import BorderCard from "@/layouts/CardLayout.vue";
 
-// add the role, will be replaced with actual athentication
-// TODO: replace with actual authentication
-const roles = ["Admin", "Student", "Superstudent", "Syndicus"];
-const current_role = ref(roles[0]);
+const data: Ref<Result<ScheduleQuery> | null> = ref(null);
+const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
 
-// state to keep track of the startround popup
-const start_popup = ref(false);
-function start_round() {
-  // TODO: start the round in the database
-  // we are already on the page, so refresh after the db update
-  router.go(0);
-}
+tryOrAlertAsync(async () => {
+  data.value = await new ScheduleQuery().getOne(35);
+});
 
-const end_popup = ref(false);
-function close_round() {
-  // TODO: close the round in the database
-  // we are already on the page, so refresh after the db update
-  router.go(0);
-}
-
-function building_time_range(building: RoundBuilding) {
-  if (!building.start_time) {
-    return "";
+tryOrAlertAsync(async () => {
+  for (const progress of await new ProgressQuery().getAll()) {
+    progressItems.value.set(progress.building_id, progress);
   }
-  if (building.end_time) {
-    return (
-      date_to_hh_mm(building.start_time) +
-      "-" +
-      date_to_hh_mm(building.end_time)
-    );
-  }
-  return date_to_hh_mm(building.start_time);
-}
-
-function building_status_color(building: RoundBuilding): string {
-  if (building.end_time) {
-    return "success";
-  }
-  if (building.start_time) {
-    return "warning";
-  }
-  return "red";
-}
-
-function building_status_size(building: RoundBuilding): string {
-  if (building.end_time) {
-    return "large";
-  }
-  if (building.start_time) {
-    return "default";
-  }
-  return "small";
-}
-
-function building_status_icon(building: RoundBuilding): string {
-  if (building.end_time) {
-    return "mdi-check";
-  }
-  if (building.start_time) {
-    return "mdi-account-clock";
-  }
-  return "mdi-office-building";
-}
-
-function round_complete(round: Round): boolean {
-  for (const building of round.buildings) {
-    if (!building.end_time) {
-      return false;
-    }
-  }
-  return true;
-}
-
-const mockround: Round = {
-  name: "Vrijdagmarkt",
-  due_date: new Date(2023, 2, 6, 12, 45),
-  start_time: new Date(2023, 2, 6, 12, 45),
-  end_time: null,
-  student: "Sophie",
-  buildings: [
-    {
-      name: "Garcia",
-      address: "Bruges, Belgium",
-      start_time: new Date(2023, 2, 6, 12, 45),
-      end_time: new Date(2023, 2, 6, 12, 55),
-      comments: true,
-      amount_of_pics: 5,
-    },
-    {
-      name: "Miller",
-      address: "Leuven, Belgium",
-      start_time: new Date(2023, 2, 6, 13, 5),
-      end_time: null,
-      comments: false,
-      amount_of_pics: 2,
-    },
-    {
-      name: "Clark",
-      address: "Ostend, Belgium",
-      start_time: null,
-      end_time: null,
-      comments: false,
-      amount_of_pics: 0,
-    } /*
-    {
-      name: "Miller",
-      address: "Leuven, Belgium",
-      start_time: null,
-      end_time: null,
-      comments: false,
-      amount_of_pics: 0,
-    },
-    {
-      name: "Clark",
-      address: "Ostend, Belgium",
-      start_time: null,
-      end_time: null,
-      comments: false,
-      amount_of_pics: 0,
-    },
-    {
-      name: "Miller",
-      address: "Leuven, Belgium",
-      start_time: null,
-      end_time: null,
-      comments: false,
-      amount_of_pics: 0,
-    },
-    {
-      name: "Clark",
-      address: "Ostend, Belgium",
-      start_time: null,
-      end_time: null,
-      comments: false,
-      amount_of_pics: 0,
-    },*/,
-  ],
-};
+});
 </script>
+
+<style lang="sass">
+.space-y
+  & > *
+    margin-bottom: 24px
+
+.carousel
+  img
+    width: 100%
+    aspect-ratio: 1
+    border-radius: 5px
+    overflow: clip
+    object-fit: cover
+
+  display: grid
+  grid-template-columns: repeat(3, minmax(0, 1fr))
+  gap: 24px
+</style>

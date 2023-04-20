@@ -44,6 +44,11 @@ export class ScheduleRouting extends Routing {
                 },
                 round: {
                     name: req.query["round"],
+                    buildings: {
+                        some: {
+                            building_id: Parser.number(req.query["building"]),
+                        }
+                    }
                 },
             },
             include: ScheduleRouting.includes,
@@ -70,6 +75,7 @@ export class ScheduleRouting extends Routing {
     async createOne(req: CustomRequest, res: express.Response) {
         const user = await prisma.schedule.create({
             data: req.body,
+            include: ScheduleRouting.includes,
         });
 
         return res.status(201).json(user);
@@ -82,6 +88,7 @@ export class ScheduleRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
+            include: ScheduleRouting.includes,
         });
 
         return res.status(200).json(result);

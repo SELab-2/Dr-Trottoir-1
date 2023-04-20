@@ -9,7 +9,7 @@ on:
             - 'api/**'
 
 jobs:
-    lint_test:
+    lint-build:
         runs-on: [ self-hosted ]
         defaults:
             run:
@@ -32,5 +32,9 @@ jobs:
                     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: "Verify the code compiles"
                 run: npm run build
-                env:
-                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            -   name: "Cleanup"
+                if: always()
+                run: |
+                    chmod +x ../server/cleanup.sh
+                    ../server/cleanup.sh -p
+                shell: bash

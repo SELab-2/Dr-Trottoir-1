@@ -4,7 +4,7 @@
       prepend-inner-icon="mdi-phone"
       label="Telefoonnummer"
       v-model="contact.phone"
-      :variant="readonly ? 'plain' : 'filled'"
+      :variant="readonly ? 'plain' : 'outlined'"
       :readonly="readonly"
       @update:model-value="$emit('onUpdate', contact)"
     ></v-text-field>
@@ -12,7 +12,7 @@
       prepend-inner-icon="mdi-email"
       label="e-mail"
       v-model="contact.email"
-      :variant="readonly ? 'plain' : 'filled'"
+      :variant="readonly ? 'plain' : 'outlined'"
       :readonly="readonly"
       @update:model-value="$emit('onUpdate', contact)"
     ></v-text-field>

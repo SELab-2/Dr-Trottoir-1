@@ -50,3 +50,9 @@ jobs:
                     npx prisma db push
             -   name: "Execute tests"
                 run: npm run test
+            -   name: "Cleanup"
+                if: always()
+                run: |
+                    chmod +x ../server/cleanup.sh
+                    ../server/cleanup.sh -p
+                shell: bash
