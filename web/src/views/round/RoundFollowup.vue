@@ -13,6 +13,7 @@
       variant="flat" 
       subtitle="Er zijn geen rondes ingepland voor de geselecteerde data."
     />
+    <!-- TODO: fix comment when db ready for it-->
     <RoundCard
       v-for="(schedule, i) in schedules"
       :key="i"
@@ -22,7 +23,7 @@
       :student_name="schedule.user.first_name"
       :building_index="progress?.get(schedule)!"
       :total_buildings="schedule.round.buildings.length"
-      :round_comments="false"
+      :round_comments="progress?.get(schedule)! != 0" 
       @click="redirect_to_detail()"
       style="cursor: pointer"
     ></RoundCard>
@@ -92,6 +93,7 @@ async function completedBuildings(schedule: Result<ScheduleQuery>): Promise<numb
     let count = 0;
     for(const building of schedule.round.buildings){
       const progress = await fetchBuildingProgress(schedule.id, building.building_id);
+      console.log(progress)
       if(progress){
         count++;
       }
