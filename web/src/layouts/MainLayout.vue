@@ -191,9 +191,11 @@ const isAdmin: Boolean = useAuthStore().auth!.admin;
 const syndicusBuildings: Ref<Result<BuildingQuery>[]> = ref([]);
 
 tryOrAlertAsync(async () => {
-  syndicusBuildings.value = await new BuildingQuery().getAll({
-    syndicus_id: 89, // TODO: change id
-  });
+  if (isAdmin) {
+    syndicusBuildings.value = await new BuildingQuery().getAll({
+      syndicus_id: 89, // TODO: change id
+    });
+  }
 });
 
 // account display settings
@@ -210,8 +212,8 @@ window.addEventListener(
   () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
 );
 async function logOut() {
-  await useAuthStore().logOut();
   await router.push({ name: "login" });
+  await useAuthStore().logOut();
 }
 </script>
 
