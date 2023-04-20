@@ -5,12 +5,16 @@
       :sort_items="sort_items"
       :filter_items="filter_options"
       class="mx-1 mb-3"
-      @onUpdate="async (new_data: FilterData) => {await handleFilterUpdate(new_data)}"
+      @onUpdate="
+        async (new_data: FilterData) => {
+          await handleFilterUpdate(new_data);
+        }
+      "
     />
-    <v-card 
+    <v-card
       v-if="schedules.length === 0"
-      color="background" 
-      variant="flat" 
+      color="background"
+      variant="flat"
       subtitle="Er zijn geen rondes ingepland voor de geselecteerde data."
     />
     <!-- TODO: fix comment when db ready for it-->
@@ -23,7 +27,7 @@
       :student_name="schedule.user.first_name"
       :building_index="progress?.get(schedule)!"
       :total_buildings="schedule.round.buildings.length"
-      :round_comments="progress?.get(schedule)! != 0" 
+      :round_comments="progress?.get(schedule)! != 0"
       @click="redirect_to_detail()"
       style="cursor: pointer"
     ></RoundCard>
@@ -31,7 +35,6 @@
 </template>
 
 <script lang="ts" setup>
-import Round from "@/components/models/Round";
 import RoundCard from "@/components/cards/RoundCard.vue";
 import LargeFilter from "@/components/filter/LargeFilter.vue";
 import { useRouter } from "vue-router";
@@ -39,7 +42,7 @@ import { Ref, ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
-import { ScheduleQuery, ProgressQuery ,Result } from "@selab-2/groep-1-query";
+import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 
 // the router constant
@@ -65,20 +68,14 @@ function redirect_to_detail() {
   router.push({ name: "round_detail", params: { id: 0, schedule: 0 } });
 }
 
-function round_has_comments(round: Round): boolean {
-  for (const building of round.buildings) {
-    if (building.comments) {
-      return true;
-    }
-  }
-  return false;
-}
-
 /* Data fetching */
 
 //interface ExtendedSchedule extends Result<ScheduleQuery>, Result<ProgressQuery> {};
 
-async function fetchBuildingProgress(schedule_id: number, building_id: number): Promise<Result<ProgressQuery> | null>{
+async function fetchBuildingProgress(
+  schedule_id: number,
+  building_id: number,
+): Promise<Result<ProgressQuery> | null> {
   let result: Array<Result<ProgressQuery>> = [];
   await tryOrAlertAsync(async () => {
     result = await new ProgressQuery().getAll({
@@ -89,18 +86,22 @@ async function fetchBuildingProgress(schedule_id: number, building_id: number): 
   return result.length == 0 ? null : result[0];
 }
 
-async function completedBuildings(schedule: Result<ScheduleQuery>): Promise<number>{
-    let count = 0;
-    for(const building of schedule.round.buildings){
-      const progress = await fetchBuildingProgress(schedule.id, building.building_id);
-      console.log(progress)
-      if(progress){
-        count++;
-      }
+async function completedBuildings(
+  schedule: Result<ScheduleQuery>,
+): Promise<number> {
+  let count = 0;
+  for (const building of schedule.round.buildings) {
+    const progress = await fetchBuildingProgress(
+      schedule.id,
+      building.building_id,
+    );
+    console.log(progress);
+    if (progress) {
+      count++;
     }
-    return count;
+  }
+  return count;
 }
-
 
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 const progress = ref<Map<Result<ScheduleQuery>, number>>(); // completed buildings of each schedule
@@ -108,11 +109,10 @@ const progress = ref<Map<Result<ScheduleQuery>, number>>(); // completed buildin
 // fetch the schedules, for today
 handleFilterUpdate(filter_data.value);
 
-
 /**
  * Update the schedules state with new schedules
  */
-async function updadeSchedules(){
+async function updadeSchedules() {
   // fetch schedules
   let result: Array<Result<ScheduleQuery>> = [];
   await tryOrAlertAsync(async () => {
@@ -125,8 +125,8 @@ async function updadeSchedules(){
   });
   // fetch progress
   const newProgress = new Map();
-  for(const schedule of result){
-    newProgress.set(schedule ,await completedBuildings(schedule));
+  for (const schedule of result) {
+    newProgress.set(schedule, await completedBuildings(schedule));
   }
   progress.value = newProgress;
 
@@ -134,22 +134,19 @@ async function updadeSchedules(){
   result = filtered_data(result);
 
   schedules.value = result;
-
 }
 
-
 /* Data filtering */
-async function handleFilterUpdate(data: FilterData){
+async function handleFilterUpdate(data: FilterData) {
   filter_data.value = data;
   // set at start of the day
-  filter_data.value.start_day.setHours(0,0,0,0);
+  filter_data.value.start_day.setHours(0, 0, 0, 0);
   // set at end of the day
-  filter_data.value.end_day.setHours(23,59,59,999);
-  await updadeSchedules();  
+  filter_data.value.end_day.setHours(23, 59, 59, 999);
+  await updadeSchedules();
 }
 
 //Filtering TODO: replace with API calls
-
 
 function filter_query(schedule: Result<ScheduleQuery>): boolean {
   let search_by: string = "";
@@ -167,8 +164,8 @@ function filter_query(schedule: Result<ScheduleQuery>): boolean {
   );
 }
 
-function progressOfSchedule(schedule: Result<ScheduleQuery>): number{
-  return progress.value?.get(schedule)!
+function progressOfSchedule(schedule: Result<ScheduleQuery>): number {
+  return progress.value?.get(schedule)!;
 }
 
 function filter_filters(schedule: Result<ScheduleQuery>): boolean {
@@ -179,7 +176,8 @@ function filter_filters(schedule: Result<ScheduleQuery>): boolean {
   for (const option of filter_data.value.filters) {
     switch (option) {
       case "Klaar":
-        result = progressOfSchedule(schedule) == schedule.round.buildings.length;
+        result =
+          progressOfSchedule(schedule) == schedule.round.buildings.length;
         break;
       case "Bezig":
         result =
@@ -202,7 +200,9 @@ function calculateProgress(done: number, total: number): number {
 }
 
 // The list of data after filtering
-function filtered_data(schedules: Result<ScheduleQuery>[]): Result<ScheduleQuery>[] {
+function filtered_data(
+  schedules: Result<ScheduleQuery>[],
+): Result<ScheduleQuery>[] {
   const result: Result<ScheduleQuery>[] = [];
   // filtering
   schedules.forEach((schedule) => {
@@ -223,8 +223,14 @@ function filtered_data(schedules: Result<ScheduleQuery>[]): Result<ScheduleQuery
     if (filter_data.value.sort_by == "Gebouwen") {
       return a.round.buildings.length > b.round.buildings.length ? 1 : -1;
     } else {
-      const ap = calculateProgress(progressOfSchedule(a), a.round.buildings.length);
-      const bp = calculateProgress(progressOfSchedule(b), b.round.buildings.length);
+      const ap = calculateProgress(
+        progressOfSchedule(a),
+        a.round.buildings.length,
+      );
+      const bp = calculateProgress(
+        progressOfSchedule(b),
+        b.round.buildings.length,
+      );
       return ap > bp ? 1 : -1;
     }
   });
