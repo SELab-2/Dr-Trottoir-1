@@ -1,12 +1,26 @@
 <template>
   <div>
-    <HFillWrapper margin="mx-4 mb-4">
-      <BorderCard :title="`Inplannen voor ${current_round?.name}`">
-        <v-row class="py-0 my-4 mx-2">
+    <HFillWrapper>
+      <BorderCard
+        class="pa-8"
+        style="display: flex; flex-direction: column; gap: 12px"
+      >
+        <h2>Ronde inplannen: {{ current_round?.name }}</h2>
+
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur.
+        </p>
+
+        <v-row class="py-0">
           <v-col
             cols="1"
             style="min-width: 100px; max-width: 100%"
-            class="flex-grow-1 flex-shrink-0 py-0 my-0"
+            class="flex-grow-1 flex-shrink-0"
             ><v-select
               label="Selecteer student"
               :items="students"
@@ -29,66 +43,65 @@
             </v-select></v-col
           ></v-row
         >
-        <v-row class="py-0 my-4 mx-2">
-          <v-col cols="3" class="flex-grow-0 flex-shrink-0"
-            ><v-select
-              prepend-inner-icon="mdi-replay"
-              variant="outlined"
-              label="Frequentie"
-              v-model="frequency"
-              :items="frequencys"
-              @update:model-value="frequencyCheck()"
-            ></v-select></v-col
-          ><v-col
-            cols="1"
-            style="min-width: 100px; max-width: 100%"
-            class="flex-grow-1 flex-shrink-0"
-            ><div v-if="!multipleday">
-              <v-text-field
-                prepend-inner-icon="mdi-calendar"
-                label="Startdatum"
-                variant="outlined"
-                type="date"
-                v-model="startDate"
-              ></v-text-field>
-            </div>
-            <div class="d-flex justify-space-between" v-else>
-              <v-text-field
-                v-model="startDate"
-                prepend-inner-icon="mdi-calendar"
-                variant="outlined"
-                class="mr-1"
-                type="date"
-                label="Startdatum"
-              ></v-text-field
-              ><v-text-field
-                v-model="endDate"
-                prepend-inner-icon="mdi-calendar"
-                variant="outlined"
-                class="ml-1"
-                type="date"
-                label="Einddatum"
-              ></v-text-field></div></v-col
-          ><v-col cols="3" class="flex-grow-0 flex-shrink-0"
-            ><v-text-field
-              prepend-inner-icon="mdi-clock-time-two-outline"
-              label="Starttijd"
-              variant="outlined"
-              type="time"
-              v-model="time"
-            ></v-text-field
-          ></v-col>
-        </v-row>
-        <v-card-actions
-          ><v-btn prepend-icon="mdi-plus" @click="updateRounds()"
+
+        <div
+          class="selectors"
+          :class="multipleday ? 'grid-cols-4' : 'grid-cols-3'"
+        >
+          <v-select
+            prepend-inner-icon="mdi-replay"
+            variant="outlined"
+            label="Frequentie"
+            v-model="frequency"
+            :items="frequencys"
+            @update:model-value="frequencyCheck()"
+          ></v-select>
+
+          <v-text-field
+            v-model="startDate"
+            prepend-inner-icon="mdi-calendar"
+            variant="outlined"
+            type="date"
+            label="Startdatum"
+          ></v-text-field>
+
+          <v-text-field
+            v-model="endDate"
+            prepend-inner-icon="mdi-calendar"
+            variant="outlined"
+            type="date"
+            label="Einddatum"
+            v-if="multipleday"
+          ></v-text-field>
+
+          <v-text-field
+            prepend-inner-icon="mdi-clock-time-two-outline"
+            label="Starttijd"
+            variant="outlined"
+            type="time"
+            v-model="time"
+          ></v-text-field>
+        </div>
+
+        <div style="display: flex; align-items: center">
+          <v-btn
+            prepend-icon="mdi-plus"
+            @click="updateRounds()"
+            :disabled="student === undefined"
+            variant="tonal"
             >Toevoegen</v-btn
           >
-          <v-spacer></v-spacer
-          ><v-btn prepend-icon="mdi-check" @click="planRounds()"
+          <div class="flex-grow-1"></div>
+          <v-btn
+            prepend-icon="mdi-check"
+            @click="planRounds()"
+            :disabled="rounds?.length === 0"
+            variant="tonal"
             >Ronde inplannen</v-btn
-          ></v-card-actions
-        >
+          >
+        </div>
       </BorderCard>
+
       <RoundSelectCard
         v-for="(round, i) in rounds"
         :key="i"
@@ -143,7 +156,7 @@ const frequencyDict: Record<string, number> = {
 
 const startDate = ref<string>(new Date().toISOString().substring(0, 10));
 const endDate = ref<string>(new Date().toISOString().substring(0, 10));
-const time = ref<string>("");
+const time = ref<string>("12:00");
 const frequency = ref<string>(frequencys[0]);
 const multipleday = ref<boolean>(false);
 
@@ -215,4 +228,19 @@ function planRounds() {
 .flex
   display: flex
   gap: 20px
+
+.grid-cols-3
+  grid-template-columns: repeat(3, minmax(0, 1fr))
+
+.grid-cols-4
+  grid-template-columns: repeat(4, minmax(0, 1fr))
+
+.selectors
+  display: grid
+  flex-direction: row
+  gap: 12px
+  height: 80px
+
+  & > *
+    min-height: 100%
 </style>
