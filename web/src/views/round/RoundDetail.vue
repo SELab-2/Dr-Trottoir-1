@@ -67,6 +67,7 @@
       </div>
     </HFillWrapper>
   </div>
+  <AddButton icon="mdi-plus" :items="actions" v-if='mobile'/>
 </template>
 
 <script lang="ts" setup>
@@ -77,11 +78,26 @@ import CardLayout from "@/layouts/CardLayout.vue";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import RoundDetailCard from '@/components/cards/RoundDetailCard.vue'
 import Avatar from "@/components/Avatar.vue";
+import AddButton from '@/components/buttons/AddButton.vue';
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRoute } from 'vue-router'
 import { useDisplay } from 'vuetify'
 
+const actions = [
+  {
+    title: "Foto toevoegen",
+    clicked: () => console.log("foto"),
+  },
+  {
+    title: "Opmerking toevoegen",
+    clicked: () => console.log("opmerking"),
+  },
+  {
+    title: "Bezoek beëindigen",
+    clicked: () => console.log("einde"),
+  },
+];
 
 const data: Ref<Result<ScheduleQuery> | null> = ref(null);
 const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
