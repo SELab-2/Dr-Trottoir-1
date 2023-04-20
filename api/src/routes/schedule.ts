@@ -47,8 +47,8 @@ export class ScheduleRouting extends Routing {
                     buildings: {
                         some: {
                             building_id: Parser.number(req.query["building"]),
-                        }
-                    }
+                        },
+                    },
                 },
             },
             include: ScheduleRouting.includes,

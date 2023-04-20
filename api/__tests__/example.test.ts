@@ -53,6 +53,7 @@ describe("Example test suite", () => {
         await testRunner.post({
             url: "/action",
             data: newAction,
+            expectedResponse: newAction,
         });
 
         // clean up after ourselves
