@@ -113,15 +113,17 @@ const actions: Button[] = [
   },
 ];
 
+const route = useRoute();
+const schedule_id: number = Number(route.params.schedule);
+
 const data: Ref<Result<ScheduleQuery> | null> = ref(null);
 const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
 
-const route = useRoute();
 const display = useDisplay();
 const mobile = display.mobile;
 
 tryOrAlertAsync(async () => {
-  data.value = await new ScheduleQuery().getOne(Number(route.params.schedule));
+  data.value = await new ScheduleQuery().getOne(schedule_id);
 });
 
 tryOrAlertAsync(async () => {
