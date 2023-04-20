@@ -2,18 +2,21 @@
   <div v-if="data !== null">
     <HFillWrapper>
       <div class="space-y">
-        <div
-          style="
-            margin-bottom: 0;
-            display: flex;
-            gap: 12px;
-          "
-        >
+        <div style="margin-bottom: 0; display: flex; gap: 12px">
           <h2>{{ data.round.name }}</h2>
           <div class="flex-grow-1"></div>
-          <CardLayout class='pa-1 d-flex align-center' style="border-radius: 30px;" :to='{name: "account_settings", params: {id: data.user.id}}'>
-            <Avatar size='small' :name="`${data.user.first_name} ${ data.user.last_name}`" />
-            <p class="ml-1" v-if='!mobile'>{{data.user.first_name}} {{data.user.last_name }}</p>
+          <CardLayout
+            class="pa-1 d-flex align-center"
+            style="border-radius: 30px"
+            :to="{ name: 'account_settings', params: { id: data.user.id } }"
+          >
+            <Avatar
+              size="small"
+              :name="`${data.user.first_name} ${data.user.last_name}`"
+            />
+            <p class="ml-1" v-if="!mobile">
+              {{ data.user.first_name }} {{ data.user.last_name }}
+            </p>
           </CardLayout>
         </div>
         <RoundedButton
@@ -33,9 +36,19 @@
 
         <divider-layout class="my-8"></divider-layout>
 
-        <v-timeline truncate-line="both" side="end" density="compact" align="start">
-          <v-timeline-item dot-color="success" icon="mdi-check" size="large" width='100%'>
-            <h3 class='pt-2'>Start: 12u00</h3>
+        <v-timeline
+          truncate-line="both"
+          side="end"
+          density="compact"
+          align="start"
+        >
+          <v-timeline-item
+            dot-color="success"
+            icon="mdi-check"
+            size="large"
+            width="100%"
+          >
+            <h3 class="pt-2">Start: 12u00</h3>
           </v-timeline-item>
 
           <v-timeline-item
@@ -49,9 +62,9 @@
             dot-color="success"
             icon="mdi-check"
             size="large"
-            width='100%'
+            width="100%"
           >
-            <RoundDetailCard :entry='entry'/>
+            <RoundDetailCard :entry="entry" />
           </v-timeline-item>
 
           <v-timeline-item
@@ -59,15 +72,15 @@
             dot-color="grey"
             icon="mdi-clock"
             size="large"
-            width='100%'
+            width="100%"
           >
-            <h3 class='pt-2'>Einde: 14u00</h3>
+            <h3 class="pt-2">Einde: 14u00</h3>
           </v-timeline-item>
         </v-timeline>
       </div>
     </HFillWrapper>
   </div>
-  <AddButton icon="mdi-plus" :items="actions" v-if='mobile'/>
+  <AddButton icon="mdi-plus" :items="actions" v-if="mobile" />
 </template>
 
 <script lang="ts" setup>
@@ -76,15 +89,16 @@ import DividerLayout from "@/layouts/DividerLayout.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
-import RoundDetailCard from '@/components/cards/RoundDetailCard.vue'
+import RoundDetailCard from "@/components/cards/RoundDetailCard.vue";
 import Avatar from "@/components/Avatar.vue";
-import AddButton from '@/components/buttons/AddButton.vue';
+import AddButton from "@/components/buttons/AddButton.vue";
+import Button from "@/components/models/Button";
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
-import { useRoute } from 'vue-router'
-import { useDisplay } from 'vuetify'
+import { useRoute } from "vue-router";
+import { useDisplay } from "vuetify";
 
-const actions = [
+const actions: Button[] = [
   {
     title: "Foto toevoegen",
     clicked: () => console.log("foto"),
@@ -107,7 +121,7 @@ const display = useDisplay();
 const mobile = display.mobile;
 
 tryOrAlertAsync(async () => {
-  data.value = await new ScheduleQuery().getOne(route.params.schedule);
+  data.value = await new ScheduleQuery().getOne(Number(route.params.schedule));
 });
 
 tryOrAlertAsync(async () => {

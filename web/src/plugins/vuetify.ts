@@ -58,7 +58,7 @@ export default createVuetify({
     VAutocomplete: { variant: "outlined" },
   },
   display: {
-    mobileBreakpoint: 'lg',
+    mobileBreakpoint: "lg",
     thresholds: {
       xs: 0,
       sm: 340,

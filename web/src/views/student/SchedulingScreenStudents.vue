@@ -126,7 +126,6 @@ const snackbar = ref(false);
 const currentRound = ref(0);
 const currentSchedule = ref(0);
 
-
 type DayEntry = {
   id: number;
   start: Date;

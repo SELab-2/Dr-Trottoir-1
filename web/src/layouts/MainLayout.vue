@@ -178,7 +178,7 @@ import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useAuthStore } from "@/stores/auth";
 import { BuildingQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
-import { useDisplay } from 'vuetify'
+import { useDisplay } from "vuetify";
 
 const router = useRouter();
 const display = useDisplay();

@@ -1,18 +1,13 @@
 <template>
-  <CardLayout class="pa-8" v-if='entry'>
+  <CardLayout class="pa-8" v-if="entry">
     <div
-      style="
-                  align-items: center;
-                  display: flex;
-                  cursor: pointer;
-                  gap: 12px;
-                "
+      style="align-items: center; display: flex; cursor: pointer; gap: 12px"
       @click="
-                  router.push({
-                    name: 'building_id',
-                    params: { id: entry.building.id },
-                  })
-                "
+        router.push({
+          name: 'building_id',
+          params: { id: entry.building.id },
+        })
+      "
     >
       <div>
         <h2>{{ entry.building.name }}</h2>
@@ -26,20 +21,29 @@
         </p>
       </div>
       <div class="flex-grow-1"></div>
-      <div class='d-flex' v-if='!mobile'> <!-- TODO make also visible on mobile -->
+      <div class="d-flex" v-if="!mobile">
+        <!-- TODO make also visible on mobile -->
         <RoundedButton
-          class='mx-1'
+          class="mx-1"
           v-if="entry.progress"
           icon="mdi-clock-start"
-          :value="new Date(entry.progress.arrival).toLocaleTimeString('nl', {hour: '2-digit', minute:'2-digit'})"
+          :value="
+            new Date(entry.progress.arrival).toLocaleTimeString('nl', {
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          "
         ></RoundedButton>
         <RoundedButton
-          class='mx-1'
+          class="mx-1"
           v-if="entry.progress"
           icon="mdi-clock-end"
           :value="
-                    new Date(entry.progress.departure).toLocaleTimeString('nl', {hour: '2-digit', minute:'2-digit'})
-                  "
+            new Date(entry.progress.departure).toLocaleTimeString('nl', {
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          "
         ></RoundedButton>
       </div>
       <v-icon icon="mdi-chevron-right"></v-icon>
@@ -53,7 +57,7 @@
     />
   </CardLayout>
   <v-expand-transition v-on:click.stop>
-    <div v-show='expanded'>
+    <div v-show="expanded">
       <CardLayout class="pa-8 pb-0 space-y">
         <div v-if="entry.progress?.report">
           <div style="display: flex; align-items: center">
@@ -71,10 +75,7 @@
 
         <div>
           <h3 class="mb-2">Afbeeldingen</h3>
-          <div
-            class="carousel"
-            v-if="entry.progress?.images.length ?? 0 > 0"
-          >
+          <div class="carousel" v-if="entry.progress?.images.length ?? 0 > 0">
             <div
               class="carousel-item"
               v-for="image in entry.progress?.images"
@@ -82,7 +83,7 @@
             >
               <img
                 src="https://unsplash.com/photos/u_khkgVDmxA/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Mnx8YmFzZW1lbnR8ZW58MHx8fHwxNjgxNzA5NzIx&force=true&w=640"
-                alt='opvolgfoto'
+                alt="opvolgfoto"
               />
               <p style="font-weight: 700; font-size: 14px" class="mt-2">
                 {{ image.type }}
@@ -102,13 +103,13 @@
   </v-expand-transition>
 </template>
 
-<script lang='ts' setup>
+<script lang="ts" setup>
 import CardLayout from "@/layouts/CardLayout.vue";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import DividerLayout from "@/layouts/DividerLayout.vue";
-import { useDisplay } from 'vuetify'
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { useDisplay } from "vuetify";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
 
 defineProps(["entry"]);
 
@@ -118,10 +119,9 @@ const display = useDisplay();
 const mobile = display.mobile;
 
 const expanded = ref<Boolean>(false);
-
 </script>
 
-<style scoped lang='sass'>
+<style scoped lang="sass">
 .space-y
   & > *
     margin-bottom: 24px
