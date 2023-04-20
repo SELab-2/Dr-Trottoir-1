@@ -8,6 +8,7 @@
           value="Student"
           color="primary"
           density="compact"
+          :disabled="props.readonly"
           hide-details
         />
         <v-checkbox
@@ -16,6 +17,7 @@
           value="Superstudent"
           color="primary"
           density="compact"
+          :disabled="props.readonly"
           hide-details
         />
       </v-col>
@@ -26,6 +28,7 @@
           value="Syndicus"
           color="primary"
           density="compact"
+          :disabled="props.readonly"
           hide-details
         />
         <v-checkbox
@@ -34,6 +37,7 @@
           value="Admin"
           color="primary"
           density="compact"
+          :disabled="props.readonly"
           hide-details
         />
       </v-col>
@@ -49,7 +53,13 @@
 import { computed } from 'vue'
 // use v-model
 // https://vuejs.org/guide/components/v-model.html
-const props = defineProps(['modelValue'])
+const props = defineProps({
+  modelValue: {type: Array<string>},
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
+})
 const emit = defineEmits(['update:modelValue'])
 
 const roles = computed({

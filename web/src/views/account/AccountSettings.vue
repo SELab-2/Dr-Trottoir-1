@@ -95,7 +95,7 @@
       prepend-icon="mdi-account-multiple"
     >
       <template v-slot:title> Rollen </template>
-      <RolesForm v-if="edit" v-model="roles"/>
+      <RolesForm :readonly="!edit" v-model="roles"/>
     </BorderCard>
 
     <!-- Section to set new password -->
@@ -191,10 +191,17 @@ const passwordCheck = ref("");
 const passwordHidden = ref(false);
 const user: Ref<Result<UserQuery> | null> = ref(null);
 
+tryOrAlertAsync(async () => {
+  user.value = await new UserQuery().getOne(props.id);
+});
+
 // reactive states for the new password
 const password1 = ref("");
 const password2 = ref("");
 const showPsswd = ref(false);
+
+// reactive state for the roles
+const roles = ref<string[]>([])
 
 function handleRemove() {
   // TODO: API-call to remove the account
@@ -235,9 +242,7 @@ const popupMsg = ref("");
 const popupSubmitMsg = ref("");
 const popupSubmit: Ref<() => void> = ref(() => {});
 
-tryOrAlertAsync(async () => {
-  user.value = await new UserQuery().getOne(props.id);
-});
+
 
 </script>
 
