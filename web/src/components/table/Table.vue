@@ -31,7 +31,7 @@
           v-for="header in headers"
           :class="{ fit: header.fit }"
           style="cursor: pointer"
-          @click="router.push(item.route())"
+          @click="() => props.route && router.push(props.route(item))"
         >
           <div
             v-if="header.type === RowType.IMAGE"
@@ -82,6 +82,7 @@ const props = defineProps({
   entries: { type: Array<any>, require: true },
   headers: { type: Array<Header<any>>, require: true, default: [] },
   sort: { type: Function, require: true, default: () => {} },
+  route: { type: Function, require: false, default: null },
 });
 
 const entries = ref(props.entries);

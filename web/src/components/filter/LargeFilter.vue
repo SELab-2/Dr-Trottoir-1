@@ -30,10 +30,9 @@
             <v-text-field
               label="Eerste dag"
               type="date"
-              variant="solo"
               v-model="s_day"
               @update:model-value="
-                filter_data.start_day = formatDate(new Date(s_day));
+                filter_data.start_day = new Date(s_day);
                 $emit('onUpdate', filter_data);
               "
             />
@@ -42,17 +41,15 @@
             <v-text-field
               label="Laatste dag"
               type="date"
-              variant="solo"
               v-model="e_day"
               @update:model-value="
-                filter_data.end_day = formatDate(new Date(e_day));
+                filter_data.end_day = new Date(e_day);
                 $emit('onUpdate', filter_data);
               "
             />
           </v-col>
           <v-col v-if="search_by_labels.length > 1">
             <v-select
-              variant="solo"
               label="Zoekcategorie"
               :items="search_by_labels"
               v-model="filter_data.search_label"
@@ -123,7 +120,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
-import { formatDate } from "@/assets/scripts/date";
 import BorderCard from "@/layouts/CardLayout.vue";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 
@@ -183,7 +179,7 @@ const filter_data = ref<FilterData>({
   // The currently selected filters
   filters: props.selected_filters,
   // The start and end date
-  start_day: formatDate(props.start_date),
-  end_day: formatDate(props.end_date),
+  start_day: props.start_date,
+  end_day: props.end_date,
 });
 </script>
