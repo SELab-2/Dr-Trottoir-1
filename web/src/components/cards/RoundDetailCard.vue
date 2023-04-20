@@ -1,7 +1,14 @@
 <template>
-  <CardLayout class="pa-8" v-if="entry">
+  <CardLayout class="pt-8" v-if="entry">
     <div
-      style="align-items: center; display: flex; cursor: pointer; gap: 12px"
+      style="
+        align-items: center;
+        display: flex;
+        position: relative;
+        cursor: pointer;
+        gap: 12px;
+      "
+      class="px-8 pb-8"
       @click="
         router.push({
           name: 'building_id',
@@ -47,18 +54,19 @@
         ></RoundedButton>
       </div>
       <v-icon icon="mdi-chevron-right"></v-icon>
+      <v-btn
+        @click.stop="expanded = !expanded"
+        :icon="expanded ? 'mdi-menu-up' : 'mdi-menu-down'"
+        class="dropdown-button"
+        variant="text"
+      />
     </div>
-
-    <v-btn
-      @click.stop="expanded = !expanded"
-      :icon="expanded ? 'mdi-menu-up' : 'mdi-menu-down'"
-      class="dropdown-button"
-      variant="text"
-    />
-  </CardLayout>
-  <v-expand-transition v-on:click.stop>
-    <div v-show="expanded">
-      <CardLayout class="pa-8 pb-0 space-y">
+    <v-expand-transition v-on:click.stop>
+      <div v-show="expanded" class="px-8 pb-8">
+        <divider-layout
+          v-if="entry.progress?.report"
+          class="mb-4"
+        ></divider-layout>
         <div v-if="entry.progress?.report">
           <div style="display: flex; align-items: center">
             <h3 class="mb-2">Notities</h3>
@@ -71,8 +79,8 @@
             class="mt-4"
           ></RoundedButton>
         </div>
-        <divider-layout v-if="entry.progress?.report"></divider-layout>
 
+        <divider-layout class="my-4" />
         <div>
           <h3 class="mb-2">Afbeeldingen</h3>
           <div class="carousel" v-if="entry.progress?.images.length ?? 0 > 0">
@@ -98,9 +106,9 @@
             class="mt-4"
           ></RoundedButton>
         </div>
-      </CardLayout>
-    </div>
-  </v-expand-transition>
+      </div>
+    </v-expand-transition>
+  </CardLayout>
 </template>
 
 <script lang="ts" setup>
@@ -146,7 +154,7 @@ const expanded = ref<Boolean>(false);
 
 .dropdown-button
   position: absolute
+  right: 0
   bottom: 0
-  right: 3px
   margin-bottom: 0
 </style>
