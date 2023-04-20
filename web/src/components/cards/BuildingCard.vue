@@ -1,14 +1,7 @@
 <template>
   <BorderCard
-    :clickable="building!.data.length === 1"
     class="mx-1 mb-3"
-    @click="
-      () => {
-        if (building) {
-          atClick(building.data[0].date);
-        }
-      }
-    "
+    v-on="!can_expand ? { click: () => route(start_date) } : {}"
   >
     <v-row class="flex-nowrap">
       <v-col cols="2" class="flex-grow-0 flex-shrink-0">
@@ -33,14 +26,14 @@
           <!-- Subtitle -->
           <template v-slot:subtitle>
             <Avatar
-              :name="building!.syndicus"
+              :name="full_syndicus_name()"
               size="x-small"
-              :key="building!.syndicus"
+              :key="full_syndicus_name()"
             />
-            {{ building!.syndicus }} <br />
+            {{ full_syndicus_name() }} <br />
             <v-chip label color="brown" class="mt-4">
               <v-icon icon="mdi-office-building-marker-outline"></v-icon>
-              <p class="ml-2">{{ building!.adres }}</p>
+              <p class="ml-2">{{ full_address() }}</p>
             </v-chip>
           </template>
 
@@ -50,10 +43,10 @@
               label
               color="blue"
               class="ml-3 align-top"
-              v-if="building!.data.length === 1"
+              v-if="!can_expand"
             >
               <v-icon icon="mdi-calendar-clock"></v-icon>
-              <p class="ml-2">{{ building!.data[0].date }}</p>
+              <p class="ml-2">{{ start_date.toLocaleDateString("nl") }}</p>
             </v-chip>
             <!-- Date expansion button-->
             <v-btn
@@ -68,20 +61,22 @@
       </v-col>
     </v-row>
     <v-expand-transition v-on:click.stop>
-      <div v-show="building!.data.length > 1 && expanded">
+      <div v-show="progresses.length && expanded">
         <DividerLayout />
-        <div class="w-100 px-4 py-2" v-if="building!.data.length > 1">
+        <div class="w-100 px-4 py-2" v-if="progresses.length">
           <v-chip
-            v-for="(datum, id) of building!.data"
+            v-for="(progress, id) of progresses"
             :key="id"
             label
             class="w-100"
-            @click="atClick(datum.date)"
             variant="text"
+            @click="route(progress.arrival)"
           >
             <v-icon color="blue" icon="mdi-calendar-clock"></v-icon>
-            <p class="ml-2">{{ datum.date }}</p>
-            <v-icon end color="black" v-if="datum.comments">
+            <p class="ml-2">
+              {{ new Date(progress.arrival).toLocaleDateString("nl") }}
+            </p>
+            <v-icon end color="black" v-if="progress.report">
               mdi-comment-alert-outline
             </v-icon>
           </v-chip>
@@ -93,25 +88,63 @@
 
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
-import { ref } from "vue";
+import { ref, Ref } from "vue";
 import { useRouter } from "vue-router";
 import BorderCard from "@/layouts/CardLayout.vue";
 import DividerLayout from "@/layouts/DividerLayout.vue";
+import { Result, BuildingQuery, ProgressQuery } from "@selab-2/groep-1-query";
+import { PropType } from "vue";
+import { tryOrAlertAsync } from "@/try";
 
 const router = useRouter();
 
 const props = defineProps({
-  building: Object,
+  building: { type: Object as PropType<Result<BuildingQuery>>, required: true },
+  start_date: { type: Date, required: true },
+  end_date: { type: Date, required: true },
 });
+
+function full_syndicus_name() {
+  const user = props.building.syndicus?.user;
+  return user?.first_name + " " + user?.last_name;
+}
+
+function full_address() {
+  const addressprops = props.building.address;
+  return (
+    addressprops.street + " " + addressprops.number + " " + addressprops.city
+  );
+}
 
 const expanded = ref<Boolean>(false);
 const comments = ref<Boolean>(false);
 
-function atClick(date: string) {
+let progresses: Ref<Result<ProgressQuery>[]> = ref([]);
+
+const can_expand: Ref<boolean> = ref(
+  props.start_date.toLocaleDateString("nl") !==
+    props.end_date.toLocaleDateString("nl"),
+);
+
+tryOrAlertAsync(async () => {
+  progresses.value = await new ProgressQuery().getAll({
+    building: props.building?.id,
+    arrived_after: props.start_date,
+    arrived_before: props.end_date,
+  });
+  can_expand.value = can_expand.value && progresses.value.length > 0;
+});
+
+function route(date: Date) {
+  console.log(`TODO: link to ${date}`);
   if (props.building) {
     router.push({
-      name: "building_id_detail",
-      params: { id: props.building.id, date: date },
+      name: "building_id",
+      params: {
+        id: props.building.id,
+        // TODO change to different route with:
+        //  date: new Date(date).toLocaleDateString("nl"),
+      },
     });
   }
 }

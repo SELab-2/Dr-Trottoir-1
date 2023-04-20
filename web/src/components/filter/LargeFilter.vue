@@ -32,9 +32,7 @@
               type="date"
               v-model="s_day"
               @update:model-value="
-                filter_data.start_day = new Date(s_day).toLocaleDateString(
-                  'nl',
-                );
+                filter_data.start_day = new Date(s_day);
                 $emit('onUpdate', filter_data);
               "
             />
@@ -45,7 +43,7 @@
               type="date"
               v-model="e_day"
               @update:model-value="
-                filter_data.end_day = new Date(e_day).toLocaleDateString('nl');
+                filter_data.end_day = new Date(e_day);
                 $emit('onUpdate', filter_data);
               "
             />
@@ -181,7 +179,7 @@ const filter_data = ref<FilterData>({
   // The currently selected filters
   filters: props.selected_filters,
   // The start and end date
-  start_day: props.start_date.toLocaleDateString("nl"),
-  end_day: props.end_date.toLocaleDateString("nl"),
+  start_day: props.start_date,
+  end_day: props.end_date,
 });
 </script>
