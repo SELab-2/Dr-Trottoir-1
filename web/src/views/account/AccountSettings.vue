@@ -181,7 +181,10 @@ import CardPopup from "@/components/popups/CardPopup.vue";
 
 import { Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
+import { useRouter } from "vue-router";
 
+
+const router = useRouter();
 
 const props = defineProps(["id"]);
 
@@ -209,10 +212,11 @@ tryOrAlertAsync(async () => {
 // reactive state for the roles
 const roles = ref<string[]>([])
 
-function handleRemove() {
-  // TODO: API-call to remove the account
+async function handleRemove() {
+  await tryOrAlertAsync(async () => {new UserQuery().deleteOne({id: user.value?.id})});
   showPopup.value = false;
   edit.value = false;
+  router.push({name: "user_overview"})
 }
 
 function handleRemovePopup(){
@@ -247,7 +251,6 @@ const popupTitle = ref("");
 const popupMsg = ref("");
 const popupSubmitMsg = ref("");
 const popupSubmit: Ref<() => void> = ref(() => {});
-
 
 
 </script>
