@@ -24,15 +24,6 @@
     <v-col>
       <v-checkbox
         v-model="roles"
-        label="Syndicus"
-        value="Syndicus"
-        color="primary"
-        density="compact"
-        :disabled="props.readonly"
-        hide-details
-      />
-      <v-checkbox
-        v-model="roles"
         label="Admin"
         value="Admin"
         color="primary"

@@ -191,7 +191,7 @@ const psswd2Rules = [
   },
 
   // check if psswd2 matches psswd1
-  (_: string) => {
+  () => {
     return password1.value == password2.value
       ? true
       : "Wachtwoorden komen niet overeen.";
@@ -224,10 +224,11 @@ async function submitForm() {
             street: address.value.street,
             zip_code: Number(address.value.zip_code),
           },
-        }, //TODO fix hard coded
+        },
         date_added: new Date(),
         last_login: new Date(),
       });
+      console.log(user);
       router.push({ name: "account_settings", params: { id: user.id } });
     });
   }
