@@ -37,10 +37,10 @@ import { useRouter } from "vue-router";
 import { Ref, ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
-import CardLayout from "@/layouts/CardLayout.vue";
 
-import { ScheduleQuery, Result } from "@selab-2/groep-1-query";
+import { ScheduleQuery, ProgressQuery ,Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
+import { type } from "os";
 
 // the router constant
 const router = useRouter();
@@ -86,6 +86,11 @@ function completed_buildings(round: Round): number {
 
 /* Data fetching */
 
+//interface ExtendedSchedule extends Result<ScheduleQuery>, Result<ProgressQuery> {};
+
+type ExtendedSchedule = Result<ScheduleQuery> & Result<ProgressQuery>
+const schedules: Ref<Array<ExtendedSchedule>> = ref(await fetchSchedules());
+
 /**
  * Fetch all the schedules
  */
@@ -99,9 +104,24 @@ async function fetchSchedules(): Promise<Array<Result<ScheduleQuery>>> {
       //ord: (filter_data.value.sort_ascending ? ['asc'] : ['desc']),
     });
   });
-  console.log(result);
-  return result;
+  
+  const ret : ExtendedSchedule[] = [];
+  for (const schedule of result) {
+    let progress: Array<Result<ProgressQuery>> = [];
+    await tryOrAlertAsync(async () => {
+    progress = await new ProgressQuery().getAll({
+      schedule: schedule.id
+    });
+    console.log(progress[0])
+    console.log(schedule)
+    const combined : ExtendedSchedule = Object.assign({}, schedule, progress[0]);
+    ret.push(combined)
+  });
+  }
+  console.log(ret)
+  return ret;
 }
+
 
 /**
  * Update the schedules state with new schedules
@@ -110,7 +130,7 @@ async function updadeSchedules(){
   schedules.value = await fetchSchedules();
 }
 
-const schedules: Ref<Array<Result<ScheduleQuery>>> = ref(await fetchSchedules());
+
 
 /* Data filtering */
 function handleFilterUpdate(data: FilterData){
