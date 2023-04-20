@@ -20,7 +20,7 @@
       round_start="TODO"
       round_end="TODO"
       :student_name="schedule.user.first_name"
-      :building_index="0"
+      :building_index="progress[i]"
       :total_buildings="schedule.round.buildings.length"
       :round_comments="false"
       @click="redirect_to_detail()"
@@ -74,22 +74,38 @@ function round_has_comments(round: Round): boolean {
   return false;
 }
 
-function completed_buildings(round: Round): number {
-  let count = 0;
-  for (const building of round.buildings) {
-    if (building.end_time) {
-      count++;
-    }
-  }
-  return count;
-}
-
 /* Data fetching */
 
 //interface ExtendedSchedule extends Result<ScheduleQuery>, Result<ProgressQuery> {};
 
+async function fetchBuildingProgress(schedule_id: number, building_id: number): Promise<Result<ProgressQuery> | null>{
+  let result: Array<Result<ProgressQuery>> = [];
+  await tryOrAlertAsync(async () => {
+    result = await new ProgressQuery().getAll({
+      schedule: schedule_id,
+      building: building_id,
+    });
+  });
+  return result.length == 0 ? null : result[0];
+}
 
-const schedules: Ref<Array<Result<ScheduleQuery>>> = ref(await fetchSchedules());
+async function completedBuildings(schedule: Result<ScheduleQuery>): Promise<number>{
+    let count = 0;
+    for(const building of schedule.round.buildings){
+      const progress = await fetchBuildingProgress(schedule.id, building.building_id);
+      if(progress){
+        count++;
+      }
+    }
+    return count;
+}
+
+
+const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
+const progress = ref<number[]>([]); // completed buildings of each scedule
+
+// fetch the schedules, for today
+handleFilterUpdate(filter_data.value);
 
 /**
  * Fetch all the schedules
@@ -104,7 +120,6 @@ async function fetchSchedules(): Promise<Array<Result<ScheduleQuery>>> {
       //ord: (filter_data.value.sort_ascending ? ['asc'] : ['desc']),
     });
   });
-  console.log(result);
   return result;
 }
 
@@ -114,8 +129,12 @@ async function fetchSchedules(): Promise<Array<Result<ScheduleQuery>>> {
  */
 async function updadeSchedules(){
   schedules.value = await fetchSchedules();
+  for(const schedule of schedules.value){
+    progress.value.push(await completedBuildings(schedule));
+  }
+  console.log(schedules.value);
+  console.log(progress.value);
 }
-
 
 
 /* Data filtering */
