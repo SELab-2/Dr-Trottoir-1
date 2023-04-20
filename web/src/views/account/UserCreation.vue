@@ -55,7 +55,7 @@
           :city="String(address.city)"
           :number="address.number"
           :zip_code="address.zip_code"
-          @onUpdate="(newAddress) => (address = newAddress)"
+          @onUpdate="(newAddress) => ( address = newAddress)"
         ></AddressForm>
       </BorderCard>
 
@@ -105,7 +105,7 @@
           prepend-icon="mdi-check"
           type="submit"
           @click="submitForm"
-          :disabled="valid"
+          
         >
           Maak account
         </v-btn>
@@ -123,6 +123,12 @@ import ContactForm from "@/components/forms/ContactForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import RolesForm from "@/components/forms/RolesForm.vue";
+import { UserQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
+import { useRouter } from "vue-router";
+
+
+const router = useRouter();
 
 // define the spacing for the input fields
 const spacing: String = "mx-5";
@@ -139,9 +145,9 @@ const contact = ref<Contact>({
 // user address
 const address = ref<Address>({
   street: "",
-  number: 0,
+  number: "0",
   city: "",
-  zip_code: 0,
+  zip_code: "0",
 });
 // reactive psswd1 state
 const password1 = ref("");
@@ -150,7 +156,7 @@ const password2 = ref("");
 // reactive state to know if you must show both password fields or not
 const showPsswd = ref(false);
 // reactive array keeping track of all the roles for this new user
-const roles: Ref<String[]> = ref([]);
+const roles: Ref<string[]> = ref([]);
 
 /* below are the rule checks*/
 
@@ -192,11 +198,37 @@ const psswd2Rules = [
 
 /* Form submition */
 
-function submitForm(){
+async function submitForm(){
   // check if form is valid before submitting
   if(valid.value){
     // :to="{ name: 'account_settings', params: { id: 0 } }"
-    console.log('submit!');
+    let user;
+    await tryOrAlertAsync(async () => {
+      user = await new UserQuery().createOne({
+        first_name: first_name.value,
+        last_name: last_name.value,
+        email: contact.value.email,
+        phone: contact.value.phone,
+        student: roles.value.includes('Student'),
+        super_student: roles.value.includes('Superstudent'),
+        admin: roles.value.includes('Admin'),
+        password: password2.value,
+        address: {
+          create: {
+            city: address.value.city,
+            latitude: 0,
+            longitude: 0,
+            number: Number(address.value.number),
+            street: address.value.street,
+            zip_code: Number(address.value.zip_code),
+          },
+        }, //TODO fix hard coded
+        date_added: new Date(),
+        last_login: new Date(),
+      });
+      router.push({ name: 'account_settings', params: { id: user.id } });
+    });
+    
   }
   
 }

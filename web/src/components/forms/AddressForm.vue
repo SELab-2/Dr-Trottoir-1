@@ -92,16 +92,16 @@ const props = defineProps({
     default: "",
   },
   number: {
-    type: Number,
-    default: 0,
+    type: String,
+    default: "0",
   },
   city: {
     type: String,
     default: "",
   },
   zip_code: {
-    type: Number,
-    default: 0,
+    type: String,
+    default: "0",
   },
 });
 
