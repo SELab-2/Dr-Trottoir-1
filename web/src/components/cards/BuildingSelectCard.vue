@@ -39,7 +39,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in ['REST', 'GFT', 'PMD', 'PAPIER']" :key="item">
+          <tr v-for="item in ['REST', 'GFT', 'PMD']" :key="item">
             <td class="text-center" v-for="index in 7" :key="index">
               <v-chip size="small" v-if="handleGarbageMap(item, index)">{{
                 item
@@ -58,6 +58,7 @@ import { ref, onMounted } from "vue";
 import { GarbageQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 
+// TODO: discuss with group proper format temp actions
 const tempActions = ["REST", "GFT", "PMD"];
 const garbageMap = ref<Map<String, Boolean[]>>(new Map());
 
