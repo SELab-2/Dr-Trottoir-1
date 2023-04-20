@@ -112,7 +112,7 @@ const routes: any[] = [
         },
       },
       {
-        path: "/ronde/plannen",
+        path: "/ronde/:id/plannen",
         name: "round_plan",
         component: RoundPlanner,
         meta: {

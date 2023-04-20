@@ -1,132 +1,161 @@
 <template>
-  <v-row no-gutters>
-    <!-- Usage of v-col to get 2 columns -->
-    <!-- This v-col is the content on left hand side of the screen -->
-    <v-col class="pa-2 ma-2">
-      <v-card width="100%">
-        <!-- Header for the card title -->
-        <!-- TODO: remove the mockdata from this part -->
-        <v-card-title class="d-flex"
-          ><v-text-field
-            label="Naam ronde"
-            hint="Bv: Copure vrijdag"
-            variant="solo"
-          ></v-text-field
-          ><v-spacer></v-spacer><v-btn>Klaar</v-btn>
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-layout>
-          <v-list width="100%">
-            <v-list-item
-              v-for="(building, i) in round"
-              :key="i"
-              :value="building"
-              fluid
-            >
-              <v-list-item-title>{{ building.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{ building.adress }}</v-list-item-subtitle>
-
-              <!-- Buttons for manipulating the round list -->
-              <template v-slot:prepend>
-                <v-icon
-                  icon="mdi-chevron-up"
-                  @click="moveBuildingUp(i)"
-                ></v-icon>
-                <v-icon
-                  icon="mdi-chevron-down"
-                  @click="moveBuildingDown(i)"
-                ></v-icon>
-                <v-icon
-                  icon="mdi-close"
-                  @click="deleteBuildingFromRound(i, building)"
-                ></v-icon>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-layout>
-      </v-card>
+  <v-row class="py-0 my-2 mx-2">
+    <v-col
+      cols="1"
+      style="min-width: 100px; max-width: 100%"
+      class="flex-grow-1 flex-shrink-0 py-0 my-0"
+      ><border-card
+        class="mb-4"
+        title="Ronde aanmaken"
+        subtitle="De ronde zal in de volgorde van onderstaande lijst opgeslaan worden"
+      >
+        <template v-slot:append
+          ><v-switch
+            color="primary"
+            v-model="garbageinfo"
+            label="Toon afvalkalender"
+          ></v-switch
+        ></template>
+        <v-text-field
+          class="ml-3 mr-5"
+          label="Naam ronde"
+          v-model="newRoundName"
+          variant="outlined"
+        />
+        <v-card-actions class="d-flex align-center"
+          ><v-spacer></v-spacer
+          ><v-btn class="ml-3" prepend-icon="mdi-check" @click="makeRound()"
+            >Ronde aanmaken</v-btn
+          ></v-card-actions
+        >
+      </border-card>
+      <building-select-card
+        v-for="(building, i) in newRoundBuildings"
+        :key="i"
+        @remove="deleteBuildingFromRound(i, building)"
+        @up="moveBuildingUp(i)"
+        @down="moveBuildingDown(i)"
+        :name="building.name"
+        :building-id="building.id"
+        :address="getFullAddress(building)"
+        :garbageinfo="garbageinfo"
+      ></building-select-card>
     </v-col>
-    <!-- Right hand side of the screen -->
-    <v-col class="pa-2 ma-2">
-      <v-card width="100%">
-        <v-card-title>
-          <v-text-field
-            label="Zoeken op naam van bestaande gebouwen"
-            variant="solo"
-            v-model="searchquery"
-          ></v-text-field>
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-layout>
-          <v-list width="100%">
-            <v-list-item
-              v-for="building in filterlist()"
-              :key="building.listid"
-              :value="building"
-              fluid
-            >
-              <v-list-item-title>{{ building.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{ building.adress }}</v-list-item-subtitle>
-              <template v-slot:prepend>
-                <!-- Button for manipulating the building list -->
-                <v-icon
-                  icon="mdi-arrow-left-bold"
-                  @click="
-                    deleteBuildingFromAvailable(building.listid, building)
-                  "
-                ></v-icon>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-layout>
-      </v-card>
+    <v-col
+      cols="2"
+      style="min-width: 100px; max-width: 100%"
+      class="flex-grow-1 flex-shrink-0 py-0 ml-5"
+      ><border-card
+        title="Zoeken in gebouwen"
+        subtitle="Klik op een gebouw om deze toe te voegen aan de lijst"
+        class="mb-4 pt-3"
+        ><v-text-field
+          class="ml-3 mr-5 mt-3"
+          label="Naam van gebouw"
+          v-model="searchquery"
+          variant="outlined"
+        />
+      </border-card>
+
+      <building-info-card
+        v-for="entry in filterlist()"
+        :key="entry.listID"
+        :name="entry.building.name"
+        :address="getFullAddress(entry.building)"
+        @clicked="deleteBuildingFromAvailable(entry.listID, entry.building)"
+      >
+      </building-info-card>
     </v-col>
   </v-row>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, Ref } from "vue";
+import { ref, Ref, onMounted } from "vue";
+import BorderCard from "@/layouts/CardLayout.vue";
+import BuildingSelectCard from "@/components/cards/BuildingSelectCard.vue";
+import BuildingInfoCard from "@/components/cards/BuildingInfoCard.vue";
+import { Result, BuildingQuery, RoundQuery } from "@selab-2/groep-1-query";
+import { RoundBuildingQuery } from "@selab-2/groep-1-query//src/round_building";
+import { tryOrAlertAsync } from "@/try";
+import router from "@/router";
+
+const availableBuildings = ref<Result<BuildingQuery>[]>([]);
+
+onMounted(() => {
+  tryOrAlertAsync(async () => {
+    /* TODO implement if selab is bumped
+    const allBuildings = await new BuildingQuery().getAll();
+    const available : Result<RoundBuildingQuery>[] = []
+
+    for (const building of allBuildings){
+      try {
+        await new RoundBuildingQuery().getOne(building.id)
+      }
+      catch {
+        available.push(building)
+      }
+    }
+    */
+    availableBuildings.value = await new BuildingQuery().getAll();
+  });
+});
+
+const garbageinfo: Ref<boolean> = ref(true);
+
+const newRoundName = ref<string>("");
 
 // The query that will be used to filter all available buildings
 const searchquery: Ref<string> = ref("");
 
 /*
- * TODO: Building should be populated via a api/backend call
- * For now it's just mockdata
- * Reactive so the lists on screen update in real time
- */
-const buildings: { name: string; adress: string }[] = reactive([
-  { adress: "10841 Sutter CircleSutter Creek95685", name: "Lee" },
-  { adress: "915 Sacramento StreetBakersfield93305", name: "Lartigue" },
-  { adress: "1383 Purdue StreetSan Leandro94579", name: "Anderson" },
-  { adress: "553 South Arlington RoadOrange92869", name: "Campbell" },
-  { adress: "450 C StreetHayward94541", name: "Kahn" },
-  { adress: "915 Sacramento StreetBakersfield93305", name: "Amezaga" },
-  { adress: "800 California 116Sebastopol95472", name: "Petersen" },
-  { adress: "7725 Ney AvenueOakland94605", name: "Hof" },
-  { adress: "3777 Mowry AvenueFremont94538", name: "Johnson" },
-  { adress: "1011 San Jose StreetSan Leandro94577", name: "Rodriguez" },
-]);
-
-/*
  * Round is the list that will be populated by the user
  * Should always start as an empty list
  */
-const round: { name: string; adress: string }[] = reactive([]);
+const newRoundBuildings = ref<Result<BuildingQuery>[]>([]);
 
-// This function will give back the buildings which match the string given by the user
-function filterlist(): { name: string; adress: string; listid: number }[] {
-  let filteredlist: { name: string; adress: string; listid: number }[] = [];
-  buildings.forEach((building, index) => {
+type BuildingEntry = {
+  building: Result<BuildingQuery>;
+  listID: number;
+};
+
+/**
+ * TODO: This function will give back the buildings which match the string given by the user
+ * Change this with an autocomplete but currently doesnt work with objects from mockdata
+ * Pagination is something that could be introduced in the API aswell?
+ */
+function filterlist(): BuildingEntry[] {
+  let filteredlist: BuildingEntry[] = [];
+  availableBuildings.value.forEach((building, index) => {
     if (building.name.toLowerCase().includes(searchquery.value.toLowerCase())) {
       filteredlist.push({
-        name: building.name,
-        adress: building.adress,
-        listid: index,
+        building: building,
+        listID: index,
       });
     }
   });
   return filteredlist;
+}
+
+function getFullAddress(building: Result<BuildingQuery>) {
+  const address = building.address;
+  return `${address.street} ${address.number}, ${address.city}`;
+}
+
+function makeRound() {
+  tryOrAlertAsync(async () => {
+    const newRound = await new RoundQuery().createOne({
+      name: newRoundName.value,
+    });
+
+    for (const building of newRoundBuildings.value) {
+      await new RoundBuildingQuery().createOne({
+        building_id: building.id,
+        round_id: newRound.id,
+      });
+    }
+
+    router.push({ name: "round", params: { id: newRound.id } });
+  });
 }
 
 /*
@@ -135,10 +164,10 @@ function filterlist(): { name: string; adress: string; listid: number }[] {
  */
 function deleteBuildingFromAvailable(
   index: number,
-  building: { adress: string; name: string },
+  building: Result<BuildingQuery>,
 ) {
-  buildings.splice(index, 1);
-  round.push(building);
+  availableBuildings.value.splice(index, 1);
+  newRoundBuildings.value.push(building);
 }
 
 /*
@@ -146,10 +175,10 @@ function deleteBuildingFromAvailable(
  */
 function deleteBuildingFromRound(
   index: number,
-  building: { adress: string; name: string },
+  building: Result<BuildingQuery>,
 ) {
-  round.splice(index, 1);
-  buildings.push(building);
+  newRoundBuildings.value.splice(index, 1);
+  availableBuildings.value.push(building);
 }
 
 /*
@@ -158,9 +187,9 @@ function deleteBuildingFromRound(
  */
 function moveBuildingUp(index: number) {
   if (index > 0) {
-    let temp = round[index];
-    round[index] = round[index - 1];
-    round[index - 1] = temp;
+    let temp = newRoundBuildings.value[index];
+    newRoundBuildings.value[index] = newRoundBuildings.value[index - 1];
+    newRoundBuildings.value[index - 1] = temp;
   }
 }
 
@@ -168,10 +197,10 @@ function moveBuildingUp(index: number) {
  * Move a building down in the list
  */
 function moveBuildingDown(index: number) {
-  if (round.length - 1 > index) {
-    let temp = round[index];
-    round[index] = round[index + 1];
-    round[index + 1] = temp;
+  if (newRoundBuildings.value.length - 1 > index) {
+    let temp = newRoundBuildings.value[index];
+    newRoundBuildings.value[index] = newRoundBuildings.value[index + 1];
+    newRoundBuildings.value[index + 1] = temp;
   }
 }
 </script>

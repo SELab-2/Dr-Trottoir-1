@@ -1,7 +1,15 @@
 <template>
   <HFillWrapper>
     <div class="space-y-8">
-      <h1>Ronde Korenmarkt</h1>
+      <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
+        <h1>{{ round?.name }}</h1>
+        <div class="flex-grow-1"></div>
+        <RoundedButton
+          icon="mdi-delete-outline"
+          value="Verwijderen"
+          @click="deleteRound()"
+        ></RoundedButton>
+      </div>
 
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -31,7 +39,11 @@
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Planning</h2>
         <div class="flex-grow-1"></div>
-        <RoundedButton icon="mdi-calendar" value="Inplannen"></RoundedButton>
+        <RoundedButton
+          icon="mdi-calendar"
+          value="Inplannen"
+          @click="router.push({ name: 'round_plan', params: { id: round_id } })"
+        ></RoundedButton>
       </div>
 
       <div class="space-y-8">
@@ -65,16 +77,31 @@
 </template>
 
 <script setup lang="ts">
-import { BuildingQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import {
+  BuildingQuery,
+  Result,
+  RoundQuery,
+  ScheduleQuery,
+} from "@selab-2/groep-1-query";
 import { ref, Ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import RoundCard from "@/components/round/RoundCard.vue";
 import BuildingCard from "@/components/building/BuildingCard.vue";
+import router from "@/router";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+const round_id: number = Number(route.params.id);
 
 const buildings: Ref<Array<Result<BuildingQuery>>> = ref([]);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
+const round = ref<Result<RoundQuery>>();
+
+tryOrAlertAsync(async () => {
+  round.value = await new RoundQuery().getOne(round_id);
+});
 
 tryOrAlertAsync(async () => {
   buildings.value = await new BuildingQuery().getAll({ take: 5 });
@@ -83,6 +110,13 @@ tryOrAlertAsync(async () => {
 tryOrAlertAsync(async () => {
   schedules.value = await new ScheduleQuery().getAll({ take: 5 });
 });
+
+function deleteRound() {
+  tryOrAlertAsync(async () => {
+    await new RoundQuery().deleteOne({ id: round_id, name: round.value?.name });
+    router.push({ name: "round_overview" });
+  });
+}
 </script>
 
 <style scoped lang="sass">
