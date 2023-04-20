@@ -55,11 +55,14 @@
         }}
       </v-chip>
     </template>
-    <v-chip v-if="round_start" label color="brown" class="ml-3">
+    <v-chip  label color="brown" class="ml-3">
       <v-icon icon="mdi-office-building"></v-icon>
       {{ total_buildings }}
     </v-chip>
     <v-chip label color="primary" class="ml-3">
+      <v-icon icon="mdi-calendar" class="pr-1"/> {{ date.getDate() + '-' + date.getMonth() + 1 + '-' + date.getFullYear() }}
+    </v-chip>
+    <v-chip v-if="round_start" label color="primary" class="ml-3">
       <v-icon icon="mdi-clock"></v-icon> {{ round_start }}
     </v-chip>
     <v-chip v-if="round_end" label color="primary" class="ml-3">
@@ -79,6 +82,7 @@ const props = defineProps({
   round_start: String,
   round_end: String,
   student_name: String,
+  date: { type: Date, required: true },
   total_buildings: { type: Number, required: true },
   building_index: { type: Number, required: true },
   round_comments: { type: Boolean, default: false },

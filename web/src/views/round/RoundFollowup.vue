@@ -22,12 +22,13 @@
       v-for="(schedule, i) in schedules"
       :key="i"
       :round_name="schedule.round.name"
-      round_start="TODO"
-      round_end="TODO"
+      round_start=""
+      round_end=""
       :student_name="schedule.user.first_name"
       :building_index="progress?.get(schedule)!"
       :total_buildings="schedule.round.buildings.length"
       :round_comments="progress?.get(schedule)! != 0"
+      :date="new Date(schedule.day)"
       @click="redirect_to_detail()"
       style="cursor: pointer"
     ></RoundCard>
@@ -95,7 +96,6 @@ async function completedBuildings(
       schedule.id,
       building.building_id,
     );
-    console.log(progress);
     if (progress) {
       count++;
     }
