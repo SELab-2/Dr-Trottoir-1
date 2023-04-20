@@ -36,6 +36,7 @@ export class ProgressRouting extends Routing {
         // Students are only allowed to see their own progress entries
         if (
             req.user?.student &&
+            !req.user?.super_student &&
             Parser.number(req.query["user_id"]) != req.user?.id
         ) {
             throw new APIError(APIErrorCode.FORBIDDEN);
