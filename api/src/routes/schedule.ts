@@ -4,6 +4,8 @@ import express from "express";
 import { Parser } from "../parser";
 import { prisma } from "../prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
 
 export class ScheduleRouting extends Routing {
     private static includes: Prisma.ScheduleInclude = {
@@ -19,8 +21,18 @@ export class ScheduleRouting extends Routing {
         },
     };
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        // Students are only allowed to see their own schedules
+        if (
+            req.user?.student &&
+            !req.user?.super_student &&
+            !req.user?.admin &&
+            Parser.number(req.query["user_id"]) != req.user?.id
+        ) {
+            throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
         const result = await prisma.schedule.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -44,11 +56,15 @@ export class ScheduleRouting extends Routing {
                 },
                 round: {
                     name: req.query["round"],
-                    buildings: {
-                        some: {
-                            building_id: Parser.number(req.query["building"]),
-                        }
-                    }
+                    buildings: req.query["building"]
+                        ? {
+                              some: {
+                                  building_id: Parser.number(
+                                      req.query["building"],
+                                  ),
+                              },
+                          }
+                        : {},
                 },
             },
             include: ScheduleRouting.includes,
