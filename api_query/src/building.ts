@@ -14,6 +14,18 @@ export type BuildingQueryParameters = {
     ord: Array<"asc" | "desc">;
 };
 
+// Het type dat de body van een POST en PATCH request modelleert.
+type Element = Prisma.BuildingGetPayload<{
+    select: {
+        id: true;
+        name: true;
+        ivago_id: true;
+        deleted: true;
+        hash: boolean;
+        address: true;
+    }
+}>;
+
 type BuildingAllInfo = Prisma.BuildingGetPayload<{
     select: {
         id: true;
@@ -38,7 +50,7 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
 
 export class BuildingQuery extends Query<
     BuildingQueryParameters,
-    Building,
+    Element,
     BuildingAllInfo
 > {
     endpoint = "building";
