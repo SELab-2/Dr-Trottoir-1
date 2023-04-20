@@ -29,7 +29,7 @@
       :total_buildings="schedule.round.buildings.length"
       :round_comments="progress?.get(schedule)! != 0"
       :date="new Date(schedule.day)"
-      @click="redirect_to_detail()"
+      @click="redirect_to_detail(schedule.round_id, schedule.id)"
       style="cursor: pointer"
     ></RoundCard>
   </HFillWrapper>
@@ -65,8 +65,11 @@ const filter_data = ref<FilterData>({
   end_day: new Date(),
 });
 
-function redirect_to_detail() {
-  router.push({ name: "round_detail", params: { id: 0, schedule: 0 } });
+function redirect_to_detail(round_id: number, schedule_id: number) {
+  router.push({
+    name: "round_detail",
+    params: { id: round_id, schedule: schedule_id },
+  });
 }
 
 /* Data fetching */
