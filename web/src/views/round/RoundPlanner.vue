@@ -57,7 +57,7 @@
                 v-model="startDate"
                 prepend-inner-icon="mdi-calendar"
                 variant="solo"
-                class="mr-2"
+                class="mr-1"
                 type="date"
                 label="Startdatum"
               ></v-text-field
@@ -65,7 +65,7 @@
                 v-model="endDate"
                 prepend-inner-icon="mdi-calendar"
                 variant="solo"
-                class="ml-2"
+                class="ml-1"
                 type="date"
                 label="Einddatum"
               ></v-text-field></div></v-col
@@ -144,7 +144,7 @@ const frequencyDict: Record<string, number> = {
 };
 
 const startDate = ref<string>(new Date().toISOString().substring(0, 10));
-const endDate = ref<string>("");
+const endDate = ref<string>(new Date().toISOString().substring(0, 10));
 const time = ref<string>("");
 const frequency = ref<string>(frequencys[0]);
 const multipleday = ref<boolean>(false);
@@ -155,6 +155,7 @@ interface plannedRound {
   time: string;
 }
 let rounds = ref<Array<plannedRound>>([]);
+
 function updateRounds() {
   if (frequency.value === "enkel") {
     endDate.value = startDate.value;
@@ -165,13 +166,10 @@ function updateRounds() {
   for (const d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {
     rounds.value.push({
       name: getFullStudentName(student.value),
-      date: d,
+      date: new Date(d),
       time: time.value,
     });
   }
-  startDate.value = "";
-  endDate.value = "";
-  time.value = "";
 }
 function frequencyCheck() {
   if (frequency.value == frequencys[0]) {
@@ -194,12 +192,13 @@ function getFullStudentName(s: Result<UserQuery> | undefined): string {
 }
 
 function formatDate(d : Date) : string{
-  return `${d.getMonth() + 1}/${d.getDay() + 1}/${d.getFullYear()}`
+  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`
 }
 
 function planRounds() {
   for (let plan of rounds.value) {
     tryOrAlertAsync(async () => {
+      console.log(plan.date)
       const dt_date = new Date(formatDate(plan.date) + " " + plan.time + ":00");
       console.log(formatDate(plan.date) + " " + plan.time + ":00")
       console.log(dt_date)
@@ -210,7 +209,6 @@ function planRounds() {
           round_id: round_id,
         })
         .then(() => {
-          console.log("Succes");
           rounds.value = [];
         });
     });

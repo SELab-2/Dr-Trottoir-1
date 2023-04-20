@@ -1,6 +1,6 @@
 <template>
   <BorderCard class="my-2">
-    <template v-slot:title>{{ date?.toLocaleDateString('nl') }}</template
+    <template v-slot:title>{{ date?.toLocaleDateString() }}</template
     ><template v-slot:append>
       <div class="mx-1 pb-5">
         <v-chip class="mr-4" prepend-icon="mdi-clock-time-two-outline">{{
