@@ -118,38 +118,38 @@ const address = ref<Address>({
 const streetRules = [
   // check if street is present
   (street: string) => {
-    return street ? true : 'Geef een straat op.'
+    return street ? true : "Geef een straat op.";
   },
 ];
 
 const cityRules = [
   // check if city is present
   (city: string) => {
-    return city ? true : 'Geef een stad op.';
+    return city ? true : "Geef een stad op.";
   },
 
   // check if city only contains chars
   (city: string) => {
-    return /^[a-zA-Z]+$/.test(city) ? true : 'Stad kan geen nummers bevatten.';
-  }
-]
+    return /^[a-zA-Z]+$/.test(city) ? true : "Stad kan geen nummers bevatten.";
+  },
+];
 
 const numberRules = [
   // check if number is present
   (num: string) => {
-    return num ? true : 'Geef een huisnummer.'
+    return num ? true : "Geef een huisnummer.";
   },
-]
+];
 
 const zipRules = [
   // check if zip is present
   (zip: string) => {
-    return zip ? true : 'Geef een postcode.'
+    return zip ? true : "Geef een postcode.";
   },
 
   // check if zip length is 4
   (zip: string) => {
-    return zip.length === 4 ? true : 'Ongeldige postcode'
+    return zip.length === 4 ? true : "Ongeldige postcode";
   },
-]
+];
 </script>

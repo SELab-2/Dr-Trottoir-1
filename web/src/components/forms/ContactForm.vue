@@ -54,24 +54,25 @@ const contact = ref<Contact>({
 const phoneRules = [
   // check if phone number is present
   (phone: string) => {
-    return phone ? true : 'Geef een telefoonnummer op.'
+    return phone ? true : "Geef een telefoonnummer op.";
   },
   // check if password is long enough
   (phone: string) => {
-    return phone.length >= 9 ? true : 'Telefoonnummer moet minimaal 9 tekens lang zijn.'
+    return phone.length >= 9
+      ? true
+      : "Telefoonnummer moet minimaal 9 tekens lang zijn.";
   },
 ];
 
 const emailRules = [
   // check if email is present
   (email: string) => {
-    return email ? true : 'Geef een e-mail adres op.';
+    return email ? true : "Geef een e-mail adres op.";
   },
 
   // check for valid email syntax
   (email: string) => {
-    return /^.+@.+\..+$/.test(email) ? true : 'Ongeldig e-mail adres.';
-  }
-]
-
+    return /^.+@.+\..+$/.test(email) ? true : "Ongeldig e-mail adres.";
+  },
+];
 </script>

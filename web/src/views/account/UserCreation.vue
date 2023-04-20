@@ -55,7 +55,7 @@
           :city="String(address.city)"
           :number="address.number"
           :zip_code="address.zip_code"
-          @onUpdate="(newAddress) => ( address = newAddress)"
+          @onUpdate="(newAddress) => (address = newAddress)"
         ></AddressForm>
       </BorderCard>
 
@@ -78,7 +78,7 @@
 
           <!-- Text input field for the password confirmation-->
           <v-text-field
-          class="mt-2"
+            class="mt-2"
             v-model="password2"
             :prepend-inner-icon="'mdi-lock'"
             :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
@@ -95,7 +95,7 @@
       <!-- Selection box to determine the roles -->
       <BorderCard class="mt-4" prepend-icon="mdi-account-multiple">
         <template v-slot:title> Rollen </template>
-        <RolesForm v-model="roles"/>
+        <RolesForm v-model="roles" />
       </BorderCard>
 
       <!-- Account creation button -->
@@ -105,7 +105,6 @@
           prepend-icon="mdi-check"
           type="submit"
           @click="submitForm"
-          
         >
           Maak account
         </v-btn>
@@ -126,7 +125,6 @@ import RolesForm from "@/components/forms/RolesForm.vue";
 import { UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
-
 
 const router = useRouter();
 
@@ -167,40 +165,44 @@ const valid = ref(false);
 const nameRules = [
   // check if a name was given
   (name: string) => {
-    return name ? true : 'Geef een naam op.'
-  }
+    return name ? true : "Geef een naam op.";
+  },
 ];
 
 // password rules
 const psswd1Rules = [
   // check if a password was given
   (psswd: string) => {
-    return psswd ? true : 'Geef een wachtwoord op.'
+    return psswd ? true : "Geef een wachtwoord op.";
   },
 
   // check if psswd is at least 8 chars long
   (psswd: string) => {
-    return psswd.length >= 8 ? true : 'Wachtwoord moet minimaal 8 tekens lang zijn.'
+    return psswd.length >= 8
+      ? true
+      : "Wachtwoord moet minimaal 8 tekens lang zijn.";
   },
 ];
 
 const psswd2Rules = [
   // check if psswd is present
   (psswd: string) => {
-    return psswd ? true : 'Bevestig het wachtwoord.'
+    return psswd ? true : "Bevestig het wachtwoord.";
   },
 
   // check if psswd2 matches psswd1
   (_: string) => {
-    return password1.value == password2.value ? true : 'Wachtwoorden komen niet overeen.'
+    return password1.value == password2.value
+      ? true
+      : "Wachtwoorden komen niet overeen.";
   },
 ];
 
 /* Form submition */
 
-async function submitForm(){
+async function submitForm() {
   // check if form is valid before submitting
-  if(valid.value){
+  if (valid.value) {
     // :to="{ name: 'account_settings', params: { id: 0 } }"
     let user;
     await tryOrAlertAsync(async () => {
@@ -209,9 +211,9 @@ async function submitForm(){
         last_name: last_name.value,
         email: contact.value.email,
         phone: contact.value.phone,
-        student: roles.value.includes('Student'),
-        super_student: roles.value.includes('Superstudent'),
-        admin: roles.value.includes('Admin'),
+        student: roles.value.includes("Student"),
+        super_student: roles.value.includes("Superstudent"),
+        admin: roles.value.includes("Admin"),
         password: password2.value,
         address: {
           create: {
@@ -226,11 +228,8 @@ async function submitForm(){
         date_added: new Date(),
         last_login: new Date(),
       });
-      router.push({ name: 'account_settings', params: { id: user.id } });
+      router.push({ name: "account_settings", params: { id: user.id } });
     });
-    
   }
-  
 }
-
 </script>

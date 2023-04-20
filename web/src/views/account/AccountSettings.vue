@@ -96,7 +96,7 @@
       prepend-icon="mdi-account-multiple"
     >
       <template v-slot:title> Rollen </template>
-      <RolesForm :readonly="!edit" v-model="roles"/>
+      <RolesForm :readonly="!edit" v-model="roles" />
     </BorderCard>
 
     <!-- Section to set new password -->
@@ -149,14 +149,19 @@
     </div>
   </HFillWrapper>
 
-  <CardPopup v-model="showPopup" :title="popupTitle" :prepend-icon="popupIcon" width="400">
+  <CardPopup
+    v-model="showPopup"
+    :title="popupTitle"
+    :prepend-icon="popupIcon"
+    width="400"
+  >
     <p class="mx-3">
       {{ popupMsg }}
     </p>
     <v-card-actions>
-      <v-btn 
-        prepend-icon="mdi-close" 
-        color="error" 
+      <v-btn
+        prepend-icon="mdi-close"
+        color="error"
         @click="showPopup = false"
         variant="elevated"
       >
@@ -185,7 +190,6 @@ import { Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 
-
 const router = useRouter();
 
 const props = defineProps(["id"]);
@@ -196,81 +200,82 @@ const passwordCheck = ref("");
 const passwordHidden = ref(false);
 const user: Ref<Result<UserQuery> | null> = ref(null);
 
-function handleAddressUpdate(address: Address){
-  if(user.value){
+function handleAddressUpdate(address: Address) {
+  if (user.value) {
     user.value.address.street = address.street;
     user.value.address.city = address.city;
     user.value.address.number = Number(address.number);
     user.value.address.zip_code = Number(address.zip_code);
-  }  
+  }
 }
 
 async function fetchUser() {
   tryOrAlertAsync(async () => {
     user.value = await new UserQuery().getOne(props.id);
-    console.log(user.value);
-    if(user.value.admin){
-      roles.value.push('Admin');
+    if (user.value.admin) {
+      roles.value.push("Admin");
     }
-    if(user.value.super_student){
-      roles.value.push('Superstudent');
-    } 
-    if(user.value.student){
-      roles.value.push('Student');
+    if (user.value.super_student) {
+      roles.value.push("Superstudent");
+    }
+    if (user.value.student) {
+      roles.value.push("Student");
     }
   });
 }
 fetchUser();
 
-
 // reactive state for the roles
-const roles = ref<string[]>([])
+const roles = ref<string[]>([]);
 
 /* Action handle functions */
 async function handleCancelEdit() {
   fetchUser();
-  edit.value = false;  
+  edit.value = false;
 }
 
 async function handleRemove() {
-  await tryOrAlertAsync(async () => {new UserQuery().deleteOne({id: user.value?.id})});
+  await tryOrAlertAsync(async () => {
+    new UserQuery().deleteOne({ id: user.value?.id });
+  });
   showPopup.value = false;
   edit.value = false;
-  router.push({name: "user_overview"})
+  router.push({ name: "user_overview" });
 }
 
-function handleRemovePopup(){
+function handleRemovePopup() {
   popupIcon.value = "mdi-delete-alert-outline";
   popupTitle.value = "Verwijder account";
-  popupMsg.value = "Je staat op het punt deze account permanent te verwijderen. Ben je zeker dat je wilt verdergaan?";
+  popupMsg.value =
+    "Je staat op het punt deze account permanent te verwijderen. Ben je zeker dat je wilt verdergaan?";
   popupSubmitMsg.value = "Verwijder account";
   popupSubmit.value = handleRemove;
   showPopup.value = true;
 }
 
 async function handleSave() {
-  // TODO: API-call to save the account
   await tryOrAlertAsync(async () => {
-      await new UserQuery().updateOne({
-        id: user.value?.id,
-        email: user.value?.email,
-        first_name: user.value?.first_name,
-        last_name: user.value?.last_name,
-        phone: user.value?.phone,
-        address_id: user.value?.address_id,
-        student: roles.value.includes('Student'),
-        super_student: roles.value.includes('Superstudent'),
-        admin: roles.value.includes('Admin'), 
-      });
+    await new UserQuery().updateOne({
+      id: user.value?.id,
+      email: user.value?.email,
+      first_name: user.value?.first_name,
+      last_name: user.value?.last_name,
+      phone: user.value?.phone,
+      address_id: user.value?.address_id,
+      student: roles.value.includes("Student"),
+      super_student: roles.value.includes("Superstudent"),
+      admin: roles.value.includes("Admin"),
     });
+  });
   showPopup.value = false;
   edit.value = false;
 }
 
-function handleSavePopup(){
+function handleSavePopup() {
   popupIcon.value = "mdi-content-save-alert-outline";
   popupTitle.value = "Bewaar aanpassingen";
-  popupMsg.value = "Je staat op het punt deze account permanent te bewerken. Ben je zeker dat je wilt verdergaan?";
+  popupMsg.value =
+    "Je staat op het punt deze account permanent te bewerken. Ben je zeker dat je wilt verdergaan?";
   popupSubmitMsg.value = "Bewaar aanpassingen";
   popupSubmit.value = handleSave;
   showPopup.value = true;
@@ -279,13 +284,11 @@ function handleSavePopup(){
 // popup content
 
 const showPopup = ref(false);
-const popupIcon = ref("")
+const popupIcon = ref("");
 const popupTitle = ref("");
 const popupMsg = ref("");
 const popupSubmitMsg = ref("");
 const popupSubmit: Ref<() => void> = ref(() => {});
-
-
 </script>
 
 <style lang="sass" scoped>

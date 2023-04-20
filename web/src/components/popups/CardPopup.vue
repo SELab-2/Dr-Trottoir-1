@@ -1,15 +1,15 @@
 <template>
-    <v-overlay v-model="show" class="d-flex align-center justify-center">
-        <CardLayout v-bind="{ ...$attrs }">
-            <!-- Pass all the slots -->
-            <template v-for="(_, slotName) in $slots" #[slotName]>
-                <slot :name="slotName" />
-            </template>
-        </CardLayout>
-    </v-overlay>
+  <v-overlay v-model="show" class="d-flex align-center justify-center">
+    <CardLayout v-bind="{ ...$attrs }">
+      <!-- Pass all the slots -->
+      <template v-for="(_, slotName) in $slots" #[slotName]>
+        <slot :name="slotName" />
+      </template>
+    </CardLayout>
+  </v-overlay>
 </template>
 <script lang="ts" setup>
-import CardLayout from '@/layouts/CardLayout.vue';
+import CardLayout from "@/layouts/CardLayout.vue";
 
 /**
  * This component will popup in the center of the screen.
@@ -18,18 +18,18 @@ import CardLayout from '@/layouts/CardLayout.vue';
  * where 'show' is an the boolean state to show the popup or not
  */
 
- import { computed } from 'vue'
+import { computed } from "vue";
 // use v-model
 // https://vuejs.org/guide/components/v-model.html
-const props = defineProps(['modelValue'])
-const emit = defineEmits(['update:modelValue'])
+const props = defineProps(["modelValue"]);
+const emit = defineEmits(["update:modelValue"]);
 
 const show = computed({
   get() {
-    return props.modelValue
+    return props.modelValue;
   },
   set(show) {
-    emit('update:modelValue', show)
-  }
-})
+    emit("update:modelValue", show);
+  },
+});
 </script>
