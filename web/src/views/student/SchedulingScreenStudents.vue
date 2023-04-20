@@ -1,9 +1,8 @@
 <template>
-  <HFillWrapper>
-    <!-- Day cards-->
-    <div v-for="day in days" :key="day.name">
+  <HFillWrapper v-if="days !== undefined">
+    <div v-for="day in days" :key="day.id">
       <v-card
-        v-if="day.schedule.length > 0"
+        v-if="day.list.length > 0"
         :title="day.name"
         variant="flat"
         color="background"
@@ -14,23 +13,24 @@
             prepend-icon="mdi-calendar-month-outline"
             variant="text"
           >
-            {{ day.day.getDate() }}
-            {{ formatter.format(day.day) }}
+            {{ prettyDate(day.start) }}
           </v-chip>
         </template>
-        <!-- Round cards -->
+
         <BorderCard
-          v-for="schedule in day.schedule"
-          :key="schedule.round.name"
+          v-for="item in day.list"
+          :key="item.schedule.id"
           class="mb-3 mx-1"
-          :title="schedule.round.name"
+          :title="item.schedule.round.name"
           prepend-icon="mdi-transit-detour"
           @click="
-            current_id = schedule.round_id;
-            redirect_to_detail();
+            current_id = item.schedule.round_id;
+            router.push({
+              name: 'round_detail',
+              params: { id: current_id, schedule: 0 },
+            });
           "
         >
-          <!-- Time -->
           <template v-slot:subtitle>
             <v-chip
               label
@@ -38,28 +38,33 @@
               variant="text"
               size="compact"
             >
-              {{ new Date(schedule.day).getHours() }}:{{
-                ("0" + new Date(schedule.day).getUTCMinutes()).slice(-2)
-              }}
+              {{ new Date(item.schedule.day).toISOString().slice(11, 16) }}
             </v-chip>
           </template>
 
-          <!-- Status -->
           <template v-slot:append>
             <v-btn
-              v-if="schedule.progress === 0"
+              v-if="item.progress.length === 0"
               color="primary"
               v-on:click.stop="
                 snackbar = !snackbar;
-                current_id = schedule.round_id;
+                current_id = item.schedule.round_id;
               "
-              :variant="day.day !== today ? 'flat' : 'elevated'"
-              :disabled="day.day !== today"
+              :variant="
+                new Date(item.schedule.day).getDate() !== new Date().getDate()
+                  ? 'flat'
+                  : 'elevated'
+              "
+              :disabled="
+                new Date(item.schedule.day).getDate() !== new Date().getDate()
+              "
             >
               Start ronde</v-btn
             >
             <v-chip
-              v-else-if="schedule.progress === schedule.round.buildings.length"
+              v-else-if="
+                item.progress.length === item.schedule.round.buildings.length
+              "
               label
               color="success"
             >
@@ -67,15 +72,16 @@
               Klaar
             </v-chip>
             <v-chip v-else label color="warning">
-              Bezig {{ schedule.progress }}/{{
-                schedule.round.buildings.length
+              Bezig {{ item.progress.length }}/{{
+                item.schedule.round.buildings.length
               }}
             </v-chip>
           </template>
         </BorderCard>
       </v-card>
     </div>
-    <div class="centre text-center pa-5" v-if="emptySchedule()">
+
+    <div class="centre text-center pa-5" v-if="!empty">
       <v-icon icon="mdi-alert-circle" size="x-large" />
       <h3>Geen planning voor de komende 3 dagen.</h3>
       <p>Check bij je superstudent indien je denkt dat dit niet klopt.</p>
@@ -91,7 +97,13 @@
       >
         <StartRoundPopupContent
           :oncancel="() => (snackbar = false)"
-          :onsubmit="() => redirect_to_detail()"
+          :onsubmit="
+            () =>
+              router.push({
+                name: 'round_detail',
+                params: { id: current_id, schedule: 0 },
+              })
+          "
         />
       </v-snackbar>
     </v-overlay>
@@ -103,101 +115,98 @@ import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
-import { Building } from "@selab-2/groep-1-orm";
-import { useRouter } from "vue-router";
+import router from "@/router";
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
-
-// the router constant
-const router = useRouter();
+import { tryOrAlertAsync } from "@/try";
 
 const snackbar = ref(false);
 const current_id = ref(0);
-function redirect_to_detail() {
-  router.push({
-    name: "round_detail",
-    params: { id: current_id.value, schedule: 0 },
-  });
-}
 
-// https://stackoverflow.com/questions/1643320/get-month-name-from-date
-const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
+type DayEntry = {
+  id: number;
+  start: Date;
+  end: Date;
+  list: Array<{
+    schedule: Result<ScheduleQuery>;
+    progress: Array<Result<ProgressQuery>>;
+  }>;
+  name: string;
+};
 
-async function calculateProgress(
-  buildings: ({ building: Building } & any)[], //TODO typing not correct yet
-  id: number,
-  date: Date,
-): Promise<number> {
-  const progresses: Result<ProgressQuery>[] = await new ProgressQuery().getAll({
-    user: useAuthStore().auth!.id,
-    schedule: id,
-    arrived_after: new Date(date.setHours(0, 0, 0, 0)),
-    left_before: new Date(date.setHours(23, 59, 59, 999)),
-  });
-  let matched = 0;
-  for (const building of buildings) {
-    for (const progress of progresses) {
-      if (progress.building_id == building.building.id) {
-        matched += 1;
+const empty = ref(true);
+
+// TODO: cleanup this code
+const startOfDay = new Date(new Date().setHours(0, 0, 0, 0));
+const startOfTomorrow = new Date(
+  new Date(startOfDay).setDate(startOfDay.getDate() + 1),
+);
+const startOfDayAfterTomorrow = new Date(
+  new Date(startOfTomorrow).setDate(startOfTomorrow.getDate() + 1),
+);
+const endOfDayAfterTomorrow = new Date(
+  new Date(startOfDayAfterTomorrow).setDate(
+    startOfDayAfterTomorrow.getDate() + 1,
+  ),
+);
+
+/**
+ * Retrieve all the combinations of schedules and their progress from the server.
+ */
+const days = await tryOrAlertAsync<Array<DayEntry>>(async () => {
+  const result: Array<DayEntry> = [
+    {
+      id: 0,
+      start: startOfDay,
+      end: startOfTomorrow,
+      list: [],
+      name: "Vandaag",
+    },
+    {
+      id: 1,
+      start: startOfTomorrow,
+      end: startOfDayAfterTomorrow,
+      list: [],
+      name: "Morgen",
+    },
+    {
+      id: 2,
+      start: startOfDayAfterTomorrow,
+      end: endOfDayAfterTomorrow,
+      list: [],
+      name: "Overmorgen",
+    },
+  ];
+
+  for (const { start, end, list } of result) {
+    const schedules: Array<Result<ScheduleQuery>> =
+      await new ScheduleQuery().getAll({
+        after: start,
+        before: end,
+        user_id: useAuthStore().auth?.id,
+      });
+
+    for (const scheduleItem of schedules) {
+      const progress = await new ProgressQuery().getAll({
+        schedule: scheduleItem.id,
+      });
+
+      if (progress.length > 0) {
+        empty.value = true;
       }
+
+      list.push({
+        schedule: scheduleItem,
+        progress: progress,
+      });
     }
   }
-  return matched;
-}
 
-type ProgressedSchedule = Result<ScheduleQuery> & { progress: number };
+  return result;
+});
 
-const today = new Date();
-const tomorrow = new Date(new Date().setDate(today.getDate() + 1));
-const overmorrow = new Date(new Date().setDate(today.getDate() + 2));
-const days: { name: string; day: Date; schedule: ProgressedSchedule[] }[] = [
-  {
-    name: "Vandaag",
-    day: today,
-    schedule: await loadSchedule(today),
-  },
-  {
-    name: "Morgen",
-    day: tomorrow,
-    schedule: await loadSchedule(tomorrow),
-  },
-  {
-    name: "Overmorgen",
-    day: overmorrow,
-    schedule: await loadSchedule(overmorrow),
-  },
-];
-
-async function loadSchedule(day: Date): Promise<ProgressedSchedule[]> {
-  const date = new Date(day);
-  try {
-    const schedules: ProgressedSchedule[] = (await new ScheduleQuery().getAll({
-      user_id: useAuthStore().auth!.id,
-      after: new Date(date.setHours(0, 0, 0, 0)),
-      before: new Date(date.setHours(23, 59, 59, 999)),
-    })) as ProgressedSchedule[];
-    for (let schedule of schedules) {
-      schedule.progress = await calculateProgress(
-        schedule.round.buildings,
-        schedule.id,
-        date,
-      );
-    }
-    return schedules;
-  } catch (e) {
-    // TODO: handle error messages
-    alert(e);
-  }
-
-  return [];
-}
-
-function emptySchedule(): boolean {
-  for (const day of days) {
-    if (day.schedule.length > 0) {
-      return false;
-    }
-  }
-  return true;
+function prettyDate(date: Date) {
+  const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
+  return new Date(date).getDate() + " " + formatter.format(date);
 }
 </script>
