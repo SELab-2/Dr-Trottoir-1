@@ -62,7 +62,7 @@ const filter_data = ref<FilterData>({
 });
 
 function redirect_to_detail() {
-  router.push({ name: "round_detail", params: { id: 0 } });
+  router.push({ name: "round_detail", params: { id: 0, schedule: 0 } });
 }
 
 function round_has_comments(round: Round): boolean {
@@ -88,8 +88,8 @@ function completed_buildings(round: Round): number {
 
 //interface ExtendedSchedule extends Result<ScheduleQuery>, Result<ProgressQuery> {};
 
-type ExtendedSchedule = Result<ScheduleQuery> & Result<ProgressQuery>
-const schedules: Ref<Array<ExtendedSchedule>> = ref(await fetchSchedules());
+
+const schedules: Ref<Array<Result<ScheduleQuery>>> = ref(await fetchSchedules());
 
 /**
  * Fetch all the schedules
@@ -104,22 +104,8 @@ async function fetchSchedules(): Promise<Array<Result<ScheduleQuery>>> {
       //ord: (filter_data.value.sort_ascending ? ['asc'] : ['desc']),
     });
   });
-  
-  const ret : ExtendedSchedule[] = [];
-  for (const schedule of result) {
-    let progress: Array<Result<ProgressQuery>> = [];
-    await tryOrAlertAsync(async () => {
-    progress = await new ProgressQuery().getAll({
-      schedule: schedule.id
-    });
-    console.log(progress[0])
-    console.log(schedule)
-    const combined : ExtendedSchedule = Object.assign({}, schedule, progress[0]);
-    ret.push(combined)
-  });
-  }
-  console.log(ret)
-  return ret;
+  console.log(result);
+  return result;
 }
 
 
@@ -143,6 +129,18 @@ function handleFilterUpdate(data: FilterData){
 }
 
 /* Filtering 
+
+// All the filter options
+const filter_data = ref<FilterData>({
+  query: "",
+  search_label: query_labels[0],
+  sort_by: sort_items[0],
+  sort_ascending: true,
+  filters: [],
+  start_day: new Date(),
+  end_day: new Date(),
+});
+
 
 function filter_query(round: Round): boolean {
   let search_by: string = "";

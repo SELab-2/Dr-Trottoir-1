@@ -1,4 +1,4 @@
-import { Prisma } from "@selab-2/groep-1-orm";
+import { Garbage, Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeBuilding } from "./include";
 
@@ -24,6 +24,7 @@ type GarbageAllInfo = Prisma.GarbageGetPayload<{
 
 export class GarbageQuery extends Query<
     GarbageQueryParameters,
+    Garbage,
     GarbageAllInfo
 > {
     endpoint = "garbage";
