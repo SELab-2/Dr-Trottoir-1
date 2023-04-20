@@ -20,7 +20,7 @@
           class="ml-3 mr-5"
           label="Naam ronde"
           v-model="newRoundName"
-          variant="solo"
+          variant="outlined"
         />
         <v-card-actions class="d-flex align-center"
           ><v-spacer></v-spacer
@@ -53,7 +53,7 @@
           class="ml-3 mr-5 mt-3"
           label="Naam van gebouw"
           v-model="searchquery"
-          variant="solo"
+          variant="outlined"
         />
       </border-card>
 

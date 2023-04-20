@@ -33,7 +33,7 @@
           <v-col cols="3" class="flex-grow-0 flex-shrink-0"
             ><v-select
               prepend-inner-icon="mdi-replay"
-              variant="solo"
+              variant="outlined"
               label="Frequentie"
               v-model="frequency"
               :items="frequencys"
@@ -47,7 +47,7 @@
               <v-text-field
                 prepend-inner-icon="mdi-calendar"
                 label="Startdatum"
-                variant="solo"
+                variant="outlined"
                 type="date"
                 v-model="startDate"
               ></v-text-field>
@@ -56,7 +56,7 @@
               <v-text-field
                 v-model="startDate"
                 prepend-inner-icon="mdi-calendar"
-                variant="solo"
+                variant="outlined"
                 class="mr-1"
                 type="date"
                 label="Startdatum"
@@ -64,7 +64,7 @@
               ><v-text-field
                 v-model="endDate"
                 prepend-inner-icon="mdi-calendar"
-                variant="solo"
+                variant="outlined"
                 class="ml-1"
                 type="date"
                 label="Einddatum"
@@ -73,7 +73,7 @@
             ><v-text-field
               prepend-inner-icon="mdi-clock-time-two-outline"
               label="Starttijd"
-              variant="solo"
+              variant="outlined"
               type="time"
               v-model="time"
             ></v-text-field
