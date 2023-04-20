@@ -130,6 +130,7 @@ export class UserRouting extends Routing {
                 .createHash("sha256")
                 .update(req.body.password + req.body.salt)
                 .digest("hex");
+            delete req.body.password;
         }
 
         const result = await prisma.user.update({
