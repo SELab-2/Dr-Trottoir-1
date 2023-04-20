@@ -165,12 +165,18 @@
 
         <v-spacer />
       </v-app-bar>
-      <router-view :key="route.fullPath" />
+      <Suspense :key="route.fullPath">
+        <template #fallback>
+          <Loader />
+        </template>
+        <router-view />
+      </Suspense>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
+import Loader from "@/components/popups/Loader.vue";
 import Avatar from "@/components/Avatar.vue";
 import { Ref, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -194,9 +200,11 @@ const isAdmin: Boolean = useAuthStore().auth!.admin;
 const syndicusBuildings: Ref<Result<BuildingQuery>[]> = ref([]);
 
 tryOrAlertAsync(async () => {
-  syndicusBuildings.value = await new BuildingQuery().getAll({
-    syndicus_id: 89, // TODO: change id
-  });
+  if (isAdmin) {
+    syndicusBuildings.value = await new BuildingQuery().getAll({
+      syndicus_id: 89, // TODO: change id
+    });
+  }
 });
 
 // account display settings
@@ -207,8 +215,8 @@ const studentName: string =
 const id = useAuthStore().auth!.id;
 
 async function logOut() {
-  await useAuthStore().logOut();
   await router.push({ name: "login" });
+  await useAuthStore().logOut();
 }
 </script>
 

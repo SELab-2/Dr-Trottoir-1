@@ -4,6 +4,8 @@ import express from "express";
 import { Parser } from "../parser";
 import { prisma } from "../prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
 
 export class ProgressRouting extends Routing {
     toRouter(): express.Router {
@@ -29,8 +31,18 @@ export class ProgressRouting extends Routing {
         },
     };
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        // Students are only allowed to see their own progress entries
+        if (
+            req.user?.student &&
+            !req.user?.super_student &&
+            !req.user?.admin &&
+            Parser.number(req.query["user_id"]) != req.user?.id
+        ) {
+            throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
         const result = await prisma.progress.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
