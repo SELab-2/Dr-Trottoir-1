@@ -7,11 +7,16 @@ export const forbiddenResponse = {
 };
 
 export const internalErrorResponse = {
-    detail: "An unknown error occurred",
     message: "Internal Server Error",
+    detail: "An unknown error occurred",
 };
 
 export const notFoundResponse = {
-    detail: "Resource does not exist",
     message: "Not Found",
+    detail: "Resource does not exist",
+};
+
+export const conflictResponse = {
+    message: "Conflict",
+    detail: "Unique constraint failed",
 };
