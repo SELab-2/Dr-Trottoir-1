@@ -26,7 +26,7 @@
         <v-btn
           v-else
           prepend-icon="mdi-close"
-          @click="edit = !edit"
+          @click="handleCancelEdit()"
           color="warning"
           >Annuleer aanpassingen</v-btn
         >
@@ -194,23 +194,33 @@ const passwordCheck = ref("");
 const passwordHidden = ref(false);
 const user: Ref<Result<UserQuery> | null> = ref(null);
 
-tryOrAlertAsync(async () => {
-  user.value = await new UserQuery().getOne(props.id);
-  console.log(user.value);
-  if(user.value.admin){
-    roles.value.push('Admin');
-  }
-  if(user.value.super_student){
-    roles.value.push('Superstudent');
-  } 
-  if(user.value.student){
-    roles.value.push('Student');
-  }
 
-});
+async function fetchUser() {
+  tryOrAlertAsync(async () => {
+    user.value = await new UserQuery().getOne(props.id);
+    console.log(user.value);
+    if(user.value.admin){
+      roles.value.push('Admin');
+    }
+    if(user.value.super_student){
+      roles.value.push('Superstudent');
+    } 
+    if(user.value.student){
+      roles.value.push('Student');
+    }
+  });
+}
+fetchUser();
+
 
 // reactive state for the roles
 const roles = ref<string[]>([])
+
+/* Action handle functions */
+async function handleCancelEdit() {
+  fetchUser();
+  edit.value = false;  
+}
 
 async function handleRemove() {
   await tryOrAlertAsync(async () => {new UserQuery().deleteOne({id: user.value?.id})});
