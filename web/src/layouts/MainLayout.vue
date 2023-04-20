@@ -165,12 +165,18 @@
 
         <v-spacer />
       </v-app-bar>
-      <router-view :key="route.fullPath" />
+      <Suspense :key="route.fullPath">
+        <template #fallback>
+          <Loader />
+        </template>
+        <router-view />
+      </Suspense>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
+import Loader from "@/components/popups/Loader.vue";
 import Avatar from "@/components/Avatar.vue";
 import { Ref, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
