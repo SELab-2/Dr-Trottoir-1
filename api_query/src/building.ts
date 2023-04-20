@@ -23,7 +23,7 @@ type Element = Prisma.BuildingGetPayload<{
         deleted: true;
         hash: boolean;
         address: true;
-    }
+    };
 }>;
 
 type BuildingAllInfo = Prisma.BuildingGetPayload<{
