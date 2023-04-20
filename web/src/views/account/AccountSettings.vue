@@ -83,8 +83,8 @@
         :readonly="!edit"
         :street="user?.address.street"
         :city="user?.address.city"
-        :number="user?.address.number"
-        :zip_code="user?.address.zip_code"
+        :number="String(user?.address.number)"
+        :zip_code="String(user?.address.zip_code)"
       ></AddressFrom>
     </BorderCard>
 
@@ -193,12 +193,18 @@ const user: Ref<Result<UserQuery> | null> = ref(null);
 
 tryOrAlertAsync(async () => {
   user.value = await new UserQuery().getOne(props.id);
-});
+  console.log(user.value);
+  if(user.value.admin){
+    roles.value.push('Admin');
+  }
+  if(user.value.super_student){
+    roles.value.push('Superstudent');
+  } 
+  if(user.value.student){
+    roles.value.push('Student');
+  }
 
-// reactive states for the new password
-const password1 = ref("");
-const password2 = ref("");
-const showPsswd = ref(false);
+});
 
 // reactive state for the roles
 const roles = ref<string[]>([])
