@@ -191,17 +191,17 @@ function getFullStudentName(s: Result<UserQuery> | undefined): string {
   }
 }
 
-function formatDate(d : Date) : string{
-  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`
+function formatDate(d: Date): string {
+  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
 }
 
 function planRounds() {
   for (let plan of rounds.value) {
     tryOrAlertAsync(async () => {
-      console.log(plan.date)
+      console.log(plan.date);
       const dt_date = new Date(formatDate(plan.date) + " " + plan.time + ":00");
-      console.log(formatDate(plan.date) + " " + plan.time + ":00")
-      console.log(dt_date)
+      console.log(formatDate(plan.date) + " " + plan.time + ":00");
+      console.log(dt_date);
       await new ScheduleQuery()
         .createOne({
           user_id: student.value?.id,

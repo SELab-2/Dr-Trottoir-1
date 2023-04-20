@@ -16,7 +16,12 @@
             label="Toon afvalkalender"
           ></v-switch
         ></template>
-        <v-text-field class="ml-3 mr-5" label="Naam ronde" v-model="newRoundName" variant="solo" />
+        <v-text-field
+          class="ml-3 mr-5"
+          label="Naam ronde"
+          v-model="newRoundName"
+          variant="solo"
+        />
         <v-card-actions class="d-flex align-center"
           ><v-spacer></v-spacer
           ><v-btn class="ml-3" prepend-icon="mdi-check" @click="makeRound()"
@@ -65,21 +70,16 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, Ref, onMounted } from "vue";
+import { ref, Ref, onMounted } from "vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import BuildingSelectCard from "@/components/cards/BuildingSelectCard.vue";
 import BuildingInfoCard from "@/components/cards/BuildingInfoCard.vue";
-import {
-  Result,
-  BuildingQuery,
-RoundQuery,
-} from "@selab-2/groep-1-query";
-import { RoundBuildingQuery } from "@selab-2/groep-1-query//src/round_building"
+import { Result, BuildingQuery, RoundQuery } from "@selab-2/groep-1-query";
+import { RoundBuildingQuery } from "@selab-2/groep-1-query//src/round_building";
 import { tryOrAlertAsync } from "@/try";
 import router from "@/router";
 
-const availableBuildings = ref<Result<BuildingQuery>[]>([])
-
+const availableBuildings = ref<Result<BuildingQuery>[]>([]);
 
 onMounted(() => {
   tryOrAlertAsync(async () => {
@@ -102,22 +102,21 @@ onMounted(() => {
 
 const garbageinfo: Ref<boolean> = ref(true);
 
-const newRoundName = ref<string>('')
+const newRoundName = ref<string>("");
 
 // The query that will be used to filter all available buildings
 const searchquery: Ref<string> = ref("");
-
 
 /*
  * Round is the list that will be populated by the user
  * Should always start as an empty list
  */
-const newRoundBuildings = ref<Result<BuildingQuery>[]>([])
+const newRoundBuildings = ref<Result<BuildingQuery>[]>([]);
 
 type BuildingEntry = {
-  building : Result<BuildingQuery>,
-  listID: number
-}
+  building: Result<BuildingQuery>;
+  listID: number;
+};
 
 /**
  * TODO: This function will give back the buildings which match the string given by the user
@@ -130,34 +129,32 @@ function filterlist(): BuildingEntry[] {
     if (building.name.toLowerCase().includes(searchquery.value.toLowerCase())) {
       filteredlist.push({
         building: building,
-        listID: index
+        listID: index,
       });
     }
   });
   return filteredlist;
 }
 
-function getFullAddress(building : Result<BuildingQuery>){
-  const address = building.address
-  return `${address.street} ${address.number}, ${address.city}`
+function getFullAddress(building: Result<BuildingQuery>) {
+  const address = building.address;
+  return `${address.street} ${address.number}, ${address.city}`;
 }
 
-function makeRound(){
+function makeRound() {
   tryOrAlertAsync(async () => {
     const newRound = await new RoundQuery().createOne({
-      name: newRoundName.value
-    })
+      name: newRoundName.value,
+    });
 
-    for (const building of newRoundBuildings.value){
+    for (const building of newRoundBuildings.value) {
       await new RoundBuildingQuery().createOne({
         building_id: building.id,
-        round_id: newRound.id
-      })
-
+        round_id: newRound.id,
+      });
     }
-    
-    router.push({name: 'round', params: {id: newRound.id}})
 
+    router.push({ name: "round", params: { id: newRound.id } });
   });
 }
 
