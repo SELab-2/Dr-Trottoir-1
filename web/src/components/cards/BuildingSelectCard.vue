@@ -40,8 +40,8 @@
         </thead>
         <tbody>
           <tr v-for="item in ['REST', 'GFT', 'PMD', 'PAPIER']" :key="item">
-            <td class="text-center" v-for="afval in 7" :key="afval">
-              <v-chip v-if="afval % 2 == 0">{{ item }}</v-chip>
+            <td class="text-center" v-for="index in 7" :key="index">
+              <v-chip size="small" v-if="handleGarbageMap(item, index)">{{ item }}</v-chip>
             </td>
           </tr>
         </tbody>
@@ -52,16 +52,61 @@
 
 <script setup lang="ts">
 import BorderCard from "@/layouts/CardLayout.vue";
+import { ref, onMounted } from "vue";
+import { GarbageQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 
-defineProps({
-  name: String,
-  address: String,
-  id: String,
+const tempActions = ['REST', 'GFT', 'PMD', ]
+const garbageMap = ref<Map<String, Boolean[]>>(new Map());
+
+onMounted(() => {
+
+  for (const action of tempActions){
+    garbageMap.value.set(action, new Array(7).fill(false))
+  }
+
+
+  tryOrAlertAsync(async () => {
+    const garbageOfBuilding = await new GarbageQuery().getAll({building_id: props.buildingId})
+    
+    for (const garbage of garbageOfBuilding){
+      const dayIndex = new Date(garbage.pickup_time).getDay()
+      const actionDesc = garbage.action.description
+
+      // See if it is garbage to pick up or just a task
+      if (actionDesc.includes('Ophaling')){
+        const garbageType = actionDesc.split(' ')[1]
+        console.log(garbageType)
+
+        garbageMap.value.get(garbageType === 'restafval'? 'REST': garbageType)![dayIndex] = true
+      }
+    }
+
+    console.log(garbageMap)
+
+    
+})
+});
+
+const props = defineProps({
+  name: { type: String, required: true },
+  address: { type: String, required: true },
+  buildingId: { type: Number, required: true },
   garbageinfo: {
     type: Boolean,
     default: true,
   },
 });
+
+function handleGarbageMap(garbageType : String, day : number){
+  const planningArray = garbageMap.value.get(garbageType)
+  if(planningArray) {
+    return planningArray[day]
+  } else {
+    return false
+  }
+
+}
 </script>
 
 <style scoped>
