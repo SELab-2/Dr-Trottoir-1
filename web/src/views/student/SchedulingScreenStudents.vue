@@ -81,7 +81,7 @@
       </v-card>
     </div>
 
-    <div class="centre text-center pa-5" v-if="!empty">
+    <div class="centre text-center pa-5" v-if="empty">
       <v-icon icon="mdi-alert-circle" size="x-large" />
       <h3>Geen planning voor de komende 3 dagen.</h3>
       <p>Check bij je superstudent indien je denkt dat dit niet klopt.</p>
@@ -192,7 +192,7 @@ const days = await tryOrAlertAsync<Array<DayEntry>>(async () => {
       });
 
       if (progress.length > 0) {
-        empty.value = true;
+        empty.value = false;
       }
 
       list.push({
