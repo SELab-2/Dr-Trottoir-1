@@ -37,15 +37,22 @@
       <v-icon icon="mdi-chevron-right" @click="router.push({ name: 'building_id', params: { id: building.id }, })"></v-icon>
     </div>
 
-    <divider-layout v-if="progress?.report"></divider-layout>
+    <divider-layout></divider-layout>
 
-    <div v-if="progress?.report">
+    <div>
       <h3 class="mb-2">Notities</h3>
-      <p v-if="!editMode">{{ progress.report }}</p>
+      <p v-if="!editMode">{{ progress?.report }}</p>
       <!-- eslint-disable-next-line vue/no-mutating-props -->
       <v-text-field type="text" v-else v-model="progress.report" style="margin-bottom: -20px"></v-text-field>
       <RoundedButton
-        v-if="!editMode"
+        v-if="editMode"
+        icon="mdi-check"
+        value="Opslaan"
+        class="mt-4"
+        @click="() => report()"
+      ></RoundedButton>
+      <RoundedButton
+        v-else-if="progress?.report !== ''"
         icon="mdi-pencil"
         value="Bewerken"
         class="mt-4"
@@ -53,12 +60,11 @@
       ></RoundedButton>
       <RoundedButton
         v-else
-        icon="mdi-check"
-        value="Opslaan"
+        icon="mdi-plus"
+        value="Toevoegen"
         class="mt-4"
-        @click="() => report()"
+        @click="() => editMode = !editMode"
       ></RoundedButton>
-
     </div>
 
     <divider-layout></divider-layout>

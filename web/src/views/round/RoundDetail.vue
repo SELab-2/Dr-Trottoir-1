@@ -2,28 +2,23 @@
   <div v-if="data !== null">
     <HFillWrapper>
       <div class="space-y">
-        <div
-          style="
-            margin-left: 70px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-          "
-        >
+        <div class="header">
           <h2>{{ data.round.name }}</h2>
           <div class="flex-grow-1"></div>
-          <RoundedButton
-            icon="mdi-calendar"
-            :value="new Date(data.day).toLocaleDateString()"
-          ></RoundedButton>
-          <RoundedButton
-            icon="mdi-account"
-            :value="data.user.first_name + ' ' + data.user.last_name"
-            @click="() => router.push({ name: 'account_settings', params: { id: data.user.id } })"
-          ></RoundedButton>
+          <div class="header-buttons">
+            <RoundedButton
+              icon="mdi-calendar"
+              :value="new Date(data.day).toLocaleDateString()"
+            ></RoundedButton>
+            <RoundedButton
+              icon="mdi-account"
+              :value="data.user.first_name + ' ' + data.user.last_name"
+              @click="() => router.push({ name: 'account_settings', params: { id: data.user.id } })"
+            ></RoundedButton>
+          </div>
         </div>
 
-        <p style="margin-left: 70px">
+        <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -33,36 +28,19 @@
           culpa qui officia deserunt mollit anim id est laborum.
         </p>
 
-        <divider-layout class="my-8" style="margin-left: 70px"></divider-layout>
+        <divider-layout class="my-8" ></divider-layout>
 
-        <v-timeline truncate-line="both" side="end" density="compact">
-          <v-timeline-item :dot-color="'success'" :icon="'mdi-check'">
-            <h3>Start: 12u00</h3>
-          </v-timeline-item>
-
-          <v-timeline-item
-            v-for="entry in data.round.buildings.map((e) => {
+        <Progress
+          v-for="entry in data.round.buildings.map((e) => {
               return {
                 building: e.building,
                 progress: progressItems.get(e.building_id),
               };
             })"
-            v-bind:key="entry.building.id"
-            :dot-color="'success'"
-            :icon="'mdi-check'"
-            :size="'large'"
-          >
-            <Progress :building="entry.building" :progress="entry.progress"></Progress>
-          </v-timeline-item>
-
-          <v-timeline-item
-            :tag="'TEST'"
-            :dot-color="'grey'"
-            :icon="'mdi-clock'"
-          >
-            <h3>Einde: 14u00</h3>
-          </v-timeline-item>
-        </v-timeline>
+          v-bind:key="entry.building.id"
+          :building="entry.building"
+          :progress="entry.progress"
+        ></Progress>
       </div>
     </HFillWrapper>
   </div>
@@ -87,11 +65,13 @@ const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
 
 tryOrAlertAsync(async () => {
   data.value = await new ScheduleQuery().getOne(schedule_id);
-});
 
-tryOrAlertAsync(async () => {
-  for (const progress of await new ProgressQuery().getAll()) {
+  for (const progress of await new ProgressQuery().getAll({ schedule: schedule_id })) {
     progressItems.value.set(progress.building_id, progress);
+  }
+
+  if (progressItems.value.size !== data.value?.round.buildings.length) {
+    throw new Error("Not every building has a progress item");
   }
 });
 </script>
@@ -100,4 +80,17 @@ tryOrAlertAsync(async () => {
 .space-y
   & > *
     margin-bottom: 24px
+
+.header
+  display: flex
+  align-items: center
+  gap: 12px
+
+  @media (max-width: 700px)
+    flex-direction: column
+
+.header-buttons
+  display: flex
+  align-items: center
+  gap: 12px
 </style>

@@ -89,12 +89,37 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        const user = await prisma.schedule.create({
+        const schedule = await prisma.schedule.create({
             data: req.body,
             include: ScheduleRouting.includes,
         });
 
-        return res.status(201).json(user);
+        // Retrieve all the buildings in the round.
+        const round = await prisma.round.findUniqueOrThrow({
+            where: {
+                id: Parser.number(req.body["round_id"]),
+            },
+            include: {
+                buildings: {
+                    select: {
+                        building_id: true,
+                    }
+                }
+            }
+        })
+
+        // Create a progress item for each building in the round.
+        for (const building of round.buildings) {
+            await prisma.progress.create({
+                data: {
+                    building_id: building.building_id,
+                    schedule_id: schedule.id,
+                    report: "", // TODO: make nullable
+                }
+            })
+        }
+
+        return res.status(201).json(schedule);
     }
 
     @Auth.authorization({ superStudent: true })
