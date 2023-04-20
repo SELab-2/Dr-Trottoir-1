@@ -177,6 +177,7 @@ import { useRoute, useRouter } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useAuthStore } from "@/stores/auth";
 import { BuildingQuery, Result } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 
 const router = useRouter();
 // reactive state to show the drawer or not
@@ -189,13 +190,11 @@ const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
 const isAdmin: Boolean = useAuthStore().auth!.admin;
 const syndicusBuildings: Ref<Result<BuildingQuery>[]> = ref([]);
 
-try {
+tryOrAlertAsync(async () => {
   syndicusBuildings.value = await new BuildingQuery().getAll({
-    syndicus_id: 89,
-  }); // TODO: change id
-} catch (e) {
-  alert(e); //TODO add error handling
-}
+    syndicus_id: 89, // TODO: change id
+  });
+});
 
 // account display settings
 const studentName: string =
