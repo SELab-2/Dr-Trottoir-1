@@ -30,11 +30,15 @@ export class GarbageRouting extends Routing {
                 building: {
                     syndicus_id: Parser.number(req.query["syndicus_id"]),
                     // get garbage for all buildings belonging to a certain round
-                    rounds: {
-                        some: {
-                            round_id: Parser.number(req.query["round_id"]),
-                        },
-                    },
+                    rounds: req.query["round_id"]
+                        ? {
+                              some: {
+                                  round_id: Parser.number(
+                                      req.query["round_id"],
+                                  ),
+                              },
+                          }
+                        : {},
                 },
             },
             include: GarbageRouting.includes,
