@@ -5,7 +5,7 @@
       :sort_items="sort_items"
       :filter_items="filter_options"
       class="mx-1 mb-3"
-      @onUpdate="(new_data: FilterData) => handleFilterUpdate(new_data)"
+      @onUpdate="async (new_data: FilterData) => {await handleFilterUpdate(new_data)}"
     />
     <v-card 
       v-if="schedules.length === 0"
@@ -20,7 +20,7 @@
       round_start="TODO"
       round_end="TODO"
       :student_name="schedule.user.first_name"
-      :building_index="progress[i]"
+      :building_index="progress?.get(schedule)!"
       :total_buildings="schedule.round.buildings.length"
       :round_comments="false"
       @click="redirect_to_detail()"
@@ -40,14 +40,13 @@ import HFillWrapper from "@/layouts/HFillWrapper.vue";
 
 import { ScheduleQuery, ProgressQuery ,Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
-import { type } from "os";
 
 // the router constant
 const router = useRouter();
 
 // filter props to pass to largefilter component
 const query_labels = ["Ronde", "Persoon"];
-const filter_options = ["Klaar", "Bezig", "Niet begonnen", "Opmerkingen"];
+const filter_options = ["Klaar", "Bezig", "Niet begonnen"];
 const sort_items = ["Voortgang", "Gebouwen"];
 
 // All the filter options
@@ -102,15 +101,17 @@ async function completedBuildings(schedule: Result<ScheduleQuery>): Promise<numb
 
 
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
-const progress = ref<number[]>([]); // completed buildings of each scedule
+const progress = ref<Map<Result<ScheduleQuery>, number>>(); // completed buildings of each schedule
 
 // fetch the schedules, for today
 handleFilterUpdate(filter_data.value);
 
+
 /**
- * Fetch all the schedules
+ * Update the schedules state with new schedules
  */
-async function fetchSchedules(): Promise<Array<Result<ScheduleQuery>>> {
+async function updadeSchedules(){
+  // fetch schedules
   let result: Array<Result<ScheduleQuery>> = [];
   await tryOrAlertAsync(async () => {
     result = await new ScheduleQuery().getAll({
@@ -120,55 +121,42 @@ async function fetchSchedules(): Promise<Array<Result<ScheduleQuery>>> {
       //ord: (filter_data.value.sort_ascending ? ['asc'] : ['desc']),
     });
   });
-  return result;
-}
-
-
-/**
- * Update the schedules state with new schedules
- */
-async function updadeSchedules(){
-  schedules.value = await fetchSchedules();
-  for(const schedule of schedules.value){
-    progress.value.push(await completedBuildings(schedule));
+  // fetch progress
+  const newProgress = new Map();
+  for(const schedule of result){
+    newProgress.set(schedule ,await completedBuildings(schedule));
   }
-  console.log(schedules.value);
-  console.log(progress.value);
+  progress.value = newProgress;
+
+  // apply filters
+  result = filtered_data(result);
+
+  schedules.value = result;
+
 }
 
 
 /* Data filtering */
-function handleFilterUpdate(data: FilterData){
+async function handleFilterUpdate(data: FilterData){
   filter_data.value = data;
   // set at start of the day
   filter_data.value.start_day.setHours(0,0,0,0);
   // set at end of the day
   filter_data.value.end_day.setHours(23,59,59,999);
-  updadeSchedules();
+  await updadeSchedules();  
 }
 
-/* Filtering 
-
-// All the filter options
-const filter_data = ref<FilterData>({
-  query: "",
-  search_label: query_labels[0],
-  sort_by: sort_items[0],
-  sort_ascending: true,
-  filters: [],
-  start_day: new Date(),
-  end_day: new Date(),
-});
+//Filtering TODO: replace with API calls
 
 
-function filter_query(round: Round): boolean {
+function filter_query(schedule: Result<ScheduleQuery>): boolean {
   let search_by: string = "";
   switch (filter_data.value.search_label) {
     case query_labels[0]:
-      search_by = round.name.toLowerCase();
+      search_by = schedule.round.name.toLowerCase();
       break;
     case query_labels[1]:
-      search_by = round.student.toLowerCase();
+      search_by = schedule.user.first_name.toLowerCase();
       break;
   }
   return (
@@ -177,12 +165,11 @@ function filter_query(round: Round): boolean {
   );
 }
 
-function filter_date(): boolean {
-  // TODO: fix when rounds actually have dates
-  return true;
+function progressOfSchedule(schedule: Result<ScheduleQuery>): number{
+  return progress.value?.get(schedule)!
 }
 
-function filter_filters(round: Round): boolean {
+function filter_filters(schedule: Result<ScheduleQuery>): boolean {
   if (filter_data.value.filters.length == 0) {
     return true;
   }
@@ -190,18 +177,15 @@ function filter_filters(round: Round): boolean {
   for (const option of filter_data.value.filters) {
     switch (option) {
       case "Klaar":
-        result = completed_buildings(round) == round.buildings.length;
+        result = progressOfSchedule(schedule) == schedule.round.buildings.length;
         break;
       case "Bezig":
         result =
-          0 < completed_buildings(round) &&
-          completed_buildings(round) < round.buildings.length;
+          0 < progressOfSchedule(schedule) &&
+          progressOfSchedule(schedule) < schedule.round.buildings.length;
         break;
       case "Niet begonnen":
-        result = completed_buildings(round) == 0;
-        break;
-      case "Opmerkingen":
-        result = round_has_comments(round);
+        result = progressOfSchedule(schedule) == 0;
         break;
     }
     if (result) {
@@ -211,36 +195,34 @@ function filter_filters(round: Round): boolean {
   return result;
 }
 
-function progress(done: number, total: number): number {
+function calculateProgress(done: number, total: number): number {
   return Math.round((done / total) * 100);
 }
 
 // The list of data after filtering
-function filtered_data(): Round[] {
-  const result: Round[] = [];
+function filtered_data(schedules: Result<ScheduleQuery>[]): Result<ScheduleQuery>[] {
+  const result: Result<ScheduleQuery>[] = [];
   // filtering
-  mockrounds.forEach((elem) => {
+  schedules.forEach((schedule) => {
     let can_add = true;
 
     // filter on query input
-    can_add = can_add && filter_query(elem);
+    can_add = can_add && filter_query(schedule);
     // apply filter options
-    can_add = can_add && filter_filters(elem);
-    // apply the date filtering
-    can_add = can_add && filter_date();
+    can_add = can_add && filter_filters(schedule);
 
     if (can_add) {
-      result.push(elem);
+      result.push(schedule);
     }
   });
 
   // sort the results
-  result.sort((a: Round, b: Round) => {
+  result.sort((a: Result<ScheduleQuery>, b: Result<ScheduleQuery>) => {
     if (filter_data.value.sort_by == "Gebouwen") {
-      return a.buildings.length > b.buildings.length ? 1 : -1;
+      return a.round.buildings.length > b.round.buildings.length ? 1 : -1;
     } else {
-      const ap = progress(completed_buildings(a), a.buildings.length);
-      const bp = progress(completed_buildings(b), b.buildings.length);
+      const ap = calculateProgress(progressOfSchedule(a), a.round.buildings.length);
+      const bp = calculateProgress(progressOfSchedule(b), b.round.buildings.length);
       return ap > bp ? 1 : -1;
     }
   });
@@ -249,5 +231,5 @@ function filtered_data(): Round[] {
     result.reverse();
   }
   return result;
-}*/
+}
 </script>
