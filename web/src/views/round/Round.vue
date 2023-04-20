@@ -56,11 +56,11 @@
       </div>
 
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
-        <h2>Afgelopen bezoeken</h2>
+        <h2>Recent</h2>
         <div class="flex-grow-1"></div>
         <RoundedButton
           icon="mdi-history"
-          value="Volledige geschiedenis"
+          value="Alles"
         ></RoundedButton>
       </div>
 
@@ -131,6 +131,10 @@ function deleteRound() {
   display: grid
   gap: 8px
   grid-template-columns: repeat(2, minmax(0, 1fr))
+
+  @media (max-width: 600px)
+    display: flex
+    flex-direction: column
 
 .space-y-8
   & > *
