@@ -24,10 +24,11 @@
           :title="item.schedule.round.name"
           prepend-icon="mdi-transit-detour"
           @click="
-            current_id = item.schedule.round_id;
+            currentRound = item.schedule.round_id;
+            currentSchedule = item.schedule.id;
             router.push({
               name: 'round_detail',
-              params: { id: current_id, schedule: 0 },
+              params: { id: currentRound, schedule: currentSchedule },
             });
           "
         >
@@ -47,8 +48,9 @@
               v-if="item.progress.length === 0"
               color="primary"
               v-on:click.stop="
+                currentRound = item.schedule.round_id;
+                currentSchedule = item.schedule.id;
                 snackbar = !snackbar;
-                current_id = item.schedule.round_id;
               "
               :variant="
                 new Date(item.schedule.day).getDate() !== new Date().getDate()
@@ -101,7 +103,7 @@
             () =>
               router.push({
                 name: 'round_detail',
-                params: { id: current_id, schedule: 0 },
+                params: { id: currentRound, schedule: currentSchedule },
               })
           "
         />
@@ -121,7 +123,9 @@ import { useAuthStore } from "@/stores/auth";
 import { tryOrAlertAsync } from "@/try";
 
 const snackbar = ref(false);
-const current_id = ref(0);
+const currentRound = ref(0);
+const currentSchedule = ref(0);
+
 
 type DayEntry = {
   id: number;

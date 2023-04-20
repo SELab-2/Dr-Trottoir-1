@@ -4,25 +4,24 @@
       <div class="space-y">
         <div
           style="
-            margin-left: 70px;
+            margin-bottom: 0;
             display: flex;
-            align-items: center;
             gap: 12px;
           "
         >
           <h2>{{ data.round.name }}</h2>
           <div class="flex-grow-1"></div>
-          <RoundedButton
-            icon="mdi-calendar"
-            :value="new Date(data.day).toLocaleDateString()"
-          ></RoundedButton>
-          <RoundedButton
-            icon="mdi-account"
-            :value="data.user.first_name + ' ' + data.user.last_name"
-          ></RoundedButton>
+          <CardLayout class='pa-1 d-flex align-center' style="border-radius: 30px;" :to='{name: "account_settings", params: {id: data.user.id}}'>
+            <Avatar size='small' :name="`${data.user.first_name} ${ data.user.last_name}`" />
+            <p class="ml-1" v-if='!mobile'>{{data.user.first_name}} {{data.user.last_name }}</p>
+          </CardLayout>
         </div>
+        <RoundedButton
+          icon="mdi-calendar"
+          :value="new Date(data.day).toLocaleDateString()"
+        ></RoundedButton>
 
-        <p style="margin-left: 70px">
+        <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -32,9 +31,9 @@
           culpa qui officia deserunt mollit anim id est laborum.
         </p>
 
-        <divider-layout class="my-8" style="margin-left: 70px"></divider-layout>
+        <divider-layout class="my-8"></divider-layout>
 
-        <v-timeline truncate-line="both" side="end" density="compact">
+        <v-timeline truncate-line="both" side="end" density="compact" align="start">
           <v-timeline-item :dot-color="'success'" :icon="'mdi-check'">
             <h3>Start: 12u00</h3>
           </v-timeline-item>
@@ -78,20 +77,22 @@
                   </p>
                 </div>
                 <div class="flex-grow-1"></div>
-
-                <RoundedButton
-                  v-if="entry.progress"
-                  icon="mdi-clock-start"
-                  :value="new Date(entry.progress.arrival).toLocaleTimeString()"
-                ></RoundedButton>
-                <RoundedButton
-                  v-if="entry.progress"
-                  icon="mdi-clock-end"
-                  :value="
-                    new Date(entry.progress.departure).toLocaleTimeString()
+                <div class='d-flex' v-if='!mobile'> <!-- TODO make also visible on mobile -->
+                  <RoundedButton
+                    class='mx-1'
+                    v-if="entry.progress"
+                    icon="mdi-clock-start"
+                    :value="new Date(entry.progress.arrival).toLocaleTimeString('nl', {hour: '2-digit', minute:'2-digit'})"
+                  ></RoundedButton>
+                  <RoundedButton
+                    class='mx-1'
+                    v-if="entry.progress"
+                    icon="mdi-clock-end"
+                    :value="
+                    new Date(entry.progress.departure).toLocaleTimeString('nl', {hour: '2-digit', minute:'2-digit'})
                   "
-                ></RoundedButton>
-
+                  ></RoundedButton>
+                </div>
                 <v-icon icon="mdi-chevron-right"></v-icon>
               </div>
 
@@ -160,16 +161,23 @@ import { Ref, ref } from "vue";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
+import Avatar from "@/components/Avatar.vue";
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import router from "@/router";
+import { useRoute } from 'vue-router'
+import { useDisplay } from 'vuetify'
 
 const data: Ref<Result<ScheduleQuery> | null> = ref(null);
 const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
 
+const route = useRoute();
+const display = useDisplay();
+const mobile = display.mobile;
+
 tryOrAlertAsync(async () => {
-  data.value = await new ScheduleQuery().getOne(35);
+  data.value = await new ScheduleQuery().getOne(route.params.schedule);
 });
 
 tryOrAlertAsync(async () => {
@@ -181,6 +189,7 @@ tryOrAlertAsync(async () => {
 
 <style lang="sass">
 .space-y
+  max-width: 100%
   & > *
     margin-bottom: 24px
 
@@ -193,6 +202,11 @@ tryOrAlertAsync(async () => {
     object-fit: cover
 
   display: grid
-  grid-template-columns: repeat(3, minmax(0, 1fr))
+  @media (min-width: 1000px)
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+  @media (min-width: 500px) and (max-width: 1000px)
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+  @media (max-width: 500px)
+    grid-template-columns: repeat(1, minmax(0, 1fr))
   gap: 24px
 </style>

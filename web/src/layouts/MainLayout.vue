@@ -2,8 +2,8 @@
   <v-app>
     <v-main>
       <v-navigation-drawer
-        :temporary="!permanentDrawer"
-        :permanent="!!permanentDrawer"
+        :temporary="mobile"
+        :permanent="!mobile"
         v-model="drawer"
         class="sidebar"
         style="position: fixed !important; height: 100vh !important"
@@ -178,8 +178,11 @@ import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useAuthStore } from "@/stores/auth";
 import { BuildingQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
+import { useDisplay } from 'vuetify'
 
 const router = useRouter();
+const display = useDisplay();
+const mobile = display.mobile;
 // reactive state to show the drawer or not
 const drawer = ref(true);
 // get the route object, needed to show the title
@@ -203,12 +206,6 @@ const studentName: string =
 // account display settings
 const id = useAuthStore().auth!.id;
 
-const thresholdWidth: number = 750;
-const permanentDrawer = ref<Boolean>(window.innerWidth > thresholdWidth);
-window.addEventListener(
-  "resize",
-  () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
-);
 async function logOut() {
   await useAuthStore().logOut();
   await router.push({ name: "login" });
