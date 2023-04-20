@@ -44,11 +44,15 @@ export class ScheduleRouting extends Routing {
                 },
                 round: {
                     name: req.query["round"],
-                    buildings: {
-                        some: {
-                            building_id: Parser.number(req.query["building"]),
-                        }
-                    }
+                    buildings: req.query["building"]
+                        ? {
+                              some: {
+                                  building_id: Parser.number(
+                                      req.query["building"],
+                                  ),
+                              },
+                          }
+                        : {},
                 },
             },
             include: ScheduleRouting.includes,
