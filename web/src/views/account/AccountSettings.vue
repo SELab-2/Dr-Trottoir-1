@@ -85,6 +85,7 @@
         :city="user?.address.city"
         :number="String(user?.address.number)"
         :zip_code="String(user?.address.zip_code)"
+        @onUpdate="(newAddress: Address) => handleAddressUpdate(newAddress)"
       ></AddressFrom>
     </BorderCard>
 
@@ -178,6 +179,7 @@ import { Ref, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import RolesForm from "@/components/forms/RolesForm.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
+import Address from "@/components/models/Address";
 
 import { Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
@@ -194,6 +196,14 @@ const passwordCheck = ref("");
 const passwordHidden = ref(false);
 const user: Ref<Result<UserQuery> | null> = ref(null);
 
+function handleAddressUpdate(address: Address){
+  if(user.value){
+    user.value.address.street = address.street;
+    user.value.address.city = address.city;
+    user.value.address.number = Number(address.number);
+    user.value.address.zip_code = Number(address.zip_code);
+  }  
+}
 
 async function fetchUser() {
   tryOrAlertAsync(async () => {
@@ -238,8 +248,21 @@ function handleRemovePopup(){
   showPopup.value = true;
 }
 
-function handleSave() {
+async function handleSave() {
   // TODO: API-call to save the account
+  await tryOrAlertAsync(async () => {
+      await new UserQuery().updateOne({
+        id: user.value?.id,
+        email: user.value?.email,
+        first_name: user.value?.first_name,
+        last_name: user.value?.last_name,
+        phone: user.value?.phone,
+        address_id: user.value?.address_id,
+        student: roles.value.includes('Student'),
+        super_student: roles.value.includes('Superstudent'),
+        admin: roles.value.includes('Admin'), 
+      });
+    });
   showPopup.value = false;
   edit.value = false;
 }
