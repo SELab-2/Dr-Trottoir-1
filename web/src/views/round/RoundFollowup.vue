@@ -39,7 +39,7 @@ import HFillWrapper from "@/layouts/HFillWrapper.vue";
 const router = useRouter();
 
 function redirect_to_detail() {
-  router.push({ name: "round_detail", params: { id: 0 } });
+  router.push({ name: "round_detail", params: { id: 0, schedule: 0 } });
 }
 
 function round_has_comments(round: Round): boolean {

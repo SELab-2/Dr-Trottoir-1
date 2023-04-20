@@ -1,5 +1,6 @@
 <template>
   <CardLayout
+    v-if="schedule"
     class="building-card"
     @click="
       router.push({
