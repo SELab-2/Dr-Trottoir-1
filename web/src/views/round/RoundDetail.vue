@@ -164,12 +164,16 @@ import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import router from "@/router";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+const schedule_id: number = Number(route.params.id);
 
 const data: Ref<Result<ScheduleQuery> | null> = ref(null);
 const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
 
 tryOrAlertAsync(async () => {
-  data.value = await new ScheduleQuery().getOne(35);
+  data.value = await new ScheduleQuery().getOne(schedule_id);
 });
 
 tryOrAlertAsync(async () => {

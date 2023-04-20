@@ -117,7 +117,7 @@ import { tryOrAlertAsync } from "@/try";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const round_id: number = parseInt(route.params.id[0]);
+const round_id: number = Number(route.params.id);
 
 const current_round = ref<Result<RoundQuery>>();
 const students = ref<Result<UserQuery>[]>([]);
@@ -126,12 +126,10 @@ const student = ref<Result<UserQuery>>();
 onMounted(() => {
   tryOrAlertAsync(async () => {
     students.value = await new UserQuery().getAll({ student: true });
-    console.log(students.value);
   });
 
   tryOrAlertAsync(async () => {
     current_round.value = await new RoundQuery().getOne(round_id);
-    console.log(current_round);
   });
 });
 
@@ -198,10 +196,7 @@ function formatDate(d: Date): string {
 function planRounds() {
   for (let plan of rounds.value) {
     tryOrAlertAsync(async () => {
-      console.log(plan.date);
       const dt_date = new Date(formatDate(plan.date) + " " + plan.time + ":00");
-      console.log(formatDate(plan.date) + " " + plan.time + ":00");
-      console.log(dt_date);
       await new ScheduleQuery()
         .createOne({
           user_id: student.value?.id,

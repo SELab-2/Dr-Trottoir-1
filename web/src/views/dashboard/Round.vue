@@ -8,14 +8,6 @@
     >
       Nieuwe ronde maken
     </v-btn>
-    <v-btn
-      prepend-icon="mdi-plus"
-      color="primary"
-      class="mr-3"
-      :to="{ name: 'round_plan', params: { id: 1 } }"
-    >
-      Nieuwe ronde Plannen
-    </v-btn>
   </div>
   <Table
     :entries="rounds"

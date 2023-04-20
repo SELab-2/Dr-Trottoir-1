@@ -78,15 +78,12 @@ onMounted(() => {
       // See if it is garbage to pick up or just a task
       if (actionDesc.includes("Ophaling")) {
         const garbageType = actionDesc.split(" ")[1];
-        console.log(garbageType);
 
         garbageMap.value.get(
           garbageType === "restafval" ? "REST" : garbageType,
         )![dayIndex] = true;
       }
     }
-
-    console.log(garbageMap);
   });
 });
 
