@@ -126,14 +126,11 @@ const comments = ref<Boolean>(false);
 let progresses: Ref<Result<ProgressQuery>[]> = ref([]);
 
 tryOrAlertAsync(async () => {
-  console.log(props.building?.address);
-  console.log(props.start_date);
   progresses.value = await new ProgressQuery().getAll({
     building: props.building?.id,
     arrived_after: props.start_date,
     arrived_before: props.end_date,
   });
-  console.log(progresses.value);
 });
 
 function route(date: Date) {
