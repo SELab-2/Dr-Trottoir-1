@@ -37,8 +37,8 @@ type Element = Prisma.UserGetPayload<{
         salt: false;
         password: string;
         address: true;
-    }
-}>
+    };
+}>;
 
 type UserAllInfo = Prisma.UserGetPayload<{
     select: {
