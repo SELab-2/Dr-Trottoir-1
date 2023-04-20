@@ -55,12 +55,15 @@
         }}
       </v-chip>
     </template>
-    <v-chip  label color="brown" class="ml-3">
+    <v-chip label color="brown" class="ml-3">
       <v-icon icon="mdi-office-building"></v-icon>
       {{ total_buildings }}
     </v-chip>
     <v-chip label color="primary" class="ml-3">
-      <v-icon icon="mdi-calendar" class="pr-1"/> {{ date.getDate() + '-' + date.getMonth() + 1 + '-' + date.getFullYear() }}
+      <v-icon icon="mdi-calendar" class="pr-1" />
+      {{
+        date.getDate() + "-" + date.getMonth() + 1 + "-" + date.getFullYear()
+      }}
     </v-chip>
     <v-chip v-if="round_start" label color="primary" class="ml-3">
       <v-icon icon="mdi-clock"></v-icon> {{ round_start }}
