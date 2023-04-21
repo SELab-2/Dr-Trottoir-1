@@ -4,14 +4,13 @@
 -->
 <template>
   <div class="container">
-      <slot />
-    </div>
+    <slot />
+  </div>
 </template>
 
 <script setup lang="ts">
 defineProps({ margin: { type: String, default: "ma-3" } });
 </script>
-
 
 <style lang="sass">
 .container

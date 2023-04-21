@@ -9,7 +9,9 @@
     "
   >
     <v-icon v-if="icon" color="#333333" :icon="icon" size="small" />
-    <p v-if="value" style="text-overflow: ellipsis; white-space: nowrap">{{ value }}</p>
+    <p v-if="value" style="text-overflow: ellipsis; white-space: nowrap">
+      {{ value }}
+    </p>
     <v-icon
       v-if="props.route"
       color="#333333"

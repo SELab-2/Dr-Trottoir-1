@@ -103,10 +103,10 @@ export class ScheduleRouting extends Routing {
                 buildings: {
                     select: {
                         building_id: true,
-                    }
-                }
-            }
-        })
+                    },
+                },
+            },
+        });
 
         // Create a progress item for each building in the round.
         for (const building of round.buildings) {
@@ -115,8 +115,8 @@ export class ScheduleRouting extends Routing {
                     building_id: building.building_id,
                     schedule_id: schedule.id,
                     report: "", // TODO: make nullable
-                }
-            })
+                },
+            });
         }
 
         return res.status(201).json(schedule);

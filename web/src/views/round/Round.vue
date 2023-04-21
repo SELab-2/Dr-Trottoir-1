@@ -58,10 +58,7 @@
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Recent</h2>
         <div class="flex-grow-1"></div>
-        <RoundedButton
-          icon="mdi-history"
-          value="Alles"
-        ></RoundedButton>
+        <RoundedButton icon="mdi-history" value="Alles"></RoundedButton>
       </div>
 
       <div class="space-y-8">

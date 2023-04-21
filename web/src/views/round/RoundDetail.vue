@@ -13,7 +13,13 @@
             <RoundedButton
               icon="mdi-account"
               :value="data.user.first_name + ' ' + data.user.last_name"
-              @click="() => router.push({ name: 'account_settings', params: { id: data.user.id } })"
+              @click="
+                () =>
+                  router.push({
+                    name: 'account_settings',
+                    params: { id: data.user.id },
+                  })
+              "
             ></RoundedButton>
           </div>
         </div>
@@ -28,15 +34,15 @@
           culpa qui officia deserunt mollit anim id est laborum.
         </p>
 
-        <divider-layout class="my-8" ></divider-layout>
+        <divider-layout class="my-8"></divider-layout>
 
         <Progress
           v-for="entry in data.round.buildings.map((e) => {
-              return {
-                building: e.building,
-                progress: progressItems.get(e.building_id),
-              };
-            })"
+            return {
+              building: e.building,
+              progress: progressItems.get(e.building_id),
+            };
+          })"
           v-bind:key="entry.building.id"
           :building="entry.building"
           :progress="entry.progress"
@@ -66,7 +72,9 @@ const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
 tryOrAlertAsync(async () => {
   data.value = await new ScheduleQuery().getOne(schedule_id);
 
-  for (const progress of await new ProgressQuery().getAll({ schedule: schedule_id })) {
+  for (const progress of await new ProgressQuery().getAll({
+    schedule: schedule_id,
+  })) {
     progressItems.value.set(progress.building_id, progress);
   }
 
