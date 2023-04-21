@@ -40,9 +40,11 @@ jobs:
                     registry-url: 'https://npm.pkg.github.com'
                     scope: '@selab-2'
             -   name: "Clean install"
-                run: npm ci
+                run: |
+                    echo $NODE_AUTH_TOKEN
+                    npm ci
                 env:
-                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
             -   name: "Setup the database"
                 working-directory: ./orm
                 run: |

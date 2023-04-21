@@ -4,7 +4,7 @@ WORKDIR /build
 COPY package*.json /build/
 COPY .npmrc /build/.npmrc
 
-RUN npm ci && rm -f .npmrc
+RUN npm install && rm -f .npmrc
 
 COPY . .
 RUN npm run build

@@ -41,7 +41,7 @@ const initialiseFunctions: { [name: string]: () => Promise<any> } = {
 };
 
 export async function initialiseDatabase(): Promise<void> {
-    for (let entry in initialiseFunctions) {
+    for (const entry in initialiseFunctions) {
         await initialiseFunctions[entry]();
     }
 }

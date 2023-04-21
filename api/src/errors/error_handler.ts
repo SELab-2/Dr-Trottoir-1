@@ -13,6 +13,7 @@ import { errorMessagePrismaClient } from "./prisma_error";
  */
 export class ErrorHandler {
     static handle(err: Error, req: Request, res: Response, next: NextFunction) {
+        console.log(err);
         // If a PrismaORM error occurs, we send a more detailed message.
         if (err instanceof Prisma.PrismaClientKnownRequestError) {
             const { code, detail } = errorMessagePrismaClient(err);

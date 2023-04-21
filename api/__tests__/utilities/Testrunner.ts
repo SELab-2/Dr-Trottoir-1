@@ -1,6 +1,7 @@
 import request from "supertest";
 import { expect } from "@jest/globals";
 import { constants } from "http2";
+import * as util from "util";
 
 /**
  * Describes different authentication levels.
@@ -40,28 +41,28 @@ const credentialsMap: {
 
 interface GetParameters {
     url: string;
-    expectedData: {}[];
+    expectedData: object[];
     statusCode?: number;
 }
 
 interface PostParameters {
     url: string;
-    data: {};
-    expectedResponse: {};
+    data: object;
+    expectedResponse: object;
     statusCode?: number;
 }
 
 interface PatchParameters {
     url: string;
-    data: {};
-    expectedResponse: {};
+    data: object;
+    expectedResponse: object;
     statusCode?: number;
 }
 
 interface DeleteParameters {
     url: string;
     statusCode?: number;
-    data?: {};
+    data?: object;
 }
 
 /**
@@ -139,6 +140,7 @@ export class Testrunner {
             .send(data)
             .set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
+        console.log(util.inspect(response.body, { depth: null }));
 
         // drop the id, as we cannot predict that
         delete response.body["id"];
@@ -176,6 +178,9 @@ export class Testrunner {
             .set("Cookie", [cookie]);
 
         expect(response.statusCode).toEqual(statusCode);
+
+        console.log(util.inspect(response.body, { depth: null }));
+
         this.verifyBody([expectedResponse], response);
 
         return response;
@@ -232,7 +237,7 @@ export class Testrunner {
      * @param response response to be verified
      * @private
      */
-    private verifyBody(expected: {}[], response: request.Response) {
+    private verifyBody(expected: object[], response: request.Response) {
         if (response.body instanceof Array) {
             for (const item of expected) {
                 expect(response.body).toContainEqual(item);

@@ -8,6 +8,7 @@ import {
     restoreTables,
 } from "../mock/database";
 import {
+    badRequestForeignKey,
     badRequestResponse,
     forbiddenResponse,
     internalErrorResponse,
@@ -297,9 +298,59 @@ describe("Schedule tests", () => {
 
             const expectedResponse = {
                 day: "2023-06-04T12:00:00.000Z",
-                deleted: false,
-                round_id: 2,
                 user_id: 1,
+                round_id: 2,
+                deleted: false,
+                user: {
+                    id: 1,
+                    email: "student@trottoir.be",
+                    first_name: "Dirk",
+                    last_name: "De Student",
+                    last_login: "2023-05-04T12:00:00.000Z",
+                    date_added: "2023-05-04T12:00:00.000Z",
+                    phone: "0123456789",
+                    address_id: 1,
+                    address: {
+                        id: 1,
+                        street: "Wallaby Way",
+                        number: 42,
+                        city: "Sydney",
+                        zip_code: 2000,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                    },
+                    student: true,
+                    super_student: false,
+                    admin: false,
+                    deleted: false,
+                },
+                round: {
+                    id: 2,
+                    name: "Round 2",
+                    buildings: [
+                        {
+                            id: 2,
+                            round_id: 2,
+                            building_id: 2,
+                            deleted: false,
+                            building: {
+                                id: 2,
+                                name: "Building 2",
+                                ivago_id: "ivago-2",
+                                deleted: false,
+                                address: {
+                                    id: 2,
+                                    street: "Sint-Pietersnieuwstraat",
+                                    number: 25,
+                                    city: "Ghent",
+                                    zip_code: 9000,
+                                    latitude: 51.04732,
+                                    longitude: 3.7282,
+                                },
+                            },
+                        },
+                    ],
+                },
             };
 
             await runner.post({
@@ -310,11 +361,61 @@ describe("Schedule tests", () => {
         });
         test("PATCH /schedule/:id", async () => {
             const response = {
-                day: "2023-05-04T12:00:00.000Z",
-                deleted: false,
                 id: 1,
-                round_id: 1,
+                day: "2023-05-04T12:00:00.000Z",
                 user_id: 2,
+                round_id: 1,
+                deleted: false,
+                user: {
+                    id: 2,
+                    email: "superstudent@trottoir.be",
+                    first_name: "Toon",
+                    last_name: "De Superstudent",
+                    last_login: "2023-05-04T12:00:00.000Z",
+                    date_added: "2023-05-04T12:00:00.000Z",
+                    phone: "9876543210",
+                    address_id: 2,
+                    address: {
+                        id: 2,
+                        street: "Sint-Pietersnieuwstraat",
+                        number: 25,
+                        city: "Ghent",
+                        zip_code: 9000,
+                        latitude: 51.04732,
+                        longitude: 3.7282,
+                    },
+                    student: false,
+                    super_student: true,
+                    admin: false,
+                    deleted: false,
+                },
+                round: {
+                    id: 1,
+                    name: "Round 1",
+                    buildings: [
+                        {
+                            id: 1,
+                            round_id: 1,
+                            building_id: 1,
+                            deleted: false,
+                            building: {
+                                id: 1,
+                                name: "Building 1",
+                                ivago_id: "ivago-1",
+                                deleted: false,
+                                address: {
+                                    id: 1,
+                                    street: "Wallaby Way",
+                                    number: 42,
+                                    city: "Sydney",
+                                    zip_code: 2000,
+                                    latitude: -33.865143,
+                                    longitude: 151.2099,
+                                },
+                            },
+                        },
+                    ],
+                },
             };
 
             await runner.patch({
@@ -404,16 +505,16 @@ describe("Schedule tests", () => {
                 await runner.patch({
                     url: "/schedule/1",
                     data: { user_id: 0 },
-                    expectedResponse: internalErrorResponse,
-                    statusCode: 500,
+                    expectedResponse: badRequestForeignKey,
+                    statusCode: 400,
                 });
             });
             test("Can't change round id to non-existent one", async () => {
                 await runner.patch({
                     url: "/schedule/1",
                     data: { round_id: 0 },
-                    expectedResponse: internalErrorResponse,
-                    statusCode: 500,
+                    expectedResponse: badRequestForeignKey,
+                    statusCode: 400,
                 });
             });
         });

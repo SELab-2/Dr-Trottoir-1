@@ -8,6 +8,7 @@ import {
     restoreTables,
 } from "../mock/database";
 import {
+    badRequestForeignKey,
     badRequestResponse,
     forbiddenResponse,
     internalErrorResponse,
@@ -218,16 +219,102 @@ describe("Syndicus tests", () => {
                 user_id: 3,
             };
 
+            const expected = {
+                user_id: 3,
+                user: {
+                    id: 3,
+                    email: "administrator@trottoir.be",
+                    first_name: "Mario",
+                    last_name: "De Administrator",
+                    last_login: "2023-05-04T12:00:00.000Z",
+                    date_added: "2023-05-04T12:00:00.000Z",
+                    phone: "6549873210",
+                    address_id: 3,
+                    address: {
+                        id: 3,
+                        street: "Krijgslaan",
+                        number: 281,
+                        city: "Ghent",
+                        zip_code: 9000,
+                        latitude: 51.02776,
+                        longitude: 3.71847,
+                    },
+                    student: false,
+                    super_student: false,
+                    admin: true,
+                    deleted: false,
+                },
+                building: [],
+            };
+
             await runner.post({
                 url: "/syndicus",
                 data: syndicus,
-                expectedResponse: syndicus,
+                expectedResponse: expected,
             });
         });
 
         test("PATCH /syndicus/:id", async () => {
             const updated = { user_id: 2 };
-            const expected = { id: 1, user_id: 2 };
+            const expected = {
+                id: 1,
+                user_id: 2,
+                user: {
+                    id: 2,
+                    email: "superstudent@trottoir.be",
+                    first_name: "Toon",
+                    last_name: "De Superstudent",
+                    last_login: "2023-05-04T12:00:00.000Z",
+                    date_added: "2023-05-04T12:00:00.000Z",
+                    phone: "9876543210",
+                    address_id: 2,
+                    address: {
+                        id: 2,
+                        street: "Sint-Pietersnieuwstraat",
+                        number: 25,
+                        city: "Ghent",
+                        zip_code: 9000,
+                        latitude: 51.04732,
+                        longitude: 3.7282,
+                    },
+                    student: false,
+                    super_student: true,
+                    admin: false,
+                    deleted: false,
+                },
+                building: [
+                    {
+                        id: 1,
+                        name: "Building 1",
+                        ivago_id: "ivago-1",
+                        deleted: false,
+                        address: {
+                            id: 1,
+                            street: "Wallaby Way",
+                            number: 42,
+                            city: "Sydney",
+                            zip_code: 2000,
+                            latitude: -33.865143,
+                            longitude: 151.2099,
+                        },
+                    },
+                    {
+                        id: 3,
+                        name: "Building 3",
+                        ivago_id: "ivago-3",
+                        deleted: true,
+                        address: {
+                            id: 3,
+                            street: "Krijgslaan",
+                            number: 281,
+                            city: "Ghent",
+                            zip_code: 9000,
+                            latitude: 51.02776,
+                            longitude: 3.71847,
+                        },
+                    },
+                ],
+            };
             await runner.patch({
                 url: "/syndicus/1",
                 data: updated,
@@ -292,8 +379,8 @@ describe("Syndicus tests", () => {
             await runner.patch({
                 url: "/syndicus/1",
                 data: { user_id: "25" },
-                expectedResponse: internalErrorResponse,
-                statusCode: 500,
+                expectedResponse: badRequestForeignKey,
+                statusCode: 400,
             });
         });
         describe("Must be correctly authenticated to use any path", () => {

@@ -8,6 +8,7 @@ import {
     restoreTables,
 } from "../mock/database";
 import {
+    badRequestForeignKey,
     badRequestResponse,
     forbiddenResponse,
     internalErrorResponse,
@@ -240,10 +241,63 @@ describe("Building tests", () => {
             delete building["manual"];
             delete building["images"];
 
+            const expected = {
+                id: 1,
+                name: "Building 1 New",
+                ivago_id: "ivago-1",
+                deleted: false,
+                address: {
+                    id: 1,
+                    street: "Wallaby Way",
+                    number: 42,
+                    city: "Sydney",
+                    zip_code: 2000,
+                    latitude: -33.865143,
+                    longitude: 151.2099,
+                },
+                syndicus: {
+                    id: 1,
+                    user_id: 4,
+                    user: {
+                        id: 4,
+                        email: "syndicus@trottoir.be",
+                        first_name: "Simon",
+                        last_name: "De Syndicus",
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        phone: "7894561230",
+                        address_id: 3,
+                        student: false,
+                        super_student: false,
+                        admin: false,
+                        deleted: false,
+                    },
+                },
+                manual: {
+                    id: 1,
+                    path: "path/to/static_file",
+                    location: "STATIC_FILES",
+                },
+                images: [
+                    {
+                        id: 1,
+                        building_id: 1,
+                        image_id: 1,
+                        image: {
+                            id: 1,
+                            time: "2023-05-04T12:00:00.000Z",
+                            location: "FILE_SERVER",
+                            path: "path/to/file_server_image",
+                            user_id: 1,
+                        },
+                    },
+                ],
+            };
+
             await runner.patch({
                 url: "/building/1",
                 data: building,
-                expectedResponse: building,
+                expectedResponse: expected,
             });
         });
 
@@ -301,6 +355,7 @@ describe("Building tests", () => {
                 url: "/building",
                 data: building,
                 expectedResponse: expectedBuilding,
+                statusCode: 201,
             });
         });
 
@@ -374,24 +429,24 @@ describe("Building tests", () => {
                     data: {
                         syndicus_id: 0,
                     },
-                    expectedResponse: internalErrorResponse,
-                    statusCode: 500,
+                    expectedResponse: badRequestForeignKey,
+                    statusCode: 400,
                 });
             });
             test("Cannot assign non-existent address ID", async () => {
                 await runner.patch({
                     url: "/building/1",
                     data: { address_id: 0 },
-                    expectedResponse: internalErrorResponse,
-                    statusCode: 500,
+                    expectedResponse: badRequestForeignKey,
+                    statusCode: 400,
                 });
             });
             test("Cannot assign non-existent manual ID", async () => {
                 await runner.patch({
                     url: "/building/1",
                     data: { manual_id: 0 },
-                    expectedResponse: internalErrorResponse,
-                    statusCode: 500,
+                    expectedResponse: badRequestForeignKey,
+                    statusCode: 400,
                 });
             });
         });

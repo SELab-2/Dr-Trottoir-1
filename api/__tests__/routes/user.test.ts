@@ -443,7 +443,7 @@ describe("User tests", () => {
             });
         });
         describe("Cannot send salt and hash in the request", () => {
-            let user = {
+            const user = {
                 email: "admin@email.com",
                 first_name: "admin",
                 last_name: "familyname",

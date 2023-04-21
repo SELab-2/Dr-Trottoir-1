@@ -20,3 +20,8 @@ export const conflictResponse = {
     message: "Conflict",
     detail: "Unique constraint failed",
 };
+
+export const badRequestForeignKey = {
+    message: "Bad Request",
+    detail: "Foreign key constraint failed",
+};
