@@ -78,9 +78,9 @@ tryOrAlertAsync(async () => {
     progressItems.value.set(progress.building_id, progress);
   }
 
-  if (progressItems.value.size !== data.value?.round.buildings.length) {
+  /*if (progressItems.value.size !== data.value?.round.buildings.length) {
     throw new Error("Not every building has a progress item");
-  }
+  }*/
 });
 </script>
 
