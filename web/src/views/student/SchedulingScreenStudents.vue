@@ -191,7 +191,7 @@ const days = await tryOrAlertAsync<Array<DayEntry>>(async () => {
         schedule: scheduleItem.id,
       });
 
-      if (progress.length > 0) {
+      if (schedules.length > 0) {
         empty.value = false;
       }
 
