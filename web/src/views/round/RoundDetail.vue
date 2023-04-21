@@ -17,7 +17,7 @@
                 () =>
                   router.push({
                     name: 'account_settings',
-                    params: { id: data.user.id },
+                    params: { id: data?.user?.id },
                   })
               "
             ></RoundedButton>
@@ -45,7 +45,7 @@
           })"
           v-bind:key="entry.building.id"
           :building="entry.building"
-          :progress="entry.progress"
+          :progress="entry.progress as any"
         ></Progress>
       </div>
     </HFillWrapper>
