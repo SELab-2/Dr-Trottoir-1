@@ -163,7 +163,7 @@ export class Testrunner {
         data,
         expectedResponse,
         statusCode = 200,
-    }: PatchParameters) => {
+    }: PatchParameters): Promise<request.Response> => {
         const cookie = await this.authenticate();
 
         const response = await this.server
@@ -229,7 +229,7 @@ export class Testrunner {
      * @param response response to be verified
      * @private
      */
-    private verifyBody(expected: object[], response: request.Response) {
+    private verifyBody(expected: object[], response: request.Response): void {
         if (response.body instanceof Array) {
             for (const item of expected) {
                 expect(response.body).toContainEqual(item);
