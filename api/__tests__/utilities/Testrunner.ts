@@ -111,6 +111,7 @@ export class Testrunner {
 
     /**
      * Acquires authentication and performs a GET method on the URL, without doing any testing
+     * Useful for getting the responses from the API and capturing them in the test suites
      * @param url URL to GET
      */
     getRaw = async (url: string) => {
@@ -140,7 +141,6 @@ export class Testrunner {
             .send(data)
             .set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
-        console.log(util.inspect(response.body, { depth: null }));
 
         // drop the id, as we cannot predict that
         delete response.body["id"];
@@ -178,8 +178,6 @@ export class Testrunner {
             .set("Cookie", [cookie]);
 
         expect(response.statusCode).toEqual(statusCode);
-
-        console.log(util.inspect(response.body, { depth: null }));
 
         this.verifyBody([expectedResponse], response);
 
