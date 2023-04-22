@@ -27,7 +27,7 @@
             current_id = item.schedule.round_id;
             router.push({
               name: 'round_detail',
-              params: { id: current_id, schedule: 0 },
+              params: { id: current_id, schedule: item.schedule.id },
             });
           "
         >
@@ -191,7 +191,7 @@ const days = await tryOrAlertAsync<Array<DayEntry>>(async () => {
         schedule: scheduleItem.id,
       });
 
-      if (progress.length > 0) {
+      if (schedules.length > 0) {
         empty.value = false;
       }
 

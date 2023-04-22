@@ -24,11 +24,13 @@ export class RegionRouting extends Routing {
                 id: Parser.number(req.query["id"]),
                 name: Parser.string(req.query["name"]),
                 // vind alle regios waar een bepaalde user is toegekend
-                users: {
-                    some: {
-                        user_id: Parser.number(req.query["user_id"]),
-                    },
-                },
+                users: req.query["user_id"]
+                    ? {
+                          some: {
+                              user_id: Parser.number(req.query["user_id"]),
+                          },
+                      }
+                    : {},
             },
             include: RegionRouting.includes,
         });

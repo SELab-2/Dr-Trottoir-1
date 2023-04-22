@@ -59,11 +59,13 @@ export class UserRouting extends Routing {
                     },
                 },
                 // get all users assigned to a certain region
-                regions: {
-                    some: {
-                        region_id: Parser.number(req.query["region_id"]),
-                    },
-                },
+                regions: req.query["region_id"]
+                    ? {
+                          some: {
+                              region_id: Parser.number(req.query["region_id"]),
+                          },
+                      }
+                    : {},
             },
             select: UserRouting.selects,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
@@ -128,6 +130,7 @@ export class UserRouting extends Routing {
                 .createHash("sha256")
                 .update(req.body.password + req.body.salt)
                 .digest("hex");
+            delete req.body.password;
         }
 
         const result = await prisma.user.update({

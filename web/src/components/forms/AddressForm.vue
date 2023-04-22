@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row class="py-0 my-0">
+    <v-row class="py-0 my-0 mt-2">
       <v-col
         cols="1"
         style="min-width: 100px; max-width: 100%"
@@ -15,6 +15,7 @@
           required
           :variant="readonly ? 'plain' : 'outlined'"
           :readonly="readonly"
+          :rules="streetRules"
           @update:model-value="$emit('onUpdate', address)"
         ></v-text-field>
       </v-col>
@@ -28,10 +29,11 @@
           :variant="readonly ? 'plain' : 'outlined'"
           :readonly="readonly"
           @update:model-value="$emit('onUpdate', address)"
+          :rules="numberRules"
         ></v-text-field>
       </v-col>
     </v-row>
-    <v-row class="py-0 my-0">
+    <v-row class="py-0 my-0 mt-2 mb-1">
       <v-col
         cols="1"
         style="min-width: 100px; max-width: 100%"
@@ -47,6 +49,7 @@
           @update:model-value="$emit('onUpdate', address)"
           :variant="readonly ? 'plain' : 'outlined'"
           :readonly="readonly"
+          :rules="cityRules"
         ></v-text-field>
       </v-col>
       <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
@@ -59,6 +62,7 @@
           @update:model-value="$emit('onUpdate', address)"
           :variant="readonly ? 'plain' : 'outlined'"
           :readonly="readonly"
+          :rules="zipRules"
         ></v-text-field>
       </v-col>
     </v-row>
@@ -88,16 +92,16 @@ const props = defineProps({
     default: "",
   },
   number: {
-    type: Number,
-    default: 0,
+    type: String,
+    default: "0",
   },
   city: {
     type: String,
     default: "",
   },
   zip_code: {
-    type: Number,
-    default: 0,
+    type: String,
+    default: "0",
   },
 });
 
@@ -108,4 +112,44 @@ const address = ref<Address>({
   city: props.city,
   zip_code: props.zip_code,
 });
+
+/* below are the rule checks*/
+
+const streetRules = [
+  // check if street is present
+  (street: string) => {
+    return street ? true : "Geef een straat op.";
+  },
+];
+
+const cityRules = [
+  // check if city is present
+  (city: string) => {
+    return city ? true : "Geef een stad op.";
+  },
+
+  // check if city only contains chars
+  (city: string) => {
+    return /^[a-zA-Z]+$/.test(city) ? true : "Stad kan geen nummers bevatten.";
+  },
+];
+
+const numberRules = [
+  // check if number is present
+  (num: string) => {
+    return num ? true : "Geef een huisnummer.";
+  },
+];
+
+const zipRules = [
+  // check if zip is present
+  (zip: string) => {
+    return zip ? true : "Geef een postcode.";
+  },
+
+  // check if zip length is 4
+  (zip: string) => {
+    return zip.length === 4 ? true : "Ongeldige postcode";
+  },
+];
 </script>

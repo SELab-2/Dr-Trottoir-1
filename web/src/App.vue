@@ -7,7 +7,7 @@
         </template>
         <!-- router view caches the component (Mainlayout) (no extra requests)
           TODO: check if this works with logout/login different user -->
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ Component }" :key="useAuthStore().auth?.id">
           <keep-alive>
             <component :is="Component" />
           </keep-alive>
@@ -19,6 +19,7 @@
 
 <script lang="ts" setup>
 import Loader from "@/components/popups/Loader.vue";
+import { useAuthStore } from "@/stores/auth";
 </script>
 
 <style lang="sass" scoped></style>
