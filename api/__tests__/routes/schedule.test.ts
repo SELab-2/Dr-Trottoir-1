@@ -11,7 +11,6 @@ import {
     badRequestForeignKey,
     badRequestResponse,
     forbiddenResponse,
-    internalErrorResponse,
     notFoundResponse,
 } from "../utilities/constants";
 
