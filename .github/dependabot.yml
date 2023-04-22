@@ -1,0 +1,46 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+
+registries:
+  npm-gh:
+    type: npm-registry
+    url: https://npm.pkg.github.com
+    token: ${{ secrets.NPM_AUTH_TOKEN }}
+    replaces-base: true
+
+updates:
+  # Web
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule: 
+      interval: "weekly"
+    assignees:
+      - "themessik"
+  
+  # API
+  - package-ecosystem: "npm"
+    directory: "/api"
+    schedule:
+      interval: "weekly"
+    assignees:
+      - "themessik"
+   
+  # ORM
+  - package-ecosystem: "npm"
+    directory: "/orm"
+    schedule:
+      interval: "weekly"
+    assignees:
+      - "themessik"
+      
+  # Query Builder
+  - package-ecosystem: "npm"
+    directory: "/api_query"
+    schedule:
+      interval: "weekly"
+    assignees:
+      - "themessik"
