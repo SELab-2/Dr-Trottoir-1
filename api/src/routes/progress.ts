@@ -38,7 +38,7 @@ export class ProgressRouting extends Routing {
             req.user?.student &&
             !req.user?.super_student &&
             !req.user?.admin &&
-            Parser.number(req.query["user_id"]) != req.user?.id
+            Parser.number(req.query["user"]) !== req.user?.id
         ) {
             throw new APIError(APIErrorCode.FORBIDDEN);
         }
