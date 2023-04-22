@@ -89,14 +89,12 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        // De body van een request mag niet leeg zijn, alsook geen hash of salt
-        // bevatten.
+        // The body of a request can't be empty and can't contain a hash or salt
         if (!req.body == null || req.body.hash || req.body.salt) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
-        // We kiezen een willekeurige salt, berekenen de hash-waarde, en slaan
-        // deze tenslotte op in hun corresponderende velden.
+        // We choose a random salt, calculate the hash-value and save these in their corresponding fields
         const password = req.body.password;
         delete req.body.password;
         const user: User = req.body;
@@ -106,7 +104,6 @@ export class UserRouting extends Routing {
             .update(password + user.salt)
             .digest("hex");
 
-        // Voer een poging uit om de gebruiker toe te voegen.
         const result = await prisma.user.create({
             data: user,
             select: UserRouting.selects,
@@ -117,13 +114,12 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        // De body van een request mag niet leeg zijn, alsook geen hash of salt
-        // bevatten.
+        // The body of a request can't be empty and can't contain a hash or salt
         if (req.body == null || req.body.hash || req.body.salt) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
-        // Indien het wachtwoord veranderd wordt
+        // The request might want to change the password
         if (req.body.password) {
             req.body.salt = crypto.randomBytes(32).toString();
             req.body.hash = crypto
