@@ -43,11 +43,17 @@ export class ProgressRouting extends Routing {
             throw new APIError(APIErrorCode.FORBIDDEN);
         }
 
+        // only admins can choose to see deleted entries too
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
+            deleted = undefined;
+        }
+
         const result = await prisma.progress.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                deleted: Parser.bool(req.query["deleted"], false),
+                deleted: deleted,
                 report: {
                     contains: Parser.string(req.query["report"], ""),
                 },

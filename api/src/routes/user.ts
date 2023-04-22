@@ -34,6 +34,12 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        // only admins can choose to see deleted entries too
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
+            deleted = undefined;
+        }
+
         const result = await prisma.user.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -41,7 +47,7 @@ export class UserRouting extends Routing {
                 student: Parser.bool(req.query["student"]),
                 super_student: Parser.bool(req.query["super_student"]),
                 admin: Parser.bool(req.query["admin"]),
-                deleted: Parser.bool(req.query["deleted"], false),
+                deleted: deleted,
                 last_login: {
                     lte: Parser.date(req.query["login_before"]),
                     gte: Parser.date(req.query["login_after"]),
