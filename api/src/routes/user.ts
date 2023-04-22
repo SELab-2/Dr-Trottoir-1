@@ -112,8 +112,18 @@ export class UserRouting extends Routing {
         return res.status(201).json(result);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async updateOne(req: CustomRequest, res: express.Response) {
+        // Students are only allowed to change their own account
+        if (
+            req.user?.student &&
+            !req.user?.super_student &&
+            !req.user?.admin &&
+            Parser.number(req.params["id"]) !== req.user?.id
+        ) {
+            throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
         // The body of a request can't be empty and can't contain a hash or salt
         if (req.body == null || req.body.hash || req.body.salt) {
             throw new APIError(APIErrorCode.BAD_REQUEST);

@@ -64,7 +64,6 @@ export class BuildingRouting extends Routing {
         return res.json(result);
     }
 
-    @Auth.authorization({ student: true })
     override async getOne(req: CustomRequest, res: express.Response) {
         if (Number.isNaN(parseInt(req.params["id"]))) {
             return BuildingRouting.resident(req, res);
@@ -129,7 +128,7 @@ export class BuildingRouting extends Routing {
         return res.status(200).json({});
     }
 
-    @Auth.authorization({})
+    @Auth.authorization({ student: true })
     static async internal(req: CustomRequest, res: express.Response) {
         const result = await prisma.building.findFirstOrThrow({
             where: {
