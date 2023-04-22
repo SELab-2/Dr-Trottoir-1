@@ -325,14 +325,15 @@ describe("Syndicus tests", () => {
             await runner.delete({
                 url: "/syndicus/1",
             });
-
-            console.log("Hello");
         });
     });
 
     describe("Unsuccessful requests", () => {
-        test("Requests using non-existent syndicus", async () => {
+        beforeEach(() => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+        });
+
+        test("Requests using non-existent syndicus", async () => {
             const url = "/syndicus/0";
             await runner.get({
                 url: url,
@@ -353,7 +354,6 @@ describe("Syndicus tests", () => {
             });
         });
         test("Requests using wrong type", async () => {
-            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
             const url = "/syndicus/foo";
             await runner.get({
                 url: url,
@@ -374,7 +374,6 @@ describe("Syndicus tests", () => {
             });
         });
         test("Assigning wrong type to user_id", async () => {
-            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
             await runner.patch({
                 url: "/syndicus/1",
                 data: { user_id: "25" },

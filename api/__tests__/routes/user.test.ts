@@ -25,13 +25,20 @@ describe("User tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("user", "user_region");
+        await restoreTables(
+            "user",
+            "user_region",
+            "syndicus",
+            "schedule",
+            "image",
+        );
     });
 
     describe("Successful requests", () => {
         beforeEach(() => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
         });
+
         test("GET /user", async () => {
             const expected = [
                 {
@@ -196,7 +203,6 @@ describe("User tests", () => {
             });
         });
         test("PATCH /user/:id", async () => {
-            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
             const user = (await runner.getRaw("/user/1")).body;
             user.first_name = "Baz";
 
@@ -255,6 +261,30 @@ describe("User tests", () => {
         });
     });
     describe("Unsuccessful requests", () => {
+        const user = {
+            id: undefined,
+            email: "admin@email.com",
+            first_name: "admin",
+            last_name: "familyname",
+            date_added: "2020-01-01T00:00:00.000Z",
+            last_login: "2020-01-01T00:00:00.000Z",
+            phone: "number",
+            address: {
+                id: undefined,
+                city: "Gent",
+                latitude: 100.0,
+                longitude: 100.0,
+                number: 1,
+                street: "street",
+                zip_code: 1000,
+            },
+            address_id: undefined,
+            student: false,
+            super_student: false,
+            admin: true,
+            deleted: false,
+            regions: [],
+        };
         describe("Must be correctly authorized", () => {
             test("Can't use any path without authorization", async () => {
                 runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
@@ -269,31 +299,6 @@ describe("User tests", () => {
                     expectedData: [forbiddenResponse],
                     statusCode: 403,
                 });
-
-                const user = {
-                    id: undefined,
-                    email: "admin@email.com",
-                    first_name: "admin",
-                    last_name: "familyname",
-                    date_added: "2020-01-01T00:00:00.000Z",
-                    last_login: "2020-01-01T00:00:00.000Z",
-                    phone: "number",
-                    address: {
-                        id: undefined,
-                        city: "Gent",
-                        latitude: 100.0,
-                        longitude: 100.0,
-                        number: 1,
-                        street: "street",
-                        zip_code: 1000,
-                    },
-                    address_id: undefined,
-                    student: false,
-                    super_student: false,
-                    admin: true,
-                    deleted: false,
-                    regions: [],
-                };
 
                 await runner.post({
                     url: "/user",
@@ -321,31 +326,6 @@ describe("User tests", () => {
                     expectedData: [forbiddenResponse],
                     statusCode: 403,
                 });
-
-                const user = {
-                    id: undefined,
-                    email: "admin@email.com",
-                    first_name: "admin",
-                    last_name: "familyname",
-                    date_added: "2020-01-01T00:00:00.000Z",
-                    last_login: "2020-01-01T00:00:00.000Z",
-                    phone: "number",
-                    address: {
-                        id: undefined,
-                        city: "Gent",
-                        latitude: 100.0,
-                        longitude: 100.0,
-                        number: 1,
-                        street: "street",
-                        zip_code: 1000,
-                    },
-                    address_id: undefined,
-                    student: false,
-                    super_student: false,
-                    admin: true,
-                    deleted: false,
-                    regions: [],
-                };
 
                 await runner.post({
                     url: "/user",
@@ -443,52 +423,6 @@ describe("User tests", () => {
             });
         });
         describe("Cannot send salt and hash in the request", () => {
-            const user = {
-                email: "admin@email.com",
-                first_name: "admin",
-                last_name: "familyname",
-                date_added: "2020-01-01T00:00:00.000Z",
-                last_login: "2020-01-01T00:00:00.000Z",
-                phone: "number",
-                address: {
-                    create: {
-                        city: "Gent",
-                        latitude: 100.0,
-                        longitude: 100.0,
-                        number: 1,
-                        email: "admin@email.com",
-                        first_name: "admin",
-                        last_name: "familyname",
-                        date_added: "2020-01-01T00:00:00.000Z",
-                        last_login: "2020-01-01T00:00:00.000Z",
-                        phone: "number",
-                        address: {
-                            create: {
-                                city: "Gent",
-                                latitude: 100.0,
-                                longitude: 100.0,
-                                number: 1,
-                                street: "street",
-                                zip_code: 1000,
-                            },
-                        },
-                        address_id: undefined,
-                        student: false,
-                        super_student: false,
-                        admin: true,
-                        password: "adminPassword",
-                        street: "street",
-                        zip_code: 1000,
-                    },
-                },
-                address_id: undefined,
-                student: false,
-                super_student: false,
-                admin: true,
-                password: "adminPassword",
-                hash: "somehash",
-                salt: "some salt",
-            };
             test("Can't create user a new user with predefined hash and salt", async () => {
                 runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
                 await runner.post({

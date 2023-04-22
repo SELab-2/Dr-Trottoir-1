@@ -2,7 +2,6 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import { constants } from "http2";
 import {
     deleteDatabaseData,
     initialiseDatabase,
@@ -15,19 +14,23 @@ import {
 } from "../utilities/constants";
 
 describe("Action tests", () => {
+    let runner: Testrunner;
+
+    beforeAll(async () => {
+        const server = request(app);
+        runner = new Testrunner(server);
+
+        await deleteDatabaseData();
+        await initialiseDatabase();
+
+        runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+    });
+
+    afterEach(async () => {
+        await restoreTables("action", "garbage");
+    });
+
     describe("Succesful requests", () => {
-        let runner: Testrunner;
-
-        beforeAll(async () => {
-            const server = request(app);
-            runner = new Testrunner(server);
-
-            await deleteDatabaseData();
-            await initialiseDatabase();
-
-            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
-        });
-
         test("POST /action", async () => {
             const newAction = {
                 description: "new action",
@@ -83,10 +86,6 @@ describe("Action tests", () => {
             });
         });
 
-        afterEach(async () => {
-            await restoreTables("action", "garbage");
-        });
-
         afterAll(() => {
             app.close();
         });
@@ -116,7 +115,7 @@ describe("Action tests", () => {
                     await runner.get({
                         url: "/action",
                         expectedData: [forbiddenResponse],
-                        statusCode: constants.HTTP_STATUS_FORBIDDEN,
+                        statusCode: 403,
                     });
                 });
 
@@ -124,7 +123,7 @@ describe("Action tests", () => {
                     await runner.get({
                         url: "/action/1",
                         expectedData: [forbiddenResponse],
-                        statusCode: constants.HTTP_STATUS_FORBIDDEN,
+                        statusCode: 403,
                     });
                 });
 
@@ -133,7 +132,7 @@ describe("Action tests", () => {
                         url: "/action",
                         data: newAction,
                         expectedResponse: forbiddenResponse,
-                        statusCode: constants.HTTP_STATUS_FORBIDDEN,
+                        statusCode: 403,
                     });
                 });
 
@@ -142,14 +141,14 @@ describe("Action tests", () => {
                         url: "/action/1",
                         data: newAction,
                         expectedResponse: forbiddenResponse,
-                        statusCode: constants.HTTP_STATUS_FORBIDDEN,
+                        statusCode: 403,
                     });
                 });
 
                 test("Cannot reach DELETE /action/:id", async () => {
                     await runner.delete({
                         url: "/action/1",
-                        statusCode: constants.HTTP_STATUS_FORBIDDEN,
+                        statusCode: 403,
                     });
                 });
             });
@@ -225,8 +224,11 @@ describe("Action tests", () => {
             });
         });
         describe("The type of action id must be correct", () => {
-            test("GET request", async () => {
+            beforeEach(() => {
                 runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            });
+
+            test("GET request", async () => {
                 await runner.get({
                     url: "/action/wrongtype",
                     expectedData: [badRequestResponse],
@@ -235,7 +237,6 @@ describe("Action tests", () => {
             });
 
             test("PATCH request", async () => {
-                runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
                 const newAction = {
                     foo: "bar",
                 };
@@ -249,7 +250,6 @@ describe("Action tests", () => {
             });
 
             test("DELETE request", async () => {
-                runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
                 await runner.delete({
                     url: "/action/wrongtype",
                     statusCode: 400,

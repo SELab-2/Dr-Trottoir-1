@@ -11,7 +11,6 @@ import {
     badRequestForeignKey,
     badRequestResponse,
     forbiddenResponse,
-    internalErrorResponse,
     notFoundResponse,
 } from "../utilities/constants";
 
@@ -27,12 +26,21 @@ describe("Building tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("building", "building_image");
+        await restoreTables(
+            "building",
+            "building_image",
+            "garbage",
+            "round_building",
+            "progress",
+        );
     });
 
     describe("Succesful requests", () => {
-        test("GET /building", async () => {
+        beforeEach(() => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+        });
+
+        test("GET /building", async () => {
             const buildings = [
                 {
                     address: {
@@ -227,7 +235,6 @@ describe("Building tests", () => {
         });
 
         test("PATCH /building/:id", async () => {
-            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
             const building = (await runner.getRaw("/building/1")).body;
             building["name"] = "Building 1 New";
             // delete fields that are not part of the request, but set fields accordingly for the expectedResponse
@@ -302,8 +309,6 @@ describe("Building tests", () => {
         });
 
         test("POST /building", async () => {
-            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
-
             const building = {
                 name: "new building",
                 ivago_id: "ivago-new",
@@ -360,7 +365,6 @@ describe("Building tests", () => {
         });
 
         test("DELETE /building/:id", async () => {
-            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
             await runner.delete({
                 url: "/building/1",
             });
@@ -368,19 +372,17 @@ describe("Building tests", () => {
     });
     describe("Unsuccessful requests", () => {
         describe("Must have correct authorisation", () => {
+            const newBuilding = {
+                name: "new building",
+                ivago_id: "ivago-new",
+                address_id: 3,
+                manual_id: 3,
+                syndicus_id: 1,
+            };
             describe("Can't use any path unauthorized", () => {
                 beforeEach(() => {
                     runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
                 });
-
-                const newBuilding = {
-                    name: "new building",
-                    ivago_id: "ivago-new",
-                    address_id: 3,
-                    manual_id: 3,
-                    syndicus_id: 1,
-                };
-
                 test("Can't GET /building", async () => {
                     await runner.get({
                         url: "/building",
@@ -411,7 +413,41 @@ describe("Building tests", () => {
                         statusCode: 403,
                     });
                 });
-                test("Can't delete /building/:id", async () => {
+                test("Can't DELETE /building/:id", async () => {
+                    await runner.delete({
+                        url: "/building/1",
+                        statusCode: 403,
+                    });
+                });
+            });
+            describe("Can't use any path as Student except concrete GET", () => {
+                beforeEach(() => {
+                    runner.authLevel(AuthenticationLevel.STUDENT);
+                });
+                test("Can't GET /building", async () => {
+                    await runner.get({
+                        url: "/building",
+                        expectedData: [forbiddenResponse],
+                        statusCode: 403,
+                    });
+                });
+                test("Can't POST /building", async () => {
+                    await runner.post({
+                        url: "/building",
+                        data: newBuilding,
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
+                test("Can't PATCH /building/:id", async () => {
+                    await runner.patch({
+                        url: "/building/1",
+                        data: { name: "Adapted Building" },
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
+                test("Can't DELETE /building/:id", async () => {
                     await runner.delete({
                         url: "/building/1",
                         statusCode: 403,

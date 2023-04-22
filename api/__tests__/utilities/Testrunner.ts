@@ -1,7 +1,6 @@
 import request from "supertest";
 import { expect } from "@jest/globals";
 import { constants } from "http2";
-import * as util from "util";
 
 /**
  * Describes different authentication levels.
@@ -97,7 +96,7 @@ export class Testrunner {
      */
     get = async ({
         url,
-        expectedData = [],
+        expectedData,
         statusCode = 200,
     }: GetParameters): Promise<request.Response> => {
         const cookie = await this.authenticate();
@@ -150,11 +149,6 @@ export class Testrunner {
         return response;
     };
 
-    postRaw = async (url: string, data: object) => {
-        const cookie = await this.authenticate();
-        return this.server.post(url).set(data).set("Cookie", cookie);
-    };
-
     /**
      * Acquires authentication if required and performs a PATCH request to the URL.
      * Also performs verification on the response.
@@ -194,7 +188,7 @@ export class Testrunner {
      */
     delete = async ({
         url,
-        statusCode = constants.HTTP_STATUS_OK,
+        statusCode = 200,
         data = {},
     }: DeleteParameters): Promise<request.Response> => {
         const cookie = await this.authenticate();

@@ -26,13 +26,71 @@ describe("Schedule tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("schedule");
+        await restoreTables("schedule", "progress");
     });
 
     describe("Successful requests", () => {
         beforeEach(() => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
         });
+
+        const building = {
+            day: "2023-05-04T12:00:00.000Z",
+            deleted: false,
+            id: 1,
+            round: {
+                buildings: [
+                    {
+                        building: {
+                            address: {
+                                city: "Sydney",
+                                id: 1,
+                                latitude: -33.865143,
+                                longitude: 151.2099,
+                                number: 42,
+                                street: "Wallaby Way",
+                                zip_code: 2000,
+                            },
+                            deleted: false,
+                            id: 1,
+                            ivago_id: "ivago-1",
+                            name: "Building 1",
+                        },
+                        building_id: 1,
+                        deleted: false,
+                        id: 1,
+                        round_id: 1,
+                    },
+                ],
+                id: 1,
+                name: "Round 1",
+            },
+            round_id: 1,
+            user: {
+                address: {
+                    city: "Sydney",
+                    id: 1,
+                    latitude: -33.865143,
+                    longitude: 151.2099,
+                    number: 42,
+                    street: "Wallaby Way",
+                    zip_code: 2000,
+                },
+                address_id: 1,
+                admin: false,
+                date_added: "2023-05-04T12:00:00.000Z",
+                deleted: false,
+                email: "student@trottoir.be",
+                first_name: "Dirk",
+                id: 1,
+                last_login: "2023-05-04T12:00:00.000Z",
+                last_name: "De Student",
+                phone: "0123456789",
+                student: true,
+                super_student: false,
+            },
+            user_id: 1,
+        };
 
         test("GET /schedule", async () => {
             const schedules = [
@@ -159,63 +217,6 @@ describe("Schedule tests", () => {
         });
 
         test("GET /schedule/:id", async () => {
-            const building = {
-                day: "2023-05-04T12:00:00.000Z",
-                deleted: false,
-                id: 1,
-                round: {
-                    buildings: [
-                        {
-                            building: {
-                                address: {
-                                    city: "Sydney",
-                                    id: 1,
-                                    latitude: -33.865143,
-                                    longitude: 151.2099,
-                                    number: 42,
-                                    street: "Wallaby Way",
-                                    zip_code: 2000,
-                                },
-                                deleted: false,
-                                id: 1,
-                                ivago_id: "ivago-1",
-                                name: "Building 1",
-                            },
-                            building_id: 1,
-                            deleted: false,
-                            id: 1,
-                            round_id: 1,
-                        },
-                    ],
-                    id: 1,
-                    name: "Round 1",
-                },
-                round_id: 1,
-                user: {
-                    address: {
-                        city: "Sydney",
-                        id: 1,
-                        latitude: -33.865143,
-                        longitude: 151.2099,
-                        number: 42,
-                        street: "Wallaby Way",
-                        zip_code: 2000,
-                    },
-                    address_id: 1,
-                    admin: false,
-                    date_added: "2023-05-04T12:00:00.000Z",
-                    deleted: false,
-                    email: "student@trottoir.be",
-                    first_name: "Dirk",
-                    id: 1,
-                    last_login: "2023-05-04T12:00:00.000Z",
-                    last_name: "De Student",
-                    phone: "0123456789",
-                    student: true,
-                    super_student: false,
-                },
-                user_id: 1,
-            };
             await runner.get({
                 url: "/schedule/1",
                 expectedData: [building],
@@ -224,64 +225,6 @@ describe("Schedule tests", () => {
 
         test("GET /schedule/:id as Student", async () => {
             runner.authLevel(AuthenticationLevel.STUDENT);
-            const building = {
-                day: "2023-05-04T12:00:00.000Z",
-                deleted: false,
-                id: 1,
-                round: {
-                    buildings: [
-                        {
-                            building: {
-                                address: {
-                                    city: "Sydney",
-                                    id: 1,
-                                    latitude: -33.865143,
-                                    longitude: 151.2099,
-                                    number: 42,
-                                    street: "Wallaby Way",
-                                    zip_code: 2000,
-                                },
-                                deleted: false,
-                                id: 1,
-                                ivago_id: "ivago-1",
-                                name: "Building 1",
-                            },
-                            building_id: 1,
-                            deleted: false,
-                            id: 1,
-                            round_id: 1,
-                        },
-                    ],
-                    id: 1,
-                    name: "Round 1",
-                },
-                round_id: 1,
-                user: {
-                    address: {
-                        city: "Sydney",
-                        id: 1,
-                        latitude: -33.865143,
-                        longitude: 151.2099,
-                        number: 42,
-                        street: "Wallaby Way",
-                        zip_code: 2000,
-                    },
-                    address_id: 1,
-                    admin: false,
-                    date_added: "2023-05-04T12:00:00.000Z",
-                    deleted: false,
-                    email: "student@trottoir.be",
-                    first_name: "Dirk",
-                    id: 1,
-                    last_login: "2023-05-04T12:00:00.000Z",
-                    last_name: "De Student",
-                    phone: "0123456789",
-                    student: true,
-                    super_student: false,
-                },
-                user_id: 1,
-            };
-
             await runner.get({
                 url: "/schedule/1",
                 expectedData: [building],
