@@ -9,8 +9,8 @@ on:
             - 'api/**'
 
 jobs:
-    lint_test:
-        runs-on: [ self-hosted ]
+    lint-build:
+        runs-on: ubuntu-latest
         defaults:
             run:
                 working-directory: ./api
@@ -25,8 +25,17 @@ jobs:
             -   name: "Install dependencies"
                 run: npm ci
                 env:
-                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Check for linting and errors"
                 run: npm run lint
                 env:
-                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+            -   name: "Verify the code compiles"
+                run: npm run build
+            -   name: "Cleanup"
+                if: always()
+                run: |
+                    chmod +x ../server/cleanup.sh
+                    ../server/cleanup.sh -p
+                shell: bash
+

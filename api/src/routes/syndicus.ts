@@ -1,14 +1,18 @@
 import { prisma } from "../prisma";
 import express from "express";
-import { CustomRequest, Routing, includeUser } from "./routing";
+import { CustomRequest, Routing, includeUser, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
+import { Prisma } from "@selab-2/groep-1-orm";
 
 export class SyndicusRouting extends Routing {
+    private static includes: Prisma.SyndicusInclude = {
+        user: includeUser(true),
+        building: selectBuilding(),
+    };
+
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.syndicus.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -33,10 +37,8 @@ export class SyndicusRouting extends Routing {
                 },
                 user_id: Parser.number(req.query["user"]),
             },
-            include: {
-                user: includeUser(true, true),
-                building: joins?.includes("building"),
-            },
+            include: SyndicusRouting.includes,
+            orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
 
         return res.status(200).json(result);
@@ -44,16 +46,11 @@ export class SyndicusRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const joins = Parser.stringArray(req.query.join, []);
-
         const result = await prisma.syndicus.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            include: {
-                user: includeUser(true, true),
-                building: joins?.includes("building"),
-            },
+            include: SyndicusRouting.includes,
         });
 
         return res.status(200).json(result);
@@ -65,6 +62,7 @@ export class SyndicusRouting extends Routing {
             data: {
                 user_id: parseInt(req.body["user_id"]),
             },
+            include: SyndicusRouting.includes,
         });
 
         return res.status(201).json(syndicus);
@@ -79,6 +77,7 @@ export class SyndicusRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
+            include: SyndicusRouting.includes,
         });
 
         return res.status(200).json(result);
@@ -86,18 +85,12 @@ export class SyndicusRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        await prisma.building.deleteMany({
-            where: {
-                syndicus_id: Parser.number(req.params["id"]),
-            },
-        });
-
-        const result = await prisma.syndicus.delete({
+        await prisma.syndicus.delete({
             where: {
                 id: Parser.number(req.params["id"]),
             },
         });
 
-        return res.status(200).json(result);
+        return res.status(200).json({});
     }
 }

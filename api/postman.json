@@ -1,211 +1,2028 @@
 {
-    "info": {
-        "_postman_id": "9ecf1452-d125-4712-8876-a5394160b20e",
-        "name": "API",
-        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-        "_exporter_id": "16524797"
-    },
-    "item": [
-        {
-            "name": "Building",
-            "item": [
-                {
-                    "name": "Retrieve all buildings",
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{SERVER}}/building?take=1&skip=0&join=syndicus,manual,address",
-                            "host": ["{{SERVER}}"],
-                            "path": ["building"],
-                            "query": [
-                                {
-                                    "key": "take",
-                                    "value": "1"
-                                },
-                                {
-                                    "key": "skip",
-                                    "value": "0"
-                                },
-                                {
-                                    "key": "join",
-                                    "value": "syndicus,manual,address"
-                                }
-                            ]
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Retrieve building by id",
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{SERVER}}/building/:id",
-                            "host": ["{{SERVER}}"],
-                            "path": ["building", ":id"],
-                            "variable": [
-                                {
-                                    "key": "id",
-                                    "value": "1"
-                                }
-                            ]
-                        }
-                    },
-                    "response": []
-                }
-            ]
-        },
-        {
-            "name": "Schedule",
-            "item": [
-                {
-                    "name": "Retrieve all schedule items",
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{SERVER}}/schedule?take=1&skip=0&join=round,user",
-                            "host": ["{{SERVER}}"],
-                            "path": ["schedule"],
-                            "query": [
-                                {
-                                    "key": "take",
-                                    "value": "1"
-                                },
-                                {
-                                    "key": "skip",
-                                    "value": "0"
-                                },
-                                {
-                                    "key": "join",
-                                    "value": "round,user"
-                                }
-                            ]
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Retrieve schedule item by id",
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{SERVER}}/schedule/:id",
-                            "host": ["{{SERVER}}"],
-                            "path": ["schedule", ":id"],
-                            "variable": [
-                                {
-                                    "key": "id",
-                                    "value": "1"
-                                }
-                            ]
-                        }
-                    },
-                    "response": []
-                }
-            ]
-        },
-        {
-            "name": "User",
-            "item": [
-                {
-                    "name": "Retrieve all users",
-                    "event": [
-                        {
-                            "listen": "test",
-                            "script": {
-                                "exec": [""],
-                                "type": "text/javascript"
-                            }
-                        }
-                    ],
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{SERVER}}/user?take=1024&skip=0&student=&super_student=&admin=&added_before&added_after&name=&login_before&login_after",
-                            "host": ["{{SERVER}}"],
-                            "path": ["user"],
-                            "query": [
-                                {
-                                    "key": "take",
-                                    "value": "1024",
-                                    "description": "Integer\nAmount of results"
-                                },
-                                {
-                                    "key": "skip",
-                                    "value": "0",
-                                    "description": "Integer\nSkip over a given amount of results"
-                                },
-                                {
-                                    "key": "student",
-                                    "value": "",
-                                    "description": "Boolean\nShow only (non) students"
-                                },
-                                {
-                                    "key": "super_student",
-                                    "value": "",
-                                    "description": "Boolean\nShow only (non) super students"
-                                },
-                                {
-                                    "key": "admin",
-                                    "value": "",
-                                    "description": "Boolean\nShow only (non) administrators"
-                                },
-                                {
-                                    "key": "added_before",
-                                    "value": null,
-                                    "description": "Date\nAccount has been created prior to date"
-                                },
-                                {
-                                    "key": "added_after",
-                                    "value": null,
-                                    "description": "Date\nAccount has been created after given date"
-                                },
-                                {
-                                    "key": "name",
-                                    "value": "",
-                                    "description": "String \nFilter on first and last name\n"
-                                },
-                                {
-                                    "key": "login_before",
-                                    "value": null,
-                                    "description": "Date\nUser's last login was before given date"
-                                },
-                                {
-                                    "key": "login_after",
-                                    "value": null,
-                                    "description": "Date\nUser's last login was after given date"
-                                }
-                            ]
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Retrieve user by id",
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{SERVER}}/user/:id",
-                            "host": ["{{SERVER}}"],
-                            "path": ["user", ":id"],
-                            "variable": [
-                                {
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "Identificatie"
-                                }
-                            ]
-                        }
-                    },
-                    "response": []
-                }
-            ]
-        }
-    ]
+	"info": {
+		"_postman_id": "1606ccf9-029e-4338-a737-f84514e3285a",
+		"name": "API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26394641"
+	},
+	"item": [
+		{
+			"name": "Action",
+			"item": [
+				{
+					"name": "Retrieve all actions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/action",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"action"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results",
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": "",
+									"description": "String\nSearching according a substring of the description",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \n\nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": "",
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\n\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve action by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/action/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"action",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the action"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update action by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"New description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/action/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"action",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentification of the action\n"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove action by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/action/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"action",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentification of the action\n"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Building",
+			"item": [
+				{
+					"name": "Retrieve all buildings",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+									"    console.log(response.json());",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/building",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"building"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"description": "String\nFilter on the name of the building.",
+									"disabled": true
+								},
+								{
+									"key": "ivago_id",
+									"value": "",
+									"description": "String\nSpecify the Ivago identifier",
+									"disabled": true
+								},
+								{
+									"key": "syndicus_id",
+									"value": "",
+									"description": "Number\nThe identifier of the syndicus of this building.",
+									"disabled": true
+								},
+								{
+									"key": "deleted",
+									"value": "",
+									"description": "Boolean\nShow deleted buildings. Only admins are allowed to use this option.",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \n\nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": "",
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\n\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve building by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/building/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"building",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "52",
+									"description": "Number\nThe identifier of the resource"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update building by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"UGent\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/building/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"building",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove building by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/building/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"building",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Garbage",
+			"item": [
+				{
+					"name": "Retrieve all garbage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/garbage",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"garbage"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results",
+									"disabled": true
+								},
+								{
+									"key": "before",
+									"value": "",
+									"description": "ISO-8601 Datetime\nGarbage needs to have a pickup-time before the given date.",
+									"disabled": true
+								},
+								{
+									"key": "after",
+									"value": "",
+									"description": "ISO-8601 Datetime\nGarbage needs to heva a pickup time after the given date.\n",
+									"disabled": true
+								},
+								{
+									"key": "building_id",
+									"value": "",
+									"description": "Integer\nGet the garbage from a specific building.",
+									"disabled": true
+								},
+								{
+									"key": "action_id",
+									"value": "",
+									"description": "Integer\nGet all garbage with a specific action.",
+									"disabled": true
+								},
+								{
+									"key": "syndicus_id",
+									"value": "",
+									"description": "Integer\nGet all garbage from the buildings of a specific syndicus.",
+									"disabled": true
+								},
+								{
+									"key": "round_id",
+									"value": "",
+									"description": "Integer\nGet all garbage from a specific round.",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \n\nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": "",
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\n\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve garbage by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/garbage/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"garbage",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the garbage."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update garbage by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pickup_time\": \"2023-01-01T00:00:00.000Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/garbage/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"garbage",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the garbage."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove garbage by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/garbage/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"garbage",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the garbage."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Image",
+			"item": [
+				{
+					"name": "Retrieve all images",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/image",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"image"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results",
+									"disabled": true
+								},
+								{
+									"key": "before",
+									"value": "",
+									"description": "ISO-8601 Datetime\nThe image is taken before the given time.",
+									"disabled": true
+								},
+								{
+									"key": "after",
+									"value": "",
+									"description": "ISO-8601 Datetime\nThe image is taken after the given time.",
+									"disabled": true
+								},
+								{
+									"key": "path",
+									"value": "",
+									"description": "String\nThe path of the image contains the given string.",
+									"disabled": true
+								},
+								{
+									"key": "user_id",
+									"value": "",
+									"description": "Integer\nShow all images taken by a specific user.",
+									"disabled": true
+								},
+								{
+									"key": "building_id",
+									"value": "",
+									"description": "Integer\nShow all images belonging to a specific building.",
+									"disabled": true
+								},
+								{
+									"key": "progress_id",
+									"value": "",
+									"description": "Integer\nShow all images belonging to a specific progress.",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": null,
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": null,
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve image by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/image/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"image",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the image."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update image by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"path\": \"home/user/images/image.png\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/image/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"image",
+								":id"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": null,
+									"description": "String\nIf `type=building` is given, then the entry in table `BuildingImage` is updated.\nIf `type=progress` is given, then the entry in table `ProgressImage` is updated.\nOtherwise, the entry in table `Image` is updated.",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of an entry in the table Image, BuildingImage or ProgressImage."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove image by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"hardDelete\": \"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/image/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"image",
+								":id"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": null,
+									"description": "String\nIf `type=building` is given, then the entry in table `BuildingImage` is deleted.\nIf `type=progress` is given, then the entry in table `ProgressImage` is deleted.\nOtherwise, the entry in table `Image` is deleted.",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of an entry in the table Image, BuildingImage or ProgressImage."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Progress",
+			"item": [
+				{
+					"name": "Retrieve all progresses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/progress",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"progress"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results",
+									"disabled": true
+								},
+								{
+									"key": "deleted",
+									"value": "",
+									"description": "Boolean\nShow deleted buildings. Only admins are allowed to use this option.",
+									"disabled": true
+								},
+								{
+									"key": "report",
+									"value": "",
+									"description": "String\nOnly show the progresses where the report contains the given substring.",
+									"disabled": true
+								},
+								{
+									"key": "arrived_before",
+									"value": "",
+									"description": "ISO-8601 Datetime\nThe time of arrival must happen before the given time.",
+									"disabled": true
+								},
+								{
+									"key": "arrived_after",
+									"value": "",
+									"description": "ISO-8601 Datetime\nThe time of arrival must happen after the given time.",
+									"disabled": true
+								},
+								{
+									"key": "left_before",
+									"value": "",
+									"description": "ISO-8601 Datetime\nThe time of departure must happen before the given time.",
+									"disabled": true
+								},
+								{
+									"key": "left_after",
+									"value": "",
+									"description": "ISO-8601 Datetime\nThe time of departure must happen after the given time.",
+									"disabled": true
+								},
+								{
+									"key": "building",
+									"value": "",
+									"description": "Integer\nFilter on the identifier of a building.",
+									"disabled": true
+								},
+								{
+									"key": "schedule",
+									"value": "",
+									"description": "Integer\nFilter on the identifier of a schedule.",
+									"disabled": true
+								},
+								{
+									"key": "round",
+									"value": "",
+									"description": "Integer\nFilter on the identifier of a round.",
+									"disabled": true
+								},
+								{
+									"key": "user",
+									"value": "",
+									"description": "Integer\nFilter on the identifier of a user.",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \n\nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": "",
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\n\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve progress by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/progress/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"progress",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the progress."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update progress by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"report\": \"Updated report\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/progress/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"progress",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the progress."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove progress by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/progress/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"progress",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the progress."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Region",
+			"item": [
+				{
+					"name": "Retrieve all regions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/region",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"region"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results",
+									"disabled": true
+								},
+								{
+									"key": "id",
+									"value": "",
+									"description": "Integer\nFilter by identifier of the region.",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"description": "String\nFilter by the name of the region.",
+									"disabled": true
+								},
+								{
+									"key": "user_id",
+									"value": "",
+									"description": "Integer\nFilter by the users (their id's) associated with the region.",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \n\nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": "",
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\n\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve region by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/region/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"region",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "Integer\nIdentifier of the region."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update region by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Gent\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/region/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"region",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "Integer\nIdentifier of the region."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove region by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/region/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"region",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the region."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Round",
+			"item": [
+				{
+					"name": "Retrieve all rounds",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/round",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"round"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"description": "string\nFilter on the name of the round",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \n\nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": "",
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\n\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve round by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/round/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"round",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update round by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"day\": \"2023-01-01T00:00:00.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/round/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"round",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove round by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/round/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"round",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "Integer\nIdentifier of the round_building entry"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RoundBuilding",
+			"item": [
+				{
+					"name": "Retrieve all round_building entries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/round_building",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"round_building"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results",
+									"disabled": true
+								},
+								{
+									"key": "round_id",
+									"value": "",
+									"description": "Integer\nShow all buildings belonging to a specific round (given by its identifier).",
+									"disabled": true
+								},
+								{
+									"key": "building_id",
+									"value": "",
+									"description": "Integer\nShow all rounds that contain a specific building (given by its identifier).",
+									"disabled": true
+								},
+								{
+									"key": "round",
+									"value": "",
+									"description": "String\nShow all buildings belonging to a specific round (given by its name).",
+									"disabled": true
+								},
+								{
+									"key": "building",
+									"value": "",
+									"description": "String\nShow all rounds that contain a specific building (given by its name).",
+									"disabled": true
+								},
+								{
+									"key": "ivago_id",
+									"value": null,
+									"description": "String\nShow all rounds that contain a specific building (given by its ivago id).",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": null,
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": null,
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve round_building by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/round_building/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"round_building",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "Integer\nIdentifier of the round_building entry"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update round_building by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"building_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/round_building/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"round_building",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the round_building entry"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove round_building by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"hardDelete\": \"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/round_building/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"round_building",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Schedule",
+			"item": [
+				{
+					"name": "Retrieve all schedule items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/schedule?take=&skip=",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"schedule"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results"
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results"
+								},
+								{
+									"key": "user_id",
+									"value": "",
+									"description": "Integer\nThe identifier of the user who is responsible for the scheduled round.",
+									"disabled": true
+								},
+								{
+									"key": "round_id",
+									"value": "",
+									"description": "Integer\nRetrieve the schedule for a specific route.",
+									"disabled": true
+								},
+								{
+									"key": "user_name",
+									"value": "",
+									"description": "String\nSearch routes based on the name of the person responsible.",
+									"disabled": true
+								},
+								{
+									"key": "round",
+									"value": "",
+									"description": "String\nFilter by the name of the round.",
+									"disabled": true
+								},
+								{
+									"key": "before",
+									"value": "",
+									"description": "ISO-8601 Datetime\nThe schedule takes place before the given date.",
+									"disabled": true
+								},
+								{
+									"key": "after",
+									"value": "",
+									"description": "ISO-8601 Datetime\nThe schedule takes place after the given date.",
+									"disabled": true
+								},
+								{
+									"key": "deleted",
+									"value": "",
+									"description": "Boolean\nShow deleted buildings. Only admins are allowed to use this option.",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \n\nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": "",
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\n\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve schedule item by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/schedule/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"schedule",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update schedule by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"day\": \"2023-01-01T00:00:00.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/schedule/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"schedule",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove schedule by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"hardDelete\": \"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/schedule/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"schedule",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Syndicus",
+			"item": [
+				{
+					"name": "Retrieve all syndici",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/syndicus",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"syndicus"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results",
+									"disabled": true
+								},
+								{
+									"key": "login_before",
+									"value": "",
+									"description": "ISO-8601 Datetime\nThe last login takes place before the given date.",
+									"disabled": true
+								},
+								{
+									"key": "login_after",
+									"value": "",
+									"description": "ISO-8601 Datetime\nThe last login takes place after the given date.",
+									"disabled": true
+								},
+								{
+									"key": "added_before",
+									"value": "",
+									"description": "ISO-8601 Datetime\nFilter on syndici added before the given date.",
+									"disabled": true
+								},
+								{
+									"key": "added_after",
+									"value": "",
+									"description": "ISO-8601 Datetime\nFilter on the synidici added after the given date.",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"description": "String\nFilter on the first and last name.",
+									"disabled": true
+								},
+								{
+									"key": "user",
+									"value": "",
+									"description": "Integer\nFilter on the identifier of the user.",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \n\nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": "",
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\n\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve syndicus by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/syndicus/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"syndicus",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the syndicus."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update syndicus by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/syndicus/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"syndicus",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the syndicus."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove syndicus by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/syndicus/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"syndicus",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the syndicus."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Retrieve all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/user",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results",
+									"disabled": true
+								},
+								{
+									"key": "student",
+									"value": "",
+									"description": "Boolean\nShow only (non) students",
+									"disabled": true
+								},
+								{
+									"key": "super_student",
+									"value": "",
+									"description": "Boolean\nShow only (non) super students",
+									"disabled": true
+								},
+								{
+									"key": "admin",
+									"value": "",
+									"description": "Boolean\nShow only (non) administrators",
+									"disabled": true
+								},
+								{
+									"key": "added_before",
+									"value": "",
+									"description": "ISO-8601 Datetime\nAccount has been created prior to date",
+									"disabled": true
+								},
+								{
+									"key": "added_after",
+									"value": "",
+									"description": "ISO-8601 Datetime\nAccount has been created after given date",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"description": "String \nFilter on first and last name",
+									"disabled": true
+								},
+								{
+									"key": "login_before",
+									"value": "",
+									"description": "ISO-8601 Datetime\nUser's last login was before given date",
+									"disabled": true
+								},
+								{
+									"key": "login_after",
+									"value": "",
+									"description": "ISO-8601 Datetime\nUser's last login was after given date",
+									"disabled": true
+								},
+								{
+									"key": "region_id",
+									"value": "",
+									"description": "Integer\nShow the regions associated with the user",
+									"disabled": true
+								},
+								{
+									"key": "deleted",
+									"value": "",
+									"description": "Boolean\nShow deleted buildings. Only admins are allowed to use this option.",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \n\nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": "",
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\n\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve user by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/user/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"user",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Identificatie"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"nieuw@ugent.be\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/user/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"user",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove user by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"hardDelete\": \"false\"\r\n}"
+						},
+						"url": {
+							"raw": "{{SERVER}}/user/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"user",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UserRegion",
+			"item": [
+				{
+					"name": "Retrieve all user_region entries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/user_region",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"user_region"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "",
+									"description": "Integer\nMaximum number of results",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "",
+									"description": "Integer\nDisregard the first `n` results",
+									"disabled": true
+								},
+								{
+									"key": "user_id",
+									"value": "",
+									"description": "Integer\nFilter by the identifier of a user.",
+									"disabled": true
+								},
+								{
+									"key": "region_id",
+									"value": "",
+									"description": "Integer\nFilter by the identifier of a region.",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "CSV\nSort data based on the specified fields. Must be accompanied by an equal number of values in the `ord` field. \n\nExample: `sort=user,birthday`",
+									"disabled": true
+								},
+								{
+									"key": "ord",
+									"value": "",
+									"description": "CSV\nWhich way to order the sorted data. Must be accompanied by an equal number of values in the `sort` field. Values must be either `asc` or `desc`.\n\nExample: `ord=asc,desc`",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve user_region by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/user_region/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"user_region",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the user_region entry."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user_region by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"region_id\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SERVER}}/user_region/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"user_region",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the user_region entry."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove user_region by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/user_region/:id",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"user_region",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Integer\nIdentifier of the user_region entry."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
 }

@@ -1,35 +1,20 @@
 import { Header } from "@/components/table/Header";
 import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
-import chance from "chance";
+import { Result, UserQuery } from "@selab-2/groep-1-query";
 
-export class User implements TableEntity<User> {
-  id: number;
-  first_name: string;
-  last_name: string;
-  student: boolean;
-  super_student: boolean;
-  admin: boolean;
-
-  public constructor(init?: Partial<User>) {
-    Object.assign(this, init);
-  }
-
-  headers(): Array<Header<User>> {
+export class User implements TableEntity<Result<UserQuery>> {
+  headers(): Array<Header<Result<UserQuery>>> {
     return User.headers();
   }
 
-  detailPageUrl(): string {
-    return `/account/${this.id}/false`;
-  }
-
-  static headers(): Array<Header<User>> {
+  static headers(): Array<Header<Result<UserQuery>>> {
     return [
       {
         id: 0,
-        name: "Portret",
+        name: "",
         fit: true,
-        get: (e: User) => e.first_name + " " + e.last_name,
+        get: (e: Result<UserQuery>) => e.first_name + " " + e.last_name,
         type: RowType.AVATAR,
         sortable: false,
       },
@@ -37,7 +22,7 @@ export class User implements TableEntity<User> {
         id: 1,
         name: "Naam",
         fit: false,
-        get: (e: User) => e.first_name + " " + e.last_name,
+        get: (e: Result<UserQuery>) => e.first_name + " " + e.last_name,
         type: RowType.TEXT,
         sortable: true,
       },
@@ -45,7 +30,7 @@ export class User implements TableEntity<User> {
         id: 2,
         name: "Student",
         fit: true,
-        get: (e: User) => e.student,
+        get: (e: Result<UserQuery>) => e.student,
         type: RowType.BOOLEAN,
         sortable: true,
       },
@@ -53,7 +38,7 @@ export class User implements TableEntity<User> {
         id: 3,
         name: "Superstudent",
         fit: true,
-        get: (e: User) => e.super_student,
+        get: (e: Result<UserQuery>) => e.super_student,
         type: RowType.BOOLEAN,
         sortable: true,
       },
@@ -61,39 +46,24 @@ export class User implements TableEntity<User> {
         id: 4,
         name: "Admin",
         fit: true,
-        get: (e: User) => e.admin,
+        get: (e: Result<UserQuery>) => e.admin,
         type: RowType.BOOLEAN,
         sortable: true,
       },
-      {
-        id: 5,
-        name: "",
-        fit: true,
-        get: () => "mdi-text-box-edit-outline",
-        type: RowType.ICON,
-        sortable: false,
-      },
-      {
-        id: 6,
-        name: "",
-        fit: true,
-        get: () => "mdi-trash-can-outline",
-        type: RowType.ICON,
-        sortable: false,
-      },
-    ];
+    ].map((e) => new Header<Result<UserQuery>>(e));
   }
 
-  static random(): Array<User> {
-    return [...Array(100).keys()].map(() => {
-      return new User({
-        id: chance().integer(),
-        first_name: chance().first(),
-        last_name: chance().last(),
-        student: chance().bool(),
-        super_student: chance().bool(),
-        admin: chance().bool(),
-      });
-    });
+  route(item: Result<UserQuery>): { name: string; params: { id: number } } {
+    return User.route(item);
+  }
+
+  static route(item: Result<UserQuery>): {
+    name: string;
+    params: { id: number };
+  } {
+    return {
+      name: "account_settings",
+      params: { id: item.id },
+    };
   }
 }

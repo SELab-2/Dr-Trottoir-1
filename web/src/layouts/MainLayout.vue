@@ -5,42 +5,45 @@
         :temporary="!permanentDrawer"
         :permanent="!!permanentDrawer"
         v-model="drawer"
+        class="sidebar"
+        style="position: fixed !important; height: 100vh !important"
+        color="background"
       >
         <v-list density="compact" nav>
-          <v-list-item lines="two" @click="showAccount = !showAccount">
+          <v-list-item lines="two">
             <template v-slot:prepend>
               <Avatar :name="studentName" />
             </template>
             <div class="flex">
               <div class="text">
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
-                <v-list-item-subtitle>{{ roles() }}</v-list-item-subtitle>
+                <v-list-item-subtitle v-if="useAuthStore()?.auth?.admin">
+                  Admin
+                </v-list-item-subtitle>
+                <v-list-item-subtitle
+                  v-else-if="useAuthStore()?.auth?.super_student"
+                >
+                  Super Student
+                </v-list-item-subtitle>
+                <v-list-item-subtitle v-else> Student </v-list-item-subtitle>
               </div>
-              <v-btn
-                v-if="!showAccount"
-                variant="plain"
-                icon="mdi-chevron-down"
-                size="small"
-              />
-              <v-btn
-                v-else
-                variant="plain"
-                icon="mdi-chevron-up"
-                size="small"
-              />
             </div>
           </v-list-item>
 
-          <div v-if="showAccount">
-            <router-link to="/">
-              <v-list-item
-                prepend-icon="mdi-account-cancel"
-                title="Afmelden"
-                value="logout"
-              />
-            </router-link>
+          <div>
+            <v-list-item
+              @click="logOut"
+              prepend-icon="mdi-account-cancel"
+              title="Afmelden"
+              value="logout"
+            />
 
-            <router-link to="/account/0/true">
+            <router-link
+              :to="{
+                name: 'account_settings',
+                params: { id: id },
+              }"
+            >
               <v-list-item
                 prepend-icon="mdi-cog"
                 title="Account"
@@ -50,91 +53,92 @@
           </div>
 
           <div class="py-2">
-            <v-divider />
+            <DividerLayout />
           </div>
 
           <div v-if="isStudent">
             <p class="pa-2 font-weight-medium text-caption">Overzicht</p>
 
-            <router-link to="/planning">
-              <v-list-item
-                prepend-icon="mdi-calendar-edit"
-                title="Planning"
-                value="schedule"
-              />
-            </router-link>
+            <v-list-item
+              :to="{ name: 'student_planning' }"
+              prepend-icon="mdi-calendar-edit"
+              title="Planning"
+              value="schedule"
+            />
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
-          <div v-if="isSuperStudent">
+          <div v-if="isSuperStudent || isAdmin">
             <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
 
-            <router-link to="/opvolging">
-              <v-list-item
-                prepend-icon="mdi-transit-detour"
-                title="Opvolging"
-                value="rondes"
-              />
-            </router-link>
+            <v-list-item
+              :to="{ name: 'round_followup' }"
+              prepend-icon="mdi-transit-detour"
+              title="Opvolging"
+              value="rondes"
+            />
 
-            <router-link to="/gebouwen">
-              <v-list-item
-                prepend-icon="mdi-domain"
-                title="Gebouwen"
-                value="gebouwen"
-              />
-            </router-link>
+            <v-list-item
+              :to="{ name: 'building_followup' }"
+              prepend-icon="mdi-domain"
+              title="Gebouwen"
+              value="gebouwen"
+            />
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
-          <div v-if="isSyndicus">
-            <p class="pa-2 font-weight-medium text-caption">Gebouwbeheer</p>
+          <div v-if="isAdmin && syndicusBuildings.length > 0">
+            <p class="pa-2 font-weight-medium text-caption">Mijn gebouwen</p>
 
-            <router-link to="/gebouwen">
-              <v-list-item
-                prepend-icon="mdi-file-cabinet"
-                title="Mijn Gebouwen"
-                value="gebouwen"
-              />
-            </router-link>
+            <div v-for="building of syndicusBuildings" :key="building.id">
+              <router-link
+                :to="{
+                  name: 'building_id',
+                  params: { id: building.id },
+                }"
+              >
+                <v-list-item
+                  prepend-icon="mdi-file-cabinet"
+                  :title="building.name"
+                  value="gebouwen"
+                />
+              </router-link>
+            </div>
 
             <div class="py-2">
-              <v-divider />
+              <DividerLayout />
             </div>
           </div>
 
-          <div v-if="isAdmin">
+          <div v-if="isSuperStudent || isAdmin">
             <p class="pa-2 font-weight-medium text-caption">Administratie</p>
 
-            <router-link to="/dashboard/gebruikers">
-              <v-list-item
-                prepend-icon="mdi-account-supervisor"
-                title="Gebruikers"
-                value="users"
-              ></v-list-item>
-            </router-link>
+            <v-list-item
+              :to="{ name: 'user_overview' }"
+              prepend-icon="mdi-account-supervisor"
+              title="Gebruikers"
+              value="users"
+            ></v-list-item>
 
-            <router-link to="/dashboard/gebouwen">
-              <v-list-item
-                prepend-icon="mdi-office-building-outline"
-                title="Gebouwen"
-                value="buildings"
-              ></v-list-item>
-            </router-link>
+            <v-list-item
+              :to="{ name: 'building_overview' }"
+              prepend-icon="mdi-office-building-outline"
+              title="Gebouwen"
+              value="buildings"
+            ></v-list-item>
 
-            <router-link to="/dashboard/rondes">
-              <v-list-item
-                prepend-icon="mdi-map-legend"
-                title="Routes"
-                value="routes"
-              ></v-list-item>
-            </router-link>
+            <v-list-item
+              :to="{ name: 'round_overview' }"
+              prepend-icon="mdi-map-legend"
+              title="Rondes"
+              value="rounds"
+            ></v-list-item>
           </div>
         </v-list>
 
@@ -145,82 +149,88 @@
         </template>
       </v-navigation-drawer>
 
-      <v-app-bar prominent elevation="0">
+      <v-app-bar
+        prominent
+        elevation="0"
+        color="background"
+        style="position: fixed !important"
+      >
         <div class="px-4">
           <v-app-bar-nav-icon variant="text" @click="drawer = !drawer" />
         </div>
 
         <v-toolbar-title class="font-weight-medium">
-          {{ route.name }}
+          {{ route.meta.title }}
         </v-toolbar-title>
 
         <v-spacer />
       </v-app-bar>
-
-      <router-view></router-view>
+      <Suspense :key="route.fullPath">
+        <template #fallback>
+          <Loader />
+        </template>
+        <router-view />
+      </Suspense>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
+import Loader from "@/components/popups/Loader.vue";
 import Avatar from "@/components/Avatar.vue";
+import { Ref, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import DividerLayout from "@/layouts/DividerLayout.vue";
+import { useAuthStore } from "@/stores/auth";
+import { BuildingQuery, Result } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 
-import { ref } from "vue";
-import { useRoute } from "vue-router";
-
+const router = useRouter();
 // reactive state to show the drawer or not
 const drawer = ref(true);
-
 // get the route object, needed to show the title
 const route = useRoute();
-
 // roles to know what to show
-const isStudent = ref(true);
-const isSuperStudent = ref(true);
-const isSyndicus = ref(true);
-const isAdmin = ref(true);
+const isStudent: Boolean = useAuthStore().auth!.student;
+const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
+const isAdmin: Boolean = useAuthStore().auth!.admin;
+const syndicusBuildings: Ref<Result<BuildingQuery>[]> = ref([]);
 
-// show account settings
-const showAccount = ref(false);
+tryOrAlertAsync(async () => {
+  if (isAdmin) {
+    syndicusBuildings.value = await new BuildingQuery().getAll({
+      syndicus_id: 89, // TODO: change id
+    });
+  }
+});
 
 // account display settings
-const studentName: string = "Jens Pots";
-function roles(): string {
-  let str = "";
-  if (isStudent.value) {
-    str += "student ";
-  }
-  if (isSuperStudent.value) {
-    str += "superstudent ";
-  }
-  if (isSyndicus.value) {
-    str += "syndicus ";
-  }
-  if (isAdmin.value) {
-    str += "admin ";
-  }
-  return str;
-}
+const studentName: string =
+  useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
 
-const threasholdWidth: Number = 750;
-// permanentdrawer
-const permanentDrawer = ref<Boolean>(window.innerWidth > threasholdWidth);
-function onResize() {
-  permanentDrawer.value = window.innerWidth > threasholdWidth;
+// account display settings
+const id = useAuthStore().auth!.id;
+
+const thresholdWidth: number = 750;
+const permanentDrawer = ref<Boolean>(window.innerWidth > thresholdWidth);
+window.addEventListener(
+  "resize",
+  () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
+);
+async function logOut() {
+  await router.push({ name: "login" });
+  await useAuthStore().logOut();
 }
-window.addEventListener("resize", onResize);
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 a {
   text-decoration: none;
   color: black;
 }
-
 .text {
   width: 80%;
 }
-
 .flex {
   display: flex;
 }
