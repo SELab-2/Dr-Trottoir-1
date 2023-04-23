@@ -11,7 +11,7 @@
     "test": "jest __tests__"
   },
   "dependencies": {
-    "@bitpatty/imgproxy-url-builder": "^1.2.1",
+    "@bitpatty/imgproxy-url-builder": "^1.3.3",
     "@mdi/font": "7.0.96",
     "@selab-2/groep-1-orm": "^1.0.11",
     "@selab-2/groep-1-query": "^1.0.14",
