@@ -19,7 +19,7 @@ jobs:
                 uses: actions/checkout@v3
             -   uses: actions/setup-node@v3
                 with:
-                    node-version: '16.x'
+                    node-version: '19.x'
                     registry-url: 'https://npm.pkg.github.com'
                     scope: '@selab-2'
             -   name: "Install dependencies"
@@ -38,4 +38,3 @@ jobs:
                     chmod +x ../server/cleanup.sh
                     ../server/cleanup.sh -p
                 shell: bash
-

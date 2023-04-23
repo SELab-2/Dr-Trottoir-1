@@ -33,7 +33,9 @@ export function errorMessage(code: APIErrorCode): string {
         case APIErrorCode.INTERNAL_SERVER_ERROR:
             return "Internal Server Error";
         default:
-            console.log(`ERROR: an unknown error message was raised: ${code}`);
+            console.error(
+                `ERROR: an unknown error message was raised: ${code}`,
+            );
             return "Internal Server Error";
     }
 }
