@@ -16,11 +16,13 @@ updates:
   # Web
   - package-ecosystem: "npm"
     directory: "/web"
-    schedule: 
+    schedule:
       interval: "weekly"
     assignees:
       - "themessik"
-  
+    registries:
+        - npm-gh
+
   # API
   - package-ecosystem: "npm"
     directory: "/api"
@@ -28,7 +30,9 @@ updates:
       interval: "weekly"
     assignees:
       - "themessik"
-   
+    registries:
+        - npm-gh
+
   # ORM
   - package-ecosystem: "npm"
     directory: "/orm"
@@ -36,7 +40,9 @@ updates:
       interval: "weekly"
     assignees:
       - "themessik"
-      
+    registries:
+        - npm-gh
+
   # Query Builder
   - package-ecosystem: "npm"
     directory: "/api_query"
@@ -44,3 +50,5 @@ updates:
       interval: "weekly"
     assignees:
       - "themessik"
+    registries:
+        - npm-gh
