@@ -1,15 +1,16 @@
 {
   "scripts": {
-    "prebuild": "npx prettier --check . && npx eslint src --max-warnings 0",
+    "prebuild": "prettier --check . && eslint . --max-warnings 0",
     "build": "npx tsc",
     "start": "node ./dist/main.js",
     "serve": "nodemon ./src/main.ts",
     "lint": "npx prettier --write . && npx eslint src",
+    "mock": "npx ts-node ./__tests__/mock/main.ts",
     "pretest": "npx prettier --check . && npx eslint src --max-warnings 0 && tsc",
-    "test": "jest -i"
+    "test": "jest --runInBand \".*\\.test\\.ts\""
   },
   "dependencies": {
-    "@selab-2/groep-1-orm": "^1.0.10",
+    "@selab-2/groep-1-orm": "^1.0.12",
     "@types/date-arithmetic": "^4.1.1",
     "@types/passport": "^1.0.12",
     "compression": "^1.7.4",

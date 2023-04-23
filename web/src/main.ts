@@ -16,3 +16,5 @@ registerPlugins(app);
 
 app.use(pinia);
 app.mount("#app");
+
+process.env = import.meta.env;

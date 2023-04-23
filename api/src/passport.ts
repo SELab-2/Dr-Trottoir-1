@@ -9,12 +9,15 @@ import { SerializableUser } from "./types";
 export function initializePassport() {
     passport.use(
         new passportLocal.Strategy(async (email, password, cb) => {
-            const user = await prisma.user.findFirstOrThrow({
+            const user = await prisma.user.findFirst({
                 where: {
                     email: email,
                     deleted: false,
                 },
             });
+            if (user === null) {
+                return cb(null, undefined);
+            }
 
             const hash = crypto
                 .createHash("sha256")

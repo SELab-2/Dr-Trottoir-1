@@ -7,8 +7,8 @@ on:
             - 'main'
             - 'api/**'
 jobs:
-    api-test:
-        runs-on: [ self-hosted ]
+    api-query-test:
+        runs-on: ubuntu-latest
         defaults:
             run:
                 working-directory: ./api_query
@@ -27,6 +27,12 @@ jobs:
             -   name: "Clean install"
                 run: npm ci
                 env:
-                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Execute tests"
                 run: npm run test
+            -   name: "Cleanup"
+                if: always()
+                run: |
+                    chmod +x ../server/cleanup.sh
+                    ../server/cleanup.sh -p
+                shell: bash

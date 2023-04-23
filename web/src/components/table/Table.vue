@@ -1,4 +1,4 @@
-<template>
+<template :key="props.entries">
   <v-table>
     <thead>
       <tr>
@@ -24,14 +24,14 @@
         </th>
       </tr>
     </thead>
-    <tbody>
-      <tr v-for="item in entries" :key="item.id">
+    <tbody v-if="entries">
+      <tr v-for="item in entries?.filter((e) => e !== null)" :key="item.id">
         <td
           v-bind:key="header.id"
           v-for="header in headers"
           :class="{ fit: header.fit }"
           style="cursor: pointer"
-          @click="router.push(item.route())"
+          @click="() => props.route && router.push(props.route(item))"
         >
           <div
             v-if="header.type === RowType.IMAGE"
@@ -60,6 +60,7 @@
             variant="plain"
             v-bind:icon="header.get(item)"
             size="small"
+            @click="() => header.onClick(item, entries!)"
           ></v-btn>
           <p v-if="header.type === RowType.TEXT">
             {{ header.get(item) }}
@@ -81,6 +82,7 @@ const props = defineProps({
   entries: { type: Array<any>, require: true },
   headers: { type: Array<Header<any>>, require: true, default: [] },
   sort: { type: Function, require: true, default: () => {} },
+  route: { type: Function, require: false, default: null },
 });
 
 const entries = ref(props.entries);
@@ -109,7 +111,6 @@ function sort(header: Header<any>) {
 </script>
 
 <style lang="sass" scoped>
-
 .clickable
   cursor: pointer
 

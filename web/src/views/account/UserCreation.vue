@@ -1,107 +1,115 @@
 <template>
   <HFillWrapper margin="mx-4">
-    <!-- Personal info -->
-    <BorderCard prepend-icon="mdi-account-details">
-      <template v-slot:title> Persoonlijke gegevens </template>
-      <v-row class="py-0 my-0">
-        <v-col
-          cols="1"
-          style="min-width: 100px; max-width: 100%"
-          class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
+    <v-form v-model="valid" @submit.prevent>
+      <!-- Personal info -->
+      <BorderCard prepend-icon="mdi-account-details">
+        <template v-slot:title> Persoonlijke gegevens </template>
+        <v-row class="py-0 my-0 mt-2">
+          <v-col
+            cols="1"
+            style="min-width: 100px; max-width: 100%"
+            class="flex-grow-1 flex-shrink-0 py-0 my-0 ml-5"
+          >
+            <!-- Text input field for the first name -->
+            <v-text-field
+              v-model="first_name"
+              label="Voornaam"
+              type="text"
+              :rules="nameRules"
+              required
+            ></v-text-field>
+          </v-col>
+
+          <v-col
+            cols="1"
+            style="min-width: 100px; max-width: 100%"
+            class="flex-grow-1 flex-shrink-0 py-0 my-0 mr-5"
+          >
+            <!-- Text input field for the last name -->
+            <v-text-field
+              v-model="last_name"
+              label="Achternaam"
+              type="text"
+              :rules="nameRules"
+              required
+            ></v-text-field>
+          </v-col>
+        </v-row>
+
+        <ContactForm
+          :class="spacing"
+          :phone="String(contact.phone)"
+          :email="String(contact.email)"
+          @onUpdate="(newContact) => (contact = newContact)"
         >
-          <!-- Text input field for the first name -->
-          <v-text-field
-            v-model="first_name"
-            label="Voornaam"
-            type="text"
-            required
-          ></v-text-field>
-        </v-col>
+        </ContactForm>
+      </BorderCard>
 
-        <v-col
-          cols="1"
-          style="min-width: 100px; max-width: 100%"
-          class="flex-grow-1 flex-shrink-0 py-0 my-0 mr-5"
+      <!-- Address input form of the user -->
+      <!-- Section with the adress -->
+      <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
+        <template v-slot:title> Adres </template>
+        <AddressForm
+          :class="spacing"
+          :street="String(address.street)"
+          :city="String(address.city)"
+          :number="address.number"
+          :zip_code="address.zip_code"
+          @onUpdate="(newAddress) => (address = newAddress)"
+        ></AddressForm>
+      </BorderCard>
+
+      <!-- Text input field for the password-->
+      <BorderCard class="mt-4" prepend-icon="mdi-lock">
+        <template v-slot:title> Wachtwoord </template>
+        <v-list density="compact" :class="spacing">
+          <v-text-field
+            class="mt-2"
+            v-model="password1"
+            :prepend-inner-icon="'mdi-lock'"
+            :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPsswd ? 'text' : 'password'"
+            :counter="8"
+            :rules="psswd1Rules"
+            label="Wachtwoord"
+            @click:append-inner="showPsswd = !showPsswd"
+            bg
+          ></v-text-field>
+
+          <!-- Text input field for the password confirmation-->
+          <v-text-field
+            class="mt-2"
+            v-model="password2"
+            :prepend-inner-icon="'mdi-lock'"
+            :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPsswd ? 'text' : 'password'"
+            :counter="8"
+            :rules="psswd2Rules"
+            label="Bevestig wachtwoord"
+            @click:append-inner="showPsswd = !showPsswd"
+            bg
+          ></v-text-field>
+        </v-list>
+      </BorderCard>
+
+      <!-- Selection box to determine the roles -->
+      <BorderCard class="mt-4" prepend-icon="mdi-account-multiple">
+        <template v-slot:title> Rollen </template>
+        <RolesForm v-model="roles" />
+      </BorderCard>
+
+      <!-- Account creation button -->
+      <div class="d-flex flex-row-reverse my-3">
+        <v-btn
+          color="success"
+          prepend-icon="mdi-check"
+          type="submit"
+          @click="submitForm"
         >
-          <!-- Text input field for the last name -->
-          <v-text-field
-            v-model="last_name"
-            label="Achternaam"
-            type="text"
-            required
-          ></v-text-field>
-        </v-col>
-      </v-row>
-
-      <ContactForm
-        :class="spacing"
-        :phone="String(contact.phone)"
-        :email="String(contact.email)"
-        @onUpdate="(newContact) => (contact = newContact)"
-      >
-      </ContactForm>
-    </BorderCard>
-
-    <!-- Address input form of the user -->
-    <!-- Section with the adress -->
-    <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
-      <template v-slot:title> Adres </template>
-      <AddressForm
-        :class="spacing"
-        :street="String(address.street)"
-        :city="String(address.city)"
-        :number="address.number"
-        :zip_code="address.zip_code"
-        @onUpdate="(newAddress) => (address = newAddress)"
-      ></AddressForm>
-    </BorderCard>
-
-    <!-- Text input field for the password-->
-    <BorderCard class="mt-4" prepend-icon="mdi-lock">
-      <template v-slot:title> Wachtwoord </template>
-      <v-list density="compact" :class="spacing">
-        <v-text-field
-          v-model="password1"
-          :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="showPsswd ? 'text' : 'password'"
-          label="Wachtwoord"
-          @click:append-inner="showPsswd = !showPsswd"
-          bg
-        ></v-text-field>
-
-        <!-- Text input field for the password confirmation-->
-        <v-text-field
-          v-model="password2"
-          :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="showPsswd ? 'text' : 'password'"
-          label="Bevestig wachtwoord"
-          @click:append-inner="showPsswd = !showPsswd"
-          bg
-        ></v-text-field>
-      </v-list>
-    </BorderCard>
-
-    <!-- Selection box to determine the roles -->
-    <BorderCard class="mt-4" prepend-icon="mdi-account-multiple">
-      <template v-slot:title> Rollen </template>
-      <v-select
-        :class="spacing"
-        chips
-        label="Rollen"
-        :items="['Student', 'Superstudent', 'Syndicus', 'Admin']"
-        multiple
-        v-model="roles"
-      ></v-select>
-    </BorderCard>
-
-    <!-- Account creation button -->
-    <div class="d-flex flex-row-reverse my-3">
-      <v-btn color="success" prepend-icon="mdi-check" to="settings/0/false">
-        Maak account</v-btn
-      >
-    </div>
+          Maak account
+        </v-btn>
+      </div>
+    </v-form>
   </HFillWrapper>
 </template>
 
@@ -113,39 +121,118 @@ import Contact from "@/components/models/Contact";
 import ContactForm from "@/components/forms/ContactForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
+import RolesForm from "@/components/forms/RolesForm.vue";
+import { UserQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 // define the spacing for the input fields
 const spacing: String = "mx-5";
-
 // reactive first name state
-const first_name: string = "";
 
+const first_name = ref("");
 // reactive last name state
 const last_name = ref("");
-
 // contact data
 const contact = ref<Contact>({
   phone: "",
   email: "",
 });
-
 // user address
 const address = ref<Address>({
   street: "",
-  number: 0,
+  number: "0",
   city: "",
-  zip_code: 0,
+  zip_code: "0",
 });
-
 // reactive psswd1 state
 const password1 = ref("");
-
 // reactive password confirmation state
 const password2 = ref("");
-
 // reactive state to know if you must show both password fields or not
 const showPsswd = ref(false);
-
 // reactive array keeping track of all the roles for this new user
-const roles: Ref<String[]> = ref([]);
+const roles: Ref<string[]> = ref([]);
+
+/* below are the rule checks*/
+
+// form model, to know if all forms are filled correctly
+const valid = ref(false);
+
+// first name rules
+const nameRules = [
+  // check if a name was given
+  (name: string) => {
+    return name ? true : "Geef een naam op.";
+  },
+];
+
+// password rules
+const psswd1Rules = [
+  // check if a password was given
+  (psswd: string) => {
+    return psswd ? true : "Geef een wachtwoord op.";
+  },
+
+  // check if psswd is at least 8 chars long
+  (psswd: string) => {
+    return psswd.length >= 8
+      ? true
+      : "Wachtwoord moet minimaal 8 tekens lang zijn.";
+  },
+];
+
+const psswd2Rules = [
+  // check if psswd is present
+  (psswd: string) => {
+    return psswd ? true : "Bevestig het wachtwoord.";
+  },
+
+  // check if psswd2 matches psswd1
+  () => {
+    return password1.value == password2.value
+      ? true
+      : "Wachtwoorden komen niet overeen.";
+  },
+];
+
+/* Form submition */
+
+async function submitForm() {
+  // check if form is valid before submitting
+  if (valid.value) {
+    // :to="{ name: 'account_settings', params: { id: 0 } }"
+    let user;
+    await tryOrAlertAsync(async () => {
+      user = await new UserQuery().createOne({
+        first_name: first_name.value,
+        last_name: last_name.value,
+        email: contact.value.email,
+        phone: contact.value.phone,
+        student: roles.value.includes("Student"),
+        super_student: roles.value.includes("Superstudent"),
+        admin: roles.value.includes("Admin"),
+        //@ts-ignore TODO: fix build errors
+        password: password2.value,
+        address: {
+          //@ts-ignore TODO: fix build errors
+          create: {
+            city: address.value.city,
+            latitude: 0,
+            longitude: 0,
+            number: Number(address.value.number),
+            street: address.value.street,
+            zip_code: Number(address.value.zip_code),
+          },
+        },
+        date_added: new Date(),
+        last_login: new Date(),
+      });
+      console.log(user);
+      router.push({ name: "account_settings", params: { id: user.id } });
+    });
+  }
+}
 </script>

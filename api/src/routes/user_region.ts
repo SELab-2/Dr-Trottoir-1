@@ -42,6 +42,7 @@ export class UserRegionRouting extends Routing {
     async createOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.userRegion.create({
             data: req.body,
+            include: UserRegionRouting.includes,
         });
 
         return res.status(201).json(result);
