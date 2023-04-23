@@ -1,11 +1,6 @@
 import crypto from "crypto";
 import { prisma } from "./prisma";
 
-/*
-Bij het aanmaken van een nieuw gebouw worden ook nieuwe waarden toegevoegd aan de databank in de tabellen van
-syndicus, adres en bestand. Deze tabellen kunnen enkel via deze functie gevuld worden en dus niet via een aparte
-create-functie. De tabel van adres kan echter wel nog aangevuld worden via de functie createUser in het bestand user.ts.
- */
 export async function initialiseBuilding() {
     const passwordB1 = crypto
         .createHash("sha256")
