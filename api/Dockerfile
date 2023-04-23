@@ -1,5 +1,6 @@
 FROM node:19-alpine3.16 AS build
 WORKDIR /build
+ARG NPM_AUTH_TOKEN
 
 COPY package*.json /build/
 COPY .npmrc /build/.npmrc
