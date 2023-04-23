@@ -48,6 +48,12 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        // only admins can choose to see deleted entries too
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
+            deleted = undefined;
+        }
+
         const result = await prisma.building.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -55,7 +61,7 @@ export class BuildingRouting extends Routing {
                 name: req.query["name"],
                 ivago_id: req.query["ivago_id"],
                 syndicus_id: Parser.number(req.query["syndicus_id"]),
-                deleted: Parser.bool(req.query["deleted"], false),
+                deleted: deleted,
             },
             select: BuildingRouting.selects,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
@@ -64,7 +70,6 @@ export class BuildingRouting extends Routing {
         return res.json(result);
     }
 
-    @Auth.authorization({ student: true })
     override async getOne(req: CustomRequest, res: express.Response) {
         if (Number.isNaN(parseInt(req.params["id"]))) {
             return BuildingRouting.resident(req, res);
@@ -80,7 +85,7 @@ export class BuildingRouting extends Routing {
         }
 
         // We use a simple 32 byte sequence to create a hidden link.
-        req.body["hash"] = crypto.randomBytes(32).toString();
+        req.body["hash"] = crypto.randomBytes(32).toString("hex");
 
         const result = await prisma.building.create({
             data: req.body,
@@ -129,7 +134,7 @@ export class BuildingRouting extends Routing {
         return res.status(200).json({});
     }
 
-    @Auth.authorization({})
+    @Auth.authorization({ student: true })
     static async internal(req: CustomRequest, res: express.Response) {
         const result = await prisma.building.findFirstOrThrow({
             where: {
