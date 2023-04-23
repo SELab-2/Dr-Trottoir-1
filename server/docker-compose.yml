@@ -33,7 +33,7 @@ services:
       - "~/volumes/traefik:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     healthcheck:
-      test: curl -f https://hc-ping.com/235f09fd-27ec-4fda-a8a1-4651ebc005fd
+      test: ./traefik healthcheck --ping && curl -f https://hc-ping.com/235f09fd-27ec-4fda-a8a1-4651ebc005fd
       interval: 1m
       timeout: 10s
       retries: 3
@@ -56,7 +56,7 @@ services:
     ports:
       - "2002:5432"
     healthcheck:
-        test: curl -f https://hc-ping.com/4f9e873f-656a-4ce8-a75a-1af4ccc1b752
+        test: pg_isready -p 6432 && curl -f https://hc-ping.com/4f9e873f-656a-4ce8-a75a-1af4ccc1b752
         interval: 1m
         timeout: 10s
         retries: 3
@@ -87,7 +87,7 @@ services:
       - "traefik.http.services.imgproxy.loadbalancer.server.port=8081"
       - "traefik.http.middlewares.imgproxy.stripprefix.prefixes=/imgproxy/"
     healthcheck:
-        test: curl -f https://hc-ping.com/585ad659-ac88-405c-a64c-1e0c0a37d2b7
+        test: imgproxy health && curl -f https://hc-ping.com/585ad659-ac88-405c-a64c-1e0c0a37d2b7
         interval: 10s
         timeout: 1s
         retries: 3
