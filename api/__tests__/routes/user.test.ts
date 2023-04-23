@@ -26,6 +26,7 @@ describe("User tests", () => {
 
     afterEach(async () => {
         await restoreTables(
+            "address",
             "user",
             "user_region",
             "syndicus",

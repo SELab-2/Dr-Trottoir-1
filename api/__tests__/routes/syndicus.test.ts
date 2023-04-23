@@ -25,7 +25,7 @@ describe("Syndicus tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("syndicus", "building");
+        await restoreTables("user", "syndicus", "building");
     });
 
     describe("Successful requests", () => {
