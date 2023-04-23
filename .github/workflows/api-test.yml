@@ -40,8 +40,7 @@ jobs:
                     registry-url: 'https://npm.pkg.github.com'
                     scope: '@selab-2'
             -   name: "Clean install"
-                run: |
-                    npm ci
+                run: npm ci
                 env:
                     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Setup the database"

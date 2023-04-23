@@ -336,14 +336,14 @@ describe("User tests", () => {
                 });
 
                 await runner.patch({
-                    url: "/user/1",
+                    url: "/user/2",
                     data: { first_name: "Foo" },
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
 
                 await runner.delete({
-                    url: "/user/1",
+                    url: "/user/2",
                     statusCode: 403,
                 });
             });
