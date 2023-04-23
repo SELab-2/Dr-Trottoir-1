@@ -30,5 +30,5 @@
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
 
 - [ ] De code volgt de stijl en guidelines van dit project.
-- [ ] Vereist een aanpassingen aan de documentatie. 
+- [ ] Vereist een aanpassing aan de documentatie. 
 - [ ] De documentatie is gewijzigd.
