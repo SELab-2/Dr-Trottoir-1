@@ -4,6 +4,7 @@ import { GarbageQuery } from "./garbage";
 import { ProgressQuery } from "./progress";
 import { RegionQuery } from "./region";
 import { RoundQuery } from "./round";
+import { RoundBuildingQuery } from "./round_building";
 import { ScheduleQuery } from "./schedule";
 import { SyndicusQuery } from "./syndicus";
 import { UserQuery } from "./user";
@@ -18,6 +19,7 @@ export {
     ProgressQuery,
     RegionQuery,
     RoundQuery,
+    RoundBuildingQuery,
     ScheduleQuery,
     SyndicusQuery,
     UserQuery,

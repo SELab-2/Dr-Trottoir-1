@@ -6,7 +6,7 @@
         :permanent="!!permanentDrawer"
         v-model="drawer"
         class="sidebar"
-        style="border: rgba(189, 189, 189, 0.5) 1px solid"
+        style="position: fixed !important; height: 100vh !important"
         color="background"
       >
         <v-list density="compact" nav>
@@ -72,7 +72,7 @@
             </div>
           </div>
 
-          <div v-if="isSuperStudent">
+          <div v-if="isSuperStudent || isAdmin">
             <p class="pa-2 font-weight-medium text-caption">Opvolging</p>
 
             <v-list-item
@@ -94,19 +94,19 @@
             </div>
           </div>
 
-          <div v-if="isSyndicus">
+          <div v-if="isAdmin && syndicusBuildings.length > 0">
             <p class="pa-2 font-weight-medium text-caption">Mijn gebouwen</p>
 
-            <div v-for="buildingid of [1, 2]" :key="buildingid">
+            <div v-for="building of syndicusBuildings" :key="building.id">
               <router-link
                 :to="{
                   name: 'building_id',
-                  params: { id: buildingid },
+                  params: { id: building.id },
                 }"
               >
                 <v-list-item
                   prepend-icon="mdi-file-cabinet"
-                  :title="'Gebouw ' + buildingid"
+                  :title="building.name"
                   value="gebouwen"
                 />
               </router-link>
@@ -117,7 +117,7 @@
             </div>
           </div>
 
-          <div v-if="isAdmin">
+          <div v-if="isSuperStudent || isAdmin">
             <p class="pa-2 font-weight-medium text-caption">Administratie</p>
 
             <v-list-item
@@ -150,7 +150,12 @@
         </template>
       </v-navigation-drawer>
 
-      <v-app-bar prominent elevation="0" color="background">
+      <v-app-bar
+        prominent
+        elevation="0"
+        color="background"
+        style="position: fixed !important"
+      >
         <div class="px-4">
           <v-app-bar-nav-icon
             id="navbar-visible"
@@ -176,12 +181,14 @@
 </template>
 
 <script lang="ts" setup>
+import Loader from "@/components/popups/Loader.vue";
 import Avatar from "@/components/Avatar.vue";
-import { ref } from "vue";
+import { Ref, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useAuthStore } from "@/stores/auth";
-import Loader from "@/components/popups/Loader.vue";
+import { BuildingQuery, Result } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 
 const router = useRouter();
 // reactive state to show the drawer or not
@@ -191,15 +198,22 @@ const route = useRoute();
 // roles to know what to show
 const isStudent: Boolean = useAuthStore().auth!.student;
 const isSuperStudent: Boolean = useAuthStore().auth!.super_student;
-const isSyndicus = true; // TODO: check for syndicus
 const isAdmin: Boolean = useAuthStore().auth!.admin;
+const syndicusBuildings: Ref<Result<BuildingQuery>[]> = ref([]);
+
+tryOrAlertAsync(async () => {
+  if (isAdmin) {
+    syndicusBuildings.value = await new BuildingQuery().getAll({
+      syndicus_id: 89, // TODO: change id
+    });
+  }
+});
 
 // account display settings
 const studentName: string =
   useAuthStore().auth!.first_name + " " + useAuthStore().auth!.last_name;
 
 // account display settings
-
 const id = useAuthStore().auth!.id;
 
 const thresholdWidth: number = 750;
@@ -209,8 +223,8 @@ window.addEventListener(
   () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
 );
 async function logOut() {
-  await useAuthStore().logOut();
   await router.push({ name: "login" });
+  await useAuthStore().logOut();
 }
 </script>
 
@@ -224,9 +238,5 @@ a {
 }
 .flex {
   display: flex;
-}
-.sidebar {
-  position: fixed !important;
-  height: 100vh !important;
 }
 </style>

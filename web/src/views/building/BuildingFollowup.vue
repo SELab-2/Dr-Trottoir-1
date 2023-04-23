@@ -45,7 +45,7 @@ const filterIndex = ref<number>(0);
 let filteredBuildings: Ref<Result<BuildingQuery>[]> = ref([]);
 
 async function updateBuildings() {
-  tryOrAlertAsync(async () => {
+  await tryOrAlertAsync(async () => {
     filteredBuildings.value = await new BuildingQuery().getAll({});
   });
 }

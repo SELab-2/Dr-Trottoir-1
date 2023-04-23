@@ -153,9 +153,15 @@ const building: Ref<Result<BuildingQuery> | null> = ref(null);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
 
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
 tryOrAlertAsync(async () => {
-  const result = await new BuildingQuery().getAll({ take: 1 });
-  building.value = result.at(0) ?? null;
+  building.value = await new BuildingQuery().getOne(Number(props.id));
 });
 
 tryOrAlertAsync(async () => {
@@ -164,10 +170,6 @@ tryOrAlertAsync(async () => {
 
 tryOrAlertAsync(async () => {
   garbage.value = await new GarbageQuery().getAll({});
-});
-
-defineProps({
-  id: String,
 });
 </script>
 
@@ -203,6 +205,11 @@ defineProps({
 .grid {
   display: grid;
   gap: 8px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  @media (min-width: 700px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 </style>
