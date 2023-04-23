@@ -19,7 +19,7 @@ ARG NPM_AUTH_TOKEN
 
 COPY --from=build /build/dist ./dist
 COPY package*.json ./
-COPY .npmrc /build/.npmrc
+COPY .npmrc /frontend/.npmrc
 
 RUN ["npm", "ci", "--omit=dev"]
 
