@@ -11,7 +11,7 @@ docker compose --file=developer-compose.yml up postgres -d
 
 Bovenstaande commandos leggen alles klaar om de API testen uit te kunnen voeren.
 Het laatste wat je nog moet doen is het `api/.env` bestand aanpassen. Als je `.env` bestanden niet kent / nog nooit ermee gewerkt hebt, [lees hier](https://www.codementor.io/@parthibakumarmurugesan/what-is-env-how-to-set-up-and-run-a-env-file-in-node-1pnyxw9yxj).
-Enige sleutel dat een aanpassing vereist is `DATABASE_URL`:
+Enige sleutel die een aanpassing vereist is `DATABASE_URL`:
 
 ```
 DATABASE_URL = "postgresql://postgres:postgres@10.0.0.3:5432/main"
