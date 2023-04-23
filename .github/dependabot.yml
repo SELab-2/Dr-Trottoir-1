@@ -6,7 +6,7 @@
 version: 2
 
 registries:
-  npm-gh:
+  npm:
     type: npm-registry
     url: https://npm.pkg.github.com
     token: ${{ secrets.NPM_AUTH_TOKEN }}
@@ -15,12 +15,13 @@ registries:
 updates:
   # Web
   - package-ecosystem: "npm"
+    target-branch: "feature/dependabot"
     directory: "/web"
-    schedule: 
+    schedule:
       interval: "weekly"
     assignees:
       - "themessik"
-  
+
   # API
   - package-ecosystem: "npm"
     directory: "/api"
@@ -28,7 +29,7 @@ updates:
       interval: "weekly"
     assignees:
       - "themessik"
-   
+
   # ORM
   - package-ecosystem: "npm"
     directory: "/orm"
@@ -36,7 +37,7 @@ updates:
       interval: "weekly"
     assignees:
       - "themessik"
-      
+
   # Query Builder
   - package-ecosystem: "npm"
     directory: "/api_query"
