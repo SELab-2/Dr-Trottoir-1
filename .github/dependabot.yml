@@ -9,7 +9,7 @@ registries:
   npm-gh:
     type: npm-registry
     url: https://npm.pkg.github.com
-    key: ${{ secrets.NPM_AUTH_TOKEN }}
+    token: ${{ secrets.NPM_AUTH_TOKEN }}
     replaces-base: true
 
 updates:
