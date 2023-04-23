@@ -38,7 +38,10 @@ services:
     api:
         container_name: api
         hostname: api
-        build: ../api/
+        build:
+            context: ../api
+            args:
+                NPM_AUTH_TOKEN: ${NPM_AUTH_TOKEN}
         environment:
             DATABASE_URL: "postgresql://postgres:postgres@10.0.0.3:5432/main"
         restart: always
@@ -51,7 +54,10 @@ services:
     frontend:
         container_name: frontend
         hostname: frontend
-        build: ../web/
+        build:
+            context: ../web
+            args:
+                NPM_AUTH_TOKEN: ${NPM_AUTH_TOKEN}
         networks:
             selab2:
                 ipv4_address: 10.0.0.6
