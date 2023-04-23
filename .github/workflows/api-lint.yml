@@ -29,7 +29,7 @@ jobs:
             -   name: "Check for linting and errors"
                 run: npm run lint
                 env:
-                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Verify the code compiles"
                 run: npm run build
             -   name: "Cleanup"
