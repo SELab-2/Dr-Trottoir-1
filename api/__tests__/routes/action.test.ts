@@ -1,201 +1,264 @@
-import app from "../../src/main";
+import { describe, test } from "@jest/globals";
+import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
-import { describe, expect, test } from "@jest/globals";
-import supertest from "supertest";
+import app from "../../src/main";
+import {
+    deleteDatabaseData,
+    initialiseDatabase,
+    restoreTables,
+} from "../mock/database";
+import {
+    badRequestResponse,
+    forbiddenResponse,
+    notFoundResponse,
+} from "../utilities/constants";
 
-/*
-Deze testen controleren dat de route de juiste statuscodes geeft bij het uitvoeren van een geldig request
-(met autorisatie).
-Bij elke test wordt een nieuwe action toegevoegd aan de databank. Op deze manier kunnen er geen fouten ontstaan
-door entries die uit de databank verwijderd zijn. De data waarmee gewerkt wordt, zal dus sowieso in de databank
-aanwezig zijn. Deze data wordt op het einde van de test weer verwijderd uit de databank.
- */
-describe("Test ActionRouting successful requests", () => {
-    let session: supertest.SuperTest<supertest.Test>;
-    let cookies: string;
+describe("Action tests", () => {
+    let runner: Testrunner;
 
-    // Voor elke test wordt een sessie gestart, wordt er ingelogd om autorisatie te krijgen en
-    // worden de cookies bewaard.
-    beforeEach(async () => {
-        session = request(app);
-        const resultLogin = await session.post("/auth/login").send({
-            username: "administrator@trottoir.be",
-            password: "password",
+    beforeAll(async () => {
+        const server = request(app);
+        runner = new Testrunner(server);
+
+        await deleteDatabaseData();
+        await initialiseDatabase();
+
+        runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+    });
+
+    afterEach(async () => {
+        await restoreTables("action", "garbage");
+    });
+
+    describe("Succesful requests", () => {
+        test("POST /action", async () => {
+            const newAction = {
+                description: "new action",
+            };
+
+            await runner.post({
+                url: "/action",
+                data: newAction,
+                expectedResponse: newAction,
+            });
         });
-        expect(resultLogin.status).toBe(302);
-        expect(resultLogin.headers).toHaveProperty("set-cookie");
 
-        // Deze constante zorgt ervoor dat de ingelogde gebruiker behouden blijft en dus autorisatie heeft.
-        cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
+        test("GET /action", async () => {
+            const expected = [
+                { id: 1, description: "action 1" },
+                { id: 2, description: "action 2" },
+                { id: 3, description: "Unlinked action" },
+            ];
+
+            await runner.get({ url: "/action", expectedData: expected });
+        });
+
+        test("GET /action/:id", async () => {
+            const expected = [{ id: 1, description: "action 1" }];
+
+            await runner.get({ url: "/action/1", expectedData: expected });
+        });
+
+        test("PATCH /action/:id", async () => {
+            const newAction = {
+                id: 1,
+                description: "Updated description",
+            };
+
+            await runner.patch({
+                url: "/action/1",
+                data: newAction,
+                expectedResponse: newAction,
+            });
+        });
+
+        test("DELETE /action/:id", async () => {
+            await runner.delete({ url: "/action/3" });
+
+            // verify that the action is truly deleted
+            const expected = [
+                { id: 1, description: "action 1" },
+                { id: 2, description: "action 2" },
+            ];
+            await runner.get({
+                url: "/action",
+                expectedData: expected,
+            });
+        });
+
+        afterAll(() => {
+            app.close();
+        });
     });
 
-    test("Test creating and deleting new action", async () => {
-        // Nieuwe action toevoegen
-        const resultAdd = await session
-            .post("/action")
-            .send({ description: "new action for testing" })
-            .set("Cookie", [cookies]);
-        expect(resultAdd.status).toEqual(201);
-        expect(resultAdd.body["description"]).toEqual("new action for testing");
+    describe("Unsuccesful requests", () => {
+        let runner: Testrunner;
+        beforeAll(async () => {
+            const server = request(app);
+            runner = new Testrunner(server);
 
-        // Uiteindelijk moet de nieuwe actie terug verwijderd worden.
-        const resultDelete = await session
-            .delete("/action/" + resultAdd.body["id"])
-            .set("Cookie", [cookies]);
-        expect(resultDelete.status).toEqual(200);
-    });
+            await deleteDatabaseData();
+            await initialiseDatabase();
+        });
 
-    test("Test searching existing action", async () => {
-        // Nieuwe action toevoegen
-        const resultAdd = await session
-            .post("/action")
-            .send({ description: "new action for testing" })
-            .set("Cookie", [cookies]);
-        expect(resultAdd.status).toEqual(201);
-        expect(resultAdd.body["description"]).toEqual("new action for testing");
+        describe("Must be correctly authorized to use any path", () => {
+            const newAction = {
+                description: "new action",
+            };
 
-        const resultGet = await session
-            .get("/action/" + resultAdd.body["id"])
-            .set("Cookie", [cookies]);
-        expect(resultGet.status).toEqual(200);
-        expect(resultGet.body).toEqual(resultAdd.body);
+            describe("Cannot reach any path without authorisation", () => {
+                beforeEach(() => {
+                    runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
+                });
 
-        // Uiteindelijk moet de nieuwe actie terug verwijderd worden.
-        const resultDelete = await session
-            .delete("/action/" + resultAdd.body["id"])
-            .set("Cookie", [cookies]);
-        expect(resultDelete.status).toEqual(200);
-    });
+                test("Cannot reach GET /action", async () => {
+                    await runner.get({
+                        url: "/action",
+                        expectedData: [forbiddenResponse],
+                        statusCode: 403,
+                    });
+                });
 
-    test("Test updating existing action", async () => {
-        // Nieuwe waarde toevoegen
-        const resultAdd = await session
-            .post("/action")
-            .send({ description: "new action for testing" })
-            .set("Cookie", [cookies]);
-        expect(resultAdd.status).toEqual(201);
-        expect(resultAdd.body["description"]).toEqual("new action for testing");
+                test("Cannot reach GET /action/:id", async () => {
+                    await runner.get({
+                        url: "/action/1",
+                        expectedData: [forbiddenResponse],
+                        statusCode: 403,
+                    });
+                });
 
-        // Toegevoegde waarde bewerken
-        const resultUpdate = await session
-            .patch("/action/" + resultAdd.body["id"])
-            .send({ description: "updated action description" })
-            .set("Cookie", [cookies]);
-        expect(resultUpdate.status).toEqual(200);
-        expect(resultUpdate.body["description"]).toEqual(
-            "updated action description",
-        );
+                test("Cannot reach POST /action", async () => {
+                    await runner.post({
+                        url: "/action",
+                        data: newAction,
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
 
-        // Controleren dat de waarde effectief bewerkt is in de databank
-        const resultGet = await session
-            .get("/action/" + resultAdd.body["id"])
-            .set("Cookie", [cookies]);
-        expect(resultGet.status).toEqual(200);
-        expect(resultGet.body).toEqual(resultUpdate.body);
+                test("Cannot reach PATCH /action/:id", async () => {
+                    await runner.patch({
+                        url: "/action/1",
+                        data: newAction,
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
 
-        // Uiteindelijk moet de nieuwe waarde terug verwijderd worden.
-        const resultDelete = await session
-            .delete("/action/" + resultAdd.body["id"])
-            .set("Cookie", [cookies]);
-        expect(resultDelete.status).toEqual(200);
+                test("Cannot reach DELETE /action/:id", async () => {
+                    await runner.delete({
+                        url: "/action/1",
+                        statusCode: 403,
+                    });
+                });
+            });
+            describe("Cannot reach any path as a student", () => {
+                beforeEach(() => {
+                    runner.authLevel(AuthenticationLevel.STUDENT);
+                });
+
+                test("Cannot reach GET /action", async () => {
+                    await runner.get({
+                        url: "/action",
+                        expectedData: [forbiddenResponse],
+                        statusCode: 403,
+                    });
+                });
+
+                test("Cannot reach GET /action/:id", async () => {
+                    await runner.get({
+                        url: "/action/1",
+                        expectedData: [forbiddenResponse],
+                        statusCode: 403,
+                    });
+                });
+
+                test("Cannot reach POST /action", async () => {
+                    await runner.post({
+                        url: "/action",
+                        data: newAction,
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
+
+                test("Cannot reach PATCH /action/:id", async () => {
+                    await runner.patch({
+                        url: "/action/1",
+                        data: newAction,
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
+
+                test("Cannot reach DELETE /action/:id", async () => {
+                    await runner.delete({
+                        url: "/action/1",
+                        statusCode: 403,
+                    });
+                });
+            });
+        });
+        describe("The requested path must exist", () => {
+            beforeEach(() => {
+                runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            });
+
+            test("Find a nonexistent action", async () => {
+                await runner.get({
+                    url: "/action/0",
+                    expectedData: [notFoundResponse],
+                    statusCode: 404,
+                });
+            });
+
+            test("Update a nonexistent action", async () => {
+                await runner.get({
+                    url: "/action/0",
+                    expectedData: [notFoundResponse],
+                    statusCode: 404,
+                });
+            });
+            test("Delete a nonexistent action", async () => {
+                await runner.delete({ url: "/action/0", statusCode: 404 });
+            });
+        });
+        describe("The type of action id must be correct", () => {
+            beforeEach(() => {
+                runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            });
+
+            test("GET request", async () => {
+                await runner.get({
+                    url: "/action/wrongtype",
+                    expectedData: [badRequestResponse],
+                    statusCode: 400,
+                });
+            });
+
+            test("PATCH request", async () => {
+                const newAction = {
+                    foo: "bar",
+                };
+
+                await runner.patch({
+                    url: "/action/wrongtype",
+                    data: newAction,
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+
+            test("DELETE request", async () => {
+                await runner.delete({
+                    url: "/action/wrongtype",
+                    statusCode: 400,
+                });
+            });
+        });
+
+        afterAll(() => {
+            app.close();
+        });
     });
 });
-
-// De volgende testen controleren dat de route de juiste foutcode meegeeft, wanneer een fout request wordt gestuurd.
-describe("Test ActionRouting unsuccessful requests", () => {
-    // Bij deze test wordt er niet ingelogd en heeft de sessie dus geen autorisatie om request uit te voeren.
-    test("Test authorization", async () => {
-        const session = await request(app);
-
-        await session.get("/action").expect(403);
-
-        await session.get("/action/5").expect(403);
-
-        const resultAdd = await session
-            .post("/action")
-            .send({ description: "description" });
-        expect(resultAdd.status).toEqual(403);
-        expect(resultAdd.forbidden).toEqual(true);
-
-        const resultUpdate = await session
-            .patch("/action/1")
-            .send({ description: "description" });
-        expect(resultUpdate.status).toEqual(403);
-        expect(resultUpdate.forbidden).toEqual(true);
-
-        const resultDelete = await session.delete("/action/5");
-        expect(resultDelete.status).toEqual(403);
-        expect(resultDelete.forbidden).toEqual(true);
-    });
-
-    // Deze test probeert een action te zoeken/bewerken/verwijderen die niet in de databank zit.
-    test("Test using an unexisting action", async () => {
-        const session = await request(app);
-
-        // Eerst moet er ingelogd worden om autorisatie te krijgen.
-        const resultLogin = await session.post("/auth/login").send({
-            username: "administrator@trottoir.be",
-            password: "password",
-        });
-        expect(resultLogin.status).toBe(302);
-        expect(resultLogin.headers).toHaveProperty("set-cookie");
-
-        const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
-
-        const resultGet = await session
-            .get("/action/0")
-            .set("Cookie", [cookies]);
-        expect(resultGet.status).toEqual(404);
-        expect(resultGet.notFound).toEqual(true);
-
-        const resultUpdate = await session
-            .patch("/action/0")
-            .send({ description: "description" })
-            .set("Cookie", [cookies]);
-        expect(resultUpdate.status).toBe(404);
-        expect(resultUpdate.notFound).toEqual(true);
-
-        const resultDelete = await session
-            .delete("/action/0")
-            .set("Cookie", [cookies]);
-        expect(resultDelete.status).toEqual(404);
-        expect(resultDelete.notFound).toEqual(true);
-    });
-
-    // Deze test stuurt bij een request het verkeerde type id (string in plaats van int).
-    test("Test using an wrong action type id", async () => {
-        const session = await request(app);
-
-        // Eerst moet er ingelogd worden om autorisatie te krijgen.
-        const resultLogin = await session.post("/auth/login").send({
-            username: "administrator@trottoir.be",
-            password: "password",
-        });
-        expect(resultLogin.status).toBe(302);
-        expect(resultLogin.headers).toHaveProperty("set-cookie");
-
-        const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
-
-        const resultGet = await session
-            .get("/action/wrongtype")
-            .set("Cookie", [cookies]);
-        expect(resultGet.status).toEqual(400);
-        expect(resultGet.badRequest).toEqual(true);
-
-        const resultUpdate = await session
-            .patch("/action/wrongtype")
-            .send({ description: "description" })
-            .set("Cookie", [cookies]);
-        expect(resultUpdate.status).toBe(400);
-        expect(resultUpdate.badRequest).toEqual(true);
-
-        const resultDelete = await session
-            .delete("/action/wrongtype")
-            .set("Cookie", [cookies]);
-        expect(resultDelete.status).toEqual(400);
-        expect(resultDelete.badRequest).toEqual(true);
-    });
-});
-
-// close the server after test suite is done
-app.close();

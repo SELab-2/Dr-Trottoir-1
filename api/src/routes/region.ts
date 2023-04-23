@@ -23,7 +23,7 @@ export class RegionRouting extends Routing {
             where: {
                 id: Parser.number(req.query["id"]),
                 name: Parser.string(req.query["name"]),
-                // vind alle regios waar een bepaalde user is toegekend
+                // get all regions a certain user is assigned to
                 users: req.query["user_id"]
                     ? {
                           some: {
