@@ -54,7 +54,10 @@ services:
     frontend:
         container_name: frontend
         hostname: frontend
-        build: ../web/
+        build:
+            context: ../web
+            args:
+                NPM_AUTH_TOKEN: ${NPM_AUTH_TOKEN}
         networks:
             selab2:
                 ipv4_address: 10.0.0.6
