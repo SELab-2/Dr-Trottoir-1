@@ -6,7 +6,7 @@
 version: 2
 
 registries:
-  npm-gh:
+  npm-github:
     type: npm-registry
     url: https://npm.pkg.github.com
     token: ${{ secrets.NPM_AUTH_TOKEN }}
@@ -16,11 +16,11 @@ updates:
   # Web
   - package-ecosystem: "npm"
     directory: "/web"
-    schedule: 
+    schedule:
       interval: "weekly"
     assignees:
       - "themessik"
-  
+
   # API
   - package-ecosystem: "npm"
     directory: "/api"
@@ -28,7 +28,7 @@ updates:
       interval: "weekly"
     assignees:
       - "themessik"
-   
+
   # ORM
   - package-ecosystem: "npm"
     directory: "/orm"
@@ -36,7 +36,7 @@ updates:
       interval: "weekly"
     assignees:
       - "themessik"
-      
+
   # Query Builder
   - package-ecosystem: "npm"
     directory: "/api_query"
