@@ -28,8 +28,8 @@ jobs:
                     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Check for build errors"
                 run: npm run build
-                #            -   name: "Check for linting and errors"
-                #                run: npm run test
+            -   name: "Check for linting and errors"
+                run: npm run test
                 env:
                     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Cleanup"
