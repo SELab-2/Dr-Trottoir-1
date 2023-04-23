@@ -6,7 +6,7 @@
 version: 2
 
 registries:
-  npm-gh:
+  npm:
     type: npm-registry
     url: https://npm.pkg.github.com
     token: ${{ secrets.NPM_AUTH_TOKEN }}
