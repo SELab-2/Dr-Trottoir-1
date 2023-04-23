@@ -33,11 +33,11 @@ services:
       - "~/volumes/traefik:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     healthcheck:
-      test: ./traefik healtcheck --ping
-      interval: 10s
-      timeout: 1s
+      test: curl -f https://hc-ping.com/235f09fd-27ec-4fda-a8a1-4651ebc005fd
+      interval: 1m
+      timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 1m
 
   postgres:
     container_name: postgres
@@ -55,6 +55,12 @@ services:
         ipv4_address: 10.0.0.3
     ports:
       - "2002:5432"
+    healthcheck:
+        test: curl -f https://hc-ping.com/4f9e873f-656a-4ce8-a75a-1af4ccc1b752
+        interval: 1m
+        timeout: 10s
+        retries: 3
+        start_period: 1m
 
   imgproxy:
     container_name: imgproxy
@@ -80,6 +86,12 @@ services:
       - "traefik.http.routers.imgproxy.tls.certresolver=letsencrypt"
       - "traefik.http.services.imgproxy.loadbalancer.server.port=8081"
       - "traefik.http.middlewares.imgproxy.stripprefix.prefixes=/imgproxy/"
+    healthcheck:
+        test: curl -f https://hc-ping.com/585ad659-ac88-405c-a64c-1e0c0a37d2b7
+        interval: 10s
+        timeout: 1s
+        retries: 3
+        start_period: 10s
 
   api:
     container_name: api
@@ -102,12 +114,11 @@ services:
     ports:
       - "8080:8080"
     healthcheck:
-        test: curl -f https://hc-ping.com/371a0724-68d3-4ae8-91d8-e6185a65b61b || kill -s 15 -1 && (sleep 10; kill -s 9 -1)
-        interval: 30m
-        timeout: 1m
+        test: curl -f https://hc-ping.com/371a0724-68d3-4ae8-91d8-e6185a65b61b
+        interval: 1m
+        timeout: 10s
         start_period: 1m
-        retries: 5
-
+        retries: 3
 
   frontend:
     container_name: frontend
@@ -129,6 +140,12 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    healthcheck:
+        test: curl -f https://hc-ping.com/a1c79cae-9e60-4cbb-9960-bb3885b9855a
+        interval: 1m
+        timeout: 10s
+        start_period: 1m
+        retries: 3
 
 networks:
   main:
