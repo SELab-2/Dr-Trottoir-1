@@ -85,7 +85,7 @@ export class BuildingRouting extends Routing {
         }
 
         // We use a simple 32 byte sequence to create a hidden link.
-        req.body["hash"] = crypto.randomBytes(32).toString();
+        req.body["hash"] = crypto.randomBytes(32).toString("hex");
 
         const result = await prisma.building.create({
             data: req.body,
