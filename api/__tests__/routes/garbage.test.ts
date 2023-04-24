@@ -1,253 +1,303 @@
-import app from "../../src/main";
+import { describe, test } from "@jest/globals";
+import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
-import { describe, expect, test } from "@jest/globals";
-import supertest from "supertest";
+import app from "../../src/main";
+import { deleteDatabaseData, initialiseDatabase } from "../mock/database";
+import {
+    badRequestForeignKey,
+    badRequestResponse,
+    forbiddenResponse,
+    notFoundResponse,
+} from "../utilities/constants";
 
-// Garbage die toegevoegd zal worden om mee te werken bij de testen
-const garbageToCreate = {
-    pickup_time: "2023-01-01T00:00:00.000Z",
-    action_id: undefined,
-    building_id: undefined,
-};
-
-const garbage = {
-    id: undefined,
-    pickup_time: "2023-01-01T00:00:00.000Z",
-    action_id: undefined,
-    action: {
-        id: undefined,
-        description: "Action for testing",
-    },
-    building_id: undefined,
-    building: {
-        id: undefined,
-        name: undefined,
-        ivago_id: undefined,
-        deleted: undefined,
-        address: undefined,
-    },
-};
-
-// schakel authenticatie in, ongeacht wat de runner in zijn .env heeft
 process.env["DISABLE_AUTH"] = "false";
-
-// Voor de testen uitgevoerd worden, moet de sessie gestart worden en moet autorisatie verkregen en bewaard worden.
-// Daarnaast moeten bepaalde waarden aan de databank toegevoegd worden die gebruikt zullen worden in de testen.
-async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
-    // Sessie starten en inloggen om autorisatie te krijgen
-    const session = request(app);
-    const resultLogin = await session.post("/auth/login").send({
-        username: "administrator@trottoir.be",
-        password: "password",
-    });
-    expect(resultLogin.status).toBe(302);
-    expect(resultLogin.headers).toHaveProperty("set-cookie");
-
-    // Deze constante zorgt ervoor dat de ingelogde gebruiker behouden blijft en dus autorisatie heeft.
-    const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
-
-    // Een nieuwe action toevoegen om te gebruiken bij de testen
-    let res = await session
-        .post("/action")
-        .send({ description: "Action for testing" })
-        .set("Cookie", [cookies]);
-    expect(res.status).toEqual(201);
-    garbageToCreate.action_id = res.body.id;
-    garbage.action_id = res.body.id;
-
-    // Een willekeurig gebouw nemen om te gebruiken bij de testen
-    res = await session.get("/building").set("Cookie", [cookies]);
-    expect(res.status).toEqual(200);
-    const buildings = res.body;
-    expect(buildings.length).toBeGreaterThan(0);
-    const building = buildings[0];
-    garbageToCreate.building_id = building.id;
-    garbage.building_id = building.id;
-    garbage.building.id = building.id;
-    garbage.building.name = building.name;
-    garbage.building.ivago_id = building.ivago_id;
-    garbage.building.deleted = building.deleted;
-    garbage.building.address = building.address;
-
-    // Nieuwe schedule toevoegen die gebruikt wordt bij de testen
-    res = await session
-        .post("/garbage")
-        .send(garbageToCreate)
-        .set("Cookie", [cookies]);
-    expect(res.status).toEqual(201);
-    garbage.id = res.body["id"];
-    const newGarbage = res.body;
-    garbage.action_id = newGarbage.action_id;
-    garbage.action.id = newGarbage.action_id;
-
-    return [session, cookies];
-}
-
-async function closeSession(
-    session: supertest.SuperTest<any>,
-    cookies: string,
-) {
-    let res = await session
-        .delete("/garbage/" + garbage.id)
-        .set("Cookie", [cookies]);
-    expect(res.status).toEqual(200);
-
-    res = await session
-        .delete("/action/" + garbage.action_id)
-        .set("Cookie", [cookies]);
-    expect(res.status).toEqual(200);
-}
-
-describe("Successful tests", () => {
-    let session: supertest.SuperTest<any>;
-    let cookies: string;
-
+describe("Garbage tests", () => {
+    let runner: Testrunner;
     beforeAll(async () => {
-        const session_cookies = await prepareSession();
-        session = session_cookies[0];
-        cookies = session_cookies[1];
+        const server = request(app);
+        runner = new Testrunner(server);
+
+        await deleteDatabaseData();
+        await initialiseDatabase();
+
+        runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
     });
 
-    afterAll(async () => {
-        await closeSession(session, cookies);
+    describe("Successful requests", () => {
+        beforeAll(() => {
+            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+        });
+        test("GET /garbage", async () => {
+            const expectedData = [
+                {
+                    action: { description: "action 1", id: 1 },
+                    action_id: 1,
+                    building: {
+                        address: {
+                            city: "Sydney",
+                            id: 1,
+                            latitude: -33.865143,
+                            longitude: 151.2099,
+                            number: 42,
+                            street: "Wallaby Way",
+                            zip_code: 2000,
+                        },
+                        deleted: false,
+                        id: 1,
+                        ivago_id: "ivago-1",
+                        name: "Building 1",
+                    },
+                    building_id: 1,
+                    id: 1,
+                    pickup_time: "2023-05-04T12:00:00.000Z",
+                },
+                {
+                    action: { description: "action 2", id: 2 },
+                    action_id: 2,
+                    building: {
+                        address: {
+                            city: "Ghent",
+                            id: 2,
+                            latitude: 51.04732,
+                            longitude: 3.7282,
+                            number: 25,
+                            street: "Sint-Pietersnieuwstraat",
+                            zip_code: 9000,
+                        },
+                        deleted: false,
+                        id: 2,
+                        ivago_id: "ivago-2",
+                        name: "Building 2",
+                    },
+                    building_id: 2,
+                    id: 2,
+                    pickup_time: "2023-05-04T12:00:00.000Z",
+                },
+            ];
+
+            await runner.get({
+                url: "/garbage",
+                expectedData: expectedData,
+            });
+        });
+        test("GET /garbage/:id", async () => {
+            const expected = [
+                {
+                    id: 1,
+                    pickup_time: "2023-05-04T12:00:00.000Z",
+                    action_id: 1,
+                    building_id: 1,
+                    action: { id: 1, description: "action 1" },
+                    building: {
+                        id: 1,
+                        name: "Building 1",
+                        ivago_id: "ivago-1",
+                        deleted: false,
+                        address: {
+                            id: 1,
+                            street: "Wallaby Way",
+                            number: 42,
+                            city: "Sydney",
+                            zip_code: 2000,
+                            latitude: -33.865143,
+                            longitude: 151.2099,
+                        },
+                    },
+                },
+            ];
+            await runner.get({
+                url: "/garbage/1",
+                expectedData: expected,
+            });
+        });
+
+        test("PATCH /garbage/:id", async () => {
+            const expected = {
+                id: 1,
+                pickup_time: "2023-02-02T00:00:00.000Z",
+                action_id: 1,
+                building_id: 1,
+                action: { id: 1, description: "action 1" },
+                building: {
+                    id: 1,
+                    name: "Building 1",
+                    ivago_id: "ivago-1",
+                    deleted: false,
+                    address: {
+                        id: 1,
+                        street: "Wallaby Way",
+                        number: 42,
+                        city: "Sydney",
+                        zip_code: 2000,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                    },
+                },
+            };
+            await runner.patch({
+                url: "/garbage/1",
+                data: { pickup_time: "2023-02-02T00:00:00.000Z" },
+                expectedResponse: expected,
+            });
+        });
+
+        test("POST /garbage", async () => {
+            const newGarbage = {
+                pickup_time: "2023-05-04T12:00:00.000Z",
+                action_id: 1,
+                building_id: 2,
+            };
+
+            const expectedResponse = {
+                pickup_time: "2023-05-04T12:00:00.000Z",
+                action_id: 1,
+                building_id: 2,
+                action: { id: 1, description: "action 1" },
+                building: {
+                    id: 2,
+                    name: "Building 2",
+                    ivago_id: "ivago-2",
+                    deleted: false,
+                    address: {
+                        id: 2,
+                        street: "Sint-Pietersnieuwstraat",
+                        number: 25,
+                        city: "Ghent",
+                        zip_code: 9000,
+                        latitude: 51.04732,
+                        longitude: 3.7282,
+                    },
+                },
+            };
+            await runner.post({
+                url: "/garbage",
+                data: newGarbage,
+                expectedResponse: expectedResponse,
+            });
+        });
     });
 
-    test("Test searching existing garbage", async () => {
-        const res = await session
-            .get("/garbage/" + garbage.id)
-            .set("Cookie", [cookies]);
-        expect(res.status).toEqual(200);
-        expect(res.body).toEqual(garbage);
+    describe("Unsuccessful requests", () => {
+        describe("Authentication tests", () => {
+            test("Cannot use any path as unauthorized", async () => {
+                runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
+                await runner.get({
+                    url: "/garbage",
+                    expectedData: [forbiddenResponse],
+                    statusCode: 403,
+                });
+
+                await runner.get({
+                    url: "/garbage/1",
+                    expectedData: [forbiddenResponse],
+                    statusCode: 403,
+                });
+
+                await runner.post({
+                    url: "/garbage",
+                    data: {},
+                    expectedResponse: forbiddenResponse,
+                    statusCode: 403,
+                });
+
+                await runner.patch({
+                    url: "/garbage/1",
+                    data: {},
+                    expectedResponse: forbiddenResponse,
+                    statusCode: 403,
+                });
+
+                await runner.delete({
+                    url: "/garbage/1",
+                    statusCode: 403,
+                });
+            });
+            test("Cannot use any path as Student except specific GET", async () => {
+                runner.authLevel(AuthenticationLevel.STUDENT);
+                await runner.get({
+                    url: "/garbage",
+                    expectedData: [forbiddenResponse],
+                    statusCode: 403,
+                });
+
+                await runner.post({
+                    url: "/garbage",
+                    data: {},
+                    expectedResponse: forbiddenResponse,
+                    statusCode: 403,
+                });
+
+                await runner.patch({
+                    url: "/garbage/1",
+                    data: {},
+                    expectedResponse: forbiddenResponse,
+                    statusCode: 403,
+                });
+
+                await runner.delete({
+                    url: "/garbage/1",
+                    statusCode: 403,
+                });
+            });
+        });
+
+        describe("Cannot reference a non-existent garbage", () => {
+            beforeEach(() => {
+                runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+            });
+            test("Can't GET a non-existent garbage", async () => {
+                await runner.get({
+                    url: "/garbage/0",
+                    expectedData: [notFoundResponse],
+                    statusCode: 404,
+                });
+            });
+            test("Can't PATCH a non-existent garbage", async () => {
+                await runner.patch({
+                    url: "/garbage/0",
+                    data: { pickup_time: "2023-05-04T12:00:00.000Z" },
+                    expectedResponse: notFoundResponse,
+                    statusCode: 404,
+                });
+            });
+            test("Can't DELETE a non-existent garbage", async () => {
+                await runner.delete({
+                    url: "/garbage/0",
+                    statusCode: 404,
+                });
+            });
+        });
+
+        test("Cannot assign a wrong type to a field", async () => {
+            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+            await runner.patch({
+                url: "/garbage/1",
+                // UNIX timestamp
+                data: { pickup_time: 1682538300 },
+                expectedResponse: badRequestResponse,
+                statusCode: 400,
+            });
+        });
+
+        test("Change action id to non-existent one", async () => {
+            await runner.patch({
+                url: "/garbage/1",
+                data: { action_id: 0 },
+                expectedResponse: badRequestForeignKey,
+                statusCode: 400,
+            });
+        });
+
+        test("Change building id to non-existent one", async () => {
+            await runner.patch({
+                url: "/garbage/1",
+                data: { building_id: 0 },
+                expectedResponse: badRequestForeignKey,
+                statusCode: 400,
+            });
+        });
     });
-
-    test("Test updating existing garbage", async () => {
-        const change = "2023-02-02T00:00:00.000Z";
-        const updatedGarbage = {
-            id: garbage.id,
-            pickup_time: change,
-            action_id: garbage.action_id,
-            building_id: garbage.building_id,
-        };
-
-        const res = await session
-            .patch("/garbage/" + garbage.id)
-            .send({ pickup_time: change })
-            .set("Cookie", [cookies]);
-        expect(res.status).toEqual(200);
-        expect(res.body).toEqual(updatedGarbage);
+    afterAll(() => {
+        app.close();
     });
 });
-
-describe("Unsuccessful tests", () => {
-    let session: supertest.SuperTest<any>;
-    let cookies: string;
-
-    beforeAll(async () => {
-        const session_cookies = await prepareSession();
-        session = session_cookies[0];
-        cookies = session_cookies[1];
-    });
-
-    afterAll(async () => {
-        await closeSession(session, cookies);
-    });
-
-    test("Test Authorization", async () => {
-        let res = await session.get("/garbage");
-        expect(res.status).toEqual(403);
-        expect(res.forbidden).toEqual(true);
-
-        res = await session.get("/garbage/" + garbage.id);
-        expect(res.status).toEqual(403);
-        expect(res.forbidden).toEqual(true);
-
-        res = await session.post("/garbage").send(garbageToCreate);
-        expect(res.status).toEqual(403);
-        expect(res.forbidden).toEqual(true);
-
-        res = await session
-            .patch("/garbage/" + garbage.id)
-            .send({ pickup_time: "2023-02-02T00:00:00.000Z" });
-        expect(res.status).toEqual(403);
-        expect(res.forbidden).toEqual(true);
-
-        res = await session.delete("/garbage/" + garbage.id);
-        expect(res.status).toEqual(403);
-        expect(res.forbidden).toEqual(true);
-    });
-
-    test("Test change id to unexisting id", async () => {
-        let res = await session
-            .patch("/garbage/" + garbage.id)
-            .send({ action_id: 0 })
-            .set("Cookie", [cookies]);
-        expect(res.status).toEqual(500);
-
-        res = await session
-            .patch("/garbage/" + garbage.id)
-            .send({ building_id: 0 })
-            .set("Cookie", [cookies]);
-        expect(res.status).toEqual(500);
-    });
-
-    test("Test using an unexisting garbage", async () => {
-        let res = await session.get("/garbage/0").set("Cookie", [cookies]);
-        expect(res.status).toEqual(404);
-        expect(res.notFound).toEqual(true);
-
-        res = await session
-            .patch("/garbage/0")
-            .send({ pickup_time: "2023-02-02T00:00:00.000Z" })
-            .set("Cookie", [cookies]);
-        expect(res.status).toEqual(404);
-        expect(res.notFound).toEqual(true);
-
-        res = await session.delete("/garbage/0").set("Cookie", [cookies]);
-        expect(res.status).toEqual(404);
-        expect(res.notFound).toEqual(true);
-    });
-
-    test("Test using wrong types", async () => {
-        // string in plaats van date
-        let res = await session
-            .patch("/garbage/" + garbage.id)
-            .send({ pickup_time: "date" })
-            .set("Cookie", [cookies]);
-        expect(res.status).toEqual(400);
-        expect(res.badRequest).toEqual(true);
-
-        // getal in plaats van date
-        res = await session
-            .patch("/garbage/" + garbage.id)
-            .send({ pickup_time: 2023 })
-            .set("Cookie", [cookies]);
-        expect(res.status).toEqual(400);
-        expect(res.badRequest).toEqual(true);
-
-        // boolean in plaats van date
-        res = await session
-            .patch("/garbage/" + garbage.id)
-            .send({ pickup_time: true })
-            .set("Cookie", [cookies]);
-        expect(res.status).toEqual(400);
-        expect(res.badRequest).toEqual(true);
-
-        // string in plaats van getal
-        res = await session
-            .patch("/garbage/" + garbage.id)
-            .send({ action_id: "one" })
-            .set("Cookie", [cookies]);
-        expect(res.status).toEqual(400);
-        expect(res.badRequest).toEqual(true);
-
-        // boolean in plaats van getal
-        res = await session
-            .patch("/garbage/" + garbage.id)
-            .send({ action_id: true })
-            .set("Cookie", [cookies]);
-        expect(res.status).toEqual(400);
-        expect(res.badRequest).toEqual(true);
-    });
-});
-
-app.close();
