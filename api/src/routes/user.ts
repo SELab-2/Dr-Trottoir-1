@@ -34,6 +34,12 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        // only admins can choose to see deleted entries too
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
+            deleted = undefined;
+        }
+
         const result = await prisma.user.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -41,7 +47,7 @@ export class UserRouting extends Routing {
                 student: Parser.bool(req.query["student"]),
                 super_student: Parser.bool(req.query["super_student"]),
                 admin: Parser.bool(req.query["admin"]),
-                deleted: Parser.bool(req.query["deleted"], false),
+                deleted: deleted,
                 last_login: {
                     lte: Parser.date(req.query["login_before"]),
                     gte: Parser.date(req.query["login_after"]),
@@ -89,14 +95,12 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        // De body van een request mag niet leeg zijn, alsook geen hash of salt
-        // bevatten.
+        // The body of a request can't be empty and can't contain a hash or salt
         if (!req.body == null || req.body.hash || req.body.salt) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
-        // We kiezen een willekeurige salt, berekenen de hash-waarde, en slaan
-        // deze tenslotte op in hun corresponderende velden.
+        // We choose a random salt, calculate the hash-value and save these in their corresponding fields
         const password = req.body.password;
         delete req.body.password;
         const user: User = req.body;
@@ -106,7 +110,6 @@ export class UserRouting extends Routing {
             .update(password + user.salt)
             .digest("hex");
 
-        // Voer een poging uit om de gebruiker toe te voegen.
         const result = await prisma.user.create({
             data: user,
             select: UserRouting.selects,
@@ -115,15 +118,24 @@ export class UserRouting extends Routing {
         return res.status(201).json(result);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        // De body van een request mag niet leeg zijn, alsook geen hash of salt
-        // bevatten.
+        // Students are only allowed to change their own account
+        if (
+            req.user?.student &&
+            !req.user?.super_student &&
+            !req.user?.admin &&
+            Parser.number(req.params["id"]) !== req.user?.id
+        ) {
+            throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
+        // The body of a request can't be empty and can't contain a hash or salt
         if (req.body == null || req.body.hash || req.body.salt) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
-        // Indien het wachtwoord veranderd wordt
+        // The request might want to change the password
         if (req.body.password) {
             req.body.salt = crypto.randomBytes(32).toString();
             req.body.hash = crypto

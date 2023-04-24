@@ -28,16 +28,22 @@ export class ScheduleRouting extends Routing {
             req.user?.student &&
             !req.user?.super_student &&
             !req.user?.admin &&
-            Parser.number(req.query["user_id"]) != req.user?.id
+            Parser.number(req.query["user_id"]) !== req.user?.id
         ) {
             throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
+        // only admins can choose to see deleted entries too
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
+            deleted = undefined;
         }
 
         const result = await prisma.schedule.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                deleted: Parser.bool(req.query["deleted"], false),
+                deleted: deleted,
                 day: {
                     lte: Parser.date(req.query["before"]),
                     gte: Parser.date(req.query["after"]),
@@ -137,14 +143,15 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
+        let result;
         if (Parser.bool(req.body["hardDelete"], false)) {
-            await prisma.schedule.delete({
+            result = await prisma.schedule.delete({
                 where: {
                     id: Parser.number(req.params["id"]),
                 },
             });
         } else {
-            await prisma.schedule.update({
+            result = await prisma.schedule.update({
                 data: {
                     deleted: true,
                 },
@@ -154,6 +161,6 @@ export class ScheduleRouting extends Routing {
             });
         }
 
-        return res.status(200).json({});
+        return res.status(200).json(result);
     }
 }

@@ -48,9 +48,6 @@ jobs:
                 run: |
                     npm install
                     npx prisma db push
-                    cd ../mock
-                    npm install
-                    npm run start
             -   name: "Execute tests"
                 run: npm run test
             -   name: "Cleanup"
@@ -59,4 +56,3 @@ jobs:
                     chmod +x ../server/cleanup.sh
                     ../server/cleanup.sh -p
                 shell: bash
-
