@@ -10,7 +10,7 @@ on:
 
 jobs:
     web-lint:
-        runs-on: [ self-hosted ]
+        runs-on: ubuntu-latest
         defaults:
             run:
                 working-directory: ./web
@@ -25,13 +25,13 @@ jobs:
             -   name: "Install dependencies"
                 run: npm ci
                 env:
-                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Check for build errors"
                 run: npm run build
                 #            -   name: "Check for linting and errors"
                 #                run: npm run test
                 env:
-                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Cleanup"
                 if: always()
                 run: |
