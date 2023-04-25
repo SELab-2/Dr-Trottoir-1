@@ -22,6 +22,7 @@ import { GarbageRouting } from "./routes/garbage";
 import { FileRouter } from "./routes/file";
 import { UserRegionRouting } from "./routes/user_region";
 import { ProgressRouting } from "./routes/progress";
+import { RoundBuildingRouting } from "./routes/round_building";
 import cors from "cors";
 
 // const PORT_NUMBER = 8080;
@@ -95,6 +96,7 @@ app.use("/file", FileRouter);
 app.use("/user_region", new UserRegionRouting().toRouter());
 
 app.use("/progress", new ProgressRouting().toRouter());
+app.use("/round_building", new RoundBuildingRouting().toRouter());
 
 // Finally, an error handler
 app.use(ErrorHandler.handle);

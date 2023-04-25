@@ -273,10 +273,10 @@ enum ProgressImageType {
 // Dit model houdt de vooruitgang van een gebouw bij. Hierin wordt het tijdstip van aankomst en vertrek opgeslagen samen met
 // opmerkingen van de student. Dit wordt gelinkt aan een specifieke ronde en gebruiker op een specieke dag (via Schedule).
 model Progress {
-    id        Int      @id @default(autoincrement())
+    id        Int       @id @default(autoincrement())
     report    String
-    arrival   DateTime
-    departure DateTime
+    arrival   DateTime?
+    departure DateTime?
 
     building_id Int
     building    Building @relation(fields: [building_id], references: [id], onDelete: Cascade)

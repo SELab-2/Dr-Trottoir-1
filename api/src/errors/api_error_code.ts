@@ -42,7 +42,9 @@ export function errorMessage(code: APIErrorCode): string {
         case APIErrorCode.FAILED_TO_RETRIEVE_FILE:
             return "failed to retrieve file";
         default:
-            console.log(`ERROR: an unknown error message was raised: ${code}`);
+            console.error(
+                `ERROR: an unknown error message was raised: ${code}`,
+            );
             return "Internal Server Error";
     }
 }

@@ -4,8 +4,18 @@ import express from "express";
 import { Parser } from "../parser";
 import { prisma } from "../prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
 
 export class ProgressRouting extends Routing {
+    toRouter(): express.Router {
+        const router = super.toRouter();
+        router.post("/:id/image", this.createImage);
+        router.patch("/:id/image/:image_id", this.updateImage);
+        router.delete("/:id/image/:image_id", this.deleteImage);
+        return router;
+    }
+
     private static includes: Prisma.ProgressInclude = {
         building: selectBuilding(),
         schedule: {
@@ -14,16 +24,36 @@ export class ProgressRouting extends Routing {
                 user: includeUser(false),
             },
         },
-        images: true,
+        images: {
+            include: {
+                image: true,
+            },
+        },
     };
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        // Students are only allowed to see their own progress entries
+        if (
+            req.user?.student &&
+            !req.user?.super_student &&
+            !req.user?.admin &&
+            Parser.number(req.query["user"]) !== req.user?.id
+        ) {
+            throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
+        // only admins can choose to see deleted entries too
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
+            deleted = undefined;
+        }
+
         const result = await prisma.progress.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                deleted: Parser.bool(req.query["deleted"], false),
+                deleted: deleted,
                 report: {
                     contains: Parser.string(req.query["report"], ""),
                 },
@@ -65,6 +95,7 @@ export class ProgressRouting extends Routing {
     async createOne(req: CustomRequest, res: express.Response) {
         const user = await prisma.progress.create({
             data: req.body,
+            include: ProgressRouting.includes,
         });
 
         return res.status(201).json(user);
@@ -77,6 +108,7 @@ export class ProgressRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
+            include: ProgressRouting.includes,
         });
 
         return res.status(200).json(result);
@@ -97,6 +129,86 @@ export class ProgressRouting extends Routing {
                 },
                 where: {
                     id: Parser.number(req.params["id"]),
+                },
+            });
+        }
+
+        return res.status(200).json({});
+    }
+
+    @Auth.authorization({ student: true })
+    async createImage(req: CustomRequest, res: express.Response) {
+        const progress_id = Number(Parser.number(req.params["id"]));
+
+        await prisma.image.create({
+            data: {
+                time: req.body.time,
+                location: req.body.location,
+                path: req.body.path,
+                user_id: req.body.user_id,
+                progress: {
+                    create: [
+                        {
+                            type: req.body.type,
+                            description: req.body.description,
+                            progress_id: progress_id,
+                        },
+                    ],
+                },
+            },
+        });
+
+        const result = await prisma.progress.findUniqueOrThrow({
+            where: {
+                id: progress_id,
+            },
+            include: ProgressRouting.includes,
+        });
+
+        return res.status(201).json(result);
+    }
+
+    @Auth.authorization({ student: true })
+    async updateImage(req: CustomRequest, res: express.Response) {
+        await prisma.progressImage.update({
+            data: req.body,
+            where: {
+                id: Parser.number(req.params["image_id"]),
+            },
+        });
+
+        const result = await prisma.progress.findUniqueOrThrow({
+            where: {
+                id: Parser.number(req.params["id"]),
+            },
+            include: ProgressRouting.includes,
+        });
+
+        return res.status(200).json(result);
+    }
+
+    @Auth.authorization({ student: true })
+    async deleteImage(req: CustomRequest, res: express.Response) {
+        if (Parser.bool(req.body["hardDelete"], false)) {
+            const result = await prisma.progressImage.findUniqueOrThrow({
+                where: {
+                    id: Parser.number(req.params["image_id"]),
+                },
+            });
+
+            // Use cascade delete of Image
+            await prisma.image.delete({
+                where: {
+                    id: result.image_id,
+                },
+            });
+        } else {
+            await prisma.progressImage.update({
+                data: {
+                    deleted: true,
+                },
+                where: {
+                    id: Parser.number(req.params["image_id"]),
                 },
             });
         }

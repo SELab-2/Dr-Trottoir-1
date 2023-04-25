@@ -9,27 +9,17 @@
       Nieuwe Gebruiker
     </v-btn>
   </div>
-  <Table v-bind:entries="users" v-bind:headers="User.headers()"></Table>
+  <Table :entries="users" :headers="User.headers()" :route="User.route"></Table>
 </template>
 
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
 import { User } from "@/types/User";
-import { User as OrmUser } from "@selab-2/groep-1-orm";
-import { UserQuery } from "@selab-2/groep-1-query";
+import { Result, UserQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 
-const users: User[] = await loadUsers();
-async function loadUsers(): Promise<User[]> {
-  try {
-    const usersOrErr: OrmUser[] = await new UserQuery().getAll();
-    let array = [];
-    for (let user of usersOrErr) {
-      array.push(new User(user));
-    }
-    return array;
-  } catch (e) {
-    alert("Kon gebruikers niet ophalen, probeer het later opnieuw.");
-    return [];
-  }
-}
+const users: Array<Result<UserQuery>> =
+  (await tryOrAlertAsync<Array<Result<UserQuery>>>(async () => {
+    return await new UserQuery().getAll({});
+  })) ?? [];
 </script>

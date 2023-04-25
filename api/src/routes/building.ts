@@ -10,6 +10,13 @@ import crypto from "crypto";
 import * as dateMath from "date-arithmetic";
 
 export class BuildingRouting extends Routing {
+    toRouter(): express.Router {
+        const router = super.toRouter();
+        router.post("/:id/image", this.createImage);
+        router.delete("/:id/image/:image_id", this.deleteImage);
+        return router;
+    }
+
     private static selects: Prisma.BuildingSelect = {
         id: true,
         name: true,
@@ -41,6 +48,12 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        // only admins can choose to see deleted entries too
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
+            deleted = undefined;
+        }
+
         const result = await prisma.building.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -48,7 +61,7 @@ export class BuildingRouting extends Routing {
                 name: req.query["name"],
                 ivago_id: req.query["ivago_id"],
                 syndicus_id: Parser.number(req.query["syndicus_id"]),
-                deleted: Parser.bool(req.query["deleted"], false),
+                deleted: deleted,
             },
             select: BuildingRouting.selects,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
@@ -57,7 +70,6 @@ export class BuildingRouting extends Routing {
         return res.json(result);
     }
 
-    @Auth.authorization({ student: true })
     override async getOne(req: CustomRequest, res: express.Response) {
         if (Number.isNaN(parseInt(req.params["id"]))) {
             return BuildingRouting.resident(req, res);
@@ -73,7 +85,7 @@ export class BuildingRouting extends Routing {
         }
 
         // We use a simple 32 byte sequence to create a hidden link.
-        req.body["hash"] = crypto.randomBytes(32).toString();
+        req.body["hash"] = crypto.randomBytes(32).toString("hex");
 
         const result = await prisma.building.create({
             data: req.body,
@@ -86,7 +98,7 @@ export class BuildingRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
         if (Parser.bool(req.body["hash"], false)) {
-            req.body = crypto.randomBytes(32).toString();
+            req.body.hash = crypto.randomBytes(32).toString();
         }
 
         const result = await prisma.building.update({
@@ -94,16 +106,7 @@ export class BuildingRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            select: {
-                id: true,
-                name: true,
-                ivago_id: true,
-                syndicus_id: true,
-                address_id: true,
-                manual_id: true,
-                hash: false,
-                deleted: true,
-            },
+            select: BuildingRouting.selects,
         });
 
         return res.status(200).json(result);
@@ -131,7 +134,7 @@ export class BuildingRouting extends Routing {
         return res.status(200).json({});
     }
 
-    @Auth.authorization({})
+    @Auth.authorization({ student: true })
     static async internal(req: CustomRequest, res: express.Response) {
         const result = await prisma.building.findFirstOrThrow({
             where: {
@@ -206,5 +209,48 @@ export class BuildingRouting extends Routing {
         }
 
         return res.json(result);
+    }
+
+    @Auth.authorization({ superStudent: true })
+    async createImage(req: CustomRequest, res: express.Response) {
+        const building_id = Number(Parser.number(req.params["id"]));
+        await prisma.image.create({
+            data: {
+                time: req.body.time,
+                location: req.body.location,
+                path: req.body.path,
+                user_id: req.body.user_id,
+                buildings: {
+                    create: [{ building_id: building_id }],
+                },
+            },
+        });
+
+        const result = await prisma.building.findUniqueOrThrow({
+            where: {
+                id: building_id,
+            },
+            select: BuildingRouting.selects,
+        });
+
+        return res.status(201).json(result);
+    }
+
+    @Auth.authorization({ superStudent: true })
+    async deleteImage(req: CustomRequest, res: express.Response) {
+        const result = await prisma.buildingImages.findUniqueOrThrow({
+            where: {
+                id: Parser.number(req.params["image_id"]),
+            },
+        });
+
+        // Use cascade delete of Image
+        await prisma.image.delete({
+            where: {
+                id: result.image_id,
+            },
+        });
+
+        return res.status(200).json({});
     }
 }

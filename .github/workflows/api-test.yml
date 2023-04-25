@@ -8,7 +8,7 @@ on:
             - 'api/**'
 jobs:
     api-test:
-        runs-on: [ self-hosted ]
+        runs-on: ubuntu-latest
         defaults:
             run:
                 working-directory: ./api
@@ -42,15 +42,12 @@ jobs:
             -   name: "Clean install"
                 run: npm ci
                 env:
-                    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Setup the database"
                 working-directory: ./orm
                 run: |
                     npm install
                     npx prisma db push
-                    cd ../mock
-                    npm install
-                    npm run start
             -   name: "Execute tests"
                 run: npm run test
             -   name: "Cleanup"
@@ -59,4 +56,3 @@ jobs:
                     chmod +x ../server/cleanup.sh
                     ../server/cleanup.sh -p
                 shell: bash
-

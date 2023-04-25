@@ -1,169 +1,212 @@
 <template>
-  <HFillWrapper>
-    <!-- Day cards-->
-    <v-card
-      v-for="day in days"
-      :key="day.name"
-      :title="day.name"
-      variant="flat"
-      color="background"
-    >
-      <template v-slot:append>
-        <v-chip label prepend-icon="mdi-calendar-month-outline" variant="text">
-          {{ day.rounds[0].deadline.getDate() }}
-          {{ formatter.format(day.rounds[0].deadline) }}
-        </v-chip>
-      </template>
-      <!-- Round cards -->
-      <BorderCard
-        v-for="round in day.rounds"
-        :key="round.name"
-        class="mb-3 mx-1"
-        :title="round.name"
-        prepend-icon="mdi-transit-detour"
-        @click="redirect_to_detail()"
+  <HFillWrapper v-if="days !== undefined">
+    <div v-for="day in days" :key="day.id">
+      <v-card
+        v-if="day.list.length > 0"
+        :title="day.name"
+        variant="flat"
+        color="background"
       >
-        <!-- Time -->
-        <template v-slot:subtitle>
+        <template v-slot:append>
           <v-chip
             label
-            prepend-icon="mdi-clock-time-ten-outline"
+            prepend-icon="mdi-calendar-month-outline"
             variant="text"
-            size="compact"
           >
-            {{ round.deadline.getHours() }}:{{
-              ("0" + round.deadline.getUTCMinutes()).slice(-2)
-            }}
+            {{ prettyDate(day.start) }}
           </v-chip>
         </template>
 
-        <!-- Status -->
-        <template v-slot:append>
-          <v-btn
-            v-if="
-              calculateProgress(round.buildings_done, round.buildings) === 0
-            "
-            color="primary"
-            v-on:click.stop="snackbar = !snackbar"
-            variant="tonal"
-            :disabled="round.name == 'Sterre' || round.name == 'Korenmarkt'"
-            prepend-icon="mdi-play-circle-outline"
-          >
-            Start ronde</v-btn
-          >
-          <v-btn
-            v-else-if="
-              calculateProgress(round.buildings_done, round.buildings) === 100
-            "
-            :ripple="false"
-            :clickable="false"
-            variant="tonal"
-            label
-            color="success"
-            prepend-icon="mdi-check"
-          >
-            Klaar
-          </v-btn>
-          <v-btn
-            v-else
-            label
-            color="warning"
-            :ripple="false"
-            :clickable="false"
-            variant="tonal"
-            prepend-icon="mdi-progress-clock"
-          >
-            Bezig {{ round.buildings_done }}/{{ round.buildings }}
-          </v-btn>
-        </template>
-      </BorderCard>
-
-      <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
-      <v-overlay v-model="snackbar">
-        <v-snackbar
-          v-model="snackbar"
-          timeout="-1"
-          elevation="24"
-          color="background"
+        <BorderCard
+          v-for="item in day.list"
+          :key="item.schedule.id"
+          class="mb-3 mx-1"
+          :title="item.schedule.round.name"
+          prepend-icon="mdi-transit-detour"
+          @click="
+            current_id = item.schedule.round_id;
+            router.push({
+              name: 'round_detail',
+              params: { id: current_id, schedule: item.schedule.id },
+            });
+          "
         >
-          <StartRoundPopupContent
-            :oncancel="() => (snackbar = false)"
-            :onsubmit="() => redirect_to_detail()"
-          />
-        </v-snackbar>
-      </v-overlay>
-    </v-card>
+          <template v-slot:subtitle>
+            <v-chip
+              label
+              prepend-icon="mdi-clock-time-ten-outline"
+              variant="text"
+              size="compact"
+            >
+              {{ new Date(item.schedule.day).toISOString().slice(11, 16) }}
+            </v-chip>
+          </template>
+
+          <template v-slot:append>
+            <v-btn
+              v-if="item.progress.length === 0"
+              color="primary"
+              v-on:click.stop="
+                snackbar = !snackbar;
+                current_id = item.schedule.round_id;
+              "
+              :variant="
+                new Date(item.schedule.day).getDate() !== new Date().getDate()
+                  ? 'flat'
+                  : 'elevated'
+              "
+              :disabled="
+                new Date(item.schedule.day).getDate() !== new Date().getDate()
+              "
+            >
+              Start ronde</v-btn
+            >
+            <v-chip
+              v-else-if="
+                item.progress.length === item.schedule.round.buildings.length
+              "
+              label
+              color="success"
+            >
+              <v-icon icon="mdi-check"></v-icon>
+              Klaar
+            </v-chip>
+            <v-chip v-else label color="warning">
+              Bezig {{ item.progress.length }}/{{
+                item.schedule.round.buildings.length
+              }}
+            </v-chip>
+          </template>
+        </BorderCard>
+      </v-card>
+    </div>
+
+    <div class="centre text-center pa-5" v-if="empty">
+      <v-icon icon="mdi-alert-circle" size="x-large" />
+      <h3>Geen planning voor de komende 3 dagen.</h3>
+      <p>Check bij je superstudent indien je denkt dat dit niet klopt.</p>
+    </div>
+
+    <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
+    <v-overlay v-model="snackbar">
+      <v-snackbar
+        v-model="snackbar"
+        timeout="-1"
+        elevation="24"
+        color="background"
+      >
+        <StartRoundPopupContent
+          :oncancel="() => (snackbar = false)"
+          :onsubmit="
+            () =>
+              router.push({
+                name: 'round_detail',
+                params: { id: current_id, schedule: 0 },
+              })
+          "
+        />
+      </v-snackbar>
+    </v-overlay>
   </HFillWrapper>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
-import { useRouter } from "vue-router";
 import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
-
-// the router constant
-const router = useRouter();
-
-function redirect_to_detail() {
-  router.push({ name: "round_detail", params: { id: 0 } });
-}
-
-// https://stackoverflow.com/questions/1643320/get-month-name-from-date
-const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
+import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
+import router from "@/router";
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import { tryOrAlertAsync } from "@/try";
 
 const snackbar = ref(false);
+const current_id = ref(0);
 
-const calculateProgress = (done: number, toDo: number) => {
-  return Math.round((done / toDo) * 100);
+type DayEntry = {
+  id: number;
+  start: Date;
+  end: Date;
+  list: Array<{
+    schedule: Result<ScheduleQuery>;
+    progress: Array<Result<ProgressQuery>>;
+  }>;
+  name: string;
 };
 
-const days = ref({
-  monday: {
-    name: "Vandaag",
-    rounds: [
-      {
-        name: "Grote Markt",
-        deadline: new Date(2023, 2, 6, 10, 30),
-        buildings: 5,
-        buildings_done: 5,
-      },
-      {
-        name: "Vrijdagsmarkt",
-        deadline: new Date(2023, 2, 6, 12, 45),
-        buildings: 5,
-        buildings_done: 3,
-      },
-      {
-        name: "Overpoort",
-        deadline: new Date(2023, 2, 6, 15, 30),
-        buildings: 5,
-        buildings_done: 0,
-      },
-    ],
-  },
-  tuesday: {
-    name: "Morgen",
-    rounds: [
-      {
-        name: "Korenmarkt",
-        deadline: new Date(2023, 2, 7, 10, 0),
-        buildings: 5,
-        buildings_done: 0,
-      },
-    ],
-  },
-  wednesday: {
-    name: "Maandag",
-    rounds: [
-      {
-        name: "Sterre",
-        deadline: new Date(2023, 2, 8, 15, 30),
-        buildings: 5,
-        buildings_done: 0,
-      },
-    ],
-  },
+const empty = ref(true);
+
+// TODO: cleanup this code
+const startOfDay = new Date(new Date().setHours(0, 0, 0, 0));
+const startOfTomorrow = new Date(
+  new Date(startOfDay).setDate(startOfDay.getDate() + 1),
+);
+const startOfDayAfterTomorrow = new Date(
+  new Date(startOfTomorrow).setDate(startOfTomorrow.getDate() + 1),
+);
+const endOfDayAfterTomorrow = new Date(
+  new Date(startOfDayAfterTomorrow).setDate(
+    startOfDayAfterTomorrow.getDate() + 1,
+  ),
+);
+
+/**
+ * Retrieve all the combinations of schedules and their progress from the server.
+ */
+const days = await tryOrAlertAsync<Array<DayEntry>>(async () => {
+  const result: Array<DayEntry> = [
+    {
+      id: 0,
+      start: startOfDay,
+      end: startOfTomorrow,
+      list: [],
+      name: "Vandaag",
+    },
+    {
+      id: 1,
+      start: startOfTomorrow,
+      end: startOfDayAfterTomorrow,
+      list: [],
+      name: "Morgen",
+    },
+    {
+      id: 2,
+      start: startOfDayAfterTomorrow,
+      end: endOfDayAfterTomorrow,
+      list: [],
+      name: "Overmorgen",
+    },
+  ];
+
+  for (const { start, end, list } of result) {
+    const schedules: Array<Result<ScheduleQuery>> =
+      await new ScheduleQuery().getAll({
+        after: start,
+        before: end,
+        user_id: useAuthStore().auth?.id,
+      });
+
+    for (const scheduleItem of schedules) {
+      const progress = await new ProgressQuery().getAll({
+        schedule: scheduleItem.id,
+      });
+
+      if (schedules.length > 0) {
+        empty.value = false;
+      }
+
+      list.push({
+        schedule: scheduleItem,
+        progress: progress,
+      });
+    }
+  }
+
+  return result;
 });
+
+function prettyDate(date: Date) {
+  const formatter = new Intl.DateTimeFormat("nl", { month: "long" });
+  return new Date(date).getDate() + " " + formatter.format(date);
+}
 </script>

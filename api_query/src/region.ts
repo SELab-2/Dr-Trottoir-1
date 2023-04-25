@@ -1,4 +1,4 @@
-import { Prisma } from "@selab-2/groep-1-orm";
+import { Region, Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithoutAddress } from "./include";
 
@@ -20,6 +20,10 @@ type RegionWithUsers = Prisma.RegionGetPayload<{
     };
 }>;
 
-export class RegionQuery extends Query<RegionQueryParameters, RegionWithUsers> {
+export class RegionQuery extends Query<
+    RegionQueryParameters,
+    Region,
+    RegionWithUsers
+> {
     endpoint = "region";
 }
