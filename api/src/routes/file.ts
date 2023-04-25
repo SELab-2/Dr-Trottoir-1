@@ -51,7 +51,7 @@ router.post(
                 data: req.body,
             });
             // return the saved file as JSON
-            res.json(result);
+            res.status(201).json(result);
         } catch (err) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
@@ -92,10 +92,11 @@ router.get(
                 // Send the file to the client
                 const dirname = path.resolve();
                 const full_path = path.join(dirname, result.path);
-                res.sendFile(full_path);
+                res.json(result).sendFile(full_path);
+                console.log(result);
             } else if (result.location === "EXTERNAL") {
                 // Redirect the client to the external link
-                res.redirect(result.path);
+                res.json(result).redirect(result.path);
             } else {
                 throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
             }

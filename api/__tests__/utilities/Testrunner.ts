@@ -49,6 +49,7 @@ interface PostParameters {
     data: object;
     expectedResponse: object;
     statusCode?: number;
+    file?: string;
 }
 
 interface PatchParameters {
@@ -132,13 +133,15 @@ export class Testrunner {
         data,
         expectedResponse,
         statusCode = constants.HTTP_STATUS_CREATED,
+        file = "",
     }: PostParameters): Promise<request.Response> => {
         const cookie = await this.authenticate();
 
         const response = await this.server
             .post(url)
             .send(data)
-            .set("Cookie", [cookie]);
+            .set("Cookie", [cookie])
+            .attach("file", file);
         expect(response.statusCode).toEqual(statusCode);
 
         // drop the id, as we cannot predict that
