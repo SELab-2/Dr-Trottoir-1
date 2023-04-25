@@ -110,6 +110,8 @@ services:
       - "traefik.http.middlewares.api.stripprefix.prefixes=/api/"
     env_file:
         - .env
+    environment:
+      CORS: "https://sel2-1.ugent.be"
     restart: always
     ports:
       - "8080:8080"
