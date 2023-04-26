@@ -1,7 +1,8 @@
-import { Building, Image, Prisma } from "@selab-2/groep-1-orm";
+import { Image, Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithoutAddress } from "./include";
 import { QueryError } from "./query_error";
+import { ProgressQuery } from "./progress";
 
 export type BuildingQueryParameters = {
     take: number;
@@ -48,6 +49,12 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
     };
 }>;
 
+type BuildingAnalysis = {
+    name: string;
+    expected: number;
+    average: number;
+};
+
 export class BuildingQuery extends Query<
     BuildingQueryParameters,
     Element,
@@ -89,5 +96,46 @@ export class BuildingQuery extends Query<
             this.server + this.endpoint + "/" + id + "/image/" + image_id;
 
         return this.fetchJSON(imageEndpoint, "DELETE", { hardDelete: hard });
+    }
+
+    async getAnalytics(
+        starttime: Date,
+        endtime: Date,
+    ): Promise<Array<BuildingAnalysis>> {
+        const analytics = [];
+        const buildings: Array<BuildingAllInfo> = await this.fetchJSON(
+            this.server + this.endpoint,
+        );
+
+        for (let building of buildings) {
+            // bereken de gemiddelde gespendeerde tijd
+            let time = 0;
+
+            const parameters = {
+                arrived_after: starttime,
+                left_before: endtime,
+                building: building.id,
+            };
+
+            const progresses = await new ProgressQuery().getAll(parameters);
+            for (let progress of progresses) {
+                const departure = new Date(progress.departure);
+                const arrival = new Date(progress.arrival);
+                const hours = departure.getHours() - arrival.getHours();
+                const minutes = departure.getMinutes() - arrival.getMinutes();
+
+                time += 60 * hours + minutes;
+            }
+            time /= progresses.length;
+
+            const analysis = {
+                name: building.name,
+                expected: 0, //TODO
+                average: time,
+            };
+            analytics.push(analysis);
+        }
+
+        return analytics;
     }
 }
