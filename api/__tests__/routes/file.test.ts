@@ -14,9 +14,10 @@ import {
     badRequestResponse,
     forbiddenResponse,
     notFoundResponse,
+    notFoundResponse2,
 } from "../utilities/constants";
 
-describe("Action tests", () => {
+describe("File tests", () => {
     let runner: Testrunner;
 
     beforeAll(async () => {
@@ -30,7 +31,7 @@ describe("Action tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("action", "garbage");
+        await restoreTables("file");
     });
 
     describe("Succesful requests", () => {
@@ -75,31 +76,91 @@ describe("Action tests", () => {
         });
 
         test("GET /file/:id EXTERNAL", async () => {
-            //TODO: 5 aanpassen
             const expected = [
                 {
-                    id: 5,
+                    id: 6,
                     path: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
                     location: "EXTERNAL",
                 },
             ];
             await runner.get({
-                url: "/file/5",
+                url: "/file/6",
                 expectedData: expected,
             });
         });
 
         test("GET /file/:id FILE_SERVER", async () => {
-            //TODO: 6 aanpassen
             const expected = [
                 {
-                    id: 6,
-                    path: "__tests__/files/test.txt",
+                    id: 5,
+                    path: "__tests__/mock/files/test.txt",
                     location: FileLocation.FILE_SERVER,
                 },
             ];
 
-            await runner.get({ url: "/file/6", expectedData: expected });
+            await runner.get({ url: "/file/5", expectedData: expected });
+        });
+    });
+    describe("Unsuccessful requests", () => {
+        test("POST /file with missing path", async () => {
+            const newFile = {
+                location: "EXTERNAL",
+                file: null,
+            };
+
+            await runner.post({
+                url: "/file",
+                data: newFile,
+                statusCode: 400,
+                expectedResponse: badRequestResponse,
+            });
+        });
+
+        test("POST /file with invalid location", async () => {
+            const newFile = {
+                path: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                location: "INVALID",
+                file: null,
+            };
+
+            await runner.post({
+                url: "/file",
+                data: newFile,
+                statusCode: 400,
+                expectedResponse: badRequestResponse,
+            });
+        });
+
+        test("GET /file/:id with non-existent ID", async () => {
+            await runner.get({
+                url: "/file/999",
+                statusCode: 404,
+                expectedData: [notFoundResponse2],
+            });
+        });
+
+        test("GET /file/:id with invalid ID format", async () => {
+            await runner.get({
+                url: "/file/invalid-id",
+                statusCode: 400,
+                expectedData: [badRequestResponse],
+            });
+        });
+
+        test("GET /file/:id with negative ID", async () => {
+            await runner.get({
+                url: "/file/-1",
+                statusCode: 400,
+                expectedData: [badRequestResponse],
+            });
+        });
+
+        test("GET /file/:id with zero ID", async () => {
+            await runner.get({
+                url: "/file/0",
+                statusCode: 400,
+                expectedData: [badRequestResponse],
+            });
         });
     });
 

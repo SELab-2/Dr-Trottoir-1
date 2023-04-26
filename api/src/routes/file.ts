@@ -30,6 +30,7 @@ router.post(
     "/",
     (req: Request, res: Response, next: NextFunction) => {
         const { user } = req;
+
         if (
             (process.env.DISABLE_AUTH !== undefined &&
                 process.env.DISABLE_AUTH === "true") ||
@@ -73,8 +74,16 @@ router.get(
         ) {
             throw new APIError(APIErrorCode.UNAUTHORIZED);
         }
+        // Validate ID format and range
+        const id = parseInt(req.params["id"], 10);
+        if (isNaN(id)) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
 
-        // Continue if authenticated
+        if (id <= 0) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
         next();
     },
     async (req: Request, res: Response) => {
@@ -86,22 +95,26 @@ router.get(
                 },
             });
             if (!result) {
-                throw new APIError(APIErrorCode.FILE_NOT_FOUND);
+                throw new APIError(APIErrorCode.NOT_FOUND);
             }
             if (result.location === "FILE_SERVER") {
                 // Send the file to the client
                 const dirname = path.resolve();
                 const full_path = path.join(dirname, result.path);
                 res.json(result).sendFile(full_path);
-                console.log(result);
+                //console.log(result);
             } else if (result.location === "EXTERNAL") {
                 // Redirect the client to the external link
                 res.json(result).redirect(result.path);
             } else {
-                throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
+                throw new APIError(APIErrorCode.BAD_REQUEST);
             }
         } catch (err) {
-            throw new APIError(APIErrorCode.FAILED_TO_RETRIEVE_FILE);
+            if (err instanceof APIError) {
+                throw err;
+            } else {
+                throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
+            }
         }
     },
 );
