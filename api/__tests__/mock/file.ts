@@ -32,8 +32,13 @@ export async function initialiseFile() {
         location: FileLocation.EXTERNAL,
     };
 
+    const file7 = {
+        path: "__tests__/mock/file_server/test.txt",
+        location: FileLocation.FILE_SERVER,
+    };
+
     await prisma.file.createMany({
-        data: [file1, file2, file3, file4, file5, file6],
+        data: [file1, file2, file3, file4, file5, file6, file7],
     });
 }
 

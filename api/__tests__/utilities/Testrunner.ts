@@ -52,6 +52,15 @@ interface PostParameters {
     file?: string;
 }
 
+interface PostParametersFile {
+    url: string;
+    path: string;
+    location: string;
+    expectedResponse: object;
+    statusCode?: number;
+    file?: string;
+}
+
 interface PatchParameters {
     url: string;
     data: object;
@@ -140,6 +149,32 @@ export class Testrunner {
         const response = await this.server
             .post(url)
             .send(data)
+            .set("Cookie", [cookie])
+            .attach("file", file);
+        expect(response.statusCode).toEqual(statusCode);
+
+        // drop the id, as we cannot predict that
+        delete response.body["id"];
+
+        this.verifyBody([expectedResponse], response);
+
+        return response;
+    };
+
+    postFile = async ({
+        url,
+        path,
+        location,
+        expectedResponse,
+        statusCode = constants.HTTP_STATUS_CREATED,
+        file = "",
+    }: PostParametersFile): Promise<request.Response> => {
+        const cookie = await this.authenticate();
+
+        const response = await this.server
+            .post(url)
+            .field("path", path)
+            .field("location", location)
             .set("Cookie", [cookie])
             .attach("file", file);
         expect(response.statusCode).toEqual(statusCode);

@@ -6,6 +6,7 @@ import path from "path";
 import { prisma } from "../prisma";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import fs from "fs";
 
 const router = express.Router();
 
@@ -30,7 +31,6 @@ router.post(
     "/",
     (req: Request, res: Response, next: NextFunction) => {
         const { user } = req;
-
         if (
             (process.env.DISABLE_AUTH !== undefined &&
                 process.env.DISABLE_AUTH === "true") ||
@@ -38,9 +38,9 @@ router.post(
         ) {
             next();
         } else if (user) {
-            throw new APIError(APIErrorCode.FORBIDDEN);
-        } else {
             throw new APIError(APIErrorCode.UNAUTHORIZED);
+        } else {
+            throw new APIError(APIErrorCode.FORBIDDEN);
         }
     },
     fileUpload.single("file"),
@@ -72,7 +72,60 @@ router.get(
                 user
             )
         ) {
-            throw new APIError(APIErrorCode.UNAUTHORIZED);
+            throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+        // Validate ID format and range
+        const id = parseInt(req.params["id"], 10);
+        if (isNaN(id) || id <= 0) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+        next();
+    },
+    async (req: Request, res: Response) => {
+        try {
+            // Look up the file in the database using Prisma
+            const result = await prisma.file.findUnique({
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+            if (!result) {
+                throw new APIError(APIErrorCode.NOT_FOUND);
+            }
+            if (result.location === "FILE_SERVER") {
+                // Send the file to the client
+                const dirname = path.resolve();
+                const full_path = path.join(dirname, result.path);
+                res.json(result).sendFile(full_path);
+            } else if (result.location === "EXTERNAL") {
+                // Redirect the client to the external link
+                res.json(result).redirect(result.path);
+            } else {
+                throw new APIError(APIErrorCode.BAD_REQUEST);
+            }
+        } catch (err) {
+            if (err instanceof APIError) {
+                throw err;
+            } else {
+                throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
+            }
+        }
+    },
+);
+
+router.delete(
+    "/:id",
+    async (req: Request, res: Response, next: NextFunction) => {
+        // Check authentication
+        const { user } = req;
+        if (
+            !(
+                (process.env.DISABLE_AUTH !== undefined &&
+                    process.env.DISABLE_AUTH === "true") ||
+                (user && (user.super_student || user.admin || user.syndicus))
+            )
+        ) {
+            throw new APIError(APIErrorCode.FORBIDDEN);
         }
         // Validate ID format and range
         const id = parseInt(req.params["id"], 10);
@@ -94,21 +147,31 @@ router.get(
                     id: Parser.number(req.params["id"]),
                 },
             });
+
             if (!result) {
                 throw new APIError(APIErrorCode.NOT_FOUND);
             }
+
+            // Delete the file on the file server
             if (result.location === "FILE_SERVER") {
-                // Send the file to the client
                 const dirname = path.resolve();
                 const full_path = path.join(dirname, result.path);
-                res.json(result).sendFile(full_path);
-                //console.log(result);
-            } else if (result.location === "EXTERNAL") {
-                // Redirect the client to the external link
-                res.json(result).redirect(result.path);
-            } else {
-                throw new APIError(APIErrorCode.BAD_REQUEST);
+                fs.unlink(full_path, (err) => {
+                    if (err) {
+                        throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
+                    }
+                });
             }
+
+            // Delete the file record from the database using Prisma
+            await prisma.file.delete({
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+
+            // Send a success response to the client
+            res.status(200).send();
         } catch (err) {
             if (err instanceof APIError) {
                 throw err;
