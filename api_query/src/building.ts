@@ -108,7 +108,7 @@ export class BuildingQuery extends Query<
         );
 
         for (let building of buildings) {
-            // bereken de gemiddelde gespendeerde tijd
+            // bereken de totaal gespendeerde tijd
             let time = 0;
 
             const parameters = {
@@ -126,7 +126,6 @@ export class BuildingQuery extends Query<
 
                 time += 60 * hours + minutes;
             }
-            time /= progresses.length;
 
             const analysis = {
                 name: building.name,
