@@ -19,11 +19,11 @@
     }
   },
   "include": [
-    "src/assets/scripts/*.ts",
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
+      "src/assets/scripts/*.ts",
+      "src/**/*.ts",
+      "src/**/*.d.ts",
+      "src/**/*.tsx",
+      "src/**/*.vue",
   ],
   "references": [{ "path": "./tsconfig.node.json" }],
   "exclude": ["node_modules"]
