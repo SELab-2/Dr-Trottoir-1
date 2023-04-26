@@ -49,7 +49,6 @@ interface PostParameters {
     data: object;
     expectedResponse: object;
     statusCode?: number;
-    file?: string;
 }
 
 interface PostParametersFile {
@@ -142,15 +141,13 @@ export class Testrunner {
         data,
         expectedResponse,
         statusCode = constants.HTTP_STATUS_CREATED,
-        file = "",
     }: PostParameters): Promise<request.Response> => {
         const cookie = await this.authenticate();
 
         const response = await this.server
             .post(url)
             .send(data)
-            .set("Cookie", [cookie])
-            .attach("file", file);
+            .set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
 
         // drop the id, as we cannot predict that
@@ -160,6 +157,17 @@ export class Testrunner {
 
         return response;
     };
+
+    /**
+     * Acquires authentication if required and performs a POST request to the passed URL.
+     * Also performs verification on the response.
+     * @param url URL to POST to
+     * @param path path on server
+     * @param location File location
+     * @param file file path on current host
+     * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
+     * @return the Response object for further testing, should it be required.
+     */
 
     postFile = async ({
         url,
