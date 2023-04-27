@@ -111,6 +111,7 @@ services:
       context: ../web
       args:
         NPM_AUTH_TOKEN: $NPM_AUTH_TOKEN
+        VUE_APP_API_SERVER_ADDRESS: https://sel2-1.ugent.be/api/
     networks:
       main:
         ipv4_address: 10.0.0.6
