@@ -245,6 +245,9 @@ model Schedule {
     id  Int      @id @default(autoincrement())
     day DateTime
 
+    start DateTime?
+    end   DateTime?
+
     user_id Int
     user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
