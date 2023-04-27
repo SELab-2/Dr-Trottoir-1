@@ -22,6 +22,11 @@ import { UserRegionRouting } from "./routes/user_region";
 import { ProgressRouting } from "./routes/progress";
 import { RoundBuildingRouting } from "./routes/round_building";
 import cors from "cors";
+import * as Sentry from "@sentry/node";
+import { ProfilingIntegration } from "@sentry/profiling-node";
+
+// Parse environment file.
+dotenv.config();
 
 // const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
@@ -35,8 +40,33 @@ if (process.env.NODE_ENV === "test") {
 
 const app = express();
 
-// Parse environment file.
-dotenv.config();
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    integrations: [
+      // enable HTTP calls tracing
+      new Sentry.Integrations.Http({ tracing: true }),
+      // enable Express.js middleware tracing
+      new Sentry.Integrations.Express({ app }),
+      // Automatically instrument Node.js libraries and frameworks
+      ...Sentry.autoDiscoverNodePerformanceMonitoringIntegrations(),
+      // Add profiling integration to list of integrations
+      new ProfilingIntegration(),
+    ],
+    // Profiling sample rate is relative to tracesSampleRate
+    profilesSampleRate: 1.0,
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+  });
+}
+
+// RequestHandler creates a separate execution context, so that all
+// transactions/spans/breadcrumbs are isolated across requests
+app.use(Sentry.Handlers.requestHandler());
+// TracingHandler creates a trace for every incoming request
+app.use(Sentry.Handlers.tracingHandler());
 
 // JSON API support
 app.use(
@@ -93,6 +123,7 @@ app.use("/progress", new ProgressRouting().toRouter());
 app.use("/round_building", new RoundBuildingRouting().toRouter());
 
 // Finally, an error handler
+app.use(Sentry.Handlers.errorHandler());
 app.use(ErrorHandler.handle);
 
 // If the authorization process is bypassed, print a big red warning
