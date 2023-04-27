@@ -75,6 +75,7 @@ describe("Building tests", () => {
                         path: "path/to/static_file",
                     },
                     name: "Building 1",
+                    expected_time: 100,
                     syndicus: {
                         id: 1,
                         user: {
@@ -127,6 +128,7 @@ describe("Building tests", () => {
                         path: "path/to/imgproxy_file",
                     },
                     name: "Building 2",
+                    expected_time: 200,
                     syndicus: {
                         id: 2,
                         user: {
@@ -188,6 +190,7 @@ describe("Building tests", () => {
                     path: "path/to/static_file",
                 },
                 name: "Building 1",
+                expected_time: 100,
                 syndicus: {
                     id: 1,
                     user: {
@@ -251,6 +254,7 @@ describe("Building tests", () => {
             const expected = {
                 id: 1,
                 name: "Building 1 New",
+                expected_time: 100,
                 ivago_id: "ivago-1",
                 deleted: false,
                 address: {
@@ -312,6 +316,7 @@ describe("Building tests", () => {
             const building = {
                 name: "new building",
                 ivago_id: "ivago-new",
+                expected_time: 100,
                 address_id: 3,
                 manual_id: 3,
                 syndicus_id: 1,
@@ -320,6 +325,7 @@ describe("Building tests", () => {
             const expectedBuilding = {
                 name: "new building",
                 ivago_id: "ivago-new",
+                expected_time: 100,
                 deleted: false,
                 address: {
                     id: 3,
@@ -375,6 +381,7 @@ describe("Building tests", () => {
             const newBuilding = {
                 name: "new building",
                 ivago_id: "ivago-new",
+                expected_time: 100,
                 address_id: 3,
                 manual_id: 3,
                 syndicus_id: 1,
