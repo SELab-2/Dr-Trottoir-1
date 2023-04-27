@@ -1,8 +1,32 @@
 import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
-import { User } from "@selab-2/groep-1-orm";
+import { Prisma } from "@selab-2/groep-1-orm";
 
-const defaultUser: User = {
+type AuthenticatedUser = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    email: true;
+    first_name: true;
+    last_name: true;
+    last_login: true;
+    date_added: true;
+    phone: true;
+    address_id: true;
+    student: true;
+    super_student: true;
+    admin: true;
+    hash: false;
+    salt: false;
+    address: true;
+    syndicus: {
+      select: {
+        id: true;
+      };
+    };
+  };
+}>;
+
+const defaultUser: AuthenticatedUser = {
   id: 0,
   email: "dev@trottoir.be",
   first_name: "Admin",
@@ -14,9 +38,16 @@ const defaultUser: User = {
   student: true,
   super_student: false,
   admin: true,
-  hash: "?",
-  salt: "?",
-  deleted: false,
+  address: {
+    id: 0,
+    street: "Straatnaam",
+    zip_code: 9000,
+    number: 123,
+    city: "Gent",
+    latitude: 0.0,
+    longitude: 0.0,
+  },
+  syndicus: [{ id: 0 }, { id: 1 }, { id: 2 }],
 };
 
 /**
@@ -25,7 +56,7 @@ const defaultUser: User = {
  */
 export const useAuthStore = defineStore("auth", () => {
   /* The state of this store. */
-  const auth: Ref<User | null> = ref(null);
+  const auth: Ref<AuthenticatedUser | null> = ref(null);
 
   /**
    * Attempt to log-in using a simple API call.
