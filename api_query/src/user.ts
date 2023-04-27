@@ -87,6 +87,15 @@ type RoundAnalytics = {
     average: number;
 };
 
+// Het type dat het resultaat modelleert wanneer het aantal gewerkte minuten van de studenten worden opgevraagd
+// tussen een start- en einddatum
+type UserAnalytics = {
+    student: string;
+    email: string;
+    time: number;
+    average: number;
+};
+
 function getAverageProgressTime(progresses: Array<any>) {
     let time = 0;
     let total = 0;
@@ -229,6 +238,58 @@ export class UserQuery extends Query<
                     });
                 }
             }
+        }
+
+        return analytics;
+    }
+
+    // Geef het aantal gewerkte uren van alle studenten weer tussen een start- en einddatum
+    // Enkel de studenten die effectief gewerkt hebben, worden getoond
+    async getAnalytics(
+        starttime: Date,
+        endtime: Date,
+    ): Promise<Array<UserAnalytics>> {
+        const analytics = [];
+        const users = await this.getAll({
+            student: true,
+        });
+
+        let total_time = 0;
+        let worked = 0;
+        for (let user of users) {
+            const schedules = await new ScheduleQuery().getAll({
+                user_id: user.id,
+                after: starttime,
+                before: endtime,
+            });
+
+            let time = 0;
+            for (let schedule of schedules) {
+                if (schedule.start && schedule.end) {
+                    const end = new Date(schedule.end);
+                    const start = new Date(schedule.start);
+                    const hours = end.getHours() - start.getHours();
+                    const minutes = end.getMinutes() - start.getMinutes();
+
+                    time += 60 * hours + minutes;
+                }
+            }
+
+            if (time > 0) {
+                total_time += time;
+                worked++;
+                analytics.push({
+                    student: user.first_name + " " + user.last_name,
+                    email: user.email,
+                    time: time,
+                    average: 0,
+                });
+            }
+        }
+
+        const average = total_time / worked;
+        for (let analysis of analytics) {
+            analysis.average = average;
         }
 
         return analytics;
