@@ -1,6 +1,7 @@
 <template>
   <v-list class="ma-0 pa-0">
     <v-text-field
+      id="phone"
       class="mt-2"
       prepend-inner-icon="mdi-phone"
       label="Telefoonnummer"
@@ -13,6 +14,7 @@
       @update:model-value="$emit('onUpdate', contact)"
     ></v-text-field>
     <v-text-field
+      id="email"
       class="mt-2 mb-1"
       prepend-inner-icon="mdi-email"
       label="e-mail"

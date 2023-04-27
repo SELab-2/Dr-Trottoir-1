@@ -8,6 +8,7 @@
       >
         <!-- Text input field for the street name -->
         <v-text-field
+          id="street"
           prepend-inner-icon="mdi-road-variant"
           v-model="address.street"
           label="Straat"
@@ -22,6 +23,7 @@
       <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
         <!-- Text input field for the house number -->
         <v-text-field
+          id="streetnr"
           v-model="address.number"
           label="Huisnummer"
           :type="readonly ? 'text' : 'number'"
@@ -41,6 +43,7 @@
       >
         <!-- Text input field for the city name -->
         <v-text-field
+          id="city"
           prepend-inner-icon="mdi-city-variant"
           v-model="address.city"
           label="Stad"
@@ -55,6 +58,7 @@
       <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
         <!-- Text input field for the zip code -->
         <v-text-field
+          id="zipcode"
           v-model="address.zip_code"
           label="Post code"
           :type="readonly ? 'text' : 'number'"

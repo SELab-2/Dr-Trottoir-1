@@ -46,6 +46,7 @@
               }"
             >
               <v-list-item
+                id="account"
                 prepend-icon="mdi-cog"
                 title="Account"
                 value="account"

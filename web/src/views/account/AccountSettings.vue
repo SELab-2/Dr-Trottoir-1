@@ -17,6 +17,7 @@
         "
       >
         <v-btn
+          id="edit"
           v-if="!edit"
           prepend-icon="mdi-pencil"
           @click="edit = !edit"
@@ -24,6 +25,7 @@
           >Bewerk Account</v-btn
         >
         <v-btn
+          id="cancel"
           v-else
           prepend-icon="mdi-close"
           @click="handleCancelEdit()"
@@ -67,6 +69,7 @@
         </v-col>
       </v-row>
       <ContactForm
+        id="personal"
         :class="edit ? 'mx-4' : 'mx-10'"
         :readonly="!edit"
         :phone="user?.phone"
@@ -79,6 +82,7 @@
     <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
       <template v-slot:title> Adres </template>
       <AddressFrom
+        id="address"
         :class="edit ? 'mx-4' : 'mx-10'"
         :readonly="!edit"
         :street="user?.address.street"
