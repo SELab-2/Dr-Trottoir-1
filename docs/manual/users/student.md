@@ -11,7 +11,7 @@ Voordat een student de applicatie kan gebruiken moet hij eerst [ingelogd](../pag
 Een student kan doorheen de applicatie navigeren door van de navigatie balk gebruik te maken.
 De navigatie balk kan men openen en sluiten door op het hamburgermenu (☰) te klikken.
 
-TODO: add navigation open close gif
+![](../assets/student_navbar_on_off.mp4)
 
 In de navigatie balk heeft de student 3 opties.
 

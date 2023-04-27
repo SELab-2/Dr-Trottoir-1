@@ -4,11 +4,11 @@ In deze handleiding kan u alles omtrent het gebruik van de softwareapplicatie vo
 elk type gebruiker terug vinden.
 
 ## Gebruikers
-Voor het gebruik van de applicatie wordt er onderscheid gemaakt tussen verschillende types gebruikers.
-Elke type gebruiker heeft meer of minder machtigingen zodat ze elk in staat zijn hun taken uit te kunnen voeren.
+Voor het gebruik van de applicatie wordt er onderscheid gemaakt tussen verschillende types van gebruikers.
+Elk type gebruiker heeft meer of minder machtigingen zodat ze elk in staat zijn hun taken uit te kunnen voeren.
 
 - [**Student**](users/student.md): Gebruiker die afval ophaalt.
-- [**Superstudent**](users/superstudent.md): Gebruiker die op de studenten toeziet.
+- [**Superstudent**](users/superstudent.md): Gebruiker die op studenten toeziet.
 - [**Syndicus**](users/syndicus.md): Eigenaar van een gebouw.
 - [**Admin**](users/admin.md): Administrator gebruiker.
 
