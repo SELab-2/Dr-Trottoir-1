@@ -9,16 +9,23 @@ Voordat een student de applicatie kan gebruiken moet hij eerst [ingelogd](../pag
 
 ### Navigatie balk
 Een student kan doorheen de applicatie navigeren door van de navigatie balk gebruik te maken.
-De navigatie balk kan men openen en sluiten door op het hamburgermenu (☰) te klikken.
+De navigatie balk kan men openen door op het hamburgermenu (☰) te klikken en sluiten door naast de
+open staande navigatie balk te klikken.
 
-![](../assets/student_navbar_on_off.mp4)
+|           Open navigatie            |           Sluit navigatie            |
+|:-----------------------------------:|:------------------------------------:|
+| ![](../assets/student_open_nav.jpg) | ![](../assets/student_close_nav.jpg) |
+
 
 In de navigatie balk heeft de student 3 opties.
 
-TODO: add navigation detail gif
+|            Navigatie opties            |
+|:--------------------------------------:|
+| ![](../assets/student_nav_options.jpg) |
 
-- **Log uit**: Klik op de `Log uit` om uit de applicatie uit te loggen.
-- [**Account**](../pages/account.md): Klik op de `Account` knop om de info over u account te zien en te bewerken.
-- [**Planning**](../pages/planning.md): Klik op de `Planning` knop om een overzicht van al uw ingeplande rondes te
+
+1. **Afmelden**: Klik op de `Afmelden` knop om uit de applicatie uit te loggen.
+2. [**Account**](../pages/account.md): Klik op de `Account` knop om de info over u account te zien en te bewerken.
+3. [**Planning**](../pages/planning.md): Klik op de `Planning` knop om een overzicht van al uw ingeplande rondes te
 kunnen zien.
 
