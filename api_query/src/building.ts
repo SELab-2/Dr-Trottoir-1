@@ -125,7 +125,8 @@ export class BuildingQuery extends Query<
                     const departure = new Date(progress.departure);
                     const arrival = new Date(progress.arrival);
                     const hours = departure.getHours() - arrival.getHours();
-                    const minutes = departure.getMinutes() - arrival.getMinutes();
+                    const minutes =
+                        departure.getMinutes() - arrival.getMinutes();
 
                     time += 60 * hours + minutes;
                 }
