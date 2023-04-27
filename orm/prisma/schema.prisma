@@ -143,12 +143,14 @@ model BuildingImages {
 }
 
 // Dit model bevat enkel basisinformatie van een gebouw, namelijk de naam, klantnummer van Ivago, de syndicus en de handleiding.
+// Ook de verwachte tijd dat gedurende één maand gespendeerd wordt, wordt bijgehouden.
 // De foto's, afvalophaling en overige informatie worden in andere modellen bijgehouden.
 model Building {
     id Int @id @default(autoincrement())
 
-    name     String
-    ivago_id String
+    name          String
+    ivago_id      String
+    expected_time Int?
 
     syndicus_id Int?
     syndicus    Syndicus? @relation(fields: [syndicus_id], references: [id], onDelete: SetNull)

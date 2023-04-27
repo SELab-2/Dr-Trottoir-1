@@ -21,6 +21,7 @@ export class BuildingRouting extends Routing {
         id: true,
         name: true,
         ivago_id: true,
+        expected_time: true,
         deleted: true,
         hash: false,
         address: true,

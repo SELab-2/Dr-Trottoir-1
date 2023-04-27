@@ -21,6 +21,7 @@ type Element = Prisma.BuildingGetPayload<{
         id: true;
         name: true;
         ivago_id: true;
+        expected_time: true;
         deleted: true;
         hash: boolean;
         address: true;
@@ -32,6 +33,7 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
         id: true;
         name: true;
         ivago_id: true;
+        expected_time: true;
         deleted: true;
         hash: false;
         address: true;
@@ -51,7 +53,7 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
 
 type BuildingAnalysis = {
     name: string;
-    expected: number;
+    expected: number | null;
     average: number;
 };
 
@@ -119,17 +121,19 @@ export class BuildingQuery extends Query<
 
             const progresses = await new ProgressQuery().getAll(parameters);
             for (let progress of progresses) {
-                const departure = new Date(progress.departure);
-                const arrival = new Date(progress.arrival);
-                const hours = departure.getHours() - arrival.getHours();
-                const minutes = departure.getMinutes() - arrival.getMinutes();
+                if (progress.arrival !== null && progress.departure != null) {
+                    const departure = new Date(progress.departure);
+                    const arrival = new Date(progress.arrival);
+                    const hours = departure.getHours() - arrival.getHours();
+                    const minutes = departure.getMinutes() - arrival.getMinutes();
 
-                time += 60 * hours + minutes;
+                    time += 60 * hours + minutes;
+                }
             }
 
             const analysis = {
                 name: building.name,
-                expected: 0, //TODO
+                expected: building.expected_time,
                 average: time,
             };
             analytics.push(analysis);

@@ -9,6 +9,7 @@ export async function initialiseBuilding() {
     const building1 = {
         name: "Building 1",
         ivago_id: "ivago-1",
+        expected_time: 100,
         address_id: 1,
         manual_id: 1,
 
@@ -25,6 +26,7 @@ export async function initialiseBuilding() {
     const building2 = {
         name: "Building 2",
         ivago_id: "ivago-2",
+        expected_time: 200,
         address_id: 2,
         manual_id: 2,
         deleted: false,
@@ -41,6 +43,7 @@ export async function initialiseBuilding() {
     const building3 = {
         name: "Building 3",
         ivago_id: "ivago-3",
+        expected_time: 150,
         address_id: 3,
         manual_id: 3,
         syndicus_id: 1,
