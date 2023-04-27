@@ -99,7 +99,7 @@ type UserAnalytics = {
 function getAverageProgressTime(progresses: Array<any>) {
     let time = 0;
     let total = 0;
-    for (let progress of progresses) {
+    for (const progress of progresses) {
         if (progress.arrival && progress.departure) {
             const departure = new Date(progress.departure);
             const arrival = new Date(progress.arrival);
@@ -119,7 +119,7 @@ function getAverageProgressTime(progresses: Array<any>) {
 function getAverageScheduleTime(schedules: Array<any>) {
     let time = 0;
     let total = 0;
-    for (let schedule of schedules) {
+    for (const schedule of schedules) {
         if (schedule.start && schedule.end) {
             const end = new Date(schedule.end);
             const start = new Date(schedule.start);
@@ -153,7 +153,7 @@ export class UserQuery extends Query<
 
         // bereken de gemiddelde tijd per gebouw
         let averages: { [name: string]: number } = {};
-        for (let building of buildings) {
+        for (const building of buildings) {
             const progresses = await new ProgressQuery().getAll({
                 building: building.id,
                 arrived_after: startdate,
@@ -167,8 +167,8 @@ export class UserQuery extends Query<
         const users = await this.getAll({
             student: true,
         });
-        for (let user of users) {
-            for (let building of buildings) {
+        for (const user of users) {
+            for (const building of buildings) {
                 const progresses = await new ProgressQuery().getAll({
                     user: user.id,
                     building: building.id,
@@ -202,7 +202,7 @@ export class UserQuery extends Query<
 
         // bepaal gemiddelde gespendeerde tijd per ronde
         const averages: { [name: string]: number } = {};
-        for (let round of rounds) {
+        for (const round of rounds) {
             const schedules = await new ScheduleQuery().getAll({
                 round_id: round.id,
                 after: startdate,
@@ -217,8 +217,8 @@ export class UserQuery extends Query<
             student: true,
         });
 
-        for (let user of users) {
-            for (let round of rounds) {
+        for (const user of users) {
+            for (const round of rounds) {
                 const schedules = await new ScheduleQuery().getAll({
                     user_id: user.id,
                     round_id: round.id,
@@ -256,7 +256,7 @@ export class UserQuery extends Query<
 
         let total_time = 0;
         let worked = 0;
-        for (let user of users) {
+        for (const user of users) {
             const schedules = await new ScheduleQuery().getAll({
                 user_id: user.id,
                 after: startdate,
@@ -264,7 +264,7 @@ export class UserQuery extends Query<
             });
 
             let time = 0;
-            for (let schedule of schedules) {
+            for (const schedule of schedules) {
                 if (schedule.start && schedule.end) {
                     const end = new Date(schedule.end);
                     const start = new Date(schedule.start);
@@ -288,7 +288,7 @@ export class UserQuery extends Query<
         }
 
         const average = total_time / worked;
-        for (let analysis of analytics) {
+        for (const analysis of analytics) {
             analysis.average = average;
         }
 

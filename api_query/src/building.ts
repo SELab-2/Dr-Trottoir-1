@@ -109,7 +109,7 @@ export class BuildingQuery extends Query<
             this.server + this.endpoint,
         );
 
-        for (let building of buildings) {
+        for (const building of buildings) {
             // bereken de totaal gespendeerde tijd
             let time = 0;
 
@@ -120,7 +120,7 @@ export class BuildingQuery extends Query<
             };
 
             const progresses = await new ProgressQuery().getAll(parameters);
-            for (let progress of progresses) {
+            for (const progress of progresses) {
                 if (progress.arrival !== null && progress.departure != null) {
                     const departure = new Date(progress.departure);
                     const arrival = new Date(progress.arrival);
