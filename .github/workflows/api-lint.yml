@@ -32,9 +32,3 @@ jobs:
                     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Verify the code compiles"
                 run: npm run build
-            -   name: "Cleanup"
-                if: always()
-                run: |
-                    chmod +x ../server/cleanup.sh
-                    ../server/cleanup.sh -p
-                shell: bash
