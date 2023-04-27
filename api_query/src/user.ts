@@ -152,7 +152,7 @@ export class UserQuery extends Query<
         const buildings = await new BuildingQuery().getAll();
 
         // bereken de gemiddelde tijd per gebouw
-        let averages: { [name: string]: number } = {};
+        const averages: { [name: string]: number } = {};
         for (const building of buildings) {
             const progresses = await new ProgressQuery().getAll({
                 building: building.id,
