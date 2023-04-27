@@ -14,7 +14,7 @@ export class AddressRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.address.findUniqueOrThrow({
+        const result = await prisma.address.findFirstOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
@@ -26,7 +26,7 @@ export class AddressRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.address.create({
-            data: req.body["user_id"],
+            data: req.body,
         });
 
         return res.status(201).json(result);
@@ -43,6 +43,7 @@ export class AddressRouting extends Routing {
 
         // If the user is a student, they can only update their own address.
         if (
+            process.env["DISABLE_AUTH"] !== "true" &&
             !req.user?.super_student &&
             !req.user?.admin &&
             req.user?.address_id !== addressIdentifier
@@ -52,7 +53,7 @@ export class AddressRouting extends Routing {
 
         // Update the address and return it.
         const result = await prisma.address.update({
-            data: req.body["user_id"],
+            data: req.body,
             where: {
                 id: addressIdentifier,
             },
