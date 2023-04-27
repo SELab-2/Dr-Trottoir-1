@@ -1,7 +1,9 @@
-import {Prisma} from "@selab-2/groep-1-orm";
-import {Query} from "./query";
-import {BuildingQuery} from "./building";
-import {ProgressQuery} from "./progress";
+import { Prisma } from "@selab-2/groep-1-orm";
+import { Query } from "./query";
+import { BuildingQuery } from "./building";
+import { ProgressQuery } from "./progress";
+import { RoundQuery } from "./round";
+import { ScheduleQuery } from "./schedule";
 
 export type UserQueryParameters = {
     take: number;
@@ -67,31 +69,62 @@ type UserAllInfo = Prisma.UserGetPayload<{
     };
 }>;
 
+// Het type dat het resultaat modelleert wanneer de statistieken van de studenten per gebouw worden opgevraagd
 type BuildingAnalytics = {
     student: string;
     email: string;
     building: string;
     time: number;
     average: number;
-}
+};
 
-function getAverageTime(progresses: Array<any>) {
+// Het type dat het resultaat modelleert wanneer de statistieken van de studenten per ronde worden opgevraagd
+type RoundAnalytics = {
+    student: string;
+    email: string;
+    round: string;
+    time: number;
+    average: number;
+};
+
+function getAverageProgressTime(progresses: Array<any>) {
     let time = 0;
     let total = 0;
     for (let progress of progresses) {
-        if (progress.arrival !== null && progress.departure !== null) {
+        if (progress.arrival && progress.departure) {
             const departure = new Date(progress.departure);
             const arrival = new Date(progress.arrival);
             const hours = departure.getHours() - arrival.getHours();
             const minutes = departure.getMinutes() - arrival.getMinutes();
 
             time += 60 * hours + minutes;
-            total ++;
+            total++;
         }
     }
     if (total != 0) {
         time /= total;
     }
+    return time;
+}
+
+function getAverageScheduleTime(schedules: Array<any>) {
+    let time = 0;
+    let total = 0;
+    for (let schedule of schedules) {
+        if (schedule.start && schedule.end) {
+            const end = new Date(schedule.end);
+            const start = new Date(schedule.start);
+            const hours = end.getHours() - start.getHours();
+            const minutes = end.getMinutes() - start.getMinutes();
+
+            time += 60 * hours + minutes;
+            total++;
+        }
+    }
+    if (total > 0) {
+        time /= total;
+    }
+
     return time;
 }
 
@@ -102,12 +135,15 @@ export class UserQuery extends Query<
 > {
     endpoint = "user";
 
-    async getBuildingAnalytics(starttime: Date, endtime: Date): Promise<Array<BuildingAnalytics>> {
+    async getBuildingAnalytics(
+        starttime: Date,
+        endtime: Date,
+    ): Promise<Array<BuildingAnalytics>> {
         const analytics = [];
         const buildings = await new BuildingQuery().getAll();
 
         // bereken de gemiddelde tijd per gebouw
-        let averages: {[name: string]: number} = {};
+        let averages: { [name: string]: number } = {};
         for (let building of buildings) {
             const progresses = await new ProgressQuery().getAll({
                 building: building.id,
@@ -115,7 +151,7 @@ export class UserQuery extends Query<
                 left_before: endtime,
             });
 
-            averages[building.name] = getAverageTime(progresses);
+            averages[building.name] = getAverageProgressTime(progresses);
         }
 
         // bereken de gemiddelde tijd per student per gebouw
@@ -131,7 +167,7 @@ export class UserQuery extends Query<
                     left_before: endtime,
                 });
 
-                const time = getAverageTime(progresses);
+                const time = getAverageProgressTime(progresses);
 
                 if (time > 0) {
                     analytics.push({
@@ -140,6 +176,56 @@ export class UserQuery extends Query<
                         building: building.name,
                         time: time,
                         average: averages[building.name],
+                    });
+                }
+            }
+        }
+
+        return analytics;
+    }
+
+    async getRoundAnalytics(
+        starttime: Date,
+        endtime: Date,
+    ): Promise<Array<RoundAnalytics>> {
+        const analytics = [];
+        const rounds = await new RoundQuery().getAll();
+
+        // bepaal gemiddelde gespendeerde tijd per ronde
+        const averages: { [name: string]: number } = {};
+        for (let round of rounds) {
+            const schedules = await new ScheduleQuery().getAll({
+                round_id: round.id,
+                after: starttime,
+                before: endtime,
+            });
+
+            averages[round.name] = getAverageScheduleTime(schedules);
+        }
+
+        // bepaal gemiddelde gespendeerde tijd per student per ronde
+        const users = await this.getAll({
+            student: true,
+        });
+
+        for (let user of users) {
+            for (let round of rounds) {
+                const schedules = await new ScheduleQuery().getAll({
+                    user_id: user.id,
+                    round_id: round.id,
+                    after: starttime,
+                    before: endtime,
+                });
+
+                const time = getAverageScheduleTime(schedules);
+
+                if (time > 0) {
+                    analytics.push({
+                        student: user.first_name + " " + user.last_name,
+                        email: user.email,
+                        round: round.name,
+                        time: time,
+                        average: averages[round.name],
                     });
                 }
             }
