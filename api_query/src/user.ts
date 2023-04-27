@@ -1,5 +1,7 @@
-import { Prisma } from "@selab-2/groep-1-orm";
-import { Query } from "./query";
+import {Prisma} from "@selab-2/groep-1-orm";
+import {Query} from "./query";
+import {BuildingQuery} from "./building";
+import {ProgressQuery} from "./progress";
 
 export type UserQueryParameters = {
     take: number;
@@ -65,10 +67,84 @@ type UserAllInfo = Prisma.UserGetPayload<{
     };
 }>;
 
+type BuildingAnalytics = {
+    student: string;
+    email: string;
+    building: string;
+    time: number;
+    average: number;
+}
+
+function getAverageTime(progresses: Array<any>) {
+    let time = 0;
+    let total = 0;
+    for (let progress of progresses) {
+        if (progress.arrival !== null && progress.departure !== null) {
+            const departure = new Date(progress.departure);
+            const arrival = new Date(progress.arrival);
+            const hours = departure.getHours() - arrival.getHours();
+            const minutes = departure.getMinutes() - arrival.getMinutes();
+
+            time += 60 * hours + minutes;
+            total ++;
+        }
+    }
+    if (total != 0) {
+        time /= total;
+    }
+    return time;
+}
+
 export class UserQuery extends Query<
     UserQueryParameters,
     Element,
     UserAllInfo
 > {
     endpoint = "user";
+
+    async getBuildingAnalytics(starttime: Date, endtime: Date): Promise<Array<BuildingAnalytics>> {
+        const analytics = [];
+        const buildings = await new BuildingQuery().getAll();
+
+        // bereken de gemiddelde tijd per gebouw
+        let averages: {[name: string]: number} = {};
+        for (let building of buildings) {
+            const progresses = await new ProgressQuery().getAll({
+                building: building.id,
+                arrived_after: starttime,
+                left_before: endtime,
+            });
+
+            averages[building.name] = getAverageTime(progresses);
+        }
+
+        // bereken de gemiddelde tijd per student per gebouw
+        const users = await this.getAll({
+            student: true,
+        });
+        for (let user of users) {
+            for (let building of buildings) {
+                const progresses = await new ProgressQuery().getAll({
+                    user: user.id,
+                    building: building.id,
+                    arrived_after: starttime,
+                    left_before: endtime,
+                });
+
+                const time = getAverageTime(progresses);
+
+                if (time > 0) {
+                    analytics.push({
+                        student: user.first_name + " " + user.last_name,
+                        email: user.email,
+                        building: building.name,
+                        time: time,
+                        average: averages[building.name],
+                    });
+                }
+            }
+        }
+
+        return analytics;
+    }
 }
