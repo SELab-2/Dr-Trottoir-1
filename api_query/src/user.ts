@@ -145,8 +145,8 @@ export class UserQuery extends Query<
     endpoint = "user";
 
     async getBuildingAnalytics(
-        starttime: Date,
-        endtime: Date,
+        startdate: Date,
+        enddate: Date,
     ): Promise<Array<BuildingAnalytics>> {
         const analytics = [];
         const buildings = await new BuildingQuery().getAll();
@@ -156,8 +156,8 @@ export class UserQuery extends Query<
         for (let building of buildings) {
             const progresses = await new ProgressQuery().getAll({
                 building: building.id,
-                arrived_after: starttime,
-                left_before: endtime,
+                arrived_after: startdate,
+                left_before: enddate,
             });
 
             averages[building.name] = getAverageProgressTime(progresses);
@@ -172,8 +172,8 @@ export class UserQuery extends Query<
                 const progresses = await new ProgressQuery().getAll({
                     user: user.id,
                     building: building.id,
-                    arrived_after: starttime,
-                    left_before: endtime,
+                    arrived_after: startdate,
+                    left_before: enddate,
                 });
 
                 const time = getAverageProgressTime(progresses);
@@ -194,8 +194,8 @@ export class UserQuery extends Query<
     }
 
     async getRoundAnalytics(
-        starttime: Date,
-        endtime: Date,
+        startdate: Date,
+        enddate: Date,
     ): Promise<Array<RoundAnalytics>> {
         const analytics = [];
         const rounds = await new RoundQuery().getAll();
@@ -205,8 +205,8 @@ export class UserQuery extends Query<
         for (let round of rounds) {
             const schedules = await new ScheduleQuery().getAll({
                 round_id: round.id,
-                after: starttime,
-                before: endtime,
+                after: startdate,
+                before: enddate,
             });
 
             averages[round.name] = getAverageScheduleTime(schedules);
@@ -222,8 +222,8 @@ export class UserQuery extends Query<
                 const schedules = await new ScheduleQuery().getAll({
                     user_id: user.id,
                     round_id: round.id,
-                    after: starttime,
-                    before: endtime,
+                    after: startdate,
+                    before: enddate,
                 });
 
                 const time = getAverageScheduleTime(schedules);
@@ -246,8 +246,8 @@ export class UserQuery extends Query<
     // Geef het aantal gewerkte uren van alle studenten weer tussen een start- en einddatum
     // Enkel de studenten die effectief gewerkt hebben, worden getoond
     async getAnalytics(
-        starttime: Date,
-        endtime: Date,
+        startdate: Date,
+        enddate: Date,
     ): Promise<Array<UserAnalytics>> {
         const analytics = [];
         const users = await this.getAll({
@@ -259,8 +259,8 @@ export class UserQuery extends Query<
         for (let user of users) {
             const schedules = await new ScheduleQuery().getAll({
                 user_id: user.id,
-                after: starttime,
-                before: endtime,
+                after: startdate,
+                before: enddate,
             });
 
             let time = 0;

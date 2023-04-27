@@ -101,8 +101,8 @@ export class BuildingQuery extends Query<
     }
 
     async getAnalytics(
-        starttime: Date,
-        endtime: Date,
+        startdate: Date,
+        enddate: Date,
     ): Promise<Array<BuildingAnalysis>> {
         const analytics = [];
         const buildings: Array<BuildingAllInfo> = await this.fetchJSON(
@@ -114,8 +114,8 @@ export class BuildingQuery extends Query<
             let time = 0;
 
             const parameters = {
-                arrived_after: starttime,
-                left_before: endtime,
+                arrived_after: startdate,
+                left_before: enddate,
                 building: building.id,
             };
 
