@@ -20,7 +20,7 @@ export default defineConfig({
   ],
   define: {
     "process.env": {
-      VUE_APP_API_SERVER_ADDRESS: "http://localhost:8080/"
+      VUE_APP_API_SERVER_ADDRESS: process.env.VUE_APP_API_SERVER_ADDRESS
     }
   },
   resolve: {
