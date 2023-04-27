@@ -93,7 +93,8 @@ services:
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
       - "traefik.http.services.api.loadbalancer.server.port=8080"
-      - "traefik.http.middlewares.api.stripprefix.prefixes=/api/"
+      - "traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/api/"
+      - "traefik.http.routers.api.middlewares=api-stripprefix"
     env_file:
         - .env
     environment:
