@@ -3,10 +3,8 @@ describe('login tests', () => {
     cy.visit('/')
   })
 
-  // TODO .only wegdoen wanneer api niet meer crasht bij foutieve login
-  it.only('log in succesfull', () =>{
+  it('log in succesfull', () =>{
     cy.login('administrator@trottoir.be', 'password')
-    cy.visit('/planning')
   })
 
   it('log in failed: incorrect password', () =>{
@@ -22,6 +20,10 @@ describe('login tests', () => {
     cy.get('#password').type('password')
     cy.get('#login').click()
     cy.get('#login')
+  })
+
+  // TODO: user doesn't yet have a login
+  it('ask login data', () => {
   })
 
 })

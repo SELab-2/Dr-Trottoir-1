@@ -1,11 +1,21 @@
 describe('student tests', () => {
   beforeEach(() => {
     cy.login('tudent@trottoir.be', 'student')
-    cy.visit('/planning')
   })
 
 
-  it('wijzig account, maar annuleer', () => {
+  it('student performs a round', () => {
+    // we should already be at "/planning"
+    // student selects round which he/her wants to start
+    // student goes to first building,
+    // performs garbage tasks, takes pictures and or leaves a comment
+    // student indicates building as done
+    // repeat for all buildings
+    // student ends the round
+  })
+
+
+  it('edit account, but cancel changes', () => {
     // own db still rough, so based on selab2-1.ugent.be,
     // there are still some bugs
     cy.get('#account').click()
