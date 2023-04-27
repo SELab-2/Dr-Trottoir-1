@@ -51,7 +51,7 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
     };
 }>;
 
-type BuildingAnalysis = {
+type BuildingAnalytics = {
     name: string;
     expected: number | null;
     average: number;
@@ -103,7 +103,7 @@ export class BuildingQuery extends Query<
     async getAnalytics(
         startdate: Date,
         enddate: Date,
-    ): Promise<Array<BuildingAnalysis>> {
+    ): Promise<Array<BuildingAnalytics>> {
         const analytics = [];
         const buildings: Array<BuildingAllInfo> = await this.fetchJSON(
             this.server + this.endpoint,
