@@ -14,7 +14,6 @@ import {
     badRequestResponse,
     forbiddenResponse,
     notFoundResponse,
-    notFoundResponse2,
 } from "../utilities/constants";
 
 process.env["LOCAL_FILE_PATH"] = "__tests__/mock/file_server";
@@ -148,7 +147,7 @@ describe("File tests", () => {
             await runner.get({
                 url: "/file/999",
                 statusCode: 404,
-                expectedData: [notFoundResponse2],
+                expectedData: [notFoundResponse],
             });
         });
 
@@ -163,16 +162,16 @@ describe("File tests", () => {
         test("GET /file/:id with negative ID", async () => {
             await runner.get({
                 url: "/file/-1",
-                statusCode: 400,
-                expectedData: [badRequestResponse],
+                statusCode: 404,
+                expectedData: [notFoundResponse],
             });
         });
 
         test("GET /file/:id with zero ID", async () => {
             await runner.get({
                 url: "/file/0",
-                statusCode: 400,
-                expectedData: [badRequestResponse],
+                statusCode: 404,
+                expectedData: [notFoundResponse],
             });
         });
 

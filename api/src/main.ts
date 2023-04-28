@@ -18,11 +18,10 @@ import { initializePassport } from "./passport";
 import dotenv from "dotenv";
 import { RegionRouting } from "./routes/region";
 import { GarbageRouting } from "./routes/garbage";
-
-import { FileRouter } from "./routes/file";
 import { UserRegionRouting } from "./routes/user_region";
 import { ProgressRouting } from "./routes/progress";
 import { RoundBuildingRouting } from "./routes/round_building";
+import { FileRouting } from "./routes/file";
 import cors from "cors";
 
 // const PORT_NUMBER = 8080;
@@ -91,7 +90,7 @@ app.use("/action", new ActionRouting().toRouter());
 app.use("/syndicus", new SyndicusRouting().toRouter());
 app.use("/round", new RoundRouting().toRouter());
 
-app.use("/file", FileRouter);
+app.use("/file", new FileRouting().toRouter());
 
 app.use("/user_region", new UserRegionRouting().toRouter());
 

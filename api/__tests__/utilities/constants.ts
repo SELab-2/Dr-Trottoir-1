@@ -15,10 +15,6 @@ export const notFoundResponse = {
     message: "Not Found",
     detail: "Resource does not exist",
 };
-//TODO: oplossen
-export const notFoundResponse2 = {
-    message: "Not Found",
-};
 
 export const conflictResponse = {
     message: "Conflict",
