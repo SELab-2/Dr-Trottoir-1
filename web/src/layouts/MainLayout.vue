@@ -126,6 +126,7 @@
               prepend-icon="mdi-account-supervisor"
               title="Gebruikers"
               value="users"
+              id="users"
             ></v-list-item>
 
             <v-list-item

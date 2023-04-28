@@ -47,6 +47,7 @@
         >
           <!-- Text input field for the first name -->
           <v-text-field
+            id="firstname"
             v-model="user!.first_name"
             label="Voornaam"
             type="text"
@@ -61,6 +62,7 @@
         >
           <!-- Text input field for the last name -->
           <v-text-field
+            id="lastname"
             v-model="user!.last_name"
             label="Achternaam"
             type="text"
@@ -132,6 +134,7 @@
     <div v-if="edit" class="my-4">
       <div class="d-flex flex-row-reverse">
         <v-btn
+          id="save"
           prepend-icon="mdi-check"
           @click="handleSavePopup()"
           color="success"
@@ -143,6 +146,7 @@
           v-if="
             useAuthStore().auth?.admin && user?.id !== useAuthStore().auth?.id
           "
+          id="delete"
           prepend-icon="mdi-delete"
           @click="handleRemovePopup()"
           color="error"
@@ -164,6 +168,7 @@
     </p>
     <v-card-actions>
       <v-btn
+        id="dontsubmit"
         prepend-icon="mdi-close"
         color="error"
         @click="showPopup = false"
@@ -171,7 +176,7 @@
       >
         Annuleer
       </v-btn>
-      <v-btn prepend-icon="mdi-check" color="success" @click="popupSubmit()">
+      <v-btn id= "submit" prepend-icon="mdi-check" color="success" @click="popupSubmit()">
         {{ popupSubmitMsg }}
       </v-btn>
     </v-card-actions>

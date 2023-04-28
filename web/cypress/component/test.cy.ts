@@ -1,10 +1,10 @@
 import RoundedButton from '../../src/components/buttons/RoundedButton.vue'
 import AddButton from '../../src/components/buttons/AddButton.vue'
-import BuildingCard from '../../src/components/building/BuildingCard'
-import GarbageSchedule from '../../src/components/building/GarbageSchedule'
+import BuildingCard from '../../src/components/building/BuildingCard.vue'
+import GarbageSchedule from '../../src/components/building/GarbageSchedule.vue'
 
 describe("test", () => {
-  it('uses custom text for the button label', () => {
+  it('roundedbutton', () => {
     cy.mount(RoundedButton, {
       props: {
         icon: 'mdi-domain',
@@ -33,7 +33,7 @@ describe("test", () => {
     // can't really click on it, as there is no active router to perform router.push(...)
   })
 
-  it.only('garbageschedule', ()=>{
+  it('garbageschedule', ()=>{
     cy.mount(GarbageSchedule, {
       props: {
         schedule: [{id: 6, user: {first_name: "test", last_name: "user"}}, {

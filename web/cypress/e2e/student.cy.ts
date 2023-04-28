@@ -1,6 +1,7 @@
 describe('student tests', () => {
   beforeEach(() => {
-    cy.login('tudent@trottoir.be', 'student')
+    cy.login('student@trottoir.be', 'student')
+    cy.visit('/planning')
   })
 
 
@@ -30,7 +31,7 @@ describe('student tests', () => {
     cy.get('#address').then(() => {
       cy.get('#street').type('t')
       cy.get('#streetnr').type('{backspace}')
-      cy.get('#city').type('olkn')
+      cy.get('#city').type('blabla')
       cy.get('#zipcode').type('1')
     })
     cy.get('#cancel').click()

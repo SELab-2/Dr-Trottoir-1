@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex flex-row-reverse">
     <v-btn
+      id="new"
       prepend-icon="mdi-plus"
       color="primary"
       class="mr-3"
@@ -9,7 +10,7 @@
       Nieuwe Gebruiker
     </v-btn>
   </div>
-  <Table :entries="users" :headers="User.headers()" :route="User.route"></Table>
+  <Table id="usertable" :entries="users" :headers="User.headers()" :route="User.route"></Table>
 </template>
 
 <script setup lang="ts">

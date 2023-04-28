@@ -1,5 +1,5 @@
 <template :key="props.entries">
-  <v-table>
+  <v-table id="table">
     <thead>
       <tr>
         <th
