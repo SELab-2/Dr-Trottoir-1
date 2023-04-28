@@ -1,6 +1,7 @@
 import RoundedButton from '../../src/components/buttons/RoundedButton.vue'
 import AddButton from '../../src/components/buttons/AddButton.vue'
 import BuildingCard from '../../src/components/building/BuildingCard'
+import GarbageSchedule from '../../src/components/building/GarbageSchedule'
 
 describe("test", () => {
   it('uses custom text for the button label', () => {
@@ -30,5 +31,17 @@ describe("test", () => {
       },
     })
     // can't really click on it, as there is no active router to perform router.push(...)
+  })
+
+  it.only('garbageschedule', ()=>{
+    cy.mount(GarbageSchedule, {
+      props: {
+        schedule: [{id: 6, user: {first_name: "test", last_name: "user"}}, {
+          id: 7,
+          user: {first_name: "one", last_name: "two"}
+        }]
+      }
+    })
+    // not exactly correct
   })
 })
