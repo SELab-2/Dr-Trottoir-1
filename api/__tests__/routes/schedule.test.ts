@@ -34,8 +34,10 @@ describe("Schedule tests", () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
         });
 
-        const building = {
+        const schedule = {
             day: "2023-05-04T12:00:00.000Z",
+            start: "2023-05-04T12:10:00.000Z",
+            end: "2023-05-04T12:20:00.000Z",
             deleted: false,
             id: 1,
             round: {
@@ -98,6 +100,8 @@ describe("Schedule tests", () => {
                     day: "2023-05-04T12:00:00.000Z",
                     deleted: false,
                     id: 1,
+                    start: "2023-05-04T12:10:00.000Z",
+                    end: "2023-05-04T12:20:00.000Z",
                     round: {
                         buildings: [
                             {
@@ -155,6 +159,8 @@ describe("Schedule tests", () => {
                     day: "2023-05-04T12:00:00.000Z",
                     deleted: false,
                     id: 2,
+                    start: "2023-05-04T12:10:00.000Z",
+                    end: "2023-05-04T12:20:00.000Z",
                     round: {
                         buildings: [
                             {
@@ -219,7 +225,7 @@ describe("Schedule tests", () => {
         test("GET /schedule/:id", async () => {
             await runner.get({
                 url: "/schedule/1",
-                expectedData: [building],
+                expectedData: [schedule],
             });
         });
 
@@ -227,7 +233,7 @@ describe("Schedule tests", () => {
             runner.authLevel(AuthenticationLevel.STUDENT);
             await runner.get({
                 url: "/schedule/1",
-                expectedData: [building],
+                expectedData: [schedule],
             });
         });
 
@@ -236,10 +242,14 @@ describe("Schedule tests", () => {
                 day: new Date(Date.UTC(2023, 5, 4, 12, 0, 0)),
                 user_id: 1,
                 round_id: 2,
+                start: new Date(Date.UTC(2023, 4, 4, 12, 10, 0)),
+                end: new Date(Date.UTC(2023, 4, 4, 12, 20, 0)),
             };
 
             const expectedResponse = {
                 day: "2023-06-04T12:00:00.000Z",
+                start: "2023-05-04T12:10:00.000Z",
+                end: "2023-05-04T12:20:00.000Z",
                 user_id: 1,
                 round_id: 2,
                 deleted: false,
@@ -305,6 +315,8 @@ describe("Schedule tests", () => {
             const response = {
                 id: 1,
                 day: "2023-05-04T12:00:00.000Z",
+                start: "2023-05-04T12:10:00.000Z",
+                end: "2023-05-04T12:20:00.000Z",
                 user_id: 2,
                 round_id: 1,
                 deleted: false,
