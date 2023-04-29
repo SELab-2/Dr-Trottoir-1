@@ -268,7 +268,10 @@ describe("Mail Template tests", () => {
                 });
             });
             test("Delete a nonexistent mail template", async () => {
-                await runner.delete({ url: "/mail_template/0", statusCode: 404 });
+                await runner.delete({
+                    url: "/mail_template/0",
+                    statusCode: 404,
+                });
             });
         });
         describe("The type of action id must be correct", () => {
