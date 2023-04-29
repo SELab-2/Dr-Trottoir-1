@@ -8,7 +8,7 @@ describe('admin tests', () => {
     // go to user overview
     cy.get('#users').click()
     // click new user
-    cy.get('#new').click()
+    cy.get('#newuser').click()
     // add user data
     cy.get('#firstname').type('test')
     cy.get('#lastname').type('naam')
@@ -32,7 +32,6 @@ describe('admin tests', () => {
     cy.get('#create').click()
     // check if user in userlist
     cy.get('#usertable').get('#table').contains('td', 'test naam')
-
   })
 
   it('edit a user', () => {
@@ -82,13 +81,16 @@ describe('admin tests', () => {
   })
 
   it('add garbage schedule to a building', () => {
-    cy.visit('/gebouw')
+    cy.get('#buildings').click()
     // select building
+    cy.get('#buildingtable').get('#table').contains('td', 'Building 1').click()
+
   })
 
   it('edit garbage schedule of a building', () => {
-    cy.visit('/gebouw')
+    cy.get('#buildings').click()
     // select building
+    cy.get('#buildingtable').get('#table').contains('td', 'Building 1').click()
   })
 
 

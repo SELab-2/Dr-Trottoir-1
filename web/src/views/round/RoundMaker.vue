@@ -17,6 +17,7 @@
           ></v-switch
         ></template>
         <v-text-field
+          id="roundname"
           class="ml-3 mr-5"
           label="Naam ronde"
           v-model="newRoundName"
@@ -24,7 +25,7 @@
         />
         <v-card-actions class="d-flex align-center"
           ><v-spacer></v-spacer
-          ><v-btn class="ml-3" prepend-icon="mdi-check" @click="makeRound()"
+          ><v-btn id="createround" class="ml-3" prepend-icon="mdi-check" @click="makeRound()"
             >Ronde aanmaken</v-btn
           ></v-card-actions
         >
@@ -58,6 +59,7 @@
       </border-card>
 
       <building-info-card
+        id="availablebuildings"
         v-for="entry in filterlist()"
         :key="entry.listID"
         :name="entry.building.name"

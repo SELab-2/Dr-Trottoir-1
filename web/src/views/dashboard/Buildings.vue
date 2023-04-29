@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex flex-row-reverse">
     <v-btn
+      id="newbuilding"
       prepend-icon="mdi-plus"
       color="primary"
       class="mr-3"
@@ -10,6 +11,7 @@
     </v-btn>
   </div>
   <Table
+    id="#buildingtable"
     :entries="buildings"
     :headers="Building.headers()"
     :route="Building.route"

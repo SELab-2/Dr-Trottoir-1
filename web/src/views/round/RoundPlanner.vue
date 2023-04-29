@@ -22,6 +22,7 @@
             style="min-width: 100px; max-width: 100%"
             class="flex-grow-1 flex-shrink-0"
             ><v-select
+            id="selectstudent"
               label="Selecteer student"
               :items="students"
               v-model="student"
@@ -49,6 +50,7 @@
           :class="multipleday ? 'grid-cols-4' : 'grid-cols-3'"
         >
           <v-select
+            id="frequency"
             prepend-inner-icon="mdi-replay"
             variant="outlined"
             label="Frequentie"
@@ -58,6 +60,7 @@
           ></v-select>
 
           <v-text-field
+            id="startdate"
             v-model="startDate"
             prepend-inner-icon="mdi-calendar"
             variant="outlined"
@@ -66,6 +69,7 @@
           ></v-text-field>
 
           <v-text-field
+            id="enddate"
             v-model="endDate"
             prepend-inner-icon="mdi-calendar"
             variant="outlined"
@@ -75,6 +79,7 @@
           ></v-text-field>
 
           <v-text-field
+            id="starttime"
             prepend-inner-icon="mdi-clock-time-two-outline"
             label="Starttijd"
             variant="outlined"
@@ -85,6 +90,7 @@
 
         <div style="display: flex; align-items: center">
           <v-btn
+            id="addschedule"
             prepend-icon="mdi-plus"
             @click="updateRounds()"
             :disabled="student === undefined"

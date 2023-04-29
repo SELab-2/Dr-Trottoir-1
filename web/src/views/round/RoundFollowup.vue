@@ -1,6 +1,7 @@
 <template>
   <HFillWrapper>
     <LargeFilter
+      id="filter"
       :search_by_labels="query_labels"
       :sort_items="sort_items"
       :filter_items="filter_options"

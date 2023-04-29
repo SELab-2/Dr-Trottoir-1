@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex flex-row-reverse">
     <v-btn
+      id="newround"
       prepend-icon="mdi-plus"
       color="primary"
       class="mr-3"
@@ -10,6 +11,7 @@
     </v-btn>
   </div>
   <Table
+    id="roundtable"
     :entries="rounds"
     :headers="RoundTable.headers()"
     :route="RoundTable.route"

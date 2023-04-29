@@ -134,6 +134,7 @@
               prepend-icon="mdi-office-building-outline"
               title="Gebouwen"
               value="buildings"
+              id="buildings"
             ></v-list-item>
 
             <v-list-item
@@ -141,6 +142,7 @@
               prepend-icon="mdi-map-legend"
               title="Rondes"
               value="rounds"
+              id="rounds"
             ></v-list-item>
           </div>
         </v-list>

@@ -6,6 +6,7 @@
     </template>
     <template v-slot:title v-if="search_by_labels.length != 0">
       <v-text-field
+        id="searchtype"
         :label="search_placeholder()"
         v-model="filter_data.query"
         @update:model-value="$emit('onUpdate', filter_data)"
@@ -14,6 +15,7 @@
     </template>
     <template v-slot:append>
       <v-btn
+        id="showfilters"
         prepend-icon="mdi-filter"
         :append-icon="dropdown ? 'mdi-menu-up' : 'mdi-menu-down'"
         @click="dropdown = !dropdown"

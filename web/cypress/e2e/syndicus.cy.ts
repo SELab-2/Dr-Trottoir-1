@@ -1,6 +1,6 @@
 describe('syndicus tests', () => {
   beforeEach(() => {
-    cy.login('syndicusr@trottoir.be', 'syndicus')
+    cy.login('syndicus@trottoir.be', 'syndicus')
   })
 
   it('check building', () => {

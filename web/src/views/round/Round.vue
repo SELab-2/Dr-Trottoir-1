@@ -5,6 +5,7 @@
         <h1>{{ round?.name }}</h1>
         <div class="flex-grow-1"></div>
         <RoundedButton
+          id="deleteround"
           icon="mdi-delete-outline"
           value="Verwijderen"
           @click="deleteRound()"
@@ -40,6 +41,7 @@
         <h2>Planning</h2>
         <div class="flex-grow-1"></div>
         <RoundedButton
+          id="schedule"
           icon="mdi-calendar"
           value="Inplannen"
           @click="router.push({ name: 'round_plan', params: { id: round_id } })"
@@ -48,6 +50,7 @@
 
       <div class="space-y-8">
         <RoundCard
+          id="schedules"
           v-for="schedule in schedules"
           v-bind:key="schedule.id"
           :schedule="schedule"
