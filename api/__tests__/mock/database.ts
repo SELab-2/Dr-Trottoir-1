@@ -14,6 +14,7 @@ import {
 import { initialiseRound, initialiseRoundBuilding } from "./round";
 import { initialiseFile, initialiseImage } from "./file";
 import { initialiseAction, initialiseGarbage } from "./garbage";
+import { initialiseMailTemplate} from "./mail_template"
 import { prisma } from "./prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
 
@@ -38,6 +39,7 @@ const initialiseFunctions: { [name: string]: () => Promise<any> } = {
     schedule: initialiseSchedule,
     progress: initialiseProgress,
     progress_image: initialiseProgressImage,
+    mail_template: initialiseMailTemplate,
 };
 
 export async function initialiseDatabase(): Promise<void> {
