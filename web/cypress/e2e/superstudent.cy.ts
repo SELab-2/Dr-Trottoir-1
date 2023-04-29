@@ -1,4 +1,7 @@
 describe('superstudent tests', () => {
+  // TODO check if cy.contains('X') works instead of cy.get(..).get(...).contains('X')
+  // TODO check if select(...) works better with index
+  // TODO get('CustomComponent') will probably fail => find solution
   beforeEach(() => {
     cy.login('superstudent@trottoir.be', 'super_student')
     cy.visit('/ronde/overzicht')
@@ -29,6 +32,7 @@ describe('superstudent tests', () => {
     cy.get('#rounds').click()
     // press on the round you wish to change
     cy.get('#roundtable').get('#table').contains('td', 'Round 1').click()
+    // maybe even cy.contains('td', 'Round 1').click() will work
     // press edit button
 
     // edit button currently not implemented
@@ -63,7 +67,8 @@ describe('superstudent tests', () => {
     //check if schedule has been added
     cy.get('#rounds').click()
     cy.get('#roundtable').get('#table').contains('td', 'test round').click()
-    cy.get('RoundCard').contains("h3", new Date("2023-05-01").toLocaleDateString()) // I don't know if this will work
+    cy.get('RoundCard').contains("h3", new Date("2023-05-01").toLocaleDateString())
+    // I don't know if this will work, maybe just cy.contains("h3", new Date("2023-05-01").toLocaleDateString())
   })
 
   it('switch student for round (for a single date)', () => {

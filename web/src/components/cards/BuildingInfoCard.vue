@@ -3,7 +3,7 @@
     <template v-slot:prepend>
       <v-icon icon="mdi-office-building"></v-icon>
     </template>
-    <template id="buildingname" v-slot:title>{{ name }}</template
+    <template v-slot:title>{{ name }}</template
     ><template v-slot:subtitle>{{ address }}</template>
   </BorderCard>
 </template>

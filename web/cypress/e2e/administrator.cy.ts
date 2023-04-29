@@ -1,4 +1,5 @@
 describe('admin tests', () => {
+  // TODO check if cy.contains('X') works instead of cy.get(..).get(...).contains('X')
   beforeEach(() => {
     cy.login('administrator@trottoir.be', 'administrator')
     cy.visit('/ronde/overzicht')
