@@ -7,7 +7,6 @@ import { Parser } from "../parser";
 export class MailTemplateRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        //TOOD: query param
         const result = await prisma.mailTemplate.findMany();
         return res.status(200).json(result);
     }

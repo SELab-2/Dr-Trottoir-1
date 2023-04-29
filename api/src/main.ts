@@ -92,7 +92,7 @@ app.use("/round", new RoundRouting().toRouter());
 app.use("/user_region", new UserRegionRouting().toRouter());
 app.use("/progress", new ProgressRouting().toRouter());
 app.use("/round_building", new RoundBuildingRouting().toRouter());
-app.use("/mail_template", new MailTemplateRouting().toRouter())
+app.use("/mail_template", new MailTemplateRouting().toRouter());
 // Finally, an error handler
 app.use(ErrorHandler.handle);
 

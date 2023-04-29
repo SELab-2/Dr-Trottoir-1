@@ -309,7 +309,6 @@ model MailTemplate {
     name         String
     mail_subject String
     content      String
-    test         String
 
     @@map("mail_template")
 }

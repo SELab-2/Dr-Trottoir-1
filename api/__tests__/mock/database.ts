@@ -14,7 +14,7 @@ import {
 import { initialiseRound, initialiseRoundBuilding } from "./round";
 import { initialiseFile, initialiseImage } from "./file";
 import { initialiseAction, initialiseGarbage } from "./garbage";
-import { initialiseMailTemplate} from "./mail_template"
+import { initialiseMailTemplate } from "./mail_template";
 import { prisma } from "./prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
 
