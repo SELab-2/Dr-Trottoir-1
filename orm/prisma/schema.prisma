@@ -302,3 +302,12 @@ model ProgressImage {
 
     @@map("progress_image")
 }
+
+model MailTemplate {
+    id           Int    @id @default(autoincrement())
+    name         String
+    mail_subject String
+    content      String
+
+    @@map("mail_template")
+}
