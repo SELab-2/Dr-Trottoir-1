@@ -170,9 +170,9 @@ const e_day = ref<string>(props.end_date.toISOString().substring(0, 10));
 
 // The filter data is emitted with the 'onUpdate' tag
 const filter_data = ref<FilterData>({
-  // The search querry in the main search bar
+  // The search query in the main search bar
   query: "",
-  // The selcted value to seach by
+  // The selected value to search by
   search_label: props.search_by_labels[0],
   // The currently selected sort option
   sort_by: props.sort_items[0],

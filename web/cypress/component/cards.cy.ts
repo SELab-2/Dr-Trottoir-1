@@ -2,6 +2,8 @@ import BuildingCard from '@/components/cards/BuildingCard.vue'
 import BuildingInfoCard from '@/components/cards/BuildingInfoCard.vue'
 import BuildingSelectCard from '@/components/cards/BuildingSelectCard.vue'
 import ImageCard from '@/components/cards/ImageCard.vue'
+import RoundCard from '@/components/cards/RoundCard.vue'
+import RoundSelectCard from '@/components/cards/RoundSelectCard.vue'
 
 describe("card tests", () => {
   it('buildingcard test', () => {
@@ -43,7 +45,7 @@ describe("card tests", () => {
     cy.contains('teststraat 1')
   })
 
-  it('imagecard test', () => {
+  it('imagecard test with image', () => {
     cy.mount(ImageCard, {
       props: {
         img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Grosser_Panda.JPG/1200px-Grosser_Panda.JPG",
@@ -55,10 +57,101 @@ describe("card tests", () => {
         btnText: "button",
       },
     })
-    // TODO title and text don't display
-    // cy.contains('text')
+    cy.contains('test image').should('not.exist')
+    cy.contains('text').should('not.exist')
     cy.contains('button')
   })
 
+  it('imagecard test without image', () => {
+    cy.mount(ImageCard, {
+      props: {
+        title: "test image",
+        titleIcon: "mdi-domain",
+        text: "text",
+        textIcon: "mdi-domain",
+        btnIcon: "mdi-domain",
+        btnText: "button",
+      },
+    })
+    cy.contains('text')
+    cy.contains('button')
+  })
 
+  it('roundcard with zero progress', () => {
+    const datum: Date = new Date()
+    cy.mount(RoundCard, {
+      props: {
+        round_name: "test round",
+        round_start: "startdate or time",
+        round_end: "enddate or time",
+        student_name: "test student",
+        date: datum,
+        total_buildings: 5,
+        building_index: 0,
+        round_comments: true,
+      },
+    })
+    cy.contains('test round')
+    cy.get('#start')
+    cy.get('#end')
+    cy.contains('test student')
+    cy.contains(datum.toLocaleDateString())
+    cy.contains('5')
+    cy.contains('Niet begonnen')
+  })
+
+  it('roundcard with some progress', () => {
+    cy.mount(RoundCard, {
+      props: {
+        round_name: "test round",
+        student_name: "test student",
+        date: new Date(),
+        total_buildings: 5,
+        building_index: 4,
+        round_comments: false,
+      },
+    })
+    cy.contains('test round')
+    cy.get('#start').should('not.exist')
+    cy.get('#end').should('not.exist')
+    cy.contains('test student')
+    cy.contains('5')
+    cy.contains('Bezig 4/5')
+  })
+
+  it('roundcard with full progress', () => {
+    cy.mount(RoundCard, {
+      props: {
+        round_name: "test round",
+        round_start: "startdate or time",
+        round_end: "enddate or time",
+        student_name: "test student",
+        date: new Date(),
+        total_buildings: 5,
+        building_index: 5,
+        round_comments: false,
+      },
+    })
+    cy.contains('test round')
+    cy.get('#start')
+    cy.get('#end')
+    cy.contains('test student')
+    cy.contains('5')
+    cy.contains('Klaar')
+  })
+
+  it('roundselectcard test', () => {
+    const datum: Date = new Date()
+    cy.mount(RoundSelectCard, {
+      props: {
+        name: 'test round',
+        date: datum,
+        time: "tijd",
+        id: "1",
+      },
+    })
+    cy.contains('test round')
+    cy.contains('tijd')
+    cy.contains(datum.toLocaleDateString())
+  })
 })

@@ -62,14 +62,14 @@
     <v-chip label color="primary" class="ml-3">
       <v-icon icon="mdi-calendar" class="pr-1" />
       {{
-        date.getDate() + "-" + date.getMonth() + 1 + "-" + date.getFullYear()
+        date.toLocaleDateString()
       }}
     </v-chip>
     <v-chip v-if="round_start" label color="primary" class="ml-3">
-      <v-icon icon="mdi-clock"></v-icon> {{ round_start }}
+      <v-icon id ="start" icon="mdi-clock"></v-icon> {{ round_start }}
     </v-chip>
     <v-chip v-if="round_end" label color="primary" class="ml-3">
-      <v-icon icon="mdi-clock-check"></v-icon> {{ round_end }}
+      <v-icon id="end" icon="mdi-clock-check"></v-icon> {{ round_end }}
     </v-chip>
   </BorderCard>
 </template>

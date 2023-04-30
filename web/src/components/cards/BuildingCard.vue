@@ -46,7 +46,7 @@
               v-if="!can_expand"
             >
               <v-icon icon="mdi-calendar-clock"></v-icon>
-              <p class="ml-2">{{ start_date.toLocaleDateString("nl") }}</p>
+              <p class="ml-2">{{ start_date.toLocaleDateString() }}</p>
             </v-chip>
             <!-- Date expansion button-->
             <v-btn
@@ -75,9 +75,7 @@
             <v-icon color="blue" icon="mdi-calendar-clock"></v-icon>
             <p class="ml-2">
               {{
-                new Date(progress.arrival ?? new Date()).toLocaleDateString(
-                  "nl",
-                )
+                new Date(progress.arrival ?? new Date()).toLocaleDateString()
               }}
             </p>
             <v-icon end color="black" v-if="progress.report">
@@ -126,8 +124,8 @@ const comments = ref<Boolean>(false);
 let progresses: Ref<Result<ProgressQuery>[]> = ref([]);
 
 const can_expand: Ref<boolean> = ref(
-  props.start_date.toLocaleDateString("nl") !==
-    props.end_date.toLocaleDateString("nl"),
+  props.start_date.toLocaleDateString() !==
+    props.end_date.toLocaleDateString(),
 );
 
 tryOrAlertAsync(async () => {
@@ -147,7 +145,7 @@ function route(date: Date | null) {
       params: {
         id: props.building.id,
         // TODO change to different route with:
-        //  date: new Date(date).toLocaleDateString("nl"),
+        //  date: new Date(date).toLocaleDateString(),
       },
     });
   }
