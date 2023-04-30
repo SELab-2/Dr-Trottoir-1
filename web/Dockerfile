@@ -20,9 +20,9 @@ ARG NPM_AUTH_TOKEN
 ARG VUE_APP_API_SERVER_ADDRESS
 
 COPY --from=build /build/dist ./dist
-COPY package*.json ./
-COPY .npmrc /frontend/.npmrc
+COPY .npmrc ./.npmrc
 
+COPY package*.json ./
 RUN ["npm", "ci", "--omit=dev"]
 
 EXPOSE 3000
