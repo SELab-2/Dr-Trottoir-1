@@ -17,7 +17,6 @@ export class GarbageRouting extends Routing {
     async getAll(req: CustomRequest, res: express.Response) {
         // A syndicus is only allowed to see his own garbage
         if (
-            req.user?.syndicus &&
             !req.user?.super_student &&
             !req.user?.admin &&
             req.user?.syndicus.every(
