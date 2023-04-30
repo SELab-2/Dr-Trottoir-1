@@ -151,7 +151,7 @@ const routes: any[] = [
             superstudent: boolean,
             syndicus: boolean,
             admin: boolean,
-          ) => student,
+          ) => student || superstudent || syndicus || admin,
         },
       },
       {
