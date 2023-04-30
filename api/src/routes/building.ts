@@ -134,7 +134,7 @@ export class BuildingRouting extends Routing {
         return res.status(200).json({});
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     static async internal(req: CustomRequest, res: express.Response) {
         const result = await prisma.building.findFirstOrThrow({
             where: {
@@ -211,7 +211,7 @@ export class BuildingRouting extends Routing {
         return res.json(result);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ superStudent: true, syndicus: true })
     async createImage(req: CustomRequest, res: express.Response) {
         const building_id = Number(Parser.number(req.params["id"]));
         await prisma.image.create({
@@ -236,7 +236,7 @@ export class BuildingRouting extends Routing {
         return res.status(201).json(result);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ superStudent: true, syndicus: true })
     async deleteImage(req: CustomRequest, res: express.Response) {
         const result = await prisma.buildingImages.findUniqueOrThrow({
             where: {

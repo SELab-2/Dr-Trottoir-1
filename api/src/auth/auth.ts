@@ -51,7 +51,11 @@ export class Auth {
                 }
 
                 // Check for super student privileges
-                if (options.superStudent && !req.user?.super_student) {
+                if (
+                    options.superStudent &&
+                    !req.user?.super_student &&
+                    !options.syndicus
+                ) {
                     throw new APIError(APIErrorCode.FORBIDDEN);
                 }
 
