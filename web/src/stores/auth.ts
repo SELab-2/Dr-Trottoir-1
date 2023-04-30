@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
 import { User } from "@selab-2/groep-1-orm";
+import { tryOrAlert, tryOrAlertAsync } from "@/try";
 
 const defaultUser: User = {
   id: 0,
@@ -33,7 +34,7 @@ export const useAuthStore = defineStore("auth", () => {
    * @param password The plaintext password.
    */
   async function logIn(username: string, password: string): Promise<void> {
-    try {
+    tryOrAlertAsync(async () => {
       if (process.env.VUE_APP_DISABLE_AUTHENTICATION !== "true") {
         await fetch(process.env.VUE_APP_API_SERVER_ADDRESS + "auth/login/", {
           method: "POST",
@@ -49,12 +50,7 @@ export const useAuthStore = defineStore("auth", () => {
           credentials: "include",
         });
       }
-
-      await getAuth();
-    } catch (e) {
-      // Fallback error. TODO: expand error handling.
-      alert("Internal Server Error (logging In)");
-    }
+    });
   }
 
   /**
@@ -82,7 +78,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function getAuth(): Promise<void> {
-    try {
+    tryOrAlertAsync(async () => {
       if (process.env.VUE_APP_DISABLE_AUTHENTICATION === "true") {
         auth.value = defaultUser;
       } else {
@@ -102,13 +98,8 @@ export const useAuthStore = defineStore("auth", () => {
           auth.value = null;
         }
       }
-    } catch (e) {
-      console.log(e);
-      // Fallback error. TODO: expand error handling.
-      alert("Internal Server Error (fetching Auth)");
-      auth.value = null;
-    }
-  }
+    })}
+
 
   return { auth, logIn, logOut, getAuth };
 });
