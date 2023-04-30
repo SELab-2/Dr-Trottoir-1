@@ -8,7 +8,7 @@ services:
       - "--providers.docker.swarmMode=false"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.network=server_default"
+      - "--providers.docker.network=main"
       # Configure entrypoints
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
@@ -123,7 +123,6 @@ services:
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
-      - "traefik.http.middlewares.frontend.stripprefix.prefixes=/"
     env_file:
       - .env
     restart: always
