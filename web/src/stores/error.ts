@@ -10,8 +10,6 @@ export const useErrorStore = defineStore("error", () => {
     const errors = ref<unknown[]>([])
 
     function addToStore(e: unknown){
-        console.log(errors.value)
-
         errors.value.push(e)
     }
 

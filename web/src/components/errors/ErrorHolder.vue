@@ -41,7 +41,6 @@ function getFormattedErrors(): FormattedError[] {
         body: error.message,
       });
     } else if (error instanceof Error) {
-      console.log(error)
       formatted.push({ code: 400, title: error.name, body: error.message });
     } else {
       formatted.push({
