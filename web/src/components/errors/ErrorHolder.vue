@@ -1,7 +1,8 @@
 <template>
   <v-expansion-panels variant="accordion">
     <v-expansion-panel
-      v-for="e of formattedErrors"
+      v-for="(e, i) of formattedErrors"
+      :key="i"
       :title="`Code: ${e.code} - ${e.title}`"
       :text="e.body"
     >

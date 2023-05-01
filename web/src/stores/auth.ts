@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
 import { User } from "@selab-2/groep-1-orm";
-import { tryOrAlert, tryOrAlertAsync } from "@/try";
+import { tryOrAlertAsync } from "@/try";
 
 const defaultUser: User = {
   id: 0,
@@ -98,8 +98,8 @@ export const useAuthStore = defineStore("auth", () => {
           auth.value = null;
         }
       }
-    })}
-
+    });
+  }
 
   return { auth, logIn, logOut, getAuth };
 });

@@ -1,11 +1,10 @@
-import { QueryError } from "@selab-2/groep-1-query";
 import { useErrorStore } from "./stores/error";
 
 /*
  * Receives an object and prints it to an alert and the console.
  */
 function handler(err: unknown): void {
-  useErrorStore().addToStore(err)
+  useErrorStore().addToStore(err);
 }
 
 /**
