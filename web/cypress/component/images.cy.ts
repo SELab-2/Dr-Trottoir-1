@@ -15,6 +15,7 @@ describe("images tests", () => {
     cy.get('#comment').should('have.value', 'New Comment')
     cy.contains('Verwijder afbeelding').should('be.visible')
     cy.get("#input").selectFile('src/assets/images/drtroittoir_logo.png')
+    cy.contains("drtroittoir_logo.png")
   })
   it('addimage id==0 test', () => {
     cy.mount(AddImage, {
@@ -24,9 +25,9 @@ describe("images tests", () => {
     })
     cy.contains('Commentaar')
     cy.contains('Verwijder afbeelding').should('not.be.visible')
-    // Verwijder afbeelding should appear on the screen when adding new image
+    // "Verwijder afbeelding" should appear on the screen when adding new image
     // cy.get("#input").selectFile('src/assets/images/drtroittoir_logo.png')
-    // y.contains('Verwijder afbeelding').should('be.visible')
+    // cy.contains('Verwijder afbeelding').should('be.visible')
   })
 
   it('multiaddimage test', () => {
@@ -36,7 +37,7 @@ describe("images tests", () => {
     cy.get('button:contains("Verwijder afbeelding")').should('have.length', 2);
   })
 
-  it.only('photomaker test', () => {
+  it('photomaker test', () => {
     cy.mount(PhotoMaker, {})
     cy.contains("Maak foto")
     cy.contains("Selecteer afbeelding")
@@ -49,6 +50,7 @@ describe("images tests", () => {
     cy.get('#label').type('New Label')
     cy.get('#label').should('have.value', 'New Label')
     cy.get("#select").selectFile('src/assets/images/drtroittoir_logo.png')
+    cy.contains("drtroittoir_logo.png")
   })
 
 })

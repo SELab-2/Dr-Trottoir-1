@@ -54,12 +54,14 @@
       <p v-if="!editMode">{{ progress?.report }}</p>
       <!-- eslint-disable-next-line vue/no-mutating-props -->
       <v-text-field
+        id="notes"
         type="text"
         v-else
         v-model="progress.report"
         style="margin-bottom: -20px"
       ></v-text-field>
       <RoundedButton
+        id="save"
         v-if="editMode"
         icon="mdi-check"
         value="Opslaan"
@@ -67,6 +69,7 @@
         @click="() => report()"
       ></RoundedButton>
       <RoundedButton
+        id="edit"
         v-else-if="progress?.report !== ''"
         icon="mdi-pencil"
         value="Bewerken"
