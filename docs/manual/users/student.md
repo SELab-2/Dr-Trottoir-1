@@ -7,17 +7,10 @@ Hier kan u een overzicht vinden over hoe de student de applicatie gebruikt om zi
 ### Login
 Voordat een student de applicatie kan gebruiken moet hij eerst [ingelogd](../pages/login.md) zijn.
 
-### Navigatie balk
-Een student kan doorheen de applicatie navigeren door van de navigatie balk gebruik te maken.
-De navigatie balk kan men openen door op het hamburgermenu (☰) te klikken en sluiten door naast de
-open staande navigatie balk te klikken.
-
-|           Open navigatie            |           Sluit navigatie            |
-|:-----------------------------------:|:------------------------------------:|
-| ![](../assets/student_open_nav.jpg) | ![](../assets/student_close_nav.jpg) |
+### Student opties
 
 
-In de navigatie balk heeft de student 3 opties.
+In de [navigatie balk](../navbar.md#superstudent-syndicus-admin) heeft de student 3 opties.
 
 |            Navigatie opties            |
 |:--------------------------------------:|
