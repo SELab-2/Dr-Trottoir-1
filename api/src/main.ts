@@ -53,7 +53,7 @@ app.use(helmet());
 // Support for CORS
 app.use(
     cors({
-        origin: "http://localhost:3000",
+        origin: process.env.CORS,
         credentials: true,
     }),
 );

@@ -32,9 +32,4 @@ jobs:
                 run: npm run test
                 env:
                     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-            -   name: "Cleanup"
-                if: always()
-                run: |
-                    chmod +x ../server/cleanup.sh
-                    ../server/cleanup.sh -p
-                shell: bash
+
