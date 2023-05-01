@@ -21,8 +21,7 @@
 <script lang="ts" setup>
 import Loader from "@/components/popups/Loader.vue";
 import { useAuthStore } from "@/stores/auth";
-import { useErrorStore } from "./stores/error";
-import ErrorHandler from '@/components/ErrorHandler.vue'
+import ErrorHandler from '@/components/errors/ErrorHandler.vue'
 </script>
 
 <style lang="sass" scoped></style>
