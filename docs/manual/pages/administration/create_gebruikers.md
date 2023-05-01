@@ -15,7 +15,7 @@ Alle velden moeten verplicht ingevuld worden.
 Alle velden moeten verplicht ingevuld worden.
 ### 3. Wachtwoord
 - Dit is het wachtwoord dat de gebruiker voor zijn of haar account
-zal gebruiken. De gebruiker kan later zelf het wachtwoord kunnen aanpassen.
+zal gebruiken. De gebruiker zal later zelf het wachtwoord kunnen aanpassen.
 - Klik op het oog icoontje (👁) om het wachtwoord te tonen. Klik er nogmaals op om het
 opnieuw te verbergen.
 
@@ -30,5 +30,5 @@ Het is mogelijk om een gebruiker meerdere rollen te geven.
 Een [syndicus](../../users/syndicus.md) maakt men aan zonder rollen (tenzij de syndicus ook student,
 superstudent of admin is). Bij het
 [aanmaken van een gebouw](./create_gebouwen.md) kiest men dan simpelweg deze gebruiker.
-De gebruiker zal dan automatisch syndicus zijn.
+De gebruiker zal dan automatisch syndicus van dat gebouw zijn.
 
