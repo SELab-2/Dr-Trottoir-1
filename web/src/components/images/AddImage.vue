@@ -11,6 +11,7 @@
       <v-toolbar color="rgba(0, 0, 0, 0)" class="mt-2 pt-2">
         <template v-slot:append>
           <v-file-input
+            id="input"
             single
             v-model="image"
             accept="image/*"
@@ -24,6 +25,7 @@
       </v-toolbar>
     </v-img>
     <v-textarea
+      id="comment"
       label="Commentaar"
       rows="3"
       v-model="comments"

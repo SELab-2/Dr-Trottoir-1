@@ -14,6 +14,7 @@
         </div>
 
         <v-file-input
+          id="select"
           single
           v-model="photo.image"
           label="Selecteer afbeelding"
@@ -23,12 +24,14 @@
           @update:model-value="$emit('onUpdate', photo)"
         ></v-file-input>
         <v-textarea
+          id="comment"
           @update:model-value="$emit('onUpdate', photo)"
           label="Commentaar"
           rows="3"
           v-model="photo.comments"
         ></v-textarea>
         <v-text-field
+          id="label"
           @update:model-value="$emit('onUpdate', photo)"
           label="Foto label"
           v-model="photo.label"
@@ -51,7 +54,7 @@ const photo = ref<Photo>({
 const imageUrl = ref("");
 
 /*TODO: fix typing here, commented this for deadline 1
-  Should be added in <v-file-input> 
+  Should be added in <v-file-input>
     @change="previewImage"
 
 const previewImage = (event) => {
