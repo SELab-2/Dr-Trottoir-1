@@ -10,7 +10,7 @@ Voordat een student de applicatie kan gebruiken moet hij eerst [ingelogd](../pag
 ### Student opties
 
 
-In de [navigatie balk](../navbar.md#superstudent-syndicus-admin) heeft de student 3 opties.
+In de [navigatie balk](../navbar.md#student) heeft de student 3 opties.
 
 |            Navigatie opties            |
 |:--------------------------------------:|
