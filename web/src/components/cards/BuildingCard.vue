@@ -74,7 +74,11 @@
           >
             <v-icon color="blue" icon="mdi-calendar-clock"></v-icon>
             <p class="ml-2">
-              {{ new Date(progress.arrival).toLocaleDateString("nl") }}
+              {{
+                new Date(progress.arrival ?? new Date()).toLocaleDateString(
+                  "nl",
+                )
+              }}
             </p>
             <v-icon end color="black" v-if="progress.report">
               mdi-comment-alert-outline
@@ -135,7 +139,7 @@ tryOrAlertAsync(async () => {
   can_expand.value = can_expand.value && progresses.value.length > 0;
 });
 
-function route(date: Date) {
+function route(date: Date | null) {
   console.log(`TODO: link to ${date}`);
   if (props.building) {
     router.push({
