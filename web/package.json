@@ -36,7 +36,7 @@
     "@types/webfontloader": "^1.6.35",
     "@vitejs/plugin-vue": "^3.0.3",
     "@vue/eslint-config-typescript": "^11.0.0",
-    "cypress": "^12.9.0",
+    "cypress": "^12.11.0",
     "dotenv": "^16.0.3",
     "eslint": "^8.22.0",
     "eslint-plugin-vue": "^9.3.0",
