@@ -140,7 +140,6 @@ export class Testrunner {
             .send(data)
             .set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
-
         // drop the id, as we cannot predict that
         delete response.body["id"];
 
@@ -172,6 +171,10 @@ export class Testrunner {
             .set("Cookie", [cookie]);
 
         expect(response.statusCode).toEqual(statusCode);
+
+        // delete ID, as that cannot be changed, so doesn't need to be checked
+        //  and we don't want it to interfere with the test
+        delete response.body["id"];
 
         this.verifyBody([expectedResponse], response);
 
