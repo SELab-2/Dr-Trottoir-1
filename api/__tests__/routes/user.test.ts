@@ -30,6 +30,7 @@ describe("User tests", () => {
             "user",
             "user_region",
             "syndicus",
+            "building",
             "schedule",
             "image",
         );
