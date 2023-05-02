@@ -21,7 +21,7 @@ export class ActionValidator extends Validator {
     updateOneValidator() {
         return celebrate({
             body: Joi.object({
-                description: Joi.string().min(1).required(),
+                description: Joi.string().trim().min(1).required(),
             }),
             params: Joi.object({
                 id: Joi.number().positive().required(),

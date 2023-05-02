@@ -237,7 +237,7 @@ describe("Building tests", () => {
         test("PATCH /building/:id", async () => {
             const building = (await runner.getRaw("/building/1")).body;
             building["name"] = "Building 1 New";
-            // delete fields that are not part of the request, but set fields accordingly for the expectedResponse
+            // delete fields that are not part of the request, but set fields accordingly for the request
             building["address_id"] = building["address"]["id"];
             delete building["address"];
 
@@ -249,7 +249,6 @@ describe("Building tests", () => {
             delete building["images"];
 
             const expected = {
-                id: 1,
                 name: "Building 1 New",
                 ivago_id: "ivago-1",
                 deleted: false,
