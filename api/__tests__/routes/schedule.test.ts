@@ -26,7 +26,7 @@ describe("Schedule tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("schedule", "progress");
+        await restoreTables();
     });
 
     describe("Successful requests", () => {
