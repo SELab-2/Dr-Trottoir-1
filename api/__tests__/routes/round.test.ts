@@ -341,9 +341,7 @@ describe("Round tests", () => {
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
-            });
 
-            test("Find a nonexistent round", async () => {
                 await runner.get({
                     url: "/round/-1",
                     expectedData: [notFoundResponse],
@@ -352,9 +350,15 @@ describe("Round tests", () => {
             });
 
             test("Update a nonexistent round", async () => {
-                await runner.get({
+                const newRound = {
+                    id: 0,
+                    name: "Updated Round 0",
+                };
+
+                await runner.patch({
                     url: "/round/0",
-                    expectedData: [notFoundResponse],
+                    data: newRound,
+                    expectedResponse: notFoundResponse,
                     statusCode: 404,
                 });
             });
