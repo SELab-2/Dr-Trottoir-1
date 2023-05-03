@@ -13,6 +13,7 @@ import {
     forbiddenResponse,
     notFoundResponse,
 } from "../utilities/constants";
+import { use } from "passport";
 
 describe("User tests", () => {
     let runner: Testrunner;
@@ -35,6 +36,9 @@ describe("User tests", () => {
         );
     });
 
+    /**
+     * Positive tests against the API.
+     */
     describe("Successful requests", () => {
         beforeEach(() => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
@@ -261,6 +265,9 @@ describe("User tests", () => {
             });
         });
     });
+    /**
+     * Negative tests against the API.
+     */
     describe("Unsuccessful requests", () => {
         const user = {
             id: undefined,
@@ -450,6 +457,91 @@ describe("User tests", () => {
                     statusCode: 400,
                 });
             });
+        });
+    });
+    /**
+     * Negative tests against the validation framework
+     */
+    describe("Validation tests", () => {
+        describe("GET validations", () => {
+            test("Parameter id must be a positive integer", async () => {
+                await runner.get({
+                    url: "/user/0",
+                    expectedData: [badRequestResponse],
+                    statusCode: 400,
+                });
+
+                await runner.get({
+                    url: "/user/bogus",
+                    expectedData: [badRequestResponse],
+                    statusCode: 400,
+                });
+            });
+        });
+
+        describe("POST validations", () => {
+            // user to use as template
+            let user: any = {};
+            beforeEach(() => {
+                user = {
+                    email: "foo@bar.com",
+                    first_name: "Foo",
+                    last_name: "Bar",
+                    date_added: "2020-01-01T00:00:00.000Z",
+                    last_login: "2020-01-01T00:00:00.000Z",
+                    phone: "23457890",
+                    address: {
+                        create: {
+                            city: "Gent",
+                            latitude: 100.0,
+                            longitude: 100.0,
+                            number: 1,
+                            street: "street",
+                            zip_code: 1000,
+                        },
+                    },
+                    student: false,
+                    super_student: true,
+                    admin: false,
+                    password: "foobar",
+                };
+            });
+
+            const runTest = async (data: any) => {
+                await runner.post({
+                    url: "/user",
+                    data: user,
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            };
+
+            test("Field email must be a valid email", async () => {
+                user["email"] = "foobar.com";
+                await runTest(user);
+            });
+
+            test("Field first_name must be a nonempty string with at least one non-whitespace character", async () => {
+                // empty string
+                user.first_name = "";
+                await runTest(user);
+
+                // whitespace in string
+                user.first_name = " ";
+                await runTest(user);
+            });
+
+            test("Field last_name must be a nonempty string with at least one non-whitespace character", async () => {
+                user.last_name = "";
+                await runTest(user);
+            });
+
+            test("Field date_added must be an ISO string", async () => {
+                user.date_added = "Non ISO string";
+                await runTest(user);
+            });
+
+            test("Field last_login must be an ISO string that is greater than date_added", async () => {});
         });
     });
 

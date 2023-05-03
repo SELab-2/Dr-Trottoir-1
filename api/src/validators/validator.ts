@@ -1,12 +1,13 @@
 import { celebrate } from "celebrate";
 import Joi from "joi";
+import express from "express";
 
 /**
  * Default Validator class, containing empty rules for body, query and params.
  * To be used as a template for the proper implementation.
  */
 export abstract class Validator {
-    getAllValidator() {
+    getAllValidator(): express.RequestHandler<any> {
         return celebrate({
             body: Joi.object(),
             query: Joi.object(),
@@ -14,7 +15,7 @@ export abstract class Validator {
         });
     }
 
-    getOneValidator() {
+    getOneValidator(): express.RequestHandler<any> {
         return celebrate({
             body: Joi.object(),
             query: Joi.object(),
@@ -22,7 +23,7 @@ export abstract class Validator {
         });
     }
 
-    createOneValidator() {
+    createOneValidator(): express.RequestHandler<any> {
         return celebrate({
             body: Joi.object(),
             query: Joi.object(),
@@ -30,7 +31,7 @@ export abstract class Validator {
         });
     }
 
-    updateOneValidator() {
+    updateOneValidator(): express.RequestHandler<any> {
         return celebrate({
             body: Joi.object(),
             query: Joi.object(),
@@ -38,7 +39,7 @@ export abstract class Validator {
         });
     }
 
-    deleteOneValidator() {
+    deleteOneValidator(): express.RequestHandler<any> {
         return celebrate({
             body: Joi.object(),
             query: Joi.object(),

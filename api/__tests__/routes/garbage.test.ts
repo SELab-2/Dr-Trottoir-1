@@ -10,6 +10,7 @@ import {
     notFoundResponse,
 } from "../utilities/constants";
 
+// turn authentication on, no matter what
 process.env["DISABLE_AUTH"] = "false";
 describe("Garbage tests", () => {
     let runner: Testrunner;
@@ -23,6 +24,9 @@ describe("Garbage tests", () => {
         runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
     });
 
+    /**
+     * Positive tests on the API.
+     */
     describe("Successful requests", () => {
         beforeAll(() => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
@@ -113,7 +117,6 @@ describe("Garbage tests", () => {
 
         test("PATCH /garbage/:id", async () => {
             const expected = {
-                id: 1,
                 pickup_time: "2023-02-02T00:00:00.000Z",
                 action_id: 1,
                 building_id: 1,
@@ -177,8 +180,16 @@ describe("Garbage tests", () => {
         });
     });
 
+    /**
+     * Negative tests on the API.
+     */
     describe("Unsuccessful requests", () => {
         describe("Authentication tests", () => {
+            const garbage = {
+                pickup_time: new Date(2023, 5, 3, 0, 0, 0),
+                action_id: 1,
+                building_id: 1,
+            };
             test("Cannot use any path as unauthorized", async () => {
                 runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
                 await runner.get({
@@ -195,14 +206,14 @@ describe("Garbage tests", () => {
 
                 await runner.post({
                     url: "/garbage",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
 
                 await runner.patch({
                     url: "/garbage/1",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
@@ -222,14 +233,14 @@ describe("Garbage tests", () => {
 
                 await runner.post({
                     url: "/garbage",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
 
                 await runner.patch({
                     url: "/garbage/1",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
@@ -247,14 +258,14 @@ describe("Garbage tests", () => {
             });
             test("Can't GET a non-existent garbage", async () => {
                 await runner.get({
-                    url: "/garbage/0",
+                    url: "/garbage/5",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
             });
             test("Can't PATCH a non-existent garbage", async () => {
                 await runner.patch({
-                    url: "/garbage/0",
+                    url: "/garbage/5",
                     data: { pickup_time: "2023-05-04T12:00:00.000Z" },
                     expectedResponse: notFoundResponse,
                     statusCode: 404,
@@ -262,7 +273,7 @@ describe("Garbage tests", () => {
             });
             test("Can't DELETE a non-existent garbage", async () => {
                 await runner.delete({
-                    url: "/garbage/0",
+                    url: "/garbage/5",
                     statusCode: 404,
                 });
             });
@@ -282,7 +293,7 @@ describe("Garbage tests", () => {
         test("Change action id to non-existent one", async () => {
             await runner.patch({
                 url: "/garbage/1",
-                data: { action_id: 0 },
+                data: { action_id: 5 },
                 expectedResponse: badRequestForeignKey,
                 statusCode: 400,
             });
@@ -291,9 +302,131 @@ describe("Garbage tests", () => {
         test("Change building id to non-existent one", async () => {
             await runner.patch({
                 url: "/garbage/1",
-                data: { building_id: 0 },
+                data: { building_id: 5 },
                 expectedResponse: badRequestForeignKey,
                 statusCode: 400,
+            });
+        });
+    });
+
+    /**
+     * Negative tests on the validation framework.
+     */
+    describe("Validation tests", () => {
+        describe("GET validations", () => {
+            test("Parameter id must have correct type", async () => {
+                await runner.get({
+                    url: "/garbage/bogus",
+                    expectedData: [badRequestResponse],
+                    statusCode: 400,
+                });
+            });
+
+            test("Parameter id must be a positive number", async () => {
+                await runner.get({
+                    url: "/garbage/0",
+                    expectedData: [badRequestResponse],
+                    statusCode: 400,
+                });
+            });
+        });
+
+        describe("POST validations", () => {
+            test("pickup_time must be an ISO formatted string", async () => {
+                const garbage = {
+                    pickup_time: "Non ISO string",
+                    action_id: 1,
+                    building_id: 1,
+                };
+                await runner.post({
+                    url: "/garbage",
+                    data: garbage,
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+            test("building_id must be a positive integer", async () => {
+                const garbage = {
+                    pickup_time: "2023-05-04T12:00:00.000Z",
+                    action_id: 1,
+                    building_id: "bogus",
+                };
+
+                await runner.post({
+                    url: "/garbage",
+                    data: garbage,
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+
+            test("pickup_time, action_id, and building_id  must all be present", async () => {
+                const garbage = {
+                    pickup_time: "2023-05-04T12:00:00.000Z",
+                    action_id: "bogus",
+                    building_id: 1,
+                };
+
+                await runner.post({
+                    url: "/garbage",
+                    data: garbage,
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+        });
+
+        describe("PATCH validations", () => {
+            test("pickup_time must be an ISO formatted string", async () => {
+                const garbage = {
+                    pickup_time: "Non ISO string",
+                };
+                await runner.patch({
+                    url: "/garbage/1",
+                    data: garbage,
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+
+            test("action_id must be a positive integer", async () => {
+                const garbage = {
+                    action_id: "bogus",
+                };
+
+                await runner.patch({
+                    url: "/garbage/1",
+                    data: garbage,
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+
+            test("building_id must be a positive integer", async () => {
+                const garbage = {
+                    building_id: "bogus",
+                };
+
+                await runner.patch({
+                    url: "/garbage/1",
+                    data: garbage,
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+        });
+
+        describe("DELETE validations", () => {
+            test("Parameter id must be a positive integer", async () => {
+                await runner.delete({
+                    url: "/garbage/0",
+                    statusCode: 400,
+                });
+
+                await runner.delete({
+                    url: "/garbage/bogus",
+                    statusCode: 400,
+                });
             });
         });
     });

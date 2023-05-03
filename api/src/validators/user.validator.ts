@@ -1,0 +1,75 @@
+import { Validator } from "./validator";
+import { celebrate } from "celebrate";
+import Joi from "joi";
+
+export class UserValidator extends Validator {
+    getOneValidator() {
+        return celebrate({
+            params: Joi.object({
+                id: Joi.number().positive().required(),
+            }),
+        });
+    }
+
+    createOneValidator() {
+        return celebrate({
+            body: Joi.object({
+                email: Joi.string().email().required(),
+                first_name: Joi.string().trim().min(1).required(),
+                last_name: Joi.string().trim().min(1).required(),
+                date_added: Joi.date().required(),
+                last_login: Joi.date()
+                    .greater(Joi.ref("date_added"))
+                    .required(),
+                phone: Joi.string()
+                    .trim()
+                    .min(1)
+                    // accept a potential + sign at the beginning of the number and at least 1 digit
+                    .regex(/^\\+?d\\+$/)
+                    .required(),
+                address_id: Joi.number().positive().required(),
+                student: Joi.boolean().required(),
+                super_student: Joi.boolean().required(),
+                admin: Joi.boolean().required(),
+                password: Joi.string().min(1).required(),
+                hash: Joi.forbidden(),
+                salt: Joi.forbidden(),
+            }),
+        });
+    }
+
+    updateOneValidator() {
+        return celebrate({
+            body: {
+                email: Joi.string().email(),
+                first_name: Joi.string().min(1),
+                last_name: Joi.string().min(1),
+                date_added: Joi.date(),
+                last_login: Joi.date().less(Joi.ref("date_added")),
+                phone: Joi.string()
+                    .min(1)
+                    // accept a potential + sign at the beginning of the number and at least 1 digit
+                    .regex(/^\\+?d\\+$/),
+                address_id: Joi.number().positive(),
+                student: Joi.boolean(),
+                super_student: Joi.boolean(),
+                admin: Joi.boolean(),
+                password: Joi.string().min(1),
+            },
+            params: Joi.object({
+                id: Joi.number().positive().required(),
+            }),
+        });
+    }
+
+    deleteOneValidator() {
+        return celebrate({
+            body: Joi.object({
+                hardDelete: Joi.boolean(),
+            }),
+            params: Joi.object({
+                id: Joi.number().positive().required(),
+            }),
+        });
+    }
+}

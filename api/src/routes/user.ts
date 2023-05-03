@@ -7,6 +7,8 @@ import crypto from "crypto";
 import { Prisma, User } from "@selab-2/groep-1-orm";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import { UserValidator } from "../validators/user.validator";
+import { Validator } from "../validators/validator";
 
 export class UserRouting extends Routing {
     private static selects: Prisma.UserSelect = {
@@ -177,5 +179,9 @@ export class UserRouting extends Routing {
             });
         }
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new UserValidator();
     }
 }
