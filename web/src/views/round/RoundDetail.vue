@@ -3,7 +3,7 @@
     <HFillWrapper>
       <div class="space-y">
         <div style="margin-bottom: 0; display: flex; gap: 12px">
-          <h2 class='ml-1'>{{ data.round.name }}</h2>
+          <h2>{{ data.round.name }}</h2>
           <div class="flex-grow-1"></div>
           <CardLayout
             class="pa-1 d-flex align-center"
@@ -19,10 +19,10 @@
             </p>
           </CardLayout>
         </div>
-        <RoundedButton
-          icon="mdi-calendar"
-          :value="new Date(data.day).toLocaleDateString()"
-        ></RoundedButton>
+        <p>
+          <v-icon icon="mdi-calendar"/>
+          {{new Date(data.day).toLocaleDateString()}}
+        </p>
 
         <!-- TODO add description (not in api) -->
         <p>
@@ -110,7 +110,6 @@ import CardLayout from "@/layouts/CardLayout.vue";
 import Avatar from "@/components/Avatar.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
 import Button from "@/components/models/Button";
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import RoundDetailCard from "@/components/round/RoundDetailCard.vue";
 import { useDisplay } from "vuetify";
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
@@ -158,7 +157,7 @@ tryOrAlertAsync(async () => {
 });
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
 .space-y
   max-width: 100%
   & > *
@@ -176,4 +175,7 @@ tryOrAlertAsync(async () => {
   display: flex
   align-items: center
   gap: 12px
+
+.v-timeline-item__body
+  padding-inline-start: 12px !important
 </style>
