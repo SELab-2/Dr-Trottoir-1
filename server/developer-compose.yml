@@ -44,6 +44,7 @@ services:
                 NPM_AUTH_TOKEN: ${NPM_AUTH_TOKEN}
         environment:
             DATABASE_URL: "postgresql://postgres:postgres@10.0.0.3:5432/main"
+            CORS: "http://10.0.0.6:3000"
         restart: always
         networks:
             selab2:
