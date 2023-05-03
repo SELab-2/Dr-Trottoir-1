@@ -54,7 +54,7 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
 type BuildingAnalytics = {
     name: string;
     expected: number | null;
-    average: number;
+    total: number;
 };
 
 export class BuildingQuery extends Query<
@@ -135,7 +135,7 @@ export class BuildingQuery extends Query<
             const analysis = {
                 name: building.name,
                 expected: building.expected_time,
-                average: time,
+                total: time,
             };
             analytics.push(analysis);
         }
