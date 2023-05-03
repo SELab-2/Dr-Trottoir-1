@@ -2,7 +2,11 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import { deleteDatabaseData, initialiseDatabase } from "../mock/database";
+import {
+    deleteDatabaseData,
+    initialiseDatabase,
+    restoreTables,
+} from "../mock/database";
 
 describe("Address tests", () => {
     let runner: Testrunner;
@@ -21,6 +25,10 @@ describe("Address tests", () => {
     afterAll(async () => {
         await deleteDatabaseData();
         await initialiseDatabase();
+    });
+
+    afterEach(async () => {
+        await restoreTables();
     });
 
     describe("Succesful requests", () => {
