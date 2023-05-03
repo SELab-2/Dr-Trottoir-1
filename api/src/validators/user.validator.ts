@@ -18,16 +18,27 @@ export class UserValidator extends Validator {
                 first_name: Joi.string().trim().min(1).required(),
                 last_name: Joi.string().trim().min(1).required(),
                 date_added: Joi.date().required(),
-                last_login: Joi.date()
-                    .greater(Joi.ref("date_added"))
-                    .required(),
+                last_login: [
+                    Joi.date().greater(Joi.ref("date_added")).required(),
+                    Joi.date().equal(Joi.ref("date_added")).required(),
+                ],
                 phone: Joi.string()
                     .trim()
                     .min(1)
                     // accept a potential + sign at the beginning of the number and at least 1 digit
-                    .regex(/^\\+?d\\+$/)
+                    .regex(/^\+?\d+$/)
                     .required(),
-                address_id: Joi.number().positive().required(),
+                address: Joi.object({
+                    create: Joi.object({
+                        city: Joi.string().trim().min(1),
+                        latitude: Joi.number().min(-90).max(90),
+                        longitude: Joi.number().min(-180).max(180),
+                        number: Joi.number(),
+                        street: Joi.string().trim().min(1),
+                        zip_code: Joi.number(),
+                    }),
+                }),
+
                 student: Joi.boolean().required(),
                 super_student: Joi.boolean().required(),
                 admin: Joi.boolean().required(),
