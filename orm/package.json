@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",
-    "@selab-2/groep-1-orm": "^1.0.14",
     "dotenv": "^16.0.3"
   }
 }
