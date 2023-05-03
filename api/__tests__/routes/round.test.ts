@@ -27,7 +27,7 @@ describe("Round tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("round", "round_building", "schedule");
+        await restoreTables();
     });
 
     describe("Succesful requests", () => {
