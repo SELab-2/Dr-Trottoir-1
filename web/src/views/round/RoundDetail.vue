@@ -64,7 +64,10 @@
             size="large"
             width="100%"
           >
-            <RoundDetailCard :entry="entry" />
+            <RoundDetailCard
+              :key='entry'
+              :entry="entry"
+            />
           </v-timeline-item>
 
           <v-timeline-item
@@ -88,15 +91,15 @@ import { Ref, ref } from "vue";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
-import RoundDetailCard from "@/components/cards/RoundDetailCard.vue";
 import Avatar from "@/components/Avatar.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
 import Button from "@/components/models/Button";
+import RoundedButton from "@/components/buttons/RoundedButton.vue";
+import RoundDetailCard from "@/components/round/RoundDetailCard.vue";
+import { useDisplay } from "vuetify";
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRoute } from "vue-router";
-import { useDisplay } from "vuetify";
 
 const actions: Button[] = [
   {
@@ -124,12 +127,16 @@ const mobile = display.mobile;
 
 tryOrAlertAsync(async () => {
   data.value = await new ScheduleQuery().getOne(schedule_id);
-});
 
-tryOrAlertAsync(async () => {
-  for (const progress of await new ProgressQuery().getAll()) {
+  for (const progress of await new ProgressQuery().getAll({
+    schedule: schedule_id,
+  })) {
     progressItems.value.set(progress.building_id, progress);
   }
+
+  /*if (progressItems.value.size !== data.value?.round.buildings.length) {
+    throw new Error("Not every building has a progress item");
+  }*/
 });
 </script>
 
@@ -138,4 +145,17 @@ tryOrAlertAsync(async () => {
   max-width: 100%
   & > *
     margin-bottom: 24px
+
+.header
+  display: flex
+  align-items: center
+  gap: 12px
+
+  @media (max-width: 700px)
+    flex-direction: column
+
+.header-buttons
+  display: flex
+  align-items: center
+  gap: 12px
 </style>

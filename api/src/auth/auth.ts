@@ -57,7 +57,8 @@ export class Auth {
                 // Check for student privileges
                 if (
                     options.student &&
-                    !(req.user?.student || req.user?.super_student)
+                    !req.user?.student &&
+                    !req.user?.super_student
                 ) {
                     throw new APIError(APIErrorCode.FORBIDDEN);
                 }

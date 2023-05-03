@@ -40,8 +40,9 @@ Je hebt Docker met de Docker Compose plugin nodig om deze te kunnen uitvoeren.
 De diensten zijn zo opgezet dat de afhankelijkheden van de verschillende diensten automatisch opgestart worden. Zo is API afhankelijk van de databank, dus deze wordt ook opgestart.
 
 De diensten gebruiken omgevingsvariabelen opgeslagen in .env bestanden. De nodige variabelen voor lokale ontwikkeling zijn opgeslagen in `server/developer.env`.
-De script `generate_mock.sh` zal de reeds bestaande `.env` bestanden opslaan in `.env.bak` vooralleer ze worden overschreven.
-Vervolgens zat het de lokale databank vullen met mock data.
+Je wordt verwacht om de NPM_AUTH_TOKEN te invullen in de .env met de Personal Access Token die je via Github kunt aanmaken. Deze key heeft de "repo", "workflow" en "read:packages" permissies nodig.
+De script `generate_data.sh` zal de reeds bestaande `.env` bestanden opslaan in `.env.bak` vooralleer ze worden overschreven.
+Vervolgens zat het de lokale databank vullen met test data.
 
 ```bash
 # bouw de diensten op
@@ -50,7 +51,7 @@ docker compose --file=developer-compose.yml build
 docker compose --file=developer-compose.yml up -d
 
 # vul de databank met mock data
-./generate_mock.sh
+./generate_data.sh
 
 # stop de diensten
 docker compose --file=developer-compose.yml down

@@ -42,6 +42,14 @@ npm install
 npx prisma generate
 ```
 
+#### CORS
+
+De applicatie wordt beveiligd met CORS. Aangeven welke oorsprong toegestaan is doen we aan de hand van de _environment variabele_ `CORS`.
+
+```
+CORS=http://localhost:3000
+```
+
 #### Hot-reload en TypeScript compilatie
 
 Om de API te testen tijdens het ontwikkelen maak je gebruik van het `npm start serve` commando. Deze zal automatisch TypeScript files compileren naar `/api/dist`, alsook de webserver starten en herstarten wanneer de broncode gewijzigd wordt. Dat laatste kan wel een seconde of twee in beslag nemen, waarbij je een `Connection refused` foutmelding kan ontvangen bij je client.

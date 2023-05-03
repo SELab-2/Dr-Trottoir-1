@@ -8,7 +8,7 @@
         cursor: pointer;
         gap: 12px;
       "
-      class="px-8 pb-8"
+      class="pl-8 pb-8 pr-3"
       @click="
         router.push({
           name: 'building_id',
@@ -28,6 +28,7 @@
         </p>
       </div>
       <div class="flex-grow-1"></div>
+
       <div class="d-flex" v-if="!mobile">
         <!-- TODO make also visible on mobile -->
         <RoundedButton
@@ -40,6 +41,7 @@
               minute: '2-digit',
             })
           "
+          @click.stop="() => start()"
         ></RoundedButton>
         <RoundedButton
           class="mx-1"
@@ -51,9 +53,10 @@
               minute: '2-digit',
             })
           "
+          @click.stop="() => end()"
         ></RoundedButton>
       </div>
-      <v-icon icon="mdi-chevron-right"></v-icon>
+      <v-icon icon="mdi-chevron-right" />
       <v-btn
         @click.stop="expanded = !expanded"
         :icon="expanded ? 'mdi-menu-up' : 'mdi-menu-down'"
@@ -61,32 +64,51 @@
         variant="text"
       />
     </div>
+
     <v-expand-transition v-on:click.stop>
       <div v-show="expanded" class="px-8 pb-8">
         <divider-layout
-          v-if="entry.progress?.report"
           class="mb-4"
         ></divider-layout>
-        <div v-if="entry.progress?.report">
-          <div style="display: flex; align-items: center">
-            <h3 class="mb-2">Notities</h3>
-            <div class="flex-grow-1"></div>
-          </div>
-          <p>{{ entry.progress.report }}</p>
-          <RoundedButton
-            icon="mdi-pencil"
-            value="Bewerken"
-            class="mt-4"
-          ></RoundedButton>
-        </div>
+
+        <p v-if="!editMode">{{ progress?.report }}</p>
+        <!-- eslint-disable-next-line vue/no-mutating-props -->
+        <v-text-field
+          type="text"
+          v-else
+          v-model="progress.report"
+          style="margin-bottom: -20px"
+        ></v-text-field>
+        <RoundedButton
+          v-if="editMode"
+          icon="mdi-check"
+          value="Opslaan"
+          class="mt-4"
+          @click="() => report()"
+        ></RoundedButton>
+        <RoundedButton
+          v-else-if="progress?.report !== ''"
+          icon="mdi-pencil"
+          value="Bewerken"
+          class="mt-4"
+          @click="() => (editMode = !editMode)"
+        ></RoundedButton>
+        <RoundedButton
+          v-else
+          icon="mdi-plus"
+          value="Toevoegen"
+          class="mt-4"
+          @click="() => (editMode = !editMode)"
+        ></RoundedButton>
 
         <divider-layout class="my-4" />
+
         <div>
           <h3 class="mb-2">Afbeeldingen</h3>
-          <div class="carousel" v-if="entry.progress?.images.length ?? 0 > 0">
+          <div class="carousel" v-if="progress?.images.length ?? 0 > 0">
             <div
               class="carousel-item"
-              v-for="image in entry.progress?.images"
+              v-for="image in progress?.images"
               :key="image.id"
             >
               <img
@@ -104,6 +126,7 @@
             icon="mdi-plus"
             value="Toevoegen"
             class="mt-4"
+            @click="() => addImage()"
           ></RoundedButton>
         </div>
       </div>
@@ -118,8 +141,12 @@ import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useDisplay } from "vuetify";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { tryOrAlertAsync } from '@/try'
+import { ProgressQuery } from '@selab-2/groep-1-query'
+import { useAuthStore } from '@/stores/auth'
 
-defineProps(["entry"]);
+const props = defineProps(["entry"]);
+const progress = ref(props.entry.progress);
 
 const router = useRouter();
 
@@ -127,6 +154,48 @@ const display = useDisplay();
 const mobile = display.mobile;
 
 const expanded = ref<Boolean>(false);
+const editMode = ref(false);
+
+function report() {
+  tryOrAlertAsync(async () => {
+    progress.value = await new ProgressQuery().updateOne({
+      id: progress.value.id,
+      report: progress.value.report,
+    });
+    editMode.value = !editMode.value;
+  });
+}
+
+function start() {
+  tryOrAlertAsync(async () => {
+    progress.value = await new ProgressQuery().updateOne({
+      id: progress.value.id,
+      arrival: new Date(),
+    });
+  });
+}
+
+function end() {
+  tryOrAlertAsync(async () => {
+    progress.value = await new ProgressQuery().updateOne({
+      id: progress.value.id,
+      departure: new Date(),
+    });
+  });
+}
+
+function addImage() {
+  tryOrAlertAsync(async () => {
+    progress.value = await new ProgressQuery().createImage(progress.value.id, {
+      location: "EXTERNAL",
+      description: "Net aangemaakt",
+      path: "/",
+      time: new Date(),
+      type: "GARBAGE",
+      user_id: useAuthStore().auth?.id ?? -1,
+    });
+  });
+}
 </script>
 
 <style scoped lang="sass">

@@ -1,256 +1,544 @@
-import app from "../../src/main";
+import { afterAll, beforeAll, describe, test } from "@jest/globals";
+import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
-import { describe, expect, test } from "@jest/globals";
-import supertest from "supertest";
+import app from "../../src/main";
+import {
+    deleteDatabaseData,
+    initialiseDatabase,
+    restoreTables,
+} from "../mock/database";
+import {
+    badRequestForeignKey,
+    badRequestResponse,
+    forbiddenResponse,
+    notFoundResponse,
+} from "../utilities/constants";
 
-const buildingToCreate = {
-    name: "BuildingName",
-    ivago_id: "1234567890",
-    syndicus_id: undefined,
-    address_id: undefined,
-    manual_id: 1,
-};
-
-const building = {
-    id: undefined,
-    name: "BuildingName",
-    ivago_id: "1234567890",
-    syndicus: {
-        id: undefined,
-        user_id: undefined,
-        user: undefined,
-    },
-    address: undefined,
-    manual: {
-        id: 1,
-        path: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-        location: "EXTERNAL",
-    },
-    images: [],
-    deleted: false,
-};
-
-// schakel authenticatie in, ongeacht wat de runner in zijn .env heeft
-process.env["DISABLE_AUTH"] = "false";
-
-// Voor de testen uitgevoerd worden, moet de sessie gestart worden en moet autorisatie verkregen en bewaard worden.
-// Daarnaast moeten bepaalde waarden aan de databank toegevoegd worden die gebruikt zullen worden in de testen.
-async function prepareSession(): Promise<[supertest.SuperTest<any>, string]> {
-    // Sessie starten en inloggen voor autorisatie
-    const session = request(app);
-    const resultLogin = await session.post("/auth/login").send({
-        username: "administrator@trottoir.be",
-        password: "password",
-    });
-    expect(resultLogin.status).toEqual(302);
-    expect(resultLogin.headers).toHaveProperty("set-cookie");
-
-    const cookies = resultLogin.headers["set-cookie"].pop().split(";")[0];
-
-    // adres van een willekeurige gebruiker opzoeken
-    const resultUser = await session.get("/user").set("Cookie", [cookies]);
-    const user = resultUser.body[0];
-    buildingToCreate.address_id = user.address_id;
-    building.address = user.address;
-
-    // Nieuwe syndicus toevoegen om te gebruiken bij het aanmaken van het gebouw
-    const resultSyndicus = await session
-        .post("/syndicus")
-        .send({ user_id: user.id })
-        .set("Cookie", [cookies]);
-    buildingToCreate.syndicus_id = resultSyndicus.body.id;
-
-    // Gebouw toevoegen om te gebruiken tijdens de testen.
-    const resultAdd = await session
-        .post("/building")
-        .send(buildingToCreate)
-        .set("Cookie", [cookies]);
-    expect(resultAdd.status).toEqual(201);
-    building.id = resultAdd.body.id;
-    building.syndicus.id = buildingToCreate.syndicus_id;
-    building.syndicus.user_id = user.id;
-    building.manual.id = 1;
-    delete user.address;
-    delete user.regions;
-    building.syndicus.user = user;
-
-    return [session, cookies];
-}
-
-async function closeSession(
-    session: supertest.SuperTest<any>,
-    cookies: string,
-) {
-    // Toegevoegde gebouw terug verwijderen uit de databank
-    const resultDelete = await session
-        .delete("/building/" + building.id)
-        .send({ hardDelete: true })
-        .set("Cookie", [cookies]);
-    expect(resultDelete.status).toEqual(200);
-
-    const resultDeleteSyndicus = await session
-        .delete("/syndicus/" + buildingToCreate.syndicus_id)
-        .set("Cookie", [cookies]);
-    expect(resultDeleteSyndicus.status).toEqual(200);
-}
-
-describe("Test BuildingRouting successful tests", () => {
-    let session: any;
-    let cookies: string;
+describe("Building tests", () => {
+    let runner: Testrunner;
 
     beforeAll(async () => {
-        const session_cookies = await prepareSession();
-        session = session_cookies[0];
-        cookies = session_cookies[1];
+        const server = request(app);
+        runner = new Testrunner(server);
+
+        await deleteDatabaseData();
+        await initialiseDatabase();
     });
 
-    // Na het uitvoeren van alle testen moeten zowel het gebouw als de syndicus terug verwijderd worden uit de databank.
-    afterAll(async () => {
-        await closeSession(session, cookies);
+    afterEach(async () => {
+        await restoreTables(
+            "building",
+            "building_image",
+            "garbage",
+            "round_building",
+            "progress",
+        );
     });
 
-    test("Test searching existing building", async () => {
-        const result = await session
-            .get("/building/" + building.id)
-            .set("Cookie", [cookies]);
-        expect(result.status).toEqual(200);
-        expect(result.body).toEqual(building);
+    describe("Succesful requests", () => {
+        beforeEach(() => {
+            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+        });
+
+        test("GET /building", async () => {
+            const buildings = [
+                {
+                    address: {
+                        city: "Sydney",
+                        id: 1,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                        number: 42,
+                        street: "Wallaby Way",
+                        zip_code: 2000,
+                    },
+                    deleted: false,
+                    id: 1,
+                    images: [
+                        {
+                            building_id: 1,
+                            id: 1,
+                            image: {
+                                id: 1,
+                                location: "FILE_SERVER",
+                                path: "path/to/file_server_image",
+                                time: "2023-05-04T12:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 1,
+                        },
+                    ],
+                    ivago_id: "ivago-1",
+                    manual: {
+                        id: 1,
+                        location: "STATIC_FILES",
+                        path: "path/to/static_file",
+                    },
+                    name: "Building 1",
+                    syndicus: {
+                        id: 1,
+                        user: {
+                            address_id: 3,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "syndicus@trottoir.be",
+                            first_name: "Simon",
+                            id: 4,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Syndicus",
+                            phone: "7894561230",
+                            student: false,
+                            super_student: false,
+                        },
+                        user_id: 4,
+                    },
+                },
+                {
+                    address: {
+                        city: "Ghent",
+                        id: 2,
+                        latitude: 51.04732,
+                        longitude: 3.7282,
+                        number: 25,
+                        street: "Sint-Pietersnieuwstraat",
+                        zip_code: 9000,
+                    },
+                    deleted: false,
+                    id: 2,
+                    images: [
+                        {
+                            building_id: 2,
+                            id: 2,
+                            image: {
+                                id: 2,
+                                location: "IMGPROXY",
+                                path: "path/to/img_proxy_image",
+                                time: "2023-05-04T12:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 2,
+                        },
+                    ],
+                    ivago_id: "ivago-2",
+                    manual: {
+                        id: 2,
+                        location: "IMGPROXY",
+                        path: "path/to/imgproxy_file",
+                    },
+                    name: "Building 2",
+                    syndicus: {
+                        id: 2,
+                        user: {
+                            address_id: 1,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "student@trottoir.be",
+                            first_name: "Dirk",
+                            id: 1,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Student",
+                            phone: "0123456789",
+                            student: true,
+                            super_student: false,
+                        },
+                        user_id: 1,
+                    },
+                },
+            ];
+
+            await runner.get({
+                url: "/building",
+                expectedData: buildings,
+            });
+        });
+
+        describe("GET /building/:id with different roles", () => {
+            const building = {
+                address: {
+                    city: "Sydney",
+                    id: 1,
+                    latitude: -33.865143,
+                    longitude: 151.2099,
+                    number: 42,
+                    street: "Wallaby Way",
+                    zip_code: 2000,
+                },
+                deleted: false,
+                id: 1,
+                images: [
+                    {
+                        building_id: 1,
+                        id: 1,
+                        image: {
+                            id: 1,
+                            location: "FILE_SERVER",
+                            path: "path/to/file_server_image",
+                            time: "2023-05-04T12:00:00.000Z",
+                            user_id: 1,
+                        },
+                        image_id: 1,
+                    },
+                ],
+                ivago_id: "ivago-1",
+                manual: {
+                    id: 1,
+                    location: "STATIC_FILES",
+                    path: "path/to/static_file",
+                },
+                name: "Building 1",
+                syndicus: {
+                    id: 1,
+                    user: {
+                        address_id: 3,
+                        admin: false,
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        email: "syndicus@trottoir.be",
+                        first_name: "Simon",
+                        id: 4,
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        last_name: "De Syndicus",
+                        phone: "7894561230",
+                        student: false,
+                        super_student: false,
+                    },
+                    user_id: 4,
+                },
+            };
+
+            test("GET /building/:id as Student", async () => {
+                runner.authLevel(AuthenticationLevel.STUDENT);
+
+                await runner.get({
+                    url: "/building/1",
+                    expectedData: [building],
+                });
+            });
+
+            test("GET /building/:id as Superstudent", async () => {
+                runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+                await runner.get({
+                    url: "/building/1",
+                    expectedData: [building],
+                });
+            });
+
+            test("GET /building/:id as Admin", async () => {
+                runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+                await runner.get({
+                    url: "/building/1",
+                    expectedData: [building],
+                });
+            });
+        });
+
+        test("PATCH /building/:id", async () => {
+            const building = (await runner.getRaw("/building/1")).body;
+            building["name"] = "Building 1 New";
+            // delete fields that are not part of the request, but set fields accordingly for the expectedResponse
+            building["address_id"] = building["address"]["id"];
+            delete building["address"];
+
+            building["syndicus_id"] = building["syndicus"]["id"];
+            delete building["syndicus"];
+
+            building["manual_id"] = building["manual"]["id"];
+            delete building["manual"];
+            delete building["images"];
+
+            const expected = {
+                id: 1,
+                name: "Building 1 New",
+                ivago_id: "ivago-1",
+                deleted: false,
+                address: {
+                    id: 1,
+                    street: "Wallaby Way",
+                    number: 42,
+                    city: "Sydney",
+                    zip_code: 2000,
+                    latitude: -33.865143,
+                    longitude: 151.2099,
+                },
+                syndicus: {
+                    id: 1,
+                    user_id: 4,
+                    user: {
+                        id: 4,
+                        email: "syndicus@trottoir.be",
+                        first_name: "Simon",
+                        last_name: "De Syndicus",
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        phone: "7894561230",
+                        address_id: 3,
+                        student: false,
+                        super_student: false,
+                        admin: false,
+                        deleted: false,
+                    },
+                },
+                manual: {
+                    id: 1,
+                    path: "path/to/static_file",
+                    location: "STATIC_FILES",
+                },
+                images: [
+                    {
+                        id: 1,
+                        building_id: 1,
+                        image_id: 1,
+                        image: {
+                            id: 1,
+                            time: "2023-05-04T12:00:00.000Z",
+                            location: "FILE_SERVER",
+                            path: "path/to/file_server_image",
+                            user_id: 1,
+                        },
+                    },
+                ],
+            };
+
+            await runner.patch({
+                url: "/building/1",
+                data: building,
+                expectedResponse: expected,
+            });
+        });
+
+        test("POST /building", async () => {
+            const building = {
+                name: "new building",
+                ivago_id: "ivago-new",
+                address_id: 3,
+                manual_id: 3,
+                syndicus_id: 1,
+            };
+
+            const expectedBuilding = {
+                name: "new building",
+                ivago_id: "ivago-new",
+                deleted: false,
+                address: {
+                    id: 3,
+                    street: "Krijgslaan",
+                    number: 281,
+                    city: "Ghent",
+                    zip_code: 9000,
+                    latitude: 51.02776,
+                    longitude: 3.71847,
+                },
+                syndicus: {
+                    id: 1,
+                    user_id: 4,
+                    user: {
+                        id: 4,
+                        email: "syndicus@trottoir.be",
+                        first_name: "Simon",
+                        last_name: "De Syndicus",
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        phone: "7894561230",
+                        address_id: 3,
+                        student: false,
+                        super_student: false,
+                        admin: false,
+                        deleted: false,
+                    },
+                },
+                manual: {
+                    id: 3,
+                    path: "path/to/file_server_file",
+                    location: "FILE_SERVER",
+                },
+                images: [],
+            };
+
+            await runner.post({
+                url: "/building",
+                data: building,
+                expectedResponse: expectedBuilding,
+                statusCode: 201,
+            });
+        });
+
+        test("DELETE /building/:id", async () => {
+            await runner.delete({
+                url: "/building/1",
+            });
+        });
+    });
+    describe("Unsuccessful requests", () => {
+        describe("Must have correct authorisation", () => {
+            const newBuilding = {
+                name: "new building",
+                ivago_id: "ivago-new",
+                address_id: 3,
+                manual_id: 3,
+                syndicus_id: 1,
+            };
+            describe("Can't use any path unauthorized", () => {
+                beforeEach(() => {
+                    runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
+                });
+                test("Can't GET /building", async () => {
+                    await runner.get({
+                        url: "/building",
+                        expectedData: [forbiddenResponse],
+                        statusCode: 403,
+                    });
+                });
+                test("Can't GET /building/:id", async () => {
+                    await runner.get({
+                        url: "/building/1",
+                        expectedData: [forbiddenResponse],
+                        statusCode: 403,
+                    });
+                });
+                test("Can't POST /building", async () => {
+                    await runner.post({
+                        url: "/building",
+                        data: newBuilding,
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
+                test("Can't PATCH /building/:id", async () => {
+                    await runner.patch({
+                        url: "/building/1",
+                        data: { name: "Adapted Building" },
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
+                test("Can't DELETE /building/:id", async () => {
+                    await runner.delete({
+                        url: "/building/1",
+                        statusCode: 403,
+                    });
+                });
+            });
+            describe("Can't use any path as Student except concrete GET", () => {
+                beforeEach(() => {
+                    runner.authLevel(AuthenticationLevel.STUDENT);
+                });
+                test("Can't GET /building", async () => {
+                    await runner.get({
+                        url: "/building",
+                        expectedData: [forbiddenResponse],
+                        statusCode: 403,
+                    });
+                });
+                test("Can't POST /building", async () => {
+                    await runner.post({
+                        url: "/building",
+                        data: newBuilding,
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
+                test("Can't PATCH /building/:id", async () => {
+                    await runner.patch({
+                        url: "/building/1",
+                        data: { name: "Adapted Building" },
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
+                test("Can't DELETE /building/:id", async () => {
+                    await runner.delete({
+                        url: "/building/1",
+                        statusCode: 403,
+                    });
+                });
+            });
+        });
+        describe("Cannot assign non-existent IDs", () => {
+            beforeEach(() => {
+                runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+            });
+            test("Cannot assign non-existent syndicus ID", async () => {
+                await runner.patch({
+                    url: "/building/1",
+                    data: {
+                        syndicus_id: 0,
+                    },
+                    expectedResponse: badRequestForeignKey,
+                    statusCode: 400,
+                });
+            });
+            test("Cannot assign non-existent address ID", async () => {
+                await runner.patch({
+                    url: "/building/1",
+                    data: { address_id: 0 },
+                    expectedResponse: badRequestForeignKey,
+                    statusCode: 400,
+                });
+            });
+            test("Cannot assign non-existent manual ID", async () => {
+                await runner.patch({
+                    url: "/building/1",
+                    data: { manual_id: 0 },
+                    expectedResponse: badRequestForeignKey,
+                    statusCode: 400,
+                });
+            });
+        });
+        describe("Cannot query for non-existent buildings ", () => {
+            beforeEach(() => {
+                runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+            });
+            test("Cannot GET /building/20", async () => {
+                await runner.get({
+                    url: "/building/20",
+                    expectedData: [notFoundResponse],
+                    statusCode: 404,
+                });
+            });
+
+            test("Cannot PATCH /building/20", async () => {
+                await runner.patch({
+                    url: "/building/20",
+                    data: { name: "New Building Name" },
+                    expectedResponse: notFoundResponse,
+                    statusCode: 404,
+                });
+            });
+
+            test("Cannot DELETE /building/20", async () => {
+                await runner.delete({
+                    url: "/building/20",
+                    statusCode: 404,
+                });
+            });
+        });
+        describe("Cannot change buildings using wrong types", () => {
+            beforeEach(() => {
+                runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+            });
+
+            test("PATCH using wrong key", async () => {
+                await runner.patch({
+                    url: "/building/1",
+                    data: { bad_key: "foo" },
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+            test("PATCH with correct key but wrong value type", async () => {
+                await runner.patch({
+                    url: "/building/1",
+                    data: { name: 5 }, // int instead of string
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+        });
     });
 
-    test("Test updating existing building", async () => {
-        const changedBuilding = {
-            id: building.id,
-            name: "NewName",
-            ivago_id: building.ivago_id,
-            syndicus_id: buildingToCreate.syndicus_id,
-            address_id: buildingToCreate.address_id,
-            manual_id: buildingToCreate.manual_id,
-            deleted: false,
-        };
-
-        const result = await session
-            .patch("/building/" + building.id)
-            .send({ name: "NewName" })
-            .set("Cookie", [cookies]);
-        expect(result.status).toEqual(200);
-        expect(result.body).toEqual(changedBuilding);
-
-        building.name = changedBuilding.name;
+    afterAll(() => {
+        app.close();
     });
 });
-
-describe("Test BuildingRouting unsuccessful tests", () => {
-    let session: any;
-    let cookies: string;
-
-    beforeAll(async () => {
-        const session_cookies = await prepareSession();
-        session = session_cookies[0];
-        cookies = session_cookies[1];
-    });
-
-    // Na het uitvoeren van alle testen moeten zowel het gebouw als de syndicus terug verwijderd worden uit de databank.
-    afterAll(async () => {
-        await closeSession(session, cookies);
-    });
-
-    // Bij deze test wordt er niet ingelogd en heeft de sessie dus geen autorisatie om request uit te voeren.
-    test("Test authorization", async () => {
-        const resultGet = await session.get("/building");
-        expect(resultGet.status).toEqual(403);
-        expect(resultGet.forbidden).toEqual(true);
-
-        const resultGetId = await session.get("/building/" + building.id);
-        expect(resultGetId.status).toEqual(403);
-        expect(resultGetId.forbidden).toEqual(true);
-
-        const resultAdd = await session
-            .post("/building")
-            .send(buildingToCreate);
-        expect(resultAdd.status).toEqual(403);
-        expect(resultAdd.forbidden).toEqual(true);
-
-        const resultUpdate = await session
-            .patch("/building/" + building.id)
-            .send(buildingToCreate);
-        expect(resultUpdate.status).toEqual(403);
-        expect(resultUpdate.forbidden).toEqual(true);
-
-        const resultDelete = await session.delete("/building/" + building.id);
-        expect(resultDelete.status).toEqual(403);
-        expect(resultDelete.forbidden).toEqual(true);
-    });
-
-    // Deze test probeert de id's van syndicus, address en manual te wijzigen naar onbestaande id's
-    test("Test id's to unexisting id's", async () => {
-        const resultSyndicus = await session
-            .patch("/building/" + building.id)
-            .send({ syndicus_id: 0 })
-            .set("Cookie", [cookies]);
-        expect(resultSyndicus.status).toEqual(500);
-
-        const resultAddress = await session
-            .patch("/building/" + building.id)
-            .send({ address_id: 0 })
-            .set("Cookie", [cookies]);
-        expect(resultAddress.status).toEqual(500);
-
-        const resultManual = await session
-            .patch("/building/" + building.id)
-            .send({ manual_id: 0 })
-            .set("Cookie", [cookies]);
-        expect(resultManual.status).toEqual(500);
-    });
-
-    // Deze test probeert requests uit te voeren op een onbestaand gebouw
-    test("Test using an unexisting building", async () => {
-        const resultGet = await session
-            .get("/building/0")
-            .set("Cookie", [cookies]);
-        expect(resultGet.status).toEqual(404);
-        expect(resultGet.notFound).toEqual(true);
-
-        const resultUpdate = await session
-            .patch("/building/0")
-            .send({ name: "Name" })
-            .set("Cookie", [cookies]);
-        expect(resultUpdate.status).toEqual(404);
-        expect(resultUpdate.notFound).toEqual(true);
-
-        const resultDelete = await session
-            .delete("/building/0")
-            .set("Cookie", [cookies]);
-        expect(resultDelete.status).toEqual(404);
-        expect(resultDelete.notFound).toEqual(true);
-    });
-
-    // Deze test gebruikt foute types bij het toevoegen/aanpassen van een gebouw
-    test("Test using wrong type", async () => {
-        // String in plaats van int
-        const result1 = await session
-            .patch("/building/" + building.id)
-            .send({ syndicus_id: "string in plaats van int" })
-            .set("Cookie", [cookies]);
-        expect(result1.status).toEqual(400);
-        expect(result1.badRequest).toEqual(true);
-
-        // Getal in plaats van string
-        const result2 = await session
-            .patch("/building/" + building.id)
-            .send({ ivago_id: 5 })
-            .set("Cookie", [cookies]);
-        expect(result2.status).toEqual(400);
-        expect(result2.badRequest).toEqual(true);
-
-        // Boolean in plaats van string
-        const result3 = await session
-            .patch("/building/" + building.id)
-            .send({ name: true })
-            .set("Cookie", [cookies]);
-        expect(result3.status).toEqual(400);
-        expect(result3.badRequest).toEqual(true);
-    });
-});
-
-// Server sluiten nadat alle testen uitgevoerd zijn
-app.close();

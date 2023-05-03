@@ -16,7 +16,7 @@
           pariatur.
         </p>
 
-        <v-row class="py-0">
+        <v-row class="pt-2">
           <v-col
             cols="1"
             style="min-width: 100px; max-width: 100%"

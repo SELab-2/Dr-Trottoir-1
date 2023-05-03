@@ -28,16 +28,22 @@ export class ScheduleRouting extends Routing {
             req.user?.student &&
             !req.user?.super_student &&
             !req.user?.admin &&
-            Parser.number(req.query["user_id"]) != req.user?.id
+            Parser.number(req.query["user_id"]) !== req.user?.id
         ) {
             throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
+        // only admins can choose to see deleted entries too
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
+            deleted = undefined;
         }
 
         const result = await prisma.schedule.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                deleted: Parser.bool(req.query["deleted"], false),
+                deleted: deleted,
                 day: {
                     lte: Parser.date(req.query["before"]),
                     gte: Parser.date(req.query["after"]),
@@ -89,12 +95,37 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        const user = await prisma.schedule.create({
+        const schedule = await prisma.schedule.create({
             data: req.body,
             include: ScheduleRouting.includes,
         });
 
-        return res.status(201).json(user);
+        // Retrieve all the buildings in the round.
+        const round = await prisma.round.findUniqueOrThrow({
+            where: {
+                id: Parser.number(req.body["round_id"]),
+            },
+            include: {
+                buildings: {
+                    select: {
+                        building_id: true,
+                    },
+                },
+            },
+        });
+
+        // Create a progress item for each building in the round.
+        for (const building of round.buildings) {
+            await prisma.progress.create({
+                data: {
+                    building_id: building.building_id,
+                    schedule_id: schedule.id,
+                    report: "", // TODO: make nullable
+                },
+            });
+        }
+
+        return res.status(201).json(schedule);
     }
 
     @Auth.authorization({ superStudent: true })
@@ -112,14 +143,15 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
+        let result;
         if (Parser.bool(req.body["hardDelete"], false)) {
-            await prisma.schedule.delete({
+            result = await prisma.schedule.delete({
                 where: {
                     id: Parser.number(req.params["id"]),
                 },
             });
         } else {
-            await prisma.schedule.update({
+            result = await prisma.schedule.update({
                 data: {
                     deleted: true,
                 },
@@ -129,6 +161,6 @@ export class ScheduleRouting extends Routing {
             });
         }
 
-        return res.status(200).json({});
+        return res.status(200).json(result);
     }
 }
