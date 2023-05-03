@@ -1,6 +1,6 @@
 {
   "name": "@selab-2/groep-1-query",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Package to interact with the API.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -30,9 +30,3 @@ jobs:
                     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Execute tests"
                 run: npm run test
-            -   name: "Cleanup"
-                if: always()
-                run: |
-                    chmod +x ../server/cleanup.sh
-                    ../server/cleanup.sh -p
-                shell: bash

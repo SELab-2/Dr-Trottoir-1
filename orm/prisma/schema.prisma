@@ -152,8 +152,8 @@ model Building {
     ivago_id      String
     expected_time Int?
 
-    syndicus_id Int?
-    syndicus    Syndicus? @relation(fields: [syndicus_id], references: [id], onDelete: SetNull)
+    syndicus_id Int
+    syndicus    Syndicus @relation(fields: [syndicus_id], references: [id], onDelete: Restrict)
 
     address_id Int
     address    Address @relation(fields: [address_id], references: [id], onDelete: Restrict)

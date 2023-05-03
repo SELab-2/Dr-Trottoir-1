@@ -46,13 +46,9 @@ export async function initialiseDatabase(): Promise<void> {
     }
 }
 
-export async function restoreTables(...tables: string[]) {
-    for (const table of tables) {
-        await prisma.$queryRawUnsafe(
-            `TRUNCATE "${table}" RESTART IDENTITY CASCADE`,
-        );
-        await initialiseFunctions[table]();
-    }
+export async function restoreTables() {
+    await deleteDatabaseData();
+    await initialiseDatabase();
 }
 
 /**
