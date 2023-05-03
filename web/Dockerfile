@@ -2,6 +2,7 @@
 FROM node:19-alpine3.16 AS build
 WORKDIR /build
 ARG NPM_AUTH_TOKEN
+ARG VUE_APP_API_SERVER_ADDRESS
 
 COPY package*.json /build/
 COPY .npmrc /build/.npmrc
@@ -16,11 +17,12 @@ RUN npm run build
 FROM node:19-alpine3.16 AS production
 WORKDIR /frontend
 ARG NPM_AUTH_TOKEN
+ARG VUE_APP_API_SERVER_ADDRESS
 
 COPY --from=build /build/dist ./dist
-COPY package*.json ./
-COPY .npmrc /frontend/.npmrc
+COPY .npmrc ./.npmrc
 
+COPY package*.json ./
 RUN ["npm", "ci", "--omit=dev"]
 
 EXPOSE 3000
