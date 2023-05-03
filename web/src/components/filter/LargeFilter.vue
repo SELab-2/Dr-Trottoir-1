@@ -25,7 +25,7 @@
       </v-btn>
     </template>
     <v-expand-transition>
-      <div v-show="dropdown">
+      <div id="dropdown" v-show="dropdown">
         <DividerLayout class="mb-3" />
         <v-row class="mx-0">
           <v-col>

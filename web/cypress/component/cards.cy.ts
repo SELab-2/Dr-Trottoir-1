@@ -18,6 +18,7 @@ describe("card tests", () => {
     cy.contains('testgebouw')
     cy.contains('test gebruiker')
     cy.contains('teststraat 5 Gent')
+    cy.contains(((new Date())).toLocaleDateString())
   })
 
   it('buildinginfocard test', () => {
@@ -32,7 +33,7 @@ describe("card tests", () => {
     cy.contains('teststraat 1')
   })
 
-  it('buildingselectcard test', () => {
+  it('buildingselectcard show garbage test', () => {
     cy.mount(BuildingSelectCard, {
       props: {
         name: "testgebouw",
@@ -43,6 +44,19 @@ describe("card tests", () => {
     })
     cy.contains('testgebouw')
     cy.contains('teststraat 1')
+    cy.get('#garbage').should('be.visible')
+  })
+
+  it("buildingselectcard don't show garbage test", () => {
+    cy.mount(BuildingSelectCard, {
+      props: {
+        name: "testgebouw",
+        address: "teststraat 1",
+        buildingId: 1,
+        garbageinfo: false,
+      },
+    })
+    cy.get('#garbage').should('not.be.visible')
   })
 
   it('imagecard test with image', () => {
@@ -140,7 +154,7 @@ describe("card tests", () => {
     cy.contains('Klaar')
   })
 
-  it('roundselectcard test', () => {
+  it.only('roundselectcard test', () => {
     const datum: Date = new Date()
     cy.mount(RoundSelectCard, {
       props: {
@@ -153,5 +167,6 @@ describe("card tests", () => {
     cy.contains('test round')
     cy.contains('tijd')
     cy.contains(datum.toLocaleDateString())
+    cy.get('#remove').should('be.visible')
   })
 })

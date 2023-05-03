@@ -32,9 +32,16 @@ describe("images tests", () => {
 
   it('multiaddimage test', () => {
     cy.mount(MultiAddImage, {})
+    // add image
     cy.contains('afbeelding toevoegen').click()
     // check if an extra image field was added
     cy.get('button:contains("Verwijder afbeelding")').should('have.length', 2);
+    // delete image
+    cy.get('#delete').click()
+    cy.get('button:contains("Verwijder afbeelding")').should('have.length', 1);
+    // can't delete the last image
+    cy.get('#delete').click()
+    cy.get('button:contains("Verwijder afbeelding")').should('have.length', 1);
   })
 
   it('photomaker test', () => {

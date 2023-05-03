@@ -2,6 +2,7 @@
   <!-- TODO: Container around the card to show the edges a bit more, should be removed in the future -->
   <BorderCard class="mb-3 mx-1 pb-2">
     <v-progress-linear
+      id="progress"
       absolute
       :model-value="progress()"
       :color="

@@ -12,6 +12,7 @@
               {{ header.name }}
             </p>
             <v-btn
+              id="sort"
               v-if="header.sortable"
               variant="plain"
               :icon="

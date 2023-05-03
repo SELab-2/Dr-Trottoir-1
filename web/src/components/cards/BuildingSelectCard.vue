@@ -26,7 +26,7 @@
       />
     </template>
     <v-expand-transition>
-      <v-table v-show="garbageinfo" class="mx-2 my-2" density="compact">
+      <v-table id="garbage" v-show="garbageinfo" class="mx-2 my-2" density="compact">
         <thead>
           <tr>
             <th

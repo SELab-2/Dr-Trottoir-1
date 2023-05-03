@@ -3,7 +3,7 @@ import Loader from '@/components/popups/Loader.vue'
 import StartRoundPopup from '@/components/popups/StartRoundPopupContent.vue'
 
 describe("popup tests", () => {
-  it.only('cardpopup test', () => {
+  it('cardpopup test', () => {
     cy.mount(CardPopup, {
       props: ["modelValue"]
     })

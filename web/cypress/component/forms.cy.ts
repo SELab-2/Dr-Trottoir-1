@@ -114,7 +114,7 @@ describe("form tests", () => {
     })
   })
 
-  describe.only('roleform test', () => {
+  describe('roleform test', () => {
     it('roleform input test', () => {
       cy.mount(RolesForm, {
         props: {

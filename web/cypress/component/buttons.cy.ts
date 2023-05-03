@@ -19,6 +19,7 @@ describe("buttons test", () => {
         items: []
       },
     })
+    // TODO add buttons in items list
     cy.get('#menu-activator').click()
   })
 })

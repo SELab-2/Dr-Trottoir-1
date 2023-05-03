@@ -16,7 +16,9 @@ describe("filter tests", () => {
     })
     cy.contains("Zoek per test1")
     cy.contains("Zoek per test2").should('not.exist')
+    cy.get('#dropdown').should('not.be.visible')
     cy.get("#showfilters").click()
+    cy.get('#dropdown').should('be.visible')
     cy.contains("Eerste dag").parent().type('2023-01-04') // has to be YYYY-MM-DD format
     cy.contains('Zoekcategorie').parent().click()
     cy.contains("test2").click()
@@ -25,5 +27,7 @@ describe("filter tests", () => {
     cy.contains('status1').click()
     cy.contains('alphabetical').click()
     cy.contains('Dalend').click()
+    cy.get("#showfilters").click()
+    cy.get('#dropdown').should('not.be.visible')
   })
 })

@@ -121,6 +121,9 @@ describe("round tests", () => {
           status: "scheduled",
         }
       })
+      cy.contains('Actief').should('not.exist')
+      cy.contains('Opmerkingen').should('not.exist')
+      cy.contains('10').should('not.exist')
     })
   })
 })

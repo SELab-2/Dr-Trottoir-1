@@ -34,6 +34,7 @@
 
     <v-card-actions>
       <v-btn
+        id="delete"
         @click="$emit('delete', id)"
         v-show="id != 0"
         color="error"
