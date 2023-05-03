@@ -2,8 +2,7 @@ import express from "express";
 import {Auth} from "../auth/auth";
 import {APIError} from "../errors/api_error";
 import {APIErrorCode} from "../errors/api_error_code";
-
-let nodemailer = require("nodemailer");
+import * as nodemailer from "nodemailer";
 
 export type CustomRequest = express.Request<any>;
 
