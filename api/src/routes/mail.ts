@@ -10,8 +10,7 @@ export class MailRouting {
     @Auth.authorization({ superStudent: true })
     async sendMail(req: CustomRequest, res: express.Response) {
         const transporter = nodemailer.createTransport({
-            sendmail: true,
-            host: "ssl0.ovh.net",
+            host: process.env.HOST,
             port: 587,
             auth: {
                 user: process.env.MAIL_ADDRESS,
@@ -20,7 +19,7 @@ export class MailRouting {
         });
 
         // verify connection configuration
-        transporter.verify((error: Error, succes: String) => {
+        transporter.verify((error, succes) => {
             if (error) {
                 console.log(error);
                 throw new APIError(APIErrorCode.BAD_REQUEST)
@@ -34,10 +33,14 @@ export class MailRouting {
             to: req.body["to"],
             subject: req.body["subject"],
             text: req.body["content"],
+        }, (err, info) => {
+            if (err) {
+                console.log(err);
+                throw new APIError(APIErrorCode.BAD_REQUEST);
+            }
         });
 
-
-        return res.status(200).json({});
+        return res.status(250).json({});
     }
 
     toRouter(): express.Router {
