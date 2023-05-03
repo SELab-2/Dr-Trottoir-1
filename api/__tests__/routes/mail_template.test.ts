@@ -71,6 +71,29 @@ describe("Mail Template tests", () => {
             await runner.get({ url: "/mail_template", expectedData: expected });
         });
 
+        test("GET /mail_template with filter", async () => {
+            const expected = [
+                {
+                    content: "In $(building) werkt $(code) niet meer",
+                    id: 2,
+                    mail_subject: "Code werkt niet in $(building)",
+                    name: "Code",
+                },
+                {
+                    content:
+                        "Ivago heeft $(garbage_type) niet meegenomen bij $(building)",
+                    id: 3,
+                    mail_subject: "Ivago is niet langs $(building) gekomen",
+                    name: "Ivago",
+                },
+            ];
+
+            await runner.get({
+                url: "/mail_template?name=o",
+                expectedData: expected,
+            });
+        });
+
         test("GET /mail_template/:id", async () => {
             const expected = [
                 {
