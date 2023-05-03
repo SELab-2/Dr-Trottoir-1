@@ -1,4 +1,5 @@
 import { ActionQuery } from "./action";
+import { AddressQuery } from "./address";
 import { BuildingQuery } from "./building";
 import { GarbageQuery } from "./garbage";
 import { ProgressQuery } from "./progress";
@@ -14,6 +15,7 @@ import { Result, Parameter, Element } from "./query";
 
 export {
     ActionQuery,
+    AddressQuery,
     BuildingQuery,
     GarbageQuery,
     ProgressQuery,
