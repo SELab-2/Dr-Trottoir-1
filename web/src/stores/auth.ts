@@ -1,30 +1,6 @@
 import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
-import { Prisma } from "@selab-2/groep-1-orm";
-
-type AuthenticatedUser = Prisma.UserGetPayload<{
-  select: {
-    id: true;
-    email: true;
-    first_name: true;
-    last_name: true;
-    last_login: true;
-    date_added: true;
-    phone: true;
-    address_id: true;
-    student: true;
-    super_student: true;
-    admin: true;
-    hash: false;
-    salt: false;
-    address: true;
-    syndicus: {
-      select: {
-        id: true;
-      };
-    };
-  };
-}>;
+import { AuthenticatedUser } from "@selab-2/groep-1-query";
 
 const defaultUser: AuthenticatedUser = {
   id: 0,
