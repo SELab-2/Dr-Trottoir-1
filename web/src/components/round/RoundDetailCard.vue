@@ -1,5 +1,5 @@
 <template>
-  <CardLayout class="pt-8" v-if="entry">
+  <CardLayout v-if="entry">
     <div
       style="
         align-items: center;
@@ -8,7 +8,7 @@
         cursor: pointer;
         gap: 12px;
       "
-      class="pl-8 pb-8 pr-3"
+      class="mt-8 pl-7 pb-8 pr-2"
       @click="
         router.push({
           name: 'building_id',
@@ -17,44 +17,71 @@
       "
     >
       <div>
-        <h2>{{ entry.building.name }}</h2>
-        <p>
-          {{ entry.building.address.street }}
-          {{ entry.building.address.number }}
-        </p>
-        <p>
-          {{ entry.building.address.zip_code }}
-          {{ entry.building.address.city }}
-        </p>
+        <div class="ml-1">
+          <h2>{{ entry.building.name }}</h2>
+          <p>
+            {{ entry.building.address.street }}
+            {{ entry.building.address.number }}
+          </p>
+          <p>
+            {{ entry.building.address.zip_code }}
+            {{ entry.building.address.city }}
+          </p>
+        </div>
+        <div class="d-flex mt-1" v-if="mobile">
+          <RoundedButton
+            class="mr-1"
+            v-if="progress"
+            icon="mdi-clock-start"
+            :value="
+              new Date(progress.arrival).toLocaleTimeString('nl', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })
+            "
+            @click.stop="() => start()"
+          />
+          <RoundedButton
+            class="ml-1"
+            v-if="progress"
+            icon="mdi-clock-end"
+            :value="
+              new Date(progress.departure).toLocaleTimeString('nl', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })
+            "
+            @click.stop="() => end()"
+          />
+        </div>
       </div>
       <div class="flex-grow-1"></div>
 
       <div class="d-flex" v-if="!mobile">
-        <!-- TODO make also visible on mobile -->
         <RoundedButton
-          class="mx-1"
-          v-if="entry.progress"
+          class="ma-1"
+          v-if="progress"
           icon="mdi-clock-start"
           :value="
-            new Date(entry.progress.arrival).toLocaleTimeString('nl', {
+            new Date(progress.arrival).toLocaleTimeString('nl', {
               hour: '2-digit',
               minute: '2-digit',
             })
           "
           @click.stop="() => start()"
-        ></RoundedButton>
+        />
         <RoundedButton
-          class="mx-1"
-          v-if="entry.progress"
+          class="ma-1"
+          v-if="progress"
           icon="mdi-clock-end"
           :value="
-            new Date(entry.progress.departure).toLocaleTimeString('nl', {
+            new Date(progress.departure).toLocaleTimeString('nl', {
               hour: '2-digit',
               minute: '2-digit',
             })
           "
           @click.stop="() => end()"
-        ></RoundedButton>
+        />
       </div>
       <v-icon icon="mdi-chevron-right" />
       <v-btn
@@ -67,9 +94,7 @@
 
     <v-expand-transition v-on:click.stop>
       <div v-show="expanded" class="px-8 pb-8">
-        <divider-layout
-          class="mb-4"
-        ></divider-layout>
+        <divider-layout class="mb-4"></divider-layout>
 
         <p v-if="!editMode">{{ progress?.report }}</p>
         <!-- eslint-disable-next-line vue/no-mutating-props -->
@@ -141,9 +166,9 @@ import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useDisplay } from "vuetify";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import { tryOrAlertAsync } from '@/try'
-import { ProgressQuery } from '@selab-2/groep-1-query'
-import { useAuthStore } from '@/stores/auth'
+import { tryOrAlertAsync } from "@/try";
+import { ProgressQuery } from "@selab-2/groep-1-query";
+import { useAuthStore } from "@/stores/auth";
 
 const props = defineProps(["entry"]);
 const progress = ref(props.entry.progress);
@@ -226,4 +251,9 @@ function addImage() {
   right: 0
   bottom: 0
   margin-bottom: 0
+
+.timeabsolute
+  position: absolute
+  top: 0
+  right: 0
 </style>

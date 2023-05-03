@@ -3,7 +3,7 @@
     <HFillWrapper>
       <div class="space-y">
         <div style="margin-bottom: 0; display: flex; gap: 12px">
-          <h2>{{ data.round.name }}</h2>
+          <h2 class='ml-1'>{{ data.round.name }}</h2>
           <div class="flex-grow-1"></div>
           <CardLayout
             class="pa-1 d-flex align-center"
@@ -24,14 +24,8 @@
           :value="new Date(data.day).toLocaleDateString()"
         ></RoundedButton>
 
+        <!-- TODO add description (not in api) -->
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
         </p>
 
         <divider-layout class="my-8"></divider-layout>
@@ -48,7 +42,19 @@
             size="large"
             width="100%"
           >
-            <h3 class="pt-2">Start: 12u00</h3>
+            <h3 class="pt-2">
+              Start:
+              {{
+                new Date(
+                  progressItems.get(
+                    data.round.buildings[0].building_id,
+                  )?.arrival,
+                ).toLocaleTimeString("nl", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              }}
+            </h3>
           </v-timeline-item>
 
           <v-timeline-item
@@ -64,10 +70,7 @@
             size="large"
             width="100%"
           >
-            <RoundDetailCard
-              :key='entry'
-              :entry="entry"
-            />
+            <RoundDetailCard :key="entry" :entry="entry" />
           </v-timeline-item>
 
           <v-timeline-item
@@ -77,7 +80,20 @@
             size="large"
             width="100%"
           >
-            <h3 class="pt-2">Einde: 14u00</h3>
+            <h3 class="pt-2">
+              Einde:
+              {{
+                new Date(
+                  progressItems.get(
+                    data.round.buildings[data.round.buildings.length - 1]
+                      .building_id,
+                  )?.departure,
+                ).toLocaleTimeString("nl", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              }}
+            </h3>
           </v-timeline-item>
         </v-timeline>
       </div>
@@ -134,9 +150,11 @@ tryOrAlertAsync(async () => {
     progressItems.value.set(progress.building_id, progress);
   }
 
-  /*if (progressItems.value.size !== data.value?.round.buildings.length) {
+  if (progressItems.value.size !== data.value?.round.buildings.length) {
     throw new Error("Not every building has a progress item");
-  }*/
+  }
+  console.log(data.value);
+  console.log(progressItems.value);
 });
 </script>
 
