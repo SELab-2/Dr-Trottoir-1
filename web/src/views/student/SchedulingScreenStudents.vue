@@ -189,6 +189,7 @@ const days = await tryOrAlertAsync<Array<DayEntry>>(async () => {
     for (const scheduleItem of schedules) {
       const progress = await new ProgressQuery().getAll({
         schedule: scheduleItem.id,
+        user: useAuthStore().auth?.id,
       });
 
       if (schedules.length > 0) {

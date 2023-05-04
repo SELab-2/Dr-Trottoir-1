@@ -151,7 +151,7 @@ const routes: any[] = [
             superstudent: boolean,
             syndicus: boolean,
             admin: boolean,
-          ) => student,
+          ) => student || superstudent || syndicus || admin,
         },
       },
       {
@@ -165,7 +165,7 @@ const routes: any[] = [
             superstudent: boolean,
             syndicus: boolean,
             admin: boolean,
-          ) => superstudent || admin,
+          ) => admin,
         },
       },
       {
@@ -207,7 +207,7 @@ const routes: any[] = [
             superstudent: boolean,
             syndicus: boolean,
             admin: boolean,
-          ) => student || superstudent || syndicus || admin,
+          ) => superstudent || syndicus || admin,
         },
       },
       {
@@ -221,7 +221,7 @@ const routes: any[] = [
             superstudent: boolean,
             syndicus: boolean,
             admin: boolean,
-          ) => admin,
+          ) => superstudent || admin,
         },
       },
       {
@@ -249,7 +249,7 @@ const routes: any[] = [
             superstudent: boolean,
             syndicus: boolean,
             admin: boolean,
-          ) => admin,
+          ) => superstudent || admin,
         },
       },
       {
