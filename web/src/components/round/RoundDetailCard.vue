@@ -1,5 +1,5 @@
 <template>
-  <CardLayout v-if="entry">
+  <CardLayout v-if="entry && progress">
     <div
       style="
         align-items: center;
@@ -18,7 +18,7 @@
     >
       <div>
         <div class="ml-1">
-          <h2>{{ entry.building.name }}</h2>
+          <h3>{{ entry.building.name }}</h3>
           <p>
             {{ entry.building.address.street }}
             {{ entry.building.address.number }}
@@ -31,7 +31,7 @@
         <div class="d-flex mt-1" v-if="mobile">
           <RoundedButton
             class="mr-1"
-            v-if="progress"
+            v-if="progress.arrival"
             icon="mdi-clock-start"
             :value="
               new Date(progress.arrival).toLocaleTimeString('nl', {
@@ -39,11 +39,16 @@
                 minute: '2-digit',
               })
             "
+          />
+          <RoundedButton
+            class="mr-1"
+            v-else
+            value="start"
             @click.stop="() => start()"
           />
           <RoundedButton
             class="ml-1"
-            v-if="progress"
+            v-if="progress.departure"
             icon="mdi-clock-end"
             :value="
               new Date(progress.departure).toLocaleTimeString('nl', {
@@ -51,6 +56,11 @@
                 minute: '2-digit',
               })
             "
+          />
+          <RoundedButton
+            class="mr-1"
+            v-else-if="progress.arrival"
+            value="eindig"
             @click.stop="() => end()"
           />
         </div>
@@ -60,7 +70,7 @@
       <div class="d-flex" v-if="!mobile">
         <RoundedButton
           class="ma-1"
-          v-if="progress"
+          v-if="progress.arrival"
           icon="mdi-clock-start"
           :value="
             new Date(progress.arrival).toLocaleTimeString('nl', {
@@ -68,11 +78,16 @@
               minute: '2-digit',
             })
           "
+        />
+        <RoundedButton
+          class="ma-1"
+          v-else
+          value="start"
           @click.stop="() => start()"
         />
         <RoundedButton
           class="ma-1"
-          v-if="progress"
+          v-if="progress.departure"
           icon="mdi-clock-end"
           :value="
             new Date(progress.departure).toLocaleTimeString('nl', {
@@ -80,6 +95,11 @@
               minute: '2-digit',
             })
           "
+        />
+        <RoundedButton
+          class="ma-1"
+          v-else-if="progress.arrival"
+          value="eindig"
           @click.stop="() => end()"
         />
       </div>
@@ -94,8 +114,8 @@
 
     <v-expand-transition v-on:click.stop>
       <div v-show="expanded" class="px-8 pb-8">
-        <divider-layout class="mb-4"></divider-layout>
-
+        <divider-layout class="mb-4" />
+        <h4 class="mb-2">Opmerkingen</h4>
         <p v-if="!editMode">{{ progress?.report }}</p>
         <!-- eslint-disable-next-line vue/no-mutating-props -->
         <v-text-field
@@ -103,33 +123,35 @@
           v-else
           v-model="progress.report"
           style="margin-bottom: -20px"
-        ></v-text-field>
+        />
         <RoundedButton
           v-if="editMode"
           icon="mdi-check"
           value="Opslaan"
           class="mt-4"
           @click="() => report()"
-        ></RoundedButton>
+        />
         <RoundedButton
           v-else-if="progress?.report !== ''"
           icon="mdi-pencil"
           value="Bewerken"
           class="mt-4"
           @click="() => (editMode = !editMode)"
-        ></RoundedButton>
-        <RoundedButton
-          v-else
-          icon="mdi-plus"
-          value="Toevoegen"
-          class="mt-4"
-          @click="() => (editMode = !editMode)"
-        ></RoundedButton>
+        />
+        <div v-else>
+          <p style="opacity: 75%">Geen opmerkingen toegevoegd.</p>
+          <RoundedButton
+            icon="mdi-plus"
+            value="Toevoegen"
+            class="mt-4"
+            @click="() => (editMode = !editMode)"
+          />
+        </div>
 
         <divider-layout class="my-4" />
 
         <div>
-          <h3 class="mb-2">Afbeeldingen</h3>
+          <h4 class="mb-2">Afbeeldingen</h4>
           <div class="carousel" v-if="progress?.images.length ?? 0 > 0">
             <div
               class="carousel-item"
@@ -152,7 +174,7 @@
             value="Toevoegen"
             class="mt-4"
             @click="() => addImage()"
-          ></RoundedButton>
+          />
         </div>
       </div>
     </v-expand-transition>
@@ -191,22 +213,26 @@ function report() {
   });
 }
 
-function start() {
-  tryOrAlertAsync(async () => {
+const emit = defineEmits(["start", "end"]);
+
+async function start() {
+  await tryOrAlertAsync(async () => {
     progress.value = await new ProgressQuery().updateOne({
       id: progress.value.id,
       arrival: new Date(),
     });
   });
+  emit("start");
 }
 
-function end() {
-  tryOrAlertAsync(async () => {
+async function end() {
+  await tryOrAlertAsync(async () => {
     progress.value = await new ProgressQuery().updateOne({
       id: progress.value.id,
       departure: new Date(),
     });
   });
+  emit("end");
 }
 
 function addImage() {

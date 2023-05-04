@@ -20,15 +20,15 @@
           </CardLayout>
         </div>
         <p>
-          <v-icon icon="mdi-calendar"/>
-          {{new Date(data.day).toLocaleDateString()}}
+          <v-icon icon="mdi-calendar" />
+          {{ new Date(data.day).toLocaleDateString() }}
         </p>
 
-        <!-- TODO add description (not in api) -->
+        <!-- TODO add description (not in api)
         <p>
         </p>
 
-        <divider-layout class="my-8"></divider-layout>
+        <divider-layout class="my-8"></divider-layout>-->
 
         <v-timeline
           truncate-line="both"
@@ -37,6 +37,9 @@
           align="start"
         >
           <v-timeline-item
+            v-if="
+              progressItems.get(data.round.buildings[0].building_id)?.arrival
+            "
             dot-color="success"
             icon="mdi-check"
             size="large"
@@ -56,6 +59,16 @@
               }}
             </h3>
           </v-timeline-item>
+          <v-timeline-item
+            v-else
+            tag="TEST"
+            dot-color="grey"
+            icon="mdi-clock"
+            size="large"
+            width="100%"
+          >
+            <h3 class="pt-2">Ronde nog niet begonnen.</h3>
+          </v-timeline-item>
 
           <v-timeline-item
             v-for="entry in data.round.buildings.map((e) => {
@@ -65,18 +78,29 @@
               };
             })"
             v-bind:key="entry.building.id"
-            dot-color="success"
-            icon="mdi-check"
+            :dot-color="entry.progress?.departure ? 'success' : 'grey'"
+            :icon="entry.progress?.departure ? 'mdi-check' : 'mdi-clock'"
             size="large"
             width="100%"
           >
-            <RoundDetailCard :key="entry" :entry="entry" />
+            <RoundDetailCard
+              :key="entry"
+              :entry="entry"
+              @start="roundUpdated(entry.progress.id)"
+              @end="roundUpdated(entry.progress.id)"
+            />
           </v-timeline-item>
 
           <v-timeline-item
+            v-if="
+              progressItems.get(
+                data.round.buildings[data.round.buildings.length - 1]
+                  .building_id,
+              )?.departure
+            "
             tag="TEST"
-            dot-color="grey"
-            icon="mdi-clock"
+            dot-color="success"
+            icon="mdi-check"
             size="large"
             width="100%"
           >
@@ -95,16 +119,30 @@
               }}
             </h3>
           </v-timeline-item>
+          <v-timeline-item
+            v-else
+            tag="TEST"
+            dot-color="grey"
+            icon="mdi-clock"
+            size="large"
+            width="100%"
+          >
+            <h3 class="pt-2">Ronde nog niet beëindigt.</h3>
+          </v-timeline-item>
         </v-timeline>
       </div>
     </HFillWrapper>
   </div>
-  <AddButton icon="mdi-plus" :items="actions" v-if="mobile" />
+  <AddButton
+    icon="mdi-plus"
+    :items="actions"
+    title="Building 1"
+    v-if="mobile"
+  />
 </template>
 
 <script lang="ts" setup>
 import { Ref, ref } from "vue";
-import DividerLayout from "@/layouts/DividerLayout.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
 import Avatar from "@/components/Avatar.vue";
@@ -155,6 +193,11 @@ tryOrAlertAsync(async () => {
   console.log(data.value);
   console.log(progressItems.value);
 });
+
+async function roundUpdated(id: number) {
+  const progress = await new ProgressQuery().getOne(id);
+  progressItems.value.set(progress.building_id, progress);
+}
 </script>
 
 <style lang="sass">
