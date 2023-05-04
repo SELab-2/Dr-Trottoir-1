@@ -335,7 +335,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     const isStudent = auth.student;
     const isSuperStudent = auth.super_student;
-    const isSyndicus = true; // TODO
+    const isSyndicus = auth.syndicus != null;
     const isAdmin = auth.admin;
     const checked: boolean = checkAuth(
       isStudent,

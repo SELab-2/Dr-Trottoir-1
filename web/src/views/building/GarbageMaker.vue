@@ -1,13 +1,6 @@
 <template>
   <div>
     <HFillWrapper margin="mx-4 mb-4">
-      <RoundedButton
-        icon="mdi-arrow-left"
-        value="Terugkeren"
-        class="mb-4"
-        @click="() => router.push({ name: 'building_id', params: { id: 0 } })"
-      ></RoundedButton>
-
       <h2>Afvalkalender</h2>
 
       <p class="mb-4">
