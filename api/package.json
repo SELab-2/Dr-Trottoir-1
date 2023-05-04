@@ -10,7 +10,7 @@
     "test": "jest --runInBand \".*\\.test\\.ts\""
   },
   "dependencies": {
-    "@selab-2/groep-1-orm": "^1.0.12",
+    "@selab-2/groep-1-orm": "1.0.15",
     "@types/date-arithmetic": "^4.1.1",
     "@types/passport": "^1.0.12",
     "celebrate": "^15.0.1",
@@ -43,7 +43,7 @@
     "@types/passport-local": "^1.0.35",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
-    "@typescript-eslint/parser": "^5.54.0",
+    "@typescript-eslint/parser": "^5.59.2",
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.6.0",
     "jest": "^29.5.0",
