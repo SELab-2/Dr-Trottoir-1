@@ -21,7 +21,7 @@
         </div>
         <p>
           <v-icon icon="mdi-calendar" />
-          {{ new Date(data.day).toLocaleDateString() }}
+          {{ new Date(data.day).toLocaleDateString("nl") }}
         </p>
 
         <!-- TODO add description (not in api)
@@ -44,15 +44,16 @@
             icon="mdi-check"
             size="large"
             width="100%"
+            :set="
+              (firstBuilding = progressItems.get(
+                data.round.buildings[0].building_id,
+              ))
+            "
           >
             <h3 class="pt-2">
               Start:
               {{
-                new Date(
-                  progressItems.get(
-                    data.round.buildings[0].building_id,
-                  )?.arrival,
-                ).toLocaleTimeString("nl", {
+                new Date(firstBuilding.arrival).toLocaleTimeString("nl", {
                   hour: "2-digit",
                   minute: "2-digit",
                 })
@@ -61,7 +62,6 @@
           </v-timeline-item>
           <v-timeline-item
             v-else
-            tag="TEST"
             dot-color="grey"
             icon="mdi-clock"
             size="large"
@@ -84,10 +84,10 @@
             width="100%"
           >
             <RoundDetailCard
-              :key="entry"
+              :key="entry.progress?.id"
               :entry="entry"
-              @start="roundUpdated(entry.progress.id)"
-              @end="roundUpdated(entry.progress.id)"
+              @start="roundUpdated(entry.progress?.id)"
+              @end="roundUpdated(entry.progress?.id)"
             />
           </v-timeline-item>
 
@@ -98,21 +98,21 @@
                   .building_id,
               )?.departure
             "
-            tag="TEST"
             dot-color="success"
             icon="mdi-check"
             size="large"
             width="100%"
+            :set="
+              (lastBuilding = progressItems.get(
+                data.round.buildings[data.round.buildings.length - 1]
+                  .building_id,
+              ))
+            "
           >
             <h3 class="pt-2">
               Einde:
               {{
-                new Date(
-                  progressItems.get(
-                    data.round.buildings[data.round.buildings.length - 1]
-                      .building_id,
-                  )?.departure,
-                ).toLocaleTimeString("nl", {
+                new Date(lastBuilding.departure).toLocaleTimeString("nl", {
                   hour: "2-digit",
                   minute: "2-digit",
                 })
@@ -121,7 +121,6 @@
           </v-timeline-item>
           <v-timeline-item
             v-else
-            tag="TEST"
             dot-color="grey"
             icon="mdi-clock"
             size="large"
@@ -177,6 +176,8 @@ const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
 
 const display = useDisplay();
 const mobile = display.mobile;
+const firstBuilding = ref();
+const lastBuilding = ref();
 
 tryOrAlertAsync(async () => {
   data.value = await new ScheduleQuery().getOne(schedule_id);
@@ -190,13 +191,13 @@ tryOrAlertAsync(async () => {
   if (progressItems.value.size !== data.value?.round.buildings.length) {
     throw new Error("Not every building has a progress item");
   }
-  console.log(data.value);
-  console.log(progressItems.value);
 });
 
-async function roundUpdated(id: number) {
-  const progress = await new ProgressQuery().getOne(id);
-  progressItems.value.set(progress.building_id, progress);
+async function roundUpdated(id: number | undefined) {
+  if (id) {
+    const progress = await new ProgressQuery().getOne(id);
+    progressItems.value.set(progress.building_id, progress);
+  }
 }
 </script>
 
