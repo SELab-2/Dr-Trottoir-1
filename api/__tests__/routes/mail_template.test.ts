@@ -27,7 +27,7 @@ describe("Mail Template tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("mail_template");
+        await restoreTables();
     });
 
     describe("Succesful requests", () => {
