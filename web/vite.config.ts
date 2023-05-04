@@ -1,6 +1,7 @@
 // Plugins
 import vue from "@vitejs/plugin-vue";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+import { VitePWA } from 'vite-plugin-pwa'
 
 // Utilities
 import { defineConfig, loadEnv } from "vite";
@@ -19,7 +20,13 @@ export default ({ mode }) => {
       // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
       vuetify({
         autoImport: true
-      })
+      }),
+      VitePWA({
+        registerType: 'autoUpdate',
+        devOptions: {
+          enabled: true
+        }
+      }),
     ],
     define: {
       "process.env": env
