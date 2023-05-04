@@ -302,3 +302,13 @@ model ProgressImage {
 
     @@map("progress_image")
 }
+
+// Elke mail template heeft een naam. Ook bevat elke template een mail onderwerp en content
+model MailTemplate {
+    id           Int    @id @default(autoincrement())
+    name         String
+    mail_subject String
+    content      String
+
+    @@map("mail_template")
+}
