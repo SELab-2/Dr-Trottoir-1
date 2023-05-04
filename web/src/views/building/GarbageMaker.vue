@@ -82,8 +82,6 @@ import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import Table from "@/components/table/Table.vue";
 import { DetailedDay } from "@/types/GarbageTable";
 import { GarbageTable } from "@/types/GarbageTable";
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
-import router from "@/router";
 
 const garbageTypes = ["REST", "PMD", "GFT", "Papier"];
 const actions = ["buiten zetten", "binnen halen"];

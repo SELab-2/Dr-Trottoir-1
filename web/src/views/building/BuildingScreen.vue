@@ -11,7 +11,7 @@
         <div class="d-flex justify-space-between">
           <h1 class="building-name">{{ building.name }}</h1>
           <RoundedButton
-            v-if='useAuthStore().auth?.admin'
+            v-if="useAuthStore().auth?.admin"
             @clicked="() => router.push({ name: 'building_new' })"
             icon="mdi-pencil"
             class="mt-2"
@@ -112,7 +112,10 @@
         </div>
       </div>
 
-      <div class="space-y-8" v-if='useAuthStore().auth?.admin || useAuthStore().auth?.super_student'>
+      <div
+        class="space-y-8"
+        v-if="useAuthStore().auth?.admin || useAuthStore().auth?.super_student"
+      >
         <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
           <h2>Bezoeken</h2>
           <div class="flex-grow-1"></div>
@@ -144,7 +147,7 @@ import router from "@/router";
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
-import { useAuthStore } from "@/stores/auth"
+import { useAuthStore } from "@/stores/auth";
 import { BuildingQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { Ref, ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
@@ -164,6 +167,7 @@ const props = defineProps({
 
 tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
+  console.log(building.value);
 });
 
 tryOrAlertAsync(async () => {
@@ -172,7 +176,9 @@ tryOrAlertAsync(async () => {
 });
 
 tryOrAlertAsync(async () => {
-  garbage.value = await new GarbageQuery().getAll({building_id: Number(props.id)});
+  garbage.value = await new GarbageQuery().getAll({
+    building_id: Number(props.id),
+  });
 });
 </script>
 

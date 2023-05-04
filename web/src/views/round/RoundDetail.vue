@@ -62,7 +62,7 @@ import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import { useRoute } from "vue-router";
 import Progress from "@/components/round/Progress.vue";
 import router from "@/router";
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from "@/stores/auth";
 
 const route = useRoute();
 const schedule_id: number = Number(route.params.schedule);
@@ -70,9 +70,7 @@ const schedule_id: number = Number(route.params.schedule);
 const data: Ref<Result<ScheduleQuery> | null> = ref(null);
 const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
 
-await 
-
-tryOrAlertAsync(async () => {
+await tryOrAlertAsync(async () => {
   data.value = await new ScheduleQuery().getOne(schedule_id);
 
   for (const progress of await new ProgressQuery().getAll({

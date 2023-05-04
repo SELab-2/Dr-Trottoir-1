@@ -28,9 +28,7 @@
                 <v-list-item-subtitle v-else-if="useAuthStore()?.auth?.student">
                   Student
                 </v-list-item-subtitle>
-                <v-list-item-subtitle v-else>
-                  Syndicus
-                </v-list-item-subtitle>
+                <v-list-item-subtitle v-else> Syndicus </v-list-item-subtitle>
               </div>
             </div>
           </v-list-item>
