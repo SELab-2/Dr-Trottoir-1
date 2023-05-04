@@ -21,7 +21,9 @@ import { GarbageRouting } from "./routes/garbage";
 import { UserRegionRouting } from "./routes/user_region";
 import { ProgressRouting } from "./routes/progress";
 import { RoundBuildingRouting } from "./routes/round_building";
+import { MailTemplateRouting } from "./routes/mail_template";
 import cors from "cors";
+import { AddressRouting } from "./routes/address";
 import * as Sentry from "@sentry/node";
 import { ProfilingIntegration } from "@sentry/profiling-node";
 
@@ -83,7 +85,7 @@ app.use(helmet());
 // Support for CORS
 app.use(
     cors({
-        origin: "http://localhost:3000",
+        origin: process.env.CORS,
         credentials: true,
     }),
 );
@@ -121,6 +123,8 @@ app.use("/round", new RoundRouting().toRouter());
 app.use("/user_region", new UserRegionRouting().toRouter());
 app.use("/progress", new ProgressRouting().toRouter());
 app.use("/round_building", new RoundBuildingRouting().toRouter());
+app.use("/mail_template", new MailTemplateRouting().toRouter());
+app.use("/address", new AddressRouting().toRouter());
 
 // Finally, an error handler
 app.use(Sentry.Handlers.errorHandler());
