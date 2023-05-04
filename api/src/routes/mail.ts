@@ -1,7 +1,7 @@
 import express from "express";
-import {Auth} from "../auth/auth";
-import {APIError} from "../errors/api_error";
-import {APIErrorCode} from "../errors/api_error_code";
+import { Auth } from "../auth/auth";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
 import * as nodemailer from "nodemailer";
 
 export type CustomRequest = express.Request<any>;
@@ -22,23 +22,26 @@ export class MailRouting {
         transporter.verify((error, succes) => {
             if (error) {
                 console.log(error);
-                throw new APIError(APIErrorCode.BAD_REQUEST)
+                throw new APIError(APIErrorCode.BAD_REQUEST);
             } else {
                 console.log("Email is ready to be sent");
             }
         });
 
-        await transporter.sendMail({
-            from: process.env.MAIL_ADDRESS,
-            to: req.body["to"],
-            subject: req.body["subject"],
-            text: req.body["content"],
-        }, (err, info) => {
-            if (err) {
-                console.log(err);
-                throw new APIError(APIErrorCode.BAD_REQUEST);
-            }
-        });
+        await transporter.sendMail(
+            {
+                from: process.env.MAIL_ADDRESS,
+                to: req.body["to"],
+                subject: req.body["subject"],
+                text: req.body["content"],
+            },
+            (err, info) => {
+                if (err) {
+                    console.log(err);
+                    throw new APIError(APIErrorCode.BAD_REQUEST);
+                }
+            },
+        );
 
         return res.status(250).json({});
     }
