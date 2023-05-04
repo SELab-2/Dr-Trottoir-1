@@ -213,7 +213,7 @@ function report() {
   });
 }
 
-const emit = defineEmits(["start", "end"]);
+const emit = defineEmits(["changed", "requestPhotoAdd"]);
 
 async function start() {
   await tryOrAlertAsync(async () => {
@@ -222,7 +222,7 @@ async function start() {
       arrival: new Date(),
     });
   });
-  emit("start");
+  emit("changed");
 }
 
 async function end() {
@@ -232,20 +232,11 @@ async function end() {
       departure: new Date(),
     });
   });
-  emit("end");
+  emit("changed");
 }
 
 function addImage() {
-  tryOrAlertAsync(async () => {
-    progress.value = await new ProgressQuery().createImage(progress.value.id, {
-      location: "EXTERNAL",
-      description: "Net aangemaakt",
-      path: "/",
-      time: new Date(),
-      type: "GARBAGE",
-      user_id: useAuthStore().auth?.id ?? -1,
-    });
-  });
+  emit("requestPhotoAdd", progress.value)
 }
 </script>
 

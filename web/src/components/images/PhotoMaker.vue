@@ -25,10 +25,11 @@
         variant="outlined"
       ></v-file-input>
       <v-text-field
+        v-if="isPhoto"
         variant="outlined"
         @update:model-value="$emit('onUpdate', photo)"
         label="Titel"
-        v-model="photo.label"
+        v-model="photo.title"
       ></v-text-field>
       <v-textarea
         @update:model-value="$emit('onUpdate', photo)"
@@ -40,7 +41,7 @@
       <div class="d-flex mb-4">
         <v-spacer></v-spacer
         ><v-btn
-          @click="$emit('confirm', photo)"
+          @click="$emit('confirm', photo, isPhoto)"
           color="primary"
           prepend-icon="mdi-check"
           >Opslaan</v-btn
@@ -54,7 +55,7 @@
 import Photo from "@/components/models/Photo";
 import { ref } from "vue";
 
-defineProps({
+const props = defineProps({
   id: {
     type: String,
     default: "",
@@ -63,11 +64,16 @@ defineProps({
     type: Boolean,
     default: true,
   },
+  currentComments: String,
 });
 
 const photo = ref<Photo>({
   image: [],
   comments: "",
-  label: "",
+  title: "",
 });
+
+if(!props.isPhoto) {
+  photo.value.comments = String(props.currentComments)
+}
 </script>

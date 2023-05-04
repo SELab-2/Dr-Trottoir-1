@@ -84,10 +84,10 @@
             width="100%"
           >
             <RoundDetailCard
-              :key="entry.progress?.id"
+              :key="entry.progress"
               :entry="entry"
-              @start="roundUpdated(entry.progress?.id)"
-              @end="roundUpdated(entry.progress?.id)"
+              @changed="progressUpdated(entry.progress?.id)"
+              @requestPhotoAdd='(progress) => {currentProgress=progress; showOverlay = true; overlayIsPhoto = true;}'
             />
           </v-timeline-item>
 
@@ -133,11 +133,20 @@
     </HFillWrapper>
   </div>
   <AddButton
+    :key='currentProgress?.id + ":" + currentProgress?.arrival'
     icon="mdi-plus"
-    :items="actions"
-    title="Building 1"
-    v-if="mobile"
+    :items="currentProgress?.arrival ? actions : startActions"
+    :title="currentProgress?.building.name"
+    v-if="mobile && currentProgress"
   />
+  <v-overlay v-if="currentProgress" v-model="showOverlay" class="align-center justify-center">
+    <PhotoMaker
+      @cancel="showOverlay = false"
+      @confirm="updateProgressWithPhoto"
+      :is-photo="overlayIsPhoto"
+      :current-comments='currentProgress?.report'
+    />
+  </v-overlay>
 </template>
 
 <script lang="ts" setup>
@@ -148,31 +157,67 @@ import Avatar from "@/components/Avatar.vue";
 import AddButton from "@/components/buttons/AddButton.vue";
 import Button from "@/components/models/Button";
 import RoundDetailCard from "@/components/round/RoundDetailCard.vue";
+import PhotoMaker from "@/components/images/PhotoMaker.vue";
 import { useDisplay } from "vuetify";
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRoute } from "vue-router";
+import Photo from '@/components/models/Photo'
+import { useAuthStore } from '@/stores/auth'
 
 const actions: Button[] = [
   {
     title: "Foto toevoegen",
-    clicked: () => console.log("foto"),
+    clicked: () => {
+      showOverlay.value = true;
+      overlayIsPhoto.value = true;
+    },
   },
   {
     title: "Opmerking toevoegen",
-    clicked: () => console.log("opmerking"),
+    clicked: () => {
+      showOverlay.value = true;
+      overlayIsPhoto.value = false;
+    },
   },
   {
     title: "Bezoek beëindigen",
-    clicked: () => console.log("einde"),
+    clicked: async () => {
+      await tryOrAlertAsync(async () => {
+        currentProgress.value = await new ProgressQuery().updateOne({
+          id: currentProgress.value.id,
+          departure: new Date(),
+        });
+      });
+      await progressUpdated(currentProgress.value.id);
+    },
   },
 ];
+
+const startActions: Button[] = [
+  {
+    title: "Bezoek starten",
+    clicked: async () => {
+      await tryOrAlertAsync(async () => {
+        currentProgress.value = await new ProgressQuery().updateOne({
+          id: currentProgress.value.id,
+          arrival: new Date(),
+        });
+      });
+      await progressUpdated(currentProgress.value.id);
+    },
+  },
+]
+
+const showOverlay = ref(false);
+const overlayIsPhoto = ref(true);
 
 const route = useRoute();
 const schedule_id: number = Number(route.params.schedule);
 
 const data: Ref<Result<ScheduleQuery> | null> = ref(null);
 const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
+const currentProgress: Ref<Result<ProgressQuery> | null> = ref(null);
 
 const display = useDisplay();
 const mobile = display.mobile;
@@ -191,13 +236,55 @@ tryOrAlertAsync(async () => {
   if (progressItems.value.size !== data.value?.round.buildings.length) {
     throw new Error("Not every building has a progress item");
   }
+
+  setCurrentProgress();
 });
 
-async function roundUpdated(id: number | undefined) {
+function setCurrentProgress() {
+  if(data.value?.round.buildings) {
+    for (const building of data.value.round.buildings) {
+      const progress =  progressItems.value.get(building.building_id);
+      if (progress.departure == null) {
+        currentProgress.value = progress;
+        return;
+      }
+    }
+    currentProgress.value = null;
+  }
+}
+
+async function progressUpdated(id: number | undefined) {
   if (id) {
     const progress = await new ProgressQuery().getOne(id);
     progressItems.value.set(progress.building_id, progress);
+    setCurrentProgress();
   }
+}
+
+async function updateProgressWithPhoto(photo: Photo, isPhoto: boolean) {
+  if (isPhoto) {
+    //TODO add photo with file query builder
+    await tryOrAlertAsync(async () => {
+      currentProgress.value = await new ProgressQuery().createImage(currentProgress.value.id, {
+        location: "EXTERNAL",
+        description: photo.comments,
+        path: "/",
+        time: new Date(),
+        type: "GARBAGE",
+        user_id: useAuthStore().auth?.id ?? -1,
+      });
+    });
+  }
+  else {
+    await tryOrAlertAsync(async () => {
+      currentProgress.value = await new ProgressQuery().updateOne({
+        id: currentProgress.value.id,
+        report: photo.comments,
+      });
+    });
+  }
+  await progressUpdated(currentProgress.value.id);
+  showOverlay.value = false;
 }
 </script>
 
