@@ -73,7 +73,7 @@ const photo = ref<Photo>({
   title: "",
 });
 
-if(!props.isPhoto) {
-  photo.value.comments = String(props.currentComments)
+if (!props.isPhoto) {
+  photo.value.comments = String(props.currentComments);
 }
 </script>

@@ -87,7 +87,13 @@
               :key="entry.progress"
               :entry="entry"
               @changed="progressUpdated(entry.progress?.id)"
-              @requestPhotoAdd='(progress) => {currentProgress=progress; showOverlay = true; overlayIsPhoto = true;}'
+              @requestPhotoAdd="
+                (progress) => {
+                  currentProgress = progress;
+                  showOverlay = true;
+                  overlayIsPhoto = true;
+                }
+              "
             />
           </v-timeline-item>
 
@@ -133,18 +139,22 @@
     </HFillWrapper>
   </div>
   <AddButton
-    :key='currentProgress?.id + ":" + currentProgress?.arrival'
+    :key="currentProgress?.id + ':' + currentProgress?.arrival"
     icon="mdi-plus"
     :items="currentProgress?.arrival ? actions : startActions"
     :title="currentProgress?.building.name"
     v-if="mobile && currentProgress"
   />
-  <v-overlay v-if="currentProgress" v-model="showOverlay" class="align-center justify-center">
+  <v-overlay
+    v-if="currentProgress"
+    v-model="showOverlay"
+    class="align-center justify-center"
+  >
     <PhotoMaker
       @cancel="showOverlay = false"
       @confirm="updateProgressWithPhoto"
       :is-photo="overlayIsPhoto"
-      :current-comments='currentProgress?.report'
+      :current-comments="currentProgress?.report"
     />
   </v-overlay>
 </template>
@@ -162,8 +172,8 @@ import { useDisplay } from "vuetify";
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRoute } from "vue-router";
-import Photo from '@/components/models/Photo'
-import { useAuthStore } from '@/stores/auth'
+import Photo from "@/components/models/Photo";
+import { useAuthStore } from "@/stores/auth";
 
 const actions: Button[] = [
   {
@@ -207,7 +217,7 @@ const startActions: Button[] = [
       await progressUpdated(currentProgress.value.id);
     },
   },
-]
+];
 
 const showOverlay = ref(false);
 const overlayIsPhoto = ref(true);
@@ -241,9 +251,9 @@ tryOrAlertAsync(async () => {
 });
 
 function setCurrentProgress() {
-  if(data.value?.round.buildings) {
+  if (data.value?.round.buildings) {
     for (const building of data.value.round.buildings) {
-      const progress =  progressItems.value.get(building.building_id);
+      const progress = progressItems.value.get(building.building_id);
       if (progress.departure == null) {
         currentProgress.value = progress;
         return;
@@ -265,17 +275,19 @@ async function updateProgressWithPhoto(photo: Photo, isPhoto: boolean) {
   if (isPhoto) {
     //TODO add photo with file query builder
     await tryOrAlertAsync(async () => {
-      currentProgress.value = await new ProgressQuery().createImage(currentProgress.value.id, {
-        location: "EXTERNAL",
-        description: photo.comments,
-        path: "/",
-        time: new Date(),
-        type: "GARBAGE",
-        user_id: useAuthStore().auth?.id ?? -1,
-      });
+      currentProgress.value = await new ProgressQuery().createImage(
+        currentProgress.value.id,
+        {
+          location: "EXTERNAL",
+          description: photo.comments,
+          path: "/",
+          time: new Date(),
+          type: "GARBAGE",
+          user_id: useAuthStore().auth?.id ?? -1,
+        },
+      );
     });
-  }
-  else {
+  } else {
     await tryOrAlertAsync(async () => {
       currentProgress.value = await new ProgressQuery().updateOne({
         id: currentProgress.value.id,

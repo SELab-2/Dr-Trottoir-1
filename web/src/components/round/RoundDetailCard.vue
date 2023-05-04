@@ -190,7 +190,6 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import { ProgressQuery } from "@selab-2/groep-1-query";
-import { useAuthStore } from "@/stores/auth";
 
 const props = defineProps(["entry"]);
 const progress = ref(props.entry.progress);
@@ -236,7 +235,7 @@ async function end() {
 }
 
 function addImage() {
-  emit("requestPhotoAdd", progress.value)
+  emit("requestPhotoAdd", progress.value);
 }
 </script>
 
