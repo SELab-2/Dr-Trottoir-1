@@ -6,6 +6,13 @@ export class ActionValidator extends Validator {
     getAllValidator() {
         return celebrate({
             body: Joi.object().empty().required(),
+            query: Joi.object({
+                take: Joi.number(),
+                skip: Joi.number(),
+                description: Joi.string().trim(),
+                sort: Joi.string().min(1),
+                ord: Joi.string().min(1),
+            }),
         });
     }
 

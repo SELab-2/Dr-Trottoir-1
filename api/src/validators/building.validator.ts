@@ -3,6 +3,32 @@ import { celebrate } from "celebrate";
 import Joi from "joi";
 
 export class BuildingValidator extends Validator {
+    getAllValidator() {
+        return celebrate({
+            query: Joi.object({
+                deleted: Joi.bool(),
+                take: Joi.number(),
+                skip: Joi.number(),
+                name: Joi.string(),
+                ivago_id: Joi.string(),
+                syndicus_id: Joi.number(),
+                sort: Joi.string(),
+                ord: Joi.string(),
+            }),
+        });
+    }
+
+    getOneValidator() {
+        return celebrate({
+            params: Joi.object({
+                id: [
+                    Joi.string().min(1).required(), // for resident routing
+                    Joi.number().positive().required(), // for internal routing
+                ],
+            }),
+        });
+    }
+
     createOneValidator() {
         return celebrate({
             body: Joi.object({
