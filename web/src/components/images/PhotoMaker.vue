@@ -29,7 +29,7 @@
         variant="outlined"
         @update:model-value="$emit('onUpdate', photo)"
         label="Titel"
-        v-model="photo.title"
+        v-model="photo.label"
       ></v-text-field>
       <v-textarea
         @update:model-value="$emit('onUpdate', photo)"
@@ -70,7 +70,7 @@ const props = defineProps({
 const photo = ref<Photo>({
   image: [],
   comments: "",
-  title: "",
+  label: "",
 });
 
 if (!props.isPhoto) {

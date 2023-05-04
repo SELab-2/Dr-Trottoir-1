@@ -84,7 +84,7 @@
             width="100%"
           >
             <RoundDetailCard
-              :key="entry.progress"
+              :key="JSON.stringify(entry.progress)"
               :entry="entry"
               @changed="progressUpdated(entry.progress?.id)"
               @requestPhotoAdd="
@@ -193,13 +193,17 @@ const actions: Button[] = [
   {
     title: "Bezoek beëindigen",
     clicked: async () => {
-      await tryOrAlertAsync(async () => {
-        currentProgress.value = await new ProgressQuery().updateOne({
-          id: currentProgress.value.id,
-          departure: new Date(),
+      if (currentProgress.value) {
+        await tryOrAlertAsync(async () => {
+          if (currentProgress.value) {
+            currentProgress.value = await new ProgressQuery().updateOne({
+              id: currentProgress.value.id,
+              departure: new Date(),
+            });
+          }
         });
-      });
-      await progressUpdated(currentProgress.value.id);
+        await progressUpdated(currentProgress.value.id);
+      }
     },
   },
 ];
@@ -208,13 +212,17 @@ const startActions: Button[] = [
   {
     title: "Bezoek starten",
     clicked: async () => {
-      await tryOrAlertAsync(async () => {
-        currentProgress.value = await new ProgressQuery().updateOne({
-          id: currentProgress.value.id,
-          arrival: new Date(),
+      if (currentProgress.value) {
+        await tryOrAlertAsync(async () => {
+          if (currentProgress.value) {
+            currentProgress.value = await new ProgressQuery().updateOne({
+              id: currentProgress.value.id,
+              arrival: new Date(),
+            });
+          }
         });
-      });
-      await progressUpdated(currentProgress.value.id);
+        await progressUpdated(currentProgress.value.id);
+      }
     },
   },
 ];
@@ -254,7 +262,7 @@ function setCurrentProgress() {
   if (data.value?.round.buildings) {
     for (const building of data.value.round.buildings) {
       const progress = progressItems.value.get(building.building_id);
-      if (progress.departure == null) {
+      if (progress && progress.departure == null) {
         currentProgress.value = progress;
         return;
       }
@@ -275,27 +283,31 @@ async function updateProgressWithPhoto(photo: Photo, isPhoto: boolean) {
   if (isPhoto) {
     //TODO add photo with file query builder
     await tryOrAlertAsync(async () => {
-      currentProgress.value = await new ProgressQuery().createImage(
-        currentProgress.value.id,
-        {
-          location: "EXTERNAL",
-          description: photo.comments,
-          path: "/",
-          time: new Date(),
-          type: "GARBAGE",
-          user_id: useAuthStore().auth?.id ?? -1,
-        },
-      );
+      if (currentProgress.value) {
+        currentProgress.value = await new ProgressQuery().createImage(
+          currentProgress.value.id,
+          {
+            location: "EXTERNAL",
+            description: photo.comments,
+            path: "/",
+            time: new Date(),
+            type: "GARBAGE",
+            user_id: useAuthStore().auth?.id ?? -1,
+          },
+        );
+      }
     });
   } else {
     await tryOrAlertAsync(async () => {
-      currentProgress.value = await new ProgressQuery().updateOne({
-        id: currentProgress.value.id,
-        report: photo.comments,
-      });
+      if (currentProgress.value) {
+        currentProgress.value = await new ProgressQuery().updateOne({
+          id: currentProgress.value.id,
+          report: photo.comments,
+        });
+      }
     });
   }
-  await progressUpdated(currentProgress.value.id);
+  await progressUpdated(currentProgress.value?.id);
   showOverlay.value = false;
 }
 </script>
