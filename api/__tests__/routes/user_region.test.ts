@@ -28,7 +28,7 @@ describe("User_region tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("region", "user_region");
+        await restoreTables();
     });
 
     describe("Succesful requests", () => {

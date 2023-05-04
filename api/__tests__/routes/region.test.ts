@@ -27,7 +27,7 @@ describe("Region tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("region", "user_region");
+        await restoreTables();
     });
 
     describe("Succesful requests", () => {
@@ -176,72 +176,77 @@ describe("Region tests", () => {
             });
         });
 
-        //TODO: fix, voor admin
-        // test("SOFT DELETE /region/:id", async () => {
-        //     const regionSoft = {
-        //         hardDelete: false,
-        //     };
-        //     await runner.delete({ url: "/region/3", data: regionSoft });
+        // describe("Routes for admin", () => {
+        //     beforeEach(() => {
+        //         runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+        //     });
 
-        //     // verify that the region is truly deleted
-        //     const expected = [
-        //         {
-        //             deleted: false,
-        //             id: 1,
-        //             name: "Region 1",
-        //             users: [
-        //                 {
-        //                     id: 1,
-        //                     region_id: 1,
-        //                     user: {
-        //                         address_id: 1,
-        //                         admin: false,
-        //                         date_added: "2023-05-04T12:00:00.000Z",
-        //                         deleted: false,
-        //                         email: "student@trottoir.be",
-        //                         first_name: "Dirk",
+        //     test("SOFT DELETE /region/:id", async () => {
+        //         const regionSoft = {
+        //             hardDelete:false,
+        //         };
+        //         await runner.delete({ url: "/region/3", data: regionSoft });
+
+        //         // verify that the region is truly soft deleted
+        //         const expected = [
+        //             {
+        //                 deleted: false,
+        //                 id: 1,
+        //                 name: "Region 1",
+        //                 users: [
+        //                     {
         //                         id: 1,
-        //                         last_login: "2023-05-04T12:00:00.000Z",
-        //                         last_name: "De Student",
-        //                         phone: "0123456789",
-        //                         student: true,
-        //                         super_student: false,
+        //                         region_id: 1,
+        //                         user: {
+        //                             address_id: 1,
+        //                             admin: false,
+        //                             date_added: "2023-05-04T12:00:00.000Z",
+        //                             deleted: false,
+        //                             email: "student@trottoir.be",
+        //                             first_name: "Dirk",
+        //                             id: 1,
+        //                             last_login: "2023-05-04T12:00:00.000Z",
+        //                             last_name: "De Student",
+        //                             phone: "0123456789",
+        //                             student: true,
+        //                             super_student: false,
+        //                         },
+        //                         user_id: 1,
         //                     },
-        //                     user_id: 1,
-        //                 },
-        //             ],
-        //         },
-        //         {
-        //             deleted: false,
-        //             id: 2,
-        //             name: "Region 2",
-        //             users: [
-        //                 {
-        //                     id: 2,
-        //                     region_id: 2,
-        //                     user: {
-        //                         address_id: 2,
-        //                         admin: false,
-        //                         date_added: "2023-05-04T12:00:00.000Z",
-        //                         deleted: false,
-        //                         email: "superstudent@trottoir.be",
-        //                         first_name: "Toon",
+        //                 ],
+        //             },
+        //             {
+        //                 deleted: false,
+        //                 id: 2,
+        //                 name: "Region 2",
+        //                 users: [
+        //                     {
         //                         id: 2,
-        //                         last_login: "2023-05-04T12:00:00.000Z",
-        //                         last_name: "De Superstudent",
-        //                         phone: "9876543210",
-        //                         student: false,
-        //                         super_student: true,
+        //                         region_id: 2,
+        //                         user: {
+        //                             address_id: 2,
+        //                             admin: false,
+        //                             date_added: "2023-05-04T12:00:00.000Z",
+        //                             deleted: false,
+        //                             email: "superstudent@trottoir.be",
+        //                             first_name: "Toon",
+        //                             id: 2,
+        //                             last_login: "2023-05-04T12:00:00.000Z",
+        //                             last_name: "De Superstudent",
+        //                             phone: "9876543210",
+        //                             student: false,
+        //                             super_student: true,
+        //                         },
+        //                         user_id: 2,
         //                     },
-        //                     user_id: 2,
-        //                 },
-        //             ],
-        //         },
-        //         { deleted: true, id: 3, name: "Region 3", users: [] },
-        //     ];
-        //     await runner.get({
-        //         url: "/region?deleted=true",
-        //         expectedData: expected,
+        //                 ],
+        //             },
+        //             { deleted: true, id: 3, name: "Region 3", users: [] },
+        //         ];
+        //         await runner.get({
+        //             url: "/region?deleted=true",
+        //             expectedData: expected,
+        //         });
         //     });
         // });
 
