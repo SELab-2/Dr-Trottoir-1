@@ -120,8 +120,8 @@ export class ProgressImageValidator extends Validator {
                 image_id: Joi.number().positive().required(),
             }),
             body: Joi.object({
-                hardDelete: Joi.bool()
-            })
+                hardDelete: Joi.bool(),
+            }),
         });
     }
 }

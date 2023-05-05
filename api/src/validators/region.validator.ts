@@ -17,8 +17,8 @@ export class RegionValidator extends Validator {
     getOneValidator() {
         return celebrate({
             params: Joi.object({
-                id: Joi.number().positive().required()
-            })
+                id: Joi.number().positive().required(),
+            }),
         });
     }
 
@@ -33,7 +33,7 @@ export class RegionValidator extends Validator {
     updateOneValidator() {
         return celebrate({
             params: Joi.object({
-                id: Joi.number().positive().required()
+                id: Joi.number().positive().required(),
             }),
             body: Joi.object({
                 name: Joi.string().min(1).required(),

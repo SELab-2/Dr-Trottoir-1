@@ -2,7 +2,7 @@ import { Validator } from "./validator";
 import { celebrate } from "celebrate";
 import Joi from "joi";
 
-class RoundBuildingValidator extends Validator {
+export class RoundBuildingValidator extends Validator {
     getAllValidator() {
         return celebrate({
             query: Joi.object({

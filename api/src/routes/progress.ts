@@ -6,15 +6,31 @@ import { prisma } from "../prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
-import { ProgressImageValidator } from "../validators/progress.validator";
+import {
+    ProgressImageValidator,
+    ProgressValidator,
+} from "../validators/progress.validator";
+import { Validator } from "../validators/validator";
 
 export class ProgressRouting extends Routing {
     toRouter(): express.Router {
         const router = super.toRouter();
         const imageValidator = new ProgressImageValidator();
-        router.post("/:id/image", imageValidator.createOneValidator(), this.createImage);
-        router.patch("/:id/image/:image_id", imageValidator.updateOneValidator(), this.updateImage);
-        router.delete("/:id/image/:image_id", imageValidator.deleteOneValidator(), this.deleteImage);
+        router.post(
+            "/:id/image",
+            imageValidator.createOneValidator(),
+            this.createImage,
+        );
+        router.patch(
+            "/:id/image/:image_id",
+            imageValidator.updateOneValidator(),
+            this.updateImage,
+        );
+        router.delete(
+            "/:id/image/:image_id",
+            imageValidator.deleteOneValidator(),
+            this.deleteImage,
+        );
         return router;
     }
 
@@ -216,5 +232,9 @@ export class ProgressRouting extends Routing {
         }
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new ProgressValidator();
     }
 }
