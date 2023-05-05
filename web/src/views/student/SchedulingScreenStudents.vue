@@ -1,29 +1,14 @@
 <template>
   <HFillWrapper v-if="days !== undefined">
     <div v-for="day in days" :key="day.id">
-
       <v-card
         v-if="day.list.length > 0"
         :title="day.name"
         variant="flat"
         color="background"
       >
-        <!-- Show right if screen large enough -->
         <template v-slot:append>
           <v-chip
-            v-show="!mobile"
-            label
-            prepend-icon="mdi-calendar-month-outline"
-            variant="text"
-          >
-            {{ prettyDate(day.start) }}
-          </v-chip>
-        </template>
-
-        <!-- Show below title if screen too small -->
-        <template v-slot:subtitle>
-          <v-chip
-            v-show="mobile"
             label
             prepend-icon="mdi-calendar-month-outline"
             variant="text"
@@ -47,7 +32,9 @@
           "
         >
           <template v-slot:subtitle>
+            <div class="d-flex">
             <v-chip
+              class="me-auto"
               label
               prepend-icon="mdi-clock-time-ten-outline"
               variant="text"
@@ -55,45 +42,54 @@
             >
               {{ new Date(item.schedule.day).toISOString().slice(11, 16) }}
             </v-chip>
-          </template>
-
-          <template v-slot:append>
-            <v-btn
-              v-if="item.progress.length === 0"
-              color="primary"
-              v-on:click.stop="
-                snackbar = !snackbar;
-                current_id = item.schedule.round_id;
-              "
-              :variant="
-                new Date(item.schedule.day).getDate() !== new Date().getDate()
-                  ? 'flat'
-                  : 'elevated'
-              "
-              :disabled="
-                new Date(item.schedule.day).getDate() !== new Date().getDate()
-              "
-            >
-              Start ronde</v-btn
-            >
             <v-chip
-              v-else-if="
-                item.progress.length === item.schedule.round.buildings.length
-              "
+              label
+              color="primary"
+              class="mr-2"
+            >
+              <v-icon icon="mdi-office-building-outline" class="pr-1"></v-icon>
+              {{ item.schedule.round.buildings.length }}
+
+            </v-chip>
+
+            <!-- Done status indicator -->
+            <v-chip
+              v-if="item.progress.length === item.schedule.round.buildings.length"
               label
               color="success"
             >
               <v-icon icon="mdi-check"></v-icon>
               Klaar
             </v-chip>
-            <v-chip v-else label color="warning">
+
+            <!-- In progress indicator -->
+            <v-chip v-else-if="item.progress.length !== 0" label color="warning">
               Bezig {{ item.progress.length }}/{{
                 item.schedule.round.buildings.length
               }}
             </v-chip>
-          </template>
-        </BorderCard>
+            </div>
 
+          </template>
+
+          <DividerLayout v-show="showStartButton(item)"/>
+
+          <div class="pa-4 d-flex align-center" v-if="showStartButton(item)">
+            <v-spacer/>
+            <v-btn
+
+              class="text-none"
+              prepend-icon="mdi-play"
+              color="primary"
+              v-on:click.stop="
+                snackbar = !snackbar;
+                current_id = item.schedule.round_id;
+              "
+            >
+              Start ronde
+            </v-btn>
+          </div>
+      </BorderCard>
     </div>
 
     <div class="centre text-center pa-5" v-if="empty">
@@ -127,11 +123,12 @@
 
 <script lang="ts" setup>
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
+import DividerLayout from "@/layouts/DividerLayout.vue";
 import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import router from "@/router";
-import {Ref, ref} from "vue";
+import { Ref, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { tryOrAlertAsync } from "@/try";
 import { useDisplay } from "vuetify";
@@ -141,6 +138,15 @@ const mobile: Ref<boolean> = display.mobile;
 
 const snackbar = ref(false);
 const current_id = ref(0);
+
+function showStartButton(schedule: {
+  schedule: Result<ScheduleQuery>;
+  progress: Array<Result<ProgressQuery>>;
+}): boolean{
+  const today = new Date().getDate();
+  const day = new Date(schedule.schedule.day).getDate()
+  return (today === day) && schedule.progress.length === 0;
+}
 
 type DayEntry = {
   id: number;

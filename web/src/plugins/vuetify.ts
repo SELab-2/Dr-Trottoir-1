@@ -58,15 +58,15 @@ export default createVuetify({
     VAutocomplete: { variant: "outlined" },
   },
   display: {
-  mobileBreakpoint: "lg",
+    mobileBreakpoint: "lg",
     thresholds: {
-    xs: 0,
+      xs: 0,
       sm: 340,
       md: 540,
       lg: 750,
       xl: 1280,
+    },
   },
-},
   /*theme: {
     themes: {
       light: {
