@@ -106,7 +106,7 @@ export class UserRouting extends Routing {
         const password = req.body.password;
         delete req.body.password;
         const user: User = req.body;
-        user.salt = crypto.randomBytes(32).toString();
+        user.salt = crypto.randomBytes(32).toString("hex");
         user.hash = crypto
             .createHash("sha256")
             .update(password + user.salt)
