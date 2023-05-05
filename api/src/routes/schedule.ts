@@ -21,7 +21,7 @@ export class ScheduleRouting extends Routing {
         },
     };
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getAll(req: CustomRequest, res: express.Response) {
         // Students are only allowed to see their own schedules
         if (
@@ -80,7 +80,7 @@ export class ScheduleRouting extends Routing {
         return res.status(200).json(result);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.schedule.findFirstOrThrow({
             where: {
