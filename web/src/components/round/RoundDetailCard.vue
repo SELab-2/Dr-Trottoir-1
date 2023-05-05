@@ -192,7 +192,11 @@ import { tryOrAlertAsync } from "@/try";
 import { ProgressQuery } from "@selab-2/groep-1-query";
 
 const props = defineProps(["entry"]);
-const progress = ref(props.entry.progress);
+const progress = ref(
+  props.entry.progress
+    ? JSON.parse(JSON.stringify(props.entry.progress))
+    : undefined,
+);
 
 const router = useRouter();
 
