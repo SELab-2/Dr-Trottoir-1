@@ -18,21 +18,21 @@
         </template>
       </v-card>
 
-        <BorderCard
-          v-for="item in day.list"
-          :key="item.schedule.id"
-          class="mb-3 mx-1"
-          :title="item.schedule.round.name"
-          @click="
-            current_id = item.schedule.round_id;
-            router.push({
-              name: 'round_detail',
-              params: { id: current_id, schedule: item.schedule.id },
-            });
-          "
-        >
-          <template v-slot:subtitle>
-            <div class="d-flex">
+      <BorderCard
+        v-for="item in day.list"
+        :key="item.schedule.id"
+        class="mb-3 mx-1"
+        :title="item.schedule.round.name"
+        @click="
+          current_id = item.schedule.round_id;
+          router.push({
+            name: 'round_detail',
+            params: { id: current_id, schedule: item.schedule.id },
+          });
+        "
+      >
+        <template v-slot:subtitle>
+          <div class="d-flex">
             <v-chip
               class="me-auto"
               label
@@ -42,19 +42,16 @@
             >
               {{ new Date(item.schedule.day).toISOString().slice(11, 16) }}
             </v-chip>
-            <v-chip
-              label
-              color="primary"
-              class="mr-2"
-            >
+            <v-chip label color="primary" class="mr-2">
               <v-icon icon="mdi-office-building-outline" class="pr-1"></v-icon>
               {{ item.schedule.round.buildings.length }}
-
             </v-chip>
 
             <!-- Done status indicator -->
             <v-chip
-              v-if="item.progress.length === item.schedule.round.buildings.length"
+              v-if="
+                item.progress.length === item.schedule.round.buildings.length
+              "
               label
               color="success"
             >
@@ -63,32 +60,34 @@
             </v-chip>
 
             <!-- In progress indicator -->
-            <v-chip v-else-if="item.progress.length !== 0" label color="warning">
+            <v-chip
+              v-else-if="item.progress.length !== 0"
+              label
+              color="warning"
+            >
               Bezig {{ item.progress.length }}/{{
                 item.schedule.round.buildings.length
               }}
             </v-chip>
-            </div>
-
-          </template>
-
-          <DividerLayout v-show="showStartButton(item)"/>
-
-          <div class="pa-4 d-flex align-center" v-if="showStartButton(item)">
-            <v-spacer/>
-            <v-btn
-
-              class="text-none"
-              prepend-icon="mdi-play"
-              color="primary"
-              v-on:click.stop="
-                snackbar = !snackbar;
-                current_id = item.schedule.round_id;
-              "
-            >
-              Start ronde
-            </v-btn>
           </div>
+        </template>
+
+        <DividerLayout v-show="showStartButton(item)" />
+
+        <div class="pa-4 d-flex align-center" v-if="showStartButton(item)">
+          <v-spacer />
+          <v-btn
+            class="text-none"
+            prepend-icon="mdi-play"
+            color="primary"
+            v-on:click.stop="
+              snackbar = !snackbar;
+              current_id = item.schedule.round_id;
+            "
+          >
+            Start ronde
+          </v-btn>
+        </div>
       </BorderCard>
     </div>
 
@@ -132,18 +131,16 @@ import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { tryOrAlertAsync } from "@/try";
 
-
-
 const snackbar = ref(false);
 const current_id = ref(0);
 
 function showStartButton(schedule: {
   schedule: Result<ScheduleQuery>;
   progress: Array<Result<ProgressQuery>>;
-}): boolean{
+}): boolean {
   const today = new Date().getDate();
-  const day = new Date(schedule.schedule.day).getDate()
-  return (today === day) && schedule.progress.length === 0;
+  const day = new Date(schedule.schedule.day).getDate();
+  return today === day && schedule.progress.length === 0;
 }
 
 type DayEntry = {
