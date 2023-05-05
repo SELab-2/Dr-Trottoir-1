@@ -11,7 +11,7 @@ export class GarbageRouting extends Routing {
         building: selectBuilding(),
     };
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async getAll(req: CustomRequest, res: express.Response) {
         const result = await prisma.garbage.findMany({
             take: Parser.number(req.query["take"], 1024),
