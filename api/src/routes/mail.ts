@@ -10,34 +10,30 @@ export class MailRouting {
     @Auth.authorization({ superStudent: true })
     async sendMail(req: CustomRequest, res: express.Response) {
         const transporter = nodemailer.createTransport({
-            host: process.env.HOST,
-            port: 587,
+            host: process.env.SMTP_HOST,
+            port: parseInt(process.env.SMTP_PORT ?? "NaN"),
             auth: {
-                user: process.env.MAIL_ADDRESS,
-                pass: process.env.MAIL_PASSWORD,
+                user: process.env.SMTP_MAIL_ADDRESS,
+                pass: process.env.SMTP_MAIL_PASSWORD,
             },
         });
 
         // verify connection configuration
         transporter.verify((error, succes) => {
             if (error) {
-                console.log(error);
                 throw new APIError(APIErrorCode.BAD_REQUEST);
-            } else {
-                console.log("Email is ready to be sent");
             }
         });
 
         await transporter.sendMail(
             {
-                from: process.env.MAIL_ADDRESS,
+                from: process.env.SMTP_MAIL_ADDRESS,
                 to: req.body["to"],
                 subject: req.body["subject"],
                 text: req.body["content"],
             },
             (err, info) => {
                 if (err) {
-                    console.log(err);
                     throw new APIError(APIErrorCode.BAD_REQUEST);
                 }
             },
