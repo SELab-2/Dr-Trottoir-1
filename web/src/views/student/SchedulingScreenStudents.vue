@@ -1,14 +1,17 @@
 <template>
   <HFillWrapper v-if="days !== undefined">
     <div v-for="day in days" :key="day.id">
+
       <v-card
         v-if="day.list.length > 0"
         :title="day.name"
         variant="flat"
         color="background"
       >
+        <!-- Show right if screen large enough -->
         <template v-slot:append>
           <v-chip
+            v-show="!mobile"
             label
             prepend-icon="mdi-calendar-month-outline"
             variant="text"
@@ -17,12 +20,24 @@
           </v-chip>
         </template>
 
+        <!-- Show below title if screen too small -->
+        <template v-slot:subtitle>
+          <v-chip
+            v-show="mobile"
+            label
+            prepend-icon="mdi-calendar-month-outline"
+            variant="text"
+          >
+            {{ prettyDate(day.start) }}
+          </v-chip>
+        </template>
+      </v-card>
+
         <BorderCard
           v-for="item in day.list"
           :key="item.schedule.id"
           class="mb-3 mx-1"
           :title="item.schedule.round.name"
-          prepend-icon="mdi-transit-detour"
           @click="
             current_id = item.schedule.round_id;
             router.push({
@@ -78,7 +93,7 @@
             </v-chip>
           </template>
         </BorderCard>
-      </v-card>
+
     </div>
 
     <div class="centre text-center pa-5" v-if="empty">
@@ -116,9 +131,13 @@ import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.v
 import BorderCard from "@/layouts/CardLayout.vue";
 import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import router from "@/router";
-import { ref } from "vue";
+import {Ref, ref} from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { tryOrAlertAsync } from "@/try";
+import { useDisplay } from "vuetify";
+
+const display = useDisplay();
+const mobile: Ref<boolean> = display.mobile;
 
 const snackbar = ref(false);
 const current_id = ref(0);
