@@ -84,6 +84,7 @@
             width="100%"
           >
             <RoundDetailCard
+              :class="mobile ? 'shiftUnderTimeLine' : ''"
               :key="JSON.stringify(entry.progress)"
               :entry="entry"
               @changed="progressUpdated(entry.progress?.id)"
@@ -332,5 +333,10 @@ async function updateProgressWithPhoto(photo: Photo, isPhoto: boolean) {
   gap: 12px
 
 .v-timeline-item__body
+  @media (max-width: 750px)
+    padding-inline-start: 2px !important
   padding-inline-start: 12px !important
+.shiftUnderTimeLine
+  transform: translateX(-26px)
+  width: calc(100% + 26px)
 </style>
