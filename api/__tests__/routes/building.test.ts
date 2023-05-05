@@ -2,11 +2,7 @@ import { afterAll, beforeAll, describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import {
-    deleteDatabaseData,
-    initialiseDatabase,
-    restoreTables,
-} from "../mock/database";
+import { resetDatabase, restoreTables } from "../mock/database";
 import {
     badRequestForeignKey,
     badRequestResponse,
@@ -17,22 +13,15 @@ import {
 describe("Building tests", () => {
     let runner: Testrunner;
 
-    beforeAll(async () => {
+    beforeAll(() => {
         const server = request(app);
         runner = new Testrunner(server);
 
-        await deleteDatabaseData();
-        await initialiseDatabase();
+        return resetDatabase();
     });
 
     afterEach(async () => {
-        await restoreTables(
-            "building",
-            "building_image",
-            "garbage",
-            "round_building",
-            "progress",
-        );
+        await restoreTables();
     });
 
     describe("Succesful requests", () => {

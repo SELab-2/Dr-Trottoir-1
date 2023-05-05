@@ -5,6 +5,7 @@ import app from "../../src/main";
 import {
     deleteDatabaseData,
     initialiseDatabase,
+    resetDatabase,
     restoreTables,
 } from "../mock/database";
 import {
@@ -20,14 +21,13 @@ describe("Action tests", () => {
         const server = request(app);
         runner = new Testrunner(server);
 
-        await deleteDatabaseData();
-        await initialiseDatabase();
-
         runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+
+        return resetDatabase();
     });
 
     afterEach(async () => {
-        await restoreTables("action", "garbage");
+        await restoreTables();
     });
 
     describe("Succesful requests", () => {
