@@ -42,6 +42,9 @@ const initialiseFunctions: { [name: string]: () => Promise<any> } = {
     mail_template: initialiseMailTemplate,
 };
 
+/**
+ * Initializes the database
+ */
 export async function initialiseDatabase(): Promise<void> {
     for (const entry in initialiseFunctions) {
         await initialiseFunctions[entry]();
@@ -67,4 +70,11 @@ export async function deleteDatabaseData() {
             `TRUNCATE public.${table} RESTART IDENTITY CASCADE`,
         );
     }
+}
+
+/**
+ * Resets the database. Performs a full wipe of all tables and then fills them up again
+ */
+export async function resetDatabase() {
+    return deleteDatabaseData().then(() => initialiseDatabase());
 }
