@@ -25,7 +25,7 @@ describe("Syndicus tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("user", "syndicus", "building");
+        await restoreTables();
     });
 
     describe("Successful requests", () => {
@@ -323,6 +323,14 @@ describe("Syndicus tests", () => {
 
         test("DELETE /syndicus/:id", async () => {
             await runner.delete({
+                url: "/building/1",
+                data: { hardDelete: true },
+            });
+            await runner.delete({
+                url: "/building/3",
+                data: { hardDelete: true },
+            });
+            await runner.delete({
                 url: "/syndicus/1",
             });
         });
@@ -333,6 +341,12 @@ describe("Syndicus tests", () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
         });
 
+        test("Deleting syndicus who's linked to a building", async () => {
+            await runner.delete({
+                url: "/syndicus/1",
+                statusCode: 400,
+            });
+        });
         test("Requests using non-existent syndicus", async () => {
             const url = "/syndicus/0";
             await runner.get({

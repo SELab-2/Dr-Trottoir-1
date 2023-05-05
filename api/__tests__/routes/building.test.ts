@@ -21,13 +21,7 @@ describe("Building tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables(
-            "building",
-            "building_image",
-            "garbage",
-            "round_building",
-            "progress",
-        );
+        await restoreTables();
     });
 
     describe("Succesful requests", () => {

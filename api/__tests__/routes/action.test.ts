@@ -27,7 +27,7 @@ describe("Action tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("action", "garbage");
+        await restoreTables();
     });
 
     describe("Succesful requests", () => {
