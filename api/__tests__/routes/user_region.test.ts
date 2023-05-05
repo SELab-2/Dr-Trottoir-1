@@ -337,6 +337,15 @@ describe("User_region tests", () => {
                         statusCode: 403,
                     });
                 });
+
+                test("Cannot reach PATCH /user_region/:id", async () => {
+                    await runner.patch({
+                        url: "/user_region/1",
+                        data: new_user_region,
+                        expectedResponse: methodNotAllowedResponse,
+                        statusCode: 405,
+                    });
+                });
             });
         });
         describe("The requested path must exist", () => {
