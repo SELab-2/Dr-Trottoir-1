@@ -249,10 +249,6 @@ describe("Region tests", () => {
                 });
             });
         });
-
-        afterAll(() => {
-            app.close();
-        });
     });
 
     describe("Unsuccesful requests", () => {
@@ -422,9 +418,9 @@ describe("Region tests", () => {
                 });
             });
         });
+    });
 
-        afterAll(() => {
-            app.close();
-        });
+    afterAll(() => {
+        app.close();
     });
 });
