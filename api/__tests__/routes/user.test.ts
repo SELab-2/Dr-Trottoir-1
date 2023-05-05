@@ -5,6 +5,7 @@ import app from "../../src/main";
 import {
     deleteDatabaseData,
     initialiseDatabase,
+    resetDatabase,
     restoreTables,
 } from "../mock/database";
 import {
@@ -16,23 +17,15 @@ import {
 
 describe("User tests", () => {
     let runner: Testrunner;
-    beforeAll(async () => {
+    beforeAll(() => {
         const server = request(app);
         runner = new Testrunner(server);
 
-        await deleteDatabaseData();
-        await initialiseDatabase();
+        return resetDatabase();
     });
 
     afterEach(async () => {
-        await restoreTables(
-            "address",
-            "user",
-            "user_region",
-            "syndicus",
-            "schedule",
-            "image",
-        );
+        await restoreTables();
     });
 
     describe("Successful requests", () => {
@@ -392,7 +385,7 @@ describe("User tests", () => {
         });
         test("Cannot add user with duplicate email", async () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
-            const user = {
+            const newUser = {
                 email: "student@trottoir.be",
                 first_name: "foo",
                 last_name: "bar",
@@ -409,7 +402,6 @@ describe("User tests", () => {
                         zip_code: 1000,
                     },
                 },
-                address_id: undefined,
                 student: false,
                 super_student: false,
                 admin: true,
@@ -418,7 +410,7 @@ describe("User tests", () => {
 
             await runner.post({
                 url: "/user",
-                data: user,
+                data: newUser,
                 expectedResponse: conflictResponse,
                 statusCode: 409,
             });

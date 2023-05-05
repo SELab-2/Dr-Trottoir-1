@@ -2,7 +2,8 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import { deleteDatabaseData, initialiseDatabase } from "../mock/database";
+import { resetDatabase } from "../mock/database";
+import { restoreTables } from "../mock/database";
 import {
     badRequestForeignKey,
     badRequestResponse,
@@ -13,14 +14,17 @@ import {
 process.env["DISABLE_AUTH"] = "false";
 describe("Garbage tests", () => {
     let runner: Testrunner;
+
     beforeAll(async () => {
         const server = request(app);
         runner = new Testrunner(server);
-
-        await deleteDatabaseData();
-        await initialiseDatabase();
-
         runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+
+        return resetDatabase();
+    });
+
+    afterEach(async () => {
+        await restoreTables();
     });
 
     describe("Successful requests", () => {
