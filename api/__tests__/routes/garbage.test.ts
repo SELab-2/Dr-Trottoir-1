@@ -221,13 +221,8 @@ describe("Garbage tests", () => {
                     statusCode: 403,
                 });
             });
-            test("Cannot use any path as Student except specific GET", async () => {
+            test("Cannot use any path as Student except GET", async () => {
                 runner.authLevel(AuthenticationLevel.STUDENT);
-                await runner.get({
-                    url: "/garbage",
-                    expectedData: [forbiddenResponse],
-                    statusCode: 403,
-                });
 
                 await runner.post({
                     url: "/garbage",
