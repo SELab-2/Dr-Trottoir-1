@@ -104,6 +104,7 @@ export class ProgressImageValidator extends Validator {
                 image_id: Joi.number().positive().required(),
             }),
             body: Joi.object({
+                id: Joi.forbidden(),
                 type: Joi.string()
                     .trim()
                     .valid("ARRIVAL", "DEPARTURE", "GARBAGE"),

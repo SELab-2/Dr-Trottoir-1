@@ -36,7 +36,16 @@ export class RegionValidator extends Validator {
                 id: Joi.number().positive().required(),
             }),
             body: Joi.object({
+                id: Joi.forbidden(),
                 name: Joi.string().min(1).required(),
+            }),
+        });
+    }
+
+    deleteOneValidator() {
+        return celebrate({
+            params: Joi.object({
+                id: Joi.number().positive().required(),
             }),
         });
     }

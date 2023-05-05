@@ -202,7 +202,6 @@ describe("User tests", () => {
         test("PATCH /user/:id", async () => {
             const user = (await runner.getRaw("/user/1")).body;
             user.first_name = "Baz";
-            delete user.id;
 
             await runner.patch({
                 url: "/user/1",

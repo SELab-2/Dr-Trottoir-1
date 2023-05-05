@@ -39,21 +39,19 @@ export class BuildingValidator extends Validator {
                 syndicus_id: Joi.number().positive().required(),
                 hash: Joi.string().forbidden(),
             }),
-
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
         });
     }
 
     updateOneValidator() {
         return celebrate({
             body: Joi.object({
+                id: Joi.forbidden(),
                 name: Joi.string().min(1),
                 ivago_id: Joi.string().min(1),
                 address_id: Joi.number().positive(),
                 manual_id: Joi.number().positive(),
                 syndicus_id: Joi.number().positive(),
+                deleted: Joi.bool(),
                 hash: Joi.string().forbidden(),
             }),
 

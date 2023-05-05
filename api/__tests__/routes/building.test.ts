@@ -236,8 +236,10 @@ describe("Building tests", () => {
             building["manual_id"] = building["manual"]["id"];
             delete building["manual"];
             delete building["images"];
+            delete building["id"];
 
             const expected = {
+                id: 1,
                 name: "Building 1 New",
                 ivago_id: "ivago-1",
                 deleted: false,
@@ -453,7 +455,7 @@ describe("Building tests", () => {
                     data: {
                         syndicus_id: 0,
                     },
-                    expectedResponse: badRequestForeignKey,
+                    expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
             });
@@ -461,7 +463,7 @@ describe("Building tests", () => {
                 await runner.patch({
                     url: "/building/1",
                     data: { address_id: 0 },
-                    expectedResponse: badRequestForeignKey,
+                    expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
             });
@@ -469,7 +471,7 @@ describe("Building tests", () => {
                 await runner.patch({
                     url: "/building/1",
                     data: { manual_id: 0 },
-                    expectedResponse: badRequestForeignKey,
+                    expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
             });

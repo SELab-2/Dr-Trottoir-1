@@ -44,6 +44,7 @@ export class SyndicusValidator extends Validator {
             }),
 
             body: Joi.object({
+                id: Joi.forbidden(),
                 user_id: Joi.number().positive(),
             }),
         });

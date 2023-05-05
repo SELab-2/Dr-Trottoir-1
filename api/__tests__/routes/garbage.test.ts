@@ -119,6 +119,7 @@ describe("Garbage tests", () => {
         test("PATCH /garbage/:id", async () => {
             const expected = {
                 pickup_time: "2023-02-02T00:00:00.000Z",
+                id: 1,
                 action_id: 1,
                 building_id: 1,
                 action: { id: 1, description: "action 1" },

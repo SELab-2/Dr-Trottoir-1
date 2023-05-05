@@ -42,6 +42,7 @@ export class RoundBuildingValidator extends Validator {
                 id: Joi.number().positive().required(),
             }),
             body: Joi.object({
+                id: Joi.forbidden(),
                 round_id: Joi.number().positive(),
                 building_id: Joi.number().positive(),
             }),

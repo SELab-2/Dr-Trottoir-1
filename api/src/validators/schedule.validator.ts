@@ -48,6 +48,7 @@ export class ScheduleValidator extends Validator {
             }),
 
             body: Joi.object({
+                id: Joi.forbidden(),
                 day: Joi.date().iso(),
                 user_id: Joi.number().positive(),
                 round_id: Joi.number().positive(),

@@ -39,6 +39,7 @@ export class MailTemplateValidator extends Validator {
                 id: Joi.number().positive().required(),
             }),
             body: Joi.object({
+                id: Joi.forbidden(),
                 name: Joi.string().trim().min(1),
                 mail_subject: Joi.string().trim().min(1),
                 content: Joi.string().trim().min(1),

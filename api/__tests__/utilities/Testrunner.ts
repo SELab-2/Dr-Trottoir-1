@@ -172,10 +172,6 @@ export class Testrunner {
 
         expect(response.statusCode).toEqual(statusCode);
 
-        // delete ID, as that cannot be changed, so doesn't need to be checked
-        //  and we don't want it to interfere with the test
-        delete response.body["id"];
-
         this.verifyBody([expectedResponse], response);
 
         return response;

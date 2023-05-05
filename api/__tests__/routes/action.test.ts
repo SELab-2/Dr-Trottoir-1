@@ -67,7 +67,7 @@ describe("Action tests", () => {
             await runner.patch({
                 url: "/action/1",
                 data: newAction,
-                expectedResponse: newAction,
+                expectedResponse: { id: 1, description: "Updated description" },
             });
         });
 

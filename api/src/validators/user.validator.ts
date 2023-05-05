@@ -98,6 +98,7 @@ export class UserValidator extends Validator {
     deleteOneValidator() {
         return celebrate({
             body: Joi.object({
+                id: Joi.forbidden(),
                 hardDelete: Joi.boolean(),
             }),
             params: Joi.object({
