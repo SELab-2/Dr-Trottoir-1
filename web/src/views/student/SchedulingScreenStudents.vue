@@ -128,13 +128,11 @@ import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.v
 import BorderCard from "@/layouts/CardLayout.vue";
 import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import router from "@/router";
-import { Ref, ref } from "vue";
+import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { tryOrAlertAsync } from "@/try";
-import { useDisplay } from "vuetify";
 
-const display = useDisplay();
-const mobile: Ref<boolean> = display.mobile;
+
 
 const snackbar = ref(false);
 const current_id = ref(0);

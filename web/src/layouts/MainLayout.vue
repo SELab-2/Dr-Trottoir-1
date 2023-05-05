@@ -168,7 +168,6 @@
           {{ route.meta.title }}
         </v-toolbar-title>
 
-        <v-spacer />
       </v-app-bar>
       <Suspense :key="route.fullPath">
         <template #fallback>
