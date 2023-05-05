@@ -9,6 +9,10 @@ export type MailTemplateQueryParameters = {
     ord: Array<"asc" | "desc">;
 };
 
-export class MailTemplateQuery extends Query<MailTemplateQueryParameters, MailTemplate, MailTemplate> {
+export class MailTemplateQuery extends Query<
+    MailTemplateQueryParameters,
+    MailTemplate,
+    MailTemplate
+> {
     endpoint = "mail_template";
 }
