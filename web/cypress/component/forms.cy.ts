@@ -8,7 +8,7 @@ describe("form tests", () => {
     it('addressform correct input test', () => {
       cy.mount(AdressForm, {
         props:{
-          // default props
+          // these are the default props
           readonly: false,
           street: "",
           number: "0",
@@ -69,7 +69,7 @@ describe("form tests", () => {
     it('contactform correct input test', () => {
       cy.mount(ContactForm, {
         props: {
-          // default props
+          // thse are the default props
           readonly: false,
           phone: "",
           email: "",
@@ -85,7 +85,7 @@ describe("form tests", () => {
       cy.mount(ContactForm, {
         // default props
       })
-      // cy.get('#phone').type('hallo') // you can only enter numbers
+      // cy.get('#phone').type('hallo') // you should only be able to enter numbers,
       // cy.get('#phone').should('be.empty') // this not yet implemented now
       cy.get('#phone').type("012345") // phone number too short
       cy.contains('Telefoonnummer moet minimaal 9 tekens lang zijn.')

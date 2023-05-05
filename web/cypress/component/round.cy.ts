@@ -49,7 +49,7 @@ describe("round tests", () => {
       cy.get('#edit').click()
       cy.get('#notes').clear().type("NOTE")
       cy.get('#save').click()
-      // savebutton uses apicall to update the database, so this can't be tested with just a component test
+      // savebutton uses api call to update the database, so this can't be tested with just a component test
       // same for the add image button
     })
     it('progress test no images', () => {

@@ -34,8 +34,8 @@ describe("custom table test", () => {
       },
     })
     cy.get('#table').then( () => {
-      // cy.contains('th, Gebouw')
-      // cy.contains('th, Adres')   // table heads aren't just plain text, so this doesn't work
+      cy.contains('th', 'Gebouw')
+      cy.contains('th', 'Adres')
       cy.contains('td', 'testgebouw')
       cy.contains('td', 'andergebouw')
       cy.contains('td', 'teststraat 5')

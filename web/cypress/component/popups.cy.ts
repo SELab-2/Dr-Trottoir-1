@@ -5,15 +5,17 @@ import StartRoundPopup from '@/components/popups/StartRoundPopupContent.vue'
 describe("popup tests", () => {
   it('cardpopup test', () => {
     cy.mount(CardPopup, {
-      props: ["modelValue"]
+      props: {
+        modelValue: true
+      }
     })
-    // TODO the mount doesn't give an error, but it's just a blank screen
+    // this is a blank canvas to create a popup, where modelValue indicates if the popup is active/visible or not
   })
 
   it('loader popup test', () => {
     cy.mount(Loader, {
     })
-    // this is just a spinnning circle, so there is not really anything to test
+    // this is just a spinnning circle, so there is not really anything to test other than see if it works
   })
 
   it('start round popup test', () => {

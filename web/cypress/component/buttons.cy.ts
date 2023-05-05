@@ -1,5 +1,6 @@
 import RoundedButton from '@/components/buttons/RoundedButton.vue'
 import AddButton from '@/components/buttons/AddButton.vue'
+import Button from '@/components/models/Button.vue';
 
 describe("buttons test", () => {
   it('roundedbutton test', () => {
@@ -16,10 +17,16 @@ describe("buttons test", () => {
     cy.mount(AddButton, {
       props: {
         icon: 'mdi-domain',
-        items: []
+        items: [<Button>{title: "test1"}, <Button>{title: "test2"}]
       },
     })
-    // TODO add buttons in items list
+    cy.contains("test1").should('not.exist')
+    cy.contains("test2").should('not.exist')
     cy.get('#menu-activator').click()
+    cy.contains("test1").should('be.visible')
+    cy.contains("test2").should('be.visible')
+    cy.get('#menu-activator').click()
+    cy.contains("test1").should('not.be.visible')
+    cy.contains("test2").should('not.be.visible')
   })
 })
