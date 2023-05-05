@@ -5,6 +5,7 @@ import { GarbageQuery } from "./garbage";
 import { ProgressQuery } from "./progress";
 import { RegionQuery } from "./region";
 import { RoundQuery } from "./round";
+import { MailTemplateQuery } from "./mail_template";
 import { RoundBuildingQuery } from "./round_building";
 import { ScheduleQuery } from "./schedule";
 import { SyndicusQuery } from "./syndicus";
@@ -56,4 +57,5 @@ export {
     Result,
     Parameter,
     Element,
+    MailTemplateQuery,
 };
