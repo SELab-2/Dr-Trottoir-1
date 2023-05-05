@@ -43,7 +43,7 @@ export class MailRouting {
             },
         );
 
-        return res.status(250).json({});
+        return res.status(201).json({});
     }
 
     toRouter(): express.Router {
