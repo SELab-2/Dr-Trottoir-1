@@ -96,7 +96,7 @@ export class ProgressRouting extends Routing {
         return res.status(200).json(result);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.progress.findFirstOrThrow({
             where: {

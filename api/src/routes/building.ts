@@ -60,8 +60,20 @@ export class BuildingRouting extends Routing {
         super();
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ superStudent: true, syndicus: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        // A syndicus is only allowed to see his own buildings
+        if (
+            !req.user?.super_student &&
+            !req.user?.admin &&
+            req.user?.syndicus.every(
+                (element) =>
+                    element.id !== Parser.number(req.query["syndicus_id"]),
+            )
+        ) {
+            throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
         // only admins can choose to see deleted entries too
         let deleted: boolean | undefined = false;
         if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
@@ -148,7 +160,7 @@ export class BuildingRouting extends Routing {
         return res.status(200).json({});
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     static async internal(req: CustomRequest, res: express.Response) {
         const result = await prisma.building.findFirstOrThrow({
             where: {
@@ -225,7 +237,7 @@ export class BuildingRouting extends Routing {
         return res.json(result);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ superStudent: true, syndicus: true })
     async createImage(req: CustomRequest, res: express.Response) {
         const building_id = Number(Parser.number(req.params["id"]));
         await prisma.image.create({
@@ -250,7 +262,7 @@ export class BuildingRouting extends Routing {
         return res.status(201).json(result);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ superStudent: true, syndicus: true })
     async deleteImage(req: CustomRequest, res: express.Response) {
         const result = await prisma.buildingImages.findUniqueOrThrow({
             where: {

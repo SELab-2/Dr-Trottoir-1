@@ -1,11 +1,13 @@
 import { prisma } from "../prisma";
 import express from "express";
-import { CustomRequest, Routing, includeUser, selectBuilding } from "./routing";
+import { CustomRequest, includeUser, Routing, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import { Prisma } from "@selab-2/groep-1-orm";
 import { Validator } from "../validators/validator";
 import { SyndicusValidator } from "../validators/syndicus.validator";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
 
 export class SyndicusRouting extends Routing {
     private static includes: Prisma.SyndicusInclude = {
@@ -49,8 +51,19 @@ export class SyndicusRouting extends Routing {
         return res.status(200).json(result);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ superStudent: true, syndicus: true })
     async getOne(req: CustomRequest, res: express.Response) {
+        // A syndicus is only allowed to see his own entries
+        if (
+            !req.user?.super_student &&
+            !req.user?.admin &&
+            req.user?.syndicus.every(
+                (element) => element.id !== Parser.number(req.params["id"]),
+            )
+        ) {
+            throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
         const result = await prisma.syndicus.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),

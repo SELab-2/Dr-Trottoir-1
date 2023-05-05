@@ -82,7 +82,7 @@ export class UserRouting extends Routing {
         return res.status(200).json(result);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.user.findFirstOrThrow({
             where: {
@@ -120,11 +120,11 @@ export class UserRouting extends Routing {
         return res.status(201).json(result);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        // Students are only allowed to change their own account
+        // Students and syndici are only allowed to change their own account
         if (
-            req.user?.student &&
+            (req.user?.student || req.user?.syndicus) &&
             !req.user?.super_student &&
             !req.user?.admin &&
             Parser.number(req.params["id"]) !== req.user?.id
