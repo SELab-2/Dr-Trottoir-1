@@ -22,6 +22,7 @@ import { UserRegionRouting } from "./routes/user_region";
 import { ProgressRouting } from "./routes/progress";
 import { RoundBuildingRouting } from "./routes/round_building";
 import { MailRouting } from "./routes/mail";
+import { MailTemplateRouting } from "./routes/mail_template";
 import cors from "cors";
 import { AddressRouting } from "./routes/address";
 
@@ -94,6 +95,7 @@ app.use("/user_region", new UserRegionRouting().toRouter());
 app.use("/progress", new ProgressRouting().toRouter());
 app.use("/round_building", new RoundBuildingRouting().toRouter());
 app.use("/mail", new MailRouting().toRouter());
+app.use("/mail_template", new MailTemplateRouting().toRouter());
 app.use("/address", new AddressRouting().toRouter());
 
 // Finally, an error handler
