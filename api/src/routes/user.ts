@@ -97,11 +97,6 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        // The body of a request can't be empty and can't contain a hash or salt
-        if (!req.body == null || req.body.hash || req.body.salt) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
-
         // We choose a random salt, calculate the hash-value and save these in their corresponding fields
         const password = req.body.password;
         delete req.body.password;
