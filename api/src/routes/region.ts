@@ -77,11 +77,22 @@ export class RegionRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        await prisma.region.delete({
-            where: {
-                id: Parser.number(req.params["id"]),
-            },
-        });
+        if (Parser.bool(req.body["hardDelete"], false)) {
+            await prisma.region.delete({
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+        } else {
+            await prisma.region.update({
+                data: {
+                    deleted: true,
+                },
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+        }
 
         return res.status(200).json({});
     }
