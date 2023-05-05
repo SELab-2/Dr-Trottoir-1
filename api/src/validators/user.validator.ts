@@ -3,6 +3,28 @@ import { celebrate } from "celebrate";
 import Joi from "joi";
 
 export class UserValidator extends Validator {
+    getAllValidator() {
+        return celebrate({
+            query: Joi.object({
+                deleted: Joi.bool(),
+                take: Joi.number(),
+                skip: Joi.number(),
+                student: Joi.bool(),
+                super_student: Joi.bool(),
+                admin: Joi.bool(),
+                login_before: Joi.date().iso(),
+                login_after: Joi.date().iso(),
+                added_before: Joi.date().iso(),
+                added_after: Joi.date().iso(),
+                first_name: Joi.string().trim(),
+                last_name: Joi.string().trim(),
+                region_id: Joi.number().positive(),
+                sort: Joi.string().trim(),
+                ord: Joi.string().trim(),
+            }),
+        });
+    }
+
     getOneValidator() {
         return celebrate({
             params: Joi.object({

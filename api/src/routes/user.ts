@@ -60,10 +60,10 @@ export class UserRouting extends Routing {
                 },
                 OR: {
                     first_name: {
-                        contains: Parser.string(req.query["name"], ""),
+                        contains: Parser.string(req.query["first_name"], ""),
                     },
                     last_name: {
-                        contains: Parser.string(req.query["name"], ""),
+                        contains: Parser.string(req.query["last_name"], ""),
                     },
                 },
                 // get all users assigned to a certain region

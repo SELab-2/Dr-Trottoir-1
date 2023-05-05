@@ -5,6 +5,8 @@ import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import { Validator } from "../validators/validator";
+import { AddressValidator } from "../validators/address.validator";
 
 export class AddressRouting extends Routing {
     @Auth.authorization({ superStudent: true })
@@ -71,5 +73,9 @@ export class AddressRouting extends Routing {
         });
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new AddressValidator();
     }
 }

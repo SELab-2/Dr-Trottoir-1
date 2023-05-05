@@ -1,27 +1,21 @@
 import { Validator } from "./validator";
-import express from "express";
 import { celebrate } from "celebrate";
 import Joi from "joi";
 
-export class GarbageValidator extends Validator {
+export class MailTemplateValidator extends Validator {
     getAllValidator() {
         return celebrate({
             query: Joi.object({
                 take: Joi.number(),
                 skip: Joi.number(),
-                before: Joi.date().iso(),
-                after: Joi.date().iso(),
-                building_id: Joi.number(),
-                action_id: Joi.number(),
-                syndicus_id: Joi.number(),
-                round_id: Joi.number(),
+                name: Joi.string().min(1),
                 sort: Joi.string(),
                 ord: Joi.string(),
             }),
         });
     }
 
-    getOneValidator(): express.RequestHandler<any> {
+    getOneValidator() {
         return celebrate({
             params: Joi.object({
                 id: Joi.number().positive().required(),
@@ -29,30 +23,30 @@ export class GarbageValidator extends Validator {
         });
     }
 
-    createOneValidator(): express.RequestHandler<any> {
+    createOneValidator() {
         return celebrate({
             body: Joi.object({
-                pickup_time: Joi.date().iso().required(),
-                action_id: Joi.number().positive().required(),
-                building_id: Joi.number().positive().required(),
+                name: Joi.string().trim().min(1).required(),
+                mail_subject: Joi.string().trim().min(1).required(),
+                content: Joi.string().trim().min(1).required(),
             }),
         });
     }
 
-    updateOneValidator(): express.RequestHandler<any> {
+    updateOneValidator() {
         return celebrate({
             params: Joi.object({
                 id: Joi.number().positive().required(),
             }),
             body: Joi.object({
-                pickup_time: Joi.date().iso(),
-                action_id: Joi.number().positive(),
-                building_id: Joi.number().positive(),
+                name: Joi.string().trim().min(1),
+                mail_subject: Joi.string().trim().min(1),
+                content: Joi.string().trim().min(1),
             }),
         });
     }
 
-    deleteOneValidator(): express.RequestHandler<any> {
+    deleteOneValidator() {
         return celebrate({
             params: Joi.object({
                 id: Joi.number().positive().required(),

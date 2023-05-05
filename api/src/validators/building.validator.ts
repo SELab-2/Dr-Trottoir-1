@@ -71,3 +71,35 @@ export class BuildingValidator extends Validator {
         });
     }
 }
+
+export class BuildingImageValidator extends Validator {
+    createOneValidator() {
+        return celebrate({
+            body: Joi.object({
+                time: Joi.date().required(),
+                location: Joi.string()
+                    .valid(
+                        "EXTERNAL",
+                        "IMGPROXY",
+                        "STATIC_FILES",
+                        "FILE_SERVER",
+                    )
+                    .required(),
+                path: Joi.string().min(1).required(),
+                user_id: Joi.number().positive().required(),
+            }),
+
+            params: Joi.object({
+                id: Joi.number().positive(),
+            }),
+        });
+    }
+
+    deleteOneValidator() {
+        return celebrate({
+            params: Joi.object({
+                image_id: Joi.number().positive().required(),
+            }),
+        });
+    }
+}

@@ -2,14 +2,14 @@ import { Validator } from "./validator";
 import { celebrate } from "celebrate";
 import Joi from "joi";
 
-export class RegionValidator extends Validator {
+export class UserRegionValidator extends Validator {
     getAllValidator() {
         return celebrate({
             query: Joi.object({
                 take: Joi.number(),
                 skip: Joi.number(),
-                name: Joi.string().trim().min(1),
-                user_id: Joi.number(),
+                user_id: Joi.number().positive(),
+                region_id: Joi.number().positive(),
             }),
         });
     }
@@ -17,26 +17,24 @@ export class RegionValidator extends Validator {
     getOneValidator() {
         return celebrate({
             params: Joi.object({
-                id: Joi.number().positive().required()
-            })
+                id: Joi.number().positive().required(),
+            }),
         });
     }
 
     createOneValidator() {
         return celebrate({
             body: Joi.object({
-                name: Joi.string().min(1).required(),
+                user_id: Joi.number().positive().required(),
+                region_id: Joi.number().positive().required(),
             }),
         });
     }
 
-    updateOneValidator() {
+    deleteOneValidator() {
         return celebrate({
             params: Joi.object({
-                id: Joi.number().positive().required()
-            }),
-            body: Joi.object({
-                name: Joi.string().min(1).required(),
+                id: Joi.number().positive().required(),
             }),
         });
     }

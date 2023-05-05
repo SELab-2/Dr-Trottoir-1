@@ -8,12 +8,26 @@ import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 import crypto from "crypto";
 import * as dateMath from "date-arithmetic";
+import {
+    BuildingImageValidator,
+    BuildingValidator,
+} from "../validators/building.validator";
+import { Validator } from "../validators/validator";
 
 export class BuildingRouting extends Routing {
     toRouter(): express.Router {
         const router = super.toRouter();
-        router.post("/:id/image", this.createImage);
-        router.delete("/:id/image/:image_id", this.deleteImage);
+        const biValidator = new BuildingImageValidator();
+        router.post(
+            "/:id/image",
+            biValidator.createOneValidator(),
+            this.createImage,
+        );
+        router.delete(
+            "/:id/image/:image_id",
+            biValidator.deleteOneValidator(),
+            this.deleteImage,
+        );
         return router;
     }
 
@@ -252,5 +266,9 @@ export class BuildingRouting extends Routing {
         });
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new BuildingValidator();
     }
 }
