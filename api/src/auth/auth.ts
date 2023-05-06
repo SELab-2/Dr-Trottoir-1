@@ -80,7 +80,12 @@ export class Auth {
                 }
 
                 // Check for syndicus privileges
-                if (options.syndicus && !req.user?.syndicus.length) {
+                if (
+                    options.syndicus &&
+                    !req.user?.super_student &&
+                    !req.user?.student &&
+                    !req.user?.syndicus.length
+                ) {
                     throw new APIError(APIErrorCode.FORBIDDEN);
                 }
 
