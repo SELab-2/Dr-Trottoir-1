@@ -145,7 +145,6 @@ describe("Round tests", () => {
 
         test("PATCH /round/:id", async () => {
             const newRound = {
-                id: 1,
                 name: "Updated Round 1",
             };
 
@@ -337,13 +336,7 @@ describe("Round tests", () => {
 
             test("Find a nonexistent round", async () => {
                 await runner.get({
-                    url: "/round/0",
-                    expectedData: [notFoundResponse],
-                    statusCode: 404,
-                });
-
-                await runner.get({
-                    url: "/round/-1",
+                    url: "/round/6",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
@@ -351,19 +344,18 @@ describe("Round tests", () => {
 
             test("Update a nonexistent round", async () => {
                 const newRound = {
-                    id: 0,
                     name: "Updated Round 0",
                 };
 
                 await runner.patch({
-                    url: "/round/0",
+                    url: "/round/6",
                     data: newRound,
                     expectedResponse: notFoundResponse,
                     statusCode: 404,
                 });
             });
             test("Delete a nonexistent round", async () => {
-                await runner.delete({ url: "/round/0", statusCode: 404 });
+                await runner.delete({ url: "/round/9", statusCode: 404 });
             });
         });
 

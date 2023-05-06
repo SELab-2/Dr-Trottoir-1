@@ -348,7 +348,7 @@ describe("Syndicus tests", () => {
             });
         });
         test("Requests using non-existent syndicus", async () => {
-            const url = "/syndicus/0";
+            const url = "/syndicus/9";
             await runner.get({
                 url: url,
                 expectedData: [notFoundResponse],

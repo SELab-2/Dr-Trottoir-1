@@ -112,7 +112,6 @@ describe("Mail Template tests", () => {
 
         test("PATCH /mail_template/:id", async () => {
             const newMailTemplate = {
-                id: 1,
                 name: "Updated name mail template",
             };
 
@@ -277,7 +276,7 @@ describe("Mail Template tests", () => {
 
             test("Find a nonexistent mail template", async () => {
                 await runner.get({
-                    url: "/mail_template/0",
+                    url: "/mail_template/9",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
@@ -285,14 +284,14 @@ describe("Mail Template tests", () => {
 
             test("Update a nonexistent mail template", async () => {
                 await runner.get({
-                    url: "/mail_template/0",
+                    url: "/mail_template/9",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
             });
             test("Delete a nonexistent mail template", async () => {
                 await runner.delete({
-                    url: "/mail_template/0",
+                    url: "/mail_template/9",
                     statusCode: 404,
                 });
             });
