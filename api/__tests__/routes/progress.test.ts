@@ -710,7 +710,7 @@ describe("Progress tests", () => {
                     name: "Building 1",
                 },
                 building_id: 1,
-                id:1,
+                id: 1,
                 deleted: false,
                 departure: "2023-05-04T12:00:00.000Z",
                 images: [
@@ -764,11 +764,10 @@ describe("Progress tests", () => {
         });
 
         test("DELETE /progress/:id/image/:id", async () => {
-
             const deleted = {
-                hardDelete: true
-            }
-            await runner.delete({ url: "/progress/1/image/1", data:deleted });
+                hardDelete: true,
+            };
+            await runner.delete({ url: "/progress/1/image/1", data: deleted });
 
             // verify that the progress image is truly deleted
 
@@ -790,7 +789,7 @@ describe("Progress tests", () => {
                     name: "Building 1",
                 },
                 building_id: 1,
-                id:1,
+                id: 1,
                 deleted: false,
                 departure: "2023-05-04T12:00:00.000Z",
                 images: [],
@@ -827,9 +826,9 @@ describe("Progress tests", () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
 
             const deleted = {
-                hardDelete: false
-            }
-            await runner.delete({ url: "/progress/1/image/1", data:deleted });
+                hardDelete: false,
+            };
+            await runner.delete({ url: "/progress/1/image/1", data: deleted });
 
             // verify that the progress image is truly deleted
 
@@ -851,7 +850,7 @@ describe("Progress tests", () => {
                     name: "Building 1",
                 },
                 building_id: 1,
-                id:1,
+                id: 1,
                 deleted: false,
                 departure: "2023-05-04T12:00:00.000Z",
                 images: [
@@ -899,7 +898,6 @@ describe("Progress tests", () => {
 
             await runner.get({ url: "/progress/1", expectedData: [expected] });
         });
-
     });
     describe("Unsuccesful requests", () => {
         let runner: Testrunner;
@@ -912,7 +910,6 @@ describe("Progress tests", () => {
         });
 
         describe("Must be correctly authorized to use any path", () => {
-
             const timestamp: Date = new Date(Date.UTC(2023, 7, 4, 16, 0, 0));
             const newProgress = {
                 report: "Report 2",
@@ -1000,7 +997,6 @@ describe("Progress tests", () => {
                         statusCode: 403,
                     });
                 });
-
             });
             describe("Cannot reach any path as a student", () => {
                 beforeEach(() => {
@@ -1037,12 +1033,14 @@ describe("Progress tests", () => {
             });
 
             test("Update a nonexistent progress", async () => {
-                const timestamp: Date = new Date(Date.UTC(2023, 7, 4, 16, 0, 0));
+                const timestamp: Date = new Date(
+                    Date.UTC(2023, 7, 4, 16, 0, 0),
+                );
                 const newProgress = {
                     report: "Report 2",
                     arrival: timestamp,
                     departure: timestamp,
-    
+
                     building_id: 1,
                     schedule_id: 1,
                 };
@@ -1071,10 +1069,11 @@ describe("Progress tests", () => {
                 });
             });
             test("Delete a nonexistent progress image", async () => {
-                await runner.delete({ url: "/progress/1/image/0", statusCode: 404 });
+                await runner.delete({
+                    url: "/progress/1/image/0",
+                    statusCode: 404,
+                });
             });
-
-
         });
         describe("The type of progress id must be correct", () => {
             beforeEach(() => {
@@ -1090,12 +1089,14 @@ describe("Progress tests", () => {
             });
 
             test("PATCH request", async () => {
-                const timestamp: Date = new Date(Date.UTC(2023, 7, 4, 16, 0, 0));
+                const timestamp: Date = new Date(
+                    Date.UTC(2023, 7, 4, 16, 0, 0),
+                );
                 const newProgress = {
                     report: "Report 2",
                     arrival: timestamp,
                     departure: timestamp,
-    
+
                     building_id: 1,
                     schedule_id: 1,
                 };
@@ -1114,7 +1115,7 @@ describe("Progress tests", () => {
                 });
             });
         });
-        
+
         describe("The type of progress image id must be correct", () => {
             beforeEach(() => {
                 runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
@@ -1124,7 +1125,7 @@ describe("Progress tests", () => {
                 const newImage = {
                     description: "REST",
                 };
-                
+
                 await runner.patch({
                     url: "/progress/1/image/wrongtype",
                     data: newImage,
@@ -1140,7 +1141,6 @@ describe("Progress tests", () => {
                 });
             });
         });
-
     });
     afterAll(() => {
         app.close();
