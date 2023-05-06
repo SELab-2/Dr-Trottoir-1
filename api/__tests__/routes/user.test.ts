@@ -674,6 +674,68 @@ describe("User tests", () => {
                 });
             });
         });
+
+        describe("The requested path must exist", () => {
+            beforeEach(() => {
+                runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            });
+
+            test("Find a nonexistent user", async () => {
+                await runner.get({
+                    url: "/user/100",
+                    expectedData: [notFoundResponse],
+                    statusCode: 404,
+                });
+            });
+
+            test("Update a nonexistent user", async () => {
+                const newUser = {
+                    first_name: "Ik",
+                };
+                await runner.patch({
+                    url: "/user/1000",
+                    data: newUser,
+                    expectedResponse: notFoundResponse,
+                    statusCode: 404,
+                });
+            });
+            test("Delete a nonexistent user", async () => {
+                await runner.delete({ url: "/user/100", statusCode: 404 });
+            });
+        });
+        describe("The type of user id must be correct", () => {
+            beforeEach(() => {
+                runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            });
+
+            test("GET request", async () => {
+                await runner.get({
+                    url: "/user/wrongtype",
+                    expectedData: [badRequestResponse],
+                    statusCode: 400,
+                });
+            });
+
+            test("PATCH request", async () => {
+                const newUser = {
+                    name: "Ik",
+                };
+
+                await runner.patch({
+                    url: "/user/wrongtype",
+                    data: newUser,
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+
+            test("DELETE request", async () => {
+                await runner.delete({
+                    url: "/user/wrongtype",
+                    statusCode: 400,
+                });
+            });
+        });
     });
 
     afterAll(() => {
