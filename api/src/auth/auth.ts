@@ -1,9 +1,9 @@
 import express from "express";
-import {APIError} from "../errors/api_error";
-import {APIErrorCode} from "../errors/api_error_code";
-import {Parser} from "../parser";
-import {CustomRequest} from "../routes/routing";
-import {Console} from "inspector";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
+import { Parser } from "../parser";
+import { CustomRequest } from "../routes/routing";
+import { Console } from "inspector";
 
 export class Auth {
     static authorization(options: {
@@ -60,7 +60,6 @@ export class Auth {
                     throw new APIError(APIErrorCode.FORBIDDEN);
                 }
 
-                console.log("test: " + !options.superStudent + ", " + !req.user?.student + ", " + !req.user?.syndicus.length);
                 // Check for authorization limits of superstudent
                 if (
                     !options.superStudent &&
