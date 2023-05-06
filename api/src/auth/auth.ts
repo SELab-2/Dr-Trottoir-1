@@ -62,7 +62,7 @@ export class Auth {
 
                 // Check for authorization limits of superstudent
                 if (
-                    !options.superStudent &&
+                    options.superStudent === false &&
                     !req.user?.student &&
                     !req.user?.syndicus.length
                 ) {
