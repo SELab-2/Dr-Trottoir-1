@@ -52,7 +52,7 @@ export class BuildingValidator extends Validator {
                 manual_id: Joi.number().positive(),
                 syndicus_id: Joi.number().positive(),
                 deleted: Joi.bool(),
-                hash: Joi.string().forbidden(),
+                hash: Joi.bool(),
             }),
 
             params: Joi.object({

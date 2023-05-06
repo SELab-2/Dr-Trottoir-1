@@ -433,6 +433,71 @@ describe("Building tests", () => {
             });
         });
 
+        test("PATCH /building/:id (change hash)", async () => {
+            const changeHash = {
+                hash: true,
+            }
+            
+            const expected = {
+                id: 1,
+                name: "Building 1",
+                ivago_id: "ivago-1",
+                deleted: false,
+                address: {
+                    id: 1,
+                    street: "Wallaby Way",
+                    number: 42,
+                    city: "Sydney",
+                    zip_code: 2000,
+                    latitude: -33.865143,
+                    longitude: 151.2099,
+                },
+                syndicus: {
+                    id: 1,
+                    user_id: 4,
+                    user: {
+                        id: 4,
+                        email: "syndicus@trottoir.be",
+                        first_name: "Simon",
+                        last_name: "De Syndicus",
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        phone: "7894561230",
+                        address_id: 3,
+                        student: false,
+                        super_student: false,
+                        admin: false,
+                        deleted: false,
+                    },
+                },
+                manual: {
+                    id: 1,
+                    path: "path/to/static_file",
+                    location: "STATIC_FILES",
+                },
+                images: [
+                    {
+                        id: 1,
+                        building_id: 1,
+                        image_id: 1,
+                        image: {
+                            id: 1,
+                            time: "2023-05-04T12:00:00.000Z",
+                            location: "FILE_SERVER",
+                            path: "path/to/file_server_image",
+                            user_id: 1,
+                        },
+                    },
+                ],
+            };
+
+            await runner.patch({
+                url: "/building/1",
+                data: changeHash,
+                expectedResponse: expected,
+            });
+        });
+
         test("POST /building", async () => {
             const building = {
                 name: "new building",
