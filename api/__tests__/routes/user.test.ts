@@ -268,7 +268,7 @@ describe("User tests", () => {
 
             const hardUser = {
                 hardDelete: true,
-            }
+            };
             await runner.delete({
                 url: "/user/5",
                 data: hardUser,
@@ -470,10 +470,10 @@ describe("User tests", () => {
 
         test("PATCH /user/:id (change password)", async () => {
             const user = (await runner.getRaw("/user/1")).body;
-            
+
             const changePassword = {
-                password: "new Password"
-            }
+                password: "new Password",
+            };
 
             await runner.patch({
                 url: "/user/1",
