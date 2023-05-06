@@ -6,6 +6,8 @@ import { prisma } from "../prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import { Validator } from "../validators/validator";
+import { ScheduleValidator } from "../validators/schedule.validator";
 
 export class ScheduleRouting extends Routing {
     private static includes: Prisma.ScheduleInclude = {
@@ -53,10 +55,13 @@ export class ScheduleRouting extends Routing {
                 user: {
                     OR: {
                         first_name: {
-                            contains: Parser.string(req.query["user_name"], ""),
+                            contains: Parser.string(
+                                req.query["first_name"],
+                                "",
+                            ),
                         },
                         last_name: {
-                            contains: Parser.string(req.query["user_name"], ""),
+                            contains: Parser.string(req.query["last_name"], ""),
                         },
                     },
                 },
@@ -162,5 +167,9 @@ export class ScheduleRouting extends Routing {
         }
 
         return res.status(200).json(result);
+    }
+
+    getValidator(): Validator {
+        return new ScheduleValidator();
     }
 }
