@@ -80,9 +80,7 @@
             class="text-none"
             prepend-icon="mdi-play"
             color="primary"
-            v-on:click.stop="
-              openPopup(item);
-            "
+            v-on:click.stop="openPopup(item)"
           >
             Start ronde
           </v-btn>
@@ -127,19 +125,22 @@ const current_round_id = ref(0);
 const current_schedule_id = ref(0);
 const current_progress_id = ref(0);
 
-function goToRound(){
-  router.push({ name: 'round_detail', params: { id: current_round_id.value, schedule: current_schedule_id.value }});
+function goToRound() {
+  router.push({
+    name: "round_detail",
+    params: { id: current_round_id.value, schedule: current_schedule_id.value },
+  });
 }
 
-function setCurrentRound(schedule: Result<ScheduleQuery>){
-  current_round_id.value = schedule.round_id
-  current_schedule_id.value = schedule.id
+function setCurrentRound(schedule: Result<ScheduleQuery>) {
+  current_round_id.value = schedule.round_id;
+  current_schedule_id.value = schedule.id;
 }
 
 function openPopup(schedule: {
   schedule: Result<ScheduleQuery>;
   progress: Array<Result<ProgressQuery>>;
-}){
+}) {
   current_progress_id.value = schedule.progress[0].id;
   setCurrentRound(schedule.schedule);
   snackbar.value = true;
