@@ -15,7 +15,7 @@ export async function initialiseBuilding() {
         deleted: false,
         syndicus_id: 1,
 
-        hash: passwordB1,
+        hash: "aaaa",
     };
 
     const passwordB2 = crypto
