@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
+import { FileLocation } from "@selab-2/groep-1-orm";
 import request from "supertest";
 import app from "../../src/main";
 import { resetDatabase, restoreTables } from "../mock/database";
@@ -678,6 +679,142 @@ describe("Building tests", () => {
                 expectedData: expected,
             });
         });
+
+        test("POST /building/:id/image", async () => {
+            const timestamp: Date = new Date(Date.UTC(2023, 4, 4, 12, 0, 0));
+            const image = {
+                time: timestamp,
+                location: FileLocation.FILE_SERVER,
+                path: "path/to/file_server_image",
+                user_id: 1,
+            };
+
+            const expectedBuilding = {
+                address: {
+                    city: "Sydney",
+                    id: 1,
+                    latitude: -33.865143,
+                    longitude: 151.2099,
+                    number: 42,
+                    street: "Wallaby Way",
+                    zip_code: 2000,
+                },
+                deleted: false,
+                images: [
+                    {
+                        building_id: 1,
+                        id: 1,
+                        image: {
+                            id: 1,
+                            location: "FILE_SERVER",
+                            path: "path/to/file_server_image",
+                            time: "2023-05-04T12:00:00.000Z",
+                            user_id: 1,
+                        },
+                        image_id: 1,
+                    },
+                    {
+                        building_id: 1,
+                        id: 4,
+                        image: {
+                            id: 5,
+                            location: "FILE_SERVER",
+                            path: "path/to/file_server_image",
+                            time: "2023-05-04T12:00:00.000Z",
+                            user_id: 1,
+                        },
+                        image_id: 5,
+                    },
+                ],
+                ivago_id: "ivago-1",
+                manual: {
+                    id: 1,
+                    location: "STATIC_FILES",
+                    path: "path/to/static_file",
+                },
+                name: "Building 1",
+                syndicus: {
+                    id: 1,
+                    user: {
+                        address_id: 3,
+                        admin: false,
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        email: "syndicus@trottoir.be",
+                        first_name: "Simon",
+                        id: 4,
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        last_name: "De Syndicus",
+                        phone: "7894561230",
+                        student: false,
+                        super_student: false,
+                    },
+                    user_id: 4,
+                },
+            };
+
+            await runner.post({
+                url: "/building/1/image",
+                data: image,
+                expectedResponse: expectedBuilding,
+                statusCode: 201,
+            });
+        });
+
+        test("DELETE /building/:id/image/:id", async () => {
+            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+            await runner.delete({
+                url: "/building/1/image/1",
+            });
+
+            // verify that the building image is truly soft deleted
+
+            const expected= {
+                address: {
+                    city: "Sydney",
+                    id: 1,
+                    latitude: -33.865143,
+                    longitude: 151.2099,
+                    number: 42,
+                    street: "Wallaby Way",
+                    zip_code: 2000,
+                },
+                deleted: false,
+                id: 1,
+                images: [],
+                ivago_id: "ivago-1",
+                manual: {
+                    id: 1,
+                    location: "STATIC_FILES",
+                    path: "path/to/static_file",
+                },
+                name: "Building 1",
+                syndicus: {
+                    id: 1,
+                    user: {
+                        address_id: 3,
+                        admin: false,
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        email: "syndicus@trottoir.be",
+                        first_name: "Simon",
+                        id: 4,
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        last_name: "De Syndicus",
+                        phone: "7894561230",
+                        student: false,
+                        super_student: false,
+                    },
+                    user_id: 4,
+                },
+            };
+
+            await runner.get({
+                url: "/building/1",
+                expectedData: [expected],
+            });
+
+        });
     });
     describe("Unsuccessful requests", () => {
         describe("Must have correct authorisation", () => {
@@ -738,17 +875,10 @@ describe("Building tests", () => {
                     runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
                     await runner.get({
                         url: "/building/aaaa",
-                        expectedData: [{message: "Not Found"}],
-                        statusCode: 404
+                        expectedData: [{ message: "Not Found" }],
+                        statusCode: 404,
                     });
-
-
-
-
                 });
-
-
-
             });
             describe("Can't use any path as Student except concrete GET", () => {
                 beforeEach(() => {
@@ -867,7 +997,6 @@ describe("Building tests", () => {
             });
 
             test("POST building with hash", async () => {
-
                 const building = {
                     name: "new building",
                     ivago_id: "ivago-new",
@@ -879,7 +1008,7 @@ describe("Building tests", () => {
 
                 await runner.post({
                     url: "/building",
-                    data: building, 
+                    data: building,
                     expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
