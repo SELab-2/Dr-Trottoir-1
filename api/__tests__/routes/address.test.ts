@@ -241,7 +241,7 @@ describe("Address tests", () => {
 
             test("Find a nonexistent address", async () => {
                 await runner.get({
-                    url: "/address/0",
+                    url: "/address/1000",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
@@ -253,14 +253,14 @@ describe("Address tests", () => {
                     number: 2,
                 };
                 await runner.patch({
-                    url: "/address/0",
+                    url: "/address/1000",
                     data: newAddress,
                     expectedResponse: notFoundResponse,
                     statusCode: 404,
                 });
             });
             test("Delete a nonexistent address", async () => {
-                await runner.delete({ url: "/address/0", statusCode: 404 });
+                await runner.delete({ url: "/address/1000", statusCode: 404 });
             });
         });
         describe("The type of address id must be correct", () => {
