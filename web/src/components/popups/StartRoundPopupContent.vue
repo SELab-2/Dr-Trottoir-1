@@ -1,31 +1,29 @@
 <template>
   <!-- Popup containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
-  <card-popup
-    v-model="show"
-    title="Start ronde"
-    prepend-icon="mdi-alert"
-  >
+  <card-popup v-model="show" title="Start ronde" prepend-icon="mdi-alert">
     <p class="mx-3 mb-3">
       Je staat op het punt een ronde te starten. Het huidige tijdstip zal
-      opgeslagen worden als start tijdstip.
-
-      Ben je zeker dat je de ronde wilt starten?
+      opgeslagen worden als start tijdstip. Ben je zeker dat je de ronde wilt
+      starten?
     </p>
 
     <template v-slot:actions>
-      <v-spacer/>
-      <v-btn color="success" @click="onsubmit" variant="elevated"> Start ronde </v-btn>
-      <v-btn @click="oncancel" color="error" class="mr-3" variant="elevated"> Annuleer </v-btn>
+      <v-spacer />
+      <v-btn color="success" @click="onsubmit" variant="elevated">
+        Start ronde
+      </v-btn>
+      <v-btn @click="oncancel" color="error" class="mr-3" variant="elevated">
+        Annuleer
+      </v-btn>
     </template>
-
   </card-popup>
 </template>
 <script lang="ts" setup>
 import CardPopup from "@/components/popups/CardPopup.vue";
-import {computed} from "vue";
+import { computed } from "vue";
 
 const props = defineProps({
-  modelValue: {type: Boolean, required: true},
+  modelValue: { type: Boolean, required: true },
   oncancel: { type: Function, required: true },
   onsubmit: { type: Function, required: true },
 });

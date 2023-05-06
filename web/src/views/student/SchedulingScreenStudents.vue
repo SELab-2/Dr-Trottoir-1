@@ -24,11 +24,8 @@
         class="mb-3 mx-1"
         :title="item.schedule.round.name"
         @click="
-          current_id = item.schedule.round_id;
-          router.push({
-            name: 'round_detail',
-            params: { id: current_id, schedule: item.schedule.id },
-          });
+          setCurrentRound(item.schedule);
+          goToRound();
         "
       >
         <template v-slot:subtitle>
@@ -74,15 +71,17 @@
 
         <DividerLayout v-show="showStartButton(item)" />
 
-        <div class="pa-4 d-flex align-center" v-if="true ||showStartButton(item)">
+        <div
+          class="pa-4 d-flex align-center"
+          v-if="true || showStartButton(item)"
+        >
           <v-spacer />
           <v-btn
             class="text-none"
             prepend-icon="mdi-play"
             color="primary"
             v-on:click.stop="
-              snackbar = !snackbar;
-              current_id = item.schedule.round_id;
+              openPopup(item);
             "
           >
             Start ronde
@@ -103,14 +102,12 @@
       v-model="snackbar"
       :oncancel="() => (snackbar = false)"
       :onsubmit="
-        async () =>
-          router.push({
-            name: 'round_detail',
-            params: { id: current_id, schedule: 0 },
-          })
+        async () => {
+          await saveStartTime(0);
+          goToRound();
+        }
       "
     />
-
   </HFillWrapper>
 </template>
 
@@ -121,17 +118,31 @@ import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.v
 import BorderCard from "@/layouts/CardLayout.vue";
 import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import router from "@/router";
-import { Ref, ref } from "vue";
+import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { tryOrAlertAsync } from "@/try";
 
 const snackbar = ref(false);
-const current_id = ref(0);
+const current_round_id = ref(0);
+const current_schedule_id = ref(0);
 
-const popUpSchedule = ref<{
+
+function goToRound(){
+  router.push({ name: 'round_detail', params: { id: current_round_id.value, schedule: current_schedule_id.value }});
+}
+
+function setCurrentRound(schedule: Result<ScheduleQuery>){
+  current_round_id.value = schedule.round_id
+  current_schedule_id.value = schedule.id
+}
+
+function openPopup(schedule: {
   schedule: Result<ScheduleQuery>;
   progress: Array<Result<ProgressQuery>>;
-}>();
+}){
+  setCurrentRound(schedule.schedule);
+  snackbar.value = true;
+}
 
 function showStartButton(schedule: {
   schedule: Result<ScheduleQuery>;
@@ -142,13 +153,13 @@ function showStartButton(schedule: {
   return today === day && schedule.progress.length === 0;
 }
 
-async function saveStartTime(scheduleId: number){
+async function saveStartTime(scheduleId: number) {
   await tryOrAlertAsync(async () => {
     await new ProgressQuery().updateOne({
       id: scheduleId,
       arrival: new Date(),
-    })
-  })
+    });
+  });
 }
 
 type DayEntry = {
