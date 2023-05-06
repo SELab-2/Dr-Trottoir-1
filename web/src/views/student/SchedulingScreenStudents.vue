@@ -74,7 +74,7 @@
 
         <DividerLayout v-show="showStartButton(item)" />
 
-        <div class="pa-4 d-flex align-center" v-if="showStartButton(item)">
+        <div class="pa-4 d-flex align-center" v-if="true ||showStartButton(item)">
           <v-spacer />
           <v-btn
             class="text-none"
@@ -98,25 +98,19 @@
     </div>
 
     <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
-    <v-overlay v-model="snackbar">
-      <v-snackbar
-        v-model="snackbar"
-        timeout="-1"
-        elevation="24"
-        color="background"
-      >
-        <StartRoundPopupContent
-          :oncancel="() => (snackbar = false)"
-          :onsubmit="
-            () =>
-              router.push({
-                name: 'round_detail',
-                params: { id: current_id, schedule: 0 },
-              })
-          "
-        />
-      </v-snackbar>
-    </v-overlay>
+
+    <StartRoundPopupContent
+      v-model="snackbar"
+      :oncancel="() => (snackbar = false)"
+      :onsubmit="
+        async () =>
+          router.push({
+            name: 'round_detail',
+            params: { id: current_id, schedule: 0 },
+          })
+      "
+    />
+
   </HFillWrapper>
 </template>
 
@@ -127,12 +121,17 @@ import StartRoundPopupContent from "@/components/popups/StartRoundPopupContent.v
 import BorderCard from "@/layouts/CardLayout.vue";
 import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import router from "@/router";
-import { ref } from "vue";
+import { Ref, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { tryOrAlertAsync } from "@/try";
 
 const snackbar = ref(false);
 const current_id = ref(0);
+
+const popUpSchedule = ref<{
+  schedule: Result<ScheduleQuery>;
+  progress: Array<Result<ProgressQuery>>;
+}>();
 
 function showStartButton(schedule: {
   schedule: Result<ScheduleQuery>;
@@ -141,6 +140,15 @@ function showStartButton(schedule: {
   const today = new Date().getDate();
   const day = new Date(schedule.schedule.day).getDate();
   return today === day && schedule.progress.length === 0;
+}
+
+async function saveStartTime(scheduleId: number){
+  await tryOrAlertAsync(async () => {
+    await new ProgressQuery().updateOne({
+      id: scheduleId,
+      arrival: new Date(),
+    })
+  })
 }
 
 type DayEntry = {
