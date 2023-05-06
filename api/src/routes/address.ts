@@ -38,7 +38,6 @@ export class AddressRouting extends Routing {
     async updateOne(req: CustomRequest, res: express.Response) {
         const addressIdentifier = Parser.number(req.params["id"]);
 
-
         //check if the address exists
         const address = await prisma.address.findFirstOrThrow({
             where: {
