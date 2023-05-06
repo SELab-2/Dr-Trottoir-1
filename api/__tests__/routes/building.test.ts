@@ -728,6 +728,27 @@ describe("Building tests", () => {
                         statusCode: 403,
                     });
                 });
+
+                test("GET /building/:id (Resident can`t see soft deleted building)", async () => {
+                    runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+                    await runner.delete({
+                        url: "/building/1",
+                    });
+
+                    runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
+                    await runner.get({
+                        url: "/building/aaaa",
+                        expectedData: [{message: "Not Found"}],
+                        statusCode: 404
+                    });
+
+
+
+
+                });
+
+
+
             });
             describe("Can't use any path as Student except concrete GET", () => {
                 beforeEach(() => {
