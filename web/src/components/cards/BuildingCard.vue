@@ -124,8 +124,7 @@ const comments = ref<Boolean>(false);
 let progresses: Ref<Result<ProgressQuery>[]> = ref([]);
 
 const can_expand: Ref<boolean> = ref(
-  props.start_date.toLocaleDateString() !==
-    props.end_date.toLocaleDateString(),
+  props.start_date.toLocaleDateString() !== props.end_date.toLocaleDateString(),
 );
 
 tryOrAlertAsync(async () => {

@@ -22,7 +22,7 @@
             style="min-width: 100px; max-width: 100%"
             class="flex-grow-1 flex-shrink-0"
             ><v-select
-            id="selectstudent"
+              id="selectstudent"
               label="Selecteer student"
               :items="students"
               v-model="student"

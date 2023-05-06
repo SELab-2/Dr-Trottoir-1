@@ -9,16 +9,31 @@ describe("card tests", () => {
   it('buildingcard test', () => {
     cy.mount(BuildingCard, {
       props: {
-        building: {id: 6, name: "testgebouw", address:{street: "teststraat", number: 5, zip_code: 9000, city: "Gent"},
-        syndicus: {user: {first_name: "test", last_name: "gebruiker"}}},
+        building: {
+          id: 6,
+          name: "testgebouw",
+          address: {
+            street: "teststraat",
+            number: 5,
+            zip_code: 9000,
+            city: "Gent"
+          },
+        syndicus: {
+            user: {
+              first_name: "test",
+              last_name: "gebruiker"
+            }
+          }
+        },
         start_date: new Date(),
         end_date: new Date(),
       },
     })
-    cy.contains('testgebouw')
-    cy.contains('test gebruiker')
-    cy.contains('teststraat 5 Gent')
-    cy.contains(((new Date())).toLocaleDateString())
+    // all info present
+    cy.contains('testgebouw').should('be.visible')
+    cy.contains('test gebruiker').should('be.visible')
+    cy.contains('teststraat 5 Gent').should('be.visible')
+    cy.contains(((new Date())).toLocaleDateString()).should('be.visible')
   })
 
   it('buildinginfocard test', () => {
@@ -29,8 +44,9 @@ describe("card tests", () => {
         id: "1",
       },
     })
-    cy.contains('testgebouw')
-    cy.contains('teststraat 1')
+    // all info present
+    cy.contains('testgebouw').should('be.visible')
+    cy.contains('teststraat 1').should('be.visible')
   })
 
   it('buildingselectcard show garbage test', () => {
@@ -42,8 +58,9 @@ describe("card tests", () => {
         garbageinfo: true,
       },
     })
-    cy.contains('testgebouw')
-    cy.contains('teststraat 1')
+    // all info present
+    cy.contains('testgebouw').should('be.visible')
+    cy.contains('teststraat 1').should('be.visible')
     cy.get('#garbage').should('be.visible')
   })
 
@@ -56,6 +73,9 @@ describe("card tests", () => {
         garbageinfo: false,
       },
     })
+    // all info present, but no garbage
+    cy.contains('testgebouw').should('be.visible')
+    cy.contains('teststraat 1').should('be.visible')
     cy.get('#garbage').should('not.be.visible')
   })
 
@@ -71,9 +91,10 @@ describe("card tests", () => {
         btnText: "button",
       },
     })
+    // all info present, since there is an image, the title and text should not be visible/exist
     cy.contains('test image').should('not.exist')
     cy.contains('text').should('not.exist')
-    cy.contains('button')
+    cy.contains('button').should('be.visible')
   })
 
   it('imagecard test without image', () => {
@@ -87,8 +108,10 @@ describe("card tests", () => {
         btnText: "button",
       },
     })
-    cy.contains('text')
-    cy.contains('button')
+    // all info present, since there is an image, the title and text should be visible/exist
+    cy.contains('test image').should('be.visible')
+    cy.contains('text').should('be.visible')
+    cy.contains('button').should('be.visible')
   })
 
   it('roundcard with zero progress', () => {
@@ -105,13 +128,14 @@ describe("card tests", () => {
         round_comments: true,
       },
     })
-    cy.contains('test round')
-    cy.get('#start')
-    cy.get('#end')
-    cy.contains('test student')
-    cy.contains(datum.toLocaleDateString())
-    cy.contains('5')
-    cy.contains('Niet begonnen')
+    // all info present
+    cy.contains('test round').should('be.visible')
+    cy.get('#start').should('be.visible')
+    cy.get('#end').should('be.visible')
+    cy.contains('test student').should('be.visible')
+    cy.contains(datum.toLocaleDateString()).should('be.visible')
+    cy.contains('5').should('be.visible')
+    cy.contains('Niet begonnen').should('be.visible')
   })
 
   it('roundcard with some progress', () => {
@@ -125,12 +149,13 @@ describe("card tests", () => {
         round_comments: false,
       },
     })
-    cy.contains('test round')
+    // all info present
+    cy.contains('test round').should('be.visible')
     cy.get('#start').should('not.exist')
     cy.get('#end').should('not.exist')
-    cy.contains('test student')
-    cy.contains('5')
-    cy.contains('Bezig 4/5')
+    cy.contains('test student').should('be.visible')
+    cy.contains('5').should('be.visible')
+    cy.contains('Bezig 4/5').should('be.visible')
   })
 
   it('roundcard with full progress', () => {
@@ -146,15 +171,16 @@ describe("card tests", () => {
         round_comments: false,
       },
     })
-    cy.contains('test round')
-    cy.get('#start')
-    cy.get('#end')
-    cy.contains('test student')
-    cy.contains('5')
-    cy.contains('Klaar')
+    // all info present
+    cy.contains('test round').should('be.visible')
+    cy.get('#start').should('be.visible')
+    cy.get('#end').should('be.visible')
+    cy.contains('test student').should('be.visible')
+    cy.contains('5').should('be.visible')
+    cy.contains('Klaar').should('be.visible')
   })
 
-  it.only('roundselectcard test', () => {
+  it('roundselectcard test', () => {
     const datum: Date = new Date()
     cy.mount(RoundSelectCard, {
       props: {
@@ -164,9 +190,10 @@ describe("card tests", () => {
         id: "1",
       },
     })
-    cy.contains('test round')
-    cy.contains('tijd')
-    cy.contains(datum.toLocaleDateString())
+    // all info present
+    cy.contains('test round').should('be.visible')
+    cy.contains('tijd').should('be.visible')
+    cy.contains(datum.toLocaleDateString()).should('be.visible')
     cy.get('#remove').should('be.visible')
   })
 })

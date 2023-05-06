@@ -176,7 +176,12 @@
       >
         Annuleer
       </v-btn>
-      <v-btn id= "submit" prepend-icon="mdi-check" color="success" @click="popupSubmit()">
+      <v-btn
+        id="submit"
+        prepend-icon="mdi-check"
+        color="success"
+        @click="popupSubmit()"
+      >
         {{ popupSubmitMsg }}
       </v-btn>
     </v-card-actions>

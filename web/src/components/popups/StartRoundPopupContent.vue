@@ -10,7 +10,9 @@
     </p>
     <div class="d-flex flex-row-reverse ma-3">
       <v-btn id="start" color="success" @click="onsubmit"> Start ronde </v-btn>
-      <v-btn id="cancel" @click="oncancel" color="error" class="mr-3"> Annuleer </v-btn>
+      <v-btn id="cancel" @click="oncancel" color="error" class="mr-3">
+        Annuleer
+      </v-btn>
     </div>
   </v-card>
 </template>

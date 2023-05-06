@@ -8,20 +8,10 @@ describe("building component test", () => {
         building: {id: 6, name: "testgebouw", address: {street: "teststraat", number: 5, zip_code: 9000, city: "Gent"}}
       },
     })
-    cy.contains("testgebouw")
-    cy.contains("teststraat 5")
-    cy.contains("9000 Gent")
-    // can't really click on it, as there is no active router to perform router.push(...)
-  })
-
-  it('garbageschedule test', () => {
-    cy.mount(GarbageSchedule, {})
-    cy.contains('Kalender')
-    cy.contains("Taken")
-    cy.contains('Studentbezoeken')
-    cy.get('#calendar')
-    // calendar is found but is not actually visible
-    // why is there a random f?
-    // can't really test since the data comes from queries, not props
+    // all info present
+    cy.contains("testgebouw").should('be.visible')
+    cy.contains("teststraat 5").should('be.visible')
+    cy.contains("9000 Gent").should('be.visible')
+    // can't really click on the card, as there is no active router to perform router.push(...)
   })
 })

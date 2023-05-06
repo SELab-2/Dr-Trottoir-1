@@ -10,7 +10,12 @@
       Nieuwe Gebruiker
     </v-btn>
   </div>
-  <Table id="usertable" :entries="users" :headers="User.headers()" :route="User.route"></Table>
+  <Table
+    id="usertable"
+    :entries="users"
+    :headers="User.headers()"
+    :route="User.route"
+  ></Table>
 </template>
 
 <script setup lang="ts">

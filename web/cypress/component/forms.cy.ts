@@ -16,10 +16,12 @@ describe("form tests", () => {
           zip_code: "0",
         }
       })
+      // fill in the fields with correct input
       cy.get('#street').type("Teststraat")
       cy.get('#city').type('Gent')
       cy.get('#streetnr').type('{backspace}17')
       cy.get('#zipcode').type('{backspace}9000')
+      // we have to do {backspace} because the field first contains a 0, else we would have 017 en 09000
       cy.get('#street').should('have.value', 'Teststraat')
       cy.get('#streetnr').should('have.value', '17')
       cy.get('#city').should('have.value', 'Gent')
@@ -30,6 +32,7 @@ describe("form tests", () => {
       cy.mount(AdressForm, {
         // default props
       })
+      // fill in the fields with incorrect input
       cy.get('#streetnr').type('hallo') // you can only enter numbers
       cy.get('#streetnr').should('have.value', '0')
       cy.get('#zipcode').type('hallo') // you can only enter numbers
@@ -44,6 +47,7 @@ describe("form tests", () => {
           readonly: true,
         }
       })
+      // everything should now be readonly
       cy.get('#street').should('have.attr', 'readonly', 'readonly')
       cy.get('#city').should('have.attr', 'readonly', 'readonly')
       cy.get('#streetnr').should('have.attr', 'readonly', 'readonly')
@@ -54,14 +58,15 @@ describe("form tests", () => {
       cy.mount(AdressForm, {
         // default props
       })
+      // empty fields should contain a warning
       cy.get('#street').type('x{backspace}')
       cy.get('#city').type('x{backspace}')
       cy.get('#streetnr').clear()
       cy.get('#zipcode').clear()
-      cy.contains('Geef een straat op.')
-      cy.contains('Geef een stad op.')
-      cy.contains('Geef een huisnummer.')
-      cy.contains('Geef een postcode.')
+      cy.contains('Geef een straat op.').should('be.visible')
+      cy.contains('Geef een stad op.').should('be.visible')
+      cy.contains('Geef een huisnummer.').should('be.visible')
+      cy.contains('Geef een postcode.').should('be.visible')
     })
   })
 
@@ -75,6 +80,7 @@ describe("form tests", () => {
           email: "",
         },
       })
+      // fill in the field with correct input
       cy.get('#phone').type('0123456789')
       cy.get('#email').type('test@test.com')
       cy.get('#phone').should('have.value', '0123456789')
@@ -85,6 +91,8 @@ describe("form tests", () => {
       cy.mount(ContactForm, {
         // default props
       })
+      // fill in the field with incorrect input
+      // TODO uncomment once you can only add numbers in phone field
       // cy.get('#phone').type('hallo') // you should only be able to enter numbers,
       // cy.get('#phone').should('be.empty') // this not yet implemented now
       cy.get('#phone').type("012345") // phone number too short
@@ -97,6 +105,7 @@ describe("form tests", () => {
       cy.mount(ContactForm, {
         // default props
       })
+      // empty fields should contain a warning
       cy.get('#phone').type('x{backspace}')
       cy.contains('Geef een telefoonnummer op.')
       cy.get('#email').type('x{backspace}')
@@ -109,6 +118,7 @@ describe("form tests", () => {
           readonly: true,
         }
       })
+      // the fields should be readonly
       cy.get('#phone').should('have.attr', 'readonly', 'readonly')
       cy.get('#email').should('have.attr', 'readonly', 'readonly')
     })
@@ -122,6 +132,7 @@ describe("form tests", () => {
           readonly: false,
         },
       })
+      // checkboxes can be checked and unchecked
       cy.get('#student').check()
       cy.get('#superstudent').check()
       cy.get('#administrator').check()
@@ -142,6 +153,7 @@ describe("form tests", () => {
           readonly: true,
         }
       })
+      // checkboxes are now readonly
       cy.get('#student').should('have.attr', 'disabled', 'disabled')
       cy.get('#superstudent').should('have.attr', 'disabled', 'disabled')
       cy.get('#administrator').should('have.attr', 'disabled', 'disabled')

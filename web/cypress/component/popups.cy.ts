@@ -25,10 +25,11 @@ describe("popup tests", () => {
         onsubmit: () => {},
       }
     })
-    cy.contains('Start ronde')
+    // all info present
+    cy.contains('Start ronde').should('be.visible')
     cy.contains('Je staat op het punt een ronde te starten. Het huidige tijdstip zal opgeslagen worden als start ' +
-      'tijdstip. Ben je zeker dat je de ronde wilt starten?')
-    cy.get('#start').contains('Start ronde')
-    cy.get('#cancel').contains( 'Annuleer')
+      'tijdstip. Ben je zeker dat je de ronde wilt starten?').should('be.visible')
+    cy.get('#start').contains('Start ronde').should('be.visible')
+    cy.get('#cancel').contains( 'Annuleer').should('be.visible')
   })
 })

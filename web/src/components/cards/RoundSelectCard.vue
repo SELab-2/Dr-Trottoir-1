@@ -13,7 +13,12 @@
       class="bg-grey-lighten-2"
     ></RoundedButton>
 
-    <v-icon id="remove" @click="$emit('remove')" color="error" icon="mdi-close" />
+    <v-icon
+      id="remove"
+      @click="$emit('remove')"
+      color="error"
+      icon="mdi-close"
+    />
   </BorderCard>
 </template>
 

@@ -25,7 +25,11 @@
         />
         <v-card-actions class="d-flex align-center"
           ><v-spacer></v-spacer
-          ><v-btn id="createround" class="ml-3" prepend-icon="mdi-check" @click="makeRound()"
+          ><v-btn
+            id="createround"
+            class="ml-3"
+            prepend-icon="mdi-check"
+            @click="makeRound()"
             >Ronde aanmaken</v-btn
           ></v-card-actions
         >

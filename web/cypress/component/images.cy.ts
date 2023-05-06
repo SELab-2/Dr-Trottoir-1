@@ -9,13 +9,14 @@ describe("images tests", () => {
         id: 1
       }
     })
-    cy.contains('Commentaar')
+    // all info present, you can enter comments, select a file and there is a delete button
+    cy.contains('Commentaar').should('be.visible')
     cy.get('#comment').should('have.value', '')
     cy.get('#comment').type('New Comment')
     cy.get('#comment').should('have.value', 'New Comment')
     cy.contains('Verwijder afbeelding').should('be.visible')
     cy.get("#input").selectFile('src/assets/images/drtroittoir_logo.png')
-    cy.contains("drtroittoir_logo.png")
+    cy.contains("drtroittoir_logo.png").should('be.visible')
   })
   it('addimage id==0 test', () => {
     cy.mount(AddImage, {
@@ -23,11 +24,14 @@ describe("images tests", () => {
         id: 0
       }
     })
-    cy.contains('Commentaar')
+    // all info present, you can enter comments and select a file, but there is no delete button
+    cy.contains('Commentaar').should('be.visible')
+    cy.get('#comment').should('have.value', '')
+    cy.get('#comment').type('New Comment')
+    cy.get('#comment').should('have.value', 'New Comment')
     cy.contains('Verwijder afbeelding').should('not.be.visible')
-    // "Verwijder afbeelding" should appear on the screen when adding new image
-    // cy.get("#input").selectFile('src/assets/images/drtroittoir_logo.png')
-    // cy.contains('Verwijder afbeelding').should('be.visible')
+    cy.get("#input").selectFile('src/assets/images/drtroittoir_logo.png')
+    cy.contains("drtroittoir_logo.png").should('be.visible')
   })
 
   it('multiaddimage test', () => {
@@ -46,10 +50,11 @@ describe("images tests", () => {
 
   it('photomaker test', () => {
     cy.mount(PhotoMaker, {})
-    cy.contains("Maak foto")
-    cy.contains("Selecteer afbeelding")
-    cy.contains("Commentaar")
-    cy.contains("Foto label")
+    // all info present, you can add comments and labels and select a file
+    cy.contains("Maak foto").should('be.visible')
+    cy.contains("Selecteer afbeelding").should('be.visible')
+    cy.contains("Commentaar").should('be.visible')
+    cy.contains("Foto label").should('be.visible')
     cy.get('#comment').should('have.value', '')
     cy.get('#comment').type('New Comment')
     cy.get('#comment').should('have.value', 'New Comment')
@@ -57,7 +62,7 @@ describe("images tests", () => {
     cy.get('#label').type('New Label')
     cy.get('#label').should('have.value', 'New Label')
     cy.get("#select").selectFile('src/assets/images/drtroittoir_logo.png')
-    cy.contains("drtroittoir_logo.png")
+    cy.contains("drtroittoir_logo.png").should('be.visible')
   })
 
 })

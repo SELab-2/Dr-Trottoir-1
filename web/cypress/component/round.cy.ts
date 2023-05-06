@@ -8,44 +8,68 @@ describe("round tests", () => {
         props: {
           progress:
             {
-              id: 1, report: "test", arrival: new Date(), departure: new Date(), building_id: 2,
+              id: 1,
+              report: "test",
+              arrival: new Date(),
+              departure: new Date(),
+              building_id: 2,
               building: {
-                id: 2, name: "testbuilding", syndicus_id: 3, syndicus: {}, address_id: 4,
+                id: 2,
+                name: "testbuilding",
+                syndicus_id: 3,
+                syndicus: {},
+                address_id: 4,
                 address: {
-                  id: 4, street: 'teststraat', number: 1, city: "Gent", zip_code: 9000,
+                  id: 4,
+                  street: 'teststraat',
+                  number: 1, city: "Gent",
+                  zip_code: 9000,
                 }
               },
-              schedule_id: 5, schedule: {},
-              images: [{
+              schedule_id: 5,
+              schedule: {},
+              images: [
+                {
                 id: 1,
                 type: "arrival",
                 description: "test arrival"
-              }, {
+                },
+                {
                 id: 2,
                 type: "departure",
                 description: "test departure"
-              }]
+                }
+              ]
             },
           building: {
-            id: 2, name: "testbuilding", syndicus_id: 3, syndicus: {}, address_id: 4,
+            id: 2,
+            name: "testbuilding",
+            syndicus_id: 3,
+            syndicus: {},
+            address_id: 4,
             address: {
-              id: 4, street: 'teststraat', number: 1, city: "Gent", zip_code: 9000,
+              id: 4,
+              street: 'teststraat',
+              number: 1,
+              city: "Gent",
+              zip_code: 9000,
             }
           },
         }
       })
-      cy.contains('testbuilding')
-      cy.contains('teststraat 1')
-      cy.contains('9000 Gent')
-      cy.contains('Notities')
-      cy.contains('test')
-      cy.contains('Bewerken')
-      cy.contains('Afbeeldingen')
-      cy.contains('Toevoegen')
-      cy.contains('arrival')
-      cy.contains('test arrival')
-      cy.contains('departure')
-      cy.contains('test departure')
+      // all info present, all pictures present and you can edit a note
+      cy.contains('testbuilding').should('be.visible')
+      cy.contains('teststraat 1').should('be.visible')
+      cy.contains('9000 Gent').should('be.visible')
+      cy.contains('Notities').should('be.visible')
+      cy.contains('test').should('be.visible')
+      cy.contains('Bewerken').should('be.visible')
+      cy.contains('Afbeeldingen').should('be.visible')
+      cy.contains('Toevoegen').should('be.visible')
+      cy.contains('arrival').should('be.visible')
+      cy.contains('test arrival').should('be.visible')
+      cy.contains('departure').should('be.visible')
+      cy.contains('test departure').should('be.visible')
       cy.get('#edit').click()
       cy.get('#notes').clear().type("NOTE")
       cy.get('#save').click()
@@ -57,71 +81,130 @@ describe("round tests", () => {
         props: {
           progress:
             {
-              id: 1, report: "test", arrival: new Date(), departure: new Date(), building_id: 2,
+              id: 1,
+              report: "test",
+              arrival: new Date(),
+              departure: new Date(),
+              building_id: 2,
               building: {
-                id: 2, name: "testbuilding", syndicus_id: 3, syndicus: {}, address_id: 4,
+                id: 2,
+                name: "testbuilding",
+                syndicus_id: 3,
+                syndicus: {},
+                address_id: 4,
                 address: {
-                  id: 4, street: 'teststraat', number: 1, city: "Gent", zip_code: 9000,
+                  id: 4,
+                  street: 'teststraat',
+                  number: 1,
+                  city: "Gent",
+                  zip_code: 9000,
                 }
               },
-              schedule_id: 5, schedule: {},
+              schedule_id: 5,
+              schedule: {},
               images: []
             },
           building: {
-            id: 2, name: "testbuilding", syndicus_id: 3, syndicus: {}, address_id: 4,
+            id: 2,
+            name: "testbuilding",
+            syndicus_id: 3,
+            syndicus: {},
+            address_id: 4,
             address: {
-              id: 4, street: 'teststraat', number: 1, city: "Gent", zip_code: 9000,
+              id: 4,
+              street: 'teststraat',
+              number: 1,
+              city: "Gent",
+              zip_code: 9000,
             }
           },
         }
       })
-      cy.contains('Geen foto\'s toegevoegd.')
+      // all info present, no pictures and you can edit a note
+      cy.contains('testbuilding').should('be.visible')
+      cy.contains('teststraat 1').should('be.visible')
+      cy.contains('9000 Gent').should('be.visible')
+      cy.contains('Notities').should('be.visible')
+      cy.contains('test').should('be.visible')
+      cy.contains('Bewerken').should('be.visible')
+      cy.contains('Afbeeldingen').should('be.visible')
+      cy.contains('Geen foto\'s toegevoegd.').should('be.visible')
+      cy.contains('Toevoegen').should('be.visible')
+      cy.get('#edit').click()
+      cy.get('#notes').clear().type("NOTE")
+      cy.get('#save').click()
     })
   })
-  describe.only('roundcard tests', () => {
+  describe('roundcard tests', () => {
     it('roundcard completed', () => {
       cy.mount(RoundCard, {
         props: {
           schedule: {
-            id: 1, day: new Date(), user_id: 2,
-            user:{first_name: "test", last_name: "gebruiker"},
-            round_id: 3, progress: []
+            id: 1,
+            day: new Date(),
+            user_id: 2,
+            user: {
+              first_name: "test",
+              last_name: "gebruiker"
+            },
+            round_id: 3,
+            progress: [],
           },
           status: "completed",
         }
       })
-      cy.contains((new Date()).toLocaleDateString())
-      cy.contains("test gebruiker")
-      cy.contains("Opmerkingen") // this is hardcoded with a random chance, so will sometimes fail
-      cy.contains('10') // this is still a hardcoded number for now
+      // all info present
+      cy.contains((new Date()).toLocaleDateString()).should('be.visible')
+      cy.contains("test gebruiker").should('be.visible')
+      // TODO change these lines once nothing is hardcoded anymore
+      cy.contains("Opmerkingen").should('be.visible') // this is hardcoded with a random chance, so will sometimes fail
+      cy.contains('10').should('be.visible') // this is still a hardcoded number for now
     })
 
-      it('roundcard active', () => {
+    it('roundcard active', () => {
       cy.mount(RoundCard, {
         props: {
           schedule: {
-            id: 1, day: new Date(), user_id: 2,
-            user:{first_name: "test", last_name: "gebruiker"},
-            round_id: 3, progress: []
+            id: 1,
+            day: new Date(),
+            user_id: 2,
+            user: {
+              first_name: "test",
+              last_name: "gebruiker"
+            },
+            round_id: 3,
+            progress: [],
           },
           status: "active",
         }
       })
-      cy.contains('Actief')
+      // all info present
+      cy.contains('Actief').should('be.visible')
+      cy.contains((new Date()).toLocaleDateString()).should('be.visible')
+      cy.contains("test gebruiker").should('be.visible')
     })
 
     it('roundcard scheduled', () => {
       cy.mount(RoundCard, {
         props: {
           schedule: {
-            id: 1, day: new Date(), user_id: 2,
-            user:{first_name: "test", last_name: "gebruiker"},
-            round_id: 3, progress: []
+            id: 1,
+            day: new Date(),
+            user_id: 2,
+            user: {
+              first_name: "test",
+              last_name: "gebruiker"
+            },
+            round_id: 3,
+            progress: [],
           },
           status: "scheduled",
         }
       })
+      // all info present
       cy.contains('Actief').should('not.exist')
+      cy.contains((new Date()).toLocaleDateString()).should('be.visible')
+      // TODO change these lines once nothing is hardcoded anymore
       cy.contains('Opmerkingen').should('not.exist')
       cy.contains('10').should('not.exist')
     })

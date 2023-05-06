@@ -11,7 +11,7 @@ describe("component tests", () => {
         size: "small",
       },
     })
-    cy.contains('tg')
+    cy.contains('tg').should('be.visible')
   })
 
   it('badge test', () => {
@@ -20,14 +20,14 @@ describe("component tests", () => {
         value: 10,
       },
     })
-    cy.contains('10')
+    cy.contains('10').should('be.visible')
   })
 
   it('photobutton test', () => {
     cy.mount(PhotoButton, {})
-    cy.contains("File input")
+    cy.contains("File input").should('be.visible')
     cy.get("#input").selectFile('src/assets/images/drtroittoir_logo.png')
-    cy.contains("drtroittoir_logo.png")
+    cy.contains("drtroittoir_logo.png").should('be.visible')
   })
 
 })
