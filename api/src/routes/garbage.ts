@@ -13,7 +13,7 @@ export class GarbageRouting extends Routing {
         building: selectBuilding(),
     };
 
-    @Auth.authorization({ superStudent: true, syndicus: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getAll(req: CustomRequest, res: express.Response) {
         // A syndicus is only allowed to see his own garbage
         if (
