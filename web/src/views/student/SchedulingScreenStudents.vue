@@ -30,6 +30,7 @@
       >
         <template v-slot:subtitle>
           <div class="d-flex">
+            <!-- Display the hour -->
             <v-chip
               class="me-auto"
               label
@@ -46,9 +47,7 @@
 
             <!-- Done status indicator -->
             <v-chip
-              v-if="
-                item.progress.length === item.schedule.round.buildings.length
-              "
+              v-if="getCompletedBuildings(item.progress) === item.progress.length"
               label
               color="success"
             >
@@ -58,12 +57,12 @@
 
             <!-- In progress indicator -->
             <v-chip
-              v-else-if="item.progress.length !== 0"
+              v-else-if="roundStarted(item.progress)"
               label
               color="warning"
             >
-              Bezig {{ item.progress.length }}/{{
-                item.schedule.round.buildings.length
+              Bezig {{ getCompletedBuildings(item.progress) }}/{{
+                item.progress.length
               }}
             </v-chip>
           </div>
@@ -73,7 +72,7 @@
 
         <div
           class="pa-4 d-flex align-center"
-          v-if="true || showStartButton(item)"
+          v-if="showStartButton(item)"
         >
           <v-spacer />
           <v-btn
@@ -125,6 +124,9 @@ const current_round_id = ref(0);
 const current_schedule_id = ref(0);
 const current_progress_id = ref(0);
 
+/**
+ * Use the vue router to navigate to the round set by `setCurrentRound`.
+ */
 function goToRound() {
   router.push({
     name: "round_detail",
@@ -132,11 +134,19 @@ function goToRound() {
   });
 }
 
+/**
+ * Save the id of a round and it's schedule to a temp value
+ * @param schedule
+ */
 function setCurrentRound(schedule: Result<ScheduleQuery>) {
   current_round_id.value = schedule.round_id;
   current_schedule_id.value = schedule.id;
 }
 
+/**
+ * Function to open te popup, and save the round details for the popup to be used
+ * @param schedule
+ */
 function openPopup(schedule: {
   schedule: Result<ScheduleQuery>;
   progress: Array<Result<ProgressQuery>>;
@@ -146,13 +156,44 @@ function openPopup(schedule: {
   snackbar.value = true;
 }
 
+/**
+ * Return whether the start round button should be displayed
+ * @param schedule
+ */
 function showStartButton(schedule: {
   schedule: Result<ScheduleQuery>;
   progress: Array<Result<ProgressQuery>>;
 }): boolean {
   const today = new Date().getDate();
   const day = new Date(schedule.schedule.day).getDate();
-  return today === day && schedule.progress.length === 0;
+  return today === day && !roundStarted(schedule.progress);
+}
+
+/**
+ * Check if any building of the round has been started.
+ * @param progresses
+ */
+function roundStarted(progresses: Array<Result<ProgressQuery>>): boolean{
+  for(const progress of progresses){
+    if(progress.arrival != null){
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Count how many buildings are completed for a given round.
+ * @param progresses
+ */
+function getCompletedBuildings(progresses: Array<Result<ProgressQuery>>): number{
+  let count: number = 0;
+  for(const progress of progresses){
+    if(progress.departure != null){
+      count++;
+    }
+  }
+  return count;
 }
 
 async function saveStartTime() {
