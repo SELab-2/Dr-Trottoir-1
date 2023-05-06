@@ -47,7 +47,9 @@
 
             <!-- Done status indicator -->
             <v-chip
-              v-if="getCompletedBuildings(item.progress) === item.progress.length"
+              v-if="
+                getCompletedBuildings(item.progress) === item.progress.length
+              "
               label
               color="success"
             >
@@ -70,10 +72,7 @@
 
         <DividerLayout v-show="showStartButton(item)" />
 
-        <div
-          class="pa-4 d-flex align-center"
-          v-if="showStartButton(item)"
-        >
+        <div class="pa-4 d-flex align-center" v-if="showStartButton(item)">
           <v-spacer />
           <v-btn
             class="text-none"
@@ -173,9 +172,9 @@ function showStartButton(schedule: {
  * Check if any building of the round has been started.
  * @param progresses
  */
-function roundStarted(progresses: Array<Result<ProgressQuery>>): boolean{
-  for(const progress of progresses){
-    if(progress.arrival != null){
+function roundStarted(progresses: Array<Result<ProgressQuery>>): boolean {
+  for (const progress of progresses) {
+    if (progress.arrival != null) {
       return true;
     }
   }
@@ -186,10 +185,12 @@ function roundStarted(progresses: Array<Result<ProgressQuery>>): boolean{
  * Count how many buildings are completed for a given round.
  * @param progresses
  */
-function getCompletedBuildings(progresses: Array<Result<ProgressQuery>>): number{
+function getCompletedBuildings(
+  progresses: Array<Result<ProgressQuery>>,
+): number {
   let count: number = 0;
-  for(const progress of progresses){
-    if(progress.departure != null){
+  for (const progress of progresses) {
+    if (progress.departure != null) {
       count++;
     }
   }
