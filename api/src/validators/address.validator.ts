@@ -6,7 +6,7 @@ export class AddressValidator extends Validator {
     getOneValidator() {
         return celebrate({
             params: Joi.object({
-                id: Joi.number().positive(),
+                id: Joi.number().positive().required(),
             }),
         });
     }
@@ -17,8 +17,8 @@ export class AddressValidator extends Validator {
             body: Joi.object({
                 street: Joi.string().min(1).required(),
                 city: Joi.string().min(1).required(),
-                zip_code: Joi.number().required(),
-                number: Joi.number().required(),
+                zip_code: Joi.number().positive().required(),
+                number: Joi.number().positive().required(),
                 longitude: Joi.number().min(-180).max(180).required(),
                 latitude: Joi.number().min(-90).max(90).required(),
             }),
@@ -34,8 +34,8 @@ export class AddressValidator extends Validator {
                 id: Joi.forbidden(),
                 street: Joi.string().min(1),
                 city: Joi.string().min(1),
-                zip_code: Joi.number(),
-                number: Joi.number(),
+                zip_code: Joi.number().positive(),
+                number: Joi.number().positive(),
                 longitude: Joi.number().min(-180).max(180),
                 latitude: Joi.number().min(-90).max(90),
             }),
