@@ -103,7 +103,7 @@
       :oncancel="() => (snackbar = false)"
       :onsubmit="
         async () => {
-          await saveStartTime(0);
+          await saveStartTime();
           goToRound();
         }
       "
@@ -125,7 +125,7 @@ import { tryOrAlertAsync } from "@/try";
 const snackbar = ref(false);
 const current_round_id = ref(0);
 const current_schedule_id = ref(0);
-
+const current_progress_id = ref(0);
 
 function goToRound(){
   router.push({ name: 'round_detail', params: { id: current_round_id.value, schedule: current_schedule_id.value }});
@@ -140,6 +140,7 @@ function openPopup(schedule: {
   schedule: Result<ScheduleQuery>;
   progress: Array<Result<ProgressQuery>>;
 }){
+  current_progress_id.value = schedule.progress[0].id;
   setCurrentRound(schedule.schedule);
   snackbar.value = true;
 }
@@ -153,10 +154,10 @@ function showStartButton(schedule: {
   return today === day && schedule.progress.length === 0;
 }
 
-async function saveStartTime(scheduleId: number) {
+async function saveStartTime() {
   await tryOrAlertAsync(async () => {
     await new ProgressQuery().updateOne({
-      id: scheduleId,
+      id: current_progress_id.value,
       arrival: new Date(),
     });
   });
