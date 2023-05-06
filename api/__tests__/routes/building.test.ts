@@ -1038,6 +1038,13 @@ describe("Building tests", () => {
                     statusCode: 404,
                 });
             });
+
+            test("Cannot DELETE /building/:id/image/:id", async () => {
+                await runner.delete({
+                    url: "/building/1/image/20",
+                    statusCode: 404,
+                });
+            });
         });
         describe("Cannot change buildings using wrong types", () => {
             beforeEach(() => {
