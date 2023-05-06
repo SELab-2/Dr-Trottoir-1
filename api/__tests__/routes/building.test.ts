@@ -436,8 +436,8 @@ describe("Building tests", () => {
         test("PATCH /building/:id (change hash)", async () => {
             const changeHash = {
                 hash: true,
-            }
-            
+            };
+
             const expected = {
                 id: 1,
                 name: "Building 1",
@@ -834,7 +834,7 @@ describe("Building tests", () => {
 
             // verify that the building image is truly soft deleted
 
-            const expected= {
+            const expected = {
                 address: {
                     city: "Sydney",
                     id: 1,
@@ -878,7 +878,6 @@ describe("Building tests", () => {
                 url: "/building/1",
                 expectedData: [expected],
             });
-
         });
     });
     describe("Unsuccessful requests", () => {
