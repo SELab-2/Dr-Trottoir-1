@@ -155,8 +155,8 @@ model Building {
     name     String
     ivago_id String
 
-    syndicus_id Int?
-    syndicus    Syndicus? @relation(fields: [syndicus_id], references: [id], onDelete: SetNull)
+    syndicus_id Int
+    syndicus    Syndicus @relation(fields: [syndicus_id], references: [id], onDelete: Restrict)
 
     address_id Int
     address    Address @relation(fields: [address_id], references: [id], onDelete: Restrict)
@@ -306,4 +306,14 @@ model ProgressImage {
     deleted Boolean @default(false)
 
     @@map("progress_image")
+}
+
+// Elke mail template heeft een naam. Ook bevat elke template een mail onderwerp en content
+model MailTemplate {
+    id           Int    @id @default(autoincrement())
+    name         String
+    mail_subject String
+    content      String
+
+    @@map("mail_template")
 }

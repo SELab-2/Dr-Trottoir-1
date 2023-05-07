@@ -5,6 +5,7 @@ import app from "../../src/main";
 import {
     deleteDatabaseData,
     initialiseDatabase,
+    resetDatabase,
     restoreTables,
 } from "../mock/database";
 import {
@@ -20,12 +21,11 @@ describe("Syndicus tests", () => {
         const server = request(app);
         runner = new Testrunner(server);
 
-        await deleteDatabaseData();
-        await initialiseDatabase();
+        return resetDatabase();
     });
 
     afterEach(async () => {
-        await restoreTables("user", "syndicus", "building");
+        await restoreTables();
     });
 
     describe("Successful requests", () => {
@@ -323,6 +323,14 @@ describe("Syndicus tests", () => {
 
         test("DELETE /syndicus/:id", async () => {
             await runner.delete({
+                url: "/building/1",
+                data: { hardDelete: true },
+            });
+            await runner.delete({
+                url: "/building/3",
+                data: { hardDelete: true },
+            });
+            await runner.delete({
                 url: "/syndicus/1",
             });
         });
@@ -333,8 +341,14 @@ describe("Syndicus tests", () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
         });
 
+        test("Deleting syndicus who's linked to a building", async () => {
+            await runner.delete({
+                url: "/syndicus/1",
+                statusCode: 400,
+            });
+        });
         test("Requests using non-existent syndicus", async () => {
-            const url = "/syndicus/0";
+            const url = "/syndicus/9";
             await runner.get({
                 url: url,
                 expectedData: [notFoundResponse],

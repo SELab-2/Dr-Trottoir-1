@@ -5,6 +5,7 @@ import app from "../../src/main";
 import {
     deleteDatabaseData,
     initialiseDatabase,
+    resetDatabase,
     restoreTables,
 } from "../mock/database";
 import {
@@ -21,12 +22,11 @@ describe("Schedule tests", () => {
         const server = request(app);
         runner = new Testrunner(server);
 
-        await deleteDatabaseData();
-        await initialiseDatabase();
+        return resetDatabase();
     });
 
     afterEach(async () => {
-        await restoreTables("schedule", "progress");
+        await restoreTables();
     });
 
     describe("Successful requests", () => {
@@ -401,14 +401,18 @@ describe("Schedule tests", () => {
 
                 await runner.post({
                     url: "/schedule",
-                    data: {},
+                    data: {
+                        day: new Date().toISOString(),
+                        user_id: 1,
+                        round_id: 1,
+                    },
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
 
                 await runner.patch({
                     url: "/schedule/1",
-                    data: {},
+                    data: { user_id: 1 },
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
@@ -426,9 +430,20 @@ describe("Schedule tests", () => {
                     statusCode: 403,
                 });
 
+                await runner.post({
+                    url: "/schedule",
+                    data: {
+                        day: new Date().toISOString(),
+                        user_id: 1,
+                        round_id: 1,
+                    },
+                    expectedResponse: forbiddenResponse,
+                    statusCode: 403,
+                });
+
                 await runner.patch({
                     url: "/schedule/1",
-                    data: { foo: "bar" },
+                    data: { user_id: 1 },
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
@@ -446,7 +461,7 @@ describe("Schedule tests", () => {
             test("Can't change user id to non-existent one", async () => {
                 await runner.patch({
                     url: "/schedule/1",
-                    data: { user_id: 0 },
+                    data: { user_id: 6 },
                     expectedResponse: badRequestForeignKey,
                     statusCode: 400,
                 });
@@ -454,7 +469,7 @@ describe("Schedule tests", () => {
             test("Can't change round id to non-existent one", async () => {
                 await runner.patch({
                     url: "/schedule/1",
-                    data: { round_id: 0 },
+                    data: { round_id: 6 },
                     expectedResponse: badRequestForeignKey,
                     statusCode: 400,
                 });
@@ -466,14 +481,14 @@ describe("Schedule tests", () => {
             });
             test("Can't GET a non-existent schedule", async () => {
                 await runner.get({
-                    url: "/schedule/0",
+                    url: "/schedule/9",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
             });
             test("Can't PATCH a non-existent schedule", async () => {
                 await runner.patch({
-                    url: "/schedule/0",
+                    url: "/schedule/9",
                     data: { user_id: 1 },
                     expectedResponse: notFoundResponse,
                     statusCode: 404,
@@ -481,7 +496,7 @@ describe("Schedule tests", () => {
             });
             test("Can't DELETE a non-existent schedule", async () => {
                 await runner.delete({
-                    url: "/schedule/0",
+                    url: "/schedule/9",
                     statusCode: 404,
                 });
             });
@@ -490,7 +505,7 @@ describe("Schedule tests", () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
             await runner.patch({
                 url: "/schedule/1",
-                data: { user_id: "2" },
+                data: { user_id: "foo" },
                 expectedResponse: badRequestResponse,
                 statusCode: 400,
             });

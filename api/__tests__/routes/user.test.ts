@@ -5,6 +5,7 @@ import app from "../../src/main";
 import {
     deleteDatabaseData,
     initialiseDatabase,
+    resetDatabase,
     restoreTables,
 } from "../mock/database";
 import {
@@ -16,25 +17,20 @@ import {
 
 describe("User tests", () => {
     let runner: Testrunner;
-    beforeAll(async () => {
+    beforeAll(() => {
         const server = request(app);
         runner = new Testrunner(server);
 
-        await deleteDatabaseData();
-        await initialiseDatabase();
+        return resetDatabase();
     });
 
     afterEach(async () => {
-        await restoreTables(
-            "address",
-            "user",
-            "user_region",
-            "syndicus",
-            "schedule",
-            "image",
-        );
+        await restoreTables();
     });
 
+    /**
+     * Positive tests against the API.
+     */
     describe("Successful requests", () => {
         beforeEach(() => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
@@ -160,7 +156,7 @@ describe("User tests", () => {
                 address: {
                     create: {
                         city: "Gent",
-                        latitude: 100.0,
+                        latitude: 90,
                         longitude: 100.0,
                         number: 1,
                         street: "street",
@@ -191,7 +187,7 @@ describe("User tests", () => {
                     number: 1,
                     city: "Gent",
                     zip_code: 1000,
-                    latitude: 100,
+                    latitude: 90,
                     longitude: 100,
                 },
                 regions: [],
@@ -261,30 +257,31 @@ describe("User tests", () => {
             });
         });
     });
+    /**
+     * Negative tests against the API.
+     */
     describe("Unsuccessful requests", () => {
-        const user = {
-            id: undefined,
-            email: "admin@email.com",
-            first_name: "admin",
-            last_name: "familyname",
+        const user: any = {
+            email: "foo@bar.com",
+            first_name: "Foo",
+            last_name: "Bar",
             date_added: "2020-01-01T00:00:00.000Z",
             last_login: "2020-01-01T00:00:00.000Z",
-            phone: "number",
+            phone: "23457890",
             address: {
-                id: undefined,
-                city: "Gent",
-                latitude: 100.0,
-                longitude: 100.0,
-                number: 1,
-                street: "street",
-                zip_code: 1000,
+                create: {
+                    city: "Gent",
+                    latitude: 90,
+                    longitude: 100.0,
+                    number: 1,
+                    street: "street",
+                    zip_code: 1000,
+                },
             },
-            address_id: undefined,
             student: false,
-            super_student: false,
-            admin: true,
-            deleted: false,
-            regions: [],
+            super_student: true,
+            admin: false,
+            password: "foobar",
         };
         describe("Must be correctly authorized", () => {
             test("Can't use any path without authorization", async () => {
@@ -350,7 +347,7 @@ describe("User tests", () => {
         });
         test("Cannot query for non-existent user", async () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
-            const url = "/user/0";
+            const url = "/user/6";
             await runner.get({
                 url: url,
                 expectedData: [notFoundResponse],
@@ -392,24 +389,23 @@ describe("User tests", () => {
         });
         test("Cannot add user with duplicate email", async () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
-            const user = {
+            const newUser = {
                 email: "student@trottoir.be",
                 first_name: "foo",
                 last_name: "bar",
                 date_added: "2020-01-01T00:00:00.000Z",
                 last_login: "2020-01-01T00:00:00.000Z",
-                phone: "number",
+                phone: "516135485312",
                 address: {
                     create: {
                         city: "Gent",
-                        latitude: 100.0,
+                        latitude: 90,
                         longitude: 100.0,
                         number: 1,
                         street: "street",
                         zip_code: 1000,
                     },
                 },
-                address_id: undefined,
                 student: false,
                 super_student: false,
                 admin: true,
@@ -418,13 +414,15 @@ describe("User tests", () => {
 
             await runner.post({
                 url: "/user",
-                data: user,
+                data: newUser,
                 expectedResponse: conflictResponse,
                 statusCode: 409,
             });
         });
         describe("Cannot send salt and hash in the request", () => {
-            test("Can't create user a new user with predefined hash and salt", async () => {
+            test("Can't create a new user with predefined hash and salt", async () => {
+                user.hash = "hash";
+                user.salt = "salt";
                 runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
                 await runner.post({
                     url: "/user",

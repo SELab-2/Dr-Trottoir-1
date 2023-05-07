@@ -149,7 +149,6 @@ export class Testrunner {
             .send(data)
             .set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
-
         // drop the id, as we cannot predict that
         delete response.body["id"];
 
