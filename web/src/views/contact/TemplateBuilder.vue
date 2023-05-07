@@ -1,6 +1,6 @@
 <template>
   <HFillWrapper margin="mx-4">
-    <h2>Contactformulier</h2>
+    <h2>Nieuwe email template</h2>
 
     <p>
       Maak hier een nieuwe email template aan. Aan de rechterkant vindt u codes
@@ -30,7 +30,6 @@
               </v-text-field>
             </v-col>
           </v-row>
-          <!-- TODO: Show syndicus for convenience. Something goes wrong here. -->
           <v-row class="py-0 my-0 mx-3">
             <v-col
               cols="1"
@@ -40,6 +39,7 @@
               <v-text-field
                 prepend-inner-icon="mdi-text-short"
                 label="Template onderwerp"
+                v-model="subject"
               >
               </v-text-field>
             </v-col>
@@ -53,8 +53,9 @@
             >
               <v-textarea
                 rows="17"
-                label="Inhoud"
+                label="Template inhoud"
                 prepend-inner-icon="mdi-text"
+                v-model="body"
               ></v-textarea
             ></v-col>
           </v-row>
@@ -63,6 +64,7 @@
             prepend-icon="mdi-content-save"
             variant="tonal"
             class="mb-6 ml-6"
+            @click="tester()"
             >Opslaan</v-btn
           >
         </BorderCard> </v-col
@@ -88,10 +90,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
-import { Result, BuildingQuery } from "@selab-2/groep-1-query";
 
 const variables: { name: string; description: string }[] = [
   { name: "$(syndicus_voornaam)", description: "Voornaam van een syndicus" },
