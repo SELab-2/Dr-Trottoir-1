@@ -6,60 +6,64 @@ import { Parser } from "../parser";
 import multer from "multer";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
-import path from "path";
 import fs from "fs";
 
-//creates multer object
-const fileUpload = multer({
-    storage: multer.diskStorage({
-        destination: function (req, file, cb) {
-            if (process.env.LOCAL_FILE_PATH !== undefined) {
-                cb(null, process.env.LOCAL_FILE_PATH as string);
-            } else {
-                throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
-            }
-        },
-        filename: function (req, file, cb) {
-            cb(null, file.originalname);
-        },
-    }),
-});
-
 export class FileRouting extends Routing {
+    private upload = multer({
+        dest: process.env.FILE_STORAGE_DIRECTORY,
+        limits: {
+            files: 1,
+            fileSize: 5 * 1024 * 1024, // 5 MB
+        },
+    });
+
     @Auth.authorization({ superStudent: true })
+    async getAll(req: CustomRequest, res: express.Response) {
+        const result = await prisma.file.findMany({
+            take: Parser.number(req.query["take"], 1024),
+            skip: Parser.number(req.query["skip"], 0),
+        });
+
+        return res.json(result);
+    }
+
+    @Auth.authorization({ student: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        // Look up the file in the database using Prisma
         const result = await prisma.file.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
         });
 
-        if (result.location === "FILE_SERVER") {
-            // Send the file to the client
-            const dirname = path.resolve();
-            const full_path = path.join(dirname, result.path);
-            res.json(result).sendFile(full_path);
-        } else if (result.location === "EXTERNAL") {
-            // Redirect the client to the external link
-            res.json(result).redirect(result.path);
-        } else {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
+        switch (result.location) {
+            case "FILE_SERVER":
+                return res.sendFile(
+                    `${process.env.FILE_STORAGE_DIRECTORY}/${result.path}`,
+                );
+            case "EXTERNAL":
+                return res.redirect(result.path);
+            default:
+                throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        const uploadSingle = fileUpload.single("file");
-        uploadSingle(req, res, (err) => {
-            if (err) {
-                throw new APIError(APIErrorCode.BAD_REQUEST);
-            }
-        });
-        delete req.body["file"];
-        // save the file to the database using Prisma
+        if (!req.files || req.files.length !== 1) {
+            throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+        const file = (req.files as Express.Multer.File[])[0];
+
         const result = await prisma.file.create({
-            data: req.body,
+            data: {
+                path: file.filename,
+                mime: file.mimetype,
+                size_in_bytes: file.size,
+                original_name: file.originalname,
+                user_id: req.user?.id ?? 1,
+                location: "FILE_SERVER",
+            },
         });
 
         return res.status(201).json(result);
@@ -67,29 +71,33 @@ export class FileRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        // Look up the file in the database using Prisma
-        const result = await prisma.file.findUniqueOrThrow({
+        const result = await prisma.file.delete({
             where: {
                 id: Parser.number(req.params["id"]),
             },
         });
 
-        // Delete the file on the file server
         if (result.location === "FILE_SERVER") {
-            const dirname = path.resolve();
-            const full_path = path.join(dirname, result.path);
-            fs.unlink(full_path, (err) => {
-                if (err) {
-                    throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
-                }
-            });
+            fs.unlinkSync(
+                `${process.env.FILE_STORAGE_DIRECTORY}/${result.path}`,
+            );
         }
-        // Delete the file record from the database using Prisma
-        await prisma.file.delete({
-            where: {
-                id: Parser.number(req.params["id"]),
-            },
-        });
+
         return res.status(200).json({});
+    }
+
+    toRouter(): express.Router {
+        const router = express.Router();
+        const validator = this.getValidator();
+        router.get("/", validator.getAllValidator(), this.getAll);
+        router.get("/:id", validator.getOneValidator(), this.getOne);
+        router.post(
+            "/",
+            validator.createOneValidator(),
+            this.upload.any(),
+            this.createOne,
+        );
+        router.delete("/:id", validator.deleteOneValidator(), this.deleteOne);
+        return router;
     }
 }
