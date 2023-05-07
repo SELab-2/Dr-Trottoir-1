@@ -167,17 +167,13 @@ const props = defineProps({
 
 tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
-  console.log(building.value);
-});
 
-tryOrAlertAsync(async () => {
   // TODO (in rework building page)
   //schedules.value = await new ScheduleQuery().getAll({});
-});
 
-tryOrAlertAsync(async () => {
   garbage.value = await new GarbageQuery().getAll({
     building_id: Number(props.id),
+    syndicus_id: building.value?.syndicus.id,
   });
 });
 </script>
