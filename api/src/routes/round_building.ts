@@ -4,6 +4,8 @@ import { CustomRequest, Routing, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { Validator } from "../validators/validator";
+import { RoundBuildingValidator } from "../validators/round_building.validator";
 
 export class RoundBuildingRouting extends Routing {
     private static includes: Prisma.RoundBuildingInclude = {
@@ -89,5 +91,9 @@ export class RoundBuildingRouting extends Routing {
         }
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new RoundBuildingValidator();
     }
 }
