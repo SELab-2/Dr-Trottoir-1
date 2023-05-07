@@ -1,6 +1,7 @@
 import express from "express";
 import { APIErrorCode } from "../errors/api_error_code";
 import { APIError } from "../errors/api_error";
+import { Validator } from "../validators/validator";
 
 export type CustomRequest = express.Request<any, any, any, any, any>;
 
@@ -42,16 +43,21 @@ export abstract class Routing {
         throw new APIError(APIErrorCode.METHOD_NOT_ALLOWED);
     }
 
+    getValidator(): Validator {
+        return new (class extends Validator {})();
+    }
+
     /**
      * Construct a new router which contains all the mentioned functions.
      */
     toRouter(): express.Router {
         const router = express.Router();
-        router.get("/", this.getAll);
-        router.get("/:id", this.getOne);
-        router.post("/", this.createOne);
-        router.patch("/:id", this.updateOne);
-        router.delete("/:id", this.deleteOne);
+        const validator = this.getValidator();
+        router.get("/", validator.getAllValidator(), this.getAll);
+        router.get("/:id", validator.getOneValidator(), this.getOne);
+        router.post("/", validator.createOneValidator(), this.createOne);
+        router.patch("/:id", validator.updateOneValidator(), this.updateOne);
+        router.delete("/:id", validator.deleteOneValidator(), this.deleteOne);
         return router;
     }
 }

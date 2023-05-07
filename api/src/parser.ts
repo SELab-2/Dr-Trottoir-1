@@ -86,7 +86,7 @@ export class Parser {
      *      Parser.order([a,b,c], [1,2,3]) will result in [{a: 1}, {b: 2}, {c: 3}]
      * Prisma orders front to back, so fields that should be sorted on first should be at the front of the list
      * @param sortFields fields to sort on
-     * @param sortOrder order the fields are supposed to have
+     * @param orderFields order the fields are supposed to have
      * @return a list of objects for Prisma to use in orderBy query option
      */
     static order(

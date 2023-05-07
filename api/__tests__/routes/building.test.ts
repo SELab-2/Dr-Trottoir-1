@@ -2,11 +2,7 @@ import { afterAll, beforeAll, describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import {
-    deleteDatabaseData,
-    initialiseDatabase,
-    restoreTables,
-} from "../mock/database";
+import { resetDatabase, restoreTables } from "../mock/database";
 import {
     badRequestForeignKey,
     badRequestResponse,
@@ -17,12 +13,11 @@ import {
 describe("Building tests", () => {
     let runner: Testrunner;
 
-    beforeAll(async () => {
+    beforeAll(() => {
         const server = request(app);
         runner = new Testrunner(server);
 
-        await deleteDatabaseData();
-        await initialiseDatabase();
+        return resetDatabase();
     });
 
     afterEach(async () => {
@@ -231,7 +226,7 @@ describe("Building tests", () => {
         test("PATCH /building/:id", async () => {
             const building = (await runner.getRaw("/building/1")).body;
             building["name"] = "Building 1 New";
-            // delete fields that are not part of the request, but set fields accordingly for the expectedResponse
+            // delete fields that are not part of the request, but set fields accordingly for the request
             building["address_id"] = building["address"]["id"];
             delete building["address"];
 
@@ -241,6 +236,7 @@ describe("Building tests", () => {
             building["manual_id"] = building["manual"]["id"];
             delete building["manual"];
             delete building["images"];
+            delete building["id"];
 
             const expected = {
                 id: 1,
@@ -459,7 +455,7 @@ describe("Building tests", () => {
                     data: {
                         syndicus_id: 0,
                     },
-                    expectedResponse: badRequestForeignKey,
+                    expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
             });
@@ -467,7 +463,7 @@ describe("Building tests", () => {
                 await runner.patch({
                     url: "/building/1",
                     data: { address_id: 0 },
-                    expectedResponse: badRequestForeignKey,
+                    expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
             });
@@ -475,7 +471,7 @@ describe("Building tests", () => {
                 await runner.patch({
                     url: "/building/1",
                     data: { manual_id: 0 },
-                    expectedResponse: badRequestForeignKey,
+                    expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
             });
