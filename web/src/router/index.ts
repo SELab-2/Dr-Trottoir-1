@@ -21,7 +21,7 @@ import Auth from "@/views/dev/Auth.vue";
 import { useAuthStore } from "@/stores/auth";
 import TryOrAlert from "@/views/dev/TryOrAlert.vue";
 import Round from "@/views/round/Round.vue";
-import TemplateBuilder from "@/views/contact/TemplateBuilder.vue"
+import TemplateBuilder from "@/views/contact/TemplateBuilder.vue";
 
 const routes: any[] = [
   {

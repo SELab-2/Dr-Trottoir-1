@@ -1,4 +1,4 @@
-import { BuildingQuery, UserQuery, Result } from "@selab-2/groep-1-query";
+import { BuildingQuery, Result } from "@selab-2/groep-1-query";
 
 export function parseTemplate(
   building: Result<BuildingQuery>,

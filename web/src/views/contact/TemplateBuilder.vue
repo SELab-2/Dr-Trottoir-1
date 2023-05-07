@@ -64,7 +64,6 @@
             prepend-icon="mdi-content-save"
             variant="tonal"
             class="mb-6 ml-6"
-            @click="tester()"
             >Opslaan</v-btn
           >
         </BorderCard> </v-col
@@ -75,7 +74,11 @@
       >
         <BorderCard prepend-icon="mdi-variable" title="Variabelen" class="mt-5">
           <v-list>
-            <v-list-item v-for="variable of variables" class="mx-1">
+            <v-list-item
+              v-for="(variable, i) of variables"
+              :key="i"
+              class="mx-1"
+            >
               <v-list-item-title>{{ variable.name }}</v-list-item-title>
 
               <span class="variable-description">
@@ -92,6 +95,10 @@
 <script lang="ts" setup>
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
+import { ref } from "vue";
+
+const subject = ref<string>("");
+const body = ref<string>("");
 
 const variables: { name: string; description: string }[] = [
   { name: "$(syndicus_voornaam)", description: "Voornaam van een syndicus" },
@@ -102,7 +109,7 @@ const variables: { name: string; description: string }[] = [
   { name: "$(syndicus_naam)", description: "Volledige naam van een syndicus" },
   { name: "$(gebouw_naam)", description: "Naam van het gebouw" },
   { name: "$(gebouw_adres)", description: "Adres van het gebouw" },
-  {name: '$(ivago_id)', description: 'Ivago ID van het gebouw'}
+  { name: "$(ivago_id)", description: "Ivago ID van het gebouw" },
 ];
 </script>
 
