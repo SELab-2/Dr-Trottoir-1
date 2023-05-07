@@ -133,7 +133,7 @@
             size="large"
             width="100%"
           >
-            <h3 class="pt-2">Ronde nog niet beëindigt.</h3>
+            <h3 class="pt-2">Ronde nog niet beëindigd.</h3>
           </v-timeline-item>
         </v-timeline>
       </div>
