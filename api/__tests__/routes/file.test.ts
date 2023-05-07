@@ -32,7 +32,7 @@ describe("File tests", () => {
     });
 
     afterEach(async () => {
-        await restoreTables("file");
+        await restoreTables();
     });
 
     describe("Succesful requests", () => {
