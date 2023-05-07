@@ -1,43 +1,33 @@
 import { prisma } from "../prisma";
 import express from "express";
-import { CustomRequest, Routing, selectBuilding } from "./routing";
+import { CustomRequest, Routing } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
-import { Prisma } from "@selab-2/groep-1-orm";
 import { Validator } from "../validators/validator";
-import { RoundValidator } from "../validators/round.validator";
+import { MailTemplateValidator } from "../validators/mailtemplate.validator";
 
-export class RoundRouting extends Routing {
-    private static includes: Prisma.RoundInclude = {
-        buildings: {
-            include: {
-                building: selectBuilding(),
-            },
-        },
-    };
-
+export class MailTemplateRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
-        const result = await prisma.round.findMany({
+        const result = await prisma.mailTemplate.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                name: req.query["name"],
+                name: {
+                    contains: Parser.string(req.query["name"], ""),
+                },
             },
-            include: RoundRouting.includes,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
         });
-
-        return res.json(result);
+        return res.status(200).json(result);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ superStudent: true })
     async getOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.round.findUniqueOrThrow({
+        const result = await prisma.mailTemplate.findUniqueOrThrow({
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            include: RoundRouting.includes,
         });
 
         return res.status(200).json(result);
@@ -45,22 +35,20 @@ export class RoundRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        const round = await prisma.round.create({
+        const action = await prisma.mailTemplate.create({
             data: req.body,
-            include: RoundRouting.includes,
         });
 
-        return res.status(201).json(round);
+        return res.status(201).json(action);
     }
 
     @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        const result = await prisma.round.update({
+        const result = await prisma.mailTemplate.update({
             data: req.body,
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            include: RoundRouting.includes,
         });
 
         return res.status(200).json(result);
@@ -68,7 +56,7 @@ export class RoundRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        await prisma.round.delete({
+        await prisma.mailTemplate.delete({
             where: {
                 id: Parser.number(req.params["id"]),
             },
@@ -78,6 +66,6 @@ export class RoundRouting extends Routing {
     }
 
     getValidator(): Validator {
-        return new RoundValidator();
+        return new MailTemplateValidator();
     }
 }

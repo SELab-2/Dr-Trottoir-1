@@ -5,6 +5,7 @@ import app from "../../src/main";
 import {
     deleteDatabaseData,
     initialiseDatabase,
+    resetDatabase,
     restoreTables,
 } from "../mock/database";
 import {
@@ -20,10 +21,9 @@ describe("Action tests", () => {
         const server = request(app);
         runner = new Testrunner(server);
 
-        await deleteDatabaseData();
-        await initialiseDatabase();
-
         runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+
+        return resetDatabase();
     });
 
     afterEach(async () => {
@@ -61,14 +61,13 @@ describe("Action tests", () => {
 
         test("PATCH /action/:id", async () => {
             const newAction = {
-                id: 1,
                 description: "Updated description",
             };
 
             await runner.patch({
                 url: "/action/1",
                 data: newAction,
-                expectedResponse: newAction,
+                expectedResponse: { id: 1, description: "Updated description" },
             });
         });
 
@@ -206,7 +205,7 @@ describe("Action tests", () => {
 
             test("Find a nonexistent action", async () => {
                 await runner.get({
-                    url: "/action/0",
+                    url: "/action/5",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
@@ -214,13 +213,13 @@ describe("Action tests", () => {
 
             test("Update a nonexistent action", async () => {
                 await runner.get({
-                    url: "/action/0",
+                    url: "/action/5",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
             });
             test("Delete a nonexistent action", async () => {
-                await runner.delete({ url: "/action/0", statusCode: 404 });
+                await runner.delete({ url: "/action/5", statusCode: 404 });
             });
         });
         describe("The type of action id must be correct", () => {
