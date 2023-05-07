@@ -44,7 +44,7 @@
             class="mr-1"
             v-else
             value="start"
-            icon='mdi-play'
+            icon="mdi-play"
             @click.stop="() => start()"
           />
           <RoundedButton
@@ -62,7 +62,7 @@
             class="mr-1"
             v-else-if="progress.arrival"
             value="eindig"
-            icon='mdi-stop'
+            icon="mdi-stop"
             @click.stop="() => end()"
           />
         </div>
@@ -85,7 +85,7 @@
           class="ma-1"
           v-else
           value="start"
-          icon='mdi-play'
+          icon="mdi-play"
           @click.stop="() => start()"
         />
         <RoundedButton
@@ -103,7 +103,7 @@
           class="ma-1"
           v-else-if="progress.arrival"
           value="eindig"
-          icon='mdi-stop'
+          icon="mdi-stop"
           @click.stop="() => end()"
         />
       </div>
