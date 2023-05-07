@@ -27,7 +27,7 @@
         <div style="display: flex; gap: 16px; flex-wrap: wrap" class="mt-2">
           <RoundedButton icon="mdi-map-search" value="Kaarten" />
           <RoundedButton icon="mdi-file-pdf-box" value="Handleiding" />
-          <RoundedButton icon="mdi-lock" value="3142" />
+          <RoundedButton icon="mdi-lock" @click="toClip(3142)" value="3142" />
         </div>
       </div>
 
@@ -63,12 +63,15 @@
 
         <div style="flex-grow: 1"></div>
 
-        <div style="display: flex; gap: 16px; flex-wrap: wrap">
+        <div style="gap: 16px; flex-wrap: wrap" class='d-flex flex-row-reverse'>
           <RoundedButton
             icon="mdi-phone"
+            @click="call(building.syndicus?.user.phone)"
             :value="building.syndicus?.user.phone"
           />
-          <RoundedButton icon="mdi-mail" value="E-mail" />
+          <RoundedButton icon="mdi-mail" value="E-mail"
+            @click="mail(building.syndicus?.user.email)"
+          />
         </div>
       </CardLayout>
 
@@ -153,6 +156,18 @@ const building: Ref<Result<BuildingQuery> | null> = ref(null);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
 
+function call(number: string) {
+  location.href ='tel:' + number;
+}
+
+function mail(address: string) {
+  location.href ='mailto:' + address;
+}
+
+function toClip(text: string) {
+  navigator.clipboard.writeText(text);
+}
+
 const props = defineProps({
   id: {
     type: String,
@@ -162,6 +177,7 @@ const props = defineProps({
 
 tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
+  console.log(building.value)
 });
 
 tryOrAlertAsync(async () => {
@@ -169,7 +185,7 @@ tryOrAlertAsync(async () => {
 });
 
 tryOrAlertAsync(async () => {
-  garbage.value = await new GarbageQuery().getAll({});
+  garbage.value = await new GarbageQuery().getAll({building_id: Number(props.id)});
 });
 </script>
 
