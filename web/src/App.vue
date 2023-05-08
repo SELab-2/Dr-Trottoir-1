@@ -11,6 +11,7 @@
           <keep-alive>
             <component :is="Component" />
           </keep-alive>
+          <ErrorHandler></ErrorHandler>
         </router-view>
       </Suspense>
     </v-main>
@@ -20,6 +21,7 @@
 <script lang="ts" setup>
 import Loader from "@/components/popups/Loader.vue";
 import { useAuthStore } from "@/stores/auth";
+import ErrorHandler from "@/components/errors/ErrorHandler.vue";
 </script>
 
 <style lang="sass" scoped></style>

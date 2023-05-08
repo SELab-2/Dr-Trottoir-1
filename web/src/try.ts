@@ -1,11 +1,4 @@
-/*
- * Receives an object and prints it to an alert and the console.
- */
-function handler(err: unknown): void {
-  const jsonString = JSON.stringify(err, Object.getOwnPropertyNames(err), 2);
-  console.log(jsonString);
-  alert(jsonString);
-}
+import { useErrorStore } from "./stores/error";
 
 /**
  * Attempt to execute a function which may throw an exception. If it does, it
@@ -28,7 +21,8 @@ export function tryOrAlert<T>(func: () => T): T | undefined {
   try {
     return func();
   } catch (err) {
-    handler(err);
+    useErrorStore().addToStore(err);
+    useErrorStore().storeFunction(func);
   }
 }
 
@@ -55,6 +49,7 @@ export async function tryOrAlertAsync<T>(
   try {
     return await func();
   } catch (err) {
-    handler(err);
+    useErrorStore().addToStore(err);
+    useErrorStore().storeAsyncFunction(func);
   }
 }
