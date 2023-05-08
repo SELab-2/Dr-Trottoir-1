@@ -13,7 +13,7 @@
       </v-list-item>
       <div
         v-show="
-          useAuthStore().auth?.admin || user?.id === useAuthStore().auth?.id
+          (useAuthStore().auth?.admin || user.id === useAuthStore().auth?.id) && !user.deleted
         "
         class="align-self-center"
       >
@@ -50,6 +50,32 @@
         />
       </div>
     </div>
+    <!-- Display if user has been removed -->
+    <BorderCard
+      v-show="user.deleted"
+      prepend-icon="mdi-alert"
+      title="Deze account is verwijderd."
+    >
+      <template v-slot:append>
+        <v-btn
+          color="success"
+          @click="restore()"
+          variant="elevated"
+          class="text-none mr-3"
+          prepend-icon="mdi-delete-restore"
+        >
+          Herstel
+        </v-btn>
+        <v-btn
+          @click="handleRemovePopupPermanent()"
+          color="error"
+          class="text-none"
+          prepend-icon="mdi-delete-forever"
+        >
+          Verwijder
+        </v-btn>
+      </template>
+    </BorderCard>
 
     <!-- Section with the contact info -->
     <BorderCard class="mt-4" prepend-icon="mdi-account-details">
@@ -176,7 +202,6 @@
     v-model="showPopup"
     :title="popupTitle"
     :prepend-icon="popupIcon"
-    width="400"
   >
     <p class="mx-3">
       {{ popupMsg }}
@@ -187,10 +212,17 @@
         color="error"
         @click="showPopup = false"
         variant="elevated"
+        class="text-none"
       >
         Annuleer
       </v-btn>
-      <v-btn prepend-icon="mdi-check" color="success" @click="popupSubmit()">
+      <v-btn
+        prepend-icon="mdi-check"
+        color="success"
+        @click="popupSubmit()"
+        variant="elevated"
+        class="text-none"
+      >
         {{ popupSubmitMsg }}
       </v-btn>
     </v-card-actions>
@@ -209,7 +241,7 @@ import RolesForm from "@/components/forms/RolesForm.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
 import Address from "@/components/models/Address";
 
-import { Result, UserQuery } from "@selab-2/groep-1-query";
+import {AddressQuery, Result, UserQuery} from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 import {useDisplay} from "vuetify";
@@ -238,9 +270,7 @@ function handleAddressUpdate(address: Address) {
 
 async function fetchUser() {
   await tryOrAlertAsync(async () => {
-    console.log(user.value);
     user.value = await new UserQuery().getOne(props.id);
-    console.log(user.value);
     if (user.value.admin) {
       roles.value.push("Admin");
     }
@@ -269,20 +299,61 @@ async function handleRemove() {
   });
   showPopup.value = false;
   edit.value = false;
-  await router.push({name: "user_overview"});
+  await router.go(0);
 }
 
 function handleRemovePopup() {
   popupIcon.value = "mdi-delete-alert-outline";
   popupTitle.value = "Verwijder account";
   popupMsg.value =
-    "Je staat op het punt deze account permanent te verwijderen. Ben je zeker dat je wilt verdergaan?";
+    "Je staat op het punt deze account te verwijderen. Ben je zeker dat je wilt verdergaan?";
   popupSubmitMsg.value = "Verwijder account";
   popupSubmit.value = handleRemove;
   showPopup.value = true;
 }
 
+async function restore(){
+  await tryOrAlertAsync(async () => {
+    await new UserQuery().updateOne({
+      id: user.value?.id,
+      deleted: false
+    });
+  });
+  router.go(0);
+}
+
+async function handleRemovePermanent() {
+  await tryOrAlertAsync(async () => {
+    await new UserQuery().deleteOne({id: user.value?.id}, true);
+  });
+  showPopup.value = false;
+  edit.value = false;
+  await router.push({name: "user_overview"});
+}
+
+function handleRemovePopupPermanent() {
+  popupIcon.value = "mdi-delete-alert-outline";
+  popupTitle.value = "Verwijder account";
+  popupMsg.value =
+    "Je staat op het punt deze account permanent te verwijderen. Ben je zeker dat je wilt verdergaan?";
+  popupSubmitMsg.value = "Verwijder account";
+  popupSubmit.value = handleRemovePermanent;
+  showPopup.value = true;
+}
+
 async function handleSave() {
+  // update the address
+  await tryOrAlertAsync(async () => {
+    await new AddressQuery().updateOne({
+      id: user.value?.address.id,
+      city: user.value?.address.city,
+      zip_code: user.value?.address.zip_code,
+      street: user.value?.address.street,
+      number: user.value?.address.number,
+    })
+  })
+
+  // update the user
   await tryOrAlertAsync(async () => {
     await new UserQuery().updateOne({
       id: user.value?.id,
@@ -290,7 +361,6 @@ async function handleSave() {
       first_name: user.value?.first_name,
       last_name: user.value?.last_name,
       phone: user.value?.phone,
-      address_id: user.value?.address_id,
       student: roles.value.includes("Student"),
       super_student: roles.value.includes("Superstudent"),
       admin: roles.value.includes("Admin"),
