@@ -147,7 +147,7 @@
     v-if="mobile && currentProgress"
   />
   <v-overlay
-    v-if="currentProgress"
+    v-if="currentProgress && isStudent"
     v-model="showOverlay"
     class="align-center justify-center"
   >
@@ -227,6 +227,8 @@ const startActions: Button[] = [
     },
   },
 ];
+
+const isStudent = useAuthStore().auth?.student;
 
 const showOverlay = ref(false);
 const overlayIsPhoto = ref(true);

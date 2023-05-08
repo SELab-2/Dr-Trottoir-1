@@ -42,7 +42,7 @@
           />
           <RoundedButton
             class="mr-1"
-            v-else
+            v-else-if='isStudent'
             value="start"
             icon="mdi-play"
             @click.stop="() => start()"
@@ -60,7 +60,7 @@
           />
           <RoundedButton
             class="mr-1"
-            v-else-if="progress.arrival"
+            v-else-if="progress.arrival && isStudent"
             value="eindig"
             icon="mdi-stop"
             @click.stop="() => end()"
@@ -83,7 +83,7 @@
         />
         <RoundedButton
           class="ma-1"
-          v-else
+          v-else-if='isStudent'
           value="start"
           icon="mdi-play"
           @click.stop="() => start()"
@@ -101,7 +101,7 @@
         />
         <RoundedButton
           class="ma-1"
-          v-else-if="progress.arrival"
+          v-else-if="progress.arrival && isStudent"
           value="eindig"
           icon="mdi-stop"
           @click.stop="() => end()"
@@ -136,7 +136,7 @@
           @click="() => report()"
         />
         <RoundedButton
-          v-else-if="progress?.report !== ''"
+          v-else-if="progress?.report !== '' && isStudent"
           icon="mdi-pencil"
           value="Bewerken"
           class="mt-4"
@@ -145,6 +145,7 @@
         <div v-else>
           <p style="opacity: 75%">Geen opmerkingen toegevoegd.</p>
           <RoundedButton
+            v-if='isStudent'
             icon="mdi-plus"
             value="Toevoegen"
             class="mt-4"
@@ -174,6 +175,7 @@
           </div>
           <p v-else style="opacity: 75%">Geen foto's toegevoegd.</p>
           <RoundedButton
+            v-if='isStudent'
             icon="mdi-plus"
             value="Toevoegen"
             class="mt-4"
@@ -194,6 +196,7 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import { ProgressQuery } from "@selab-2/groep-1-query";
+import { useAuthStore } from '@/stores/auth'
 
 const props = defineProps(["entry"]);
 const progress = ref(
@@ -201,6 +204,8 @@ const progress = ref(
     ? JSON.parse(JSON.stringify(props.entry.progress))
     : undefined,
 );
+
+const isStudent = useAuthStore().auth?.student;
 
 const router = useRouter();
 
