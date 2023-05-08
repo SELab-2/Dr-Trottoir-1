@@ -22,12 +22,12 @@
           class="text-none"
           v-show="!mobile"
           :prepend-icon="!edit ? 'mdi-pencil' : 'mdi-close'"
-          @click="() => {
+          @click="async () => {
             if (!edit){
               edit = true;
             }
             else {
-              handleCancelEdit();
+              await router.go(0);
             }
           }"
           :color="!edit ? 'primary' : 'warning'"
@@ -87,10 +87,13 @@
       <ContactForm
         :class="edit ? 'mx-4' : 'mx-10'"
         :readonly="!edit"
-        :phone="user?.phone"
-        :email="user?.email"
-      >
-      </ContactForm>
+        :phone="user.phone"
+        :email="user.email"
+        @onUpdate="((contact) => {
+          user.phone = contact.phone;
+          user.email = contact.email;
+        })"
+      />
     </BorderCard>
 
     <!-- Section with the adress -->
@@ -234,8 +237,10 @@ function handleAddressUpdate(address: Address) {
 }
 
 async function fetchUser() {
-  tryOrAlertAsync(async () => {
+  await tryOrAlertAsync(async () => {
+    console.log(user.value);
     user.value = await new UserQuery().getOne(props.id);
+    console.log(user.value);
     if (user.value.admin) {
       roles.value.push("Admin");
     }
@@ -254,17 +259,17 @@ const roles = ref<string[]>([]);
 
 /* Action handle functions */
 async function handleCancelEdit() {
-  fetchUser();
+  await fetchUser();
   edit.value = false;
 }
 
 async function handleRemove() {
   await tryOrAlertAsync(async () => {
-    new UserQuery().deleteOne({ id: user.value?.id });
+    await new UserQuery().deleteOne({id: user.value?.id});
   });
   showPopup.value = false;
   edit.value = false;
-  router.push({ name: "user_overview" });
+  await router.push({name: "user_overview"});
 }
 
 function handleRemovePopup() {

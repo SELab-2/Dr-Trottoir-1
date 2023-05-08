@@ -44,6 +44,8 @@ const props = defineProps({
   },
 });
 
+defineEmits(['onUpdate'])
+
 const contact = ref<Contact>({
   phone: props.phone,
   email: props.email,
