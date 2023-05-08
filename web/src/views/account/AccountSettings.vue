@@ -19,6 +19,7 @@
       >
         <!-- Not mobile edit button -->
         <v-btn
+          class="text-none"
           v-show="!mobile"
           :prepend-icon="!edit ? 'mdi-pencil' : 'mdi-close'"
           @click="() => {
@@ -148,9 +149,10 @@
           prepend-icon="mdi-check"
           @click="handleSavePopup()"
           color="success"
-          class="my-3"
-          >Sla op</v-btn
+          class="my-3 text-none"
         >
+          Sla op
+        </v-btn>
 
         <v-btn
           v-if="
@@ -159,9 +161,10 @@
           prepend-icon="mdi-delete"
           @click="handleRemovePopup()"
           color="error"
-          class="mx-5 my-3"
-          >Verwijder account</v-btn
+          class="mx-5 my-3 text-none"
         >
+          Verwijder account
+        </v-btn>
       </div>
     </div>
   </HFillWrapper>
