@@ -118,12 +118,7 @@
         :readonly="!edit"
         :phone="user.phone"
         :email="user.email"
-        @onUpdate="
-          (contact) => {
-            user.phone = contact.phone;
-            user.email = contact.email;
-          }
-        "
+        @onUpdate="(contact: Contact) => handleContactUpdate(contact)"
       />
     </BorderCard>
 
@@ -246,6 +241,7 @@ import { AddressQuery, Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
+import Contact from "@/components/models/Contact";
 
 const display = useDisplay();
 const mobile: Ref<boolean> = display.mobile;
@@ -266,6 +262,13 @@ function handleAddressUpdate(address: Address) {
     user.value.address.city = address.city;
     user.value.address.number = Number(address.number);
     user.value.address.zip_code = Number(address.zip_code);
+  }
+}
+
+function handleContactUpdate(contact: Contact) {
+  if (user.value) {
+    user.value.email = contact.email;
+    user.value.phone = contact.phone;
   }
 }
 
