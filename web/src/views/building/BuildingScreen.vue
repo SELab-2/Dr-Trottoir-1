@@ -11,6 +11,7 @@
         <div class="d-flex justify-space-between">
           <h1 class="building-name">{{ building.name }}</h1>
           <RoundedButton
+            v-if="!useAuthStore().auth?.student"
             @clicked="() => router.push({ name: 'building_new' })"
             icon="mdi-pencil"
             class="mt-2"
@@ -18,16 +19,20 @@
         </div>
 
         <p>
+          TODO in API: Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
-          ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua.
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </p>
 
         <div style="display: flex; gap: 16px; flex-wrap: wrap" class="mt-2">
-          <RoundedButton icon="mdi-map-search" value="Kaarten" />
-          <RoundedButton icon="mdi-file-pdf-box" value="Handleiding" />
-          <RoundedButton icon="mdi-lock" @click="toClip(3142)" value="3142" />
+          <RoundedButton
+            icon="mdi-map-search"
+            @click="tomaps()"
+            value="Kaarten"
+          />
+          <RoundedButton icon="mdi-file-pdf-box" @value="Handleiding" />
+          <RoundedButton icon="mdi-lock" @click="toClip('TODO')" value="TODO" />
         </div>
       </div>
 
@@ -63,13 +68,15 @@
 
         <div style="flex-grow: 1"></div>
 
-        <div style="gap: 16px; flex-wrap: wrap" class='d-flex flex-row-reverse'>
+        <div style="gap: 16px; flex-wrap: wrap" class="d-flex flex-row-reverse">
           <RoundedButton
             icon="mdi-phone"
             @click="call(building.syndicus?.user.phone)"
             :value="building.syndicus?.user.phone"
           />
-          <RoundedButton icon="mdi-mail" value="E-mail"
+          <RoundedButton
+            icon="mdi-mail"
+            value="E-mail"
             @click="mail(building.syndicus?.user.email)"
           />
         </div>
@@ -151,17 +158,24 @@ import { Ref, ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import RoundCard from "@/components/round/RoundCard.vue";
 import { GarbageQuery } from "@selab-2/groep-1-query/dist/garbage";
+import { useAuthStore } from "@/stores/auth";
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
 
 function call(number: string) {
-  location.href ='tel:' + number;
+  location.href = "tel:" + number;
 }
 
 function mail(address: string) {
-  location.href ='mailto:' + address;
+  location.href = "mailto:" + address;
+}
+
+function tomaps() {
+  window.open(
+    `https://maps.google.com/maps?q=${building.value?.address.number}+${building.value?.address.street},+${building.value?.address.city},+${building.value?.address.zip_code}`,
+  );
 }
 
 function toClip(text: string) {
@@ -177,7 +191,7 @@ const props = defineProps({
 
 tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
-  console.log(building.value)
+  console.log(building.value);
 });
 
 tryOrAlertAsync(async () => {
@@ -185,7 +199,9 @@ tryOrAlertAsync(async () => {
 });
 
 tryOrAlertAsync(async () => {
-  garbage.value = await new GarbageQuery().getAll({building_id: Number(props.id)});
+  garbage.value = await new GarbageQuery().getAll({
+    building_id: Number(props.id),
+  });
 });
 </script>
 
