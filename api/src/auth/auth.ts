@@ -3,7 +3,6 @@ import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 import { Parser } from "../parser";
 import { CustomRequest } from "../routes/routing";
-import { Console } from "inspector";
 
 export class Auth {
     static authorization(options: {
