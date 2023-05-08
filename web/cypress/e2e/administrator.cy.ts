@@ -32,14 +32,14 @@ describe('admin tests', () => {
     })
     cy.get('#create').click()
     // check if user in userlist
-    cy.get('#usertable').get('#table').contains('td', 'test naam')
+    cy.contains('td', 'test naam')
   })
 
   it('edit a user', () => {
     // go to user overview
     cy.get('#users').click()
     // click user
-    cy.get('#usertable').get('#table').contains('td', 'test naam').click()
+    cy.contains('test naam').click()
     // press edit button
     cy.get('#edit').click()
     // alter user data
@@ -58,14 +58,14 @@ describe('admin tests', () => {
     cy.get('#submit').click()
     // check if user is updated in the table
     // cy.get('#users').click()
-    cy.get('#usertable').get('#table').contains('td', 'nieuwe gebruiker')
+    cy.contains('nieuwe gebruiker')
   })
 
   it('delete a user', () => {
     // go to user overview
     cy.get('#users').click()
     // click user
-    cy.get('#usertable').get('#table').contains('td', 'nieuwe gebruiker').click()
+    cy.contains('nieuwe gebruiker').click()
     // press edit button
     cy.get('#edit').click()
     // press delete
@@ -74,7 +74,7 @@ describe('admin tests', () => {
     cy.get('#submit').click()
     // user should not be present in the table
     // cy.get('#users').click()
-    cy.get('#usertable').get('#table').contains('td', 'nieuwe gebruiker').should('not.exist')
+    cy.contains('nieuwe gebruiker').should('not.exist')
   })
 
   it('check the profitability statistics', () => {
@@ -84,18 +84,21 @@ describe('admin tests', () => {
   it('add garbage schedule to a building', () => {
     cy.get('#buildings').click()
     // select building
-    cy.get('#buildingtable').get('#table').contains('td', 'Building 1').click()
-
+    cy.contains('td', 'Building 1').click()
+    // add garbage
   })
 
   it('edit garbage schedule of a building', () => {
     cy.get('#buildings').click()
     // select building
-    cy.get('#buildingtable').get('#table').contains('td', 'Building 1').click()
+    cy.contains('Building 1').click()
+    //edit garbage
   })
 
-
-
-
-
+  it('delete garbage schedule to a building', () => {
+    cy.get('#buildings').click()
+    // select building
+    cy.contains('td', 'Building 1').click()
+    // delete garbage
+  })
 })

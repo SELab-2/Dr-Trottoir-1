@@ -35,7 +35,7 @@
         <!-- Help text for people who don't have an account yet -->
         <p class="me-auto">
           Nog geen account?
-          <span @click="snackbar = true" class="clickable-text">
+          <span id="contact" @click="snackbar = true" class="clickable-text">
             Contacteer ons.
           </span>
         </p>
