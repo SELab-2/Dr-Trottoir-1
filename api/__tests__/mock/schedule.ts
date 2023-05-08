@@ -1,5 +1,6 @@
 import { ProgressImageType } from "@selab-2/groep-1-orm";
 import { prisma } from "./prisma";
+import { image } from "./file";
 
 export async function initialiseSchedule() {
     const timestamp: Date = new Date(Date.UTC(2023, 4, 4, 12, 0, 0));
@@ -51,14 +52,14 @@ export async function initialiseProgressImage() {
     const pi1 = {
         type: ProgressImageType.ARRIVAL,
         description: "Description of progress image 1",
-        image_id: 1,
+        image_id: image.id,
         progress_id: 1,
     };
 
     const pi2 = {
         type: ProgressImageType.GARBAGE,
         description: "Description of progress image 2",
-        image_id: 2,
+        image_id: image.id,
         progress_id: 2,
     };
 
