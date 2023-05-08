@@ -2,27 +2,23 @@ import { afterAll, beforeAll, describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import {
-    deleteDatabaseData,
-    initialiseDatabase,
-    restoreTables,
-} from "../mock/database";
+import { resetDatabase, restoreTables } from "../mock/database";
 import {
     badRequestForeignKey,
     badRequestResponse,
     forbiddenResponse,
     notFoundResponse,
 } from "../utilities/constants";
+import { image, manual } from "../mock/file";
 
 describe("Building tests", () => {
     let runner: Testrunner;
 
-    beforeAll(async () => {
+    beforeAll(() => {
         const server = request(app);
         runner = new Testrunner(server);
 
-        await deleteDatabaseData();
-        await initialiseDatabase();
+        return resetDatabase();
     });
 
     afterEach(async () => {
@@ -52,22 +48,12 @@ describe("Building tests", () => {
                         {
                             building_id: 1,
                             id: 1,
-                            image: {
-                                id: 1,
-                                location: "FILE_SERVER",
-                                path: "path/to/file_server_image",
-                                time: "2023-05-04T12:00:00.000Z",
-                                user_id: 1,
-                            },
-                            image_id: 1,
+                            image: image,
+                            image_id: image.id,
                         },
                     ],
                     ivago_id: "ivago-1",
-                    manual: {
-                        id: 1,
-                        location: "STATIC_FILES",
-                        path: "path/to/static_file",
-                    },
+                    manual: manual,
                     name: "Building 1",
                     syndicus: {
                         id: 1,
@@ -104,22 +90,12 @@ describe("Building tests", () => {
                         {
                             building_id: 2,
                             id: 2,
-                            image: {
-                                id: 2,
-                                location: "IMGPROXY",
-                                path: "path/to/img_proxy_image",
-                                time: "2023-05-04T12:00:00.000Z",
-                                user_id: 1,
-                            },
-                            image_id: 2,
+                            image: image,
+                            image_id: image.id,
                         },
                     ],
                     ivago_id: "ivago-2",
-                    manual: {
-                        id: 2,
-                        location: "IMGPROXY",
-                        path: "path/to/imgproxy_file",
-                    },
+                    manual: manual,
                     name: "Building 2",
                     syndicus: {
                         id: 2,
@@ -165,22 +141,12 @@ describe("Building tests", () => {
                     {
                         building_id: 1,
                         id: 1,
-                        image: {
-                            id: 1,
-                            location: "FILE_SERVER",
-                            path: "path/to/file_server_image",
-                            time: "2023-05-04T12:00:00.000Z",
-                            user_id: 1,
-                        },
-                        image_id: 1,
+                        image: image,
+                        image_id: image.id,
                     },
                 ],
                 ivago_id: "ivago-1",
-                manual: {
-                    id: 1,
-                    location: "STATIC_FILES",
-                    path: "path/to/static_file",
-                },
+                manual: manual,
                 name: "Building 1",
                 syndicus: {
                     id: 1,
@@ -231,7 +197,7 @@ describe("Building tests", () => {
         test("PATCH /building/:id", async () => {
             const building = (await runner.getRaw("/building/1")).body;
             building["name"] = "Building 1 New";
-            // delete fields that are not part of the request, but set fields accordingly for the expectedResponse
+            // delete fields that are not part of the request, but set fields accordingly for the request
             building["address_id"] = building["address"]["id"];
             delete building["address"];
 
@@ -241,6 +207,7 @@ describe("Building tests", () => {
             building["manual_id"] = building["manual"]["id"];
             delete building["manual"];
             delete building["images"];
+            delete building["id"];
 
             const expected = {
                 id: 1,
@@ -274,23 +241,13 @@ describe("Building tests", () => {
                         deleted: false,
                     },
                 },
-                manual: {
-                    id: 1,
-                    path: "path/to/static_file",
-                    location: "STATIC_FILES",
-                },
+                manual: manual,
                 images: [
                     {
                         id: 1,
                         building_id: 1,
-                        image_id: 1,
-                        image: {
-                            id: 1,
-                            time: "2023-05-04T12:00:00.000Z",
-                            location: "FILE_SERVER",
-                            path: "path/to/file_server_image",
-                            user_id: 1,
-                        },
+                        image_id: image.id,
+                        image: image,
                     },
                 ],
             };
@@ -307,7 +264,7 @@ describe("Building tests", () => {
                 name: "new building",
                 ivago_id: "ivago-new",
                 address_id: 3,
-                manual_id: 3,
+                manual_id: manual.id,
                 syndicus_id: 1,
             };
 
@@ -342,11 +299,7 @@ describe("Building tests", () => {
                         deleted: false,
                     },
                 },
-                manual: {
-                    id: 3,
-                    path: "path/to/file_server_file",
-                    location: "FILE_SERVER",
-                },
+                manual: manual,
                 images: [],
             };
 
@@ -370,7 +323,7 @@ describe("Building tests", () => {
                 name: "new building",
                 ivago_id: "ivago-new",
                 address_id: 3,
-                manual_id: 3,
+                manual_id: manual.id,
                 syndicus_id: 1,
             };
             describe("Can't use any path unauthorized", () => {
@@ -459,7 +412,7 @@ describe("Building tests", () => {
                     data: {
                         syndicus_id: 0,
                     },
-                    expectedResponse: badRequestForeignKey,
+                    expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
             });
@@ -467,7 +420,7 @@ describe("Building tests", () => {
                 await runner.patch({
                     url: "/building/1",
                     data: { address_id: 0 },
-                    expectedResponse: badRequestForeignKey,
+                    expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
             });
@@ -475,7 +428,7 @@ describe("Building tests", () => {
                 await runner.patch({
                     url: "/building/1",
                     data: { manual_id: 0 },
-                    expectedResponse: badRequestForeignKey,
+                    expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
             });

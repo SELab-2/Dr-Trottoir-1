@@ -5,6 +5,7 @@ import app from "../../src/main";
 import {
     deleteDatabaseData,
     initialiseDatabase,
+    resetDatabase,
     restoreTables,
 } from "../mock/database";
 import {
@@ -20,8 +21,7 @@ describe("Syndicus tests", () => {
         const server = request(app);
         runner = new Testrunner(server);
 
-        await deleteDatabaseData();
-        await initialiseDatabase();
+        return resetDatabase();
     });
 
     afterEach(async () => {
@@ -348,7 +348,7 @@ describe("Syndicus tests", () => {
             });
         });
         test("Requests using non-existent syndicus", async () => {
-            const url = "/syndicus/0";
+            const url = "/syndicus/9";
             await runner.get({
                 url: url,
                 expectedData: [notFoundResponse],
