@@ -2,11 +2,8 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import {
-    deleteDatabaseData,
-    initialiseDatabase,
-    restoreTables,
-} from "../mock/database";
+import { resetDatabase } from "../mock/database";
+import { restoreTables } from "../mock/database";
 import {
     badRequestForeignKey,
     badRequestResponse,
@@ -14,6 +11,7 @@ import {
     notFoundResponse,
 } from "../utilities/constants";
 
+// turn authentication on, no matter what
 process.env["DISABLE_AUTH"] = "false";
 describe("Garbage tests", () => {
     let runner: Testrunner;
@@ -21,11 +19,9 @@ describe("Garbage tests", () => {
     beforeAll(async () => {
         const server = request(app);
         runner = new Testrunner(server);
-
-        await deleteDatabaseData();
-        await initialiseDatabase();
-
         runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+
+        return resetDatabase();
     });
 
     afterEach(async () => {
@@ -122,8 +118,8 @@ describe("Garbage tests", () => {
 
         test("PATCH /garbage/:id", async () => {
             const expected = {
-                id: 1,
                 pickup_time: "2023-02-02T00:00:00.000Z",
+                id: 1,
                 action_id: 1,
                 building_id: 1,
                 action: { id: 1, description: "action 1" },
@@ -186,8 +182,16 @@ describe("Garbage tests", () => {
         });
     });
 
+    /**
+     * Negative tests on the API.
+     */
     describe("Unsuccessful requests", () => {
         describe("Authentication tests", () => {
+            const garbage = {
+                pickup_time: new Date(2023, 5, 3, 0, 0, 0),
+                action_id: 1,
+                building_id: 1,
+            };
             test("Cannot use any path as unauthorized", async () => {
                 runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
                 await runner.get({
@@ -204,14 +208,14 @@ describe("Garbage tests", () => {
 
                 await runner.post({
                     url: "/garbage",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
 
                 await runner.patch({
                     url: "/garbage/1",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
@@ -221,24 +225,19 @@ describe("Garbage tests", () => {
                     statusCode: 403,
                 });
             });
-            test("Cannot use any path as Student except specific GET", async () => {
+            test("Cannot use any path as Student except GET", async () => {
                 runner.authLevel(AuthenticationLevel.STUDENT);
-                await runner.get({
-                    url: "/garbage",
-                    expectedData: [forbiddenResponse],
-                    statusCode: 403,
-                });
 
                 await runner.post({
                     url: "/garbage",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
 
                 await runner.patch({
                     url: "/garbage/1",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
@@ -256,14 +255,14 @@ describe("Garbage tests", () => {
             });
             test("Can't GET a non-existent garbage", async () => {
                 await runner.get({
-                    url: "/garbage/0",
+                    url: "/garbage/5",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
             });
             test("Can't PATCH a non-existent garbage", async () => {
                 await runner.patch({
-                    url: "/garbage/0",
+                    url: "/garbage/5",
                     data: { pickup_time: "2023-05-04T12:00:00.000Z" },
                     expectedResponse: notFoundResponse,
                     statusCode: 404,
@@ -271,7 +270,7 @@ describe("Garbage tests", () => {
             });
             test("Can't DELETE a non-existent garbage", async () => {
                 await runner.delete({
-                    url: "/garbage/0",
+                    url: "/garbage/5",
                     statusCode: 404,
                 });
             });
@@ -291,7 +290,7 @@ describe("Garbage tests", () => {
         test("Change action id to non-existent one", async () => {
             await runner.patch({
                 url: "/garbage/1",
-                data: { action_id: 0 },
+                data: { action_id: 5 },
                 expectedResponse: badRequestForeignKey,
                 statusCode: 400,
             });
@@ -300,12 +299,13 @@ describe("Garbage tests", () => {
         test("Change building id to non-existent one", async () => {
             await runner.patch({
                 url: "/garbage/1",
-                data: { building_id: 0 },
+                data: { building_id: 5 },
                 expectedResponse: badRequestForeignKey,
                 statusCode: 400,
             });
         });
     });
+
     afterAll(() => {
         app.close();
     });
