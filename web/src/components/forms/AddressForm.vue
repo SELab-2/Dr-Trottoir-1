@@ -19,7 +19,11 @@
           @update:model-value="$emit('onUpdate', address)"
         ></v-text-field>
       </v-col>
-      <v-col v-show="!mobile" cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
+      <v-col
+        v-show="!mobile"
+        cols="3"
+        class="flex-grow-0 flex-shrink-0 py-0 my-0"
+      >
         <!-- Text input field for the house number -->
         <HomeNumberInputField
           :readonly="readonly"
@@ -55,7 +59,11 @@
           :rules="cityRules"
         ></v-text-field>
       </v-col>
-      <v-col v-show="!mobile" cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
+      <v-col
+        v-show="!mobile"
+        cols="3"
+        class="flex-grow-0 flex-shrink-0 py-0 my-0"
+      >
         <!-- Text input field for the zip code -->
         <ZipCodeInputField
           :readonly="readonly"
@@ -83,9 +91,9 @@
     ></AddressForm>
 */
 
-import {Ref, ref} from "vue";
+import { Ref, ref } from "vue";
 import Address from "@/components/models/Address";
-import {useDisplay} from "vuetify";
+import { useDisplay } from "vuetify";
 import HomeNumberInputField from "@/components/inputfields/HomeNumberInputField.vue";
 import ZipCodeInputField from "@/components/inputfields/ZipCodeInputField.vue";
 
@@ -143,6 +151,4 @@ const cityRules = [
     return /^[a-zA-Z]+$/.test(city) ? true : "Stad kan geen nummers bevatten.";
   },
 ];
-
-
 </script>

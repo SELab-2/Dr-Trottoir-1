@@ -12,9 +12,9 @@
 </template>
 <script lang="ts" setup>
 /*
-* The home number can be passed to this component using the v-model.
-* */
-import {computed} from "vue";
+ * The home number can be passed to this component using the v-model.
+ * */
+import { computed } from "vue";
 
 const props = defineProps({
   modelValue: { type: String, required: true },
@@ -38,5 +38,4 @@ const numberRules = [
     return num ? true : "Geef een huisnummer.";
   },
 ];
-
 </script>

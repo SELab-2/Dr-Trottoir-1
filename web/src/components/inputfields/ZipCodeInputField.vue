@@ -12,9 +12,9 @@
 </template>
 <script lang="ts" setup>
 /*
-* The home number can be passed to this component using the v-model.
-* */
-import {computed} from "vue";
+ * The home number can be passed to this component using the v-model.
+ * */
+import { computed } from "vue";
 
 const props = defineProps({
   modelValue: { type: String, required: true },
@@ -43,5 +43,4 @@ const zipRules = [
     return zip.length === 4 ? true : "Ongeldige postcode";
   },
 ];
-
 </script>

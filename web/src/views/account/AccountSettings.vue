@@ -13,7 +13,8 @@
       </v-list-item>
       <div
         v-show="
-          (useAuthStore().auth?.admin || user.id === useAuthStore().auth?.id) && !user.deleted
+          (useAuthStore().auth?.admin || user.id === useAuthStore().auth?.id) &&
+          !user.deleted
         "
         class="align-self-center"
       >
@@ -22,30 +23,32 @@
           class="text-none"
           v-show="!mobile"
           :prepend-icon="!edit ? 'mdi-pencil' : 'mdi-close'"
-          @click="async () => {
-            if (!edit){
-              edit = true;
+          @click="
+            async () => {
+              if (!edit) {
+                edit = true;
+              } else {
+                await router.go(0);
+              }
             }
-            else {
-              await router.go(0);
-            }
-          }"
+          "
           :color="!edit ? 'primary' : 'warning'"
         >
-          {{ !edit ? 'Bewerk Account' : 'Annuleer aanpassingen' }}
+          {{ !edit ? "Bewerk Account" : "Annuleer aanpassingen" }}
         </v-btn>
         <!-- Mobile edit button -->
         <v-btn
           v-show="mobile"
           :icon="!edit ? 'mdi-pencil' : 'mdi-close'"
-          @click="() => {
-            if (!edit){
-              edit = true;
+          @click="
+            () => {
+              if (!edit) {
+                edit = true;
+              } else {
+                handleCancelEdit();
+              }
             }
-            else {
-              handleCancelEdit();
-            }
-          }"
+          "
           variant="text"
         />
       </div>
@@ -115,10 +118,12 @@
         :readonly="!edit"
         :phone="user.phone"
         :email="user.email"
-        @onUpdate="((contact) => {
-          user.phone = contact.phone;
-          user.email = contact.email;
-        })"
+        @onUpdate="
+          (contact) => {
+            user.phone = contact.phone;
+            user.email = contact.email;
+          }
+        "
       />
     </BorderCard>
 
@@ -198,11 +203,7 @@
     </div>
   </HFillWrapper>
 
-  <CardPopup
-    v-model="showPopup"
-    :title="popupTitle"
-    :prepend-icon="popupIcon"
-  >
+  <CardPopup v-model="showPopup" :title="popupTitle" :prepend-icon="popupIcon">
     <p class="mx-3">
       {{ popupMsg }}
     </p>
@@ -241,10 +242,10 @@ import RolesForm from "@/components/forms/RolesForm.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
 import Address from "@/components/models/Address";
 
-import {AddressQuery, Result, UserQuery} from "@selab-2/groep-1-query";
+import { AddressQuery, Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
-import {useDisplay} from "vuetify";
+import { useDisplay } from "vuetify";
 
 const display = useDisplay();
 const mobile: Ref<boolean> = display.mobile;
@@ -295,7 +296,7 @@ async function handleCancelEdit() {
 
 async function handleRemove() {
   await tryOrAlertAsync(async () => {
-    await new UserQuery().deleteOne({id: user.value?.id});
+    await new UserQuery().deleteOne({ id: user.value?.id });
   });
   showPopup.value = false;
   edit.value = false;
@@ -312,11 +313,11 @@ function handleRemovePopup() {
   showPopup.value = true;
 }
 
-async function restore(){
+async function restore() {
   await tryOrAlertAsync(async () => {
     await new UserQuery().updateOne({
       id: user.value?.id,
-      deleted: false
+      deleted: false,
     });
   });
   router.go(0);
@@ -324,11 +325,11 @@ async function restore(){
 
 async function handleRemovePermanent() {
   await tryOrAlertAsync(async () => {
-    await new UserQuery().deleteOne({id: user.value?.id}, true);
+    await new UserQuery().deleteOne({ id: user.value?.id }, true);
   });
   showPopup.value = false;
   edit.value = false;
-  await router.push({name: "user_overview"});
+  await router.push({ name: "user_overview" });
 }
 
 function handleRemovePopupPermanent() {
@@ -350,8 +351,8 @@ async function handleSave() {
       zip_code: user.value?.address.zip_code,
       street: user.value?.address.street,
       number: user.value?.address.number,
-    })
-  })
+    });
+  });
 
   // update the user
   await tryOrAlertAsync(async () => {
