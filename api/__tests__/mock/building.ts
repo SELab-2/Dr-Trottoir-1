@@ -20,9 +20,9 @@ export async function initialiseBuilding() {
     };
 
     const passwordB2 = crypto
-      .createHash("sha256")
-      .update("password_building2")
-      .digest("hex");
+        .createHash("sha256")
+        .update("password_building2")
+        .digest("hex");
     const building2 = {
         name: "Building 2",
         ivago_id: "ivago-2",
@@ -35,9 +35,9 @@ export async function initialiseBuilding() {
     };
 
     const passwordB3 = crypto
-      .createHash("sha256")
-      .update("password_building3")
-      .digest("hex");
+        .createHash("sha256")
+        .update("password_building3")
+        .digest("hex");
 
     const building3 = {
         name: "Building 3",

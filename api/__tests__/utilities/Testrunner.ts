@@ -277,11 +277,15 @@ export class Testrunner {
     private verifyBody(expected: object[], response: request.Response): void {
         if (response.body instanceof Array) {
             for (const item of expected) {
-                expect(response.body).toContainEqual(item);
+                expect(response.body).toContainEqual(
+                    JSON.parse(JSON.stringify(item)),
+                );
             }
         } else {
             // if body is a single object, expected array should only contain a single element
-            expect(response.body).toEqual(expected[0]);
+            expect(JSON.parse(JSON.stringify(response.body))).toEqual(
+                JSON.parse(JSON.stringify(expected[0])),
+            );
         }
     }
 }
