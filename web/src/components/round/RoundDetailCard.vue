@@ -42,7 +42,7 @@
           />
           <RoundedButton
             class="mr-1"
-            v-else-if='isStudent'
+            v-else-if="isStudent"
             value="start"
             icon="mdi-play"
             @click.stop="() => start()"
@@ -83,7 +83,7 @@
         />
         <RoundedButton
           class="ma-1"
-          v-else-if='isStudent'
+          v-else-if="isStudent"
           value="start"
           icon="mdi-play"
           @click.stop="() => start()"
@@ -145,7 +145,7 @@
         <div v-else>
           <p style="opacity: 75%">Geen opmerkingen toegevoegd.</p>
           <RoundedButton
-            v-if='isStudent'
+            v-if="isStudent"
             icon="mdi-plus"
             value="Toevoegen"
             class="mt-4"
@@ -175,7 +175,7 @@
           </div>
           <p v-else style="opacity: 75%">Geen foto's toegevoegd.</p>
           <RoundedButton
-            v-if='isStudent'
+            v-if="isStudent"
             icon="mdi-plus"
             value="Toevoegen"
             class="mt-4"
@@ -196,7 +196,7 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import { ProgressQuery } from "@selab-2/groep-1-query";
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from "@/stores/auth";
 
 const props = defineProps(["entry"]);
 const progress = ref(
