@@ -12,24 +12,41 @@
         </template>
       </v-list-item>
       <div
-        v-if="
+        v-show="
           useAuthStore().auth?.admin || user?.id === useAuthStore().auth?.id
         "
+        class="align-self-center"
       >
+        <!-- Not mobile edit button -->
         <v-btn
-          v-if="!edit"
-          prepend-icon="mdi-pencil"
-          @click="edit = !edit"
-          color="primary"
-          >Bewerk Account</v-btn
+          v-show="!mobile"
+          :prepend-icon="!edit ? 'mdi-pencil' : 'mdi-close'"
+          @click="() => {
+            if (!edit){
+              edit = true;
+            }
+            else {
+              handleCancelEdit();
+            }
+          }"
+          :color="!edit ? 'primary' : 'warning'"
         >
+          {{ !edit ? 'Bewerk Account' : 'Annuleer aanpassingen' }}
+        </v-btn>
+        <!-- Mobile edit button -->
         <v-btn
-          v-else
-          prepend-icon="mdi-close"
-          @click="handleCancelEdit()"
-          color="warning"
-          >Annuleer aanpassingen</v-btn
-        >
+          v-show="mobile"
+          :icon="!edit ? 'mdi-pencil' : 'mdi-close'"
+          @click="() => {
+            if (!edit){
+              edit = true;
+            }
+            else {
+              handleCancelEdit();
+            }
+          }"
+          variant="text"
+        />
       </div>
     </div>
 
@@ -189,6 +206,10 @@ import Address from "@/components/models/Address";
 import { Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
+import {useDisplay} from "vuetify";
+
+const display = useDisplay();
+const mobile: Ref<boolean> = display.mobile;
 
 const router = useRouter();
 
