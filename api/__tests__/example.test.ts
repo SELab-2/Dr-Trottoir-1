@@ -62,7 +62,6 @@ describe("Example test suite", () => {
 
     test("Example PATCH", async () => {
         const updatedAction = {
-            id: 1,
             description: "Update!",
         };
 
@@ -71,7 +70,7 @@ describe("Example test suite", () => {
             data: updatedAction,
             // for succesful PATCH requests, expectedResponse should be equal to data
             // for PATCH requests that are expected to fail, provide the expected response
-            expectedResponse: updatedAction,
+            expectedResponse: { id: 1, description: "Update!" },
         });
     });
 

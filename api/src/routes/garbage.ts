@@ -4,6 +4,10 @@ import { prisma } from "../prisma";
 import { Parser } from "../parser";
 import { Auth } from "../auth/auth";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { GarbageValidator } from "../validators/garbage.validator";
+import { Validator } from "../validators/validator";
+import { APIError } from "../errors/api_error";
+import { APIErrorCode } from "../errors/api_error_code";
 
 export class GarbageRouting extends Routing {
     private static includes: Prisma.GarbageInclude = {
@@ -11,8 +15,20 @@ export class GarbageRouting extends Routing {
         building: selectBuilding(),
     };
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        // A syndicus is only allowed to see his own garbage
+        if (
+            !req.user?.super_student &&
+            !req.user?.admin &&
+            req.user?.syndicus.every(
+                (element) =>
+                    element.id !== Parser.number(req.query["syndicus_id"]),
+            )
+        ) {
+            throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
         const result = await prisma.garbage.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -48,7 +64,7 @@ export class GarbageRouting extends Routing {
         return res.json(result);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.garbage.findUniqueOrThrow({
             where: {
@@ -92,5 +108,9 @@ export class GarbageRouting extends Routing {
         });
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new GarbageValidator();
     }
 }

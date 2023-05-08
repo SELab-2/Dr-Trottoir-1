@@ -3,6 +3,8 @@ import express from "express";
 import { CustomRequest, Routing } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
+import { Validator } from "../validators/validator";
+import { MailTemplateValidator } from "../validators/mailtemplate.validator";
 
 export class MailTemplateRouting extends Routing {
     @Auth.authorization({ superStudent: true })
@@ -61,5 +63,9 @@ export class MailTemplateRouting extends Routing {
         });
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new MailTemplateValidator();
     }
 }

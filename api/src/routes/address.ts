@@ -5,6 +5,8 @@ import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import { Validator } from "../validators/validator";
+import { AddressValidator } from "../validators/address.validator";
 
 export class AddressRouting extends Routing {
     @Auth.authorization({ superStudent: true })
@@ -36,11 +38,6 @@ export class AddressRouting extends Routing {
     async updateOne(req: CustomRequest, res: express.Response) {
         const addressIdentifier = Parser.number(req.params["id"]);
 
-        // Must be a valid identifier.
-        if (!addressIdentifier || Number.isNaN(addressIdentifier)) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
-
         // If the user is a student, they can only update their own address.
         if (
             process.env["DISABLE_AUTH"] !== "true" &&
@@ -71,5 +68,9 @@ export class AddressRouting extends Routing {
         });
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new AddressValidator();
     }
 }
