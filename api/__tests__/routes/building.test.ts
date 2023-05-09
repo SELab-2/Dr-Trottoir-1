@@ -4,7 +4,6 @@ import request from "supertest";
 import app from "../../src/main";
 import { resetDatabase, restoreTables } from "../mock/database";
 import {
-    badRequestForeignKey,
     badRequestResponse,
     forbiddenResponse,
     notFoundResponse,
@@ -55,6 +54,7 @@ describe("Building tests", () => {
                     ivago_id: "ivago-1",
                     manual: manual,
                     name: "Building 1",
+                    description: "Description of building 1",
                     expected_time: 100,
                     syndicus: {
                         id: 1,
@@ -96,6 +96,7 @@ describe("Building tests", () => {
                         },
                     ],
                     ivago_id: "ivago-2",
+                    description: "Description of building 2",
                     manual: manual,
                     name: "Building 2",
                     expected_time: 200,
@@ -148,6 +149,7 @@ describe("Building tests", () => {
                     },
                 ],
                 ivago_id: "ivago-1",
+                description: "Description of building 1",
                 manual: manual,
                 name: "Building 1",
                 expected_time: 100,
@@ -217,6 +219,7 @@ describe("Building tests", () => {
                 name: "Building 1 New",
                 expected_time: 100,
                 ivago_id: "ivago-1",
+                description: "Description of building 1",
                 deleted: false,
                 address: {
                     id: 1,
@@ -267,6 +270,7 @@ describe("Building tests", () => {
             const building = {
                 name: "new building",
                 ivago_id: "ivago-new",
+                description: "Description of new building",
                 expected_time: 100,
                 address_id: 3,
                 manual_id: manual.id,
@@ -276,6 +280,7 @@ describe("Building tests", () => {
             const expectedBuilding = {
                 name: "new building",
                 ivago_id: "ivago-new",
+                description: "Description of new building",
                 expected_time: 100,
                 deleted: false,
                 address: {
@@ -328,6 +333,7 @@ describe("Building tests", () => {
             const newBuilding = {
                 name: "new building",
                 ivago_id: "ivago-new",
+                description: "Description of new building",
                 expected_time: 100,
                 address_id: 3,
                 manual_id: manual.id,
