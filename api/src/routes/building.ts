@@ -35,6 +35,7 @@ export class BuildingRouting extends Routing {
         id: true,
         name: true,
         ivago_id: true,
+        description: true,
         expected_time: true,
         deleted: true,
         hash: false,
@@ -87,6 +88,9 @@ export class BuildingRouting extends Routing {
             where: {
                 name: req.query["name"],
                 ivago_id: req.query["ivago_id"],
+                description: {
+                    contains: req.query["description"],
+                },
                 syndicus_id: Parser.number(req.query["syndicus_id"]),
                 deleted: deleted,
             },
@@ -186,6 +190,7 @@ export class BuildingRouting extends Routing {
                 id: true,
                 name: true,
                 ivago_id: true,
+                description: true,
                 deleted: true,
                 hash: false,
                 address: true,
