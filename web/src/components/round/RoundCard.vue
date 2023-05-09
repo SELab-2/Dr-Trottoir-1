@@ -16,7 +16,7 @@
     <div class="flex-grow-1"></div>
     <RoundedButton
       class="bg-green-lighten-5"
-      v-if="status == 'active'"
+      v-if="status === 'active'"
       icon="mdi-bicycle-cargo"
       value="Actief"
     ></RoundedButton>

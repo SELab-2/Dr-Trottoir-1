@@ -93,9 +93,9 @@
           <h2 class="me-auto">Taken</h2>
           <div class="d-flex flex-wrap">
             <div class="chip mx-1 mt-1">
-              <input type="month" />
+              <input type="date" v-model="taskStartDate" @change='getTasks()'/>
               tot
-              <input type="month" />
+              <input type="date" v-model="taskEndDate" @change='getTasks()'/>
             </div>
             <RoundedButton
               icon="mdi-plus"
@@ -128,6 +128,9 @@
             <v-icon icon="mdi-trash-can-outline"></v-icon>
           </CardLayout>
         </div>
+        <div v-if='garbage.length === 0'>
+          <p>Geen taken voor de geselecteerde periode.</p>
+        </div>
       </div>
 
       <div class="space-y-8" v-if='useAuthStore().auth?.admin || useAuthStore().auth?.super_student'>
@@ -152,6 +155,9 @@
             :images="progress.images.length"
           />
         </div>
+        <div v-if='progresses.length === 0'>
+          <p>Geen bezoeken voor de geselecteerde periode.</p>
+        </div>
       </div>
     </div>
   </HFillWrapper>
@@ -163,7 +169,7 @@ import router from "@/router";
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
-import { BuildingQuery, ProgressQuery, Result, ScheduleQuery } from '@selab-2/groep-1-query'
+import { BuildingQuery, ProgressQuery, Result } from '@selab-2/groep-1-query'
 import { Ref, ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import RoundCard from "@/components/round/RoundCard.vue";
@@ -179,6 +185,9 @@ const scheduleMonth: Ref<string> = ref(
     -2,
   )}`,
 );
+
+const taskStartDate: Ref<string> = ref(new Date().toISOString().split("T")[0]);
+const taskEndDate: Ref<string> = ref(new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split("T")[0]);
 
 function call(number: string) {
   location.href = "tel:" + number;
@@ -228,11 +237,19 @@ async function getVisits() {
 }
 await getVisits();
 
-tryOrAlertAsync(async () => {
-  garbage.value = await new GarbageQuery().getAll({
-    building_id: Number(props.id),
+async function getTasks() {
+  await tryOrAlertAsync(async () => {
+    if (building.value) {
+      garbage.value = await new GarbageQuery().getAll({
+        building_id: building.value.id,
+        before: new Date(taskStartDate.value),
+        after: new Date(taskStartDate.value),
+        syndicus_id: building.value.syndicus.id
+      });
+    }
   });
-});
+}
+await getTasks();
 </script>
 
 <style lang="scss" scoped>
