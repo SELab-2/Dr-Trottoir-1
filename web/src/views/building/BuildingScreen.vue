@@ -147,11 +147,6 @@
                 @change="getVisits()"
               />
             </div>
-            <RoundedButton
-              class="mx-1 mt-1"
-              icon="mdi-plus"
-              value="Toevoegen"
-            ></RoundedButton>
           </div>
         </div>
         <div v-for="progress in progresses" :key="progress.id">
