@@ -9,6 +9,7 @@ export class RoundValidator extends Validator {
                 take: Joi.number().positive(),
                 skip: Joi.number().positive(),
                 name: Joi.string().trim().min(1),
+                description: Joi.string().trim(),
                 sort: Joi.string().trim().min(1),
                 ord: Joi.string().trim().min(1),
             }),
@@ -27,6 +28,7 @@ export class RoundValidator extends Validator {
         return celebrate({
             body: Joi.object({
                 name: Joi.string().trim().min(1).required(),
+                description: Joi.string().trim(),
             }),
         });
     }
@@ -39,6 +41,7 @@ export class RoundValidator extends Validator {
             body: Joi.object({
                 id: Joi.forbidden(),
                 name: Joi.string().trim().min(1),
+                description: Joi.string().trim(),
             }),
         });
     }
