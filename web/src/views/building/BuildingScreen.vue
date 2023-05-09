@@ -77,13 +77,13 @@
         <div style="gap: 16px; flex-wrap: wrap" class="d-flex flex-row-reverse">
           <RoundedButton
             icon="mdi-phone"
-            @click="call(building.syndicus?.user.phone)"
-            :value="building.syndicus?.user.phone"
+            @click="call(building?.syndicus?.user.phone)"
+            :value="building?.syndicus?.user.phone"
           />
           <RoundedButton
             icon="mdi-mail"
             value="E-mail"
-            @click="mail(building.syndicus?.user.email)"
+            @click="mail(building?.syndicus?.user.email)"
           />
         </div>
       </CardLayout>
@@ -206,12 +206,16 @@ const taskEndDate: Ref<string> = ref(
     .split("T")[0],
 );
 
-function call(number: string) {
-  location.href = "tel:" + number;
+function call(number: string | undefined) {
+  if (number) {
+    location.href = "tel:" + number;
+  }
 }
 
-function mail(address: string) {
-  location.href = "mailto:" + address;
+function mail(address: string | undefined) {
+  if (address) {
+    location.href = "mailto:" + address;
+  }
 }
 
 function tomaps() {
@@ -247,14 +251,14 @@ async function getVisits() {
   await tryOrAlertAsync(async () => {
     if (building.value) {
       progresses.value = [];
-      for (const progress: Result<ProgressQuery> of await new ProgressQuery().getAll(
-        {
-          building: building.value.id,
-        },
-      )) {
-        const progressDay = new Date(progress.schedule?.day);
-        if (progressDay > startOfMonth && progressDay < endOfMonth) {
-          progresses.value.push(progress);
+      for (const progress of await new ProgressQuery().getAll({
+        building: building.value.id,
+      })) {
+        if (progress.schedule) {
+          const progressDay = new Date(progress.schedule.day);
+          if (progressDay > startOfMonth && progressDay < endOfMonth) {
+            progresses.value.push(progress);
+          }
         }
       }
     }
