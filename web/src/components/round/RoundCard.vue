@@ -21,17 +21,16 @@
       value="Actief"
     ></RoundedButton>
     <RoundedButton
-      v-if="status != 'scheduled' && Math.random() < 0.75"
+      v-if="comments"
       icon="mdi-note-edit-outline"
       value="Opmerkingen"
     ></RoundedButton>
     <RoundedButton
-      v-if="status != 'scheduled'"
+      v-if="images > 0"
       icon="mdi-image"
-      value="10"
+      :value="images.toString()"
     ></RoundedButton>
-    <v-icon v-if="status != 'scheduled'" icon="mdi-chevron-right"></v-icon>
-    <v-icon v-else icon="mdi-trash-can-outline"></v-icon>
+    <v-icon icon="mdi-chevron-right" @click="router.push({name: 'round_detail', params: { id: schedule.round_id, schedule: schedule.id },})"></v-icon>
   </CardLayout>
 </template>
 
@@ -44,6 +43,8 @@ import { Result, ScheduleQuery } from "@selab-2/groep-1-query";
 defineProps<{
   schedule: Result<ScheduleQuery>;
   status: "completed" | "active" | "scheduled";
+  comments: boolean;
+  images: number;
 }>();
 </script>
 

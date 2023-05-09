@@ -130,12 +130,12 @@
         </div>
       </div>
 
-      <div class="space-y-8">
+      <div class="space-y-8" v-if='useAuthStore().auth?.admin || useAuthStore().auth?.super_student'>
         <div class="d-flex mt-8 flex-wrap align-center">
           <h2 class="me-auto">Bezoeken</h2>
           <div class="d-flex">
             <div class="chip mx-1 mt-1">
-              <input type="month" v-model="scheduleMonth" />
+              <input type="month" v-model="scheduleMonth" @change='getVisits()' />
             </div>
             <RoundedButton
               class="mx-1 mt-1"
@@ -144,20 +144,14 @@
             ></RoundedButton>
           </div>
         </div>
-
-        <RoundCard
-          :schedule="schedule"
-          :status="'completed'"
-          v-for="schedule in schedules"
-          :key="schedule.id"
-        ></RoundCard>
-        <RoundCard :schedule="schedules[0]" :status="'active'"></RoundCard>
-        <RoundCard
-          :schedule="schedule"
-          :status="'scheduled'"
-          v-for="schedule in schedules"
-          :key="schedule.id"
-        ></RoundCard>
+        <div v-for='progress in progresses' :key="progress.id">
+          <RoundCard
+            :schedule="progress.schedule"
+            :status="progress.arrival? progress.departure? 'completed' : 'active' : 'scheduled'"
+            :comments="progress.report != null && progress.report !== ''"
+            :images="progress.images.length"
+          />
+        </div>
       </div>
     </div>
   </HFillWrapper>
@@ -169,7 +163,7 @@ import router from "@/router";
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
-import { BuildingQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import { BuildingQuery, ProgressQuery, Result, ScheduleQuery } from '@selab-2/groep-1-query'
 import { Ref, ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import RoundCard from "@/components/round/RoundCard.vue";
@@ -177,7 +171,7 @@ import { GarbageQuery } from "@selab-2/groep-1-query/dist/garbage";
 import { useAuthStore } from "@/stores/auth";
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
-const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
+const progresses: Ref<Array<Result<ProgressQuery>>> = ref([]);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
 
 const scheduleMonth: Ref<string> = ref(
@@ -211,14 +205,28 @@ const props = defineProps({
   },
 });
 
-tryOrAlertAsync(async () => {
+await tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
-  console.log(building.value);
 });
 
-tryOrAlertAsync(async () => {
-  schedules.value = await new ScheduleQuery().getAll({});
-});
+async function getVisits() {
+  const startOfMonth = new Date(scheduleMonth.value + '-01');
+  const endOfMonth = new Date(new Date(startOfMonth.getFullYear(), startOfMonth.getMonth() + 1, 0).setHours(23,59,59,999));
+  await tryOrAlertAsync(async () => {
+    if (building.value) {
+      progresses.value = [];
+      for (const progress: Result<ProgressQuery> of await new ProgressQuery().getAll({
+        building: building.value.id,
+      })) {
+        const progressDay = new Date(progress.schedule?.day)
+        if(progressDay > startOfMonth && progressDay < endOfMonth) {
+          progresses.value.push(progress);
+        }
+      }
+    }
+  });
+}
+await getVisits();
 
 tryOrAlertAsync(async () => {
   garbage.value = await new GarbageQuery().getAll({
