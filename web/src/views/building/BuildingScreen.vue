@@ -18,12 +18,13 @@
           />
         </div>
 
+        <!-- TODO add in API
         <p>
-          TODO in API: Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit,
           sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
+        </p> -->
 
         <div style="display: flex; gap: 16px; flex-wrap: wrap" class="mt-2">
           <RoundedButton
@@ -31,8 +32,13 @@
             @click="tomaps()"
             value="Kaarten"
           />
-          <RoundedButton icon="mdi-file-pdf-box" @value="Handleiding" />
-          <RoundedButton icon="mdi-lock" @click="toClip('TODO')" value="TODO" />
+          <RoundedButton
+            icon="mdi-file-pdf-box"
+            @click="toClip('TODO')"
+            value="Handleiding"
+          />
+          <!-- TODO add in API
+          <RoundedButton icon="mdi-lock" @click="toClip('TODO')" value="TODO" /> -->
         </div>
       </div>
 
@@ -83,20 +89,23 @@
       </CardLayout>
 
       <div class="space-y-8">
-        <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
-          <h2>Taken</h2>
-          <div class="flex-grow-1"></div>
-          <RoundedButton
-            icon="mdi-calendar"
-            value="17 Maart 2023 - 24 Maart 2023"
-          ></RoundedButton>
-          <RoundedButton
-            icon="mdi-plus"
-            value="Toevoegen"
-            @click="
-              () => router.push({ name: 'garbage_plan', params: { id: id } })
-            "
-          ></RoundedButton>
+        <div class="d-flex mt-8 flex-wrap align-center">
+          <h2 class="me-auto">Taken</h2>
+          <div class="d-flex flex-wrap">
+            <div class="chip mx-1 mt-1">
+              <input type="month" />
+              tot
+              <input type="month" />
+            </div>
+            <RoundedButton
+              icon="mdi-plus"
+              class="mx-1 mt-1"
+              value="Toevoegen"
+              @click="
+                () => router.push({ name: 'garbage_plan', params: { id: id } })
+              "
+            />
+          </div>
         </div>
         <div class="grid">
           <CardLayout
@@ -122,11 +131,18 @@
       </div>
 
       <div class="space-y-8">
-        <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
-          <h2>Bezoeken</h2>
-          <div class="flex-grow-1"></div>
-          <RoundedButton icon="mdi-calendar" value="Maart 2023"></RoundedButton>
-          <RoundedButton icon="mdi-plus" value="Toevoegen"></RoundedButton>
+        <div class="d-flex mt-8 flex-wrap align-center">
+          <h2 class="me-auto">Bezoeken</h2>
+          <div class="d-flex">
+            <div class="chip mx-1 mt-1">
+              <input type="month" v-model="scheduleMonth" />
+            </div>
+            <RoundedButton
+              class="mx-1 mt-1"
+              icon="mdi-plus"
+              value="Toevoegen"
+            ></RoundedButton>
+          </div>
         </div>
 
         <RoundCard
@@ -163,6 +179,12 @@ import { useAuthStore } from "@/stores/auth";
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
+
+const scheduleMonth: Ref<string> = ref(
+  `${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(
+    -2,
+  )}`,
+);
 
 function call(number: string) {
   location.href = "tel:" + number;
@@ -243,5 +265,21 @@ tryOrAlertAsync(async () => {
   @media (min-width: 700px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 50px;
+  background: #ffffff;
+  font-family: Roboto, sans-serif !important;
+  font-size: 14px;
+  font-weight: bold;
+  border: 1.5px solid #e0e0e0;
+  width: fit-content;
+  height: fit-content;
+  color: #000000de;
 }
 </style>
