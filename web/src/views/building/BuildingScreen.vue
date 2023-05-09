@@ -93,9 +93,9 @@
           <h2 class="me-auto">Taken</h2>
           <div class="d-flex flex-wrap">
             <div class="chip mx-1 mt-1">
-              <input type="date" v-model="taskStartDate" @change='getTasks()'/>
+              <input type="date" v-model="taskStartDate" @change="getTasks()" />
               tot
-              <input type="date" v-model="taskEndDate" @change='getTasks()'/>
+              <input type="date" v-model="taskEndDate" @change="getTasks()" />
             </div>
             <RoundedButton
               icon="mdi-plus"
@@ -128,17 +128,24 @@
             <v-icon icon="mdi-trash-can-outline"></v-icon>
           </CardLayout>
         </div>
-        <div v-if='garbage.length === 0'>
+        <div v-if="garbage.length === 0">
           <p>Geen taken voor de geselecteerde periode.</p>
         </div>
       </div>
 
-      <div class="space-y-8" v-if='useAuthStore().auth?.admin || useAuthStore().auth?.super_student'>
+      <div
+        class="space-y-8"
+        v-if="useAuthStore().auth?.admin || useAuthStore().auth?.super_student"
+      >
         <div class="d-flex mt-8 flex-wrap align-center">
           <h2 class="me-auto">Bezoeken</h2>
           <div class="d-flex">
             <div class="chip mx-1 mt-1">
-              <input type="month" v-model="scheduleMonth" @change='getVisits()' />
+              <input
+                type="month"
+                v-model="scheduleMonth"
+                @change="getVisits()"
+              />
             </div>
             <RoundedButton
               class="mx-1 mt-1"
@@ -147,15 +154,21 @@
             ></RoundedButton>
           </div>
         </div>
-        <div v-for='progress in progresses' :key="progress.id">
+        <div v-for="progress in progresses" :key="progress.id">
           <RoundCard
             :schedule="progress.schedule"
-            :status="progress.arrival? progress.departure? 'completed' : 'active' : 'scheduled'"
+            :status="
+              progress.arrival
+                ? progress.departure
+                  ? 'completed'
+                  : 'active'
+                : 'scheduled'
+            "
             :comments="progress.report != null && progress.report !== ''"
             :images="progress.images.length"
           />
         </div>
-        <div v-if='progresses.length === 0'>
+        <div v-if="progresses.length === 0">
           <p>Geen bezoeken voor de geselecteerde periode.</p>
         </div>
       </div>
@@ -169,7 +182,7 @@ import router from "@/router";
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
-import { BuildingQuery, ProgressQuery, Result } from '@selab-2/groep-1-query'
+import { BuildingQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import { Ref, ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import RoundCard from "@/components/round/RoundCard.vue";
@@ -187,7 +200,11 @@ const scheduleMonth: Ref<string> = ref(
 );
 
 const taskStartDate: Ref<string> = ref(new Date().toISOString().split("T")[0]);
-const taskEndDate: Ref<string> = ref(new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split("T")[0]);
+const taskEndDate: Ref<string> = ref(
+  new Date(new Date().setDate(new Date().getDate() + 7))
+    .toISOString()
+    .split("T")[0],
+);
 
 function call(number: string) {
   location.href = "tel:" + number;
@@ -219,16 +236,24 @@ await tryOrAlertAsync(async () => {
 });
 
 async function getVisits() {
-  const startOfMonth = new Date(scheduleMonth.value + '-01');
-  const endOfMonth = new Date(new Date(startOfMonth.getFullYear(), startOfMonth.getMonth() + 1, 0).setHours(23,59,59,999));
+  const startOfMonth = new Date(scheduleMonth.value + "-01");
+  const endOfMonth = new Date(
+    new Date(
+      startOfMonth.getFullYear(),
+      startOfMonth.getMonth() + 1,
+      0,
+    ).setHours(23, 59, 59, 999),
+  );
   await tryOrAlertAsync(async () => {
     if (building.value) {
       progresses.value = [];
-      for (const progress: Result<ProgressQuery> of await new ProgressQuery().getAll({
-        building: building.value.id,
-      })) {
-        const progressDay = new Date(progress.schedule?.day)
-        if(progressDay > startOfMonth && progressDay < endOfMonth) {
+      for (const progress: Result<ProgressQuery> of await new ProgressQuery().getAll(
+        {
+          building: building.value.id,
+        },
+      )) {
+        const progressDay = new Date(progress.schedule?.day);
+        if (progressDay > startOfMonth && progressDay < endOfMonth) {
           progresses.value.push(progress);
         }
       }
@@ -244,7 +269,7 @@ async function getTasks() {
         building_id: building.value.id,
         before: new Date(taskStartDate.value),
         after: new Date(taskStartDate.value),
-        syndicus_id: building.value.syndicus.id
+        syndicus_id: building.value.syndicus.id,
       });
     }
   });

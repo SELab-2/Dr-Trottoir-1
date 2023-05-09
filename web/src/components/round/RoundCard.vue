@@ -10,7 +10,7 @@
     "
   >
     <div>
-      <h3>{{ new Date(schedule.day).toLocaleDateString() }}</h3>
+      <h3>{{ new Date(schedule.day).toLocaleDateString("nl") }}</h3>
       <p>{{ schedule.user.first_name }} {{ schedule.user.last_name }}</p>
     </div>
     <div class="flex-grow-1"></div>
@@ -30,7 +30,15 @@
       icon="mdi-image"
       :value="images.toString()"
     ></RoundedButton>
-    <v-icon icon="mdi-chevron-right" @click="router.push({name: 'round_detail', params: { id: schedule.round_id, schedule: schedule.id },})"></v-icon>
+    <v-icon
+      icon="mdi-chevron-right"
+      @click="
+        router.push({
+          name: 'round_detail',
+          params: { id: schedule.round_id, schedule: schedule.id },
+        })
+      "
+    ></v-icon>
   </CardLayout>
 </template>
 
