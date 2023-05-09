@@ -3,7 +3,7 @@
     <v-btn
       prepend-icon="mdi-plus"
       color="primary"
-      class="mr-3"
+      class="mr-3 text-none"
       :to="{ name: 'building_new' }"
     >
       Nieuw Gebouw
