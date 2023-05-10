@@ -6,12 +6,16 @@ import { VitePWA } from 'vite-plugin-pwa'
 // Utilities
 import { defineConfig, loadEnv } from "vite";
 import { fileURLToPath, URL } from "node:url";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return defineConfig({
+    build: {
+      sourcemap: true,
+    },
     envPrefix: 'VUE_APP_',
     plugins: [
       vue({
@@ -52,6 +56,19 @@ export default ({ mode }) => {
         devOptions: {
           enabled: true
         }
+      }),
+      sentryVitePlugin({
+        org: "dr-trottoir",
+        project: "vue",
+
+        // Auth tokens can be obtained from https://sentry.io/settings/account/api/auth-tokens/
+        // and need `project:releases` and `org:read` scopes
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+
+        sourcemaps: {
+          // Specify the directory containing build artifacts
+          assets: "./dist/**",
+        },
       }),
     ],
     define: {
