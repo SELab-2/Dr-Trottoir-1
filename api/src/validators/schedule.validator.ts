@@ -46,20 +46,24 @@ export class ScheduleValidator extends Validator {
     }
 
     updateOneValidator() {
-        return celebrate({
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
 
-            body: Joi.object({
-                id: Joi.ref("params.id"),
-                day: Joi.date().iso(),
-                user_id: Joi.number().positive(),
-                round_id: Joi.number().positive(),
-                start: Joi.string().isoDate(),
-                end: Joi.string().isoDate(),
-            }),
-        });
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    day: Joi.date().iso(),
+                    user_id: Joi.number().positive(),
+                    round_id: Joi.number().positive(),
+                    start: Joi.string().isoDate(),
+                    end: Joi.string().isoDate(),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator() {
