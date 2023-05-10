@@ -28,7 +28,16 @@ export async function initialiseAddress() {
         longitude: 3.71847,
     };
 
+    const address4 = {
+        street: "Krijgslaan",
+        number: 282,
+        city: "Ghent",
+        zip_code: 9000,
+        latitude: 51.02776,
+        longitude: 3.71847,
+    };
+
     await prisma.address.createMany({
-        data: [address1, address2, address3],
+        data: [address1, address2, address3, address4],
     });
 }
