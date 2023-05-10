@@ -68,6 +68,8 @@ describe("Progress tests", () => {
                 report: "Report 2",
                 schedule: {
                     day: "2023-05-04T12:00:00.000Z",
+                    start: "2023-05-04T12:10:00.000Z",
+                    end: "2023-05-04T12:20:00.000Z",
                     deleted: false,
                     id: 1,
                     round: { id: 1, name: "Round 1" },
@@ -128,9 +130,9 @@ describe("Progress tests", () => {
                             id: 1,
                             image: {
                                 id: 1,
-                                location: "FILE_SERVER",
-                                path: "path/to/file_server_image",
-                                time: "2023-05-04T12:00:00.000Z",
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
                                 user_id: 1,
                             },
                             image_id: 1,
@@ -142,9 +144,11 @@ describe("Progress tests", () => {
                     schedule: {
                         day: "2023-05-04T12:00:00.000Z",
                         deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
                         id: 1,
                         round: { id: 1, name: "Round 1" },
                         round_id: 1,
+                        start: "2023-05-04T12:10:00.000Z",
                         user: {
                             address_id: 1,
                             admin: false,
@@ -190,13 +194,13 @@ describe("Progress tests", () => {
                             description: "Description of progress image 2",
                             id: 2,
                             image: {
-                                id: 2,
+                                id: 1,
                                 location: "IMGPROXY",
-                                path: "path/to/img_proxy_image",
-                                time: "2023-05-04T12:00:00.000Z",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 1,
                             progress_id: 2,
                             type: "GARBAGE",
                         },
@@ -205,9 +209,11 @@ describe("Progress tests", () => {
                     schedule: {
                         day: "2023-05-04T12:00:00.000Z",
                         deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
                         id: 2,
                         round: { id: 2, name: "Round 2" },
                         round_id: 2,
+                        start: "2023-05-04T12:10:00.000Z",
                         user: {
                             address_id: 2,
                             admin: false,
@@ -261,9 +267,9 @@ describe("Progress tests", () => {
                             id: 1,
                             image: {
                                 id: 1,
-                                location: "FILE_SERVER",
-                                path: "path/to/file_server_image",
-                                time: "2023-05-04T12:00:00.000Z",
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
                                 user_id: 1,
                             },
                             image_id: 1,
@@ -275,6 +281,8 @@ describe("Progress tests", () => {
                     schedule: {
                         day: "2023-05-04T12:00:00.000Z",
                         deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
+                        start: "2023-05-04T12:10:00.000Z",
                         id: 1,
                         round: { id: 1, name: "Round 1" },
                         round_id: 1,
@@ -334,9 +342,9 @@ describe("Progress tests", () => {
                         id: 1,
                         image: {
                             id: 1,
-                            location: "FILE_SERVER",
-                            path: "path/to/file_server_image",
-                            time: "2023-05-04T12:00:00.000Z",
+                            location: "IMGPROXY",
+                            path: "image.jpg",
+                            time: "1969-12-31T23:00:00.000Z",
                             user_id: 1,
                         },
                         image_id: 1,
@@ -349,6 +357,8 @@ describe("Progress tests", () => {
                     day: "2023-05-04T12:00:00.000Z",
                     deleted: false,
                     id: 1,
+                    start: "2023-05-04T12:10:00.000Z",
+                    end: "2023-05-04T12:20:00.000Z",
                     round: { id: 1, name: "Round 1" },
                     round_id: 1,
                     user: {
@@ -378,9 +388,10 @@ describe("Progress tests", () => {
         });
 
         test("DELETE /progress/:id", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             await runner.delete({ url: "/progress/1" });
 
-            // verify that the progress is truly deleted
+            // verify that the progress is soft deleted
             const expected = [
                 {
                     arrival: "2023-05-04T12:00:00.000Z",
@@ -409,13 +420,13 @@ describe("Progress tests", () => {
                             description: "Description of progress image 2",
                             id: 2,
                             image: {
-                                id: 2,
+                                id: 1,
                                 location: "IMGPROXY",
-                                path: "path/to/img_proxy_image",
-                                time: "2023-05-04T12:00:00.000Z",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 1,
                             progress_id: 2,
                             type: "GARBAGE",
                         },
@@ -424,9 +435,88 @@ describe("Progress tests", () => {
                     schedule: {
                         day: "2023-05-04T12:00:00.000Z",
                         deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
                         id: 2,
                         round: { id: 2, name: "Round 2" },
                         round_id: 2,
+                        start: "2023-05-04T12:10:00.000Z",
+                        user: {
+                            address_id: 2,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "superstudent@trottoir.be",
+                            first_name: "Toon",
+                            id: 2,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Superstudent",
+                            phone: "9876543210",
+                            student: false,
+                            super_student: true,
+                        },
+                        user_id: 2,
+                    },
+                    schedule_id: 2,
+                },
+            ];
+            await runner.get({
+                url: "/progress?deleted=true",
+                expectedData: expected,
+            });
+        });
+
+        test("SOFT DELETE /progress/:id (super-student)", async () => {
+            await runner.delete({ url: "/progress/1" });
+
+            // verify that the progress is soft deleted
+            const expected = [
+                {
+                    arrival: "2023-05-04T12:00:00.000Z",
+                    building: {
+                        address: {
+                            city: "Ghent",
+                            id: 2,
+                            latitude: 51.04732,
+                            longitude: 3.7282,
+                            number: 25,
+                            street: "Sint-Pietersnieuwstraat",
+                            zip_code: 9000,
+                        },
+                        deleted: false,
+                        id: 2,
+                        ivago_id: "ivago-2",
+                        name: "Building 2",
+                    },
+                    building_id: 2,
+                    deleted: false,
+                    departure: "2023-05-04T12:00:00.000Z",
+                    id: 2,
+                    images: [
+                        {
+                            deleted: false,
+                            description: "Description of progress image 2",
+                            id: 2,
+                            image: {
+                                id: 1,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 1,
+                            progress_id: 2,
+                            type: "GARBAGE",
+                        },
+                    ],
+                    report: "Report 2",
+                    schedule: {
+                        day: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
+                        id: 2,
+                        round: { id: 2, name: "Round 2" },
+                        round_id: 2,
+                        start: "2023-05-04T12:10:00.000Z",
                         user: {
                             address_id: 2,
                             admin: false,
@@ -452,15 +542,11 @@ describe("Progress tests", () => {
             });
         });
 
-        test("SOFT DELETE /progress/:id", async () => {
+        test("SOFT DELETE /progress/:id (admin)", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
-            const softProgress = {
-                hardDelete: false,
-            };
+            await runner.delete({ url: "/progress/1" });
 
-            await runner.delete({ url: "/progress/1", data: softProgress });
-
-            // verify that the progress is truly soft deleted
+            // verify that the progress is soft deleted
             const expected = [
                 {
                     arrival: "2023-05-04T12:00:00.000Z",
@@ -490,9 +576,9 @@ describe("Progress tests", () => {
                             id: 1,
                             image: {
                                 id: 1,
-                                location: "FILE_SERVER",
-                                path: "path/to/file_server_image",
-                                time: "2023-05-04T12:00:00.000Z",
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
                                 user_id: 1,
                             },
                             image_id: 1,
@@ -504,9 +590,11 @@ describe("Progress tests", () => {
                     schedule: {
                         day: "2023-05-04T12:00:00.000Z",
                         deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
                         id: 1,
                         round: { id: 1, name: "Round 1" },
                         round_id: 1,
+                        start: "2023-05-04T12:10:00.000Z",
                         user: {
                             address_id: 1,
                             admin: false,
@@ -552,13 +640,13 @@ describe("Progress tests", () => {
                             description: "Description of progress image 2",
                             id: 2,
                             image: {
-                                id: 2,
+                                id: 1,
                                 location: "IMGPROXY",
-                                path: "path/to/img_proxy_image",
-                                time: "2023-05-04T12:00:00.000Z",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 1,
                             progress_id: 2,
                             type: "GARBAGE",
                         },
@@ -567,9 +655,11 @@ describe("Progress tests", () => {
                     schedule: {
                         day: "2023-05-04T12:00:00.000Z",
                         deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
                         id: 2,
                         round: { id: 2, name: "Round 2" },
                         round_id: 2,
+                        start: "2023-05-04T12:10:00.000Z",
                         user: {
                             address_id: 2,
                             admin: false,
@@ -602,6 +692,7 @@ describe("Progress tests", () => {
                 location: FileLocation.FILE_SERVER,
                 path: "path/to/file_server_image",
                 description: "vuilnis",
+                user_id: 2,
             };
             const expected = {
                 arrival: "2023-05-04T12:00:00.000Z",
@@ -720,9 +811,9 @@ describe("Progress tests", () => {
                         id: 1,
                         image: {
                             id: 1,
-                            location: "FILE_SERVER",
-                            path: "path/to/file_server_image",
-                            time: "2023-05-04T12:00:00.000Z",
+                            location: "IMGPROXY",
+                            path: "image.jpg",
+                            time: "1969-12-31T23:00:00.000Z",
                             user_id: 1,
                         },
                         image_id: 1,
@@ -734,6 +825,8 @@ describe("Progress tests", () => {
                 schedule: {
                     day: "2023-05-04T12:00:00.000Z",
                     deleted: false,
+                    end: "2023-05-04T12:20:00.000Z",
+                    start: "2023-05-04T12:10:00.000Z",
                     id: 1,
                     round: { id: 1, name: "Round 1" },
                     round_id: 1,
@@ -797,6 +890,8 @@ describe("Progress tests", () => {
                 schedule: {
                     day: "2023-05-04T12:00:00.000Z",
                     deleted: false,
+                    end: "2023-05-04T12:20:00.000Z",
+                    start: "2023-05-04T12:10:00.000Z",
                     id: 1,
                     round: { id: 1, name: "Round 1" },
                     round_id: 1,
@@ -822,15 +917,74 @@ describe("Progress tests", () => {
             await runner.get({ url: "/progress/1", expectedData: [expected] });
         });
 
-        test("SOFT DELETE /progress/:id/image/:id", async () => {
+        test("DELETE /progress/:id/image/:id", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            const hardDelete = {
+                hardDelete: true,
+            }
+            await runner.delete({ url: "/progress/1/image/1", data: hardDelete});
+
+            // verify that the progress image is deleted
+
+            const expected = {
+                arrival: "2023-05-04T12:00:00.000Z",
+                building: {
+                    address: {
+                        city: "Sydney",
+                        id: 1,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                        number: 42,
+                        street: "Wallaby Way",
+                        zip_code: 2000,
+                    },
+                    deleted: false,
+                    id: 1,
+                    ivago_id: "ivago-1",
+                    name: "Building 1",
+                },
+                building_id: 1,
+                id: 1,
+                deleted: false,
+                departure: "2023-05-04T12:00:00.000Z",
+                images: [],
+                report: "Report 1",
+                schedule: {
+                    day: "2023-05-04T12:00:00.000Z",
+                    deleted: false,
+                    id: 1,
+                    end: "2023-05-04T12:20:00.000Z",
+                    start: "2023-05-04T12:10:00.000Z",
+                    round: { id: 1, name: "Round 1" },
+                    round_id: 1,
+                    user: {
+                        address_id: 1,
+                        admin: false,
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        email: "student@trottoir.be",
+                        first_name: "Dirk",
+                        id: 1,
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        last_name: "De Student",
+                        phone: "0123456789",
+                        student: true,
+                        super_student: false,
+                    },
+                    user_id: 1,
+                },
+                schedule_id: 1,
+            };
+
+            await runner.get({ url: "/progress/1?deleted=true", expectedData: [expected] });
+        });
+
+        test("SOFT DELETE /progress/:id/image/:id (admin)", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
 
-            const deleted = {
-                hardDelete: false,
-            };
-            await runner.delete({ url: "/progress/1/image/1", data: deleted });
+            await runner.delete({ url: "/progress/1/image/1"});
 
-            // verify that the progress image is truly deleted
+            // verify that the progress image is soft deleted
 
             const expected = {
                 arrival: "2023-05-04T12:00:00.000Z",
@@ -860,9 +1014,9 @@ describe("Progress tests", () => {
                         id: 1,
                         image: {
                             id: 1,
-                            location: "FILE_SERVER",
-                            path: "path/to/file_server_image",
-                            time: "2023-05-04T12:00:00.000Z",
+                            location: "IMGPROXY",
+                            path: "image.jpg",
+                            time: "1969-12-31T23:00:00.000Z",
                             user_id: 1,
                         },
                         image_id: 1,
@@ -875,6 +1029,66 @@ describe("Progress tests", () => {
                     day: "2023-05-04T12:00:00.000Z",
                     deleted: false,
                     id: 1,
+                    end: "2023-05-04T12:20:00.000Z",
+                    start: "2023-05-04T12:10:00.000Z",
+                    round: { id: 1, name: "Round 1" },
+                    round_id: 1,
+                    user: {
+                        address_id: 1,
+                        admin: false,
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        email: "student@trottoir.be",
+                        first_name: "Dirk",
+                        id: 1,
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        last_name: "De Student",
+                        phone: "0123456789",
+                        student: true,
+                        super_student: false,
+                    },
+                    user_id: 1,
+                },
+                schedule_id: 1,
+            };
+
+            await runner.get({ url: "/progress/1?deleted=true", expectedData: [expected] });
+        });
+
+        test("SOFT DELETE /progress/:id/image/:id (super-student)", async () => {
+            await runner.delete({ url: "/progress/1/image/1"});
+
+            // verify that the progress image is soft deleted
+
+            const expected = {
+                arrival: "2023-05-04T12:00:00.000Z",
+                building: {
+                    address: {
+                        city: "Sydney",
+                        id: 1,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                        number: 42,
+                        street: "Wallaby Way",
+                        zip_code: 2000,
+                    },
+                    deleted: false,
+                    id: 1,
+                    ivago_id: "ivago-1",
+                    name: "Building 1",
+                },
+                building_id: 1,
+                id: 1,
+                deleted: false,
+                departure: "2023-05-04T12:00:00.000Z",
+                images: [],
+                report: "Report 1",
+                schedule: {
+                    day: "2023-05-04T12:00:00.000Z",
+                    deleted: false,
+                    id: 1,
+                    end: "2023-05-04T12:20:00.000Z",
+                    start: "2023-05-04T12:10:00.000Z",
                     round: { id: 1, name: "Round 1" },
                     round_id: 1,
                     user: {
@@ -898,6 +1112,8 @@ describe("Progress tests", () => {
 
             await runner.get({ url: "/progress/1", expectedData: [expected] });
         });
+
+
     });
     describe("Unsuccesful requests", () => {
         let runner: Testrunner;
@@ -925,6 +1141,7 @@ describe("Progress tests", () => {
                 location: FileLocation.FILE_SERVER,
                 path: "path/to/file_server_image",
                 description: "vuilnis",
+                user_id: 1
             };
 
             describe("Cannot reach any path without authorisation", () => {
@@ -985,7 +1202,7 @@ describe("Progress tests", () => {
                 test("Cannot reach PATCH /progress/:id/image/:id", async () => {
                     await runner.patch({
                         url: "/progress/1/image/1",
-                        data: newImage,
+                        data: {description: "REST",},
                         expectedResponse: forbiddenResponse,
                         statusCode: 403,
                     });
@@ -1026,7 +1243,7 @@ describe("Progress tests", () => {
 
             test("Find a nonexistent progress", async () => {
                 await runner.get({
-                    url: "/progress/0",
+                    url: "/progress/100",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
@@ -1046,14 +1263,14 @@ describe("Progress tests", () => {
                 };
 
                 await runner.patch({
-                    url: "/progress/0",
+                    url: "/progress/100",
                     data: newProgress,
                     expectedResponse: notFoundResponse,
                     statusCode: 404,
                 });
             });
             test("Delete a nonexistent progress", async () => {
-                await runner.delete({ url: "/progress/0", statusCode: 404 });
+                await runner.delete({ url: "/progress/100", statusCode: 404 });
             });
 
             test("Update a nonexistent progress image", async () => {
@@ -1062,7 +1279,7 @@ describe("Progress tests", () => {
                 };
 
                 await runner.patch({
-                    url: "/progress/1/image/0",
+                    url: "/progress/1/image/100",
                     data: newImage,
                     expectedResponse: notFoundResponse,
                     statusCode: 404,
@@ -1070,7 +1287,7 @@ describe("Progress tests", () => {
             });
             test("Delete a nonexistent progress image", async () => {
                 await runner.delete({
-                    url: "/progress/1/image/0",
+                    url: "/progress/1/image/100",
                     statusCode: 404,
                 });
             });
