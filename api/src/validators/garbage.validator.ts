@@ -40,17 +40,21 @@ export class GarbageValidator extends Validator {
     }
 
     updateOneValidator(): express.RequestHandler<any> {
-        return celebrate({
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
-            body: Joi.object({
-                id: Joi.ref("params.id"),
-                pickup_time: Joi.date().iso(),
-                action_id: Joi.number().positive(),
-                building_id: Joi.number().positive(),
-            }),
-        });
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    pickup_time: Joi.date().iso(),
+                    action_id: Joi.number().positive(),
+                    building_id: Joi.number().positive(),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator(): express.RequestHandler<any> {

@@ -354,13 +354,7 @@ describe("Region tests", () => {
 
                 test("Find a nonexistent region", async () => {
                     await runner.get({
-                        url: "/region/0",
-                        expectedData: [notFoundResponse],
-                        statusCode: 404,
-                    });
-
-                    await runner.get({
-                        url: "/region/-1",
+                        url: "/region/50",
                         expectedData: [notFoundResponse],
                         statusCode: 404,
                     });
@@ -368,14 +362,14 @@ describe("Region tests", () => {
 
                 test("Update a nonexistent region", async () => {
                     await runner.patch({
-                        url: "/region/0",
+                        url: "/region/50",
                         data: newRegion,
                         expectedResponse: notFoundResponse,
                         statusCode: 404,
                     });
                 });
                 test("Delete a nonexistent region", async () => {
-                    await runner.delete({ url: "/region/0", statusCode: 404 });
+                    await runner.delete({ url: "/region/50", statusCode: 404 });
                 });
             });
 

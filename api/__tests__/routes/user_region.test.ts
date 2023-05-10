@@ -355,14 +355,17 @@ describe("User_region tests", () => {
 
             test("Find a nonexistent user_region", async () => {
                 await runner.get({
-                    url: "/user_region/0",
+                    url: "/user_region/50",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
             });
 
             test("Delete a nonexistent user_region", async () => {
-                await runner.delete({ url: "/user_region/0", statusCode: 404 });
+                await runner.delete({
+                    url: "/user_region/50",
+                    statusCode: 404,
+                });
             });
         });
         describe("The type of user_region id must be correct", () => {
