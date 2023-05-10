@@ -6,6 +6,10 @@ export const forbiddenResponse = {
     message: "Forbidden",
 };
 
+export const unauthorizedResponse = {
+    message: "Unauthorized",
+};
+
 export const internalErrorResponse = {
     message: "Internal Server Error",
     detail: "An unknown error occurred",
