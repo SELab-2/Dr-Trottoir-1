@@ -45,25 +45,25 @@ if (process.env.NODE_ENV === "test") {
 const app = express();
 
 if (process.env.SENTRY_DSN) {
-  Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-    integrations: [
-      // enable HTTP calls tracing
-      new Sentry.Integrations.Http({ tracing: true }),
-      // enable Express.js middleware tracing
-      new Sentry.Integrations.Express({ app }),
-      // Automatically instrument Node.js libraries and frameworks
-      ...Sentry.autoDiscoverNodePerformanceMonitoringIntegrations(),
-      // Add profiling integration to list of integrations
-      new ProfilingIntegration(),
-    ],
-    // Profiling sample rate is relative to tracesSampleRate
-    profilesSampleRate: 1.0,
-    // Set tracesSampleRate to 1.0 to capture 100%
-    // of transactions for performance monitoring.
-    // We recommend adjusting this value in production
-    tracesSampleRate: 1.0,
-  });
+    Sentry.init({
+        dsn: process.env.SENTRY_DSN,
+        integrations: [
+            // enable HTTP calls tracing
+            new Sentry.Integrations.Http({ tracing: true }),
+            // enable Express.js middleware tracing
+            new Sentry.Integrations.Express({ app }),
+            // Automatically instrument Node.js libraries and frameworks
+            ...Sentry.autoDiscoverNodePerformanceMonitoringIntegrations(),
+            // Add profiling integration to list of integrations
+            new ProfilingIntegration(),
+        ],
+        // Profiling sample rate is relative to tracesSampleRate
+        profilesSampleRate: 1.0,
+        // Set tracesSampleRate to 1.0 to capture 100%
+        // of transactions for performance monitoring.
+        // We recommend adjusting this value in production
+        tracesSampleRate: 1.0,
+    });
 }
 
 // RequestHandler creates a separate execution context, so that all
