@@ -259,7 +259,10 @@ async function getVisits() {
     }
   });
 }
-await getVisits();
+if (useAuthStore().auth?.admin || useAuthStore().auth?.super_student){
+  await getVisits();
+}
+
 
 async function getTasks() {
   await tryOrAlertAsync(async () => {
