@@ -245,11 +245,12 @@ const mobile = display.mobile;
 const firstBuilding = ref();
 const lastBuilding = ref();
 
-tryOrAlertAsync(async () => {
+await tryOrAlertAsync(async () => {
   data.value = await new ScheduleQuery().getOne(schedule_id);
 
   for (const progress of await new ProgressQuery().getAll({
     schedule: schedule_id,
+    user: useAuthStore().auth?.id,
   })) {
     progressItems.value.set(progress.building_id, progress);
   }
