@@ -138,10 +138,73 @@ describe("Region tests", () => {
         });
 
         test("DELETE /region/:id", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             await runner.delete({ url: "/region/1" });
 
-            // verify that the region is truly deleted
+            // verify that the region is soft truly deleted (admin)
             const expected = [
+                {
+                    deleted: true,
+                    id: 1,
+                    name: "Region 1",
+                    users: [
+                        {
+                            id: 1,
+                            region_id: 1,
+                            user: {
+                                address_id: 1,
+                                admin: false,
+                                date_added: "2023-05-04T12:00:00.000Z",
+                                deleted: false,
+                                email: "student@trottoir.be",
+                                first_name: "Dirk",
+                                id: 1,
+                                last_login: "2023-05-04T12:00:00.000Z",
+                                last_name: "De Student",
+                                phone: "0123456789",
+                                student: true,
+                                super_student: false,
+                            },
+                            user_id: 1,
+                        },
+                    ],
+                },
+                {
+                    deleted: false,
+                    id: 2,
+                    name: "Region 2",
+                    users: [
+                        {
+                            id: 2,
+                            region_id: 2,
+                            user: {
+                                address_id: 2,
+                                admin: false,
+                                date_added: "2023-05-04T12:00:00.000Z",
+                                deleted: false,
+                                email: "superstudent@trottoir.be",
+                                first_name: "Toon",
+                                id: 2,
+                                last_login: "2023-05-04T12:00:00.000Z",
+                                last_name: "De Superstudent",
+                                phone: "9876543210",
+                                student: false,
+                                super_student: true,
+                            },
+                            user_id: 2,
+                        },
+                    ],
+                },
+                { deleted: false, id: 3, name: "Region 3", users: [] },
+            ];
+            await runner.get({
+                url: "/region?deleted=true",
+                expectedData: expected,
+            });
+
+            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+            // verify that the region is soft truly deleted (superstudent)
+            const expectedSuperStudent = [
                 {
                     deleted: false,
                     id: 2,
@@ -172,18 +235,19 @@ describe("Region tests", () => {
             ];
             await runner.get({
                 url: "/region",
-                expectedData: expected,
+                expectedData: expectedSuperStudent,
             });
+
         });
 
-        test("SOFT DELETE /region/:id", async () => {
+        test("DELETE /region/:id", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             const regionSoft = {
-                hardDelete: false,
+                hardDelete: true,
             };
             await runner.delete({ url: "/region/3", data: regionSoft });
 
-            // verify that the region is truly soft deleted
+            // verify that the region is truly deleted
             const expected = [
                 {
                     deleted: false,
@@ -237,7 +301,6 @@ describe("Region tests", () => {
                         },
                     ],
                 },
-                { deleted: true, id: 3, name: "Region 3", users: [] },
             ];
             await runner.get({
                 url: "/region?deleted=true",
