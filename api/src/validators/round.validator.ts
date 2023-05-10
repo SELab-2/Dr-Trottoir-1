@@ -34,16 +34,20 @@ export class RoundValidator extends Validator {
     }
 
     updateOneValidator() {
-        return celebrate({
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
-            body: Joi.object({
-                id: Joi.ref("params.id"),
-                name: Joi.string().trim().min(1),
-                description: Joi.string().trim(),
-            }),
-        });
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    name: Joi.string().trim().min(1),
+                    description: Joi.string().trim(),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator() {

@@ -33,7 +33,7 @@ export class ProgressValidator extends Validator {
     createOneValidator() {
         return celebrate({
             body: Joi.object({
-                report: Joi.string().trim().min(1).required(),
+                report: Joi.string().trim().required(),
                 arrival: Joi.date().iso(),
                 departure: Joi.date().iso(),
                 building_id: Joi.number().positive().required(),
@@ -44,20 +44,24 @@ export class ProgressValidator extends Validator {
     }
 
     updateOneValidator() {
-        return celebrate({
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
-            body: Joi.object({
-                id: Joi.ref("params.id"),
-                report: Joi.string().trim(),
-                arrival: Joi.date().iso(),
-                departure: Joi.date().iso(),
-                building_id: Joi.number().positive(),
-                schedule_id: Joi.number().positive(),
-                deleted: Joi.bool(),
-            }),
-        });
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    report: Joi.string().trim(),
+                    arrival: Joi.date().iso(),
+                    departure: Joi.date().iso(),
+                    building_id: Joi.number().positive(),
+                    schedule_id: Joi.number().positive(),
+                    deleted: Joi.bool(),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator() {
@@ -99,21 +103,25 @@ export class ProgressImageValidator extends Validator {
     }
 
     updateOneValidator() {
-        return celebrate({
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-                image_id: Joi.number().positive().required(),
-            }),
-            body: Joi.object({
-                id: Joi.forbidden(),
-                type: Joi.string()
-                    .trim()
-                    .valid("ARRIVAL", "DEPARTURE", "GARBAGE"),
-                description: Joi.string().trim().min(1),
-                image_id: Joi.number().positive(),
-                progress_id: Joi.number().positive(),
-            }),
-        });
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                    image_id: Joi.number().positive().required(),
+                }),
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    type: Joi.string()
+                        .trim()
+                        .valid("ARRIVAL", "DEPARTURE", "GARBAGE"),
+                    description: Joi.string().trim().min(1),
+                    image_id: Joi.number().positive(),
+                    progress_id: Joi.number().positive(),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator() {
