@@ -205,7 +205,7 @@ describe("Building tests", () => {
                 });
             });
 
-            test("GET /building/:id as Rssident", async () => {
+            test("GET /building/:id as Resident", async () => {
                 runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
                 const buildingResident = {
                     address: {
@@ -237,9 +237,9 @@ describe("Building tests", () => {
                             id: 1,
                             image: {
                                 id: 1,
-                                location: "FILE_SERVER",
-                                path: "path/to/file_server_image",
-                                time: "2023-05-04T12:00:00.000Z",
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
                                 user_id: 1,
                             },
                             image_id: 1,
@@ -247,9 +247,15 @@ describe("Building tests", () => {
                     ],
                     ivago_id: "ivago-1",
                     manual: {
+                        createdAt: "1969-12-31T23:00:00.000Z",
                         id: 1,
-                        location: "STATIC_FILES",
-                        path: "path/to/static_file",
+                        location: "FILE_SERVER",
+                        mime: "application/pdf",
+                        original_name: "handleiding.pdf",
+                        path: "manual.pdf",
+                        size_in_bytes: 1024,
+                        updatedAt: "1969-12-31T23:00:00.000Z",
+                        user_id: 1,
                     },
                     name: "Building 1",
                     progress: [
@@ -267,9 +273,9 @@ describe("Building tests", () => {
                                     id: 1,
                                     image: {
                                         id: 1,
-                                        location: "FILE_SERVER",
-                                        path: "path/to/file_server_image",
-                                        time: "2023-05-04T12:00:00.000Z",
+                                        location: "IMGPROXY",
+                                        path: "image.jpg",
+                                        time: "1969-12-31T23:00:00.000Z",
                                         user_id: 1,
                                     },
                                     image_id: 1,
@@ -280,6 +286,8 @@ describe("Building tests", () => {
                             report: "Report 1",
                             schedule: {
                                 day: "2023-05-04T12:00:00.000Z",
+                                start: "2023-05-04T12:10:00.000Z",
+                                end: "2023-05-04T12:20:00.000Z",
                                 deleted: false,
                                 id: 1,
                                 round: {
@@ -408,6 +416,7 @@ describe("Building tests", () => {
                 name: "Building 1",
                 ivago_id: "ivago-1",
                 deleted: false,
+                expected_time: 100,
                 address: {
                     id: 1,
                     street: "Wallaby Way",
@@ -437,8 +446,14 @@ describe("Building tests", () => {
                 },
                 manual: {
                     id: 1,
-                    path: "path/to/static_file",
-                    location: "STATIC_FILES",
+                    createdAt: "1969-12-31T23:00:00.000Z",
+                    path: "manual.pdf",
+                    original_name: "handleiding.pdf",
+                    mime: "application/pdf",
+                    location: "FILE_SERVER",
+                    size_in_bytes: 1024,
+                    updatedAt: "1969-12-31T23:00:00.000Z",
+                    user_id: 1,
                 },
                 images: [
                     {
@@ -447,9 +462,9 @@ describe("Building tests", () => {
                         image_id: 1,
                         image: {
                             id: 1,
-                            time: "2023-05-04T12:00:00.000Z",
-                            location: "FILE_SERVER",
-                            path: "path/to/file_server_image",
+                            time: "1969-12-31T23:00:00.000Z",
+                            location: "IMGPROXY",
+                            path: "image.jpg",
                             user_id: 1,
                         },
                     },
@@ -518,6 +533,7 @@ describe("Building tests", () => {
         });
 
         test("DELETE /building/:id", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             const hardBuilding = {
                 hardDelete: true,
             };
@@ -540,26 +556,33 @@ describe("Building tests", () => {
                         zip_code: 9000,
                     },
                     deleted: false,
+                    expected_time: 200,
                     id: 2,
                     images: [
                         {
                             building_id: 2,
                             id: 2,
                             image: {
-                                id: 2,
+                                id: 1,
                                 location: "IMGPROXY",
-                                path: "path/to/img_proxy_image",
-                                time: "2023-05-04T12:00:00.000Z",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 1,
                         },
                     ],
                     ivago_id: "ivago-2",
                     manual: {
-                        id: 2,
-                        location: "IMGPROXY",
-                        path: "path/to/imgproxy_file",
+                        createdAt: "1969-12-31T23:00:00.000Z",
+                        id: 1,
+                        location: "FILE_SERVER",
+                        mime: "application/pdf",
+                        original_name: "handleiding.pdf",
+                        path: "manual.pdf",
+                        size_in_bytes: 1024,
+                        updatedAt: "1969-12-31T23:00:00.000Z",
+                        user_id: 1,
                     },
                     name: "Building 2",
                     syndicus: {
@@ -583,18 +606,18 @@ describe("Building tests", () => {
                 },
             ];
             await runner.get({
-                url: "/building",
+                url: "/building?deleted=true",
                 expectedData: expected,
             });
         });
 
-        test("SOFT DELETE /building/:id", async () => {
+        test("SOFT DELETE /building/:id (admin)", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             await runner.delete({
                 url: "/building/1",
             });
 
-            // verify that the building is truly soft deleted
+            // verify that the building is soft deleted
 
             const expected = [
                 {
@@ -608,6 +631,7 @@ describe("Building tests", () => {
                         zip_code: 2000,
                     },
                     deleted: true,
+                    expected_time: 100,
                     id: 1,
                     images: [
                         {
@@ -615,9 +639,9 @@ describe("Building tests", () => {
                             id: 1,
                             image: {
                                 id: 1,
-                                location: "FILE_SERVER",
-                                path: "path/to/file_server_image",
-                                time: "2023-05-04T12:00:00.000Z",
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
                                 user_id: 1,
                             },
                             image_id: 1,
@@ -625,9 +649,15 @@ describe("Building tests", () => {
                     ],
                     ivago_id: "ivago-1",
                     manual: {
+                        createdAt: "1969-12-31T23:00:00.000Z",
                         id: 1,
-                        location: "STATIC_FILES",
-                        path: "path/to/static_file",
+                        location: "FILE_SERVER",
+                        mime: "application/pdf",
+                        original_name: "handleiding.pdf",
+                        path: "manual.pdf",
+                        size_in_bytes: 1024,
+                        updatedAt: "1969-12-31T23:00:00.000Z",
+                        user_id: 1,
                     },
                     name: "Building 1",
                     syndicus: {
@@ -660,26 +690,166 @@ describe("Building tests", () => {
                         zip_code: 9000,
                     },
                     deleted: false,
+                    expected_time: 200,
                     id: 2,
                     images: [
                         {
                             building_id: 2,
                             id: 2,
                             image: {
-                                id: 2,
+                                id: 1,
                                 location: "IMGPROXY",
-                                path: "path/to/img_proxy_image",
-                                time: "2023-05-04T12:00:00.000Z",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 1,
                         },
                     ],
                     ivago_id: "ivago-2",
                     manual: {
+                        createdAt: "1969-12-31T23:00:00.000Z",
+                        id: 1,
+                        location: "FILE_SERVER",
+                        mime: "application/pdf",
+                        original_name: "handleiding.pdf",
+                        path: "manual.pdf",
+                        size_in_bytes: 1024,
+                        updatedAt: "1969-12-31T23:00:00.000Z",
+                        user_id: 1,
+                    },
+                    name: "Building 2",
+                    syndicus: {
                         id: 2,
-                        location: "IMGPROXY",
-                        path: "path/to/imgproxy_file",
+                        user: {
+                            address_id: 1,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "student@trottoir.be",
+                            first_name: "Dirk",
+                            id: 1,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Student",
+                            phone: "0123456789",
+                            student: true,
+                            super_student: false,
+                        },
+                        user_id: 1,
+                    },
+                },
+                {
+                    address: {
+                        city: "Ghent",
+                        id: 3,
+                        latitude: 51.02776,
+                        longitude: 3.71847,
+                        number: 281,
+                        street: "Krijgslaan",
+                        zip_code: 9000,
+                    },
+                    deleted: true,
+                    expected_time: 150,
+                    id: 3,
+                    images: [
+                        {
+                            building_id: 3,
+                            id: 3,
+                            image: {
+                                id: 1,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 1,
+                        },
+                    ],
+                    ivago_id: "ivago-3",
+                    manual: {
+                        createdAt: "1969-12-31T23:00:00.000Z",
+                        id: 1,
+                        location: "FILE_SERVER",
+                        mime: "application/pdf",
+                        original_name: "handleiding.pdf",
+                        path: "manual.pdf",
+                        size_in_bytes: 1024,
+                        updatedAt: "1969-12-31T23:00:00.000Z",
+                        user_id: 1,
+                    },
+                    name: "Building 3",
+                    syndicus: {
+                        id: 1,
+                        user: {
+                            address_id: 3,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "syndicus@trottoir.be",
+                            first_name: "Simon",
+                            id: 4,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Syndicus",
+                            phone: "7894561230",
+                            student: false,
+                            super_student: false,
+                        },
+                        user_id: 4,
+                    },
+                },
+            ];
+            await runner.get({
+                url: "/building?deleted=true",
+                expectedData: expected,
+            });
+        });
+
+        test("SOFT DELETE /building/:id (super-student)", async () => {
+            await runner.delete({
+                url: "/building/1",
+            });
+
+            // verify that the building is soft deleted
+
+            const expected = [
+                {
+                    address: {
+                        city: "Ghent",
+                        id: 2,
+                        latitude: 51.04732,
+                        longitude: 3.7282,
+                        number: 25,
+                        street: "Sint-Pietersnieuwstraat",
+                        zip_code: 9000,
+                    },
+                    deleted: false,
+                    expected_time: 200,
+                    id: 2,
+                    images: [
+                        {
+                            building_id: 2,
+                            id: 2,
+                            image: {
+                                id: 1,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 1,
+                        },
+                    ],
+                    ivago_id: "ivago-2",
+                    manual: {
+                        createdAt: "1969-12-31T23:00:00.000Z",
+                        id: 1,
+                        location: "FILE_SERVER",
+                        mime: "application/pdf",
+                        original_name: "handleiding.pdf",
+                        path: "manual.pdf",
+                        size_in_bytes: 1024,
+                        updatedAt: "1969-12-31T23:00:00.000Z",
+                        user_id: 1,
                     },
                     name: "Building 2",
                     syndicus: {
@@ -703,7 +873,7 @@ describe("Building tests", () => {
                 },
             ];
             await runner.get({
-                url: "/building?deleted=true",
+                url: "/building",
                 expectedData: expected,
             });
         });
@@ -790,9 +960,13 @@ describe("Building tests", () => {
         });
 
         test("DELETE /building/:id/image/:id", async () => {
-            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            const hardDelete = {
+                hardDelete: true,
+            };
             await runner.delete({
                 url: "/building/1/image/1",
+                data: hardDelete,
             });
 
             // verify that the building image is truly soft deleted
@@ -808,13 +982,20 @@ describe("Building tests", () => {
                     zip_code: 2000,
                 },
                 deleted: false,
+                expected_time: 100,
                 id: 1,
                 images: [],
                 ivago_id: "ivago-1",
                 manual: {
                     id: 1,
-                    location: "STATIC_FILES",
-                    path: "path/to/static_file",
+                    createdAt: "1969-12-31T23:00:00.000Z",
+                    location: "FILE_SERVER",
+                    path: "manual.pdf",
+                    mime: "application/pdf",
+                    original_name: "handleiding.pdf",
+                    size_in_bytes: 1024,
+                    updatedAt: "1969-12-31T23:00:00.000Z",
+                    user_id: 1,
                 },
                 name: "Building 1",
                 syndicus: {
@@ -838,7 +1019,7 @@ describe("Building tests", () => {
             };
 
             await runner.get({
-                url: "/building/1",
+                url: "/building/1?deleted=true",
                 expectedData: [expected],
             });
         });
