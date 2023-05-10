@@ -203,7 +203,7 @@ describe("Region tests", () => {
             });
 
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
-            // verify that the region is soft truly deleted (superstudent)
+            // verify that the region is soft deleted (superstudent)
             const expectedSuperStudent = [
                 {
                     deleted: false,
@@ -241,10 +241,10 @@ describe("Region tests", () => {
 
         test("DELETE /region/:id", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
-            const regionSoft = {
+            const regionHard = {
                 hardDelete: true,
             };
-            await runner.delete({ url: "/region/3", data: regionSoft });
+            await runner.delete({ url: "/region/3", data: regionHard });
 
             // verify that the region is truly deleted
             const expected = [
