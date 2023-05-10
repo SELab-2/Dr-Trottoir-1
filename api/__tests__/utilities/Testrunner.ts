@@ -51,6 +51,15 @@ interface PostParameters {
     statusCode?: number;
 }
 
+interface PostParametersFile {
+    url: string;
+    path: string;
+    location: string;
+    expectedResponse: object;
+    statusCode?: number;
+    file?: string;
+}
+
 interface PatchParameters {
     url: string;
     data: object;
@@ -149,6 +158,43 @@ export class Testrunner {
     };
 
     /**
+     * Acquires authentication if required and performs a POST request to the passed URL.
+     * Also performs verification on the response.
+     * @param url URL to POST to
+     * @param path path on server
+     * @param location File location
+     * @param file file path on current host
+     * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
+     * @return the Response object for further testing, should it be required.
+     */
+
+    postFile = async ({
+        url,
+        path,
+        location,
+        expectedResponse,
+        statusCode = constants.HTTP_STATUS_CREATED,
+        file = "",
+    }: PostParametersFile): Promise<request.Response> => {
+        const cookie = await this.authenticate();
+
+        const response = await this.server
+            .post(url)
+            .field("path", path)
+            .field("location", location)
+            .set("Cookie", [cookie])
+            .attach("file", file);
+        expect(response.statusCode).toEqual(statusCode);
+
+        // drop the id, as we cannot predict that
+        delete response.body["id"];
+
+        this.verifyBody([expectedResponse], response);
+
+        return response;
+    };
+
+    /**
      * Acquires authentication if required and performs a PATCH request to the URL.
      * Also performs verification on the response.
      * @param url URL to PATCH to
@@ -231,11 +277,15 @@ export class Testrunner {
     private verifyBody(expected: object[], response: request.Response): void {
         if (response.body instanceof Array) {
             for (const item of expected) {
-                expect(response.body).toContainEqual(item);
+                expect(response.body).toContainEqual(
+                    JSON.parse(JSON.stringify(item)),
+                );
             }
         } else {
             // if body is a single object, expected array should only contain a single element
-            expect(response.body).toEqual(expected[0]);
+            expect(JSON.parse(JSON.stringify(response.body))).toEqual(
+                JSON.parse(JSON.stringify(expected[0])),
+            );
         }
     }
 }

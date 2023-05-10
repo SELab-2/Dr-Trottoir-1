@@ -73,7 +73,11 @@ export class UserValidator extends Validator {
 
     updateOneValidator() {
         return celebrate({
+            params: Joi.object({
+                id: Joi.number().positive().required(),
+            }),
             body: {
+                id: Joi.ref("params.id"),
                 email: Joi.string().email(),
                 first_name: Joi.string().min(1),
                 last_name: Joi.string().min(1),
@@ -89,9 +93,6 @@ export class UserValidator extends Validator {
                 admin: Joi.boolean(),
                 password: Joi.string().min(1),
             },
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
         });
     }
 

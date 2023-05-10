@@ -54,6 +54,7 @@ model User {
     syndicus        Syndicus[]
     schedule        Schedule[]
     uploaded_images Image[]
+    files           File[]
 
     @@map("user")
 }
@@ -74,11 +75,25 @@ model UserRegion {
 
 // Hier wordt het pad naar een bestand bijgehouden.
 model File {
-    id Int @id @default(autoincrement())
+    id            Int    @id @default(autoincrement())
+    mime          String
+    size_in_bytes Int
+    original_name String
 
-    path      String
+    // Waar het bestand zich bevindt
+    location FileLocation
+    path     String
+
+    // Gebruiker die de file geupload heeft.
+    user_id Int?
+    user    User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+    // Relaties
     buildings Building[]
-    location  FileLocation
+
+    // Metadata
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     @@map("file")
 }
@@ -143,12 +158,14 @@ model BuildingImages {
 }
 
 // Dit model bevat enkel basisinformatie van een gebouw, namelijk de naam, klantnummer van Ivago, de syndicus en de handleiding.
+// Ook de verwachte tijd dat gedurende één maand gespendeerd wordt, wordt bijgehouden.
 // De foto's, afvalophaling en overige informatie worden in andere modellen bijgehouden.
 model Building {
     id Int @id @default(autoincrement())
 
-    name     String
-    ivago_id String
+    name          String
+    ivago_id      String
+    expected_time Int?
 
     syndicus_id Int
     syndicus    Syndicus @relation(fields: [syndicus_id], references: [id], onDelete: Restrict)
@@ -242,6 +259,9 @@ model Round {
 model Schedule {
     id  Int      @id @default(autoincrement())
     day DateTime
+
+    start DateTime?
+    end   DateTime?
 
     user_id Int
     user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
