@@ -60,6 +60,7 @@ describe("Syndicus tests", () => {
                             deleted: true,
                             id: 3,
                             ivago_id: "ivago-3",
+                            description: "Description of building 3",
                             name: "Building 3",
                         },
                     ],
