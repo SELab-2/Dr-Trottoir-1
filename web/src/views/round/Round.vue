@@ -11,15 +11,6 @@
         ></RoundedButton>
       </div>
 
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </p>
 
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Gebouwen</h2>
@@ -47,12 +38,12 @@
       </div>
 
       <div class="space-y-8">
-        <RoundCard
+        <RoundéCard
           v-for="schedule in schedules"
           v-bind:key="schedule.id"
           :schedule="schedule"
           :status="schedule === schedules[0] ? 'active' : 'scheduled'"
-        ></RoundCard>
+        ></RoundéCard>
       </div>
 
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
