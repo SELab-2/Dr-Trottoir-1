@@ -20,21 +20,28 @@
           @update:model-value="$emit('onUpdate', address)"
         ></v-text-field>
       </v-col>
-      <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
+      <v-col
+        v-show="!mobile"
+        cols="3"
+        class="flex-grow-0 flex-shrink-0 py-0 my-0"
+      >
         <!-- Text input field for the house number -->
-        <v-text-field
+        <HomeNumberInputField
           id="streetnr"
-          v-model="address.number"
-          label="Huisnummer"
-          :type="readonly ? 'text' : 'number'"
-          required
-          :variant="readonly ? 'plain' : 'outlined'"
           :readonly="readonly"
+          v-model="address.number"
           @update:model-value="$emit('onUpdate', address)"
-          :rules="numberRules"
-        ></v-text-field>
+        />
       </v-col>
     </v-row>
+
+    <!-- Text input field for the house number -->
+    <HomeNumberInputField
+      v-show="mobile"
+      :readonly="readonly"
+      v-model="address.number"
+      @update:model-value="$emit('onUpdate', address)"
+    />
     <v-row class="py-0 my-0 mt-2 mb-1">
       <v-col
         cols="1"
@@ -55,21 +62,25 @@
           :rules="cityRules"
         ></v-text-field>
       </v-col>
-      <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
+      <v-col
+        v-show="!mobile"
+        cols="3"
+        class="flex-grow-0 flex-shrink-0 py-0 my-0"
+      >
         <!-- Text input field for the zip code -->
-        <v-text-field
-          id="zipcode"
-          v-model="address.zip_code"
-          label="Post code"
-          :type="readonly ? 'text' : 'number'"
-          required
-          @update:model-value="$emit('onUpdate', address)"
-          :variant="readonly ? 'plain' : 'outlined'"
+        <ZipCodeInputField
           :readonly="readonly"
-          :rules="zipRules"
-        ></v-text-field>
+          v-model="address.zip_code"
+          @update:model-value="$emit('onUpdate', address)"
+        />
       </v-col>
     </v-row>
+    <ZipCodeInputField
+      v-show="mobile"
+      :readonly="readonly"
+      v-model="address.zip_code"
+      @update:model-value="$emit('onUpdate', address)"
+    />
   </div>
 </template>
 <script lang="ts" setup>
@@ -83,8 +94,14 @@
     ></AddressForm>
 */
 
-import { ref } from "vue";
+import { Ref, ref } from "vue";
 import Address from "@/components/models/Address";
+import { useDisplay } from "vuetify";
+import HomeNumberInputField from "@/components/inputfields/HomeNumberInputField.vue";
+import ZipCodeInputField from "@/components/inputfields/ZipCodeInputField.vue";
+
+const display = useDisplay();
+const mobile: Ref<boolean> = display.mobile;
 
 const props = defineProps({
   readonly: {
@@ -135,25 +152,6 @@ const cityRules = [
   // check if city only contains chars
   (city: string) => {
     return /^[a-zA-Z]+$/.test(city) ? true : "Stad kan geen nummers bevatten.";
-  },
-];
-
-const numberRules = [
-  // check if number is present
-  (num: string) => {
-    return num ? true : "Geef een huisnummer.";
-  },
-];
-
-const zipRules = [
-  // check if zip is present
-  (zip: string) => {
-    return zip ? true : "Geef een postcode.";
-  },
-
-  // check if zip length is 4
-  (zip: string) => {
-    return zip.length === 4 ? true : "Ongeldige postcode";
   },
 ];
 </script>

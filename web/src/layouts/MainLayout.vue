@@ -25,7 +25,10 @@
                 >
                   Super Student
                 </v-list-item-subtitle>
-                <v-list-item-subtitle v-else> Student </v-list-item-subtitle>
+                <v-list-item-subtitle v-else-if="useAuthStore()?.auth?.student">
+                  Student
+                </v-list-item-subtitle>
+                <v-list-item-subtitle v-else> Syndicus </v-list-item-subtitle>
               </div>
             </div>
           </v-list-item>
@@ -95,7 +98,7 @@
             </div>
           </div>
 
-          <div v-if="isAdmin && syndicusBuildings.length > 0">
+          <div v-if="syndicusBuildings.length > 0">
             <p class="pa-2 font-weight-medium text-caption">Mijn gebouwen</p>
 
             <div v-for="building of syndicusBuildings" :key="building.id">
@@ -171,8 +174,6 @@
         <v-toolbar-title class="font-weight-medium">
           {{ route.meta.title }}
         </v-toolbar-title>
-
-        <v-spacer />
       </v-app-bar>
       <Suspense :key="route.fullPath">
         <template #fallback>
@@ -206,10 +207,8 @@ const isAdmin: Boolean = useAuthStore().auth!.admin;
 const syndicusBuildings: Ref<Result<BuildingQuery>[]> = ref([]);
 
 tryOrAlertAsync(async () => {
-  if (isAdmin) {
-    syndicusBuildings.value = await new BuildingQuery().getAll({
-      syndicus_id: 89, // TODO: change id
-    });
+  for (const building of useAuthStore().auth!.syndicus) {
+    syndicusBuildings.value.push(await new BuildingQuery().getOne(building.id));
   }
 });
 
