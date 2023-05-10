@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex flex-row-reverse">
     <v-btn
+      v-if="useAuthStore().auth?.admin"
       prepend-icon="mdi-plus"
       color="primary"
       class="mr-3 text-none"
@@ -18,6 +19,7 @@
 
 <script setup lang="ts">
 import Table from "@/components/table/Table.vue";
+import { useAuthStore } from "@/stores/auth";
 import { Building } from "@/types/Building";
 import { BuildingQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
