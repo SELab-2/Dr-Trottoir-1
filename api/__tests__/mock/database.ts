@@ -12,7 +12,7 @@ import {
     initialiseSchedule,
 } from "./schedule";
 import { initialiseRound, initialiseRoundBuilding } from "./round";
-import { initialiseFile, initialiseImage } from "./file";
+import { initialiseFiles } from "./file";
 import { initialiseAction, initialiseGarbage } from "./garbage";
 import { initialiseMailTemplate } from "./mail_template";
 import { prisma } from "./prisma";
@@ -25,11 +25,10 @@ import { Prisma } from "@selab-2/groep-1-orm";
 const initialiseFunctions: { [name: string]: () => Promise<any> } = {
     address: initialiseAddress,
     user: initialiseUser,
+    files: initialiseFiles,
     region: initialiseRegion,
     user_region: initialiseUserRegion,
     syndicus: initialiseSyndicus,
-    file: initialiseFile,
-    image: initialiseImage,
     building: initialiseBuilding,
     building_image: initialiseBuildingImages,
     action: initialiseAction,
@@ -42,6 +41,9 @@ const initialiseFunctions: { [name: string]: () => Promise<any> } = {
     mail_template: initialiseMailTemplate,
 };
 
+/**
+ * Initializes the database
+ */
 export async function initialiseDatabase(): Promise<void> {
     for (const entry in initialiseFunctions) {
         await initialiseFunctions[entry]();
@@ -67,4 +69,11 @@ export async function deleteDatabaseData() {
             `TRUNCATE public.${table} RESTART IDENTITY CASCADE`,
         );
     }
+}
+
+/**
+ * Resets the database. Performs a full wipe of all tables and then fills them up again
+ */
+export async function resetDatabase() {
+    return deleteDatabaseData().then(() => initialiseDatabase());
 }

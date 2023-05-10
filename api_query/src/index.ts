@@ -2,9 +2,11 @@ import { ActionQuery } from "./action";
 import { AddressQuery } from "./address";
 import { BuildingQuery } from "./building";
 import { GarbageQuery } from "./garbage";
+import { MailQuery } from "./mail";
 import { ProgressQuery } from "./progress";
 import { RegionQuery } from "./region";
 import { RoundQuery } from "./round";
+import { MailTemplateQuery } from "./mail_template";
 import { RoundBuildingQuery } from "./round_building";
 import { ScheduleQuery } from "./schedule";
 import { SyndicusQuery } from "./syndicus";
@@ -44,6 +46,7 @@ export {
     AuthenticatedUser,
     BuildingQuery,
     GarbageQuery,
+    MailQuery,
     ProgressQuery,
     RegionQuery,
     RoundQuery,
@@ -56,4 +59,5 @@ export {
     Result,
     Parameter,
     Element,
+    MailTemplateQuery,
 };

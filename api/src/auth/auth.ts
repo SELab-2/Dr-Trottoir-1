@@ -8,6 +8,7 @@ export class Auth {
     static authorization(options: {
         superStudent?: boolean;
         student?: boolean;
+        syndicus?: boolean;
     }): MethodDecorator {
         return function (
             target: object,
@@ -50,7 +51,11 @@ export class Auth {
                 }
 
                 // Check for super student privileges
-                if (options.superStudent && !req.user?.super_student) {
+                if (
+                    options.superStudent &&
+                    !req.user?.super_student &&
+                    !options.syndicus
+                ) {
                     throw new APIError(APIErrorCode.FORBIDDEN);
                 }
 
@@ -58,8 +63,14 @@ export class Auth {
                 if (
                     options.student &&
                     !req.user?.student &&
-                    !req.user?.super_student
+                    !req.user?.super_student &&
+                    !options.syndicus
                 ) {
+                    throw new APIError(APIErrorCode.FORBIDDEN);
+                }
+
+                // Check for syndicus privileges
+                if (options.syndicus && !req.user?.syndicus) {
                     throw new APIError(APIErrorCode.FORBIDDEN);
                 }
 

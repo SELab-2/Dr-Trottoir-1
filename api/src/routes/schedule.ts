@@ -6,6 +6,8 @@ import { prisma } from "../prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import { Validator } from "../validators/validator";
+import { ScheduleValidator } from "../validators/schedule.validator";
 
 export class ScheduleRouting extends Routing {
     private static includes: Prisma.ScheduleInclude = {
@@ -21,7 +23,7 @@ export class ScheduleRouting extends Routing {
         },
     };
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getAll(req: CustomRequest, res: express.Response) {
         // Students are only allowed to see their own schedules
         if (
@@ -53,10 +55,13 @@ export class ScheduleRouting extends Routing {
                 user: {
                     OR: {
                         first_name: {
-                            contains: Parser.string(req.query["user_name"], ""),
+                            contains: Parser.string(
+                                req.query["first_name"],
+                                "",
+                            ),
                         },
                         last_name: {
-                            contains: Parser.string(req.query["user_name"], ""),
+                            contains: Parser.string(req.query["last_name"], ""),
                         },
                     },
                 },
@@ -80,7 +85,7 @@ export class ScheduleRouting extends Routing {
         return res.status(200).json(result);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.schedule.findFirstOrThrow({
             where: {
@@ -162,5 +167,9 @@ export class ScheduleRouting extends Routing {
         }
 
         return res.status(200).json(result);
+    }
+
+    getValidator(): Validator {
+        return new ScheduleValidator();
     }
 }

@@ -4,6 +4,8 @@ import { Parser } from "../parser";
 import { prisma } from "../prisma";
 import { Auth } from "../auth/auth";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { Validator } from "../validators/validator";
+import { UserRegionValidator } from "../validators/user_region.validator";
 
 export class UserRegionRouting extends Routing {
     private static includes: Prisma.UserRegionInclude = {
@@ -57,5 +59,9 @@ export class UserRegionRouting extends Routing {
         });
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new UserRegionValidator();
     }
 }
