@@ -69,6 +69,7 @@
       >
         <!-- Text input field for the zip code -->
         <ZipCodeInputField
+          id="zipcode"
           :readonly="readonly"
           v-model="address.zip_code"
           @update:model-value="$emit('onUpdate', address)"

@@ -50,7 +50,6 @@
 
       <div class="space-y-8">
         <RoundCard
-          id="schedules"
           v-for="schedule in schedules"
           v-bind:key="schedule.id"
           :schedule="schedule"

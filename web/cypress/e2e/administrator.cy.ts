@@ -1,5 +1,4 @@
 describe('admin tests', () => {
-  // TODO check if cy.contains('X') works instead of cy.get(..).get(...).contains('X')
   beforeEach(() => {
     cy.login('administrator@trottoir.be', 'administrator')
     cy.visit('/ronde/overzicht')
@@ -32,7 +31,7 @@ describe('admin tests', () => {
     })
     cy.get('#create').click()
     // check if user in userlist
-    cy.contains('td', 'test naam')
+    cy.contains('test naam')
   })
 
   it('edit a user', () => {
@@ -84,7 +83,7 @@ describe('admin tests', () => {
   it('add garbage schedule to a building', () => {
     cy.get('#buildings').click()
     // select building
-    cy.contains('td', 'Building 1').click()
+    cy.contains('Building 1').click()
     // add garbage
   })
 
@@ -95,10 +94,35 @@ describe('admin tests', () => {
     //edit garbage
   })
 
-  it('delete garbage schedule to a building', () => {
+  it('delete garbage schedule of a building', () => {
     cy.get('#buildings').click()
     // select building
-    cy.contains('td', 'Building 1').click()
+    cy.contains('Building 1').click()
     // delete garbage
   })
+
+  it('add building', () => {
+    cy.get('#buildings').click()
+    // press create button
+    cy.get('#newbuilding').click()
+    // add building data
+    // save
+  })
+
+  it('edit building', () => {
+    // press building from buildings overview
+    cy.get('#building').first().click()
+    // press edit button
+    // alter building data
+    // save
+  })
+
+  it('add garbageschedule building', () => {
+    // press building from buildings overview (right now a bit unclear as to how to do this, with the v-for element)
+    cy.get('#building').first().click()
+    // press add-garbage button
+    // add data
+    // save
+  })
+
 })

@@ -1,7 +1,5 @@
 describe('superstudent tests', () => {
-  // TODO check if cy.contains('X') works instead of cy.get(..).get(...).contains('X')
   // TODO check if select(...) works better with index
-  // TODO get('CustomComponent') will probably fail => find solution
   beforeEach(() => {
     cy.login('superstudent@trottoir.be', 'super_student')
     cy.visit('/ronde/overzicht')
@@ -10,7 +8,7 @@ describe('superstudent tests', () => {
   // there is a lot of overlap for superstudents and admins,
   // these overlaps will be tested with either a superstudent or an admin. There is no need to test them twice.
 
-  it('create round', () => {
+  it('create round, no name', () => {
     // go to round overview
     cy.get('#rounds').click()
     // press create button
@@ -18,21 +16,56 @@ describe('superstudent tests', () => {
     // add buildings
     cy.get('#building').eq(0).click() // not sure if this actually works yet
     cy.get('#building').eq(0).click()
+    // save
+    //cy.get('#createround').click()
+    // confirm?
+    // this shouldn't create a new round
+    // check for popup on screen?
+    //cy.contains("test round")
+  })
+
+  it('create round, no buildings', () => {
+    // go to round overview
+    cy.get('#rounds').click()
+    // press create button
+    cy.get('#newround').click()
     // add name
     cy.get('#roundname').type("test round")
     // save
-    cy.get('#createround').click()
+    //cy.get('#createround').click()
     // confirm?
-    // we are rerouted back to the rounds table
-    cy.contains("test round")
+    // this shouldn't create a new round
+    // check for popup on screen?
+    //cy.contains("test round")
+  })
+
+  it('create round succes', () => {
+    // go to round overview
+    cy.get('#rounds').click()
+    // press create button
+    cy.get('#newround').click()
+    // add buildings
+    cy.get('#building').first().click()
+    cy.get('#building').first().click()
+    // add name
+    cy.get('#roundname').type("test round")
+    // save
+    //cy.get('#createround').click()
+    // confirm?
+    // we are rerouted to the round detail of the new round
+    //cy.contains("test round")
+    // check if it also appears in the list
+    //cy.get('#rounds').click()
+    //cy.contains("test round")
   })
 
   it('edit round', () => {
+    // also add tests where try to edit round with incorrect data?
+
     // go to round overview
     cy.get('#rounds').click()
     // press on the round you wish to change
-    cy.get('#roundtable').get('#table').contains('td', 'Round 1').click()
-    // maybe even cy.contains('td', 'Round 1').click() will work
+    cy.contains('Round 1').click()
     // press edit button
 
     // edit button currently not implemented
@@ -48,15 +81,15 @@ describe('superstudent tests', () => {
     // go to round overview
     cy.get('#rounds').click()
     // select round
-    cy.get('#roundtable').get('#table').contains('td', 'test round').click()
+    cy.contains('test round').click()
     // select plan schedule
     cy.get('#schedule').click()
     // select student and date(s)
     cy.get('#selectstudent').select('Dirk De Student') // maybe safer with index
     cy.get('.selectors').then( () => {
       cy.get('#frequency').select('wekelijks') // maybe safer with index
-      cy.get('#startdate').type('01052023')
-      cy.get('#enddate').type('31052023')
+      cy.get('#startdate').type('01062023')
+      cy.get('#enddate').type('31062023')
       cy.get('#starttime').type('1930')
     })
     // add
@@ -66,9 +99,12 @@ describe('superstudent tests', () => {
     // confirm?
     //check if schedule has been added
     cy.get('#rounds').click()
-    cy.get('#roundtable').get('#table').contains('td', 'test round').click()
-    cy.get('RoundCard').contains("h3", new Date("2023-05-01").toLocaleDateString())
-    // I don't know if this will work, maybe just cy.contains("h3", new Date("2023-05-01").toLocaleDateString())
+    cy.contains('test round').click()
+    // this will work if the last added schedule is the first one in the list
+    cy.get('#buildingcard').eq(0).then(() => {
+      cy.get('#date').contains(new Date("2023-06-01").toLocaleDateString())
+      cy.get('#student').contains("Dirk De Student")
+    })
   })
 
   it('switch student for round (for a single date)', () => {
@@ -79,18 +115,19 @@ describe('superstudent tests', () => {
     // go to round overview
     cy.get('#rounds').click()
     // press on the round you wish to delete
-    cy.get('#roundtable').get('#table').contains('td', 'test round').click()
+    cy.contains('test round').click()
     // press delete button
     cy.get('#deleteround').click()
     // confirm?
     // round should not be present in the table
-    cy.get('#roundtable').get('#table').contains('td', 'test round').should('not.exist')
+    cy.contains('test round').should('not.exist')
   })
 
 
   it('observe students currently doing a round', () => {
     // make sure there is a student currently doing Round X: maybe add a test that creates this?
-    const round: string = "Round X"
+    // give round to student -> student starts round
+    const round: string = "Ronde 3"
     // go to the overview page
     cy.visit('/ronde/overzicht')
     // add filters
@@ -100,8 +137,10 @@ describe('superstudent tests', () => {
       cy.get('#searchtype').type(round)
     })
     // click on the student/round to get more details
-    cy.get('RoundCard').first().click()
+    cy.get('#roundcard').first().click()
     cy.contains(round)
+    // full name wasn't visible in the round selection, but it is once you clicked on the round
+    cy.contains("Dirk De Student")
   })
 
 })

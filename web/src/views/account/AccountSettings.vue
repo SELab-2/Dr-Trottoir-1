@@ -130,7 +130,7 @@
     <!-- Section with the adress -->
     <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
       <template v-slot:title> Adres </template>
-      <AddressFrom
+      <AddressForm
         id="address"
         :class="edit ? 'mx-4' : 'mx-10'"
         :readonly="!edit"
@@ -139,7 +139,7 @@
         :number="String(user?.address.number)"
         :zip_code="String(user?.address.zip_code)"
         @onUpdate="(newAddress: Address) => handleAddressUpdate(newAddress)"
-      ></AddressFrom>
+      ></AddressForm>
     </BorderCard>
 
     <!-- Section to pick the roles -->
@@ -239,7 +239,7 @@
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import ContactForm from "@/components/forms/ContactForm.vue";
-import AddressFrom from "@/components/forms/AddressForm.vue";
+import AddressForm from "@/components/forms/AddressForm.vue";
 import Avatar from "@/components/Avatar.vue";
 import { Ref, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";

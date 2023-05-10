@@ -7,7 +7,7 @@
       ><border-card
         class="mb-4"
         title="Ronde aanmaken"
-        subtitle="De ronde zal in de volgorde van onderstaande lijst opgeslaan worden"
+        subtitle="De ronde zal in de volgorde van onderstaande lijst opgeslagen worden"
       >
         <template v-slot:append
           ><v-switch
@@ -63,7 +63,6 @@
       </border-card>
 
       <building-info-card
-        id="availablebuildings"
         v-for="entry in filterlist()"
         :key="entry.listID"
         :name="entry.building.name"

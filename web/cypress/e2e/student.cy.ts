@@ -17,10 +17,8 @@ describe('student tests', () => {
 
 
   it('edit account, but cancel changes', () => {
-    // own db still rough, so based on selab2-1.ugent.be,
-    // there are still some bugs
     cy.get('#account').click()
-    cy.get('#edit').click()
+    cy.get('#editcancel').click()
     cy.get('#personal').then(() => {
       cy.get('#phone').clear()
       // cancel button should not be clickable when a field does not meet the requirements,
@@ -34,9 +32,10 @@ describe('student tests', () => {
       cy.get('#city').type('blabla')
       cy.get('#zipcode').type('1')
     })
-    cy.get('#cancel').click()
+    cy.get('#editcancel').click()
     cy.get('#personal').get('#phone').should('not.contain.text', '0111111111')
-    // cancel keeps the changes, but doesn't push to db, so on reload the changes are gone
+    // cancel keeps the changes, but doesn't push to db, so on reload the changes are gone,
+    // and cypress apparently autoreloads the page
     // obviously the changes should be gone once cancel is pushed, and not just on reload after cancel
   })
 

@@ -109,6 +109,7 @@
                 }"
               >
                 <v-list-item
+                  id="building"
                   prepend-icon="mdi-file-cabinet"
                   :title="building.name"
                   value="gebouwen"
