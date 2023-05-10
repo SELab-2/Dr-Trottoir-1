@@ -53,8 +53,7 @@ Cypress.Commands.add('login' as any, (email: string, password:string) => {
     cy.get('#email').type(email)
     cy.get('#password').type(password)
     cy.get('#login').click()
-    // TODO remove next line from comments when routing is fixed, also change it in the e2e tests
-    // cy.get('#logout').should('be.visible')
+    cy.get('#logout').should('be.visible')
   },
     {
       cacheAcrossSpecs: true
