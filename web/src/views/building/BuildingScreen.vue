@@ -173,7 +173,7 @@ tryOrAlertAsync(async () => {
 
   garbage.value = await new GarbageQuery().getAll({
     building_id: Number(props.id),
-    syndicus_id: building.value?.syndicus.id,
+    syndicus_id: building.value?.syndicus?.id,
   });
 });
 </script>
