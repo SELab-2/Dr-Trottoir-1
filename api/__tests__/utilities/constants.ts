@@ -29,3 +29,7 @@ export const badRequestForeignKey = {
     message: "Bad Request",
     detail: "Foreign key constraint failed",
 };
+
+export const methodNotAllowedResponse = {
+    message: "Method not allowed",
+};
