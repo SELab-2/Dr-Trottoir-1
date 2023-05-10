@@ -38,16 +38,20 @@ export class SyndicusValidator extends Validator {
     }
 
     updateOneValidator() {
-        return celebrate({
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
 
-            body: Joi.object({
-                id: Joi.forbidden(),
-                user_id: Joi.number().positive(),
-            }),
-        });
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    user_id: Joi.number().positive(),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator() {

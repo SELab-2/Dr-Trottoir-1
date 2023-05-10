@@ -26,20 +26,24 @@ export class AddressValidator extends Validator {
     }
 
     updateOneValidator() {
-        return celebrate({
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
-            body: Joi.object({
-                id: Joi.forbidden(),
-                street: Joi.string().min(1),
-                city: Joi.string().min(1),
-                zip_code: Joi.number().positive(),
-                number: Joi.number().positive(),
-                longitude: Joi.number().min(-180).max(180),
-                latitude: Joi.number().min(-90).max(90),
-            }),
-        });
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    street: Joi.string().min(1),
+                    city: Joi.string().min(1),
+                    zip_code: Joi.number().positive(),
+                    number: Joi.number().positive(),
+                    longitude: Joi.number().min(-180).max(180),
+                    latitude: Joi.number().min(-90).max(90),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator() {
