@@ -68,6 +68,7 @@
 </template>
 
 <script lang="ts" setup>
+import { AuthenticatedUser } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -82,8 +83,23 @@ const showPsswd = ref(false);
 const snackbar = ref(false);
 async function logIn() {
   await useAuthStore().logIn(email.value, password.value);
-  // TODO: should link to correct page for which user authenticated, now default student
-  await router.push({ name: "student_planning" });
+  const auth: AuthenticatedUser | null = useAuthStore().auth;
+  if (auth) {
+    if (auth.student) {
+      await router.push({ name: "student_planning" });
+    } else if (auth.super_student) {
+      await router.push({ name: "round_followup" });
+    } else if (auth.admin) {
+      await router.push({ name: "user_overview" });
+    } else if (auth.syndicus) {
+      await router.push({
+        name: "building_id",
+        params: { id: auth.syndicus[0].id },
+      });
+    } else {
+      await router.push({ name: "account_settings", params: { id: auth.id } });
+    }
+  }
 }
 </script>
 
