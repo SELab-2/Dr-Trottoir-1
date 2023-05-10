@@ -250,10 +250,6 @@ describe("User_region tests", () => {
                 expectedData: expected,
             });
         });
-
-        afterAll(() => {
-            app.close();
-        });
     });
 
     describe("Unsuccesful requests", () => {
@@ -408,9 +404,9 @@ describe("User_region tests", () => {
                 });
             });
         });
+    });
 
-        afterAll(() => {
-            app.close();
-        });
+    afterAll(() => {
+        app.close();
     });
 });

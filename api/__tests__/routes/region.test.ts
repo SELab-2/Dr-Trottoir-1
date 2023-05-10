@@ -237,7 +237,6 @@ describe("Region tests", () => {
                 url: "/region",
                 expectedData: expectedSuperStudent,
             });
-
         });
 
         test("DELETE /region/:id", async () => {
