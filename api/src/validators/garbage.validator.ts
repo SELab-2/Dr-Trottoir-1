@@ -45,7 +45,7 @@ export class GarbageValidator extends Validator {
                 id: Joi.number().positive().required(),
             }),
             body: Joi.object({
-                id: Joi.forbidden(),
+                id: Joi.ref("params.id"),
                 pickup_time: Joi.date().iso(),
                 action_id: Joi.number().positive(),
                 building_id: Joi.number().positive(),

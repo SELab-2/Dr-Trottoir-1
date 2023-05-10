@@ -1,49 +1,74 @@
 <template>
-  <div>
-    <v-container>
-      <v-form>
-        <v-img
-          cover
-          v-if="imageUrl"
-          :src="imageUrl"
-          aspect-ratio="1/1"
-          :with="300"
-        ></v-img>
-        <div class="d-flex justify-center align-center py-5">
-          <v-btn block variant="outlined"> Maak foto</v-btn>
-        </div>
+  <v-card class="mx-2 my-2" max-width="350px" min-width="300px">
+    <template v-slot:title
+      ><v-card-title v-if="isPhoto">Foto toevoegen</v-card-title>
+      <v-card-title v-else>Opmerking toevoegen</v-card-title></template
+    >
+    <template v-slot:append
+      ><v-icon
+        @click="$emit('confirm', photo)"
+        color="error"
+        icon="mdi-close"
+      ></v-icon
+    ></template>
 
-        <v-file-input
-          id="select"
-          single
-          v-model="photo.image"
-          label="Selecteer afbeelding"
-          accept="image/*"
-          prepend-icon=""
-          prepend-inner-icon="mdi-image"
-          @update:model-value="$emit('onUpdate', photo)"
-        ></v-file-input>
-        <v-textarea
-          id="comment"
-          @update:model-value="$emit('onUpdate', photo)"
-          label="Commentaar"
-          rows="3"
-          v-model="photo.comments"
-        ></v-textarea>
-        <v-text-field
-          id="label"
-          @update:model-value="$emit('onUpdate', photo)"
-          label="Foto label"
-          v-model="photo.label"
-        ></v-text-field>
-      </v-form>
-    </v-container>
-  </div>
+    <div class="mx-4 my-2">
+      <v-file-input
+        id="select"
+        v-if="isPhoto"
+        single
+        v-model="photo.image"
+        label="Selecteer afbeelding"
+        accept="image/*"
+        prepend-icon=""
+        prepend-inner-icon="mdi-image"
+        @update:model-value="$emit('onUpdate', photo)"
+        variant="outlined"
+      ></v-file-input>
+      <v-text-field
+        v-if="isPhoto"
+        id="label"
+        variant="outlined"
+        @update:model-value="$emit('onUpdate', photo)"
+        label="Titel"
+        v-model="photo.label"
+      ></v-text-field>
+      <v-textarea
+        @update:model-value="$emit('onUpdate', photo)"
+        id="comment"
+        label="Commentaar"
+        rows="3"
+        v-model="photo.comments"
+        variant="outlined"
+      ></v-textarea>
+      <div class="d-flex mb-4">
+        <v-spacer></v-spacer
+        ><v-btn
+          @click="$emit('confirm', photo, isPhoto)"
+          color="primary"
+          prepend-icon="mdi-check"
+          >Opslaan</v-btn
+        >
+      </div>
+    </div>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
 import Photo from "@/components/models/Photo";
+import { ref } from "vue";
+
+const props = defineProps({
+  id: {
+    type: String,
+    default: "",
+  },
+  isPhoto: {
+    type: Boolean,
+    default: true,
+  },
+  currentComments: String,
+});
 
 const photo = ref<Photo>({
   image: [],
@@ -51,65 +76,7 @@ const photo = ref<Photo>({
   label: "",
 });
 
-const imageUrl = ref("");
-
-/*TODO: fix typing here, commented this for deadline 1
-  Should be added in <v-file-input>
-    @change="previewImage"
-
-const previewImage = (event) => {
-  const file = event.target.files[0];
-  const reader = new FileReader();
-
-  reader.onload = (e) => {
-    if (e.target != null) {
-      imageUrl.value = e.target.result;
-    }
-  };
-
-  reader.readAsDataURL(file);
-};
-*/
-
-// later voor het submit van afbeelding
-//const submit = () => {
-//   try {
-//     const formData = new FormData();
-//     formData.append("image", photo.image.value);
-//     formData.append("label", label.value);
-//     formData.append("comment", comments.value);
-//     console.log("verzonden");
-//     for (const value of formData.values()) {
-//       console.log(value);
-//     }
-
-//     //const response = await axios.post("/images", formData);
-//     //console.log(response.data);
-
-//     // reset form after submit
-//     //file.value = null;
-//     preview.value = null;
-//     label.value = "";
-//     comments.value = "";
-//     image.value = null;
-//     //emit("form-submitted", formData);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+if (!props.isPhoto) {
+  photo.value.comments = String(props.currentComments);
+}
 </script>
-
-<style scoped>
-.d-flex {
-  display: flex;
-}
-.justify-center {
-  justify-content: center;
-}
-.align-center {
-  align-items: center;
-}
-.pad {
-  padding: 15px;
-}
-</style>

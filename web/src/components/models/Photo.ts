@@ -1,5 +1,5 @@
 export default interface Address {
   image: File[];
-  comments: String;
-  label: String;
+  comments: string;
+  label: string;
 }
