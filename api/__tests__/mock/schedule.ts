@@ -4,17 +4,23 @@ import { image } from "./file";
 
 export async function initialiseSchedule() {
     const timestamp: Date = new Date(Date.UTC(2023, 4, 4, 12, 0, 0));
+    const start: Date = new Date(Date.UTC(2023, 4, 4, 12, 10, 0));
+    const end: Date = new Date(Date.UTC(2023, 4, 4, 12, 20, 0));
 
     const s1 = {
         day: timestamp,
         user_id: 1,
         round_id: 1,
+        start: start,
+        end: end,
     };
 
     const s2 = {
         day: timestamp,
         user_id: 2,
         round_id: 2,
+        start: start,
+        end: end,
     };
 
     await prisma.schedule.createMany({
