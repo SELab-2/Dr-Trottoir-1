@@ -165,7 +165,7 @@ const routes: any[] = [
             superstudent: boolean,
             syndicus: boolean,
             admin: boolean,
-          ) => superstudent || admin,
+          ) => admin,
         },
       },
       {
@@ -207,7 +207,7 @@ const routes: any[] = [
             superstudent: boolean,
             syndicus: boolean,
             admin: boolean,
-          ) => student || superstudent || syndicus || admin,
+          ) => superstudent || syndicus || admin,
         },
       },
       {
@@ -221,7 +221,7 @@ const routes: any[] = [
             superstudent: boolean,
             syndicus: boolean,
             admin: boolean,
-          ) => admin,
+          ) => superstudent || admin,
         },
       },
       {
@@ -249,7 +249,7 @@ const routes: any[] = [
             superstudent: boolean,
             syndicus: boolean,
             admin: boolean,
-          ) => admin,
+          ) => superstudent || admin,
         },
       },
       {
@@ -335,7 +335,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     const isStudent = auth.student;
     const isSuperStudent = auth.super_student;
-    const isSyndicus = true; // TODO
+    const isSyndicus = auth.syndicus != null;
     const isAdmin = auth.admin;
     const checked: boolean = checkAuth(
       isStudent,
