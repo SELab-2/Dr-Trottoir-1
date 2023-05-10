@@ -251,12 +251,8 @@ await tryOrAlertAsync(async () => {
     schedule: schedule_id,
     user: data.value.user.id,
   })) {
-    console.log(progress)
     progressItems.value.set(progress.building_id, progress);
   }
-
-  console.log(progressItems.value.size)
-  console.log(data.value?.round.buildings.length)
   if (progressItems.value.size !== data.value?.round.buildings.length) {
     throw new Error("Not every building has a progress item");
   }
