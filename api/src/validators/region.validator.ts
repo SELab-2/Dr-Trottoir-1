@@ -1,5 +1,5 @@
 import { Validator } from "./validator";
-import { celebrate } from "celebrate";
+import { celebrate, Segments } from "celebrate";
 import Joi from "joi";
 
 export class RegionValidator extends Validator {
@@ -10,6 +10,7 @@ export class RegionValidator extends Validator {
                 skip: Joi.number(),
                 name: Joi.string().trim().min(1),
                 user_id: Joi.number(),
+                deleted: Joi.bool(),
             }),
         });
     }
@@ -31,15 +32,19 @@ export class RegionValidator extends Validator {
     }
 
     updateOneValidator() {
-        return celebrate({
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
-            body: Joi.object({
-                id: Joi.ref("params.id"),
-                name: Joi.string().min(1).required(),
-            }),
-        });
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    name: Joi.string().min(1).required(),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator() {
