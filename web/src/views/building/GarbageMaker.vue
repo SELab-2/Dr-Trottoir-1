@@ -1,13 +1,6 @@
 <template>
   <div>
     <HFillWrapper margin="mx-4 mb-4">
-      <RoundedButton
-        icon="mdi-arrow-left"
-        value="Terugkeren"
-        class="mb-4"
-        @click="() => router.push({ name: 'building_id', params: { id: 0 } })"
-      ></RoundedButton>
-
       <h2>Afvalkalender</h2>
 
       <p class="mb-4">
@@ -89,8 +82,6 @@ import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import Table from "@/components/table/Table.vue";
 import { DetailedDay } from "@/types/GarbageTable";
 import { GarbageTable } from "@/types/GarbageTable";
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
-import router from "@/router";
 
 const garbageTypes = ["REST", "PMD", "GFT", "Papier"];
 const actions = ["buiten zetten", "binnen halen"];
