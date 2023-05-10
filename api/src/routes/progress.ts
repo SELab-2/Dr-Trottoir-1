@@ -165,13 +165,9 @@ export class ProgressRouting extends Routing {
                 path: req.body.path,
                 user_id: req.body.user_id,
                 progress: {
-                    create: [
-                        {
-                            type: req.body.type,
-                            description: req.body.description,
-                            progress_id: progress_id,
-                        },
-                    ],
+                    connect: {
+                        id: progress_id,
+                    },
                 },
             },
         });
