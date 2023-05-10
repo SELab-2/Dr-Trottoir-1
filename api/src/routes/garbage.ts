@@ -4,6 +4,8 @@ import { prisma } from "../prisma";
 import { Parser } from "../parser";
 import { Auth } from "../auth/auth";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { GarbageValidator } from "../validators/garbage.validator";
+import { Validator } from "../validators/validator";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 
@@ -13,7 +15,7 @@ export class GarbageRouting extends Routing {
         building: selectBuilding(),
     };
 
-    @Auth.authorization({ superStudent: true, syndicus: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getAll(req: CustomRequest, res: express.Response) {
         // A syndicus is only allowed to see his own garbage
         if (
@@ -106,5 +108,9 @@ export class GarbageRouting extends Routing {
         });
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new GarbageValidator();
     }
 }

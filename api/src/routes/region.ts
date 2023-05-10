@@ -5,6 +5,8 @@ import { prisma } from "../prisma";
 import { Auth } from "../auth/auth";
 import { Prisma } from "@selab-2/groep-1-orm";
 import RegionInclude = Prisma.RegionInclude;
+import { RegionValidator } from "../validators/region.validator";
+import { Validator } from "../validators/validator";
 
 export class RegionRouting extends Routing {
     private static includes: RegionInclude = {
@@ -21,7 +23,6 @@ export class RegionRouting extends Routing {
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
-                id: Parser.number(req.query["id"]),
                 name: Parser.string(req.query["name"]),
                 // get all regions a certain user is assigned to
                 users: req.query["user_id"]
@@ -63,9 +64,7 @@ export class RegionRouting extends Routing {
     @Auth.authorization({ superStudent: true })
     async updateOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.region.update({
-            data: {
-                name: req.body["name"],
-            },
+            data: req.body,
             where: {
                 id: Parser.number(req.params["id"]),
             },
@@ -95,5 +94,9 @@ export class RegionRouting extends Routing {
         }
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new RegionValidator();
     }
 }

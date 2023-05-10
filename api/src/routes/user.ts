@@ -7,6 +7,8 @@ import crypto from "crypto";
 import { Prisma, User } from "@selab-2/groep-1-orm";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import { UserValidator } from "../validators/user.validator";
+import { Validator } from "../validators/validator";
 
 export class UserRouting extends Routing {
     private static selects: Prisma.UserSelect = {
@@ -58,10 +60,10 @@ export class UserRouting extends Routing {
                 },
                 OR: {
                     first_name: {
-                        contains: Parser.string(req.query["name"], ""),
+                        contains: Parser.string(req.query["first_name"], ""),
                     },
                     last_name: {
-                        contains: Parser.string(req.query["name"], ""),
+                        contains: Parser.string(req.query["last_name"], ""),
                     },
                 },
                 // get all users assigned to a certain region
@@ -95,11 +97,6 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        // The body of a request can't be empty and can't contain a hash or salt
-        if (!req.body == null || req.body.hash || req.body.salt) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
-
         // We choose a random salt, calculate the hash-value and save these in their corresponding fields
         const password = req.body.password;
         delete req.body.password;
@@ -177,5 +174,9 @@ export class UserRouting extends Routing {
             });
         }
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new UserValidator();
     }
 }

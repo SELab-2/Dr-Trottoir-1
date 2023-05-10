@@ -4,6 +4,8 @@ import { CustomRequest, includeUser, Routing, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { Validator } from "../validators/validator";
+import { SyndicusValidator } from "../validators/syndicus.validator";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 
@@ -30,10 +32,13 @@ export class SyndicusRouting extends Routing {
                     },
                     OR: {
                         first_name: {
-                            contains: Parser.string(req.query["name"], ""),
+                            contains: Parser.string(
+                                req.query["first_name"],
+                                "",
+                            ),
                         },
                         last_name: {
-                            contains: Parser.string(req.query["name"], ""),
+                            contains: Parser.string(req.query["last_name"], ""),
                         },
                     },
                 },
@@ -105,5 +110,9 @@ export class SyndicusRouting extends Routing {
         });
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new SyndicusValidator();
     }
 }

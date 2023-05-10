@@ -28,6 +28,7 @@
         :type="showPsswd ? 'text' : 'password'"
         label="Wachtwoord"
         @click:append-inner="showPsswd = !showPsswd"
+        @keyup.enter="logIn()"
         bg
       ></v-text-field>
       <!-- Div with help text and login button -->
@@ -44,7 +45,7 @@
           id="login"
           prepend-icon="mdi-login"
           color="success"
-          @click="logIn"
+          @click="logIn()"
           >Login</v-btn
         >
       </div>
