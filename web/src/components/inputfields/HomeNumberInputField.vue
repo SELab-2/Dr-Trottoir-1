@@ -1,6 +1,7 @@
 <template>
   <!-- Text input field for the house number -->
   <v-text-field
+    id="streetnr"
     v-model="homeNumber"
     label="Huisnummer"
     :type="readonly ? 'text' : 'number'"

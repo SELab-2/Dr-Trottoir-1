@@ -27,7 +27,7 @@
       >
         <!-- Text input field for the house number -->
         <HomeNumberInputField
-          id="streetnr"
+          id="streetnrfield"
           :readonly="readonly"
           v-model="address.number"
           @update:model-value="$emit('onUpdate', address)"
@@ -69,7 +69,7 @@
       >
         <!-- Text input field for the zip code -->
         <ZipCodeInputField
-          id="zipcode"
+          id="zipcodefield"
           :readonly="readonly"
           v-model="address.zip_code"
           @update:model-value="$emit('onUpdate', address)"

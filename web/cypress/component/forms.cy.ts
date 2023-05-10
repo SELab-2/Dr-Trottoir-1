@@ -4,7 +4,7 @@ import RolesForm from '@/components/forms/RolesForm.vue'
 
 
 describe("form tests", () => {
-  describe('addressform tests', () => {
+  describe.only('addressform tests', () => {
     it('addressform correct input test', () => {
       cy.mount(AdressForm, {
         props:{
@@ -20,10 +20,10 @@ describe("form tests", () => {
       cy.get('#street').type("Teststraat")
       cy.get('#city').type('Gent')
       cy.get('#streetnr').type('{backspace}17')
-      cy.get('#zipcode').type('{backspace}9000')
+      cy.get('#zipcodefield').get('#zipcode').type('{backspace}9000')
       // we have to do {backspace} because the field first contains a 0, else we would have 017 en 09000
       cy.get('#street').should('have.value', 'Teststraat')
-      cy.get('#streetnr').should('have.value', '17')
+      cy.get('#streetnrfield').get('#streetnr').should('have.value', '17')
       cy.get('#city').should('have.value', 'Gent')
       cy.get('#zipcode').should('have.value', '9000')
     })
@@ -33,11 +33,15 @@ describe("form tests", () => {
         // default props
       })
       // fill in the fields with incorrect input
-      cy.get('#streetnr').type('hallo') // you can only enter numbers
-      cy.get('#streetnr').should('have.value', '0')
-      cy.get('#zipcode').type('hallo') // you can only enter numbers
-      cy.get('#zipcode').should('have.value', '0')
-      cy.get('#zipcode').type('9000') // without backspace, the zip code will be 09000, which is an incorrect zipcode
+      cy.get('#streetnrfield').then(()=>{
+        cy.get('#streetnr').type('hallo')
+        cy.get('#streetnr').should('have.value', '0')
+      }) // you can only enter numbers
+      cy.get('#zipcodefield').then(() => {
+        cy.get('#zipcode').type('hallo') // you can only enter numbers
+        cy.get('#zipcode').should('have.value', '0')
+        cy.get('#zipcode').type('9000')
+      })// without backspace, the zip code will be 09000, which is an incorrect zipcode
       cy.contains('Ongeldige postcode')
     })
 
@@ -50,8 +54,8 @@ describe("form tests", () => {
       // everything should now be readonly
       cy.get('#street').should('have.attr', 'readonly', 'readonly')
       cy.get('#city').should('have.attr', 'readonly', 'readonly')
-      cy.get('#streetnr').should('have.attr', 'readonly', 'readonly')
-      cy.get('#zipcode').should('have.attr', 'readonly', 'readonly')
+      cy.get('#streetnrfield').get('#streetnr').should('have.attr', 'readonly', 'readonly')
+      cy.get('#zipcodefield').get('#zipcode').should('have.attr', 'readonly', 'readonly')
     })
 
     it('addressform empty test', () => {
@@ -61,8 +65,8 @@ describe("form tests", () => {
       // empty fields should contain a warning
       cy.get('#street').type('x{backspace}')
       cy.get('#city').type('x{backspace}')
-      cy.get('#streetnr').clear()
-      cy.get('#zipcode').clear()
+      cy.get('#streetnrfield').get('#streetnr').clear()
+      cy.get('#zipcodefield').get('#zipcode').clear()
       cy.contains('Geef een straat op.').should('be.visible')
       cy.contains('Geef een stad op.').should('be.visible')
       cy.contains('Geef een huisnummer.').should('be.visible')
