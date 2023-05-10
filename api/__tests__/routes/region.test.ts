@@ -137,11 +137,11 @@ describe("Region tests", () => {
             });
         });
 
-        test("DELETE /region/:id", async () => {
+        test("SOFT DELETE /region/:id", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             await runner.delete({ url: "/region/1" });
 
-            // verify that the region is soft truly deleted (admin)
+            // verify that the region is soft deleted (admin)
             const expected = [
                 {
                     deleted: true,
