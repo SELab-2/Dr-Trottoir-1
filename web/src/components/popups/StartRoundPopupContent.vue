@@ -9,10 +9,10 @@
 
     <template v-slot:actions>
       <v-spacer />
-      <v-btn color="success" @click="onsubmit" variant="elevated">
+      <v-btn id="start" color="success" @click="onsubmit" variant="elevated">
         Start ronde
       </v-btn>
-      <v-btn @click="oncancel" color="error" class="mr-3" variant="elevated">
+      <v-btn id="cancel" @click="oncancel" color="error" class="mr-3" variant="elevated">
         Annuleer
       </v-btn>
     </template>

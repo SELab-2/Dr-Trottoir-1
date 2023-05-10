@@ -1,5 +1,4 @@
 import BuildingCard from '@/components/building/BuildingCard.vue'
-import GarbageSchedule from '@/components/building/GarbageSchedule.vue'
 
 describe("building component test", () => {
   it('buildingcard test', () => {
