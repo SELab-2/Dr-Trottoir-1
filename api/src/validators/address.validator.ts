@@ -31,7 +31,7 @@ export class AddressValidator extends Validator {
                 id: Joi.number().positive().required(),
             }),
             body: Joi.object({
-                id: Joi.forbidden(),
+                id: Joi.ref("params.id"),
                 street: Joi.string().min(1),
                 city: Joi.string().min(1),
                 zip_code: Joi.number().positive(),
