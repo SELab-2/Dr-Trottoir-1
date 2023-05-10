@@ -4,6 +4,8 @@ import { prisma } from "../prisma";
 import { Parser } from "../parser";
 import { Auth } from "../auth/auth";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { GarbageValidator } from "../validators/garbage.validator";
+import { Validator } from "../validators/validator";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 
@@ -106,5 +108,9 @@ export class GarbageRouting extends Routing {
         });
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new GarbageValidator();
     }
 }
