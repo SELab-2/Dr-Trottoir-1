@@ -47,8 +47,11 @@ export class BuildingValidator extends Validator {
 
     updateOneValidator() {
         return celebrate({
+            params: Joi.object({
+                id: Joi.number().positive().required(),
+            }),
             body: Joi.object({
-                id: Joi.forbidden(),
+                id: Joi.ref("params.id"),
                 name: Joi.string().min(1),
                 ivago_id: Joi.string().min(1),
                 description: Joi.string().trim(),
@@ -58,10 +61,6 @@ export class BuildingValidator extends Validator {
                 deleted: Joi.bool(),
                 hash: Joi.string().forbidden(),
                 expected_time: Joi.number().positive(),
-            }),
-
-            params: Joi.object({
-                id: Joi.number().positive().required(),
             }),
         });
     }
