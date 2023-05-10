@@ -72,27 +72,32 @@ export class UserValidator extends Validator {
     }
 
     updateOneValidator() {
-        return celebrate({
-            body: {
-                email: Joi.string().email(),
-                first_name: Joi.string().min(1),
-                last_name: Joi.string().min(1),
-                date_added: Joi.date(),
-                last_login: Joi.date().less(Joi.ref("date_added")),
-                phone: Joi.string()
-                    .min(1)
-                    // accept a potential + sign at the beginning of the number and at least 1 digit
-                    .regex(/^\\+?d\\+$/),
-                address_id: Joi.number().positive(),
-                student: Joi.boolean(),
-                super_student: Joi.boolean(),
-                admin: Joi.boolean(),
-                password: Joi.string().min(1),
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
+                body: {
+                    id: Joi.ref("$params.id"),
+                    email: Joi.string().email(),
+                    first_name: Joi.string().min(1),
+                    last_name: Joi.string().min(1),
+                    date_added: Joi.date(),
+                    last_login: Joi.date().less(Joi.ref("date_added")),
+                    phone: Joi.string()
+                        .min(1)
+                        // accept a potential + sign at the beginning of the number and at least 1 digit
+                        .regex(/^\\+?d\\+$/),
+                    address_id: Joi.number().positive(),
+                    student: Joi.boolean(),
+                    super_student: Joi.boolean(),
+                    admin: Joi.boolean(),
+                    password: Joi.string().min(1),
+                },
             },
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
-        });
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator() {

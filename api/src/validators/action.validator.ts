@@ -26,15 +26,19 @@ export class ActionValidator extends Validator {
     }
 
     updateOneValidator() {
-        return celebrate({
-            body: Joi.object({
-                id: Joi.forbidden(),
-                description: Joi.string().trim().min(1).required(),
-            }),
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
-        });
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    description: Joi.string().trim().min(1),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     createOneValidator() {

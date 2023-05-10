@@ -19,6 +19,8 @@ export class ScheduleValidator extends Validator {
                 building: Joi.number().positive(),
                 sort: Joi.string().trim().min(1),
                 ord: Joi.string().trim().min(1),
+                start: Joi.string().isoDate(),
+                end: Joi.string().isoDate(),
             }),
         });
     }
@@ -37,23 +39,31 @@ export class ScheduleValidator extends Validator {
                 day: Joi.date().iso().required(),
                 user_id: Joi.number().positive().required(),
                 round_id: Joi.number().positive().required(),
+                start: Joi.string().isoDate(),
+                end: Joi.string().isoDate(),
             }),
         });
     }
 
     updateOneValidator() {
-        return celebrate({
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
 
-            body: Joi.object({
-                id: Joi.forbidden(),
-                day: Joi.date().iso(),
-                user_id: Joi.number().positive(),
-                round_id: Joi.number().positive(),
-            }),
-        });
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    day: Joi.date().iso(),
+                    user_id: Joi.number().positive(),
+                    round_id: Joi.number().positive(),
+                    start: Joi.string().isoDate(),
+                    end: Joi.string().isoDate(),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator() {

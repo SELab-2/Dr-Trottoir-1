@@ -38,27 +38,32 @@ export class BuildingValidator extends Validator {
                 manual_id: Joi.number().positive().required(),
                 syndicus_id: Joi.number().positive().required(),
                 hash: Joi.string().forbidden(),
+                expected_time: Joi.number().positive(),
             }),
         });
     }
 
     updateOneValidator() {
-        return celebrate({
-            body: Joi.object({
-                id: Joi.forbidden(),
-                name: Joi.string().min(1),
-                ivago_id: Joi.string().min(1),
-                address_id: Joi.number().positive(),
-                manual_id: Joi.number().positive(),
-                syndicus_id: Joi.number().positive(),
-                deleted: Joi.bool(),
-                hash: Joi.bool(),
-            }),
-
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
-        });
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    name: Joi.string().min(1),
+                    ivago_id: Joi.string().min(1),
+                    address_id: Joi.number().positive(),
+                    manual_id: Joi.number().positive(),
+                    syndicus_id: Joi.number().positive(),
+                    deleted: Joi.bool(),
+                    hash: Joi.string().forbidden(),
+                    expected_time: Joi.number().positive(),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator() {

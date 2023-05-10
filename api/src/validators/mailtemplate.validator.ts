@@ -34,17 +34,21 @@ export class MailTemplateValidator extends Validator {
     }
 
     updateOneValidator() {
-        return celebrate({
-            params: Joi.object({
-                id: Joi.number().positive().required(),
-            }),
-            body: Joi.object({
-                id: Joi.forbidden(),
-                name: Joi.string().trim().min(1),
-                mail_subject: Joi.string().trim().min(1),
-                content: Joi.string().trim().min(1),
-            }),
-        });
+        return celebrate(
+            {
+                params: Joi.object({
+                    id: Joi.number().positive().required(),
+                }),
+                body: Joi.object({
+                    id: Joi.ref("$params.id"),
+                    name: Joi.string().trim().min(1),
+                    mail_subject: Joi.string().trim().min(1),
+                    content: Joi.string().trim().min(1),
+                }),
+            },
+            undefined,
+            { reqContext: true },
+        );
     }
 
     deleteOneValidator() {
