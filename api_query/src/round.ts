@@ -6,6 +6,7 @@ export type RoundQueryParameters = {
     take: number;
     skip: number;
     name: string;
+    description: string;
     sort: string[];
     ord: Array<"asc" | "desc">;
 };
