@@ -4,22 +4,15 @@
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h1>{{ round?.name }}</h1>
         <div class="flex-grow-1"></div>
-        <RoundedButton
-          icon="mdi-delete-outline"
-          value="Verwijderen"
+        <v-btn
+          class="text-none"
+          prepend-icon="mdi-delete"
           @click="deleteRound()"
-        ></RoundedButton>
+          color="error"
+        >
+          Verwijderen
+        </v-btn>
       </div>
-
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </p>
 
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Gebouwen</h2>
@@ -35,15 +28,21 @@
           :building="building"
         ></BuildingCard>
       </div>
-
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Planning</h2>
         <div class="flex-grow-1"></div>
-        <RoundedButton
-          icon="mdi-calendar"
-          value="Inplannen"
-          @click="router.push({ name: 'round_plan', params: { id: round_id } })"
-        ></RoundedButton>
+        <DateRange
+          v-model:start-date="planningStart"
+          v-model:end-date="planningEnd"
+        />
+        <v-btn
+          class="text-none"
+          prepend-icon="mdi-calendar"
+          :to="{ name: 'round_plan', params: { id: round_id } }"
+          color="primary"
+        >
+          Inplannen
+        </v-btn>
       </div>
 
       <div class="space-y-8">
@@ -92,6 +91,10 @@ import RoundCard from "@/components/round/RoundCard.vue";
 import BuildingCard from "@/components/building/BuildingCard.vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
+import DateRange from "@/components/filter/DateRange.vue";
+
+const planningStart = ref(new Date());
+const planningEnd = ref(new Date());
 
 const route = useRoute();
 const round_id: number = Number(route.params.id);
