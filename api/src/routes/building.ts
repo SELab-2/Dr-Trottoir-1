@@ -253,7 +253,9 @@ export class BuildingRouting extends Routing {
                 path: req.body.path,
                 user_id: req.body.user_id,
                 buildings: {
-                    create: [{ building_id: building_id }],
+                    connect: {
+                        id: building_id,
+                    },
                 },
             },
         });
