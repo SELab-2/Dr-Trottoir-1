@@ -59,7 +59,10 @@
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Recent</h2>
         <div class="flex-grow-1"></div>
-        <RoundedButton icon="mdi-history" value="Alles"></RoundedButton>
+        <DateRange
+          v-model:start-date="geschiedenisStart"
+          v-model:end-date="geschiedenisEnd"
+        />
       </div>
 
       <div class="space-y-8">
@@ -96,20 +99,27 @@ import DateRange from "@/components/filter/DateRange.vue";
 const planningStart = ref(new Date());
 const planningEnd = ref(new Date());
 
+const geschiedenisStart = ref(new Date());
+const geschiedenisEnd = ref(new Date());
+
 const route = useRoute();
 const round_id: number = Number(route.params.id);
 
-const buildings: Ref<Array<Result<BuildingQuery>>> = ref([]);
+const buildings = ref([]);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 const round = ref<Result<RoundQuery>>();
 
 tryOrAlertAsync(async () => {
   round.value = await new RoundQuery().getOne(round_id);
+  // get the buildings
+  if(round.value) {
+    for (const building of round.value?.buildings) {
+      buildings.value.push(building.building)
+    }
+  }
 });
 
-tryOrAlertAsync(async () => {
-  buildings.value = await new BuildingQuery().getAll({ take: 5 });
-});
+
 
 tryOrAlertAsync(async () => {
   schedules.value = await new ScheduleQuery().getAll({ take: 5 });
