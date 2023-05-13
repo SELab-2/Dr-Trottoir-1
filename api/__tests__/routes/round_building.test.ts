@@ -56,7 +56,7 @@ describe("Round_building tests", () => {
                 },
                 building_id: 2,
                 deleted: false,
-                round: { id: 1, name: "Round 1" },
+                round: { id: 1, name: "Round 1", description: null },
                 round_id: 1,
             };
             await runner.post({
@@ -87,7 +87,7 @@ describe("Round_building tests", () => {
                     building_id: 1,
                     deleted: false,
                     id: 1,
-                    round: { id: 1, name: "Round 1" },
+                    round: { description: null, id: 1, name: "Round 1" },
                     round_id: 1,
                 },
                 {
@@ -109,7 +109,7 @@ describe("Round_building tests", () => {
                     building_id: 2,
                     deleted: false,
                     id: 2,
-                    round: { id: 2, name: "Round 2" },
+                    round: { description: null, id: 2, name: "Round 2" },
                     round_id: 2,
                 },
             ];
@@ -141,7 +141,7 @@ describe("Round_building tests", () => {
                     building_id: 1,
                     deleted: false,
                     id: 1,
-                    round: { id: 1, name: "Round 1" },
+                    round: { id: 1, name: "Round 1", description: null },
                     round_id: 1,
                 },
             ];
@@ -176,7 +176,7 @@ describe("Round_building tests", () => {
                 building_id: 1,
                 deleted: false,
                 id: 1,
-                round: { id: 2, name: "Round 2" },
+                round: { id: 2, name: "Round 2", description: null },
                 round_id: 2,
             };
 
@@ -188,6 +188,7 @@ describe("Round_building tests", () => {
         });
 
         test("DELETE /round_building/:id", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             const hardRoundBuilding = {
                 hardDelete: true,
             };
@@ -217,7 +218,43 @@ describe("Round_building tests", () => {
                     building_id: 2,
                     deleted: false,
                     id: 2,
-                    round: { id: 2, name: "Round 2" },
+                    round: { description: null, id: 2, name: "Round 2" },
+                    round_id: 2,
+                },
+            ];
+            await runner.get({
+                url: "/round_building?deleted=true",
+                expectedData: expected,
+            });
+        });
+
+        test("SOFT DELETE /round_building/:id (super-student)", async () => {
+            await runner.delete({
+                url: "/round_building/1",
+            });
+
+            // verify that the round_building is truly deleted
+            const expected = [
+                {
+                    building: {
+                        address: {
+                            city: "Ghent",
+                            id: 2,
+                            latitude: 51.04732,
+                            longitude: 3.7282,
+                            number: 25,
+                            street: "Sint-Pietersnieuwstraat",
+                            zip_code: 9000,
+                        },
+                        deleted: false,
+                        id: 2,
+                        ivago_id: "ivago-2",
+                        name: "Building 2",
+                    },
+                    building_id: 2,
+                    deleted: false,
+                    id: 2,
+                    round: { description: null, id: 2, name: "Round 2" },
                     round_id: 2,
                 },
             ];
@@ -227,7 +264,7 @@ describe("Round_building tests", () => {
             });
         });
 
-        test("SOFT DELETE /round_building/:id", async () => {
+        test("SOFT DELETE /round_building/:id (admin)", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             await runner.delete({ url: "/round_building/1" });
 
@@ -252,7 +289,7 @@ describe("Round_building tests", () => {
                     building_id: 1,
                     deleted: true,
                     id: 1,
-                    round: { id: 1, name: "Round 1" },
+                    round: { id: 1, name: "Round 1", description: null },
                     round_id: 1,
                 },
                 {
@@ -274,7 +311,7 @@ describe("Round_building tests", () => {
                     building_id: 2,
                     deleted: false,
                     id: 2,
-                    round: { id: 2, name: "Round 2" },
+                    round: { id: 2, name: "Round 2", description: null },
                     round_id: 2,
                 },
             ];
@@ -401,7 +438,7 @@ describe("Round_building tests", () => {
 
             test("Find a nonexistent round_building", async () => {
                 await runner.get({
-                    url: "/round_building/0",
+                    url: "/round_building/100",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
@@ -413,7 +450,7 @@ describe("Round_building tests", () => {
                     building_id: 2,
                 };
                 await runner.patch({
-                    url: "/round_building/0",
+                    url: "/round_building/100",
                     data: newRoundBuilding,
                     expectedResponse: notFoundResponse,
                     statusCode: 404,
@@ -421,7 +458,7 @@ describe("Round_building tests", () => {
             });
             test("Delete a nonexistent round_building", async () => {
                 await runner.delete({
-                    url: "/round_building/0",
+                    url: "/round_building/100",
                     statusCode: 404,
                 });
             });
