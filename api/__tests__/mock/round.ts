@@ -3,10 +3,12 @@ import { prisma } from "./prisma";
 export async function initialiseRound() {
     const r1 = {
         name: "Round 1",
+        description: "Description of round 1",
     };
 
     const r2 = {
         name: "Round 2",
+        description: "Description of round 2",
     };
 
     await prisma.round.createMany({
