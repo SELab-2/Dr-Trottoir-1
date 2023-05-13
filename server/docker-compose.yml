@@ -63,6 +63,7 @@ services:
     restart: always
     networks:
       main:
+        ipv4_address: 10.0.0.13
     ports:
       - "2002:5432"
 
