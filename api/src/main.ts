@@ -45,6 +45,7 @@ if (process.env.NODE_ENV === "test") {
 const app = express();
 
 if (process.env.SENTRY_DSN) {
+    console.log("Initializing Sentry.io SDK");
     Sentry.init({
         dsn: process.env.SENTRY_DSN,
         integrations: [
@@ -64,13 +65,13 @@ if (process.env.SENTRY_DSN) {
         // We recommend adjusting this value in production
         tracesSampleRate: 1.0,
     });
-}
 
-// RequestHandler creates a separate execution context, so that all
-// transactions/spans/breadcrumbs are isolated across requests
-app.use(Sentry.Handlers.requestHandler());
-// TracingHandler creates a trace for every incoming request
-app.use(Sentry.Handlers.tracingHandler());
+    // RequestHandler creates a separate execution context, so that all
+    // transactions/spans/breadcrumbs are isolated across requests
+    app.use(Sentry.Handlers.requestHandler());
+    // TracingHandler creates a trace for every incoming request
+    app.use(Sentry.Handlers.tracingHandler());
+}
 
 // JSON API support
 app.use(
