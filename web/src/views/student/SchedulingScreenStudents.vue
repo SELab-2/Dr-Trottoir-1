@@ -117,7 +117,10 @@ import router from "@/router";
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { tryOrAlertAsync } from "@/try";
-import {getCompletedBuildings, roundStarted} from "@/assets/scripts/roundProgress";
+import {
+  getCompletedBuildings,
+  roundStarted,
+} from "@/assets/scripts/roundProgress";
 
 const snackbar = ref(false);
 const current_round_id = ref(0);
@@ -168,7 +171,6 @@ function showStartButton(schedule: {
   const day = new Date(schedule.schedule.day).getDate();
   return today === day && !roundStarted(schedule.progress);
 }
-
 
 async function saveStartTime() {
   await tryOrAlertAsync(async () => {

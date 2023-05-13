@@ -20,7 +20,7 @@
       variant="outlined"
       v-show="getImagesAmount(progress) !== 0"
     >
-      <v-icon icon="mdi-image-outline" class="mr-1" color="black"/>
+      <v-icon icon="mdi-image-outline" class="mr-1" color="black" />
       <p class="text-black">{{ getImagesAmount(progress) }}</p>
     </v-chip>
 
@@ -30,7 +30,7 @@
       variant="outlined"
       v-show="getCommentsAmount(progress) !== 0"
     >
-      <v-icon icon="mdi-comment-outline" class="mr-1" color="black"/>
+      <v-icon icon="mdi-comment-outline" class="mr-1" color="black" />
       <p class="text-black">{{ getCommentsAmount(progress) }}</p>
     </v-chip>
 
@@ -38,9 +38,12 @@
     <v-chip
       color="yellow-darken-3"
       variant="outlined"
-      v-show="roundStarted(progress) && getCompletedBuildings(progress) !== progress.length"
+      v-show="
+        roundStarted(progress) &&
+        getCompletedBuildings(progress) !== progress.length
+      "
     >
-      <v-icon icon="mdi-bicycle-cargo" class="mr-1"/>
+      <v-icon icon="mdi-bicycle-cargo" class="mr-1" />
       Actief
     </v-chip>
 
@@ -69,11 +72,15 @@
 <script lang="ts" setup>
 import router from "@/router";
 import CardLayout from "@/layouts/CardLayout.vue";
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
-import {ProgressQuery, Result, ScheduleQuery} from "@selab-2/groep-1-query";
-import {ref, Ref} from "vue";
-import {tryOrAlertAsync} from "@/try";
-import {getCommentsAmount, getCompletedBuildings, getImagesAmount, roundStarted} from "@/assets/scripts/roundProgress";
+import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import { ref, Ref } from "vue";
+import { tryOrAlertAsync } from "@/try";
+import {
+  getCommentsAmount,
+  getCompletedBuildings,
+  getImagesAmount,
+  roundStarted,
+} from "@/assets/scripts/roundProgress";
 
 const props = defineProps<{
   schedule: Result<ScheduleQuery>;
@@ -83,11 +90,9 @@ const progress: Ref<Array<Result<ProgressQuery>>> = ref([]);
 
 tryOrAlertAsync(async () => {
   progress.value = await new ProgressQuery().getAll({
-    schedule: props.schedule.id
+    schedule: props.schedule.id,
   });
 });
-
-
 </script>
 
 <style lang="sass">

@@ -17,11 +17,10 @@
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Gebouwen</h2>
         <div class="flex-grow-1"></div>
-        <RoundedButton icon="mdi-calendar" value="Wijzigen"/>
+        <RoundedButton icon="mdi-calendar" value="Wijzigen" />
       </div>
-
+      <MapComponent :buildings="buildings" />
       <div class="grid">
-        <img src="@/assets/images/dummyMap.png" class="map" alt="Map" />
         <BuildingCard
           class="inner"
           v-for="building in buildings"
@@ -96,15 +95,16 @@ import BuildingCard from "@/components/building/BuildingCard.vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import DateRange from "@/components/filter/DateRange.vue";
+import MapComponent from "@/components/maps/MapComponent.vue";
 
 /**
  * Get a date days from a given date
  * @param days Amount of dates from the given date
  * @param date Given date, defaults to moment of the function call
  */
-function daysFromDate(days: number, date: Date = new Date()): Date{
-  const day = 24 * 60 * 60 * 1000
-  return new Date(date.getTime() + days*day);
+function daysFromDate(days: number, date: Date = new Date()): Date {
+  const day = 24 * 60 * 60 * 1000;
+  return new Date(date.getTime() + days * day);
 }
 
 const planningStart: Ref<Date> = ref(new Date());
@@ -112,7 +112,6 @@ const planningEnd: Ref<Date> = ref(daysFromDate(6));
 
 const geschiedenisEnd: Ref<Date> = ref(daysFromDate(-1));
 const geschiedenisStart: Ref<Date> = ref(daysFromDate(-7));
-
 
 const route = useRoute();
 const round_id: number = Number(route.params.id);
@@ -183,8 +182,9 @@ function deleteRound() {
     display: flex
     flex-direction: column
 
-.inner:last-child:nth-child(even)
+.inner:last-child:nth-child(odd)
   grid-column: 1 / span 2
+
 
 .space-y-8
   & > *
