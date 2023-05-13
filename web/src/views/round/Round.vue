@@ -69,7 +69,7 @@
         <RoundCard
           :schedule="schedule"
           :status="'completed'"
-          v-for="schedule in schedules"
+          v-for="schedule in passedSchedules"
           v-bind:key="schedule.id"
           :comments="false"
           :images="0"
@@ -96,17 +96,25 @@ import router from "@/router";
 import { useRoute } from "vue-router";
 import DateRange from "@/components/filter/DateRange.vue";
 
-const planningStart = ref(new Date());
-const planningEnd = ref(new Date());
+function daysFromNow(days: number): Date{
+  let date = new Date();
+  const day = 24 * 60 * 60 * 1000
+  return new Date(date.getTime() + days*day);
+}
 
-const geschiedenisStart = ref(new Date());
-const geschiedenisEnd = ref(new Date());
+const planningStart: Ref<Date> = ref(new Date());
+const planningEnd: Ref<Date> = ref(daysFromNow(6));
+
+const geschiedenisEnd: Ref<Date> = ref(daysFromNow(-1));
+const geschiedenisStart: Ref<Date> = ref(daysFromNow(-7));
+
 
 const route = useRoute();
 const round_id: number = Number(route.params.id);
 
 const buildings: Ref<Array<Result<BuildingQuery>>> = ref([]);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
+const passedSchedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 const round = ref<Result<RoundQuery>>();
 
 tryOrAlertAsync(async () => {
@@ -122,7 +130,25 @@ tryOrAlertAsync(async () => {
 });
 
 tryOrAlertAsync(async () => {
-  schedules.value = await new ScheduleQuery().getAll({ take: 5 });
+  planningStart.value.setHours(0, 0, 0, 0);
+  planningEnd.value.setHours(23, 59, 59, 999);
+
+  // fetch future schedules
+  schedules.value = await new ScheduleQuery().getAll({
+    after: planningStart.value,
+    before: planningEnd.value,
+  });
+});
+
+tryOrAlertAsync(async () => {
+  geschiedenisStart.value.setHours(0, 0, 0, 0);
+  geschiedenisEnd.value.setHours(23, 59, 59, 999);
+
+  // fetch past schedules
+  passedSchedules.value = await new ScheduleQuery().getAll({
+    after: geschiedenisStart.value,
+    before: geschiedenisEnd.value,
+  });
 });
 
 function deleteRound() {
