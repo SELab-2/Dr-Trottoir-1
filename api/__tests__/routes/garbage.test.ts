@@ -50,6 +50,7 @@ describe("Garbage tests", () => {
                         deleted: false,
                         id: 1,
                         ivago_id: "ivago-1",
+                        description: "Description of building 1",
                         name: "Building 1",
                     },
                     building_id: 1,
@@ -72,6 +73,7 @@ describe("Garbage tests", () => {
                         deleted: false,
                         id: 2,
                         ivago_id: "ivago-2",
+                        description: "Description of building 2",
                         name: "Building 2",
                     },
                     building_id: 2,
@@ -97,6 +99,7 @@ describe("Garbage tests", () => {
                         id: 1,
                         name: "Building 1",
                         ivago_id: "ivago-1",
+                        description: "Description of building 1",
                         deleted: false,
                         address: {
                             id: 1,
@@ -127,6 +130,7 @@ describe("Garbage tests", () => {
                     id: 1,
                     name: "Building 1",
                     ivago_id: "ivago-1",
+                    description: "Description of building 1",
                     deleted: false,
                     address: {
                         id: 1,
@@ -162,6 +166,7 @@ describe("Garbage tests", () => {
                     id: 2,
                     name: "Building 2",
                     ivago_id: "ivago-2",
+                    description: "Description of building 2",
                     deleted: false,
                     address: {
                         id: 2,

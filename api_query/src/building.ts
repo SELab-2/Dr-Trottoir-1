@@ -9,6 +9,7 @@ export type BuildingQueryParameters = {
     skip: number;
     name: string;
     ivago_id: string;
+    description: string;
     syndicus_id: number;
     deleted: boolean;
     sort: string[];
@@ -21,6 +22,7 @@ type Element = Prisma.BuildingGetPayload<{
         id: true;
         name: true;
         ivago_id: true;
+        description: true;
         expected_time: true;
         deleted: true;
         hash: boolean;
@@ -33,6 +35,7 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
         id: true;
         name: true;
         ivago_id: true;
+        description: true;
         expected_time: true;
         deleted: true;
         hash: false;
