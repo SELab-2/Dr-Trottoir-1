@@ -23,6 +23,9 @@ export class RoundRouting extends Routing {
             skip: Parser.number(req.query["skip"], 0),
             where: {
                 name: req.query["name"],
+                description: {
+                    contains: req.query["description"],
+                },
             },
             include: RoundRouting.includes,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
