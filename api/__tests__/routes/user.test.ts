@@ -2,12 +2,7 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import {
-    deleteDatabaseData,
-    initialiseDatabase,
-    resetDatabase,
-    restoreTables,
-} from "../mock/database";
+import { resetDatabase, restoreTables } from "../mock/database";
 import {
     badRequestResponse,
     conflictResponse,
