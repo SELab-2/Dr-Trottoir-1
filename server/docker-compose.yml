@@ -100,6 +100,7 @@ services:
     environment:
       CORS: "https://sel2-1.ugent.be"
       NPM_AUTH_TOKEN: $NPM_AUTH_TOKEN
+      SENTRY_DSN: $SENTRY_DSN
     restart: always
     ports:
       - "8080:8080"
