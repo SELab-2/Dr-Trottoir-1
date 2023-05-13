@@ -28,7 +28,6 @@
           :building="building"
         ></BuildingCard>
       </div>
-      {{ planningStart }}
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Planning</h2>
         <div class="flex-grow-1"></div>
@@ -81,7 +80,12 @@
 </template>
 
 <script setup lang="ts">
-import { Result, RoundQuery, ScheduleQuery } from "@selab-2/groep-1-query";
+import {
+  BuildingQuery,
+  Result,
+  RoundQuery,
+  ScheduleQuery,
+} from "@selab-2/groep-1-query";
 import { ref, Ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
@@ -101,17 +105,19 @@ const geschiedenisEnd = ref(new Date());
 const route = useRoute();
 const round_id: number = Number(route.params.id);
 
-const buildings = ref([]);
+const buildings: Ref<Array<Result<BuildingQuery>>> = ref([]);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 const round = ref<Result<RoundQuery>>();
 
 tryOrAlertAsync(async () => {
   round.value = await new RoundQuery().getOne(round_id);
   // get the buildings
-
   // eslint-disable-next-line no-unsafe-optional-chaining
-  for (const building of round.value?.buildings) {
-    buildings.value.push(building.building);
+  for (const round_building of round.value?.buildings) {
+    const building = await new BuildingQuery().getOne(
+      round_building.building.id,
+    );
+    buildings.value.push(building);
   }
 });
 
@@ -122,7 +128,7 @@ tryOrAlertAsync(async () => {
 function deleteRound() {
   tryOrAlertAsync(async () => {
     await new RoundQuery().deleteOne({ id: round_id, name: round.value?.name });
-    router.push({ name: "round_overview" });
+    await router.push({ name: "round_overview" });
   });
 }
 </script>
