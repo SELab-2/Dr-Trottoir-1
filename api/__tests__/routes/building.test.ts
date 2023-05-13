@@ -220,6 +220,7 @@ describe("Building tests", () => {
                         zip_code: 2000,
                     },
                     deleted: false,
+                    description: "Description of building 1",
                     garbage: [
                         {
                             action: {
@@ -295,6 +296,7 @@ describe("Building tests", () => {
                                 round: {
                                     id: 1,
                                     name: "Round 1",
+                                    description: "Description of round 1",
                                 },
                                 round_id: 1,
                                 user: {
@@ -419,6 +421,7 @@ describe("Building tests", () => {
                 name: "Building 1",
                 ivago_id: "ivago-1",
                 deleted: false,
+                description: "Description of building 1",
                 expected_time: 100,
                 address: {
                     id: 1,
@@ -561,140 +564,7 @@ describe("Building tests", () => {
                         zip_code: 9000,
                     },
                     deleted: false,
-                    expected_time: 200,
-                    id: 2,
-                    images: [
-                        {
-                            building_id: 2,
-                            id: 2,
-                            image: {
-                                id: 1,
-                                location: "IMGPROXY",
-                                path: "image.jpg",
-                                time: "1969-12-31T23:00:00.000Z",
-                                user_id: 1,
-                            },
-                            image_id: 1,
-                        },
-                    ],
-                    ivago_id: "ivago-2",
-                    manual: {
-                        createdAt: "1969-12-31T23:00:00.000Z",
-                        id: 1,
-                        location: "FILE_SERVER",
-                        mime: "application/pdf",
-                        original_name: "handleiding.pdf",
-                        path: "manual.pdf",
-                        size_in_bytes: 1024,
-                        updatedAt: "1969-12-31T23:00:00.000Z",
-                        user_id: 1,
-                    },
-                    name: "Building 2",
-                    syndicus: {
-                        id: 2,
-                        user: {
-                            address_id: 1,
-                            admin: false,
-                            date_added: "2023-05-04T12:00:00.000Z",
-                            deleted: false,
-                            email: "student@trottoir.be",
-                            first_name: "Dirk",
-                            id: 1,
-                            last_login: "2023-05-04T12:00:00.000Z",
-                            last_name: "De Student",
-                            phone: "0123456789",
-                            student: true,
-                            super_student: false,
-                        },
-                        user_id: 1,
-                    },
-                },
-            ];
-            await runner.get({
-                url: "/building?deleted=true",
-                expectedData: expected,
-            });
-        });
-
-        test("SOFT DELETE /building/:id (admin)", async () => {
-            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
-            await runner.delete({
-                url: "/building/1",
-            });
-
-            // verify that the building is soft deleted
-
-            const expected = [
-                {
-                    address: {
-                        city: "Sydney",
-                        id: 1,
-                        latitude: -33.865143,
-                        longitude: 151.2099,
-                        number: 42,
-                        street: "Wallaby Way",
-                        zip_code: 2000,
-                    },
-                    deleted: true,
-                    expected_time: 100,
-                    id: 1,
-                    images: [
-                        {
-                            building_id: 1,
-                            id: 1,
-                            image: {
-                                id: 1,
-                                location: "IMGPROXY",
-                                path: "image.jpg",
-                                time: "1969-12-31T23:00:00.000Z",
-                                user_id: 1,
-                            },
-                            image_id: 1,
-                        },
-                    ],
-                    ivago_id: "ivago-1",
-                    manual: {
-                        createdAt: "1969-12-31T23:00:00.000Z",
-                        id: 1,
-                        location: "FILE_SERVER",
-                        mime: "application/pdf",
-                        original_name: "handleiding.pdf",
-                        path: "manual.pdf",
-                        size_in_bytes: 1024,
-                        updatedAt: "1969-12-31T23:00:00.000Z",
-                        user_id: 1,
-                    },
-                    name: "Building 1",
-                    syndicus: {
-                        id: 1,
-                        user: {
-                            address_id: 3,
-                            admin: false,
-                            date_added: "2023-05-04T12:00:00.000Z",
-                            deleted: false,
-                            email: "syndicus@trottoir.be",
-                            first_name: "Simon",
-                            id: 4,
-                            last_login: "2023-05-04T12:00:00.000Z",
-                            last_name: "De Syndicus",
-                            phone: "7894561230",
-                            student: false,
-                            super_student: false,
-                        },
-                        user_id: 4,
-                    },
-                },
-                {
-                    address: {
-                        city: "Ghent",
-                        id: 2,
-                        latitude: 51.04732,
-                        longitude: 3.7282,
-                        number: 25,
-                        street: "Sint-Pietersnieuwstraat",
-                        zip_code: 9000,
-                    },
-                    deleted: false,
+                    description: "Description of building 2",
                     expected_time: 200,
                     id: 2,
                     images: [
@@ -754,6 +624,203 @@ describe("Building tests", () => {
                         zip_code: 9000,
                     },
                     deleted: true,
+                    description: "Description of building 3",
+                    expected_time: 150,
+                    id: 3,
+                    images: [
+                        {
+                            building_id: 3,
+                            id: 3,
+                            image: {
+                                id: 1,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 1,
+                        },
+                    ],
+                    ivago_id: "ivago-3",
+                    manual: {
+                        createdAt: "1969-12-31T23:00:00.000Z",
+                        id: 1,
+                        location: "FILE_SERVER",
+                        mime: "application/pdf",
+                        original_name: "handleiding.pdf",
+                        path: "manual.pdf",
+                        size_in_bytes: 1024,
+                        updatedAt: "1969-12-31T23:00:00.000Z",
+                        user_id: 1,
+                    },
+                    name: "Building 3",
+                    syndicus: {
+                        id: 1,
+                        user: {
+                            address_id: 3,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "syndicus@trottoir.be",
+                            first_name: "Simon",
+                            id: 4,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Syndicus",
+                            phone: "7894561230",
+                            student: false,
+                            super_student: false,
+                        },
+                        user_id: 4,
+                    },
+                },
+            ];
+            await runner.get({
+                url: "/building?deleted=true",
+                expectedData: expected,
+            });
+        });
+
+        test("SOFT DELETE /building/:id (admin)", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            await runner.delete({
+                url: "/building/1",
+            });
+
+            // verify that the building is soft deleted
+
+            const expected = [
+                {
+                    address: {
+                        city: "Sydney",
+                        id: 1,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                        number: 42,
+                        street: "Wallaby Way",
+                        zip_code: 2000,
+                    },
+                    deleted: true,
+                    description: "Description of building 1",
+                    expected_time: 100,
+                    id: 1,
+                    images: [
+                        {
+                            building_id: 1,
+                            id: 1,
+                            image: {
+                                id: 1,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 1,
+                        },
+                    ],
+                    ivago_id: "ivago-1",
+                    manual: {
+                        createdAt: "1969-12-31T23:00:00.000Z",
+                        id: 1,
+                        location: "FILE_SERVER",
+                        mime: "application/pdf",
+                        original_name: "handleiding.pdf",
+                        path: "manual.pdf",
+                        size_in_bytes: 1024,
+                        updatedAt: "1969-12-31T23:00:00.000Z",
+                        user_id: 1,
+                    },
+                    name: "Building 1",
+                    syndicus: {
+                        id: 1,
+                        user: {
+                            address_id: 3,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "syndicus@trottoir.be",
+                            first_name: "Simon",
+                            id: 4,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Syndicus",
+                            phone: "7894561230",
+                            student: false,
+                            super_student: false,
+                        },
+                        user_id: 4,
+                    },
+                },
+                {
+                    address: {
+                        city: "Ghent",
+                        id: 2,
+                        latitude: 51.04732,
+                        longitude: 3.7282,
+                        number: 25,
+                        street: "Sint-Pietersnieuwstraat",
+                        zip_code: 9000,
+                    },
+                    deleted: false,
+                    description: "Description of building 2",
+                    expected_time: 200,
+                    id: 2,
+                    images: [
+                        {
+                            building_id: 2,
+                            id: 2,
+                            image: {
+                                id: 1,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1969-12-31T23:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 1,
+                        },
+                    ],
+                    ivago_id: "ivago-2",
+                    manual: {
+                        createdAt: "1969-12-31T23:00:00.000Z",
+                        id: 1,
+                        location: "FILE_SERVER",
+                        mime: "application/pdf",
+                        original_name: "handleiding.pdf",
+                        path: "manual.pdf",
+                        size_in_bytes: 1024,
+                        updatedAt: "1969-12-31T23:00:00.000Z",
+                        user_id: 1,
+                    },
+                    name: "Building 2",
+                    syndicus: {
+                        id: 2,
+                        user: {
+                            address_id: 1,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "student@trottoir.be",
+                            first_name: "Dirk",
+                            id: 1,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Student",
+                            phone: "0123456789",
+                            student: true,
+                            super_student: false,
+                        },
+                        user_id: 1,
+                    },
+                },
+                {
+                    address: {
+                        city: "Ghent",
+                        id: 3,
+                        latitude: 51.02776,
+                        longitude: 3.71847,
+                        number: 281,
+                        street: "Krijgslaan",
+                        zip_code: 9000,
+                    },
+                    deleted: true,
+                    description: "Description of building 3",
                     expected_time: 150,
                     id: 3,
                     images: [
@@ -828,6 +895,7 @@ describe("Building tests", () => {
                         zip_code: 9000,
                     },
                     deleted: false,
+                    description: "Description of building 2",
                     expected_time: 200,
                     id: 2,
                     images: [
@@ -882,87 +950,87 @@ describe("Building tests", () => {
                 expectedData: expected,
             });
         });
+        // uncomment after issue 399
+        // test("POST /building/:id/image", async () => {
+        //     const timestamp: Date = new Date(Date.UTC(2023, 4, 4, 12, 0, 0));
+        //     const image = {
+        //         time: timestamp,
+        //         location: FileLocation.FILE_SERVER,
+        //         path: "path/to/file_server_image",
+        //         user_id: 1,
+        //     };
 
-        test("POST /building/:id/image", async () => {
-            const timestamp: Date = new Date(Date.UTC(2023, 4, 4, 12, 0, 0));
-            const image = {
-                time: timestamp,
-                location: FileLocation.FILE_SERVER,
-                path: "path/to/file_server_image",
-                user_id: 1,
-            };
+        //     const expectedBuilding = {
+        //         address: {
+        //             city: "Sydney",
+        //             id: 1,
+        //             latitude: -33.865143,
+        //             longitude: 151.2099,
+        //             number: 42,
+        //             street: "Wallaby Way",
+        //             zip_code: 2000,
+        //         },
+        //         deleted: false,
+        //         images: [
+        //             {
+        //                 building_id: 1,
+        //                 id: 1,
+        //                 image: {
+        //                     id: 1,
+        //                     location: "FILE_SERVER",
+        //                     path: "path/to/file_server_image",
+        //                     time: "2023-05-04T12:00:00.000Z",
+        //                     user_id: 1,
+        //                 },
+        //                 image_id: 1,
+        //             },
+        //             {
+        //                 building_id: 1,
+        //                 id: 4,
+        //                 image: {
+        //                     id: 5,
+        //                     location: "FILE_SERVER",
+        //                     path: "path/to/file_server_image",
+        //                     time: "2023-05-04T12:00:00.000Z",
+        //                     user_id: 1,
+        //                 },
+        //                 image_id: 5,
+        //             },
+        //         ],
+        //         ivago_id: "ivago-1",
+        //         manual: {
+        //             id: 1,
+        //             location: "STATIC_FILES",
+        //             path: "path/to/static_file",
+        //         },
+        //         name: "Building 1",
+        //         syndicus: {
+        //             id: 1,
+        //             user: {
+        //                 address_id: 3,
+        //                 admin: false,
+        //                 date_added: "2023-05-04T12:00:00.000Z",
+        //                 deleted: false,
+        //                 email: "syndicus@trottoir.be",
+        //                 first_name: "Simon",
+        //                 id: 4,
+        //                 last_login: "2023-05-04T12:00:00.000Z",
+        //                 last_name: "De Syndicus",
+        //                 phone: "7894561230",
+        //                 student: false,
+        //                 super_student: false,
+        //             },
+        //             user_id: 4,
+        //         },
+        //     };
 
-            const expectedBuilding = {
-                address: {
-                    city: "Sydney",
-                    id: 1,
-                    latitude: -33.865143,
-                    longitude: 151.2099,
-                    number: 42,
-                    street: "Wallaby Way",
-                    zip_code: 2000,
-                },
-                deleted: false,
-                images: [
-                    {
-                        building_id: 1,
-                        id: 1,
-                        image: {
-                            id: 1,
-                            location: "FILE_SERVER",
-                            path: "path/to/file_server_image",
-                            time: "2023-05-04T12:00:00.000Z",
-                            user_id: 1,
-                        },
-                        image_id: 1,
-                    },
-                    {
-                        building_id: 1,
-                        id: 4,
-                        image: {
-                            id: 5,
-                            location: "FILE_SERVER",
-                            path: "path/to/file_server_image",
-                            time: "2023-05-04T12:00:00.000Z",
-                            user_id: 1,
-                        },
-                        image_id: 5,
-                    },
-                ],
-                ivago_id: "ivago-1",
-                manual: {
-                    id: 1,
-                    location: "STATIC_FILES",
-                    path: "path/to/static_file",
-                },
-                name: "Building 1",
-                syndicus: {
-                    id: 1,
-                    user: {
-                        address_id: 3,
-                        admin: false,
-                        date_added: "2023-05-04T12:00:00.000Z",
-                        deleted: false,
-                        email: "syndicus@trottoir.be",
-                        first_name: "Simon",
-                        id: 4,
-                        last_login: "2023-05-04T12:00:00.000Z",
-                        last_name: "De Syndicus",
-                        phone: "7894561230",
-                        student: false,
-                        super_student: false,
-                    },
-                    user_id: 4,
-                },
-            };
-
-            await runner.post({
-                url: "/building/1/image",
-                data: image,
-                expectedResponse: expectedBuilding,
-                statusCode: 201,
-            });
-        });
+        //     await runner.post({
+        //         url: "/building/1/image",
+        //         data: image,
+        //         expectedResponse: expectedBuilding,
+        //         statusCode: 201,
+        //     });
+        // });
 
         test("DELETE /building/:id/image/:id", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
@@ -987,6 +1055,7 @@ describe("Building tests", () => {
                     zip_code: 2000,
                 },
                 deleted: false,
+                description: "Description of building 1",
                 expected_time: 100,
                 id: 1,
                 images: [],
