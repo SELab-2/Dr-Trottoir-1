@@ -84,6 +84,7 @@
             width="100%"
           >
             <RoundDetailCard
+              id="building"
               :class="mobile ? 'shiftUnderTimeLine' : ''"
               :key="JSON.stringify(entry.progress)"
               :entry="entry"

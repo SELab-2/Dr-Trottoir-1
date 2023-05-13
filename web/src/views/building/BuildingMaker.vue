@@ -4,17 +4,20 @@
     <BorderCard prepend-icon="mdi-home" class="mb-3 px-4" title="Gebouw info">
       <v-text-field
         required
+        id="name"
         type="text"
         v-model="building.name"
         label="Building Name"
       ></v-text-field>
       <v-text-field
         required
+        id="ivagoid"
         type="text"
         v-model="building.ivagoId"
         label="Ivago id"
       ></v-text-field>
       <v-select
+        id="syndicus"
         label="Syndicus"
         :items="['Jeff', 'Elon', 'Tim', 'Bill', 'Warren', 'Steve']"
         v-model="building.syndicus"
@@ -51,6 +54,7 @@
           <v-col>
             <v-text-field
               required
+              id="longitude"
               type="number"
               v-model="address2.longitude"
               label="Longitude"
@@ -59,6 +63,7 @@
           <v-col>
             <v-text-field
               required
+              id="latitude"
               type="number"
               v-model="address2.latitude"
               label="Latitude"
@@ -67,6 +72,7 @@
         </v-row>
         <!-- addres forum gebruiken -->
         <AddressForm
+          id="addressform"
           @onUpdate="(newAddress) => (address2 = newAddress)"
         ></AddressForm>
       </div>
@@ -82,6 +88,7 @@
     </BorderCard>
     <div class="d-flex flex-row-reverse mt-3">
       <v-btn
+        id="submit"
         @click="submit"
         to="/gebouw/0"
         type="submit"

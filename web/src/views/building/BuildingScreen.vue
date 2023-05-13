@@ -12,6 +12,7 @@
           <h1 class="building-name">{{ building.name }}</h1>
           <RoundedButton
             v-if="!useAuthStore().auth?.student"
+            id="edit"
             @clicked="() => router.push({ name: 'building_new' })"
             icon="mdi-pencil"
             class="mt-2"
@@ -98,6 +99,7 @@
               <input type="date" v-model="taskEndDate" @change="getTasks()" />
             </div>
             <RoundedButton
+              id="addgarbage"
               icon="mdi-plus"
               class="mx-1 mt-1"
               value="Toevoegen"

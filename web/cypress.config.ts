@@ -3,7 +3,7 @@ import { defineConfig } from "cypress";
 export default defineConfig({
   e2e: {
     supportFile: "cypress/support/e2e.ts",
-    // baseUrl: "https://sel2-1.ugent.be/",
+    //baseUrl: "https://sel2-1.ugent.be/",
     baseUrl: "http://localhost:3000/",
     setupNodeEvents(on, config) {
       // implement node event listeners here

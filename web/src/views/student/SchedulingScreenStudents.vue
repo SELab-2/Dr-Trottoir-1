@@ -21,6 +21,7 @@
       <BorderCard
         v-for="item in day.list"
         :key="item.schedule.id"
+        id="round"
         class="mb-3 mx-1"
         :title="item.schedule.round.name"
         @click="

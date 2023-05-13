@@ -14,14 +14,13 @@ describe('superstudent tests', () => {
     // press create button
     cy.get('#newround').click()
     // add buildings
-    cy.get('#building').eq(0).click() // not sure if this actually works yet
-    cy.get('#building').eq(0).click()
+    cy.get('#building').first().click()
+    cy.get('#building').first().click()
     // save
-    //cy.get('#createround').click()
+    cy.get('#createround').click()
     // confirm?
-    // this shouldn't create a new round
+    // this gives QueryError2
     // check for popup on screen?
-    //cy.contains("test round")
   })
 
   it('create round, no buildings', () => {
@@ -32,11 +31,10 @@ describe('superstudent tests', () => {
     // add name
     cy.get('#roundname').type("test round")
     // save
-    //cy.get('#createround').click()
+    cy.get('#createround').click()
     // confirm?
-    // this shouldn't create a new round
+    // this gives QueryError2
     // check for popup on screen?
-    //cy.contains("test round")
   })
 
   it('create round succes', () => {
@@ -50,13 +48,14 @@ describe('superstudent tests', () => {
     // add name
     cy.get('#roundname').type("test round")
     // save
-    //cy.get('#createround').click()
+    cy.get('#createround').click()
     // confirm?
     // we are rerouted to the round detail of the new round
-    //cy.contains("test round")
+    cy.contains("test round")
+    cy.contains("Planning")
     // check if it also appears in the list
-    //cy.get('#rounds').click()
-    //cy.contains("test round")
+    cy.get('#rounds').click()
+    cy.contains("test round")
   })
 
   it('edit round', () => {
@@ -101,7 +100,7 @@ describe('superstudent tests', () => {
     cy.get('#rounds').click()
     cy.contains('test round').click()
     // this will work if the last added schedule is the first one in the list
-    cy.get('#buildingcard').eq(0).then(() => {
+    cy.get('#buildingcard').first().then(() => {
       cy.get('#date').contains(new Date("2023-06-01").toLocaleDateString())
       cy.get('#student').contains("Dirk De Student")
     })
@@ -141,6 +140,7 @@ describe('superstudent tests', () => {
     cy.contains(round)
     // full name wasn't visible in the round selection, but it is once you clicked on the round
     cy.contains("Dirk De Student")
+    // gebouw cards uitklappen om opmerkingen/afbeeldingen te zien
   })
 
 })

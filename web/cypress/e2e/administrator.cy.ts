@@ -30,8 +30,10 @@ describe('admin tests', () => {
       cy.get('#administrator').check()
     })
     cy.get('#create').click()
+    cy.get('#submit').click()
     // check if user in userlist
     cy.contains('test naam')
+    // click on user and check if all fields are ok? or is this more for backend testing?
   })
 
   it('edit a user', () => {
@@ -40,7 +42,7 @@ describe('admin tests', () => {
     // click user
     cy.contains('test naam').click()
     // press edit button
-    cy.get('#edit').click()
+    cy.get('#editcancel').click()
     // alter user data
     // most of this has been tested in the student tests,
     // however only admins can change name, roles or password of a user
@@ -80,49 +82,95 @@ describe('admin tests', () => {
     // not yet implemented
   })
 
+  it('add building', () => {
+    cy.get('#buildings').click()
+    // press create button
+    cy.get('#newbuilding').click()
+    // add building data
+    cy.get('#name').type('test building')
+    cy.get('#ivagoid').type('1234')
+    // syndicus still hardcoded
+    // cy.get('#syndicus').select()
+    cy.get('#longitude').type("12")
+    cy.get('#latitude').type("34")
+    cy.get('#addressform').then(() => {
+      cy.get('#street').type("teststraat")
+      cy.get('#streetnr').type("1")
+      cy.get('#city').type("test")
+      cy.get('#zipcode').type("1111")
+    })
+    cy.get('#submit').click()
+    // save
+    // we should be on the info page of the building
+    cy.contains('test building')
+    cy.contains('Taken')
+  })
+
   it('add garbage schedule to a building', () => {
     cy.get('#buildings').click()
     // select building
     cy.contains('Building 1').click()
     // add garbage
+    cy.get('#addgarbage').click()
+    cy.get('#garbage').select('REST')
+    cy.get('#action').select('buiten zetten')
+    cy.get('frequency').select('wekelijks')
+    // TODO: add an actual date
+    cy.get('startdate').type('')
+    cy.get('#enddate').type('')
+    cy.get('time').type('2000')
+    cy.get('#addtoschedule').click()
+    cy.get('#schedule').click()
+    // check if schedule is added
   })
 
   it('edit garbage schedule of a building', () => {
     cy.get('#buildings').click()
     // select building
-    cy.contains('Building 1').click()
+    cy.contains('test building').click()
     //edit garbage
   })
 
   it('delete garbage schedule of a building', () => {
     cy.get('#buildings').click()
     // select building
-    cy.contains('Building 1').click()
+    cy.contains('test building').click()
     // delete garbage
   })
 
-  it('add building', () => {
-    cy.get('#buildings').click()
-    // press create button
-    cy.get('#newbuilding').click()
-    // add building data
-    // save
-  })
-
   it('edit building', () => {
+    cy.get('#buildings').click()
     // press building from buildings overview
-    cy.get('#building').first().click()
+    cy.contains('test building').click()
     // press edit button
+    cy.contains('#edit').click()
     // alter building data
+    // TODO: actually change some of this data
+    cy.get('#name').type('test building')
+    cy.get('#ivagoid').type('1234')
+    // syndicus still hardcoded
+    // cy.get('#syndicus').select()
+    cy.get('#longitude').type("12")
+    cy.get('#latitude').type("34")
+    cy.get('#addressform').then(() => {
+      cy.get('#street').type("teststraat")
+      cy.get('#streetnr').type("1")
+      cy.get('#city').type("test")
+      cy.get('#zipcode').type("1111")
+    })
+    cy.get('#submit').click()
+    // save
+    // we should be on the info page of the building
+    cy.contains('test building')
+    cy.contains('Taken')
     // save
   })
 
-  it('add garbageschedule building', () => {
-    // press building from buildings overview (right now a bit unclear as to how to do this, with the v-for element)
-    cy.get('#building').first().click()
-    // press add-garbage button
-    // add data
-    // save
+  it('delete building', () => {
+    cy.contains('test building').click()
+    cy.get('#edit').click()
+    // delete
+    // confirm?
   })
 
 })

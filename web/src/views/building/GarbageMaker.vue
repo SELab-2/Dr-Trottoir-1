@@ -15,12 +15,14 @@
 
       <div class="flex">
         <v-select
+          id="garbage"
           v-model="garbageType"
           :items="garbageTypes"
           label="Garbage Type"
         ></v-select>
-        <v-select v-model="action" :items="actions" label="Actie"></v-select>
+        <v-select id="action" v-model="action" :items="actions" label="Actie"></v-select>
         <v-select
+          id="frequency"
           v-model="frequency"
           :items="frequenties"
           label="Frequentie"
@@ -29,21 +31,24 @@
 
       <div class="flex">
         <v-text-field
+          id="startdate"
           v-model="startDate"
           label="Start Datum"
           type="date"
         ></v-text-field>
         <v-text-field
+          id="enddate"
           v-model="endDate"
           v-if="frequency !== 'enkel'"
           label="Einde Datum"
           type="date"
         ></v-text-field>
-        <v-text-field v-model="time" label="Tijd" type="time"></v-text-field>
+        <v-text-field id="time" v-model="time" label="Tijd" type="time"></v-text-field>
       </div>
 
       <div class="flex">
         <v-btn
+          id="schedule"
           prepend-icon="mdi-check"
           variant="tonal"
           @click="submit"
@@ -51,6 +56,7 @@
           >Inplannen</v-btn
         >
         <v-btn
+          id="addtoschedule"
           prepend-icon="mdi-plus-circle"
           @click="add"
           variant="tonal"
@@ -63,7 +69,7 @@
           "
           >Toevoegen</v-btn
         >
-        <v-btn prepend-icon="mdi-delete" variant="tonal" @click="clearAll"
+        <v-btn id="clearall" prepend-icon="mdi-delete" variant="tonal" @click="clearAll"
           >Alles verwijderen</v-btn
         >
       </div>

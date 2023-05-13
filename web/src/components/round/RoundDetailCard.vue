@@ -41,6 +41,7 @@
             "
           />
           <RoundedButton
+            id="start"
             class="mr-1"
             v-else-if="isStudent"
             value="start"
@@ -59,6 +60,7 @@
             "
           />
           <RoundedButton
+            id="end"
             class="mr-1"
             v-else-if="progress.arrival && isStudent"
             value="eindig"
