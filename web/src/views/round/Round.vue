@@ -28,6 +28,7 @@
           :building="building"
         ></BuildingCard>
       </div>
+      {{ planningStart }}
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Planning</h2>
         <div class="flex-grow-1"></div>
@@ -80,12 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  BuildingQuery,
-  Result,
-  RoundQuery,
-  ScheduleQuery,
-} from "@selab-2/groep-1-query";
+import { Result, RoundQuery, ScheduleQuery } from "@selab-2/groep-1-query";
 import { ref, Ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
@@ -112,14 +108,12 @@ const round = ref<Result<RoundQuery>>();
 tryOrAlertAsync(async () => {
   round.value = await new RoundQuery().getOne(round_id);
   // get the buildings
-  if(round.value) {
-    for (const building of round.value?.buildings) {
-      buildings.value.push(building.building)
-    }
+
+  // eslint-disable-next-line no-unsafe-optional-chaining
+  for (const building of round.value?.buildings) {
+    buildings.value.push(building.building);
   }
 });
-
-
 
 tryOrAlertAsync(async () => {
   schedules.value = await new ScheduleQuery().getAll({ take: 5 });
