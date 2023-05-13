@@ -96,17 +96,21 @@ import router from "@/router";
 import { useRoute } from "vue-router";
 import DateRange from "@/components/filter/DateRange.vue";
 
-function daysFromNow(days: number): Date{
-  let date = new Date();
+/**
+ * Get a date days from a given date
+ * @param days Amount of dates from the given date
+ * @param date Given date, defaults to moment of the function call
+ */
+function daysFromDate(days: number, date: Date = new Date()): Date{
   const day = 24 * 60 * 60 * 1000
   return new Date(date.getTime() + days*day);
 }
 
 const planningStart: Ref<Date> = ref(new Date());
-const planningEnd: Ref<Date> = ref(daysFromNow(6));
+const planningEnd: Ref<Date> = ref(daysFromDate(6));
 
-const geschiedenisEnd: Ref<Date> = ref(daysFromNow(-1));
-const geschiedenisStart: Ref<Date> = ref(daysFromNow(-7));
+const geschiedenisEnd: Ref<Date> = ref(daysFromDate(-1));
+const geschiedenisStart: Ref<Date> = ref(daysFromDate(-7));
 
 
 const route = useRoute();
