@@ -44,6 +44,7 @@
       <div class="d-flex mb-4">
         <v-spacer></v-spacer
         ><v-btn
+          id="save"
           @click="$emit('confirm', photo, isPhoto)"
           color="primary"
           prepend-icon="mdi-check"

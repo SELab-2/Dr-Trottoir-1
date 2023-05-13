@@ -51,10 +51,10 @@ describe("images tests", () => {
   it('photomaker test', () => {
     cy.mount(PhotoMaker, {})
     // all info present, you can add comments and labels and select a file
-    cy.contains("Maak foto").should('be.visible')
+    cy.contains("Foto toevoegen").should('be.visible')
     cy.contains("Selecteer afbeelding").should('be.visible')
+    cy.contains("Titel").should('be.visible')
     cy.contains("Commentaar").should('be.visible')
-    cy.contains("Foto label").should('be.visible')
     cy.get('#comment').should('have.value', '')
     cy.get('#comment').type('New Comment')
     cy.get('#comment').should('have.value', 'New Comment')
@@ -63,6 +63,7 @@ describe("images tests", () => {
     cy.get('#label').should('have.value', 'New Label')
     cy.get("#select").selectFile('src/assets/images/drtroittoir_logo.png')
     cy.contains("drtroittoir_logo.png").should('be.visible')
+    cy.get("#save").should('be.visible')
   })
 
 })

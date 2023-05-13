@@ -2,9 +2,9 @@ import RoundDetailCard from '@/components/round/RoundDetailCard.vue'
 import RoundCard from '@/components/round/RoundCard.vue'
 
 describe("round tests", () => {
-  describe.only('RoundDetailCard tests', () => {
+  describe('RoundDetailCard tests', () => {
     // TODO
-    it.only('delete this test once others work', () => {
+    it('delete this test once others work', () => {
       cy.mount(RoundDetailCard, {
         props:{
           entry: {
@@ -208,14 +208,15 @@ describe("round tests", () => {
             progress: [],
           },
           status: "completed",
+          comments: true,
+          images: 3,
         }
       })
       // all info present
       cy.contains((new Date()).toLocaleDateString()).should('be.visible')
       cy.contains("test gebruiker").should('be.visible')
-      // TODO change these lines once nothing is hardcoded anymore
-      cy.contains("Opmerkingen").should('be.visible') // this is hardcoded with a random chance, so will sometimes fail
-      cy.contains('10').should('be.visible') // this is still a hardcoded number for now
+      cy.contains("Opmerkingen").should('be.visible')
+      cy.get('#images').contains('3').should('be.visible')
     })
 
     it('roundcard active', () => {
@@ -233,12 +234,16 @@ describe("round tests", () => {
             progress: [],
           },
           status: "active",
+          comments: false,
+          images: 4,
         }
       })
       // all info present
       cy.contains('Actief').should('be.visible')
       cy.contains((new Date()).toLocaleDateString()).should('be.visible')
       cy.contains("test gebruiker").should('be.visible')
+      cy.contains("Opmerkingen").should('not.exist')
+      cy.get('#images').contains('4').should('be.visible')
     })
 
     it('roundcard scheduled', () => {
@@ -256,14 +261,15 @@ describe("round tests", () => {
             progress: [],
           },
           status: "scheduled",
+          comments: false,
+          images: 0,
         }
       })
       // all info present
       cy.contains('Actief').should('not.exist')
       cy.contains((new Date()).toLocaleDateString()).should('be.visible')
-      // TODO change these lines once nothing is hardcoded anymore
       cy.contains('Opmerkingen').should('not.exist')
-      cy.contains('10').should('not.exist')
+      cy.get('#images').should('not.exist')
     })
   })
 })

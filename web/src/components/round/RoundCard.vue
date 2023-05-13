@@ -27,6 +27,7 @@
       value="Opmerkingen"
     ></RoundedButton>
     <RoundedButton
+      id="images"
       v-if="images > 0"
       icon="mdi-image"
       :value="images.toString()"
