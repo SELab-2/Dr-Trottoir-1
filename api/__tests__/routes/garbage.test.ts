@@ -32,7 +32,7 @@ describe("Garbage tests", () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
         });
 
-        describe("GET /garbage with different roles", async () => {
+        describe("GET /garbage with different roles", () => {
             afterAll(() => {
                 runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
             });
@@ -139,7 +139,7 @@ describe("Garbage tests", () => {
             });
         });
 
-        describe("GET /garbage/:id with different roles", async () => {
+        describe("GET /garbage/:id with different roles", () => {
             afterAll(() => {
                 runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
             });
