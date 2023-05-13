@@ -52,6 +52,8 @@
           v-bind:key="schedule.id"
           :schedule="schedule"
           :status="schedule === schedules[0] ? 'active' : 'scheduled'"
+          :comments="false"
+          :images="0"
         ></RoundCard>
       </div>
 
@@ -67,6 +69,8 @@
           :status="'completed'"
           v-for="schedule in schedules"
           v-bind:key="schedule.id"
+          :comments="false"
+          :images="0"
         />
       </div>
     </div>

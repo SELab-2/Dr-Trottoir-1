@@ -11,6 +11,7 @@ export class BuildingValidator extends Validator {
                 skip: Joi.number(),
                 name: Joi.string(),
                 ivago_id: Joi.string(),
+                description: Joi.string().trim(),
                 syndicus_id: Joi.number(),
                 sort: Joi.string(),
                 ord: Joi.string(),
@@ -34,6 +35,7 @@ export class BuildingValidator extends Validator {
             body: Joi.object({
                 name: Joi.string().min(1).required(),
                 ivago_id: Joi.string().min(1).required(),
+                description: Joi.string().trim(),
                 address_id: Joi.number().positive().required(),
                 manual_id: Joi.number().positive().required(),
                 syndicus_id: Joi.number().positive().required(),
@@ -53,6 +55,7 @@ export class BuildingValidator extends Validator {
                     id: Joi.ref("$params.id"),
                     name: Joi.string().min(1),
                     ivago_id: Joi.string().min(1),
+                    description: Joi.string().trim(),
                     address_id: Joi.number().positive(),
                     manual_id: Joi.number().positive(),
                     syndicus_id: Joi.number().positive(),

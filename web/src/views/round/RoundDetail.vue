@@ -247,14 +247,12 @@ const lastBuilding = ref();
 
 await tryOrAlertAsync(async () => {
   data.value = await new ScheduleQuery().getOne(schedule_id);
-
   for (const progress of await new ProgressQuery().getAll({
     schedule: schedule_id,
-    user: useAuthStore().auth?.id,
+    user: data.value.user.id,
   })) {
     progressItems.value.set(progress.building_id, progress);
   }
-
   if (progressItems.value.size !== data.value?.round.buildings.length) {
     throw new Error("Not every building has a progress item");
   }

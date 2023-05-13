@@ -2,12 +2,7 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import {
-    deleteDatabaseData,
-    initialiseDatabase,
-    resetDatabase,
-    restoreTables,
-} from "../mock/database";
+import { resetDatabase, restoreTables } from "../mock/database";
 import {
     badRequestForeignKey,
     badRequestResponse,
@@ -49,6 +44,7 @@ describe("Syndicus tests", () => {
                             deleted: false,
                             id: 1,
                             ivago_id: "ivago-1",
+                            description: "Description of building 1",
                             name: "Building 1",
                         },
                         {
@@ -64,6 +60,7 @@ describe("Syndicus tests", () => {
                             deleted: true,
                             id: 3,
                             ivago_id: "ivago-3",
+                            description: "Description of building 3",
                             name: "Building 3",
                         },
                     ],
@@ -108,6 +105,7 @@ describe("Syndicus tests", () => {
                             deleted: false,
                             id: 2,
                             ivago_id: "ivago-2",
+                            description: "Description of building 2",
                             name: "Building 2",
                         },
                     ],
@@ -178,6 +176,7 @@ describe("Syndicus tests", () => {
                             id: 1,
                             name: "Building 1",
                             ivago_id: "ivago-1",
+                            description: "Description of building 1",
                             deleted: false,
                             address: {
                                 id: 1,
@@ -193,6 +192,7 @@ describe("Syndicus tests", () => {
                             id: 3,
                             name: "Building 3",
                             ivago_id: "ivago-3",
+                            description: "Description of building 3",
                             deleted: true,
                             address: {
                                 id: 3,
@@ -286,6 +286,7 @@ describe("Syndicus tests", () => {
                         id: 1,
                         name: "Building 1",
                         ivago_id: "ivago-1",
+                        description: "Description of building 1",
                         deleted: false,
                         address: {
                             id: 1,
@@ -301,6 +302,7 @@ describe("Syndicus tests", () => {
                         id: 3,
                         name: "Building 3",
                         ivago_id: "ivago-3",
+                        description: "Description of building 3",
                         deleted: true,
                         address: {
                             id: 3,

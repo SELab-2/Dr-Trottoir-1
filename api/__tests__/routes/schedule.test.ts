@@ -2,12 +2,7 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import {
-    deleteDatabaseData,
-    initialiseDatabase,
-    resetDatabase,
-    restoreTables,
-} from "../mock/database";
+import { resetDatabase, restoreTables } from "../mock/database";
 import {
     badRequestForeignKey,
     badRequestResponse,
@@ -56,6 +51,7 @@ describe("Schedule tests", () => {
                             deleted: false,
                             id: 1,
                             ivago_id: "ivago-1",
+                            description: "Description of building 1",
                             name: "Building 1",
                         },
                         building_id: 1,
@@ -66,6 +62,7 @@ describe("Schedule tests", () => {
                 ],
                 id: 1,
                 name: "Round 1",
+                description: "Description of round 1",
             },
             round_id: 1,
             user: {
@@ -118,6 +115,7 @@ describe("Schedule tests", () => {
                                     deleted: false,
                                     id: 1,
                                     ivago_id: "ivago-1",
+                                    description: "Description of building 1",
                                     name: "Building 1",
                                 },
                                 building_id: 1,
@@ -128,6 +126,7 @@ describe("Schedule tests", () => {
                         ],
                         id: 1,
                         name: "Round 1",
+                        description: "Description of round 1",
                     },
                     round_id: 1,
                     user: {
@@ -177,6 +176,7 @@ describe("Schedule tests", () => {
                                     deleted: false,
                                     id: 2,
                                     ivago_id: "ivago-2",
+                                    description: "Description of building 2",
                                     name: "Building 2",
                                 },
                                 building_id: 2,
@@ -187,6 +187,7 @@ describe("Schedule tests", () => {
                         ],
                         id: 2,
                         name: "Round 2",
+                        description: "Description of round 2",
                     },
                     round_id: 2,
                     user: {
@@ -279,6 +280,7 @@ describe("Schedule tests", () => {
                 round: {
                     id: 2,
                     name: "Round 2",
+                    description: "Description of round 2",
                     buildings: [
                         {
                             id: 2,
@@ -289,6 +291,7 @@ describe("Schedule tests", () => {
                                 id: 2,
                                 name: "Building 2",
                                 ivago_id: "ivago-2",
+                                description: "Description of building 2",
                                 deleted: false,
                                 address: {
                                     id: 2,
@@ -346,6 +349,7 @@ describe("Schedule tests", () => {
                 round: {
                     id: 1,
                     name: "Round 1",
+                    description: "Description of round 1",
                     buildings: [
                         {
                             id: 1,
@@ -356,6 +360,7 @@ describe("Schedule tests", () => {
                                 id: 1,
                                 name: "Building 1",
                                 ivago_id: "ivago-1",
+                                description: "Description of building 1",
                                 deleted: false,
                                 address: {
                                     id: 1,
