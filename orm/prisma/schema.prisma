@@ -165,6 +165,7 @@ model Building {
 
     name          String
     ivago_id      String
+    description   String?
     expected_time Int?
 
     syndicus_id Int
@@ -248,6 +249,8 @@ model RoundBuilding {
 model Round {
     id   Int    @id @default(autoincrement())
     name String @unique
+
+    description String?
 
     buildings RoundBuilding[]
     schedule  Schedule[]
