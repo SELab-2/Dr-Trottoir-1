@@ -730,7 +730,7 @@ describe("Progress tests", () => {
                 expectedData: expected,
             });
         });
-        //uncomment after issue  399 
+        //uncomment after issue  399
         // test("POST /progress/:id/image", async () => {
         //     const timestamp: Date = new Date(Date.UTC(2023, 7, 4, 17, 0, 0));
         //     const newImage = {
