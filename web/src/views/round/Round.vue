@@ -17,12 +17,13 @@
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Gebouwen</h2>
         <div class="flex-grow-1"></div>
-        <RoundedButton icon="mdi-calendar" value="Wijzigen"></RoundedButton>
+        <RoundedButton icon="mdi-calendar" value="Wijzigen"/>
       </div>
 
       <div class="grid">
         <img src="@/assets/images/dummyMap.png" class="map" alt="Map" />
         <BuildingCard
+          class="inner"
           v-for="building in buildings"
           :key="building.id"
           :building="building"
@@ -181,6 +182,9 @@ function deleteRound() {
   @media (max-width: 600px)
     display: flex
     flex-direction: column
+
+.inner:last-child:nth-child(even)
+  grid-column: 1 / span 2
 
 .space-y-8
   & > *

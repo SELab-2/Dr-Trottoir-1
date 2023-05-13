@@ -85,7 +85,6 @@ tryOrAlertAsync(async () => {
   progress.value = await new ProgressQuery().getAll({
     schedule: props.schedule.id
   });
-  console.log(progress.value);
 });
 
 
