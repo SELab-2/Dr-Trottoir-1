@@ -139,6 +139,7 @@ tryOrAlertAsync(async () => {
 
   // fetch future schedules
   schedules.value = await new ScheduleQuery().getAll({
+    round_id: round_id,
     after: planningStart.value,
     before: planningEnd.value,
   });
@@ -150,6 +151,7 @@ tryOrAlertAsync(async () => {
 
   // fetch past schedules
   passedSchedules.value = await new ScheduleQuery().getAll({
+    round_id: round_id,
     after: geschiedenisStart.value,
     before: geschiedenisEnd.value,
   });
