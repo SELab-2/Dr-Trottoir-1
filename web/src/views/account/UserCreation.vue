@@ -237,7 +237,6 @@ async function submitForm() {
         date_added: new Date(),
         last_login: new Date(),
       });
-      console.log(user);
       router.push({ name: "account_settings", params: { id: user.id } });
     });
   }

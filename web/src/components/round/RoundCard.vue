@@ -6,7 +6,7 @@
     @click="
       router.push({
         name: 'round_detail',
-        params: { id: schedule.round_id, schedule: schedule.id },
+        params: { id: schedule?.round_id, schedule: schedule?.id },
       })
     "
   >
@@ -17,22 +17,29 @@
     <div class="flex-grow-1"></div>
     <RoundedButton
       class="bg-green-lighten-5"
-      v-if="status == 'active'"
+      v-if="status === 'active'"
       icon="mdi-bicycle-cargo"
       value="Actief"
     ></RoundedButton>
     <RoundedButton
-      v-if="status != 'scheduled' && Math.random() < 0.75"
+      v-if="comments"
       icon="mdi-note-edit-outline"
       value="Opmerkingen"
     ></RoundedButton>
     <RoundedButton
-      v-if="status != 'scheduled'"
+      v-if="images > 0"
       icon="mdi-image"
-      value="10"
+      :value="images.toString()"
     ></RoundedButton>
-    <v-icon v-if="status != 'scheduled'" icon="mdi-chevron-right"></v-icon>
-    <v-icon v-else icon="mdi-trash-can-outline"></v-icon>
+    <v-icon
+      icon="mdi-chevron-right"
+      @click="
+        router.push({
+          name: 'round_detail',
+          params: { id: schedule?.round_id, schedule: schedule?.id },
+        })
+      "
+    ></v-icon>
   </CardLayout>
 </template>
 
@@ -40,11 +47,13 @@
 import router from "@/router";
 import CardLayout from "@/layouts/CardLayout.vue";
 import RoundedButton from "@/components/buttons/RoundedButton.vue";
-import { Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import { Schedule, User } from "@selab-2/groep-1-orm";
 
 defineProps<{
-  schedule: Result<ScheduleQuery>;
+  schedule: (Schedule & { user: User }) | null;
   status: "completed" | "active" | "scheduled";
+  comments: boolean;
+  images: number;
 }>();
 </script>
 
