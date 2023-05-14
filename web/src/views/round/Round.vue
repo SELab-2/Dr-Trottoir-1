@@ -118,16 +118,14 @@ import { useRoute } from "vue-router";
 import DateRange from "@/components/filter/DateRange.vue";
 import MapComponent from "@/components/maps/MapComponent.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
+import {daysFromDate} from "@/assets/scripts/date";
 
 /**
  * Get a date days from a given date
  * @param days Amount of dates from the given date
  * @param date Given date, defaults to moment of the function call
  */
-function daysFromDate(days: number, date: Date = new Date()): Date {
-  const day = 24 * 60 * 60 * 1000;
-  return new Date(date.getTime() + days * day);
-}
+
 
 const showRemovePopup = ref(false);
 

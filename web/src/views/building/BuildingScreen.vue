@@ -92,11 +92,7 @@
         <div class="d-flex mt-8 flex-wrap align-center">
           <h2 class="me-auto">Taken</h2>
           <div class="d-flex flex-wrap">
-            <div class="chip mx-1 mt-1">
-              <input type="date" v-model="taskStartDate" @change="getTasks()" />
-              tot
-              <input type="date" v-model="taskEndDate" @change="getTasks()" />
-            </div>
+
             <RoundedButton
               icon="mdi-plus"
               class="mx-1 mt-1"
@@ -140,13 +136,7 @@
         <div class="d-flex mt-8 flex-wrap align-center">
           <h2 class="me-auto">Bezoeken</h2>
           <div class="d-flex">
-            <div class="chip mx-1 mt-1">
-              <input
-                type="month"
-                v-model="scheduleMonth"
-                @change="getVisits()"
-              />
-            </div>
+            <DateRange :end-date="bezoekenEnd" :start-date="bezoekenStart"/>
           </div>
         </div>
         <div v-for="schedule in schedules" :key="schedule.id">
@@ -177,6 +167,11 @@ import { tryOrAlertAsync } from "@/try";
 import RoundCard from "@/components/round/RoundCard.vue";
 import { GarbageQuery } from "@selab-2/groep-1-query/dist/garbage";
 import { useAuthStore } from "@/stores/auth";
+import DateRange from "@/components/filter/DateRange.vue";
+import {daysFromDate} from "@/assets/scripts/date";
+
+const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
+const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
