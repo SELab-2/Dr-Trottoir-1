@@ -330,6 +330,7 @@ describe("Progress tests", () => {
         });
 
         test("PATCH /progress/:id", async () => {
+            runner.authLevel(AuthenticationLevel.STUDENT);
             const newProgress = {
                 report: "Report 1.1",
             };
@@ -733,11 +734,13 @@ describe("Progress tests", () => {
         test("POST /progress/:id/image", async () => {
             const timestamp: Date = new Date(Date.UTC(2023, 7, 4, 17, 0, 0));
             const newImage = {
-                path: "image.jpg",
+                path: "image2.jpg",
                 user_id: 1,
                 time: timestamp,
                 location: "IMGPROXY",
                 description: "vuilnis",
+                type: "ARRIVAL"
+
             };
             const expected = {
                 arrival: "2023-05-04T12:00:00.000Z",
@@ -778,12 +781,12 @@ describe("Progress tests", () => {
                     },
                     {
                         deleted: false,
-                        description: "Description of progress image 1",
-                        id: 2,
+                        description: "vuilnis",
+                        id: 3,
                         image: {
                             id: 1,
                             location: "IMGPROXY",
-                            path: "image.jpg",
+                            path: "image2.jpg",
                             time: "2023-08-04T17:00:00.000Z",
                             user_id: 1,
                         },
@@ -823,11 +826,6 @@ describe("Progress tests", () => {
                 },
                 schedule_id: 1,
             };
-            await runner.post({
-                url: "/progress/1/image",
-                data: newImage,
-                expectedResponse: expected,
-            });
             await runner.post({
                 url: "/progress/1/image",
                 data: newImage,

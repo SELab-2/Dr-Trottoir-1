@@ -158,18 +158,22 @@ export class ProgressRouting extends Routing {
     async createImage(req: CustomRequest, res: express.Response) {
         const progress_id = Number(Parser.number(req.params["id"]));
 
-        await prisma.image.create({
+        const newImage = await prisma.image.create({
             data: {
                 time: req.body.time,
                 location: req.body.location,
                 path: req.body.path,
                 user_id: req.body.user_id,
-                progress: {
-                    connect: {
-                        id: progress_id,
-                    },
-                },
             },
+        });
+
+        await prisma.progressImage.create({
+            data: {
+                type: req.body.type,
+                description: req.body.description,
+                image_id: newImage.id,
+                progress_id: progress_id,
+            }
         });
 
         const result = await prisma.progress.findUniqueOrThrow({
