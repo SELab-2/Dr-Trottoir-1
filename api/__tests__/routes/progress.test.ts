@@ -32,704 +32,704 @@ describe("Progress tests", () => {
     });
 
     describe("Succesful requests", () => {
-        // test("POST /progress", async () => {
-        //     const timestamp: Date = new Date(Date.UTC(2023, 7, 4, 16, 0, 0));
+        test("POST /progress", async () => {
+            const timestamp: Date = new Date(Date.UTC(2023, 7, 4, 16, 0, 0));
 
-        //     const newProgress = {
-        //         report: "Report 2",
-        //         arrival: timestamp,
-        //         departure: timestamp,
+            const newProgress = {
+                report: "Report 2",
+                arrival: timestamp,
+                departure: timestamp,
 
-        //         building_id: 1,
-        //         schedule_id: 1,
-        //     };
+                building_id: 1,
+                schedule_id: 1,
+            };
 
-        //     const expected = {
-        //         arrival: "2023-08-04T16:00:00.000Z",
-        //         building: {
-        //             address: {
-        //                 city: "Sydney",
-        //                 id: 1,
-        //                 latitude: -33.865143,
-        //                 longitude: 151.2099,
-        //                 number: 42,
-        //                 street: "Wallaby Way",
-        //                 zip_code: 2000,
-        //             },
-        //             deleted: false,
-        //             description: "Description of building 1",
-        //             id: 1,
-        //             ivago_id: "ivago-1",
-        //             name: "Building 1",
-        //         },
-        //         building_id: 1,
-        //         deleted: false,
-        //         departure: "2023-08-04T16:00:00.000Z",
-        //         images: [],
-        //         report: "Report 2",
-        //         schedule: {
-        //             day: "2023-05-04T12:00:00.000Z",
-        //             start: "2023-05-04T12:10:00.000Z",
-        //             end: "2023-05-04T12:20:00.000Z",
-        //             deleted: false,
-        //             id: 1,
-        //             round: {
-        //                 id: 1,
-        //                 name: "Round 1",
-        //                 description: "Description of round 1",
-        //             },
-        //             round_id: 1,
-        //             user: {
-        //                 address_id: 1,
-        //                 admin: false,
-        //                 date_added: "2023-05-04T12:00:00.000Z",
-        //                 deleted: false,
-        //                 email: "student@trottoir.be",
-        //                 first_name: "Dirk",
-        //                 id: 1,
-        //                 last_login: "2023-05-04T12:00:00.000Z",
-        //                 last_name: "De Student",
-        //                 phone: "0123456789",
-        //                 student: true,
-        //                 super_student: false,
-        //             },
-        //             user_id: 1,
-        //         },
-        //         schedule_id: 1,
-        //     };
+            const expected = {
+                arrival: "2023-08-04T16:00:00.000Z",
+                building: {
+                    address: {
+                        city: "Sydney",
+                        id: 1,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                        number: 42,
+                        street: "Wallaby Way",
+                        zip_code: 2000,
+                    },
+                    deleted: false,
+                    description: "Description of building 1",
+                    id: 1,
+                    ivago_id: "ivago-1",
+                    name: "Building 1",
+                },
+                building_id: 1,
+                deleted: false,
+                departure: "2023-08-04T16:00:00.000Z",
+                images: [],
+                report: "Report 2",
+                schedule: {
+                    day: "2023-05-04T12:00:00.000Z",
+                    start: "2023-05-04T12:10:00.000Z",
+                    end: "2023-05-04T12:20:00.000Z",
+                    deleted: false,
+                    id: 1,
+                    round: {
+                        id: 1,
+                        name: "Round 1",
+                        description: "Description of round 1",
+                    },
+                    round_id: 1,
+                    user: {
+                        address_id: 1,
+                        admin: false,
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        email: "student@trottoir.be",
+                        first_name: "Dirk",
+                        id: 1,
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        last_name: "De Student",
+                        phone: "0123456789",
+                        student: true,
+                        super_student: false,
+                    },
+                    user_id: 1,
+                },
+                schedule_id: 1,
+            };
 
-        //     await runner.post({
-        //         url: "/progress",
-        //         data: newProgress,
-        //         expectedResponse: expected,
-        //     });
-        // });
+            await runner.post({
+                url: "/progress",
+                data: newProgress,
+                expectedResponse: expected,
+            });
+        });
 
-        // test("GET /progress", async () => {
-        //     const expected = [
-        //         {
-        //             arrival: "2023-05-04T12:00:00.000Z",
-        //             building: {
-        //                 address: {
-        //                     city: "Sydney",
-        //                     id: 1,
-        //                     latitude: -33.865143,
-        //                     longitude: 151.2099,
-        //                     number: 42,
-        //                     street: "Wallaby Way",
-        //                     zip_code: 2000,
-        //                 },
-        //                 deleted: false,
-        //                 description: "Description of building 1",
-        //                 id: 1,
-        //                 ivago_id: "ivago-1",
-        //                 name: "Building 1",
-        //             },
-        //             building_id: 1,
-        //             deleted: false,
-        //             departure: "2023-05-04T12:00:00.000Z",
-        //             id: 1,
-        //             images: [
-        //                 {
-        //                     deleted: false,
-        //                     description: "Description of progress image 1",
-        //                     id: 1,
-        //                     image: {
-        //                         id: 10,
-        //                         location: "IMGPROXY",
-        //                         path: "image.jpg",
-        //                         time: "1970-01-01T00:00:00.000Z",
-        //                         user_id: 1,
-        //                     },
-        //                     image_id: 10,
-        //                     progress_id: 1,
-        //                     type: "ARRIVAL",
-        //                 },
-        //             ],
-        //             report: "Report 1",
-        //             schedule: {
-        //                 day: "2023-05-04T12:00:00.000Z",
-        //                 deleted: false,
-        //                 end: "2023-05-04T12:20:00.000Z",
-        //                 id: 1,
-        //                 round: {
-        //                     description: "Description of round 1",
-        //                     id: 1,
-        //                     name: "Round 1",
-        //                 },
-        //                 round_id: 1,
-        //                 start: "2023-05-04T12:10:00.000Z",
-        //                 user: {
-        //                     address_id: 1,
-        //                     admin: false,
-        //                     date_added: "2023-05-04T12:00:00.000Z",
-        //                     deleted: false,
-        //                     email: "student@trottoir.be",
-        //                     first_name: "Dirk",
-        //                     id: 1,
-        //                     last_login: "2023-05-04T12:00:00.000Z",
-        //                     last_name: "De Student",
-        //                     phone: "0123456789",
-        //                     student: true,
-        //                     super_student: false,
-        //                 },
-        //                 user_id: 1,
-        //             },
-        //             schedule_id: 1,
-        //         },
-        //         {
-        //             arrival: "2023-05-04T12:00:00.000Z",
-        //             building: {
-        //                 address: {
-        //                     city: "Ghent",
-        //                     id: 2,
-        //                     latitude: 51.04732,
-        //                     longitude: 3.7282,
-        //                     number: 25,
-        //                     street: "Sint-Pietersnieuwstraat",
-        //                     zip_code: 9000,
-        //                 },
-        //                 deleted: false,
-        //                 description: "Description of building 2",
-        //                 id: 2,
-        //                 ivago_id: "ivago-2",
-        //                 name: "Building 2",
-        //             },
-        //             building_id: 2,
-        //             deleted: false,
-        //             departure: "2023-05-04T12:00:00.000Z",
-        //             id: 2,
-        //             images: [
-        //                 {
-        //                     deleted: false,
-        //                     description: "Description of progress image 2",
-        //                     id: 2,
-        //                     image: {
-        //                         id: 10,
-        //                         location: "IMGPROXY",
-        //                         path: "image.jpg",
-        //                         time: "1970-01-01T00:00:00.000Z",
-        //                         user_id: 1,
-        //                     },
-        //                     image_id: 10,
-        //                     progress_id: 2,
-        //                     type: "GARBAGE",
-        //                 },
-        //             ],
-        //             report: "Report 2",
-        //             schedule: {
-        //                 day: "2023-05-04T12:00:00.000Z",
-        //                 deleted: false,
-        //                 end: "2023-05-04T12:20:00.000Z",
-        //                 id: 2,
-        //                 round: {
-        //                     description: "Description of round 2",
-        //                     id: 2,
-        //                     name: "Round 2",
-        //                 },
-        //                 round_id: 2,
-        //                 start: "2023-05-04T12:10:00.000Z",
-        //                 user: {
-        //                     address_id: 2,
-        //                     admin: false,
-        //                     date_added: "2023-05-04T12:00:00.000Z",
-        //                     deleted: false,
-        //                     email: "superstudent@trottoir.be",
-        //                     first_name: "Toon",
-        //                     id: 2,
-        //                     last_login: "2023-05-04T12:00:00.000Z",
-        //                     last_name: "De Superstudent",
-        //                     phone: "9876543210",
-        //                     student: false,
-        //                     super_student: true,
-        //                 },
-        //                 user_id: 2,
-        //             },
-        //             schedule_id: 2,
-        //         },
-        //     ];
+        test("GET /progress", async () => {
+            const expected = [
+                {
+                    arrival: "2023-05-04T12:00:00.000Z",
+                    building: {
+                        address: {
+                            city: "Sydney",
+                            id: 1,
+                            latitude: -33.865143,
+                            longitude: 151.2099,
+                            number: 42,
+                            street: "Wallaby Way",
+                            zip_code: 2000,
+                        },
+                        deleted: false,
+                        description: "Description of building 1",
+                        id: 1,
+                        ivago_id: "ivago-1",
+                        name: "Building 1",
+                    },
+                    building_id: 1,
+                    deleted: false,
+                    departure: "2023-05-04T12:00:00.000Z",
+                    id: 1,
+                    images: [
+                        {
+                            deleted: false,
+                            description: "Description of progress image 1",
+                            id: 1,
+                            image: {
+                                id: 10,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1970-01-01T00:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 10,
+                            progress_id: 1,
+                            type: "ARRIVAL",
+                        },
+                    ],
+                    report: "Report 1",
+                    schedule: {
+                        day: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
+                        id: 1,
+                        round: {
+                            description: "Description of round 1",
+                            id: 1,
+                            name: "Round 1",
+                        },
+                        round_id: 1,
+                        start: "2023-05-04T12:10:00.000Z",
+                        user: {
+                            address_id: 1,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "student@trottoir.be",
+                            first_name: "Dirk",
+                            id: 1,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Student",
+                            phone: "0123456789",
+                            student: true,
+                            super_student: false,
+                        },
+                        user_id: 1,
+                    },
+                    schedule_id: 1,
+                },
+                {
+                    arrival: "2023-05-04T12:00:00.000Z",
+                    building: {
+                        address: {
+                            city: "Ghent",
+                            id: 2,
+                            latitude: 51.04732,
+                            longitude: 3.7282,
+                            number: 25,
+                            street: "Sint-Pietersnieuwstraat",
+                            zip_code: 9000,
+                        },
+                        deleted: false,
+                        description: "Description of building 2",
+                        id: 2,
+                        ivago_id: "ivago-2",
+                        name: "Building 2",
+                    },
+                    building_id: 2,
+                    deleted: false,
+                    departure: "2023-05-04T12:00:00.000Z",
+                    id: 2,
+                    images: [
+                        {
+                            deleted: false,
+                            description: "Description of progress image 2",
+                            id: 2,
+                            image: {
+                                id: 10,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1970-01-01T00:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 10,
+                            progress_id: 2,
+                            type: "GARBAGE",
+                        },
+                    ],
+                    report: "Report 2",
+                    schedule: {
+                        day: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
+                        id: 2,
+                        round: {
+                            description: "Description of round 2",
+                            id: 2,
+                            name: "Round 2",
+                        },
+                        round_id: 2,
+                        start: "2023-05-04T12:10:00.000Z",
+                        user: {
+                            address_id: 2,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "superstudent@trottoir.be",
+                            first_name: "Toon",
+                            id: 2,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Superstudent",
+                            phone: "9876543210",
+                            student: false,
+                            super_student: true,
+                        },
+                        user_id: 2,
+                    },
+                    schedule_id: 2,
+                },
+            ];
 
-        //     await runner.get({ url: "/progress", expectedData: expected });
-        // });
+            await runner.get({ url: "/progress", expectedData: expected });
+        });
 
-        // test("GET /progress/:id", async () => {
-        //     const expected = [
-        //         {
-        //             arrival: "2023-05-04T12:00:00.000Z",
-        //             building: {
-        //                 address: {
-        //                     city: "Sydney",
-        //                     id: 1,
-        //                     latitude: -33.865143,
-        //                     longitude: 151.2099,
-        //                     number: 42,
-        //                     street: "Wallaby Way",
-        //                     zip_code: 2000,
-        //                 },
-        //                 deleted: false,
-        //                 description: "Description of building 1",
-        //                 id: 1,
-        //                 ivago_id: "ivago-1",
-        //                 name: "Building 1",
-        //             },
-        //             building_id: 1,
-        //             deleted: false,
-        //             departure: "2023-05-04T12:00:00.000Z",
-        //             id: 1,
-        //             images: [
-        //                 {
-        //                     deleted: false,
-        //                     description: "Description of progress image 1",
-        //                     id: 1,
-        //                     image: {
-        //                         id: 10,
-        //                         location: "IMGPROXY",
-        //                         path: "image.jpg",
-        //                         time: "1970-01-01T00:00:00.000Z",
-        //                         user_id: 1,
-        //                     },
-        //                     image_id: 10,
-        //                     progress_id: 1,
-        //                     type: "ARRIVAL",
-        //                 },
-        //             ],
-        //             report: "Report 1",
-        //             schedule: {
-        //                 day: "2023-05-04T12:00:00.000Z",
-        //                 deleted: false,
-        //                 end: "2023-05-04T12:20:00.000Z",
-        //                 start: "2023-05-04T12:10:00.000Z",
-        //                 id: 1,
-        //                 round: {
-        //                     id: 1,
-        //                     description: "Description of round 1",
-        //                     name: "Round 1",
-        //                 },
-        //                 round_id: 1,
-        //                 user: {
-        //                     address_id: 1,
-        //                     admin: false,
-        //                     date_added: "2023-05-04T12:00:00.000Z",
-        //                     deleted: false,
-        //                     email: "student@trottoir.be",
-        //                     first_name: "Dirk",
-        //                     id: 1,
-        //                     last_login: "2023-05-04T12:00:00.000Z",
-        //                     last_name: "De Student",
-        //                     phone: "0123456789",
-        //                     student: true,
-        //                     super_student: false,
-        //                 },
-        //                 user_id: 1,
-        //             },
-        //             schedule_id: 1,
-        //         },
-        //     ];
+        test("GET /progress/:id", async () => {
+            const expected = [
+                {
+                    arrival: "2023-05-04T12:00:00.000Z",
+                    building: {
+                        address: {
+                            city: "Sydney",
+                            id: 1,
+                            latitude: -33.865143,
+                            longitude: 151.2099,
+                            number: 42,
+                            street: "Wallaby Way",
+                            zip_code: 2000,
+                        },
+                        deleted: false,
+                        description: "Description of building 1",
+                        id: 1,
+                        ivago_id: "ivago-1",
+                        name: "Building 1",
+                    },
+                    building_id: 1,
+                    deleted: false,
+                    departure: "2023-05-04T12:00:00.000Z",
+                    id: 1,
+                    images: [
+                        {
+                            deleted: false,
+                            description: "Description of progress image 1",
+                            id: 1,
+                            image: {
+                                id: 10,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1970-01-01T00:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 10,
+                            progress_id: 1,
+                            type: "ARRIVAL",
+                        },
+                    ],
+                    report: "Report 1",
+                    schedule: {
+                        day: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
+                        start: "2023-05-04T12:10:00.000Z",
+                        id: 1,
+                        round: {
+                            id: 1,
+                            description: "Description of round 1",
+                            name: "Round 1",
+                        },
+                        round_id: 1,
+                        user: {
+                            address_id: 1,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "student@trottoir.be",
+                            first_name: "Dirk",
+                            id: 1,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Student",
+                            phone: "0123456789",
+                            student: true,
+                            super_student: false,
+                        },
+                        user_id: 1,
+                    },
+                    schedule_id: 1,
+                },
+            ];
 
-        //     await runner.get({ url: "/progress/1", expectedData: expected });
-        // });
+            await runner.get({ url: "/progress/1", expectedData: expected });
+        });
 
-        // test("PATCH /progress/:id", async () => {
-        //     const newProgress = {
-        //         report: "Report 1.1",
-        //     };
+        test("PATCH /progress/:id", async () => {
+            const newProgress = {
+                report: "Report 1.1",
+            };
 
-        //     const expected = {
-        //         arrival: "2023-05-04T12:00:00.000Z",
-        //         building: {
-        //             address: {
-        //                 city: "Sydney",
-        //                 id: 1,
-        //                 latitude: -33.865143,
-        //                 longitude: 151.2099,
-        //                 number: 42,
-        //                 street: "Wallaby Way",
-        //                 zip_code: 2000,
-        //             },
-        //             deleted: false,
-        //             description: "Description of building 1",
-        //             id: 1,
-        //             ivago_id: "ivago-1",
-        //             name: "Building 1",
-        //         },
-        //         building_id: 1,
-        //         deleted: false,
-        //         departure: "2023-05-04T12:00:00.000Z",
-        //         id: 1,
-        //         images: [
-        //             {
-        //                 deleted: false,
-        //                 description: "Description of progress image 1",
-        //                 id: 1,
-        //                 image: {
-        //                     id: 10,
-        //                     location: "IMGPROXY",
-        //                     path: "image.jpg",
-        //                     time: "1970-01-01T00:00:00.000Z",
-        //                     user_id: 1,
-        //                 },
-        //                 image_id: 10,
-        //                 progress_id: 1,
-        //                 type: "ARRIVAL",
-        //             },
-        //         ],
-        //         report: "Report 1.1",
-        //         schedule: {
-        //             day: "2023-05-04T12:00:00.000Z",
-        //             deleted: false,
-        //             id: 1,
-        //             start: "2023-05-04T12:10:00.000Z",
-        //             end: "2023-05-04T12:20:00.000Z",
-        //             round: {
-        //                 id: 1,
-        //                 description: "Description of round 1",
-        //                 name: "Round 1",
-        //             },
-        //             round_id: 1,
-        //             user: {
-        //                 address_id: 1,
-        //                 admin: false,
-        //                 date_added: "2023-05-04T12:00:00.000Z",
-        //                 deleted: false,
-        //                 email: "student@trottoir.be",
-        //                 first_name: "Dirk",
-        //                 id: 1,
-        //                 last_login: "2023-05-04T12:00:00.000Z",
-        //                 last_name: "De Student",
-        //                 phone: "0123456789",
-        //                 student: true,
-        //                 super_student: false,
-        //             },
-        //             user_id: 1,
-        //         },
-        //         schedule_id: 1,
-        //     };
+            const expected = {
+                arrival: "2023-05-04T12:00:00.000Z",
+                building: {
+                    address: {
+                        city: "Sydney",
+                        id: 1,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                        number: 42,
+                        street: "Wallaby Way",
+                        zip_code: 2000,
+                    },
+                    deleted: false,
+                    description: "Description of building 1",
+                    id: 1,
+                    ivago_id: "ivago-1",
+                    name: "Building 1",
+                },
+                building_id: 1,
+                deleted: false,
+                departure: "2023-05-04T12:00:00.000Z",
+                id: 1,
+                images: [
+                    {
+                        deleted: false,
+                        description: "Description of progress image 1",
+                        id: 1,
+                        image: {
+                            id: 10,
+                            location: "IMGPROXY",
+                            path: "image.jpg",
+                            time: "1970-01-01T00:00:00.000Z",
+                            user_id: 1,
+                        },
+                        image_id: 10,
+                        progress_id: 1,
+                        type: "ARRIVAL",
+                    },
+                ],
+                report: "Report 1.1",
+                schedule: {
+                    day: "2023-05-04T12:00:00.000Z",
+                    deleted: false,
+                    id: 1,
+                    start: "2023-05-04T12:10:00.000Z",
+                    end: "2023-05-04T12:20:00.000Z",
+                    round: {
+                        id: 1,
+                        description: "Description of round 1",
+                        name: "Round 1",
+                    },
+                    round_id: 1,
+                    user: {
+                        address_id: 1,
+                        admin: false,
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        email: "student@trottoir.be",
+                        first_name: "Dirk",
+                        id: 1,
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        last_name: "De Student",
+                        phone: "0123456789",
+                        student: true,
+                        super_student: false,
+                    },
+                    user_id: 1,
+                },
+                schedule_id: 1,
+            };
 
-        //     await runner.patch({
-        //         url: "/progress/1",
-        //         data: newProgress,
-        //         expectedResponse: expected,
-        //     });
-        // });
+            await runner.patch({
+                url: "/progress/1",
+                data: newProgress,
+                expectedResponse: expected,
+            });
+        });
 
-        // test("SOFT DELETE /progress/:id (admin)", async () => {
-        //     runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
-        //     await runner.delete({ url: "/progress/1" });
+        test("SOFT DELETE /progress/:id (admin)", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            await runner.delete({ url: "/progress/1" });
 
-        //     // verify that the progress is soft deleted
-        //     const expected = [
-        //         {
-        //             arrival: "2023-05-04T12:00:00.000Z",
-        //             building: {
-        //                 address: {
-        //                     city: "Sydney",
-        //                     id: 1,
-        //                     latitude: -33.865143,
-        //                     longitude: 151.2099,
-        //                     number: 42,
-        //                     street: "Wallaby Way",
-        //                     zip_code: 2000,
-        //                 },
-        //                 deleted: false,
-        //                 description: "Description of building 1",
-        //                 id: 1,
-        //                 ivago_id: "ivago-1",
-        //                 name: "Building 1",
-        //             },
-        //             building_id: 1,
-        //             deleted: true,
-        //             departure: "2023-05-04T12:00:00.000Z",
-        //             id: 1,
-        //             images: [
-        //                 {
-        //                     deleted: false,
-        //                     description: "Description of progress image 1",
-        //                     id: 1,
-        //                     image: {
-        //                         id: 10,
-        //                         location: "IMGPROXY",
-        //                         path: "image.jpg",
-        //                         time: "1970-01-01T00:00:00.000Z",
-        //                         user_id: 1,
-        //                     },
-        //                     image_id: 10,
-        //                     progress_id: 1,
-        //                     type: "ARRIVAL",
-        //                 },
-        //             ],
-        //             report: "Report 1",
-        //             schedule: {
-        //                 day: "2023-05-04T12:00:00.000Z",
-        //                 deleted: false,
-        //                 end: "2023-05-04T12:20:00.000Z",
-        //                 id: 1,
-        //                 round: {
-        //                     description: "Description of round 1",
-        //                     id: 1,
-        //                     name: "Round 1",
-        //                 },
-        //                 round_id: 1,
-        //                 start: "2023-05-04T12:10:00.000Z",
-        //                 user: {
-        //                     address_id: 1,
-        //                     admin: false,
-        //                     date_added: "2023-05-04T12:00:00.000Z",
-        //                     deleted: false,
-        //                     email: "student@trottoir.be",
-        //                     first_name: "Dirk",
-        //                     id: 1,
-        //                     last_login: "2023-05-04T12:00:00.000Z",
-        //                     last_name: "De Student",
-        //                     phone: "0123456789",
-        //                     student: true,
-        //                     super_student: false,
-        //                 },
-        //                 user_id: 1,
-        //             },
-        //             schedule_id: 1,
-        //         },
-        //         {
-        //             arrival: "2023-05-04T12:00:00.000Z",
-        //             building: {
-        //                 address: {
-        //                     city: "Ghent",
-        //                     id: 2,
-        //                     latitude: 51.04732,
-        //                     longitude: 3.7282,
-        //                     number: 25,
-        //                     street: "Sint-Pietersnieuwstraat",
-        //                     zip_code: 9000,
-        //                 },
-        //                 deleted: false,
-        //                 description: "Description of building 2",
-        //                 id: 2,
-        //                 ivago_id: "ivago-2",
-        //                 name: "Building 2",
-        //             },
-        //             building_id: 2,
-        //             deleted: false,
-        //             departure: "2023-05-04T12:00:00.000Z",
-        //             id: 2,
-        //             images: [
-        //                 {
-        //                     deleted: false,
-        //                     description: "Description of progress image 2",
-        //                     id: 2,
-        //                     image: {
-        //                         id: 10,
-        //                         location: "IMGPROXY",
-        //                         path: "image.jpg",
-        //                         time: "1970-01-01T00:00:00.000Z",
-        //                         user_id: 1,
-        //                     },
-        //                     image_id: 10,
-        //                     progress_id: 2,
-        //                     type: "GARBAGE",
-        //                 },
-        //             ],
-        //             report: "Report 2",
-        //             schedule: {
-        //                 day: "2023-05-04T12:00:00.000Z",
-        //                 deleted: false,
-        //                 end: "2023-05-04T12:20:00.000Z",
-        //                 id: 2,
-        //                 round: {
-        //                     description: "Description of round 2",
-        //                     id: 2,
-        //                     name: "Round 2",
-        //                 },
-        //                 round_id: 2,
-        //                 start: "2023-05-04T12:10:00.000Z",
-        //                 user: {
-        //                     address_id: 2,
-        //                     admin: false,
-        //                     date_added: "2023-05-04T12:00:00.000Z",
-        //                     deleted: false,
-        //                     email: "superstudent@trottoir.be",
-        //                     first_name: "Toon",
-        //                     id: 2,
-        //                     last_login: "2023-05-04T12:00:00.000Z",
-        //                     last_name: "De Superstudent",
-        //                     phone: "9876543210",
-        //                     student: false,
-        //                     super_student: true,
-        //                 },
-        //                 user_id: 2,
-        //             },
-        //             schedule_id: 2,
-        //         },
-        //     ];
-        //     await runner.get({
-        //         url: "/progress?deleted=true",
-        //         expectedData: expected,
-        //     });
-        // });
+            // verify that the progress is soft deleted
+            const expected = [
+                {
+                    arrival: "2023-05-04T12:00:00.000Z",
+                    building: {
+                        address: {
+                            city: "Sydney",
+                            id: 1,
+                            latitude: -33.865143,
+                            longitude: 151.2099,
+                            number: 42,
+                            street: "Wallaby Way",
+                            zip_code: 2000,
+                        },
+                        deleted: false,
+                        description: "Description of building 1",
+                        id: 1,
+                        ivago_id: "ivago-1",
+                        name: "Building 1",
+                    },
+                    building_id: 1,
+                    deleted: true,
+                    departure: "2023-05-04T12:00:00.000Z",
+                    id: 1,
+                    images: [
+                        {
+                            deleted: false,
+                            description: "Description of progress image 1",
+                            id: 1,
+                            image: {
+                                id: 10,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1970-01-01T00:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 10,
+                            progress_id: 1,
+                            type: "ARRIVAL",
+                        },
+                    ],
+                    report: "Report 1",
+                    schedule: {
+                        day: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
+                        id: 1,
+                        round: {
+                            description: "Description of round 1",
+                            id: 1,
+                            name: "Round 1",
+                        },
+                        round_id: 1,
+                        start: "2023-05-04T12:10:00.000Z",
+                        user: {
+                            address_id: 1,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "student@trottoir.be",
+                            first_name: "Dirk",
+                            id: 1,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Student",
+                            phone: "0123456789",
+                            student: true,
+                            super_student: false,
+                        },
+                        user_id: 1,
+                    },
+                    schedule_id: 1,
+                },
+                {
+                    arrival: "2023-05-04T12:00:00.000Z",
+                    building: {
+                        address: {
+                            city: "Ghent",
+                            id: 2,
+                            latitude: 51.04732,
+                            longitude: 3.7282,
+                            number: 25,
+                            street: "Sint-Pietersnieuwstraat",
+                            zip_code: 9000,
+                        },
+                        deleted: false,
+                        description: "Description of building 2",
+                        id: 2,
+                        ivago_id: "ivago-2",
+                        name: "Building 2",
+                    },
+                    building_id: 2,
+                    deleted: false,
+                    departure: "2023-05-04T12:00:00.000Z",
+                    id: 2,
+                    images: [
+                        {
+                            deleted: false,
+                            description: "Description of progress image 2",
+                            id: 2,
+                            image: {
+                                id: 10,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1970-01-01T00:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 10,
+                            progress_id: 2,
+                            type: "GARBAGE",
+                        },
+                    ],
+                    report: "Report 2",
+                    schedule: {
+                        day: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
+                        id: 2,
+                        round: {
+                            description: "Description of round 2",
+                            id: 2,
+                            name: "Round 2",
+                        },
+                        round_id: 2,
+                        start: "2023-05-04T12:10:00.000Z",
+                        user: {
+                            address_id: 2,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "superstudent@trottoir.be",
+                            first_name: "Toon",
+                            id: 2,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Superstudent",
+                            phone: "9876543210",
+                            student: false,
+                            super_student: true,
+                        },
+                        user_id: 2,
+                    },
+                    schedule_id: 2,
+                },
+            ];
+            await runner.get({
+                url: "/progress?deleted=true",
+                expectedData: expected,
+            });
+        });
 
-        // test("SOFT DELETE /progress/:id (super-student)", async () => {
-        //     await runner.delete({ url: "/progress/1" });
+        test("SOFT DELETE /progress/:id (super-student)", async () => {
+            await runner.delete({ url: "/progress/1" });
 
-        //     // verify that the progress is soft deleted
-        //     const expected = [
-        //         {
-        //             arrival: "2023-05-04T12:00:00.000Z",
-        //             building: {
-        //                 address: {
-        //                     city: "Ghent",
-        //                     id: 2,
-        //                     latitude: 51.04732,
-        //                     longitude: 3.7282,
-        //                     number: 25,
-        //                     street: "Sint-Pietersnieuwstraat",
-        //                     zip_code: 9000,
-        //                 },
-        //                 deleted: false,
-        //                 description: "Description of building 2",
-        //                 id: 2,
-        //                 ivago_id: "ivago-2",
-        //                 name: "Building 2",
-        //             },
-        //             building_id: 2,
-        //             deleted: false,
-        //             departure: "2023-05-04T12:00:00.000Z",
-        //             id: 2,
-        //             images: [
-        //                 {
-        //                     deleted: false,
-        //                     description: "Description of progress image 2",
-        //                     id: 2,
-        //                     image: {
-        //                         id: 10,
-        //                         location: "IMGPROXY",
-        //                         path: "image.jpg",
-        //                         time: "1970-01-01T00:00:00.000Z",
-        //                         user_id: 1,
-        //                     },
-        //                     image_id: 10,
-        //                     progress_id: 2,
-        //                     type: "GARBAGE",
-        //                 },
-        //             ],
-        //             report: "Report 2",
-        //             schedule: {
-        //                 day: "2023-05-04T12:00:00.000Z",
-        //                 deleted: false,
-        //                 end: "2023-05-04T12:20:00.000Z",
-        //                 id: 2,
-        //                 round: {
-        //                     description: "Description of round 2",
-        //                     id: 2,
-        //                     name: "Round 2",
-        //                 },
-        //                 round_id: 2,
-        //                 start: "2023-05-04T12:10:00.000Z",
-        //                 user: {
-        //                     address_id: 2,
-        //                     admin: false,
-        //                     date_added: "2023-05-04T12:00:00.000Z",
-        //                     deleted: false,
-        //                     email: "superstudent@trottoir.be",
-        //                     first_name: "Toon",
-        //                     id: 2,
-        //                     last_login: "2023-05-04T12:00:00.000Z",
-        //                     last_name: "De Superstudent",
-        //                     phone: "9876543210",
-        //                     student: false,
-        //                     super_student: true,
-        //                 },
-        //                 user_id: 2,
-        //             },
-        //             schedule_id: 2,
-        //         },
-        //     ];
-        //     await runner.get({
-        //         url: "/progress",
-        //         expectedData: expected,
-        //     });
-        // });
+            // verify that the progress is soft deleted
+            const expected = [
+                {
+                    arrival: "2023-05-04T12:00:00.000Z",
+                    building: {
+                        address: {
+                            city: "Ghent",
+                            id: 2,
+                            latitude: 51.04732,
+                            longitude: 3.7282,
+                            number: 25,
+                            street: "Sint-Pietersnieuwstraat",
+                            zip_code: 9000,
+                        },
+                        deleted: false,
+                        description: "Description of building 2",
+                        id: 2,
+                        ivago_id: "ivago-2",
+                        name: "Building 2",
+                    },
+                    building_id: 2,
+                    deleted: false,
+                    departure: "2023-05-04T12:00:00.000Z",
+                    id: 2,
+                    images: [
+                        {
+                            deleted: false,
+                            description: "Description of progress image 2",
+                            id: 2,
+                            image: {
+                                id: 10,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1970-01-01T00:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 10,
+                            progress_id: 2,
+                            type: "GARBAGE",
+                        },
+                    ],
+                    report: "Report 2",
+                    schedule: {
+                        day: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
+                        id: 2,
+                        round: {
+                            description: "Description of round 2",
+                            id: 2,
+                            name: "Round 2",
+                        },
+                        round_id: 2,
+                        start: "2023-05-04T12:10:00.000Z",
+                        user: {
+                            address_id: 2,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "superstudent@trottoir.be",
+                            first_name: "Toon",
+                            id: 2,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Superstudent",
+                            phone: "9876543210",
+                            student: false,
+                            super_student: true,
+                        },
+                        user_id: 2,
+                    },
+                    schedule_id: 2,
+                },
+            ];
+            await runner.get({
+                url: "/progress",
+                expectedData: expected,
+            });
+        });
 
-        // test("DELETE /progress/:id (admin)", async () => {
-        //     runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
-        //     const hardDelete = { hardDelete: true };
-        //     await runner.delete({ url: "/progress/1", data: hardDelete });
+        test("DELETE /progress/:id (admin)", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            const hardDelete = { hardDelete: true };
+            await runner.delete({ url: "/progress/1", data: hardDelete });
 
-        //     // verify that the progress is soft deleted
-        //     const expected = [
-        //         {
-        //             arrival: "2023-05-04T12:00:00.000Z",
-        //             building: {
-        //                 address: {
-        //                     city: "Ghent",
-        //                     id: 2,
-        //                     latitude: 51.04732,
-        //                     longitude: 3.7282,
-        //                     number: 25,
-        //                     street: "Sint-Pietersnieuwstraat",
-        //                     zip_code: 9000,
-        //                 },
-        //                 deleted: false,
-        //                 description: "Description of building 2",
-        //                 id: 2,
-        //                 ivago_id: "ivago-2",
-        //                 name: "Building 2",
-        //             },
-        //             building_id: 2,
-        //             deleted: false,
-        //             departure: "2023-05-04T12:00:00.000Z",
-        //             id: 2,
-        //             images: [
-        //                 {
-        //                     deleted: false,
-        //                     description: "Description of progress image 2",
-        //                     id: 2,
-        //                     image: {
-        //                         id: 10,
-        //                         location: "IMGPROXY",
-        //                         path: "image.jpg",
-        //                         time: "1970-01-01T00:00:00.000Z",
-        //                         user_id: 1,
-        //                     },
-        //                     image_id: 10,
-        //                     progress_id: 2,
-        //                     type: "GARBAGE",
-        //                 },
-        //             ],
-        //             report: "Report 2",
-        //             schedule: {
-        //                 day: "2023-05-04T12:00:00.000Z",
-        //                 deleted: false,
-        //                 end: "2023-05-04T12:20:00.000Z",
-        //                 id: 2,
-        //                 round: {
-        //                     description: "Description of round 2",
-        //                     id: 2,
-        //                     name: "Round 2",
-        //                 },
-        //                 round_id: 2,
-        //                 start: "2023-05-04T12:10:00.000Z",
-        //                 user: {
-        //                     address_id: 2,
-        //                     admin: false,
-        //                     date_added: "2023-05-04T12:00:00.000Z",
-        //                     deleted: false,
-        //                     email: "superstudent@trottoir.be",
-        //                     first_name: "Toon",
-        //                     id: 2,
-        //                     last_login: "2023-05-04T12:00:00.000Z",
-        //                     last_name: "De Superstudent",
-        //                     phone: "9876543210",
-        //                     student: false,
-        //                     super_student: true,
-        //                 },
-        //                 user_id: 2,
-        //             },
-        //             schedule_id: 2,
-        //         },
-        //     ];
-        //     await runner.get({
-        //         url: "/progress?deleted=true",
-        //         expectedData: expected,
-        //     });
-        // });
+            // verify that the progress is soft deleted
+            const expected = [
+                {
+                    arrival: "2023-05-04T12:00:00.000Z",
+                    building: {
+                        address: {
+                            city: "Ghent",
+                            id: 2,
+                            latitude: 51.04732,
+                            longitude: 3.7282,
+                            number: 25,
+                            street: "Sint-Pietersnieuwstraat",
+                            zip_code: 9000,
+                        },
+                        deleted: false,
+                        description: "Description of building 2",
+                        id: 2,
+                        ivago_id: "ivago-2",
+                        name: "Building 2",
+                    },
+                    building_id: 2,
+                    deleted: false,
+                    departure: "2023-05-04T12:00:00.000Z",
+                    id: 2,
+                    images: [
+                        {
+                            deleted: false,
+                            description: "Description of progress image 2",
+                            id: 2,
+                            image: {
+                                id: 10,
+                                location: "IMGPROXY",
+                                path: "image.jpg",
+                                time: "1970-01-01T00:00:00.000Z",
+                                user_id: 1,
+                            },
+                            image_id: 10,
+                            progress_id: 2,
+                            type: "GARBAGE",
+                        },
+                    ],
+                    report: "Report 2",
+                    schedule: {
+                        day: "2023-05-04T12:00:00.000Z",
+                        deleted: false,
+                        end: "2023-05-04T12:20:00.000Z",
+                        id: 2,
+                        round: {
+                            description: "Description of round 2",
+                            id: 2,
+                            name: "Round 2",
+                        },
+                        round_id: 2,
+                        start: "2023-05-04T12:10:00.000Z",
+                        user: {
+                            address_id: 2,
+                            admin: false,
+                            date_added: "2023-05-04T12:00:00.000Z",
+                            deleted: false,
+                            email: "superstudent@trottoir.be",
+                            first_name: "Toon",
+                            id: 2,
+                            last_login: "2023-05-04T12:00:00.000Z",
+                            last_name: "De Superstudent",
+                            phone: "9876543210",
+                            student: false,
+                            super_student: true,
+                        },
+                        user_id: 2,
+                    },
+                    schedule_id: 2,
+                },
+            ];
+            await runner.get({
+                url: "/progress?deleted=true",
+                expectedData: expected,
+            });
+        });
         test("POST /progress/:id/image", async () => {
             const timestamp: Date = new Date(Date.UTC(2023, 7, 4, 17, 0, 0));
             const newImage = {
