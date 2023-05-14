@@ -8,7 +8,8 @@
     "lint": "npx prettier --write . && npx eslint src",
     "pretest": "npx prettier --check . && npx eslint src --max-warnings 0",
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "tsc"
   },
   "repository": {
     "type": "git",
