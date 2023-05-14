@@ -119,7 +119,7 @@ export class ProgressRouting extends Routing {
         return res.status(201).json(user);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, superStudent: false })
     async updateOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.progress.update({
             data: req.body,
@@ -154,7 +154,7 @@ export class ProgressRouting extends Routing {
         return res.status(200).json({});
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, superStudent: false })
     async createImage(req: CustomRequest, res: express.Response) {
         const progress_id = Number(Parser.number(req.params["id"]));
 
@@ -182,7 +182,7 @@ export class ProgressRouting extends Routing {
         return res.status(201).json(result);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, superStudent: false })
     async updateImage(req: CustomRequest, res: express.Response) {
         await prisma.progressImage.update({
             data: req.body,
