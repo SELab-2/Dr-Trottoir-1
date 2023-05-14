@@ -35,14 +35,8 @@ jobs:
             -   name: "Checkout the repo code"
                 uses: actions/checkout@v3
             -   uses: actions/setup-node@v3
-                with:
-                    node-version: '16.x'
-                    registry-url: 'https://npm.pkg.github.com'
-                    scope: '@selab-2'
             -   name: "Clean install"
                 run: npm ci
-                env:
-                    NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
             -   name: "Setup the database"
                 working-directory: ./orm
                 run: |
@@ -55,4 +49,3 @@ jobs:
                     curl -Os https://uploader.codecov.io/latest/linux/codecov
                     chmod +x codecov
                     ./codecov
-                
