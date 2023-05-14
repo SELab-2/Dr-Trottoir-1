@@ -52,6 +52,8 @@ describe('superstudent tests', () => {
     // confirm?
     // we are rerouted to the round detail of the new round
     cy.contains("test round")
+    cy.contains('Gebouwen')
+    // cy.contains('naam gebouw 1')
     cy.contains("Planning")
     // check if it also appears in the list
     cy.get('#rounds').click()

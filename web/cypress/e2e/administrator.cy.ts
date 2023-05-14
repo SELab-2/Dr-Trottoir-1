@@ -94,7 +94,7 @@ describe('admin tests', () => {
     cy.get('#longitude').type("12")
     cy.get('#latitude').type("34")
     cy.get('#addressform').then(() => {
-      cy.get('#street').type("teststraat")
+      cy.get('#street').type("teststreet")
       cy.get('#streetnr').type("1")
       cy.get('#city').type("test")
       cy.get('#zipcode').type("1111")
@@ -104,6 +104,10 @@ describe('admin tests', () => {
     // we should be on the info page of the building
     cy.contains('test building')
     cy.contains('Taken')
+    cy.contains('Bezoeken')
+    // cy.contains('1234') ivago id not shown
+    // cy.contains('name of syndicus')
+    // maybe click on the 'kaarten' button to see if address was added correctly
   })
 
   it('add garbage schedule to a building', () => {
@@ -122,6 +126,9 @@ describe('admin tests', () => {
     cy.get('#addtoschedule').click()
     cy.get('#schedule').click()
     // check if schedule is added
+    cy.get('#buildings').click()
+    cy.contains('Building 1').click()
+    // onder Taken bij het gebouw, of nee toch niet, dus waar kan je dit zien? wss zo bij het aanmaken van een ronde
   })
 
   it('edit garbage schedule of a building', () => {
@@ -145,30 +152,33 @@ describe('admin tests', () => {
     // press edit button
     cy.contains('#edit').click()
     // alter building data
-    // TODO: actually change some of this data
-    cy.get('#name').type('test building')
-    cy.get('#ivagoid').type('1234')
+    cy.get('#name').clear().type('test gebouw')
+    cy.get('#ivagoid').clear().type('4321')
     // syndicus still hardcoded
     // cy.get('#syndicus').select()
-    cy.get('#longitude').type("12")
-    cy.get('#latitude').type("34")
+    cy.get('#longitude').clear().type("21")
+    cy.get('#latitude').clear().type("43")
     cy.get('#addressform').then(() => {
-      cy.get('#street').type("teststraat")
-      cy.get('#streetnr').type("1")
-      cy.get('#city').type("test")
-      cy.get('#zipcode').type("1111")
+      cy.get('#street').clear().type("teststraat")
+      cy.get('#streetnr').clear().type("10")
+      cy.get('#city').clear().type("city")
+      cy.get('#zipcode').clear().type("1000")
     })
     cy.get('#submit').click()
     // save
     // we should be on the info page of the building
-    cy.contains('test building')
+    cy.contains('test gebouw')
     cy.contains('Taken')
-    // save
+    cy.contains('Bezoeken')
+    // cy.contains('4321') ivago id not shown
+    // cy.contains('name of syndicus')
+    // maybe click on the 'kaarten' button to see if address was added correctly
   })
 
   it('delete building', () => {
     cy.contains('test building').click()
     cy.get('#edit').click()
+    // deletion not yet implemented
     // delete
     // confirm?
   })
