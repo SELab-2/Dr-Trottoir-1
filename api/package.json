@@ -10,9 +10,9 @@
     "test": "jest --runInBand \".*\\.test\\.ts\" --coverage"
   },
   "dependencies": {
+    "@selab-2/groep-1-orm": "file:../orm",
     "@sentry/node": "^7.50.0",
     "@sentry/profiling-node": "^0.3.0",
-    "@selab-2/groep-1-orm": "1.0.18",
     "@types/date-arithmetic": "^4.1.1",
     "@types/multer": "^1.4.7",
     "@types/passport": "^1.0.12",
