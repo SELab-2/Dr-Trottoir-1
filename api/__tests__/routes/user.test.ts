@@ -161,7 +161,7 @@ describe("User tests", () => {
                 student: false,
                 super_student: true,
                 admin: false,
-                password: "foobar",
+                password: "FoooB4r.",
             };
 
             const expected = {
@@ -276,7 +276,7 @@ describe("User tests", () => {
             student: false,
             super_student: true,
             admin: false,
-            password: "foobar",
+            password: "FoooB4r.",
         };
         describe("Must be correctly authorized", () => {
             test("Can't use any path without authorization", async () => {
@@ -404,7 +404,7 @@ describe("User tests", () => {
                 student: false,
                 super_student: false,
                 admin: true,
-                password: "adminPassword",
+                password: "FoooB4r.",
             };
 
             await runner.post({
