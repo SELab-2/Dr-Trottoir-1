@@ -14,7 +14,7 @@ export const manual = {
 } satisfies File;
 
 export const image = {
-    id: 1,
+    id: 10,
     time: new Date("1970-01-01T00:00:00"),
     location: "IMGPROXY",
     path: "image.jpg",
