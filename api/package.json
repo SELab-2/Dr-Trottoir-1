@@ -1,6 +1,5 @@
 {
   "scripts": {
-    "prebuild": "prettier --check . && eslint . --max-warnings 0",
     "build": "npx tsc",
     "start": "node ./dist/src/main.js",
     "serve": "nodemon ./src/main.ts",

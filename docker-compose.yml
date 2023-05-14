@@ -1,0 +1,79 @@
+version: '3.5'
+
+name: dr-trottoir
+
+services:
+  postgres:
+    container_name: dr-trottoir-postgres
+    hostname: dr-trottoir-postgres
+    image: postgres
+    environment:
+      POSTGRES_DB: main
+      POSTGRES_USER: admin
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    volumes:
+      - '/docker-volumes/dr-trottoir/postgres:/var/lib/postgresql/data'
+    restart: always
+    networks:
+      public:
+        ipv4_address: 10.0.0.165
+    expose:
+      - 5432
+
+  api:
+    container_name: dr-trottoir-api
+    hostname: dr-trottoir-api
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+      target: "api_production"
+    networks:
+      public:
+        ipv4_address: 10.0.0.166
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dr-trottoir-api.rule=Host(`trottoir.jenspots.com`)"
+      - "traefik.http.routers.dr-trottoir-api.rule=PathPrefix(`/api/`)"
+      - "traefik.http.routers.dr-trottoir-api.entrypoints=websecure"
+      - "traefik.http.routers.dr-trottoir-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.dr-trottoir-api.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.dr-trottoir-api-stripprefix.stripprefix.prefixes=/api/"
+      - "traefik.http.routers.dr-trottoir-api.middlewares=dr-trottoir-api-stripprefix"
+    environment:
+      DATABASE_URL: $DATABASE_URL
+      FILE_STORAGE_DIRECTORY: "/files"
+      CORS: "https://api.jenspots.com"
+      DISABLE_AUTH: "false"
+      ERROR_LOGGER: "false"
+      SMTP_HOST: ""
+      SMTP_PORT: ""
+      SMTP_MAIL_ADDRESS: ""
+      SMTP_MAIL_PASSWORD: $SMTP_MAIL_PASSWORD
+      SENTRY_DSN: $SENTRY_DSN
+    restart: always
+
+  web:
+    container_name: dr-trottoir-web
+    hostname: dr-trottoir-web
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+      target: "web_production"
+      args:
+        VUE_APP_API_SERVER_ADDRESS: https://trottoir.jenspots.com/api/
+    networks:
+      public:
+        ipv4_address:  10.0.0.167
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`trottoir.jenspots.com`)"
+      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+    restart: always
+
+networks:
+  public:
+    external: true
