@@ -73,8 +73,16 @@
           <v-timeline-item
             v-for="entry in data.round.buildings"
             v-bind:key="entry.building.id"
-            :dot-color="progressItems.get(entry.building_id)?.departure ? 'success' : 'grey'"
-            :icon="progressItems.get(entry.building_id)?.departure ? 'mdi-check' : 'mdi-clock'"
+            :dot-color="
+              progressItems.get(entry.building_id)?.departure
+                ? 'success'
+                : 'grey'
+            "
+            :icon="
+              progressItems.get(entry.building_id)?.departure
+                ? 'mdi-check'
+                : 'mdi-clock'
+            "
             size="large"
             width="100%"
           >
@@ -82,7 +90,9 @@
               :class="mobile ? 'shiftUnderTimeLine' : ''"
               :key="JSON.stringify(progressItems.get(entry.building_id))"
               :entry="entry"
-              @changed="progressUpdated(progressItems.get(entry.building_id)?.id)"
+              @changed="
+                progressUpdated(progressItems.get(entry.building_id)?.id)
+              "
               @requestPhotoAdd="
                 (progress) => {
                   currentProgress = progress;
