@@ -9,11 +9,11 @@ import {
     restoreTables,
 } from "../mock/database";
 import {
+    badRequestForeignKey,
     badRequestResponse,
     forbiddenResponse,
     notFoundResponse,
 } from "../utilities/constants";
-import { date } from "date-arithmetic";
 
 describe("Round_building tests", () => {
     let runner: Testrunner;
@@ -71,7 +71,7 @@ describe("Round_building tests", () => {
             });
         });
 
-        test("GET /roud_building", async () => {
+        test("GET /round_building", async () => {
             const expected = [
                 {
                     building: {
@@ -294,7 +294,7 @@ describe("Round_building tests", () => {
                 },
             ];
             await runner.get({
-                url: "/round_building",
+                url: "/round_building?deleted=true",
                 expectedData: expected,
             });
         });
@@ -537,6 +537,66 @@ describe("Round_building tests", () => {
             test("DELETE request", async () => {
                 await runner.delete({
                     url: "/round_building/wrongtype",
+                    statusCode: 400,
+                });
+            });
+        });
+
+        describe("Round and building must exist", () => {
+            beforeEach(() => {
+                runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            });
+
+            test("POST /round_building with not existing round", async () => {
+                const newRoundBuilding = {
+                    round_id: 100,
+                    building_id: 2,
+                };
+
+                await runner.post({
+                    url: "/round_building",
+                    data: newRoundBuilding,
+                    expectedResponse: badRequestForeignKey,
+                    statusCode: 400,
+                });
+            });
+
+            test("PATCH request with not existing round", async () => {
+                const newRoundBuilding = {
+                    round_id: 100,
+                };
+
+                await runner.patch({
+                    url: "/round_building/1",
+                    data: newRoundBuilding,
+                    expectedResponse: badRequestForeignKey,
+                    statusCode: 400,
+                });
+            });
+
+            test("POST /round_building with not existing building", async () => {
+                const newRoundBuilding = {
+                    round_id: 1,
+                    building_id: 100,
+                };
+
+                await runner.post({
+                    url: "/round_building",
+                    data: newRoundBuilding,
+                    expectedResponse: badRequestForeignKey,
+                    statusCode: 400,
+                });
+            });
+
+            test("PATCH request with not existing building", async () => {
+                const newRoundBuilding = {
+                    building_id: 100,
+                };
+
+                await runner.patch({
+                    url: "/round_building/1",
+                    data: newRoundBuilding,
+                    expectedResponse: badRequestForeignKey,
                     statusCode: 400,
                 });
             });
