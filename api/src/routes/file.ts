@@ -54,10 +54,9 @@ export class FileRouting extends Routing {
         }
 
         const file = (req.files as Express.Multer.File[])[0];
-
         const result = await prisma.file.create({
             data: {
-                path: file.filename,
+                path: file.fieldname,
                 mime: file.mimetype,
                 size_in_bytes: file.size,
                 original_name: file.originalname,

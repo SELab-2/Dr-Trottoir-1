@@ -53,8 +53,6 @@ interface PostParameters {
 
 interface PostParametersFile {
     url: string;
-    path: string;
-    location: string;
     expectedResponse: object;
     statusCode?: number;
     file?: string;
@@ -170,8 +168,6 @@ export class Testrunner {
 
     postFile = async ({
         url,
-        path,
-        location,
         expectedResponse,
         statusCode = constants.HTTP_STATUS_CREATED,
         file = "",
@@ -180,8 +176,6 @@ export class Testrunner {
 
         const response = await this.server
             .post(url)
-            .field("path", path)
-            .field("location", location)
             .set("Cookie", [cookie])
             .attach("file", file);
         expect(response.statusCode).toEqual(statusCode);

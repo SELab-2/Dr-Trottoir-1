@@ -2,7 +2,7 @@ import { File, Image } from "@selab-2/groep-1-orm";
 import { prisma } from "./prisma";
 
 export const manual = {
-    id: 1,
+    id: 10,
     user_id: 1,
     original_name: "handleiding.pdf",
     size_in_bytes: 1024,
@@ -20,6 +20,8 @@ export const image = {
     path: "image.jpg",
     user_id: 1,
 } satisfies Image;
+
+
 
 export async function initialiseFiles() {
     await prisma.file.create({
