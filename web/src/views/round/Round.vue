@@ -14,7 +14,6 @@
         </v-btn>
       </div>
 
-
       <MapComponent :buildings="buildings" />
       <div class="grid">
         <BuildingCard
@@ -79,19 +78,25 @@
     title="Verwijder Ronde"
     prepend-icon="mdi-delete"
   >
-    <p class="ma-3"> Je staat op het punt deze ronde te verwijderen. Ben je zeker dat je wilt verder gaan?</p>
+    <p class="ma-3">
+      Je staat op het punt deze ronde te verwijderen. Ben je zeker dat je wilt
+      verder gaan?
+    </p>
     <template v-slot:actions>
       <v-btn
         prepend-icon="mdi-close"
         color="error"
         variant="elevated"
-      >Annuleren</v-btn>
+        @click="showRemovePopup = false"
+        >Annuleren</v-btn
+      >
       <v-btn
         prepend-icon="mdi-check"
         color="success"
         variant="elevated"
-      >Verwijder ronde</v-btn>
-
+        @click="deleteRound()"
+        >Verwijder ronde</v-btn
+      >
     </template>
   </CardPopup>
 </template>
@@ -106,7 +111,6 @@ import {
 import { ref, Ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import RoundCard from "@/components/round/RoundCard.vue";
 import BuildingCard from "@/components/building/BuildingCard.vue";
 import router from "@/router";
