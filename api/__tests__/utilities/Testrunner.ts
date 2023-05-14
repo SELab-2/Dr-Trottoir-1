@@ -177,11 +177,14 @@ export class Testrunner {
         const response = await this.server
             .post(url)
             .set("Cookie", [cookie])
-            .attach("file", file);
+            .attach("files", file);
         expect(response.statusCode).toEqual(statusCode);
 
         // drop the id, as we cannot predict that
         delete response.body["id"];
+        // drop createdAt, updatedAt as we cannot predict that with each test
+        delete response.body["createdAt"];
+        delete response.body["updatedAt"];
 
         this.verifyBody([expectedResponse], response);
 

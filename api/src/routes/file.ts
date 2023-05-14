@@ -7,6 +7,7 @@ import multer from "multer";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 import fs from "fs";
+import path from "path";
 
 export class FileRouting extends Routing {
     private upload = multer({
@@ -37,9 +38,10 @@ export class FileRouting extends Routing {
 
         switch (result.location) {
             case "FILE_SERVER":
-                return res.sendFile(
-                    `${process.env.FILE_STORAGE_DIRECTORY}/${result.path}`,
-                );
+                //path must be absolute path
+                const dirname = path.resolve();
+                const full_path = path.join(dirname,process.env.FILE_STORAGE_DIRECTORY!,result.path);
+                return res.sendFile(full_path);
             case "EXTERNAL":
                 return res.redirect(result.path);
             default:
@@ -56,7 +58,7 @@ export class FileRouting extends Routing {
         const file = (req.files as Express.Multer.File[])[0];
         const result = await prisma.file.create({
             data: {
-                path: file.fieldname,
+                path: file.originalname,
                 mime: file.mimetype,
                 size_in_bytes: file.size,
                 original_name: file.originalname,

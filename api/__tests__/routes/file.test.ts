@@ -36,7 +36,14 @@ describe("File tests", () => {
 
         test("POST /file EXTERNAL", async () => {
 
-            const expected = {}
+            const expected = {
+                   location: "FILE_SERVER",
+                   mime: "text/plain",
+                   original_name: "test2.txt",
+                   path: "test2.txt",
+                   size_in_bytes: 13,
+                   user_id: 2,
+                 }
             await runner.postFile({
                 url: "/file",
                 file: "__tests__/mock/file/test2.txt",
@@ -44,18 +51,15 @@ describe("File tests", () => {
             });
         });
 
-
-
-
         test("GET /file", async () => {
             const expected = [{"createdAt": "1969-12-31T23:00:00.000Z", "id": 10, "location": "FILE_SERVER", "mime": "application/pdf", "original_name": "handleiding.pdf", "path": "manual.pdf", "size_in_bytes": 1024, "updatedAt": "1969-12-31T23:00:00.000Z", "user_id": 1}];
             await runner.get({ url: "/file", expectedData: expected });
         });
 
-        //     test("get /file:id", async () => {
-    //         const expected = {"createdAt": "1969-12-31T23:00:00.000Z", "id": 1, "location": "FILE_SERVER", "mime": "application/pdf", "original_name": "handleiding.pdf", "path": "manual.pdf", "size_in_bytes": 1024, "updatedAt": "1969-12-31T23:00:00.000Z", "user_id": 1};
-    //         await runner.get({ url: "/file/1", expectedData: [expected] });
-    //     });
+        test("GET /file:id", async () => {
+            const expected = {};
+            await runner.get({ url: "/file/11", expectedData: [expected] });
+        });
     });
 
 
