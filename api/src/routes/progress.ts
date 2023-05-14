@@ -173,7 +173,7 @@ export class ProgressRouting extends Routing {
                 description: req.body.description,
                 image_id: newImage.id,
                 progress_id: progress_id,
-            }
+            },
         });
 
         const result = await prisma.progress.findUniqueOrThrow({

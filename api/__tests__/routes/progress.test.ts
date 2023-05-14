@@ -739,8 +739,7 @@ describe("Progress tests", () => {
                 time: timestamp,
                 location: "IMGPROXY",
                 description: "vuilnis",
-                type: "ARRIVAL"
-
+                type: "ARRIVAL",
             };
             const expected = {
                 arrival: "2023-05-04T12:00:00.000Z",
