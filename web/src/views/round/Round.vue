@@ -7,18 +7,14 @@
         <v-btn
           class="text-none"
           prepend-icon="mdi-delete"
-          @click="deleteRound()"
+          @click="showRemovePopup = true"
           color="error"
         >
           Verwijderen
         </v-btn>
       </div>
 
-      <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
-        <h2>Gebouwen</h2>
-        <div class="flex-grow-1"></div>
-        <RoundedButton icon="mdi-calendar" value="Wijzigen" />
-      </div>
+
       <MapComponent :buildings="buildings" />
       <div class="grid">
         <BuildingCard
@@ -77,6 +73,27 @@
       </div>
     </div>
   </HFillWrapper>
+  <CardPopup
+    v-model="showRemovePopup"
+    :width="342"
+    title="Verwijder Ronde"
+    prepend-icon="mdi-delete"
+  >
+    <p class="ma-3"> Je staat op het punt deze ronde te verwijderen. Ben je zeker dat je wilt verder gaan?</p>
+    <template v-slot:actions>
+      <v-btn
+        prepend-icon="mdi-close"
+        color="error"
+        variant="elevated"
+      >Annuleren</v-btn>
+      <v-btn
+        prepend-icon="mdi-check"
+        color="success"
+        variant="elevated"
+      >Verwijder ronde</v-btn>
+
+    </template>
+  </CardPopup>
 </template>
 
 <script setup lang="ts">
@@ -96,6 +113,7 @@ import router from "@/router";
 import { useRoute } from "vue-router";
 import DateRange from "@/components/filter/DateRange.vue";
 import MapComponent from "@/components/maps/MapComponent.vue";
+import CardPopup from "@/components/popups/CardPopup.vue";
 
 /**
  * Get a date days from a given date
@@ -106,6 +124,8 @@ function daysFromDate(days: number, date: Date = new Date()): Date {
   const day = 24 * 60 * 60 * 1000;
   return new Date(date.getTime() + days * day);
 }
+
+const showRemovePopup = ref(false);
 
 const planningStart: Ref<Date> = ref(new Date());
 const planningEnd: Ref<Date> = ref(daysFromDate(6));
