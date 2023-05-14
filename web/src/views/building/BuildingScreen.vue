@@ -10,12 +10,7 @@
       <div>
         <div class="d-flex justify-space-between">
           <h1 class="building-name">{{ building.name }}</h1>
-          <RoundedButton
-            v-if="!useAuthStore().auth?.student"
-            @clicked="() => router.push({ name: 'building_new' })"
-            icon="mdi-pencil"
-            class="mt-2"
-          />
+          <!-- TODO: add btn to link to building edit page once we have building edit page -->
         </div>
 
         <!-- TODO add in API
@@ -27,16 +22,25 @@
         </p> -->
 
         <div style="display: flex; gap: 16px; flex-wrap: wrap" class="mt-2">
-          <RoundedButton
-            icon="mdi-map-search"
+          <v-btn
+            class="text-none"
+            prepend-icon="mdi-map-search"
             @click="tomaps()"
-            value="Kaarten"
-          />
-          <RoundedButton
-            icon="mdi-file-pdf-box"
+            color="primary"
+
+          >
+            Kaarten
+          </v-btn>
+          <v-btn
+            class="text-none"
+            append-icon="mdi-download"
+            prepend-icon="mdi-file-pdf-box"
             @click="toClip('TODO')"
-            value="Handleiding"
-          />
+            color="success"
+
+          >
+            Handleiding
+          </v-btn>
           <!-- TODO add in API
           <RoundedButton icon="mdi-lock" @click="toClip('TODO')" value="TODO" /> -->
         </div>
@@ -47,7 +51,6 @@
           display: flex;
           gap: 16px;
           align-items: center;
-          border-radius: 10px;
           padding: 16px 0 16px 16px;
         "
       >
@@ -75,16 +78,24 @@
         <div style="flex-grow: 1"></div>
 
         <div style="gap: 16px; flex-wrap: wrap" class="d-flex flex-row-reverse">
-          <RoundedButton
-            icon="mdi-phone"
+          <v-btn
+            class="text-none"
+            prepend-icon="mdi-phone"
             @click="call(building?.syndicus?.user.phone)"
-            :value="building?.syndicus?.user.phone"
-          />
-          <RoundedButton
-            icon="mdi-mail"
-            value="E-mail"
+            color="primary"
+            rounded
+          >
+            {{building?.syndicus?.user.phone}}
+          </v-btn>
+          <v-btn
+            class="text-none"
+            prepend-icon="mdi-mail"
             @click="mail(building?.syndicus?.user.email)"
-          />
+            color="primary"
+            rounded
+          >
+            E-mail
+          </v-btn>
         </div>
       </CardLayout>
 
@@ -92,15 +103,14 @@
         <div class="d-flex mt-8 flex-wrap align-center">
           <h2 class="me-auto">Taken</h2>
           <div class="d-flex flex-wrap">
-
-            <RoundedButton
-              icon="mdi-plus"
-              class="mx-1 mt-1"
-              value="Toevoegen"
-              @click="
-                () => router.push({ name: 'garbage_plan', params: { id: id } })
-              "
-            />
+            <v-btn
+              class="mx-1 mt-1 text-none"
+              prepend-icon="mdi-plus"
+              :to="{ name: 'garbage_plan', params: { id: id } }"
+              color="primary"
+            >
+              Toevoegen
+            </v-btn>
           </div>
         </div>
         <div class="grid">
