@@ -33,3 +33,20 @@ jobs:
                 env:
                     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
+    docker-build:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./web
+        steps:
+            -   name: "Checkout"
+                uses: actions/checkout@v3
+            -   uses: actions/setup-node@v3
+                with:
+                    node-version: '16.x'
+                    registry-url: 'https://npm.pkg.github.com'
+                    scope: '@selab-2'
+            -   name: "Run Docker build"
+                run: docker build -t dr_trottoir/web .
+
+
