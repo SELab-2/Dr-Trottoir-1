@@ -8,18 +8,19 @@
       />
 
       <div>
-        <div style="
-          display: flex;
-          gap: 16px;
-          align-items: center;
-        ">
+        <div class="grid" style="align-items: center;">
           <h1 class="building-name">{{ building.name }}</h1>
-          <v-spacer/>
-          <v-chip variant="outlined" color="border">
-            <v-icon icon="mdi-map-marker" color="black"/>
-            <p class="text-black">{{building.address.street}} {{building.address.number}}, {{building.address.zip_code}}, {{building.address.city}}</p>
-          </v-chip>
-          <!-- TODO: add btn to link to building edit page once we have building edit page -->
+          <div class="grid-right">
+            <v-chip variant="outlined" color="border" class="mr-2">
+              <v-icon icon="mdi-identifier" color="black"/>
+              <p class="text-black">{{building.ivago_id}}</p>
+            </v-chip>
+            <v-chip variant="outlined" color="border">
+              <v-icon icon="mdi-map-marker" color="black"/>
+              <p class="text-black">{{building.address.street}} {{building.address.number}}, {{building.address.zip_code}}, {{building.address.city}}</p>
+            </v-chip>
+            <!-- TODO: add btn to link to building edit page once we have building edit page -->
+          </div>
         </div>
         <p>
           {{ building.description }}
@@ -38,7 +39,7 @@
             class="text-none"
             append-icon="mdi-download"
             prepend-icon="mdi-file-pdf-box"
-            @click="toClip('TODO')"
+            @click="downloadManual()"
             color="success"
 
           >
@@ -49,58 +50,48 @@
         </div>
       </div>
 
+
       <CardLayout
-        style="
-          display: flex;
-          gap: 16px;
-          align-items: center;
-          padding: 16px 0 16px 16px;
-        "
+        class="grid pt-3 pb-1 px-3" style="align-items: center;"
       >
-        <Avatar
-          :name="
-            building.syndicus?.user.first_name +
-            ' ' +
-            building.syndicus?.user.last_name
-          "
-        ></Avatar>
-
         <div>
-          <p style="font-weight: 600; font-size: 16px; opacity: 90%">
-            SYNDICUS
-          </p>
-          <p style="font-weight: 500">
-            {{
+          <div style="gap: 16px; flex-wrap: wrap" class="d-flex flex-row">
+            <Avatar
+              :name="
               building.syndicus?.user.first_name +
-              " " +
+              ' ' +
               building.syndicus?.user.last_name
-            }}
-          </p>
+            "
+            />
+            <div>
+              <p style="font-weight: 600; font-size: 16px; opacity: 90%">
+                SYNDICUS
+              </p>
+              <p style="font-weight: 500">
+                {{
+                  building.syndicus?.user.first_name +
+                  " " +
+                  building.syndicus?.user.last_name
+                }}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div style="flex-grow: 1"></div>
-
-        <div style="gap: 16px; flex-wrap: wrap" class="d-flex flex-row-reverse">
-          <v-btn
-            class="text-none"
-            prepend-icon="mdi-phone"
-            @click="call(building?.syndicus?.user.phone)"
-            color="primary"
-            rounded
-          >
-            {{building?.syndicus?.user.phone}}
-          </v-btn>
-          <v-btn
-            class="text-none"
-            prepend-icon="mdi-mail"
-            @click="mail(building?.syndicus?.user.email)"
-            color="primary"
-            rounded
-          >
-            E-mail
-          </v-btn>
+        <div class="grid-right"
+        >
+          <SyndicusButtons
+            :email="building.syndicus.user.email"
+            :click-email="mail"
+            :phone="building.syndicus.user.phone"
+            :click-phone="call"
+          />
         </div>
+
       </CardLayout>
+
+      <!--rest is not for student-->
+      <div v-show="useAuthStore().auth!.syndicus || useAuthStore().auth!.admin || useAuthStore().auth!.super_student">
 
       <div class="space-y-8">
         <div class="d-flex mt-8 flex-wrap align-center">
@@ -170,16 +161,17 @@
           <p>Geen bezoeken voor de geselecteerde periode.</p>
         </div>
       </div>
+    </div>
     </v-card>
   </HFillWrapper>
 </template>
 
 <script lang="ts" setup>
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
-import router from "@/router";
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
+import axios from 'axios';
+import fs from 'fs';
 import {
   BuildingQuery,
   ProgressQuery,
@@ -193,6 +185,7 @@ import { GarbageQuery } from "@selab-2/groep-1-query/dist/garbage";
 import { useAuthStore } from "@/stores/auth";
 import DateRange from "@/components/filter/DateRange.vue";
 import {daysFromDate} from "@/assets/scripts/date";
+import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 
 const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
 const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
@@ -242,6 +235,7 @@ const props = defineProps({
 
 await tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
+  console.log(building.value)
 });
 
 async function getVisits() {
@@ -332,6 +326,15 @@ await getTasks();
 
   @media (min-width: 700px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.grid-right {
+  margin-left: 0;
+  margin-right: auto;
+  @media (min-width: 700px) {
+    margin-left: auto;
+    margin-right: 0;
   }
 }
 
