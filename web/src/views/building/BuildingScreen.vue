@@ -39,7 +39,7 @@
             class="text-none"
             append-icon="mdi-download"
             prepend-icon="mdi-file-pdf-box"
-            href="http://10.0.0.5:8080/file/1"
+            :href="'http://10.0.0.5:8080/file/' + building.manual?.id"
             color="success"
 
           >
