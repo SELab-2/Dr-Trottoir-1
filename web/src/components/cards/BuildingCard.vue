@@ -139,15 +139,12 @@ tryOrAlertAsync(async () => {
   can_expand.value = can_expand.value && progresses.value.length > 0;
 });
 
-function route(date: Date | null) {
-  console.log(`TODO: link to ${date}`);
+function route() {
   if (props.building) {
     router.push({
       name: "building_id",
       params: {
         id: props.building.id,
-        // TODO change to different route with:
-        //  date: new Date(date).toLocaleDateString("nl"),
       },
     });
   }
