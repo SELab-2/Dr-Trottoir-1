@@ -28,15 +28,11 @@ describe("Garbage tests", () => {
     });
 
     describe("Successful requests", () => {
-        beforeAll(() => {
+        beforeEach(() => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
         });
 
         describe("GET /garbage with different roles", () => {
-            afterAll(() => {
-                runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
-            });
-
             const expectedData = [
                 {
                     action: { description: "action 1", id: 1 },
@@ -140,10 +136,6 @@ describe("Garbage tests", () => {
         });
 
         describe("GET /garbage/:id with different roles", () => {
-            afterAll(() => {
-                runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
-            });
-
             const expected = [
                 {
                     id: 1,
