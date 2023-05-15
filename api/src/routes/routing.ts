@@ -90,6 +90,7 @@ export function selectBuilding() {
             id: true,
             name: true,
             ivago_id: true,
+            description: true,
             deleted: true,
             hash: false,
             address: true,

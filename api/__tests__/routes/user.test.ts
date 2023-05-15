@@ -2,12 +2,7 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import {
-    deleteDatabaseData,
-    initialiseDatabase,
-    resetDatabase,
-    restoreTables,
-} from "../mock/database";
+import { resetDatabase, restoreTables } from "../mock/database";
 import {
     badRequestResponse,
     conflictResponse,
@@ -166,7 +161,7 @@ describe("User tests", () => {
                 student: false,
                 super_student: true,
                 admin: false,
-                password: "foobar",
+                password: "FoooB4r.",
             };
 
             const expected = {
@@ -209,9 +204,244 @@ describe("User tests", () => {
                 expectedResponse: user,
             });
         });
+
         test("DELETE /user/:id", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            const hardUser = {
+                hardDelete: true,
+            };
+            await runner.delete({
+                url: "/user/5",
+                data: hardUser,
+            });
+
+            // verify that the user is truly deleted
+
+            const expected = [
+                {
+                    address: {
+                        city: "Sydney",
+                        id: 1,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                        number: 42,
+                        street: "Wallaby Way",
+                        zip_code: 2000,
+                    },
+                    address_id: 1,
+                    admin: false,
+                    date_added: "2023-05-04T12:00:00.000Z",
+                    deleted: false,
+                    email: "student@trottoir.be",
+                    first_name: "Dirk",
+                    id: 1,
+                    last_login: "2023-05-04T12:00:00.000Z",
+                    last_name: "De Student",
+                    phone: "0123456789",
+                    regions: [
+                        {
+                            id: 1,
+                            region: { deleted: false, id: 1, name: "Region 1" },
+                            region_id: 1,
+                            user_id: 1,
+                        },
+                    ],
+                    student: true,
+                    super_student: false,
+                },
+                {
+                    address: {
+                        city: "Ghent",
+                        id: 2,
+                        latitude: 51.04732,
+                        longitude: 3.7282,
+                        number: 25,
+                        street: "Sint-Pietersnieuwstraat",
+                        zip_code: 9000,
+                    },
+                    address_id: 2,
+                    admin: false,
+                    date_added: "2023-05-04T12:00:00.000Z",
+                    deleted: false,
+                    email: "superstudent@trottoir.be",
+                    first_name: "Toon",
+                    id: 2,
+                    last_login: "2023-05-04T12:00:00.000Z",
+                    last_name: "De Superstudent",
+                    phone: "9876543210",
+                    regions: [
+                        {
+                            id: 2,
+                            region: { deleted: false, id: 2, name: "Region 2" },
+                            region_id: 2,
+                            user_id: 2,
+                        },
+                    ],
+                    student: false,
+                    super_student: true,
+                },
+            ];
+
+            await runner.get({
+                url: "/user?deleted=true",
+                expectedData: expected,
+            });
+        });
+
+        test("SOFT DELETE /user/:id (admin)", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             await runner.delete({
                 url: "/user/1",
+            });
+
+            // verify that the user is truly soft deleted
+
+            const expected = [
+                {
+                    address: {
+                        city: "Sydney",
+                        id: 1,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                        number: 42,
+                        street: "Wallaby Way",
+                        zip_code: 2000,
+                    },
+                    address_id: 1,
+                    admin: false,
+                    date_added: "2023-05-04T12:00:00.000Z",
+                    deleted: true,
+                    email: "student@trottoir.be",
+                    first_name: "Dirk",
+                    id: 1,
+                    last_login: "2023-05-04T12:00:00.000Z",
+                    last_name: "De Student",
+                    phone: "0123456789",
+                    regions: [
+                        {
+                            id: 1,
+                            region: { deleted: false, id: 1, name: "Region 1" },
+                            region_id: 1,
+                            user_id: 1,
+                        },
+                    ],
+                    student: true,
+                    super_student: false,
+                },
+                {
+                    address: {
+                        city: "Ghent",
+                        id: 2,
+                        latitude: 51.04732,
+                        longitude: 3.7282,
+                        number: 25,
+                        street: "Sint-Pietersnieuwstraat",
+                        zip_code: 9000,
+                    },
+                    address_id: 2,
+                    admin: false,
+                    date_added: "2023-05-04T12:00:00.000Z",
+                    deleted: false,
+                    email: "superstudent@trottoir.be",
+                    first_name: "Toon",
+                    id: 2,
+                    last_login: "2023-05-04T12:00:00.000Z",
+                    last_name: "De Superstudent",
+                    phone: "9876543210",
+                    regions: [
+                        {
+                            id: 2,
+                            region: { deleted: false, id: 2, name: "Region 2" },
+                            region_id: 2,
+                            user_id: 2,
+                        },
+                    ],
+                    student: false,
+                    super_student: true,
+                },
+            ];
+
+            await runner.get({
+                url: "/user?deleted=true",
+                expectedData: expected,
+            });
+        });
+
+        test("SOFT DELETE /user/:id (super-student", async () => {
+            await runner.delete({
+                url: "/user/5",
+            });
+
+            // verify that the user is truly soft deleted
+
+            const expected = [
+                {
+                    address: {
+                        city: "Sydney",
+                        id: 1,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                        number: 42,
+                        street: "Wallaby Way",
+                        zip_code: 2000,
+                    },
+                    address_id: 1,
+                    admin: false,
+                    date_added: "2023-05-04T12:00:00.000Z",
+                    deleted: false,
+                    email: "student@trottoir.be",
+                    first_name: "Dirk",
+                    id: 1,
+                    last_login: "2023-05-04T12:00:00.000Z",
+                    last_name: "De Student",
+                    phone: "0123456789",
+                    regions: [
+                        {
+                            id: 1,
+                            region: { deleted: false, id: 1, name: "Region 1" },
+                            region_id: 1,
+                            user_id: 1,
+                        },
+                    ],
+                    student: true,
+                    super_student: false,
+                },
+                {
+                    address: {
+                        city: "Ghent",
+                        id: 2,
+                        latitude: 51.04732,
+                        longitude: 3.7282,
+                        number: 25,
+                        street: "Sint-Pietersnieuwstraat",
+                        zip_code: 9000,
+                    },
+                    address_id: 2,
+                    admin: false,
+                    date_added: "2023-05-04T12:00:00.000Z",
+                    deleted: false,
+                    email: "superstudent@trottoir.be",
+                    first_name: "Toon",
+                    id: 2,
+                    last_login: "2023-05-04T12:00:00.000Z",
+                    last_name: "De Superstudent",
+                    phone: "9876543210",
+                    regions: [
+                        {
+                            id: 2,
+                            region: { deleted: false, id: 2, name: "Region 2" },
+                            region_id: 2,
+                            user_id: 2,
+                        },
+                    ],
+                    student: false,
+                    super_student: true,
+                },
+            ];
+
+            await runner.get({
+                url: "/user",
+                expectedData: expected,
             });
         });
 
@@ -256,6 +486,20 @@ describe("User tests", () => {
                 expectedData: expected,
             });
         });
+
+        test("PATCH /user/:id (change password)", async () => {
+            const user = (await runner.getRaw("/user/1")).body;
+
+            const changePassword = {
+                password: "Pa55word#",
+            };
+
+            await runner.patch({
+                url: "/user/1",
+                data: changePassword,
+                expectedResponse: user,
+            });
+        });
     });
     /**
      * Negative tests against the API.
@@ -281,7 +525,7 @@ describe("User tests", () => {
             student: false,
             super_student: true,
             admin: false,
-            password: "foobar",
+            password: "FoooB4r.",
         };
         describe("Must be correctly authorized", () => {
             test("Can't use any path without authorization", async () => {
@@ -409,7 +653,7 @@ describe("User tests", () => {
                 student: false,
                 super_student: false,
                 admin: true,
-                password: "adminPassword",
+                password: "FoooB4r.",
             };
 
             await runner.post({
@@ -447,6 +691,168 @@ describe("User tests", () => {
                     expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
+            });
+        });
+
+        describe("The requested path must exist", () => {
+            beforeEach(() => {
+                runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            });
+
+            test("Find a nonexistent user", async () => {
+                await runner.get({
+                    url: "/user/100",
+                    expectedData: [notFoundResponse],
+                    statusCode: 404,
+                });
+            });
+
+            test("Update a nonexistent user", async () => {
+                const newUser = {
+                    first_name: "Ik",
+                };
+                await runner.patch({
+                    url: "/user/1000",
+                    data: newUser,
+                    expectedResponse: notFoundResponse,
+                    statusCode: 404,
+                });
+            });
+            test("Delete a nonexistent user", async () => {
+                await runner.delete({ url: "/user/100", statusCode: 404 });
+            });
+        });
+        describe("The type of user id must be correct", () => {
+            beforeEach(() => {
+                runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            });
+
+            test("GET request", async () => {
+                await runner.get({
+                    url: "/user/wrongtype",
+                    expectedData: [badRequestResponse],
+                    statusCode: 400,
+                });
+            });
+
+            test("PATCH request", async () => {
+                const newUser = {
+                    name: "Ik",
+                };
+
+                await runner.patch({
+                    url: "/user/wrongtype",
+                    data: newUser,
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+
+            test("DELETE request", async () => {
+                await runner.delete({
+                    url: "/user/wrongtype",
+                    statusCode: 400,
+                });
+            });
+        });
+    });
+
+    describe("Password validation tests", () => {
+        beforeEach(() => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+        });
+
+        const expected = {
+            id: 1,
+            email: "student@trottoir.be",
+            first_name: "Dirk",
+            last_name: "De Student",
+            last_login: "2023-05-04T12:00:00.000Z",
+            date_added: "2023-05-04T12:00:00.000Z",
+            phone: "0123456789",
+            address_id: 1,
+            student: true,
+            super_student: false,
+            admin: false,
+            deleted: false,
+            address: {
+                id: 1,
+                street: "Wallaby Way",
+                number: 42,
+                city: "Sydney",
+                zip_code: 2000,
+                latitude: -33.865143,
+                longitude: 151.2099,
+            },
+            regions: [
+                {
+                    id: 1,
+                    user_id: 1,
+                    region_id: 1,
+                    region: { id: 1, name: "Region 1", deleted: false },
+                },
+            ],
+        };
+
+        test("Password must have at least 8 characters", async () => {
+            // password is too short
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "Sh0rPs." },
+                statusCode: 400,
+                expectedResponse: badRequestResponse,
+            });
+
+            // Password is long enough
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "L0ngPassword." },
+                expectedResponse: expected,
+            });
+        });
+
+        test("Password must have at least one numeric character", async () => {
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "NoNumericPresent." },
+                expectedResponse: badRequestResponse,
+                statusCode: 400,
+            });
+
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "Numer1cPr3sent." },
+                expectedResponse: expected,
+            });
+        });
+
+        test("Password must have at least one uppercase character", async () => {
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "alll0wercase." },
+                expectedResponse: badRequestResponse,
+                statusCode: 400,
+            });
+
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "UpperC4sePresent." },
+                expectedResponse: expected,
+            });
+        });
+
+        test("Password must have at least one special character", async () => {
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "NoSp3cialCharsHere" },
+                expectedResponse: badRequestResponse,
+                statusCode: 400,
+            });
+
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "Sp3cial.Chars.Present!" },
+                expectedResponse: expected,
             });
         });
     });
