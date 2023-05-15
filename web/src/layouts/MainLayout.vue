@@ -10,11 +10,14 @@
         color="background"
       >
         <v-list density="compact" nav>
-          <v-list-item lines="two">
+          <v-list-item lines="two" :to="{
+                name: 'account_settings',
+                params: { id: id },
+              }">
             <template v-slot:prepend>
               <Avatar :name="studentName" />
             </template>
-            <div class="flex">
+            <div class="flex" >
               <div class="text">
                 <v-list-item-title>{{ studentName }}</v-list-item-title>
                 <v-list-item-subtitle v-if="useAuthStore()?.auth?.admin">
@@ -41,19 +44,6 @@
               title="Afmelden"
               value="logout"
             />
-
-            <router-link
-              :to="{
-                name: 'account_settings',
-                params: { id: id },
-              }"
-            >
-              <v-list-item
-                prepend-icon="mdi-cog"
-                title="Account"
-                value="account"
-              />
-            </router-link>
           </div>
 
           <div class="py-2">
