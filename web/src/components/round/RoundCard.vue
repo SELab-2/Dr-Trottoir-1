@@ -12,7 +12,9 @@
   >
     <div>
       <h3 id="date">{{ new Date(schedule.day).toLocaleDateString() }}</h3>
-      <p id="student">{{ schedule.user.first_name }} {{ schedule.user.last_name }}</p>
+      <p id="student">
+        {{ schedule.user.first_name }} {{ schedule.user.last_name }}
+      </p>
     </div>
     <div class="flex-grow-1"></div>
     <RoundedButton
