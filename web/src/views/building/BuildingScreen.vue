@@ -8,14 +8,14 @@
       />
 
       <div>
-        <div class="grid" style="align-items: center;">
+        <div class="flex-container">
           <h1 class="building-name">{{ building.name }}</h1>
-          <div class="grid-right">
-            <v-chip variant="outlined" color="border" class="mr-2">
+          <div style="display: flex; flex-wrap: wrap;">
+            <v-chip variant="outlined" color="border" class="mr-2 labels">
               <v-icon icon="mdi-identifier" color="black"/>
               <p class="text-black">{{building.ivago_id}}</p>
             </v-chip>
-            <v-chip variant="outlined" color="border">
+            <v-chip variant="outlined" color="border" class="labels">
               <v-icon icon="mdi-map-marker" color="black"/>
               <p class="text-black">{{building.address.street}} {{building.address.number}}, {{building.address.zip_code}}, {{building.address.city}}</p>
             </v-chip>
@@ -39,12 +39,13 @@
             class="text-none"
             append-icon="mdi-download"
             prepend-icon="mdi-file-pdf-box"
-            @click="downloadManual()"
+            href="http://10.0.0.5:8080/file/1"
             color="success"
 
           >
             Handleiding
           </v-btn>
+
           <!-- TODO add in API
           <RoundedButton icon="mdi-lock" @click="toClip('TODO')" value="TODO" /> -->
         </div>
@@ -170,8 +171,6 @@
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
-import axios from 'axios';
-import fs from 'fs';
 import {
   BuildingQuery,
   ProgressQuery,
@@ -352,5 +351,21 @@ await getTasks();
   width: fit-content;
   height: fit-content;
   color: #000000de;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @media (max-width: 700px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.labels{
+  @media (max-width: 700px) {
+    margin-bottom: 5px;
+  }
 }
 </style>
