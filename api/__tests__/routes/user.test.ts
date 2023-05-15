@@ -161,7 +161,7 @@ describe("User tests", () => {
                 student: false,
                 super_student: true,
                 admin: false,
-                password: "foobar",
+                password: "FoooB4r.",
             };
 
             const expected = {
@@ -276,7 +276,7 @@ describe("User tests", () => {
             student: false,
             super_student: true,
             admin: false,
-            password: "foobar",
+            password: "FoooB4r.",
         };
         describe("Must be correctly authorized", () => {
             test("Can't use any path without authorization", async () => {
@@ -404,7 +404,7 @@ describe("User tests", () => {
                 student: false,
                 super_student: false,
                 admin: true,
-                password: "adminPassword",
+                password: "FoooB4r.",
             };
 
             await runner.post({
@@ -442,6 +442,106 @@ describe("User tests", () => {
                     expectedResponse: badRequestResponse,
                     statusCode: 400,
                 });
+            });
+        });
+    });
+
+    describe("Password validation tests", () => {
+        beforeEach(() => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+        });
+
+        const expected = {
+            id: 1,
+            email: "student@trottoir.be",
+            first_name: "Dirk",
+            last_name: "De Student",
+            last_login: "2023-05-04T12:00:00.000Z",
+            date_added: "2023-05-04T12:00:00.000Z",
+            phone: "0123456789",
+            address_id: 1,
+            student: true,
+            super_student: false,
+            admin: false,
+            deleted: false,
+            address: {
+                id: 1,
+                street: "Wallaby Way",
+                number: 42,
+                city: "Sydney",
+                zip_code: 2000,
+                latitude: -33.865143,
+                longitude: 151.2099,
+            },
+            regions: [
+                {
+                    id: 1,
+                    user_id: 1,
+                    region_id: 1,
+                    region: { id: 1, name: "Region 1", deleted: false },
+                },
+            ],
+        };
+
+        test("Password must have at least 8 characters", async () => {
+            // password is too short
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "Sh0rPs." },
+                statusCode: 400,
+                expectedResponse: badRequestResponse,
+            });
+
+            // Password is long enough
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "L0ngPassword." },
+                expectedResponse: expected,
+            });
+        });
+
+        test("Password must have at least one numeric character", async () => {
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "NoNumericPresent." },
+                expectedResponse: badRequestResponse,
+                statusCode: 400,
+            });
+
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "Numer1cPr3sent." },
+                expectedResponse: expected,
+            });
+        });
+
+        test("Password must have at least one uppercase character", async () => {
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "alll0wercase." },
+                expectedResponse: badRequestResponse,
+                statusCode: 400,
+            });
+
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "UpperC4sePresent." },
+                expectedResponse: expected,
+            });
+        });
+
+        test("Password must have at least one special character", async () => {
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "NoSp3cialCharsHere" },
+                expectedResponse: badRequestResponse,
+                statusCode: 400,
+            });
+
+            await runner.patch({
+                url: "/user/1",
+                data: { password: "Sp3cial.Chars.Present!" },
+                expectedResponse: expected,
             });
         });
     });

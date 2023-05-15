@@ -13,20 +13,20 @@
         required
         id="ivagoid"
         type="text"
-        v-model="building.ivagoId"
-        label="Ivago id"
+        v-model="building.ivago_id"
+        label="Ivago ID"
       ></v-text-field>
       <v-select
         id="syndicus"
         label="Syndicus"
-        :items="['Jeff', 'Elon', 'Tim', 'Bill', 'Warren', 'Steve']"
-        v-model="building.syndicus"
+        :items="syndici.map((e) => e.id)"
+        v-model="building.syndicus_id"
       ></v-select>
 
       <v-file-input
+        disabled
         prepend-icon=""
         prepend-inner-icon="mdi-file"
-        v-model="building.manual"
         label="Manual"
       ></v-file-input>
     </BorderCard>
@@ -56,7 +56,7 @@
               required
               id="longitude"
               type="number"
-              v-model="address2.longitude"
+              v-model="address.longitude"
               label="Longitude"
             ></v-text-field>
           </v-col>
@@ -65,7 +65,7 @@
               required
               id="latitude"
               type="number"
-              v-model="address2.latitude"
+              v-model="address.latitude"
               label="Latitude"
             ></v-text-field>
           </v-col>
@@ -73,44 +73,41 @@
         <!-- addres forum gebruiken -->
         <AddressForm
           id="addressform"
-          @onUpdate="(newAddress) => (address2 = newAddress)"
+          @onUpdate="(newAddress) => (address = newAddress)"
         ></AddressForm>
       </div>
     </BorderCard>
 
-    <BorderCard prepend-icon="mdi-image">
-      <!-- v-card met alle extra afbeeldingen -->
-      <template v-slot:title> Extra afbeeldigen </template>
-      <v-card-item>
-        <MultiAddImage @form-submitted="handleMultiImages"> </MultiAddImage>
-        <div ref="container"></div>
-      </v-card-item>
-    </BorderCard>
-    <div class="d-flex flex-row-reverse mt-3">
-      <v-btn
-        id="submit"
-        @click="submit"
-        to="/gebouw/0"
-        type="submit"
-        color="success"
-        prepend-icon="mdi-check"
-        >Maak gebouw</v-btn
-      >
-    </div>
+    <v-btn
+      id="submit"
+      @click="submit"
+      type="submit"
+      color="success"
+      prepend-icon="mdi-check"
+      class="mb-12"
+      >Maak gebouw</v-btn
+    >
   </HFillWrapper>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import MultiAddImage from "@/components/images/MultiAddImage.vue";
-import Address2 from "@/components/models/Address2";
-import Building from "@/components/models/Building";
 import AddressForm from "../../components/forms/AddressForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
+import { tryOrAlertAsync } from "@/try";
+import {
+  AddressQuery,
+  BuildingQuery,
+  SyndicusQuery,
+} from "@selab-2/groep-1-query";
+import router from "@/router";
 
 const dummyMap = ref(null);
-const address2 = ref<Address2>({
+
+const syndici = await new SyndicusQuery().getAll();
+
+const address = ref({
   street: "",
   number: 0,
   city: "",
@@ -119,25 +116,22 @@ const address2 = ref<Address2>({
   longitude: 0,
 });
 
-const building = ref<Building>({
+const building = ref({
   name: "",
-  ivagoId: "",
-  syndicus: "",
-  manual: [],
+  ivago_id: "",
+  syndicus_id: 0,
+  address_id: 0,
+  manual_id: null,
 });
 
-//TODO: handle multi image
-const handleMultiImages = () => {};
-//TODO: api request
 const submit = () => {
-  try {
-    //alle data zit in building
-    //const response = await axios.post("", );
-    //console.log(response.data);
-    // reset form after submit
-    //previewBuildingImage.value = ref(null);
-  } catch (error) {
-    console.log(error);
-  }
+  tryOrAlertAsync(async () => {
+    const { id } = await new AddressQuery().createOne(address.value);
+    building.value.address_id = id;
+    const { id: buildingId } = await new BuildingQuery().createOne(
+      building.value,
+    );
+    await router.push(`/gebouw/${buildingId}`);
+  });
 };
 </script>

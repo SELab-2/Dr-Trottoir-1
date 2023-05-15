@@ -10,6 +10,8 @@
     "test": "jest --runInBand \".*\\.test\\.ts\" --coverage"
   },
   "dependencies": {
+    "@sentry/node": "^7.50.0",
+    "@sentry/profiling-node": "^0.3.0",
     "@selab-2/groep-1-orm": "1.0.18",
     "@types/date-arithmetic": "^4.1.1",
     "@types/multer": "^1.4.7",
@@ -25,6 +27,7 @@
     "express-session": "^1.17.3",
     "helmet": "^7.0.0",
     "joi": "^17.9.2",
+    "joi-password": "^4.1.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.1",
