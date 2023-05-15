@@ -3,20 +3,21 @@ import { Header } from "@/components/table/Header";
 import { RowType } from "@/components/table/RowType";
 import { Result, ActionQuery } from "@selab-2/groep-1-query";
 
-export interface DetailedDay {
+export interface GarbageOverviewEntry {
   date: Date;
   action: Result<ActionQuery>;
   time: string;
+  preview: boolean
 }
 
-export class GarbageTable extends TableEntity<DetailedDay> {
-  static headers(): Array<Header<DetailedDay>> {
+export class GarbageOverviewTable extends TableEntity<GarbageOverviewEntry> {
+  static headers(): Array<Header<GarbageOverviewEntry>> {
     return [
       {
         id: 0,
         name: "Day",
         fit: false,
-        get: (e: DetailedDay) => e.date.toLocaleDateString(),
+        get: (e: GarbageOverviewEntry) => e.date.toLocaleDateString(),
         type: RowType.TEXT,
         sortable: false,
       },
@@ -24,7 +25,7 @@ export class GarbageTable extends TableEntity<DetailedDay> {
         id: 1,
         name: "Actie",
         fit: false,
-        get: (e: DetailedDay) => e.action.description,
+        get: (e: GarbageOverviewEntry) => e.action.description,
         type: RowType.TEXT,
         sortable: false,
       },
@@ -32,7 +33,7 @@ export class GarbageTable extends TableEntity<DetailedDay> {
         id: 2,
         name: "Tijd",
         fit: false,
-        get: (e: DetailedDay) => e.time,
+        get: (e: GarbageOverviewEntry) => e.time,
         type: RowType.TEXT,
         sortable: false,
       },
@@ -40,18 +41,15 @@ export class GarbageTable extends TableEntity<DetailedDay> {
         id: 3,
         name: "",
         fit: true,
-        get: () => "mdi-close",
+        get: (e: GarbageOverviewEntry) => e.preview ? "mdi-new-box":"",
         type: RowType.ICONBUTTON,
         sortable: false,
-        onClick: (e: DetailedDay, list: Array<DetailedDay | null>) => {
-          const index = list.findIndex((x) => x === e);
-          list[index] = null;
-        },
+        onClick: () => {},
       },
-    ].map((e) => new Header<DetailedDay>(e));
+    ].map((e) => new Header<GarbageOverviewEntry>(e));
   }
 
-  headers(): Array<Header<DetailedDay>> {
+  headers(): Array<Header<GarbageOverviewEntry>> {
     return GarbageTable.headers();
   }
 
