@@ -96,6 +96,7 @@
               :class="mobile ? 'shiftUnderTimeLine' : ''"
               :key="JSON.stringify(entry.progress)"
               :entry="entry"
+              :day='data.day'
               @changed="progressUpdated(entry.progress?.id)"
               @requestPhotoAdd="
                 (progress) => {

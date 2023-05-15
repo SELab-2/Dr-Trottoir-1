@@ -42,7 +42,7 @@
           />
           <RoundedButton
             class="mr-1"
-            v-else-if="isStudent"
+            v-else-if="canEdit"
             value="start"
             icon="mdi-play"
             @click.stop="() => start()"
@@ -60,7 +60,7 @@
           />
           <RoundedButton
             class="mr-1"
-            v-else-if="progress.arrival && isStudent"
+            v-else-if="progress.arrival && canEdit"
             value="eindig"
             icon="mdi-stop"
             @click.stop="() => end()"
@@ -83,7 +83,7 @@
         />
         <RoundedButton
           class="ma-1"
-          v-else-if="isStudent"
+          v-else-if="canEdit"
           value="start"
           icon="mdi-play"
           @click.stop="() => start()"
@@ -101,7 +101,7 @@
         />
         <RoundedButton
           class="ma-1"
-          v-else-if="progress.arrival && isStudent"
+          v-else-if="progress.arrival && canEdit"
           value="eindig"
           icon="mdi-stop"
           @click.stop="() => end()"
@@ -136,7 +136,7 @@
           @click="() => report()"
         />
         <RoundedButton
-          v-else-if="progress?.report !== '' && isStudent"
+          v-else-if="progress?.report !== '' && canEdit"
           icon="mdi-pencil"
           value="Bewerken"
           class="mt-4"
@@ -145,7 +145,7 @@
         <div v-else>
           <p style="opacity: 75%">Geen opmerkingen toegevoegd.</p>
           <RoundedButton
-            v-if="isStudent"
+            v-if="canEdit"
             icon="mdi-plus"
             value="Toevoegen"
             class="mt-4"
@@ -175,7 +175,7 @@
           </div>
           <p v-else style="opacity: 75%">Geen foto's toegevoegd.</p>
           <RoundedButton
-            v-if="isStudent"
+            v-if="canEdit"
             icon="mdi-plus"
             value="Toevoegen"
             class="mt-4"
@@ -198,7 +198,7 @@ import { tryOrAlertAsync } from "@/try";
 import { ProgressQuery } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
 
-const props = defineProps(["entry"]);
+const props = defineProps(["entry", "day"]);
 const progress = ref(
   props.entry.progress
     ? JSON.parse(JSON.stringify(props.entry.progress))
@@ -206,6 +206,7 @@ const progress = ref(
 );
 
 const isStudent = useAuthStore().auth?.student;
+const canEdit = isStudent && (new Date(new Date(props.day).setHours(0, 0, 0)) <= new Date());
 
 const router = useRouter();
 
