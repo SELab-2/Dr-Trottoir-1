@@ -50,3 +50,9 @@ jobs:
                     npx prisma db push
             -   name: "Execute tests"
                 run: npm run test
+            -   name: "Upload CodeCov"
+                run: | 
+                    curl -Os https://uploader.codecov.io/latest/linux/codecov
+                    chmod +x codecov
+                    ./codecov
+                

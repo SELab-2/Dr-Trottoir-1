@@ -21,10 +21,16 @@ import { GarbageRouting } from "./routes/garbage";
 import { UserRegionRouting } from "./routes/user_region";
 import { ProgressRouting } from "./routes/progress";
 import { RoundBuildingRouting } from "./routes/round_building";
+import { FileRouting } from "./routes/file";
 import { MailRouting } from "./routes/mail";
 import { MailTemplateRouting } from "./routes/mail_template";
 import cors from "cors";
 import { AddressRouting } from "./routes/address";
+import * as Sentry from "@sentry/node";
+import { ProfilingIntegration } from "@sentry/profiling-node";
+
+// Parse environment file.
+dotenv.config();
 
 // const PORT_NUMBER = 8080;
 const CRYPTO_SESSION_TOKEN = "verysecrettoken";
@@ -38,8 +44,34 @@ if (process.env.NODE_ENV === "test") {
 
 const app = express();
 
-// Parse environment file.
-dotenv.config();
+if (process.env.SENTRY_DSN) {
+    console.log("Initializing Sentry.io SDK");
+    Sentry.init({
+        dsn: process.env.SENTRY_DSN,
+        integrations: [
+            // enable HTTP calls tracing
+            new Sentry.Integrations.Http({ tracing: true }),
+            // enable Express.js middleware tracing
+            new Sentry.Integrations.Express({ app }),
+            // Automatically instrument Node.js libraries and frameworks
+            ...Sentry.autoDiscoverNodePerformanceMonitoringIntegrations(),
+            // Add profiling integration to list of integrations
+            new ProfilingIntegration(),
+        ],
+        // Profiling sample rate is relative to tracesSampleRate
+        profilesSampleRate: 1.0,
+        // Set tracesSampleRate to 1.0 to capture 100%
+        // of transactions for performance monitoring.
+        // We recommend adjusting this value in production
+        tracesSampleRate: 1.0,
+    });
+
+    // RequestHandler creates a separate execution context, so that all
+    // transactions/spans/breadcrumbs are isolated across requests
+    app.use(Sentry.Handlers.requestHandler());
+    // TracingHandler creates a trace for every incoming request
+    app.use(Sentry.Handlers.tracingHandler());
+}
 
 // JSON API support
 app.use(
@@ -91,7 +123,11 @@ app.use("/garbage", new GarbageRouting().toRouter());
 app.use("/action", new ActionRouting().toRouter());
 app.use("/syndicus", new SyndicusRouting().toRouter());
 app.use("/round", new RoundRouting().toRouter());
+
+app.use("/file", new FileRouting().toRouter());
+
 app.use("/user_region", new UserRegionRouting().toRouter());
+
 app.use("/progress", new ProgressRouting().toRouter());
 app.use("/round_building", new RoundBuildingRouting().toRouter());
 app.use("/mail", new MailRouting().toRouter());
@@ -99,6 +135,7 @@ app.use("/mail_template", new MailTemplateRouting().toRouter());
 app.use("/address", new AddressRouting().toRouter());
 
 // Finally, an error handler
+app.use(Sentry.Handlers.errorHandler());
 app.use(ErrorHandler.handle);
 
 // If the authorization process is bypassed, print a big red warning

@@ -11,23 +11,34 @@
         <div class="d-flex justify-space-between">
           <h1 class="building-name">{{ building.name }}</h1>
           <RoundedButton
+            v-if="!useAuthStore().auth?.student"
             @clicked="() => router.push({ name: 'building_new' })"
             icon="mdi-pencil"
             class="mt-2"
           />
         </div>
 
+        <!-- TODO add in API
         <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
-          ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua.
-        </p>
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p> -->
 
         <div style="display: flex; gap: 16px; flex-wrap: wrap" class="mt-2">
-          <RoundedButton icon="mdi-map-search" value="Kaarten" />
-          <RoundedButton icon="mdi-file-pdf-box" value="Handleiding" />
-          <RoundedButton icon="mdi-lock" value="3142" />
+          <RoundedButton
+            icon="mdi-map-search"
+            @click="tomaps()"
+            value="Kaarten"
+          />
+          <RoundedButton
+            icon="mdi-file-pdf-box"
+            @click="toClip('TODO')"
+            value="Handleiding"
+          />
+          <!-- TODO add in API
+          <RoundedButton icon="mdi-lock" @click="toClip('TODO')" value="TODO" /> -->
         </div>
       </div>
 
@@ -63,30 +74,38 @@
 
         <div style="flex-grow: 1"></div>
 
-        <div style="display: flex; gap: 16px; flex-wrap: wrap">
+        <div style="gap: 16px; flex-wrap: wrap" class="d-flex flex-row-reverse">
           <RoundedButton
             icon="mdi-phone"
-            :value="building.syndicus?.user.phone"
+            @click="call(building?.syndicus?.user.phone)"
+            :value="building?.syndicus?.user.phone"
           />
-          <RoundedButton icon="mdi-mail" value="E-mail" />
+          <RoundedButton
+            icon="mdi-mail"
+            value="E-mail"
+            @click="mail(building?.syndicus?.user.email)"
+          />
         </div>
       </CardLayout>
 
       <div class="space-y-8">
-        <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
-          <h2>Taken</h2>
-          <div class="flex-grow-1"></div>
-          <RoundedButton
-            icon="mdi-calendar"
-            value="17 Maart 2023 - 24 Maart 2023"
-          ></RoundedButton>
-          <RoundedButton
-            icon="mdi-plus"
-            value="Toevoegen"
-            @click="
-              () => router.push({ name: 'garbage_plan', params: { id: id } })
-            "
-          ></RoundedButton>
+        <div class="d-flex mt-8 flex-wrap align-center">
+          <h2 class="me-auto">Taken</h2>
+          <div class="d-flex flex-wrap">
+            <div class="chip mx-1 mt-1">
+              <input type="date" v-model="taskStartDate" @change="getTasks()" />
+              tot
+              <input type="date" v-model="taskEndDate" @change="getTasks()" />
+            </div>
+            <RoundedButton
+              icon="mdi-plus"
+              class="mx-1 mt-1"
+              value="Toevoegen"
+              @click="
+                () => router.push({ name: 'garbage_plan', params: { id: id } })
+              "
+            />
+          </div>
         </div>
         <div class="grid">
           <CardLayout
@@ -109,29 +128,44 @@
             <v-icon icon="mdi-trash-can-outline"></v-icon>
           </CardLayout>
         </div>
+        <div v-if="garbage.length === 0">
+          <p>Geen taken voor de geselecteerde periode.</p>
+        </div>
       </div>
 
-      <div class="space-y-8">
-        <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
-          <h2>Bezoeken</h2>
-          <div class="flex-grow-1"></div>
-          <RoundedButton icon="mdi-calendar" value="Maart 2023"></RoundedButton>
-          <RoundedButton icon="mdi-plus" value="Toevoegen"></RoundedButton>
+      <div
+        class="space-y-8"
+        v-if="useAuthStore().auth?.admin || useAuthStore().auth?.super_student"
+      >
+        <div class="d-flex mt-8 flex-wrap align-center">
+          <h2 class="me-auto">Bezoeken</h2>
+          <div class="d-flex">
+            <div class="chip mx-1 mt-1">
+              <input
+                type="month"
+                v-model="scheduleMonth"
+                @change="getVisits()"
+              />
+            </div>
+          </div>
         </div>
-
-        <RoundCard
-          :schedule="schedule"
-          :status="'completed'"
-          v-for="schedule in schedules"
-          :key="schedule.id"
-        ></RoundCard>
-        <RoundCard :schedule="schedules[0]" :status="'active'"></RoundCard>
-        <RoundCard
-          :schedule="schedule"
-          :status="'scheduled'"
-          v-for="schedule in schedules"
-          :key="schedule.id"
-        ></RoundCard>
+        <div v-for="progress in progresses" :key="progress.id">
+          <RoundCard
+            :schedule="progress.schedule"
+            :status="
+              progress.arrival
+                ? progress.departure
+                  ? 'completed'
+                  : 'active'
+                : 'scheduled'
+            "
+            :comments="progress.report != null && progress.report !== ''"
+            :images="progress.images.length"
+          />
+        </div>
+        <div v-if="progresses.length === 0">
+          <p>Geen bezoeken voor de geselecteerde periode.</p>
+        </div>
       </div>
     </div>
   </HFillWrapper>
@@ -143,15 +177,51 @@ import router from "@/router";
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
-import { BuildingQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import { BuildingQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import { Ref, ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import RoundCard from "@/components/round/RoundCard.vue";
-import { GarbageQuery } from "@selab-2/groep-1-query/dist/garbage";
+import { GarbageQuery } from "@selab-2/groep-1-query";
+import { useAuthStore } from "@/stores/auth";
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
-const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
+const progresses: Ref<Array<Result<ProgressQuery>>> = ref([]);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
+
+const scheduleMonth: Ref<string> = ref(
+  `${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(
+    -2,
+  )}`,
+);
+
+const taskStartDate: Ref<string> = ref(new Date().toISOString().split("T")[0]);
+const taskEndDate: Ref<string> = ref(
+  new Date(new Date().setDate(new Date().getDate() + 7))
+    .toISOString()
+    .split("T")[0],
+);
+
+function call(number: string | undefined) {
+  if (number) {
+    location.href = "tel:" + number;
+  }
+}
+
+function mail(address: string | undefined) {
+  if (address) {
+    location.href = "mailto:" + address;
+  }
+}
+
+function tomaps() {
+  window.open(
+    `https://maps.google.com/maps?q=${building.value?.address.number}+${building.value?.address.street},+${building.value?.address.city},+${building.value?.address.zip_code}`,
+  );
+}
+
+function toClip(text: string) {
+  navigator.clipboard.writeText(text);
+}
 
 const props = defineProps({
   id: {
@@ -160,17 +230,52 @@ const props = defineProps({
   },
 });
 
-tryOrAlertAsync(async () => {
+await tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
 });
 
-tryOrAlertAsync(async () => {
-  schedules.value = await new ScheduleQuery().getAll({});
-});
+async function getVisits() {
+  const startOfMonth = new Date(scheduleMonth.value + "-01");
+  const endOfMonth = new Date(
+    new Date(
+      startOfMonth.getFullYear(),
+      startOfMonth.getMonth() + 1,
+      0,
+    ).setHours(23, 59, 59, 999),
+  );
+  await tryOrAlertAsync(async () => {
+    if (building.value) {
+      progresses.value = [];
+      for (const progress of await new ProgressQuery().getAll({
+        building: building.value.id,
+      })) {
+        if (progress.schedule) {
+          const progressDay = new Date(progress.schedule.day);
+          if (progressDay > startOfMonth && progressDay < endOfMonth) {
+            progresses.value.push(progress);
+          }
+        }
+      }
+    }
+  });
+}
+if (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) {
+  await getVisits();
+}
 
-tryOrAlertAsync(async () => {
-  garbage.value = await new GarbageQuery().getAll({});
-});
+async function getTasks() {
+  await tryOrAlertAsync(async () => {
+    if (building.value) {
+      garbage.value = await new GarbageQuery().getAll({
+        building_id: building.value.id,
+        before: new Date(taskStartDate.value),
+        after: new Date(taskStartDate.value),
+        syndicus_id: building.value.syndicus.id,
+      });
+    }
+  });
+}
+await getTasks();
 </script>
 
 <style lang="scss" scoped>
@@ -211,5 +316,21 @@ tryOrAlertAsync(async () => {
   @media (min-width: 700px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 50px;
+  background: #ffffff;
+  font-family: Roboto, sans-serif !important;
+  font-size: 14px;
+  font-weight: bold;
+  border: 1.5px solid #e0e0e0;
+  width: fit-content;
+  height: fit-content;
+  color: #000000de;
 }
 </style>
