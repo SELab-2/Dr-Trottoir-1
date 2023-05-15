@@ -106,7 +106,12 @@
         <div class="d-flex mt-8 flex-wrap align-center">
           <h2 class="me-auto">Taken</h2>
           <div class="d-flex flex-wrap">
-            <DateRange :end-date="takenEnd" :start-date="takenStart"/>
+            <DateRange
+              v-model:end-date="takenEnd"
+              v-model:start-date="takenStart"
+              @update:end-date="getTasks()"
+              @update:start-date="getTasks()"
+            />
             <v-btn
               class="mx-1 text-none"
               prepend-icon="mdi-plus"
@@ -150,7 +155,12 @@
         <div class="d-flex mt-8 flex-wrap align-center">
           <h2 class="me-auto">Bezoeken</h2>
           <div class="d-flex">
-            <DateRange :end-date="bezoekenEnd" :start-date="bezoekenStart"/>
+            <DateRange
+              v-model:end-date="bezoekenEnd"
+              v-model:start-date="bezoekenStart"
+              @update:end-date="getVisits()"
+              @update:start-date="getVisits()"
+            />
           </div>
         </div>
         <div v-for="schedule in schedules" :key="schedule.id">
@@ -200,12 +210,6 @@ const scheduleMonth: Ref<string> = ref(
   )}`,
 );
 
-const taskStartDate: Ref<string> = ref(new Date().toISOString().split("T")[0]);
-const taskEndDate: Ref<string> = ref(
-  new Date(new Date().setDate(new Date().getDate() + 7))
-    .toISOString()
-    .split("T")[0],
-);
 
 function call(number: string | undefined) {
   if (number) {
@@ -238,18 +242,14 @@ const props = defineProps({
 
 await tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
-  console.log(building.value);
 });
 
 async function getVisits() {
-  const startOfMonth = new Date(scheduleMonth.value + "-01");
-  const endOfMonth = new Date(
-    new Date(
-      startOfMonth.getFullYear(),
-      startOfMonth.getMonth() + 1,
-      0,
-    ).setHours(23, 59, 59, 999),
-  );
+  // clear current schedules
+  schedules.value = [];
+  bezoekenStart.value.setHours(0, 0, 0, 0);
+  bezoekenEnd.value.setHours(23, 59, 59, 999);
+  // fetch all schedules
   await tryOrAlertAsync(async () => {
     if (!building.value) {
       return;
@@ -261,8 +261,8 @@ async function getVisits() {
       if (progress.schedule) {
         const progressDay = new Date(progress.schedule.day);
         if (
-          progressDay > startOfMonth &&
-          progressDay < endOfMonth &&
+          progressDay > bezoekenStart.value &&
+          progressDay < bezoekenEnd.value &&
           progress.schedule_id
         ) {
           const schedule = await new ScheduleQuery().getOne(
@@ -279,12 +279,14 @@ if (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) {
 }
 
 async function getTasks() {
+  takenStart.value.setHours(0, 0, 0, 0);
+  takenEnd.value.setHours(23, 59, 59, 999);
   await tryOrAlertAsync(async () => {
     if (building.value) {
       garbage.value = await new GarbageQuery().getAll({
         building_id: building.value.id,
-        before: new Date(taskStartDate.value),
-        after: new Date(taskStartDate.value),
+        before: takenEnd.value,
+        after: takenStart.value,
         syndicus_id: building.value.syndicus.id,
       });
     }
