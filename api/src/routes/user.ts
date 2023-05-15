@@ -134,7 +134,7 @@ export class UserRouting extends Routing {
 
         // The request might want to change the password
         if (req.body.password) {
-            req.body.salt = crypto.randomBytes(32).toString();
+            req.body.salt = crypto.randomBytes(32).toString("hex");
             req.body.hash = crypto
                 .createHash("sha256")
                 .update(req.body.password + req.body.salt)
