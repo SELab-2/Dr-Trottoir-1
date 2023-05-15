@@ -1,6 +1,6 @@
 <template>
   <HFillWrapper v-if="building !== null">
-    <div class="space-y">
+    <v-card variant="text" class="space-y">
       <img
         alt="banner"
         id="banner"
@@ -8,19 +8,22 @@
       />
 
       <div>
-        <div class="d-flex justify-space-between">
+        <div style="
+          display: flex;
+          gap: 16px;
+          align-items: center;
+        ">
           <h1 class="building-name">{{ building.name }}</h1>
+          <v-spacer/>
+          <v-chip variant="outlined" color="border">
+            <v-icon icon="mdi-map-marker" color="black"/>
+            <p class="text-black">{{building.address.street}} {{building.address.number}}, {{building.address.zip_code}}, {{building.address.city}}</p>
+          </v-chip>
           <!-- TODO: add btn to link to building edit page once we have building edit page -->
         </div>
-
-        <!-- TODO add in API
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p> -->
-
+          {{ building.description }}
+        </p>
         <div style="display: flex; gap: 16px; flex-wrap: wrap" class="mt-2">
           <v-btn
             class="text-none"
@@ -103,8 +106,9 @@
         <div class="d-flex mt-8 flex-wrap align-center">
           <h2 class="me-auto">Taken</h2>
           <div class="d-flex flex-wrap">
+            <DateRange :end-date="takenEnd" :start-date="takenStart"/>
             <v-btn
-              class="mx-1 mt-1 text-none"
+              class="mx-1 text-none"
               prepend-icon="mdi-plus"
               :to="{ name: 'garbage_plan', params: { id: id } }"
               color="primary"
@@ -156,7 +160,7 @@
           <p>Geen bezoeken voor de geselecteerde periode.</p>
         </div>
       </div>
-    </div>
+    </v-card>
   </HFillWrapper>
 </template>
 
@@ -182,6 +186,9 @@ import {daysFromDate} from "@/assets/scripts/date";
 
 const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
 const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
+
+const takenStart: Ref<Date> = ref(daysFromDate(0));
+const takenEnd: Ref<Date> = ref(daysFromDate(13));
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
@@ -231,6 +238,7 @@ const props = defineProps({
 
 await tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
+  console.log(building.value);
 });
 
 async function getVisits() {
