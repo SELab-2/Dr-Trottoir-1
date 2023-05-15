@@ -24,7 +24,6 @@
         disabled
         prepend-icon=""
         prepend-inner-icon="mdi-file"
-        v-model="building.manual"
         label="Manual"
       ></v-file-input>
     </BorderCard>
