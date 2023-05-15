@@ -50,7 +50,7 @@ export class GarbageOverviewTable extends TableEntity<GarbageOverviewEntry> {
   }
 
   headers(): Array<Header<GarbageOverviewEntry>> {
-    return GarbageTable.headers();
+    return GarbageOverviewTable.headers();
   }
 
   route(): { name: string; params: object } {

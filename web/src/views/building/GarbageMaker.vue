@@ -175,8 +175,7 @@ import { tryOrAlertAsync } from "@/try";
 import BorderCard from "@/layouts/CardLayout.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import Table from "@/components/table/Table.vue";
-import { DetailedDay } from "@/types/GarbageTable";
-import { GarbageTable } from "@/types/GarbageTable";
+import { DetailedDay, GarbageTable } from "@/types/GarbageTable";
 import {
   GarbageOverviewEntry,
   GarbageOverviewTable,
