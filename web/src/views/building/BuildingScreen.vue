@@ -175,7 +175,7 @@ import {
 import { Ref, ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import RoundCard from "@/components/round/RoundCard.vue";
-import { GarbageQuery } from "@selab-2/groep-1-query/dist/garbage";
+import { GarbageQuery } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);

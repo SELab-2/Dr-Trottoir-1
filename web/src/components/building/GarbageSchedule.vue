@@ -73,7 +73,7 @@
 <script lang="ts" setup>
 import "v-calendar/style.css";
 import { Ref, ref } from "vue";
-import { GarbageQuery } from "@selab-2/groep-1-query/dist/garbage";
+import { GarbageQuery } from "@selab-2/groep-1-query";
 import { Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";

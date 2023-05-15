@@ -2,7 +2,19 @@ import { Validator } from "./validator";
 import { celebrate } from "celebrate";
 import Joi from "joi";
 
+import { JoiPasswordExtend, joiPasswordExtendCore } from "joi-password";
+
+const joiPassword: JoiPasswordExtend = Joi.extend(joiPasswordExtendCore);
+
 export class UserValidator extends Validator {
+    passwordValidator = joiPassword
+        .string()
+        .trim()
+        .min(8) // minimum of 8 characters
+        .minOfNumeric(1) // at least one numberic character
+        .minOfUppercase(1) // at least one uppercase character
+        .minOfSpecialCharacters(1); // at least one special character
+
     getAllValidator() {
         return celebrate({
             query: Joi.object({
@@ -64,7 +76,7 @@ export class UserValidator extends Validator {
                 student: Joi.boolean().required(),
                 super_student: Joi.boolean().required(),
                 admin: Joi.boolean().required(),
-                password: Joi.string().min(1).required(),
+                password: this.passwordValidator.required(),
                 hash: Joi.forbidden(),
                 salt: Joi.forbidden(),
             }),
@@ -92,7 +104,7 @@ export class UserValidator extends Validator {
                     student: Joi.boolean(),
                     super_student: Joi.boolean(),
                     admin: Joi.boolean(),
-                    password: Joi.string().min(1),
+                    password: this.passwordValidator,
                 },
             },
             undefined,

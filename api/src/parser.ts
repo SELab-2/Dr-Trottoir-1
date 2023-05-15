@@ -43,24 +43,14 @@ export class Parser {
         return result;
     }
 
-    static stringArray(
-        input: string | undefined,
-        otherwise: string[] | undefined = undefined,
-    ): string[] | undefined {
-        return input?.split(",") ?? otherwise;
-    }
-
     static string(
         input: string | undefined,
         otherwise: string | undefined = undefined,
     ): string | undefined {
         if (!input) {
             return otherwise;
-        } else if (input.length > 0) {
-            return input;
-        } else {
-            return otherwise;
         }
+        return input;
     }
 
     static date(
@@ -93,13 +83,10 @@ export class Parser {
         sortFields: string | undefined,
         orderFields: string | undefined,
     ): object[] {
+        const allowedOrders = ["asc", "desc"];
+
         const sortFieldsSeparated = sortFields?.split(",");
         const orderFieldsSeparated = orderFields?.split(",");
-
-        // Length of sort and order field must be equal.
-        if (sortFieldsSeparated?.length !== orderFieldsSeparated?.length) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
 
         // Either both are undefined, or neither are.
         if (
@@ -114,12 +101,22 @@ export class Parser {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
+        // Length of sort and order field must be equal.
+        if (sortFieldsSeparated.length !== orderFieldsSeparated.length) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
         // Accumulate the result
         const result = [];
 
         for (const i in sortFieldsSeparated) {
             const sortField = sortFieldsSeparated[i];
             const orderField = orderFieldsSeparated[i];
+
+            if (!allowedOrders.includes(orderField)) {
+                throw new APIError(APIErrorCode.BAD_REQUEST);
+            }
+
             result.push({ [sortField]: orderField });
         }
 
