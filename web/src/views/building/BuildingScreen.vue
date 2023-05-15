@@ -180,7 +180,7 @@ import {
 import { Ref, ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import RoundCard from "@/components/round/RoundCard.vue";
-import { GarbageQuery } from "@selab-2/groep-1-query/dist/garbage";
+import { GarbageQuery } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
 import DateRange from "@/components/filter/DateRange.vue";
 import {daysFromDate} from "@/assets/scripts/date";

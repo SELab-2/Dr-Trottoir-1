@@ -7,7 +7,8 @@ export class QueryError extends Error {
     message: string;
 
     constructor(code: number, message: string) {
-        super();
+        super(message);
+        Object.setPrototypeOf(this, QueryError.prototype);
         this.code = code;
         this.message = message;
     }
