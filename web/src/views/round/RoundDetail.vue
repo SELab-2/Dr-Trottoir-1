@@ -3,7 +3,16 @@
     <HFillWrapper>
       <div class="space-y">
         <div style="margin-bottom: 0; display: flex; gap: 12px">
-          <h2>{{ data.round.name }}</h2>
+          <h2 v-if='useAuthStore().auth?.student'>{{ data.round.name }}</h2>
+          <v-hover v-else v-slot:default='{isHovering, props}'>
+            <h2
+              v-bind='props'
+              @click='router.push({name: "round", params: { id: data.round.id}})'
+              :class='isHovering? "text-decoration-underline": ""'
+            >
+              {{ data.round.name }}
+            </h2>
+          </v-hover>
           <div class="flex-grow-1"></div>
           <CardLayout
             class="pa-1 d-flex align-center"
@@ -172,9 +181,11 @@ import PhotoMaker from "@/components/images/PhotoMaker.vue";
 import { useDisplay } from "vuetify";
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from 'vue-router'
 import Photo from "@/components/models/Photo";
 import { useAuthStore } from "@/stores/auth";
+
+const router = useRouter();
 
 const actions: Button[] = [
   {

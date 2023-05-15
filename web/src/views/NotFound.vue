@@ -7,7 +7,7 @@
     />
     <div class='titles'>
       <h1>404</h1>
-      <h4>Niet gevonden.</h4>
+      <p>Niet gevonden.</p>
     </div>
   </div>
 </template>
