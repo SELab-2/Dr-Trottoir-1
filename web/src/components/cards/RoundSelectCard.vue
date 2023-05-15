@@ -1,7 +1,5 @@
 <template>
-  <BorderCard
-    class="round-select-card"
-  >
+  <BorderCard class="round-select-card">
     <div>
       <div v-if="alreadyPlanned">
         <h3>{{ date?.toLocaleDateString() }}</h3>
@@ -20,7 +18,12 @@
       class="bg-grey-lighten-2"
     ></RoundedButton>
 
-    <v-icon v-if="removeable" @click="$emit('remove')" color="error" icon="mdi-close" />
+    <v-icon
+      v-if="removeable"
+      @click="$emit('remove')"
+      color="error"
+      icon="mdi-close"
+    />
   </BorderCard>
 </template>
 
@@ -34,7 +37,7 @@ defineProps({
   time: String,
   id: String,
   alreadyPlanned: { type: Boolean, required: true },
-  removeable: {type: Boolean, default: true}
+  removeable: { type: Boolean, default: true },
 });
 </script>
 

@@ -7,7 +7,7 @@ export interface GarbageOverviewEntry {
   date: Date;
   action: Result<ActionQuery>;
   time: string;
-  preview: boolean
+  preview: boolean;
 }
 
 export class GarbageOverviewTable extends TableEntity<GarbageOverviewEntry> {
@@ -41,7 +41,7 @@ export class GarbageOverviewTable extends TableEntity<GarbageOverviewEntry> {
         id: 3,
         name: "",
         fit: true,
-        get: (e: GarbageOverviewEntry) => e.preview ? "mdi-new-box":"",
+        get: (e: GarbageOverviewEntry) => (e.preview ? "mdi-new-box" : ""),
         type: RowType.ICONBUTTON,
         sortable: false,
         onClick: () => {},

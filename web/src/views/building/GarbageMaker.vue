@@ -27,7 +27,8 @@
               toevoegen om een voorbeeld te zien van hoe deze inplanning er zal
               uitzien. Hiervoor kunt u ook gebruik maken van "voorlopig schema".
               Als u tevreden bent met deze inplanning, kan u deze opslaan door
-              op "Inplannen" te drukken. Bent u ontevreden en wilt u opnieuw beginnen, druk dan op "Alles verwijderen".
+              op "Inplannen" te drukken. Bent u ontevreden en wilt u opnieuw
+              beginnen, druk dan op "Alles verwijderen".
             </p>
 
             <v-row class="pt-2">

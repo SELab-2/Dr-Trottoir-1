@@ -123,8 +123,8 @@
               Hier wordt er een voorlopig overzicht getoond van de planning van
               deze ronde. Kies start- en einddatum door deze aan te passen in de
               velden. Tussen dit overzicht staan ook de planningen van de rondes
-              die je nog niet bevestigd hebt. Ga hier na of de inplanning
-              op die dag wel of niet werkt.
+              die je nog niet bevestigd hebt. Ga hier na of de inplanning op die
+              dag wel of niet werkt.
             </p>
             <div class="d-flex mt-4">
               <v-text-field
