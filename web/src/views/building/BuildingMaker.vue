@@ -45,22 +45,25 @@
     </BorderCard>
 
     <!-- card met alle info over de locatie -->
-    <BorderCard class="mb-3">
-      <v-img
-        src="@/assets/images/dummyMap.png"
-        v-model="dummyMap"
-        max-height="300px"
-        cover
-      >
-        <v-toolbar color="rgb(250, 250, 250, 0)" class="pl-4">
-          <template v-slot:title>
-            <v-card-title> Locatie info </v-card-title>
-          </template>
-          <template v-slot:prepend>
-            <v-icon icon="mdi-access-point" size="large"></v-icon>
-          </template>
-        </v-toolbar>
-      </v-img>
+    <BorderCard prepend-icon="mdi-map-marker" class="mb-3" title="Locatie info">
+      <CardLayout style="height: 400px">
+        <l-map ref="map" v-model:zoom="zoom" :center="[51, 4.4699]">
+          <l-tile-layer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            layer-type="base"
+            name="OpenStreetMap"
+          />
+          <l-marker
+            :key="building.id"
+            :lat-lng="[address.longitude, address.latitude]"
+            name="building"
+          >
+            <l-tooltip :options="{ permanent: true }">
+              {{ building.name }}
+            </l-tooltip>
+          </l-marker>
+        </l-map>
+      </CardLayout>
 
       <div class="mx-4 mt-3">
         <v-row>
@@ -111,6 +114,10 @@ import {
   UserQuery,
 } from "@selab-2/groep-1-query";
 import router from "@/router";
+import "leaflet/dist/leaflet.css";
+import "leaflet/dist/leaflet.js";
+import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
+import CardLayout from "@/layouts/CardLayout.vue";
 
 const dummyMap = ref(null);
 
@@ -144,6 +151,8 @@ function getFullStudentName(s: Result<UserQuery> | undefined): string {
     return " ";
   }
 }
+
+const zoom = ref(8);
 
 const submit = () => {
   tryOrAlertAsync(async () => {
