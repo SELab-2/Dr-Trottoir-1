@@ -14,6 +14,7 @@ import BuildingScreen from "@/views/building/BuildingScreen.vue";
 import BuildingFollowup from "@/views/building/BuildingFollowup.vue";
 import GarbageMaker from "@/views/building/GarbageMaker.vue";
 import UserOverview from "@/views/dashboard/Users.vue";
+import TemplateOverview from "@/views/dashboard/Template.vue";
 import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
 import ContactSyndicus from "@/views/contact/ContactSyndicus.vue";
@@ -184,7 +185,7 @@ const routes: any[] = [
         },
       },
       {
-        path: "/contact/:id",
+        path: "/contact/:id?",
         name: "contact_syndicus",
         component: ContactSyndicus,
         meta: {
@@ -273,6 +274,20 @@ const routes: any[] = [
         name: "template_new",
         meta: {
           title: "",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
+        },
+      },
+      {
+        path: "/template",
+        component: TemplateOverview,
+        name: "template_overview",
+        meta: {
+          title: "Templates",
           auth: (
             student: boolean,
             superstudent: boolean,
