@@ -194,7 +194,7 @@
       <RoundSelectCard
         v-for="(round, i) in showAllPlanned ? fullScheme : rounds"
         :key="i"
-        @remove="round.func()"
+        @remove="round.func(i)"
         :name="round.name"
         :date="round.date"
         :time="round.time"
@@ -266,7 +266,7 @@ interface plannedRound {
   name: string;
   time: string;
   alreadyPlanned: boolean;
-  func: () => void;
+  func: (i: number) => void;
 }
 
 let rounds = ref<Array<plannedRound>>([]);
@@ -280,24 +280,15 @@ function calcNewRounds() {
   let frequencyCount = frequencyDict[frequency.value];
   let index = rounds.value.length;
   for (const d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {
-    const currentindex = index;
     rounds.value.push({
       name: getFullStudentName(student.value),
       date: new Date(d),
       time: time.value,
       alreadyPlanned: false,
-      func: () => removeFromRounds(currentindex),
+      func: (i: number) => removeFromRounds(i),
     });
-    index += 1;
   }
 }
-
-function updateRounds() {
-  for (let i = 0; i < rounds.value.length; i++) {
-    rounds.value[i].func = () => removeFromRounds(i);
-  }
-}
-
 function frequencyCheck() {
   if (frequency.value == frequencys[0]) {
     multipleday.value = false;
@@ -308,14 +299,13 @@ function frequencyCheck() {
 
 function removeFromRounds(index: number) {
   rounds.value.splice(index, 1);
-  updateRounds();
   updateFullScheme();
 }
 
-function deleteFromDatabase(id: number) {
+function deleteFromDatabase(id: number, index: number) {
   tryOrAlertAsync(async () => {
     await new ScheduleQuery().deleteOne({ id: id });
-    updateFullScheme();
+    fullScheme.value.splice(index, 1);
   });
 }
 
@@ -338,7 +328,7 @@ function updateFullScheme() {
         date: new Date(plannedSchedule.day),
         time: new Date(plannedSchedule.day).toTimeString().substring(0, 5),
         alreadyPlanned: true,
-        func: () => deleteFromDatabase(plannedSchedule.id),
+        func: (i: number) => deleteFromDatabase(plannedSchedule.id, i),
       }),
     );
 
