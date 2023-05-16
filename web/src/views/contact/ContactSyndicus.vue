@@ -76,17 +76,6 @@
           cols="1"
           style="min-width: 100px; max-width: 100%"
           class="flex-grow-1 flex-shrink-0 py-0 my-0"
-          ><v-file-input
-            prepend-icon=""
-            prepend-inner-icon="mdi-upload"
-            label="Bestanden"
-          ></v-file-input></v-col
-      ></v-row>
-      <v-row class="py-0 my-0 mx-3"
-        ><v-col
-          cols="1"
-          style="min-width: 100px; max-width: 100%"
-          class="flex-grow-1 flex-shrink-0 py-0 my-0"
         >
           <v-textarea v-model="content" rows="17" label="Inhoud"></v-textarea
         ></v-col>
