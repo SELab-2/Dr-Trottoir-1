@@ -1,4 +1,3 @@
-
 <template>
   <v-btn
     class="text-none mr-2"
@@ -21,12 +20,10 @@
 </template>
 
 <script setup lang="ts">
-
 defineProps({
   phone: String,
   email: String,
-  clickPhone: {type: Function, default: () => {}},
-  clickEmail: {type: Function, default: () => {}},
+  clickPhone: { type: Function, default: () => {} },
+  clickEmail: { type: Function, default: () => {} },
 });
-
 </script>

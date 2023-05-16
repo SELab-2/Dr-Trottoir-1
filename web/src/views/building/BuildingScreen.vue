@@ -10,14 +10,17 @@
       <div>
         <div class="flex-container">
           <h1 class="building-name">{{ building.name }}</h1>
-          <div style="display: flex; flex-wrap: wrap;">
+          <div style="display: flex; flex-wrap: wrap">
             <v-chip variant="outlined" color="border" class="mr-2 labels">
-              <v-icon icon="mdi-identifier" color="black"/>
-              <p class="text-black">{{building.ivago_id}}</p>
+              <v-icon icon="mdi-identifier" color="black" />
+              <p class="text-black">{{ building.ivago_id }}</p>
             </v-chip>
             <v-chip variant="outlined" color="border" class="labels">
-              <v-icon icon="mdi-map-marker" color="black"/>
-              <p class="text-black">{{building.address.street}} {{building.address.number}}, {{building.address.zip_code}}, {{building.address.city}}</p>
+              <v-icon icon="mdi-map-marker" color="black" />
+              <p class="text-black">
+                {{ building.address.street }} {{ building.address.number }},
+                {{ building.address.zip_code }}, {{ building.address.city }}
+              </p>
             </v-chip>
             <!-- TODO: add btn to link to building edit page once we have building edit page -->
           </div>
@@ -31,7 +34,6 @@
             prepend-icon="mdi-map-search"
             @click="tomaps()"
             color="primary"
-
           >
             Kaarten
           </v-btn>
@@ -41,7 +43,6 @@
             prepend-icon="mdi-file-pdf-box"
             :href="'http://10.0.0.5:8080/file/' + building.manual?.id"
             color="success"
-
           >
             Handleiding
           </v-btn>
@@ -51,18 +52,15 @@
         </div>
       </div>
 
-
-      <CardLayout
-        class="grid pt-3 pb-1 px-3" style="align-items: center;"
-      >
+      <CardLayout class="grid pt-3 pb-1 px-3" style="align-items: center">
         <div>
           <div style="gap: 16px; flex-wrap: wrap" class="d-flex flex-row">
             <Avatar
               :name="
-              building.syndicus?.user.first_name +
-              ' ' +
-              building.syndicus?.user.last_name
-            "
+                building.syndicus?.user.first_name +
+                ' ' +
+                building.syndicus?.user.last_name
+              "
             />
             <div>
               <p style="font-weight: 600; font-size: 16px; opacity: 90%">
@@ -79,8 +77,7 @@
           </div>
         </div>
 
-        <div class="grid-right"
-        >
+        <div class="grid-right">
           <SyndicusButtons
             :email="building.syndicus.user.email"
             :click-email="mail"
@@ -88,11 +85,7 @@
             :click-phone="call"
           />
         </div>
-
       </CardLayout>
-
-      <!--rest is not for student-->
-      <div v-show="useAuthStore().auth!.syndicus || useAuthStore().auth!.admin || useAuthStore().auth!.super_student">
 
       <div class="space-y-8">
         <div class="d-flex mt-8 flex-wrap align-center">
@@ -140,29 +133,32 @@
         </div>
       </div>
 
-      <div
-        class="space-y-8"
-        v-if="useAuthStore().auth?.admin || useAuthStore().auth?.super_student"
-      >
-        <div class="d-flex mt-8 flex-wrap align-center">
-          <h2 class="me-auto">Bezoeken</h2>
-          <div class="d-flex">
-            <DateRange
-              v-model:end-date="bezoekenEnd"
-              v-model:start-date="bezoekenStart"
-              @update:end-date="getVisits()"
-              @update:start-date="getVisits()"
-            />
+      <div v-show="noStudent">
+        <div
+          class="space-y-8"
+          v-if="
+            useAuthStore().auth?.admin || useAuthStore().auth?.super_student
+          "
+        >
+          <div class="d-flex mt-8 flex-wrap align-center">
+            <h2 class="me-auto">Bezoeken</h2>
+            <div class="d-flex">
+              <DateRange
+                v-model:end-date="bezoekenEnd"
+                v-model:start-date="bezoekenStart"
+                @update:end-date="getVisits()"
+                @update:start-date="getVisits()"
+              />
+            </div>
+          </div>
+          <div v-for="schedule in schedules" :key="schedule.id">
+            <RoundCard :schedule="schedule" />
+          </div>
+          <div v-if="schedules.length === 0">
+            <p>Geen bezoeken voor de geselecteerde periode.</p>
           </div>
         </div>
-        <div v-for="schedule in schedules" :key="schedule.id">
-          <RoundCard :schedule="schedule" />
-        </div>
-        <div v-if="schedules.length === 0">
-          <p>Geen bezoeken voor de geselecteerde periode.</p>
-        </div>
       </div>
-    </div>
     </v-card>
   </HFillWrapper>
 </template>
@@ -174,7 +170,8 @@ import CardLayout from "@/layouts/CardLayout.vue";
 import {
   BuildingQuery,
   ProgressQuery,
-  Result, RoundQuery,
+  Result,
+  RoundQuery,
   ScheduleQuery,
 } from "@selab-2/groep-1-query";
 import { Ref, ref } from "vue";
@@ -183,16 +180,21 @@ import RoundCard from "@/components/round/RoundCard.vue";
 import { GarbageQuery } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
 import DateRange from "@/components/filter/DateRange.vue";
-import {daysFromDate} from "@/assets/scripts/date";
+import { daysFromDate } from "@/assets/scripts/date";
 import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 
-const noStudent: Boolean = useAuthStore().auth!.admin || useAuthStore().auth!.super_student || useAuthStore().auth!.super_student;
+const noStudent: Boolean =
+  useAuthStore().auth!.admin ||
+  useAuthStore().auth!.super_student ||
+  useAuthStore().auth!.syndicus.length !== 0;
 
 const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
 const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
 
 const takenStart: Ref<Date> = ref(daysFromDate(0));
-const takenEnd: Ref<Date> = noStudent ? ref(daysFromDate(13)) : ref(daysFromDate(0));
+const takenEnd: Ref<Date> = noStudent
+  ? ref(daysFromDate(13))
+  : ref(daysFromDate(0));
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
@@ -203,7 +205,6 @@ const scheduleMonth: Ref<string> = ref(
     -2,
   )}`,
 );
-
 
 function call(number: string | undefined) {
   if (number) {
@@ -275,16 +276,15 @@ if (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) {
 async function getTasks() {
   takenStart.value.setHours(0, 0, 0, 0);
   takenEnd.value.setHours(23, 59, 59, 999);
-  if(noStudent){
+  if (noStudent) {
     await getNoneStudentTasks();
-  }else{
+  } else {
     await getStudentTasks();
   }
-
 }
 await getTasks();
 
-async function getNoneStudentTasks(){
+async function getNoneStudentTasks() {
   await tryOrAlertAsync(async () => {
     if (building.value) {
       garbage.value = await new GarbageQuery().getAll({
@@ -297,29 +297,29 @@ async function getNoneStudentTasks(){
   });
 }
 
-async function getStudentTasks(){
+async function getStudentTasks() {
   await tryOrAlertAsync(async () => {
     // get all rounds in the date range for student
     const rounds = await new ScheduleQuery().getAll({
       before: takenEnd.value,
       after: takenStart.value,
-      user_id: useAuthStore().auth!.id
+      user_id: useAuthStore().auth!.id,
     });
     garbage.value = [];
     // filter for the rounds with this building, and get the garbage
-    for(const round of rounds){
-      for(const building of round.round.buildings){
-        if(building.id === Number(props.id)){
+    for (const round of rounds) {
+      for (const building of round.round.buildings) {
+        if (building.id === Number(props.id)) {
           // the round has this building, so we can get the garbage
           const garbages = await new GarbageQuery().getAll({
             before: takenEnd.value,
             after: takenStart.value,
             building_id: building.id,
             round_id: round.round_id,
-          })
+          });
           // add all the garbage for this building,
           // for this day, for the round of the user
-          for(const gar of garbages){
+          for (const gar of garbages) {
             garbage.value.push(gar);
           }
         }
@@ -327,8 +327,6 @@ async function getStudentTasks(){
     }
   });
 }
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -406,7 +404,7 @@ async function getStudentTasks(){
   }
 }
 
-.labels{
+.labels {
   @media (max-width: 700px) {
     margin-bottom: 5px;
   }
