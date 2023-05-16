@@ -228,7 +228,7 @@ function canEdit() {
   if (!data.value){
     return false;
   }
-  return isStudent && (new Date(new Date(data.value.day).setHours(0, 0, 0)) >= new Date());
+  return isStudent && (new Date(new Date(data.value.day).setHours(0, 0, 0)) <= new Date());
 }
 
 const showOverlay = ref(false);
