@@ -38,10 +38,11 @@ export class FileRouting extends Routing {
 
         switch (result.location) {
             case "FILE_SERVER":
-                //path must be absolute path
-                const dirname = path.resolve();
-                const full_path = path.join(dirname,process.env.FILE_STORAGE_DIRECTORY!,result.path);
-                return res.sendFile(full_path);
+                return res.sendFile(
+                    `${path.resolve()}/${process.env.FILE_STORAGE_DIRECTORY}/${
+                        result.path
+                    }`,
+                );
             case "EXTERNAL":
                 return res.redirect(result.path);
             default:
@@ -49,7 +50,7 @@ export class FileRouting extends Routing {
         }
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async createOne(req: CustomRequest, res: express.Response) {
         if (!req.files || req.files.length !== 1) {
             throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
@@ -58,7 +59,7 @@ export class FileRouting extends Routing {
         const file = (req.files as Express.Multer.File[])[0];
         const result = await prisma.file.create({
             data: {
-                path: file.originalname,
+                path: file.filename,
                 mime: file.mimetype,
                 size_in_bytes: file.size,
                 original_name: file.originalname,
@@ -87,6 +88,10 @@ export class FileRouting extends Routing {
         return res.status(200).json({});
     }
 
+    async updateOne(req: CustomRequest, res: express.Response) {
+        throw new APIError(APIErrorCode.FORBIDDEN); 
+    }
+
     toRouter(): express.Router {
         const router = express.Router();
         const validator = this.getValidator();
@@ -99,6 +104,7 @@ export class FileRouting extends Routing {
             this.createOne,
         );
         router.delete("/:id", validator.deleteOneValidator(), this.deleteOne);
+        router.patch("/:id", validator.updateOneValidator(), this.updateOne)
         return router;
     }
 }
