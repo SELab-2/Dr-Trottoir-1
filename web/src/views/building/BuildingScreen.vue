@@ -11,6 +11,9 @@
         <div class="flex-container">
           <div>
             <h1 class="building-name">{{ building.name }}</h1>
+            <p>
+              {{ getBuildingDescription() }}
+            </p>
           </div>
 
           <div style="display: flex; flex-wrap: wrap">
@@ -235,6 +238,11 @@ const takenEnd: Ref<Date> = noStudent
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
+
+function getBuildingDescription(): string {
+  const castedBuilding: any = building.value as any;
+  return castedBuilding.description;
+}
 
 function call(number: string | undefined) {
   if (number) {
