@@ -40,10 +40,6 @@ export async function initialiseFiles() {
         data: manual,
     });
 
-    const rel_path = path.join(
-        process.env.FILE_STORAGE_DIRECTORY!,
-        "example.txt",
-    );
     writeFileSync(
         `${process.env.FILE_STORAGE_DIRECTORY}/example.txt`,
         "hello world 0",
