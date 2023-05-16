@@ -60,38 +60,27 @@
       </BorderCard>
 
       <!-- Text input field for the password-->
-      <BorderCard class="mt-4" prepend-icon="mdi-lock">
-        <template v-slot:title> Wachtwoord </template>
-        <v-list density="compact" :class="spacing">
-          <v-text-field
-            class="mt-2"
-            v-model="password1"
-            :prepend-inner-icon="'mdi-lock'"
-            :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPsswd ? 'text' : 'password'"
-            :counter="8"
-            :rules="psswd1Rules"
-            label="Wachtwoord"
-            hint="Wachtwoorden bestaan minstens uit 1 getal, 1 hoofdletter en 1 speciaal karakter."
-            @click:append-inner="showPsswd = !showPsswd"
-            bg
-          ></v-text-field>
+      <PasswordInputCard class="mt-4" prepend-icon="mdi-lock" />
 
-          <!-- Text input field for the password confirmation-->
-          <v-text-field
-            class="mt-2"
-            v-model="password2"
-            :prepend-inner-icon="'mdi-lock'"
-            :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPsswd ? 'text' : 'password'"
-            :counter="8"
-            :rules="psswd2Rules"
-            label="Bevestig wachtwoord"
-            @click:append-inner="showPsswd = !showPsswd"
-            bg
-          ></v-text-field>
-        </v-list>
-      </BorderCard>
+      <!--      <BorderCard class="mt-4" prepend-icon="mdi-lock">-->
+      <!--        <template v-slot:title> Wachtwoord </template>-->
+      <!--        <v-list density="compact" :class="spacing">-->
+      <!--          <PasswordInputCard />-->
+      <!--          &lt;!&ndash; Text input field for the password confirmation&ndash;&gt;-->
+      <!--          <v-text-field-->
+      <!--            class="mt-2"-->
+      <!--            v-model="password2"-->
+      <!--            :prepend-inner-icon="'mdi-lock'"-->
+      <!--            :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"-->
+      <!--            :type="showPsswd ? 'text' : 'password'"-->
+      <!--            :counter="8"-->
+      <!--            :rules="psswd2Rules"-->
+      <!--            label="Bevestig wachtwoord"-->
+      <!--            @click:append-inner="showPsswd = !showPsswd"-->
+      <!--            bg-->
+      <!--          ></v-text-field>-->
+      <!--        </v-list>-->
+      <!--      </BorderCard>-->
 
       <!-- Selection box to determine the roles -->
       <BorderCard class="mt-4" prepend-icon="mdi-account-multiple">
@@ -126,6 +115,7 @@ import RolesForm from "@/components/forms/RolesForm.vue";
 import { UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
+import PasswordInputCard from "@/components/cards/PasswordInputCard.vue";
 
 const router = useRouter();
 
@@ -152,8 +142,7 @@ const address = ref<Address>({
 const password1 = ref("");
 // reactive password confirmation state
 const password2 = ref("");
-// reactive state to know if you must show both password fields or not
-const showPsswd = ref(false);
+
 // reactive array keeping track of all the roles for this new user
 const roles: Ref<string[]> = ref([]);
 
@@ -170,36 +159,7 @@ const nameRules = [
   },
 ];
 
-// password rules
-const psswd1Rules = [
-  // check if a password was given
-  (psswd: string) => {
-    return psswd ? true : "Geef een wachtwoord op.";
-  },
-
-  // check if psswd is at least 8 chars long
-  (psswd: string) => {
-    return psswd.length >= 8
-      ? true
-      : "Wachtwoord moet minimaal 8 tekens lang zijn.";
-  },
-];
-
-const psswd2Rules = [
-  // check if psswd is present
-  (psswd: string) => {
-    return psswd ? true : "Bevestig het wachtwoord.";
-  },
-
-  // check if psswd2 matches psswd1
-  () => {
-    return password1.value == password2.value
-      ? true
-      : "Wachtwoorden komen niet overeen.";
-  },
-];
-
-/* Form submition */
+/* Form submission */
 
 async function submitForm() {
   // check if form is valid before submitting

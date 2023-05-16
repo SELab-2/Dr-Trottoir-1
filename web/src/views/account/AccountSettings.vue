@@ -119,7 +119,7 @@
         :phone="user.phone"
         :email="user.email"
         @onUpdate="(contact: Contact) => handleContactUpdate(contact)"
-      />
+      />validate in frontend
     </BorderCard>
 
     <!-- Section with the adress -->
@@ -147,29 +147,13 @@
     </BorderCard>
 
     <!-- Section to set new password -->
-    <BorderCard v-if="edit" class="mt-4" prepend-icon="mdi-lock">
-      <template v-slot:title> Nieuw wachtwoord </template>
-      <v-list density="compact" class="mx-4">
-        <v-text-field
-          v-model="password"
-          :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="passwordHidden ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="passwordHidden ? 'text' : 'password'"
-          label="Nieuw wachtwoord"
-          @click:append-inner="passwordHidden = !passwordHidden"
-          bg
-        ></v-text-field>
-        <v-text-field
-          v-model="passwordCheck"
-          :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="passwordHidden ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="passwordHidden ? 'text' : 'password'"
-          label="Bevestig nieuw wachtwoord"
-          @click:append-inner="passwordHidden = !passwordHidden"
-          bg
-        ></v-text-field>
-      </v-list>
-    </BorderCard>
+    <PasswordInputCard
+      v-if="edit"
+      class="mt-4"
+      prepend-icon="mdi-lock"
+      @password="setPassword"
+      @password-repeat="setPasswordRepeat"
+    />
 
     <!-- Section that allows to save and remove the account -->
     <div v-if="edit" class="my-4">
@@ -242,6 +226,7 @@ import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import Contact from "@/components/models/Contact";
+import PasswordInputCard from "@/components/cards/PasswordInputCard.vue";
 
 const display = useDisplay();
 const mobile: Ref<boolean> = display.mobile;
@@ -253,8 +238,16 @@ const props = defineProps(["id"]);
 const edit = ref(false);
 const password = ref("");
 const passwordCheck = ref("");
-const passwordHidden = ref(false);
+// const passwordHidden = ref(false);
 const user: Ref<Result<UserQuery> | null> = ref(null);
+
+const setPassword = (pw) => {
+  password.value = pw;
+};
+
+const setPasswordRepeat = (pw) => {
+  passwordCheck.value = pw;
+};
 
 function handleAddressUpdate(address: Address) {
   if (user.value) {
