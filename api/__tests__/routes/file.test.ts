@@ -40,25 +40,25 @@ describe("File tests", () => {
         test("GET /file", async () => {
             const expected = [
                 {
-                    createdAt: "1969-12-31T23:00:00.000Z",
+                    createdAt: "1970-01-01T00:00:00.000Z",
                     id: 10,
                     location: "FILE_SERVER",
                     mime: "application/pdf",
                     original_name: "handleiding.pdf",
                     path: "manual.pdf",
                     size_in_bytes: 1024,
-                    updatedAt: "1969-12-31T23:00:00.000Z",
+                    updatedAt: "1970-01-01T00:00:00.000Z",
                     user_id: 1,
                 },
                 {
-                    createdAt: "1969-12-31T23:00:00.000Z",
+                    createdAt: "1970-01-01T00:00:00.000Z",
                     id: 11,
                     location: "FILE_SERVER",
                     mime: "text/plain",
                     original_name: "example.txt",
                     path: "example.txt",
                     size_in_bytes: 13,
-                    updatedAt: "1969-12-31T23:00:00.000Z",
+                    updatedAt: "1970-01-01T00:00:00.000Z",
                     user_id: 2,
                 },
             ];
@@ -78,14 +78,14 @@ describe("File tests", () => {
 
             const expected = [
                 {
-                    createdAt: "1969-12-31T23:00:00.000Z",
+                    createdAt: "1970-01-01T00:00:00.000Z",
                     id: 10,
                     location: "FILE_SERVER",
                     mime: "application/pdf",
                     original_name: "handleiding.pdf",
                     path: "manual.pdf",
                     size_in_bytes: 1024,
-                    updatedAt: "1969-12-31T23:00:00.000Z",
+                    updatedAt: "1970-01-01T00:00:00.000Z",
                     user_id: 1,
                 },
             ];
