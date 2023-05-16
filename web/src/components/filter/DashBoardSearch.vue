@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-center">
+  <div class="d-flex align-center box">
     <v-icon icon="mdi-magnify" class="mx-2" size="x-large"></v-icon>
     <v-text-field
       class="w-100"
@@ -32,6 +32,9 @@ defineEmits(["changed"]);
 
 <style scoped lang="scss">
 .checkbox {
-  width: 17%;
+  width: 150px;
+}
+.box {
+  height: 50px;
 }
 </style>

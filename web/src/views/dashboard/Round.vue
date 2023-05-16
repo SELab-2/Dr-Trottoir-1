@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-row-reverse">
+  <div class="d-flex flex-row-reverse toprow">
     <v-btn
       prepend-icon="mdi-plus"
       color="primary"
@@ -33,7 +33,18 @@ async function getRounds(search: string) {
   rounds.value =
     (await tryOrAlertAsync<Array<Result<RoundQuery>>>(async () => {
       const results = await new RoundQuery().getAll({});
-      return results.filter((round) => round.name.toLowerCase().includes(search.toLowerCase()));
+      return results.filter((round) =>
+        round.name.toLowerCase().includes(search.toLowerCase()),
+      );
     })) ?? [];
 }
 </script>
+
+<style scoped lang="scss">
+.toprow {
+  z-index: 1000;
+  position: fixed;
+  top: 14px;
+  right: 4px;
+}
+</style>

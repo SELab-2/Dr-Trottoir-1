@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-row-reverse">
+  <div class="toprow">
     <v-btn
       v-if="useAuthStore().auth?.admin"
       prepend-icon="mdi-plus"
@@ -37,8 +37,21 @@ await getUsers(false, "");
 async function getUsers(showDeleted: boolean, search: string) {
   users.value =
     (await tryOrAlertAsync<Array<Result<UserQuery>>>(async () => {
-      const results = await new UserQuery().getAll({deleted: showDeleted});
-      return results.filter((user) => (user.first_name + ' ' + user.last_name).toLowerCase().includes(search.toLowerCase()));
+      const results = await new UserQuery().getAll({ deleted: showDeleted });
+      return results.filter((user) =>
+        (user.first_name + " " + user.last_name)
+          .toLowerCase()
+          .includes(search.toLowerCase()),
+      );
     })) ?? [];
 }
 </script>
+
+<style scoped lang="scss">
+.toprow {
+  z-index: 1000;
+  position: fixed;
+  top: 14px;
+  right: 4px;
+}
+</style>
