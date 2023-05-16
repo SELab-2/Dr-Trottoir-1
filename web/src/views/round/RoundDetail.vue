@@ -53,18 +53,16 @@
             icon="mdi-check"
             size="large"
             width="100%"
+            :set="(firstBuilding = getFirstBuilding())"
           >
             <h3 class="pt-2">
               Start:
               {{
-                getFirstBuilding()?.arrival
-                  ? new Date(getFirstBuilding().arrival).toLocaleTimeString(
-                      "nl",
-                      {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      },
-                    )
+                firstBuilding?.arrival
+                  ? new Date(firstBuilding.arrival).toLocaleTimeString("nl", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
                   : "error"
               }}
             </h3>
@@ -114,18 +112,16 @@
             icon="mdi-check"
             size="large"
             width="100%"
+            :set="(lastBuilding = getLastBuilding())"
           >
             <h3 class="pt-2">
               Einde:
               {{
-                getLastBuilding()?.departure
-                  ? new Date(getLastBuilding().departure).toLocaleTimeString(
-                      "nl",
-                      {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      },
-                    )
+                lastBuilding?.departure
+                  ? new Date(lastBuilding.departure).toLocaleTimeString("nl", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
                   : "error"
               }}
             </h3>
@@ -268,6 +264,9 @@ await tryOrAlertAsync(async () => {
 
   setCurrentProgress();
 });
+
+const firstBuilding = ref(getFirstBuilding());
+const lastBuilding = ref(getLastBuilding());
 
 function getFirstBuilding() {
   if (data.value) {
