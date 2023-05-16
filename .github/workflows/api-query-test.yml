@@ -1,4 +1,4 @@
-name: API Query Builder Test
+name: CI API Query Builder
 on:
     workflow_dispatch:
     pull_request:
@@ -15,12 +15,13 @@ jobs:
         env:
             DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/main"
             NODE_ENV: "test"
-
         steps:
             -   name: "Checkout the repo code"
                 uses: actions/checkout@v3
             -   uses: actions/setup-node@v3
             -   name: "Clean install"
                 run: npm ci
+            -   name: "Lint the code"
+                run: npm run lint
             -   name: "Execute tests"
                 run: npm run test

@@ -1,4 +1,4 @@
-name: Web Linter
+name: CI Web
 
 on:
     workflow_dispatch:

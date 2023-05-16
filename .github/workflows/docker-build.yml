@@ -1,0 +1,20 @@
+name: Docker Build
+
+on:
+    workflow_run:
+        workflows: ["CI API", "CI Web", "CI API Query Builder"]
+        types:
+            - completed
+
+jobs:
+    docker-api:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: .
+
+        steps:
+            -   name: "Checkout"
+                uses: actions/checkout@v3
+            -   name: "Build images"
+                run: docker build .
