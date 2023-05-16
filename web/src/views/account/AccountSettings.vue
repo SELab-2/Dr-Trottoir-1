@@ -28,7 +28,7 @@
               if (!edit) {
                 edit = true;
               } else {
-                handleCancelEdit();;
+                handleCancelEdit();
               }
             }
           "
