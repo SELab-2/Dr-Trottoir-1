@@ -99,7 +99,7 @@ export class UserValidator extends Validator {
                     phone: Joi.string()
                         .min(1)
                         // accept a potential + sign at the beginning of the number and at least 1 digit
-                        .regex(/^\\+?d\\+$/),
+                        .regex(/^\+?[0-9]+$/),
                     address_id: Joi.number().positive(),
                     student: Joi.boolean(),
                     super_student: Joi.boolean(),
