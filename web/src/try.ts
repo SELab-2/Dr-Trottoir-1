@@ -21,8 +21,13 @@ export function tryOrAlert<T>(func: () => T): T | undefined {
   try {
     return func();
   } catch (err) {
-    useErrorStore().addToStore(err);
-    useErrorStore().storeFunction(func);
+    if (err instanceof Error) {
+      useErrorStore().appendError(err, async () => {
+        func();
+      });
+    } else {
+      useErrorStore().appendError(new Error("Unknown Error"), async () => {});
+    }
   }
 }
 
@@ -49,7 +54,12 @@ export async function tryOrAlertAsync<T>(
   try {
     return await func();
   } catch (err) {
-    useErrorStore().addToStore(err);
-    useErrorStore().storeAsyncFunction(func);
+    if (err instanceof Error) {
+      useErrorStore().appendError(err, async () => {
+        func();
+      });
+    } else {
+      useErrorStore().appendError(new Error("Unknown Error"), async () => {});
+    }
   }
 }

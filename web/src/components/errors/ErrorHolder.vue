@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 const props = defineProps({
-  errors: { type: Array<unknown>, required: true },
+  errors: { type: Array<Error>, required: true },
 });
 
 interface FormattedError {

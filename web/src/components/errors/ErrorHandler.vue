@@ -16,11 +16,17 @@
         <ErrorHolder :errors="errors"></ErrorHolder
       ></BorderCard>
       <v-card-actions class="my-1">
-        <v-btn @click="retryFunction()" prepend-icon="mdi-rotate-right"
+        <v-btn
+          @click="() => useErrorStore().retryFunction()"
+          prepend-icon="mdi-rotate-right"
           >Probeer opnieuw</v-btn
         >
         <v-spacer />
-        <v-btn @click="closedDialog()" prepend-icon="mdi-close">Sluit</v-btn>
+        <v-btn
+          @click="() => useErrorStore().popError()"
+          prepend-icon="mdi-close"
+          >Sluit</v-btn
+        >
       </v-card-actions>
     </BorderCard>
   </v-overlay>
@@ -34,16 +40,6 @@ import BorderCard from "@/layouts/CardLayout.vue";
 
 const errors = ref<unknown[]>([]);
 const showDialog = ref<boolean>(errors.value.length !== 0);
-
-function closedDialog() {
-  showDialog.value = false;
-  useErrorStore().emptyStore();
-}
-
-function retryFunction() {
-  showDialog.value = false;
-  useErrorStore().retryFunction();
-}
 
 watch(useErrorStore().errors, () => {
   showDialog.value = useErrorStore().errors.length !== 0;
