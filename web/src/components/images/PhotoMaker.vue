@@ -5,11 +5,7 @@
       <v-card-title v-else>Opmerking toevoegen</v-card-title></template
     >
     <template v-slot:append
-      ><v-icon
-        @click="$emit('cancel')"
-        color="error"
-        icon="mdi-close"
-      ></v-icon
+      ><v-icon @click="$emit('cancel')" color="error" icon="mdi-close"></v-icon
     ></template>
 
     <div class="mx-4 my-2">
@@ -27,7 +23,7 @@
       <v-select
         v-if="isPhoto"
         variant="outlined"
-        :items='ImageTypes'
+        :items="ImageTypes"
         @update:model-value="$emit('onUpdate', photo)"
         label="Type"
         v-model="photo.type"
@@ -56,7 +52,7 @@
 import Photo from "@/components/models/Photo";
 import { ref } from "vue";
 
-const ImageTypes = ['ARRIVAL', 'DEPARTURE', 'GARBAGE'];
+const ImageTypes = ["ARRIVAL", "DEPARTURE", "GARBAGE"];
 
 const props = defineProps({
   id: {

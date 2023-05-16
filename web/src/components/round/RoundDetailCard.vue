@@ -206,7 +206,8 @@ const progress = ref(
 );
 
 const isStudent = useAuthStore().auth?.student;
-const canEdit = isStudent && (new Date(new Date(props.day).setHours(0, 0, 0)) <= new Date());
+const canEdit =
+  isStudent && new Date(new Date(props.day).setHours(0, 0, 0)) <= new Date();
 
 const router = useRouter();
 

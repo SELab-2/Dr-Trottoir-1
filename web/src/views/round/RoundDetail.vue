@@ -3,12 +3,14 @@
     <HFillWrapper>
       <div class="space-y">
         <div style="margin-bottom: 0; display: flex; gap: 12px">
-          <h2 v-if='useAuthStore().auth?.student'>{{ data.round.name }}</h2>
-          <v-hover v-else v-slot:default='{isHovering, props}'>
+          <h2 v-if="useAuthStore().auth?.student">{{ data.round.name }}</h2>
+          <v-hover v-else v-slot:default="{ isHovering, props }">
             <h2
-              v-bind='props'
-              @click='router.push({name: "round", params: { id: data.round.id}})'
-              :class='isHovering? "text-decoration-underline": ""'
+              v-bind="props"
+              @click="
+                router.push({ name: 'round', params: { id: data.round.id } })
+              "
+              :class="isHovering ? 'text-decoration-underline' : ''"
             >
               {{ data.round.name }}
             </h2>
@@ -89,7 +91,7 @@
               :class="mobile ? 'shiftUnderTimeLine' : ''"
               :key="JSON.stringify(entry.progress)"
               :entry="entry"
-              :day='data.day'
+              :day="data.day"
               @changed="progressUpdated(entry.progress?.id)"
               @requestPhotoAdd="
                 (progress) => {
@@ -102,9 +104,7 @@
           </v-timeline-item>
 
           <v-timeline-item
-            v-if="
-              getLastBuilding()?.departure
-            "
+            v-if="getLastBuilding()?.departure"
             dot-color="success"
             icon="mdi-check"
             size="large"
@@ -140,10 +140,7 @@
     :title="currentProgress?.building.name"
     v-if="mobile && currentProgress && canEdit()"
   />
-  <v-overlay
-    v-model="showOverlay"
-    class="align-center justify-center"
-  >
+  <v-overlay v-model="showOverlay" class="align-center justify-center">
     <PhotoMaker
       @cancel="showOverlay = false"
       @confirm="updateProgressWithPhoto"
@@ -165,7 +162,7 @@ import PhotoMaker from "@/components/images/PhotoMaker.vue";
 import { useDisplay } from "vuetify";
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from "vue-router";
 import Photo from "@/components/models/Photo";
 import { useAuthStore } from "@/stores/auth";
 
@@ -225,10 +222,13 @@ const startActions: Button[] = [
 
 const isStudent = useAuthStore().auth?.student;
 function canEdit() {
-  if (!data.value){
+  if (!data.value) {
     return false;
   }
-  return isStudent && (new Date(new Date(data.value.day).setHours(0, 0, 0)) <= new Date());
+  return (
+    isStudent &&
+    new Date(new Date(data.value.day).setHours(0, 0, 0)) <= new Date()
+  );
 }
 
 const showOverlay = ref(false);
@@ -260,11 +260,17 @@ await tryOrAlertAsync(async () => {
 });
 
 function getFirstBuilding() {
-  if(data.value) {
-    let firstBuilding = progressItems.value.get(data.value.round.buildings[0].building_id);
+  if (data.value) {
+    let firstBuilding = progressItems.value.get(
+      data.value.round.buildings[0].building_id,
+    );
     for (const building of data.value.round.buildings) {
       const build = progressItems.value.get(building.building_id);
-      if (build?.arrival && (!firstBuilding?.arrival || new Date(build.arrival) < new Date(firstBuilding.arrival))) {
+      if (
+        build?.arrival &&
+        (!firstBuilding?.arrival ||
+          new Date(build.arrival) < new Date(firstBuilding.arrival))
+      ) {
         firstBuilding = build;
       }
     }
@@ -274,14 +280,20 @@ function getFirstBuilding() {
 }
 
 function getLastBuilding() {
-  if(data.value) {
-    let lastbuilding = progressItems.value.get(data.value.round.buildings[0].building_id);
+  if (data.value) {
+    let lastbuilding = progressItems.value.get(
+      data.value.round.buildings[0].building_id,
+    );
     for (const building of data.value.round.buildings) {
       const build = progressItems.value.get(building.building_id);
       if (!build?.departure) {
         return build;
       }
-      if (build && (!lastbuilding?.departure || new Date(build.departure) > new Date(lastbuilding.departure))) {
+      if (
+        build &&
+        (!lastbuilding?.departure ||
+          new Date(build.departure) > new Date(lastbuilding.departure))
+      ) {
         lastbuilding = build;
       }
     }

@@ -268,9 +268,9 @@ const routes: any[] = [
         },
       },
       {
-        path: '/:pathMatch(.*)*',
+        path: "/:pathMatch(.*)*",
         component: PageNotFound,
-        name: 'PageNotFound',
+        name: "PageNotFound",
         meta: {
           auth: (
             student: boolean,
@@ -311,7 +311,7 @@ const devRoutes: any[] = [
       ) => true,
     },
   },
-]
+];
 
 if (import.meta.env.MODE === "development") {
   routes.push(...devRoutes);

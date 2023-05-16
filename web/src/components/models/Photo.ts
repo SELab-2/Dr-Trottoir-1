@@ -1,4 +1,4 @@
-import { ProgressImageType } from '@selab-2/groep-1-orm'
+import { ProgressImageType } from "@selab-2/groep-1-orm";
 
 export default interface Address {
   image: File[];
