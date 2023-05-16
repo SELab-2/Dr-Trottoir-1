@@ -47,7 +47,7 @@
               op "ronde inplannen en opslaan" te drukken.
             </p>
 
-            <v-row class="pt-2">
+            <v-row class="pt-2 mt-1">
               <v-col
                 cols="1"
                 style="min-width: 100px; max-width: 100%"
@@ -117,7 +117,7 @@
             <div style="display: flex; align-items: center">
               <v-btn
                 prepend-icon="mdi-plus"
-                @click="updateRounds()"
+                @click="calcNewRounds()"
                 :disabled="student === undefined"
                 variant="tonal"
                 >Tijdelijk toevoegen</v-btn
@@ -194,12 +194,11 @@
       <RoundSelectCard
         v-for="(round, i) in showAllPlanned ? fullScheme : rounds"
         :key="i"
-        @remove="removeFromRounds(i)"
+        @remove="round.func()"
         :name="round.name"
         :date="round.date"
         :time="round.time"
         :already-planned="round.alreadyPlanned"
-        :removeable="!showAllPlanned"
       >
       </RoundSelectCard>
     </HFillWrapper>
@@ -267,27 +266,38 @@ interface plannedRound {
   name: string;
   time: string;
   alreadyPlanned: boolean;
+  func: () => void;
 }
 
 let rounds = ref<Array<plannedRound>>([]);
 
-function updateRounds() {
-  rounds.value = [];
+function calcNewRounds() {
   if (frequency.value === "enkel") {
     endDate.value = startDate.value;
   }
   const start = new Date(startDate.value);
   const end = new Date(endDate.value);
   let frequencyCount = frequencyDict[frequency.value];
+  let index = rounds.value.length;
   for (const d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {
+    const currentindex = index;
     rounds.value.push({
       name: getFullStudentName(student.value),
       date: new Date(d),
       time: time.value,
       alreadyPlanned: false,
+      func: () => removeFromRounds(currentindex),
     });
+    index += 1;
   }
 }
+
+function updateRounds() {
+  for (let i = 0; i < rounds.value.length; i++) {
+    rounds.value[i].func = () => removeFromRounds(i);
+  }
+}
+
 function frequencyCheck() {
   if (frequency.value == frequencys[0]) {
     multipleday.value = false;
@@ -295,9 +305,18 @@ function frequencyCheck() {
     multipleday.value = true;
   }
 }
+
 function removeFromRounds(index: number) {
   rounds.value.splice(index, 1);
+  updateRounds();
   updateFullScheme();
+}
+
+function deleteFromDatabase(id: number) {
+  tryOrAlertAsync(async () => {
+    await new ScheduleQuery().deleteOne({ id: id });
+    updateFullScheme();
+  });
 }
 
 const fullScheme = ref<plannedRound[]>([]);
@@ -319,6 +338,7 @@ function updateFullScheme() {
         date: new Date(plannedSchedule.day),
         time: new Date(plannedSchedule.day).toTimeString().substring(0, 5),
         alreadyPlanned: true,
+        func: () => deleteFromDatabase(plannedSchedule.id),
       }),
     );
 
