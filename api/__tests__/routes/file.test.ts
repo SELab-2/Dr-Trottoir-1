@@ -244,17 +244,15 @@ describe("File tests", () => {
         app.close();
 
         //delete added files
-        const dir = opendirSync(process.env.FILE_STORAGE_DIRECTORY!);
+        const dir = opendirSync(`${process.env.FILE_STORAGE_DIRECTORY}`);
         let dirent;
         while ((dirent = dir.readSync()) !== null) {
             if (dirent.name != "INIT.txt") {
-                const dirname = path.resolve();
-                const full_path = path.join(
-                    dirname,
-                    process.env.FILE_STORAGE_DIRECTORY!,
-                    dirent.name,
+                unlinkSync(
+                    `${path.resolve()}/${process.env.FILE_STORAGE_DIRECTORY}/${
+                        dirent.name
+                    }`,
                 );
-                unlinkSync(full_path);
             }
         }
         dir.closeSync();

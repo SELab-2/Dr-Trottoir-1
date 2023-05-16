@@ -44,7 +44,10 @@ export async function initialiseFiles() {
         process.env.FILE_STORAGE_DIRECTORY!,
         "example.txt",
     );
-    writeFileSync(rel_path, "hello world 0");
+    writeFileSync(
+        `${process.env.FILE_STORAGE_DIRECTORY}/example.txt`,
+        "hello world 0",
+    );
     await prisma.file.create({
         data: testfile,
     });
