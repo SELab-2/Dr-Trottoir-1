@@ -35,13 +35,10 @@ const users: Ref<Array<Result<UserQuery>>> = ref([]);
 await getUsers(false, "");
 
 async function getUsers(showDeleted: boolean, search: string) {
-  console.log("TODO: filter with: " + search);
   users.value =
     (await tryOrAlertAsync<Array<Result<UserQuery>>>(async () => {
-      if (showDeleted) {
-        return await new UserQuery().getAll({ deleted: true });
-      }
-      return await new UserQuery().getAll({});
+      const results = await new UserQuery().getAll({deleted: showDeleted});
+      return results.filter((user) => (user.first_name + ' ' + user.last_name).toLowerCase().includes(search.toLowerCase()));
     })) ?? [];
 }
 </script>

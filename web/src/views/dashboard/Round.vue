@@ -11,6 +11,7 @@
   </div>
   <DashBoardSearch :admin="false" @changed="(_, b) => getRounds(b)" />
   <Table
+    :key="rounds.length"
     :entries="rounds"
     :headers="RoundTable.headers()"
     :route="RoundTable.route"
@@ -29,10 +30,10 @@ const rounds: Ref<Array<Result<RoundQuery>>> = ref([]);
 await getRounds("");
 
 async function getRounds(search: string) {
-  console.log("TODO: filter with: " + search);
   rounds.value =
     (await tryOrAlertAsync<Array<Result<RoundQuery>>>(async () => {
-      return await new RoundQuery().getAll({});
+      const results = await new RoundQuery().getAll({});
+      return results.filter((round) => round.name.toLowerCase().includes(search.toLowerCase()));
     })) ?? [];
 }
 </script>
