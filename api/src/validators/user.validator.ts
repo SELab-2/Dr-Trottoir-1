@@ -41,6 +41,7 @@ export class UserValidator extends Validator {
         return celebrate({
             params: Joi.object({
                 id: Joi.number().positive().required(),
+                deleted: Joi.bool(),
             }),
         });
     }
