@@ -16,7 +16,9 @@ import {
 import { opendirSync, unlinkSync } from "fs";
 import path from "path";
 
-process.env["FILE_STORAGE_DIRECTORY"] = `${path.resolve()}/__tests__/mock/file_server`;
+process.env[
+    "FILE_STORAGE_DIRECTORY"
+] = `${path.resolve()}/__tests__/mock/file_server`;
 
 describe("File tests", () => {
     let runner: Testrunner;
@@ -234,9 +236,7 @@ describe("File tests", () => {
         while ((dirent = dir.readSync()) !== null) {
             if (dirent.name != "INIT.txt") {
                 unlinkSync(
-                    `${process.env.FILE_STORAGE_DIRECTORY}/${
-                        dirent.name
-                    }`,
+                    `${process.env.FILE_STORAGE_DIRECTORY}/${dirent.name}`,
                 );
             }
         }

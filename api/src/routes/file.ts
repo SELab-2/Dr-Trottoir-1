@@ -39,9 +39,7 @@ export class FileRouting extends Routing {
         switch (result.location) {
             case "FILE_SERVER":
                 return res.sendFile(
-                    `${process.env.FILE_STORAGE_DIRECTORY}/${
-                        result.path
-                    }`,
+                    `${process.env.FILE_STORAGE_DIRECTORY}/${result.path}`,
                 );
             case "EXTERNAL":
                 return res.redirect(result.path);
