@@ -18,7 +18,24 @@
         style="display: flex; flex-direction: column; gap: 12px"
         ><v-expand-transition
           ><div v-show="!showAllPlanned">
-            <h2>Afvalkalender voor: {{ currentBuilding?.name }}</h2>
+            <div class="d-flex">
+              <h2>Afvalkalender voor:</h2>
+              <v-hover v-slot:default="{ isHovering, props }">
+                <h2
+                  class="mx-1"
+                  v-bind="props"
+                  @click="
+                    router.push({
+                      name: 'building_id',
+                      params: { id: currentBuilding?.id },
+                    })
+                  "
+                  :class="isHovering ? 'text-decoration-underline' : ''"
+                >
+                  {{ currentBuilding?.name }}
+                </h2>
+              </v-hover>
+            </div>
 
             <p class="mb-4">
               Kies hier een actie die moet uitgevoerd worden voor
@@ -112,7 +129,24 @@
         >
         <v-expand-transition
           ><div v-show="showAllPlanned">
-            <h2>Voorlopig overzicht ronde: {{ currentBuilding?.name }}</h2>
+            <div class="d-flex">
+              <h2>Voorlopig overzicht:</h2>
+              <v-hover v-slot:default="{ isHovering, props }">
+                <h2
+                  class="mx-1"
+                  v-bind="props"
+                  @click="
+                    router.push({
+                      name: 'building_id',
+                      params: { id: currentBuilding?.id },
+                    })
+                  "
+                  :class="isHovering ? 'text-decoration-underline' : ''"
+                >
+                  {{ currentBuilding?.name }}
+                </h2>
+              </v-hover>
+            </div>
             <p>
               Hier wordt er een voorlopige planning getoond de afvalkalender
               voor {{ currentBuilding?.name }}. Kies start- en einddatum door
@@ -186,7 +220,9 @@ import {
   GarbageQuery,
   BuildingQuery,
 } from "@selab-2/groep-1-query";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+
+const router = useRouter();
 
 const actions = ref<Result<ActionQuery>[]>([]);
 const frequenties = ["enkel", "wekelijks", "tweewekelijks", "maandelijks"];
@@ -253,9 +289,9 @@ function formatDate(d: Date | undefined): string {
   return "";
 }
 
-function submit() {
+async function submit() {
   for (let garbageDetail of detailedDays.value) {
-    tryOrAlertAsync(async () => {
+    await tryOrAlertAsync(async () => {
       const dtDate = new Date(
         formatDate(garbageDetail?.date) + " " + garbageDetail?.time + ":00",
       );

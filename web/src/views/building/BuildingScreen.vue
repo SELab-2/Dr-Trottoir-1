@@ -135,11 +135,13 @@
             v-for="action in garbage"
             :key="action.id"
           >
-            <div class='d-flex align-center w-100'>
-              <h4 class='ml-2 me-auto'>{{ action.action.description }}</h4>
-              <v-chip color='border' variant='outlined'>
+            <div class="d-flex align-center w-100">
+              <h4 class="ml-2 me-auto">{{ action.action.description }}</h4>
+              <v-chip color="border" variant="outlined">
                 <v-icon icon="mdi-calendar-clock"></v-icon>
-                <p class='text-black mx-1'>{{ new Date(action.pickup_time).toLocaleString('nl') }}</p>
+                <p class="text-black mx-1">
+                  {{ new Date(action.pickup_time).toLocaleString("nl") }}
+                </p>
               </v-chip>
             </div>
           </CardLayout>

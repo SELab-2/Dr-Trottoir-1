@@ -19,7 +19,24 @@
       >
         <v-expand-transition
           ><div v-show="!showAllPlanned">
-            <h2>Ronde inplannen: {{ current_round?.name }}</h2>
+            <div class="d-flex">
+              <h2>Ronde inplannen voor:</h2>
+              <v-hover v-slot:default="{ isHovering, props }">
+                <h2
+                  class="mx-1"
+                  v-bind="props"
+                  @click="
+                    router.push({
+                      name: 'round',
+                      params: { id: current_round?.id },
+                    })
+                  "
+                  :class="isHovering ? 'text-decoration-underline' : ''"
+                >
+                  {{ current_round?.name }}
+                </h2>
+              </v-hover>
+            </div>
             <p>
               Kies hier een student om hem/haar in te plannen voor de ronde
               {{ current_round?.name }}. Kies een frequentie en datum(s) wanneer
@@ -118,7 +135,24 @@
         >
         <v-expand-transition
           ><div v-show="showAllPlanned">
-            <h2>Voorlopig overzicht ronde: {{ current_round?.name }}</h2>
+            <div class="d-flex">
+              <h2>Voorlopig overzicht:</h2>
+              <v-hover v-slot:default="{ isHovering, props }">
+                <h2
+                  class="mx-1"
+                  v-bind="props"
+                  @click="
+                    router.push({
+                      name: 'round',
+                      params: { id: current_round?.id },
+                    })
+                  "
+                  :class="isHovering ? 'text-decoration-underline' : ''"
+                >
+                  {{ current_round?.name }}
+                </h2>
+              </v-hover>
+            </div>
             <p>
               Hier wordt er een voorlopig overzicht getoond van de planning van
               deze ronde. Kies start- en einddatum door deze aan te passen in de
@@ -184,7 +218,9 @@ import {
   ScheduleQuery,
 } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+
+const router = useRouter();
 
 const showAllPlanned = ref<boolean>(false);
 
