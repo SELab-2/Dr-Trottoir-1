@@ -269,7 +269,7 @@ const routes: any[] = [
         },
       },
       {
-        path: "/template/nieuw",
+        path: "/sjabloon/nieuw/:id?",
         component: TemplateBuilder,
         name: "template_new",
         meta: {
@@ -283,11 +283,11 @@ const routes: any[] = [
         },
       },
       {
-        path: "/template",
+        path: "/sjabloon",
         component: TemplateOverview,
         name: "template_overview",
         meta: {
-          title: "Templates",
+          title: "Sjablonen",
           auth: (
             student: boolean,
             superstudent: boolean,

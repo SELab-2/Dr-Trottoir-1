@@ -98,12 +98,27 @@
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import { ref } from "vue";
-import { MailTemplateQuery } from "@selab-2/groep-1-query";
+import { Result, MailTemplateQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
+import { useRoute } from "vue-router";
 
 const templateName = ref<string>("");
 const subject = ref<string>("");
 const body = ref<string>("");
+
+const route = useRoute();
+const templateId: number = Number(route.params.id);
+
+if (templateId) {
+  tryOrAlertAsync(async () => {
+    const thisTemplate: Result<MailTemplateQuery> =
+      await new MailTemplateQuery().getOne(templateId);
+
+    templateName.value = thisTemplate.name;
+    subject.value = thisTemplate.mail_subject;
+    body.value = thisTemplate.content;
+  });
+}
 
 const variables: { name: string; description: string }[] = [
   { name: "$(syndicus_voornaam)", description: "Voornaam van een syndicus" },
@@ -118,17 +133,32 @@ const variables: { name: string; description: string }[] = [
 ];
 
 function saveTemplate() {
-  tryOrAlertAsync(async () => {
-    await new MailTemplateQuery().createOne({
-      name: templateName.value,
-      mail_subject: subject.value,
-      content: body.value,
+  if (!templateId) {
+    tryOrAlertAsync(async () => {
+      await new MailTemplateQuery().createOne({
+        name: templateName.value,
+        mail_subject: subject.value,
+        content: body.value,
+      });
     });
+    clearForm();
+  } else {
+    tryOrAlertAsync(async () => {
+      await new MailTemplateQuery().updateOne({
+        id: templateId,
+        name: templateName.value,
+        mail_subject: subject.value,
+        content: body.value,
+      });
+    });
+    clearForm();
+  }
+}
 
-    templateName.value = "";
-    subject.value = "";
-    body.value = "";
-  });
+function clearForm() {
+  templateName.value = "";
+  subject.value = "";
+  body.value = "";
 }
 </script>
 

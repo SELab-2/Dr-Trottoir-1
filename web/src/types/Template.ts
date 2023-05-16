@@ -3,6 +3,7 @@ import { TableEntity } from "@/components/table/TableEntity";
 import { RowType } from "@/components/table/RowType";
 import { MailTemplateQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
+import router from "@/router";
 
 export class Template implements TableEntity<Result<MailTemplateQuery>> {
   headers(): Array<Header<Result<MailTemplateQuery>>> {
@@ -20,7 +21,18 @@ export class Template implements TableEntity<Result<MailTemplateQuery>> {
         sortable: true,
       },
       {
-        id: 4,
+        id: 1,
+        name: "",
+        fit: true,
+        get: () => "mdi-pencil",
+        type: RowType.ICONBUTTON,
+        sortable: false,
+        onClick: (e: Result<MailTemplateQuery>) => {
+          router.push({ name: "template_new", params: { id: e.id } });
+        },
+      },
+      {
+        id: 2,
         name: "",
         fit: true,
         get: () => "mdi-close",
