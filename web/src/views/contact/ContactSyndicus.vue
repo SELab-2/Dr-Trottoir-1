@@ -132,7 +132,6 @@ const buildingId: number = Number(route.params.id);
 onMounted(() => {
   tryOrAlertAsync(async () => {
     allTemplates.value = await new MailTemplateQuery().getAll();
-    console.log(allTemplates.value);
   });
 
   tryOrAlertAsync(async () => {
