@@ -56,7 +56,7 @@ export async function tryOrAlertAsync<T>(
   } catch (err) {
     if (err instanceof Error) {
       useErrorStore().appendError(err, async () => {
-        func();
+        await func();
       });
     } else {
       useErrorStore().appendError(new Error("Unknown Error"), async () => {});

@@ -1,7 +1,6 @@
 <template>
   <v-overlay
-    @update:model-value="closedDialog()"
-    v-model="showDialog"
+    v-model="useErrorStore().errors.length"
     class="d-flex align-center justify-center"
   >
     <BorderCard
@@ -13,8 +12,16 @@
     >
       <BorderCard class="mx-5 my-1">
         <!-- Give list of errors if there is one to the handler which will parse them to a good format-->
-        <ErrorHolder :errors="errors"></ErrorHolder
-      ></BorderCard>
+        <v-expansion-panels variant="accordion">
+          <v-expansion-panel
+            v-for="(e, i) of useErrorStore().errors"
+            :key="i"
+            :title="`Code: ${e.error['code'] ?? 503} - ${e.error.name}`"
+            :text="e.error.message"
+          >
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </BorderCard>
       <v-card-actions class="my-1">
         <v-btn
           @click="() => useErrorStore().retryFunction()"
@@ -33,16 +40,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from "vue";
 import { useErrorStore } from "@/stores/error";
-import ErrorHolder from "@/components/errors/ErrorHolder.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
-
-const errors = ref<unknown[]>([]);
-const showDialog = ref<boolean>(errors.value.length !== 0);
-
-watch(useErrorStore().errors, () => {
-  showDialog.value = useErrorStore().errors.length !== 0;
-  errors.value = useErrorStore().errors;
-});
 </script>
