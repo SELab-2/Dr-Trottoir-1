@@ -60,7 +60,7 @@ export class UserValidator extends Validator {
                     .trim()
                     .min(1)
                     // accept a potential + sign at the beginning of the number and at least 1 digit
-                    .regex(/^\+?\d+$/)
+                    .regex(/^\+?[0-9]+$/)
                     .required(),
                 address: Joi.object({
                     create: Joi.object({
