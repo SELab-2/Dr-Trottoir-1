@@ -1,6 +1,6 @@
 <template>
   <HFillWrapper v-if="building !== null">
-    <div class="space-y">
+    <v-card variant="text" class="space-y">
       <img
         alt="banner"
         id="banner"
@@ -8,89 +8,97 @@
       />
 
       <div>
-        <div class="d-flex justify-space-between">
-          <h1 class="building-name">{{ building.name }}</h1>
-          <RoundedButton
-            v-if="!useAuthStore().auth?.student"
-            @clicked="() => router.push({ name: 'building_new' })"
-            icon="mdi-pencil"
-            class="mt-2"
-          />
+        <div class="flex-container">
+          <div>
+            <h1 class="building-name">{{ building.name }}</h1>
+            <p>
+              {{ getBuildingDescription() }}
+            </p>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap">
+            <v-chip variant="outlined" color="border" class="mr-2 labels">
+              <v-icon icon="mdi-identifier" color="black" />
+              <p class="text-black">{{ building.ivago_id }}</p>
+            </v-chip>
+            <v-chip variant="outlined" color="border" class="labels">
+              <v-icon icon="mdi-map-marker" color="black" />
+              <p class="text-black">
+                {{ building.address.street }} {{ building.address.number }},
+                {{ building.address.zip_code }}, {{ building.address.city }}
+              </p>
+            </v-chip>
+            <!-- TODO: add btn to link to building edit page once we have building edit page -->
+          </div>
         </div>
 
-        <!-- TODO add in API
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p> -->
+        <div class="d-flex mt-2" style="gap: 16px; flex-wrap: wrap">
+          <div class="me-auto d-flex" style="gap: 16px; flex-wrap: wrap">
+            <v-btn
+              class="text-none"
+              prepend-icon="mdi-map-search"
+              @click="tomaps()"
+              color="primary"
+            >
+              Kaarten
+            </v-btn>
+            <v-btn
+              class="text-none"
+              append-icon="mdi-download"
+              prepend-icon="mdi-file-pdf-box"
+              :href="'http://10.0.0.5:8080/file/' + building.manual?.id"
+              color="success"
+            >
+              Handleiding
+            </v-btn>
+          </div>
 
-        <div style="display: flex; gap: 16px; flex-wrap: wrap" class="mt-2">
-          <RoundedButton
-            icon="mdi-map-search"
-            @click="tomaps()"
-            value="Kaarten"
-          />
-          <RoundedButton
-            icon="mdi-file-pdf-box"
-            @click="toClip('TODO')"
-            value="Handleiding"
-          />
+          <v-btn
+            v-show="useAuthStore().auth?.admin"
+            class="text-none"
+            prepend-icon="mdi-delete"
+            @click="showRemovePopup = true"
+            color="error"
+          >
+            Verwijder
+          </v-btn>
+
           <!-- TODO add in API
           <RoundedButton icon="mdi-lock" @click="toClip('TODO')" value="TODO" /> -->
         </div>
       </div>
 
-      <CardLayout
-        style="
-          display: flex;
-          gap: 16px;
-          align-items: center;
-          border-radius: 10px;
-          padding: 16px 0 16px 16px;
-        "
-      >
-        <Avatar
-          :name="
-            building.syndicus?.user.first_name +
-            ' ' +
-            building.syndicus?.user.last_name
-          "
-        ></Avatar>
-
+      <CardLayout class="grid pt-3 pb-1 px-3" style="align-items: center">
         <div>
-          <p style="font-weight: 600; font-size: 16px; opacity: 90%">
-            SYNDICUS
-          </p>
-          <p style="font-weight: 500">
-            {{
-              building.syndicus?.user.first_name +
-              " " +
-              building.syndicus?.user.last_name
-            }}
-          </p>
+          <div style="gap: 16px; flex-wrap: wrap" class="d-flex flex-row">
+            <Avatar
+              :name="
+                building.syndicus?.user.first_name +
+                ' ' +
+                building.syndicus?.user.last_name
+              "
+            />
+            <div>
+              <p style="font-weight: 600; font-size: 16px; opacity: 90%">
+                SYNDICUS
+              </p>
+              <p style="font-weight: 500">
+                {{
+                  building.syndicus?.user.first_name +
+                  " " +
+                  building.syndicus?.user.last_name
+                }}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div style="flex-grow: 1"></div>
-
-        <div style="gap: 16px; flex-wrap: wrap" class="d-flex flex-row-reverse">
-          <RoundedButton
-            icon="mdi-phone"
-            @click="call(building?.syndicus?.user.phone)"
-            :value="building?.syndicus?.user.phone"
-          />
-          <RoundedButton
-            icon="mdi-mail"
-            value="E-mail"
-            @click="
-              () => {
-                router.push({
-                  name: 'contact_syndicus',
-                  params: { id: building?.id },
-                });
-              }
-            "
+        <div class="grid-right">
+          <SyndicusButtons
+            :email="building.syndicus.user.email"
+            :click-email="mail"
+            :phone="building.syndicus.user.phone"
+            :click-phone="call"
           />
         </div>
       </CardLayout>
@@ -99,19 +107,21 @@
         <div class="d-flex mt-8 flex-wrap align-center">
           <h2 class="me-auto">Taken</h2>
           <div class="d-flex flex-wrap">
-            <div class="chip mx-1 mt-1">
-              <input type="date" v-model="taskStartDate" @change="getTasks()" />
-              tot
-              <input type="date" v-model="taskEndDate" @change="getTasks()" />
-            </div>
-            <RoundedButton
-              icon="mdi-plus"
-              class="mx-1 mt-1"
-              value="Toevoegen"
-              @click="
-                () => router.push({ name: 'garbage_plan', params: { id: id } })
-              "
+            <DateRange
+              v-model:end-date="takenEnd"
+              v-model:start-date="takenStart"
+              @update:end-date="getTasks()"
+              @update:start-date="getTasks()"
             />
+            <v-btn
+              v-show="noStudent"
+              class="mx-1 text-none"
+              prepend-icon="mdi-plus"
+              :to="{ name: 'garbage_plan', params: { id: id } }"
+              color="primary"
+            >
+              Toevoegen
+            </v-btn>
           </div>
         </div>
         <div class="grid">
@@ -140,73 +150,104 @@
         </div>
       </div>
 
-      <div
-        class="space-y-8"
-        v-if="useAuthStore().auth?.admin || useAuthStore().auth?.super_student"
-      >
-        <div class="d-flex mt-8 flex-wrap align-center">
-          <h2 class="me-auto">Bezoeken</h2>
-          <div class="d-flex">
-            <div class="chip mx-1 mt-1">
-              <input
-                type="month"
-                v-model="scheduleMonth"
-                @change="getVisits()"
+      <div v-show="noStudent">
+        <div class="space-y-8" v-if="noStudent">
+          <div class="d-flex mt-8 flex-wrap align-center">
+            <h2 class="me-auto">Bezoeken</h2>
+            <div class="d-flex">
+              <DateRange
+                v-model:end-date="bezoekenEnd"
+                v-model:start-date="bezoekenStart"
+                @update:end-date="getVisits()"
+                @update:start-date="getVisits()"
               />
             </div>
           </div>
-        </div>
-        <div v-for="progress in progresses" :key="progress.id">
-          <RoundCard
-            :schedule="progress.schedule"
-            :status="
-              progress.arrival
-                ? progress.departure
-                  ? 'completed'
-                  : 'active'
-                : 'scheduled'
-            "
-            :comments="progress.report != null && progress.report !== ''"
-            :images="progress.images.length"
-          />
-        </div>
-        <div v-if="progresses.length === 0">
-          <p>Geen bezoeken voor de geselecteerde periode.</p>
+          <div v-for="schedule in schedules" :key="schedule.id">
+            <RoundCard :schedule="schedule" />
+          </div>
+          <div v-if="schedules.length === 0">
+            <p>Geen bezoeken voor de geselecteerde periode.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </v-card>
   </HFillWrapper>
+  <CardPopup
+    v-model="showRemovePopup"
+    :width="353"
+    title="Verwijder Ronde"
+    prepend-icon="mdi-delete"
+  >
+    <p class="ma-3">
+      Je staat op het punt dit gebouw te verwijderen. Ben je zeker dat je wilt
+      verder gaan?
+    </p>
+    <template v-slot:actions>
+      <v-btn
+        prepend-icon="mdi-close"
+        color="error"
+        variant="elevated"
+        @click="showRemovePopup = false"
+        >Annuleren</v-btn
+      >
+      <v-btn
+        prepend-icon="mdi-check"
+        color="success"
+        variant="elevated"
+        @click="deleteBuilding()"
+        >Verwijder gebouw</v-btn
+      >
+    </template>
+  </CardPopup>
 </template>
 
 <script lang="ts" setup>
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
-import router from "@/router";
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
-import { BuildingQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
+import {
+  BuildingQuery,
+  ProgressQuery,
+  Result,
+  ScheduleQuery,
+} from "@selab-2/groep-1-query";
 import { Ref, ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import RoundCard from "@/components/round/RoundCard.vue";
 import { GarbageQuery } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
+import DateRange from "@/components/filter/DateRange.vue";
+import { daysFromDate } from "@/assets/scripts/date";
+import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
+import CardPopup from "@/components/popups/CardPopup.vue";
+import router from "@/router";
+
+const showRemovePopup = ref(false);
+
+const noStudent: Boolean =
+  useAuthStore().auth!.admin || useAuthStore().auth!.super_student;
+
+const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
+const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
+
+const takenStart: Ref<Date> = ref(daysFromDate(0));
+const takenEnd: Ref<Date> = noStudent
+  ? ref(daysFromDate(6))
+  : ref(daysFromDate(0));
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
-const progresses: Ref<Array<Result<ProgressQuery>>> = ref([]);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
+const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 
-const scheduleMonth: Ref<string> = ref(
-  `${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(
-    -2,
-  )}`,
-);
+function getBuildingDescription(): string {
+  const castedBuilding: any = building.value as any;
+  return castedBuilding.description;
+}
 
-const taskStartDate: Ref<string> = ref(new Date().toISOString().split("T")[0]);
-const taskEndDate: Ref<string> = ref(
-  new Date(new Date().setDate(new Date().getDate() + 7))
-    .toISOString()
-    .split("T")[0],
-);
+function mail() {
+  router.push({ name: "contact_syndicus", params: { id: building.value?.id } });
+}
 
 function call(number: string | undefined) {
   if (number) {
@@ -220,9 +261,10 @@ function tomaps() {
   );
 }
 
+/*
 function toClip(text: string) {
   navigator.clipboard.writeText(text);
-}
+}*/
 
 const props = defineProps({
   id: {
@@ -236,25 +278,30 @@ await tryOrAlertAsync(async () => {
 });
 
 async function getVisits() {
-  const startOfMonth = new Date(scheduleMonth.value + "-01");
-  const endOfMonth = new Date(
-    new Date(
-      startOfMonth.getFullYear(),
-      startOfMonth.getMonth() + 1,
-      0,
-    ).setHours(23, 59, 59, 999),
-  );
+  // clear current schedules
+  schedules.value = [];
+  bezoekenStart.value.setHours(0, 0, 0, 0);
+  bezoekenEnd.value.setHours(23, 59, 59, 999);
+  // fetch all schedules
   await tryOrAlertAsync(async () => {
-    if (building.value) {
-      progresses.value = [];
-      for (const progress of await new ProgressQuery().getAll({
-        building: building.value.id,
-      })) {
-        if (progress.schedule) {
-          const progressDay = new Date(progress.schedule.day);
-          if (progressDay > startOfMonth && progressDay < endOfMonth) {
-            progresses.value.push(progress);
-          }
+    if (!building.value) {
+      return;
+    }
+    const progresses = await new ProgressQuery().getAll({
+      building: building.value?.id,
+    });
+    for (const progress of progresses) {
+      if (progress.schedule) {
+        const progressDay = new Date(progress.schedule.day);
+        if (
+          progressDay > bezoekenStart.value &&
+          progressDay < bezoekenEnd.value &&
+          progress.schedule_id
+        ) {
+          const schedule = await new ScheduleQuery().getOne(
+            progress.schedule_id,
+          );
+          schedules.value.push(schedule);
         }
       }
     }
@@ -265,18 +312,65 @@ if (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) {
 }
 
 async function getTasks() {
+  takenStart.value.setHours(0, 0, 0, 0);
+  takenEnd.value.setHours(23, 59, 59, 999);
+  if (noStudent) {
+    await getNoneStudentTasks();
+  } else {
+    await getStudentTasks();
+  }
+}
+await getTasks();
+
+async function getNoneStudentTasks() {
   await tryOrAlertAsync(async () => {
     if (building.value) {
       garbage.value = await new GarbageQuery().getAll({
         building_id: building.value.id,
-        before: new Date(taskStartDate.value),
-        after: new Date(taskStartDate.value),
+        before: takenEnd.value,
+        after: takenStart.value,
         syndicus_id: building.value.syndicus.id,
       });
     }
   });
 }
-await getTasks();
+
+async function getStudentTasks() {
+  await tryOrAlertAsync(async () => {
+    // get all rounds in the date range for student
+    const rounds = await new ScheduleQuery().getAll({
+      before: takenEnd.value,
+      after: takenStart.value,
+      user_id: useAuthStore().auth!.id,
+    });
+    garbage.value = [];
+    // filter for the rounds with this building, and get the garbage
+    for (const round of rounds) {
+      for (const building of round.round.buildings) {
+        if (building.id === Number(props.id)) {
+          // the round has this building, so we can get the garbage
+          const garbages = await new GarbageQuery().getAll({
+            before: takenEnd.value,
+            after: takenStart.value,
+            building_id: building.id,
+            round_id: round.round_id,
+          });
+          // add all the garbage for this building,
+          // for this day, for the round of the user
+          for (const gar of garbages) {
+            garbage.value.push(gar);
+          }
+        }
+      }
+    }
+  });
+}
+
+async function deleteBuilding() {
+  await tryOrAlertAsync(async () => {
+    await new BuildingQuery().deleteOne({ id: building.value?.id });
+  });
+}
 </script>
 
 <style lang="scss" scoped>
@@ -319,6 +413,15 @@ await getTasks();
   }
 }
 
+.grid-right {
+  margin-left: 0;
+  margin-right: auto;
+  @media (min-width: 700px) {
+    margin-left: auto;
+    margin-right: 0;
+  }
+}
+
 .chip {
   display: flex;
   align-items: center;
@@ -333,5 +436,21 @@ await getTasks();
   width: fit-content;
   height: fit-content;
   color: #000000de;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @media (max-width: 700px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.labels {
+  @media (max-width: 700px) {
+    margin-bottom: 5px;
+  }
 }
 </style>
