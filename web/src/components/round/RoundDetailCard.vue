@@ -142,7 +142,7 @@
           class="mt-4"
           @click="() => (editMode = !editMode)"
         />
-        <div v-else>
+        <div v-else-if="progress?.report === ''">
           <p style="opacity: 75%">Geen opmerkingen toegevoegd.</p>
           <RoundedButton
             v-if="canEdit"
