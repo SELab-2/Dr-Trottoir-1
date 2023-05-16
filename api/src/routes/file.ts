@@ -89,7 +89,7 @@ export class FileRouting extends Routing {
     }
 
     async updateOne(req: CustomRequest, res: express.Response) {
-        throw new APIError(APIErrorCode.FORBIDDEN); 
+        throw new APIError(APIErrorCode.FORBIDDEN);
     }
 
     toRouter(): express.Router {
@@ -104,7 +104,7 @@ export class FileRouting extends Routing {
             this.createOne,
         );
         router.delete("/:id", validator.deleteOneValidator(), this.deleteOne);
-        router.patch("/:id", validator.updateOneValidator(), this.updateOne)
+        router.patch("/:id", validator.updateOneValidator(), this.updateOne);
         return router;
     }
 }

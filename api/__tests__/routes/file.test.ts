@@ -107,7 +107,6 @@ describe("File tests", () => {
                 url: "/file?deleted=true",
                 expectedData: expected,
             });
-
         });
 
         describe("Unsuccesful requests", () => {
@@ -115,20 +114,19 @@ describe("File tests", () => {
             beforeAll(async () => {
                 const server = request(app);
                 runner = new Testrunner(server);
-    
+
                 await deleteDatabaseData();
                 await initialiseDatabase();
             });
-    
+
             describe("Must be correctly authorized to use any path", () => {
-                const newFile = {}
-                
-    
+                const newFile = {};
+
                 describe("Cannot reach any path without authorisation", () => {
                     beforeEach(() => {
                         runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
                     });
-    
+
                     test("Cannot reach GET /file", async () => {
                         await runner.get({
                             url: "/file",
@@ -136,7 +134,7 @@ describe("File tests", () => {
                             statusCode: 403,
                         });
                     });
-    
+
                     test("Cannot reach GET /file/:id", async () => {
                         await runner.get({
                             url: "/file/1",
@@ -144,7 +142,7 @@ describe("File tests", () => {
                             statusCode: 403,
                         });
                     });
-    
+
                     test("Cannot reach POST /file", async () => {
                         await runner.postFile({
                             url: "/file",
@@ -153,9 +151,7 @@ describe("File tests", () => {
                             statusCode: 403,
                         });
                     });
-    
 
-    
                     test("Cannot reach DELETE /file/:id", async () => {
                         await runner.delete({
                             url: "/file/1",
@@ -167,7 +163,7 @@ describe("File tests", () => {
                     beforeEach(() => {
                         runner.authLevel(AuthenticationLevel.STUDENT);
                     });
-    
+
                     test("Cannot reach GET /file", async () => {
                         await runner.get({
                             url: "/file",
@@ -175,7 +171,7 @@ describe("File tests", () => {
                             statusCode: 403,
                         });
                     });
-                
+
                     test("Cannot reach DELETE /file/:id", async () => {
                         await runner.delete({
                             url: "/file/10",
@@ -188,7 +184,7 @@ describe("File tests", () => {
                 beforeEach(() => {
                     runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
                 });
-    
+
                 test("Find a nonexistent file", async () => {
                     await runner.get({
                         url: "/file/5",
@@ -196,7 +192,7 @@ describe("File tests", () => {
                         statusCode: 404,
                     });
                 });
-    
+
                 test("Update a nonexistent file", async () => {
                     await runner.get({
                         url: "/file/5",
@@ -212,7 +208,7 @@ describe("File tests", () => {
                 beforeEach(() => {
                     runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
                 });
-    
+
                 test("GET request", async () => {
                     await runner.get({
                         url: "/file/wrongtype",
@@ -220,7 +216,7 @@ describe("File tests", () => {
                         statusCode: 400,
                     });
                 });
-        
+
                 test("DELETE request", async () => {
                     await runner.delete({
                         url: "/file/wrongtype",
@@ -232,8 +228,8 @@ describe("File tests", () => {
             test("PATCH request has to be allowed", async () => {
                 runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
                 const updateFile = {
-                    path: "newPath"
-                }
+                    path: "newPath",
+                };
                 await runner.patch({
                     url: "/file/10",
                     data: updateFile,
