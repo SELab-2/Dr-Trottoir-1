@@ -491,7 +491,7 @@ describe("User tests", () => {
             const user = (await runner.getRaw("/user/1")).body;
 
             const changePassword = {
-                password: "new Password",
+                password: "Pa55word#",
             };
 
             await runner.patch({
