@@ -75,7 +75,7 @@ import BorderCard from "@/layouts/CardLayout.vue";
 import BuildingSelectCard from "@/components/cards/BuildingSelectCard.vue";
 import BuildingInfoCard from "@/components/cards/BuildingInfoCard.vue";
 import { Result, BuildingQuery, RoundQuery } from "@selab-2/groep-1-query";
-import { RoundBuildingQuery } from "@selab-2/groep-1-query//src/round_building";
+import { RoundBuildingQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import router from "@/router";
 
