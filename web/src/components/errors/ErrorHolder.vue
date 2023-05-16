@@ -11,8 +11,6 @@
 </template>
 
 <script lang="ts" setup>
-import { QueryError } from "@selab-2/groep-1-query";
-
 const props = defineProps({
   errors: { type: Array<unknown>, required: true },
 });
@@ -33,27 +31,11 @@ function getFormattedErrors(): FormattedError[] {
   const formatted: FormattedError[] = [];
 
   for (const error of props.errors) {
-    if (error instanceof QueryError) {
-      formatted.push({
-        code: error.code,
-        title: error.name,
-        body: error.message,
-      });
-    } else if (error instanceof TypeError) {
-      formatted.push({
-        code: 400,
-        title: error.name,
-        body: error.message,
-      });
-    } else if (error instanceof Error) {
-      formatted.push({ code: 400, title: error.name, body: error.message });
-    } else {
-      formatted.push({
-        code: 400,
-        title: "Something went wrong",
-        body: JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
-      });
-    }
+    formatted.push({
+      code: error.code ?? 400,
+      title: error.name ?? "Something went wrong",
+      body: error.message ?? "Unknown error",
+    });
   }
 
   return formatted;
