@@ -41,7 +41,7 @@ export const useAuthStore = defineStore("auth", () => {
    * @param password The plaintext password.
    */
   async function logIn(username: string, password: string): Promise<void> {
-    tryOrAlertAsync(async () => {
+    await tryOrAlertAsync(async () => {
       if (process.env.VUE_APP_DISABLE_AUTHENTICATION !== "true") {
         await fetch(process.env.VUE_APP_API_SERVER_ADDRESS + "auth/login/", {
           method: "POST",
@@ -64,7 +64,7 @@ export const useAuthStore = defineStore("auth", () => {
    * Attempt a logout, which will set the current state to null if successful.
    */
   async function logOut(): Promise<void> {
-    tryOrAlertAsync(async () => {
+    await tryOrAlertAsync(async () => {
       if (process.env.VUE_APP_DISABLE_AUTHENTICATION !== "true") {
         await fetch(process.env.VUE_APP_API_SERVER_ADDRESS + "auth/logout/", {
           method: "POST",
@@ -82,7 +82,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function getAuth(): Promise<void> {
-    tryOrAlertAsync(async () => {
+    await tryOrAlertAsync(async () => {
       if (process.env.VUE_APP_DISABLE_AUTHENTICATION === "true") {
         auth.value = defaultUser;
       } else {

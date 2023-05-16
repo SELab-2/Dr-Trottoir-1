@@ -32,7 +32,7 @@ function getFormattedErrors(): FormattedError[] {
 
   for (const error of props.errors) {
     formatted.push({
-      code: error.code ?? 400,
+      code: error.code ?? 503,
       title: error.name ?? "Something went wrong",
       body: error.message ?? "Unknown error",
     });
