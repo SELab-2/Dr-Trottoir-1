@@ -11,9 +11,6 @@
         <div class="flex-container">
           <div>
             <h1 class="building-name">{{ building.name }}</h1>
-            <p>
-              {{ building.description }}
-            </p>
           </div>
 
           <div style="display: flex; flex-wrap: wrap">
@@ -55,7 +52,7 @@
 
           <v-btn
             v-show="useAuthStore().auth?.admin"
-            class="text-none "
+            class="text-none"
             prepend-icon="mdi-delete"
             @click="showRemovePopup = true"
             color="error"
@@ -151,12 +148,7 @@
       </div>
 
       <div v-show="noStudent">
-        <div
-          class="space-y-8"
-          v-if="
-            noStudent
-          "
-        >
+        <div class="space-y-8" v-if="noStudent">
           <div class="d-flex mt-8 flex-wrap align-center">
             <h2 class="me-auto">Bezoeken</h2>
             <div class="d-flex">
@@ -194,14 +186,14 @@
         color="error"
         variant="elevated"
         @click="showRemovePopup = false"
-      >Annuleren</v-btn
+        >Annuleren</v-btn
       >
       <v-btn
         prepend-icon="mdi-check"
         color="success"
         variant="elevated"
         @click="deleteBuilding()"
-      >Verwijder gebouw</v-btn
+        >Verwijder gebouw</v-btn
       >
     </template>
   </CardPopup>
@@ -215,7 +207,6 @@ import {
   BuildingQuery,
   ProgressQuery,
   Result,
-  RoundQuery,
   ScheduleQuery,
 } from "@selab-2/groep-1-query";
 import { Ref, ref } from "vue";
@@ -226,14 +217,12 @@ import { useAuthStore } from "@/stores/auth";
 import DateRange from "@/components/filter/DateRange.vue";
 import { daysFromDate } from "@/assets/scripts/date";
 import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
-import {Building} from "@/types/Building";
 import CardPopup from "@/components/popups/CardPopup.vue";
 
 const showRemovePopup = ref(false);
 
 const noStudent: Boolean =
-  useAuthStore().auth!.admin ||
-  useAuthStore().auth!.super_student;
+  useAuthStore().auth!.admin || useAuthStore().auth!.super_student;
 
 const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
 const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
@@ -246,12 +235,6 @@ const takenEnd: Ref<Date> = noStudent
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
-
-const scheduleMonth: Ref<string> = ref(
-  `${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(
-    -2,
-  )}`,
-);
 
 function call(number: string | undefined) {
   if (number) {
@@ -271,9 +254,10 @@ function tomaps() {
   );
 }
 
+/*
 function toClip(text: string) {
   navigator.clipboard.writeText(text);
-}
+}*/
 
 const props = defineProps({
   id: {
@@ -375,10 +359,10 @@ async function getStudentTasks() {
   });
 }
 
-async function deleteBuilding(){
+async function deleteBuilding() {
   await tryOrAlertAsync(async () => {
-    await new BuildingQuery().deleteOne({id: building.value?.id});
-  })
+    await new BuildingQuery().deleteOne({ id: building.value?.id });
+  });
 }
 </script>
 
