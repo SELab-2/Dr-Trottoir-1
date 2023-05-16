@@ -13,7 +13,9 @@
           Verwijderen
         </v-btn>
       </div>
+      <p>{{ round?.description }}</p>
 
+      <h2>Gebouwen</h2>
       <MapComponent :buildings="buildings" />
       <div class="grid">
         <BuildingCard
@@ -152,6 +154,7 @@ tryOrAlertAsync(async () => {
     );
     buildings.value.push(building);
   }
+  console.log(round.value);
 });
 
 tryOrAlertAsync(async () => {
