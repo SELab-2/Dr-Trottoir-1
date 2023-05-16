@@ -174,7 +174,7 @@ import CardLayout from "@/layouts/CardLayout.vue";
 import {
   BuildingQuery,
   ProgressQuery,
-  Result,
+  Result, RoundQuery,
   ScheduleQuery,
 } from "@selab-2/groep-1-query";
 import { Ref, ref } from "vue";
@@ -186,11 +186,13 @@ import DateRange from "@/components/filter/DateRange.vue";
 import {daysFromDate} from "@/assets/scripts/date";
 import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 
+const noStudent: Boolean = useAuthStore().auth!.admin || useAuthStore().auth!.super_student || useAuthStore().auth!.super_student;
+
 const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
 const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
 
 const takenStart: Ref<Date> = ref(daysFromDate(0));
-const takenEnd: Ref<Date> = ref(daysFromDate(13));
+const takenEnd: Ref<Date> = noStudent ? ref(daysFromDate(13)) : ref(daysFromDate(0));
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
@@ -234,7 +236,6 @@ const props = defineProps({
 
 await tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
-  console.log(building.value)
 });
 
 async function getVisits() {
@@ -274,6 +275,16 @@ if (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) {
 async function getTasks() {
   takenStart.value.setHours(0, 0, 0, 0);
   takenEnd.value.setHours(23, 59, 59, 999);
+  if(noStudent){
+    await getNoneStudentTasks();
+  }else{
+    await getStudentTasks();
+  }
+
+}
+await getTasks();
+
+async function getNoneStudentTasks(){
   await tryOrAlertAsync(async () => {
     if (building.value) {
       garbage.value = await new GarbageQuery().getAll({
@@ -285,7 +296,39 @@ async function getTasks() {
     }
   });
 }
-await getTasks();
+
+async function getStudentTasks(){
+  await tryOrAlertAsync(async () => {
+    // get all rounds in the date range for student
+    const rounds = await new ScheduleQuery().getAll({
+      before: takenEnd.value,
+      after: takenStart.value,
+      user_id: useAuthStore().auth!.id
+    });
+    garbage.value = [];
+    // filter for the rounds with this building, and get the garbage
+    for(const round of rounds){
+      for(const building of round.round.buildings){
+        if(building.id === Number(props.id)){
+          // the round has this building, so we can get the garbage
+          const garbages = await new GarbageQuery().getAll({
+            before: takenEnd.value,
+            after: takenStart.value,
+            building_id: building.id,
+            round_id: round.round_id,
+          })
+          // add all the garbage for this building,
+          // for this day, for the round of the user
+          for(const gar of garbages){
+            garbage.value.push(gar);
+          }
+        }
+      }
+    }
+  });
+}
+
+
 </script>
 
 <style lang="scss" scoped>
