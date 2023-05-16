@@ -14,11 +14,27 @@
         v-model="building.ivago_id"
         label="Ivago ID"
       ></v-text-field>
+
       <v-select
         label="Syndicus"
-        :items="syndici.map((e) => e.id)"
-        v-model="building.syndicus_id"
-      ></v-select>
+        :items="syndici"
+        v-model="building.syndicus"
+        prepend-inner-icon="mdi-account"
+      >
+        <template v-slot:item="{ props, item }">
+          <v-list-item
+            v-bind="props"
+            :title="item.name"
+            :subtitle="item.name"
+          >
+            <p>{{ getFullStudentName(item.value) }}</p>
+          </v-list-item>
+        </template>
+
+        <template v-slot:selection="{ item }">
+          <p>{{ getFullStudentName(item.value) }}</p>
+        </template>
+      </v-select>
 
       <v-file-input
         disabled
@@ -92,13 +108,13 @@ import { tryOrAlertAsync } from "@/try";
 import {
   AddressQuery,
   BuildingQuery,
-  SyndicusQuery,
+  UserQuery,
 } from "@selab-2/groep-1-query";
 import router from "@/router";
 
 const dummyMap = ref(null);
 
-const syndici = await new SyndicusQuery().getAll();
+const syndici = await new UserQuery().getAll();
 
 const address = ref({
   street: "",
@@ -112,17 +128,34 @@ const address = ref({
 const building = ref({
   name: "",
   ivago_id: "",
-  syndicus_id: 0,
+  syndicus: {
+    id: 0,
+    first_name: "",
+    last_name: ""
+  },
   address_id: 0,
   manual_id: null,
 });
+
+function getFullStudentName(s: Result<UserQuery> | undefined): string {
+  if (s) {
+    return s.first_name + " " + s.last_name;
+  } else {
+    return " ";
+  }
+}
 
 const submit = () => {
   tryOrAlertAsync(async () => {
     const { id } = await new AddressQuery().createOne(address.value);
     building.value.address_id = id;
-    const { id: buildingId } = await new BuildingQuery().createOne(
-      building.value,
+    const { id: buildingId } = await new BuildingQuery().createOne({
+      id: building.value.id,
+      ivago_id: building.value.ivago_id,
+      syndicus_id: building.value.syndicus.id,
+      address_id: building.value.address_id,
+      manual_id: building.value.manual_id,
+      }
     );
     await router.push(`/gebouw/${buildingId}`);
   });
