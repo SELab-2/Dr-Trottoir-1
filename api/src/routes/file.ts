@@ -39,7 +39,7 @@ export class FileRouting extends Routing {
         switch (result.location) {
             case "FILE_SERVER":
                 return res.sendFile(
-                    `${path.resolve()}/${process.env.FILE_STORAGE_DIRECTORY}/${
+                    `${process.env.FILE_STORAGE_DIRECTORY}/${
                         result.path
                     }`,
                 );
@@ -55,7 +55,6 @@ export class FileRouting extends Routing {
         if (!req.files || req.files.length !== 1) {
             throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
         }
-
         const file = (req.files as Express.Multer.File[])[0];
         const result = await prisma.file.create({
             data: {

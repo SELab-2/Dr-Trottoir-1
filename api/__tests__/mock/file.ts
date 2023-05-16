@@ -1,8 +1,9 @@
 import { File, Image } from "@selab-2/groep-1-orm";
 import { prisma } from "./prisma";
 import { writeFileSync } from "fs";
+import path from "path"
 
-process.env["FILE_STORAGE_DIRECTORY"] = "__tests__/mock/file_server";
+process.env["FILE_STORAGE_DIRECTORY"] = `${path.resolve()}/__tests__/mock/file_server`;
 
 export const manual = {
     id: 10,
