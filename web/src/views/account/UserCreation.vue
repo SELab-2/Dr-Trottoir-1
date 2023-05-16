@@ -72,6 +72,7 @@
             :counter="8"
             :rules="psswd1Rules"
             label="Wachtwoord"
+            hint="Wachtwoorden bestaan minstens uit 1 getal, 1 hoofdletter en 1 speciaal karakter."
             @click:append-inner="showPsswd = !showPsswd"
             bg
           ></v-text-field>
