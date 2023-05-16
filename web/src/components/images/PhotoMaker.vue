@@ -6,7 +6,7 @@
     >
     <template v-slot:append
       ><v-icon
-        @click="$emit('confirm', photo)"
+        @click="$emit('cancel')"
         color="error"
         icon="mdi-close"
       ></v-icon

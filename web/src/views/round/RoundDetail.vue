@@ -46,23 +46,16 @@
           align="start"
         >
           <v-timeline-item
-            v-if="
-              progressItems.get(data.round.buildings[0].building_id)?.arrival
-            "
+            v-if="getFirstBuilding()?.arrival"
             dot-color="success"
             icon="mdi-check"
             size="large"
             width="100%"
-            :set="
-              (firstBuilding = progressItems.get(
-                data.round.buildings[0].building_id,
-              ))
-            "
           >
             <h3 class="pt-2">
               Start:
               {{
-                new Date(firstBuilding.arrival).toLocaleTimeString("nl", {
+                new Date(getFirstBuilding().arrival).toLocaleTimeString("nl", {
                   hour: "2-digit",
                   minute: "2-digit",
                 })
@@ -110,26 +103,17 @@
 
           <v-timeline-item
             v-if="
-              progressItems.get(
-                data.round.buildings[data.round.buildings.length - 1]
-                  .building_id,
-              )?.departure
+              getLastBuilding()?.departure
             "
             dot-color="success"
             icon="mdi-check"
             size="large"
             width="100%"
-            :set="
-              (lastBuilding = progressItems.get(
-                data.round.buildings[data.round.buildings.length - 1]
-                  .building_id,
-              ))
-            "
           >
             <h3 class="pt-2">
               Einde:
               {{
-                new Date(lastBuilding.departure).toLocaleTimeString("nl", {
+                new Date(getLastBuilding().departure).toLocaleTimeString("nl", {
                   hour: "2-digit",
                   minute: "2-digit",
                 })
@@ -154,10 +138,9 @@
     icon="mdi-plus"
     :items="currentProgress?.arrival ? actions : startActions"
     :title="currentProgress?.building.name"
-    v-if="mobile && currentProgress"
+    v-if="mobile && currentProgress && canEdit()"
   />
   <v-overlay
-    v-if="currentProgress && isStudent"
     v-model="showOverlay"
     class="align-center justify-center"
   >
@@ -241,6 +224,12 @@ const startActions: Button[] = [
 ];
 
 const isStudent = useAuthStore().auth?.student;
+function canEdit() {
+  if (!data.value){
+    return false;
+  }
+  return isStudent && (new Date(new Date(data.value.day).setHours(0, 0, 0)) >= new Date());
+}
 
 const showOverlay = ref(false);
 const overlayIsPhoto = ref(true);
@@ -254,8 +243,6 @@ const currentProgress: Ref<Result<ProgressQuery> | null> = ref(null);
 
 const display = useDisplay();
 const mobile = display.mobile;
-const firstBuilding = ref();
-const lastBuilding = ref();
 
 await tryOrAlertAsync(async () => {
   data.value = await new ScheduleQuery().getOne(schedule_id);
@@ -271,6 +258,37 @@ await tryOrAlertAsync(async () => {
 
   setCurrentProgress();
 });
+
+function getFirstBuilding() {
+  if(data.value) {
+    let firstBuilding = progressItems.value.get(data.value.round.buildings[0].building_id);
+    for (const building of data.value.round.buildings) {
+      const build = progressItems.value.get(building.building_id);
+      if (build?.arrival && (!firstBuilding?.arrival || new Date(build.arrival) < new Date(firstBuilding.arrival))) {
+        firstBuilding = build;
+      }
+    }
+    return firstBuilding;
+  }
+  return null;
+}
+
+function getLastBuilding() {
+  if(data.value) {
+    let lastbuilding = progressItems.value.get(data.value.round.buildings[0].building_id);
+    for (const building of data.value.round.buildings) {
+      const build = progressItems.value.get(building.building_id);
+      if (!build?.departure) {
+        return build;
+      }
+      if (build && (!lastbuilding?.departure || new Date(build.departure) > new Date(lastbuilding.departure))) {
+        lastbuilding = build;
+      }
+    }
+    return lastbuilding;
+  }
+  return null;
+}
 
 function setCurrentProgress() {
   if (data.value?.round.buildings) {
