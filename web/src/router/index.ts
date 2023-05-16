@@ -21,6 +21,7 @@ import Auth from "@/views/dev/Auth.vue";
 import { useAuthStore } from "@/stores/auth";
 import TryOrAlert from "@/views/dev/TryOrAlert.vue";
 import Round from "@/views/round/Round.vue";
+import TemplateBuilder from "@/views/contact/TemplateBuilder.vue";
 
 const routes: any[] = [
   {
@@ -258,6 +259,20 @@ const routes: any[] = [
         name: "round_overview",
         meta: {
           title: "Rondes",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
+        },
+      },
+      {
+        path: "/template/nieuw",
+        component: TemplateBuilder,
+        name: "template_new",
+        meta: {
+          title: "",
           auth: (
             student: boolean,
             superstudent: boolean,

@@ -29,8 +29,7 @@ const endValue = computed({
     return getDateString(props.endDate);
   },
   set(endValue) {
-    console.log(endValue);
-    emit("update:startDate", new Date(endValue));
+    emit("update:endDate", new Date(endValue));
   },
 });
 
