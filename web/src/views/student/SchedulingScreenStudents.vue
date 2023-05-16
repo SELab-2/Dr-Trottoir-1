@@ -22,7 +22,7 @@
     </div>
 
     <div v-if="!empty">
-      <div v-for="day in days" :key="day.start">
+      <div v-for="day in days" :key="day.start.toLocaleDateString('nl')">
         <v-card
           v-if="day.list.length > 0"
           :title="day.name"

@@ -8,7 +8,7 @@
             <h2
               v-bind="props"
               @click="
-                router.push({ name: 'round', params: { id: data.round.id } })
+                router.push({ name: 'round', params: { id: data?.round.id } })
               "
               :class="isHovering ? 'text-decoration-underline' : ''"
             >
@@ -57,10 +57,15 @@
             <h3 class="pt-2">
               Start:
               {{
-                new Date(getFirstBuilding().arrival).toLocaleTimeString("nl", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
+                getFirstBuilding()?.arrival
+                  ? new Date(getFirstBuilding().arrival).toLocaleTimeString(
+                      "nl",
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      },
+                    )
+                  : "error"
               }}
             </h3>
           </v-timeline-item>
@@ -113,10 +118,15 @@
             <h3 class="pt-2">
               Einde:
               {{
-                new Date(getLastBuilding().departure).toLocaleTimeString("nl", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
+                getLastBuilding()?.departure
+                  ? new Date(getLastBuilding().departure).toLocaleTimeString(
+                      "nl",
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      },
+                    )
+                  : "error"
               }}
             </h3>
           </v-timeline-item>
