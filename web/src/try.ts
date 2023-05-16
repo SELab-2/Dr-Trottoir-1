@@ -22,11 +22,13 @@ export function tryOrAlert<T>(func: () => T): T | undefined {
     return func();
   } catch (err) {
     if (err instanceof Error) {
-      useErrorStore().appendError(err, async () => {
+      useErrorStore().setError(err, async () => {
         func();
       });
     } else {
-      useErrorStore().appendError(new Error("Unknown Error"), async () => {});
+      useErrorStore().setError(new Error("Unknown Error"), async () => {
+        func();
+      });
     }
   }
 }
@@ -55,11 +57,11 @@ export async function tryOrAlertAsync<T>(
     return await func();
   } catch (err) {
     if (err instanceof Error) {
-      useErrorStore().appendError(err, async () => {
+      useErrorStore().setError(err, async () => {
         await func();
       });
     } else {
-      useErrorStore().appendError(new Error("Unknown Error"), async () => {});
+      useErrorStore().setError(new Error("Unknown Error"), async () => {});
     }
   }
 }

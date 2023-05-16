@@ -8,26 +8,26 @@ import { Ref, ref } from "vue";
  */
 export const useErrorStore = defineStore("error", () => {
   /* The state of this store. */
-  const errors: Ref<
-    Array<{
-      error: Error;
-      func: () => Promise<void>;
-    }>
-  > = ref([]);
+  const state: Ref<{
+    error: Error;
+    func: () => Promise<void>;
+  } | null> = ref(null);
 
-  function appendError(error: Error, func: () => Promise<void>) {
-    errors.value.push({
+  function setError(error: Error, func: () => Promise<void>) {
+    state.value = {
       error,
       func,
-    });
+    };
   }
 
-  function popError(): { error: Error; func: () => Promise<void> } | undefined {
-    return errors.value.pop();
+  function popError(): { error: Error; func: () => Promise<void> } | null {
+    const result = state.value;
+    state.value = null;
+    return result;
   }
 
   async function retryFunction() {
-    const result = errors.value.pop();
+    const result = popError();
 
     if (result) {
       await tryOrAlertAsync(result.func);
@@ -35,9 +35,9 @@ export const useErrorStore = defineStore("error", () => {
   }
 
   return {
-    errors,
+    state,
     retryFunction,
-    appendError,
     popError,
+    setError,
   };
 });

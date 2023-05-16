@@ -1,4 +1,5 @@
 <template>
+  <ErrorHandler></ErrorHandler>
   <v-app>
     <v-main>
       <Suspense>
@@ -11,7 +12,6 @@
           <keep-alive>
             <component :is="Component" />
           </keep-alive>
-          <ErrorHandler></ErrorHandler>
         </router-view>
       </Suspense>
     </v-main>
