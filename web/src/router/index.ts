@@ -184,7 +184,7 @@ const routes: any[] = [
         },
       },
       {
-        path: "/contact",
+        path: "/contact/:id",
         name: "contact_syndicus",
         component: ContactSyndicus,
         meta: {

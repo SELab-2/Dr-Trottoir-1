@@ -83,7 +83,14 @@
           <RoundedButton
             icon="mdi-mail"
             value="E-mail"
-            @click="mail(building?.syndicus?.user.email)"
+            @click="
+              () => {
+                router.push({
+                  name: 'contact_syndicus',
+                  params: { id: building?.id },
+                });
+              }
+            "
           />
         </div>
       </CardLayout>
@@ -204,12 +211,6 @@ const taskEndDate: Ref<string> = ref(
 function call(number: string | undefined) {
   if (number) {
     location.href = "tel:" + number;
-  }
-}
-
-function mail(address: string | undefined) {
-  if (address) {
-    location.href = "mailto:" + address;
   }
 }
 

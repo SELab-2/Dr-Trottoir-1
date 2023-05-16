@@ -24,6 +24,7 @@
               style="min-width: 100px; max-width: 100%"
               class="flex-grow-1 flex-shrink-0 py-0 my-0 mx-3"
               ><v-text-field
+                v-model="templateName"
                 prepend-inner-icon="mdi-file-document-outline"
                 label="Template naam"
               >
@@ -64,6 +65,7 @@
             prepend-icon="mdi-content-save"
             variant="tonal"
             class="mb-6 ml-6"
+            @click="saveTemplate()"
             >Opslaan</v-btn
           >
         </BorderCard> </v-col
@@ -96,7 +98,10 @@
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import { ref } from "vue";
+import { MailTemplateQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 
+const templateName = ref<string>("");
 const subject = ref<string>("");
 const body = ref<string>("");
 
@@ -111,6 +116,20 @@ const variables: { name: string; description: string }[] = [
   { name: "$(gebouw_adres)", description: "Adres van het gebouw" },
   { name: "$(ivago_id)", description: "Ivago ID van het gebouw" },
 ];
+
+function saveTemplate() {
+  tryOrAlertAsync(async () => {
+    await new MailTemplateQuery().createOne({
+      name: templateName.value,
+      mail_subject: subject.value,
+      content: body.value,
+    });
+
+    templateName.value = "";
+    subject.value = "";
+    body.value = "";
+  });
+}
 </script>
 
 <style scoped>
