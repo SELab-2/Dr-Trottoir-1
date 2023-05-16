@@ -122,6 +122,34 @@ export async function initialiseUser() {
             },
         },
     });
+
+    const student_salt2 = crypto.randomBytes(32).toString("hex");
+    const student_hash2 = crypto
+        .createHash("sha256")
+        .update("student" + student_salt)
+        .digest("hex");
+
+    // create  second student
+    await prisma.user.create({
+        data: {
+            email: "student2@trottoir.be",
+            first_name: "Dirk",
+            last_name: "De Student",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "0123456789",
+            student: true,
+            super_student: false,
+            admin: false,
+            salt: student_salt2,
+            hash: student_hash2,
+            address: {
+                connect: {
+                    id: 1,
+                },
+            },
+        },
+    });
 }
 
 export async function initialiseUserRegion() {
