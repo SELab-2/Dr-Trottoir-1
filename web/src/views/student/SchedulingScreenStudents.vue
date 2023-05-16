@@ -117,6 +117,10 @@ import router from "@/router";
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { tryOrAlertAsync } from "@/try";
+import {
+  getCompletedBuildings,
+  roundStarted,
+} from "@/assets/scripts/roundProgress";
 
 const snackbar = ref(false);
 const current_round_id = ref(0);
@@ -166,35 +170,6 @@ function showStartButton(schedule: {
   const today = new Date().getDate();
   const day = new Date(schedule.schedule.day).getDate();
   return today === day && !roundStarted(schedule.progress);
-}
-
-/**
- * Check if any building of the round has been started.
- * @param progresses
- */
-function roundStarted(progresses: Array<Result<ProgressQuery>>): boolean {
-  for (const progress of progresses) {
-    if (progress.arrival != null) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Count how many buildings are completed for a given round.
- * @param progresses
- */
-function getCompletedBuildings(
-  progresses: Array<Result<ProgressQuery>>,
-): number {
-  let count: number = 0;
-  for (const progress of progresses) {
-    if (progress.departure != null) {
-      count++;
-    }
-  }
-  return count;
 }
 
 async function saveStartTime() {

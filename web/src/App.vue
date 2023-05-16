@@ -1,4 +1,5 @@
 <template>
+  <ErrorHandler></ErrorHandler>
   <v-app>
     <v-main>
       <Suspense>
@@ -20,6 +21,7 @@
 <script lang="ts" setup>
 import Loader from "@/components/popups/Loader.vue";
 import { useAuthStore } from "@/stores/auth";
+import ErrorHandler from "@/components/errors/ErrorHandler.vue";
 </script>
 
 <style lang="sass" scoped></style>
