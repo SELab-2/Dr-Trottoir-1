@@ -9,7 +9,13 @@
 
       <div>
         <div class="flex-container">
-          <h1 class="building-name">{{ building.name }}</h1>
+          <div>
+            <h1 class="building-name">{{ building.name }}</h1>
+            <p>
+              {{ building.description }}
+            </p>
+          </div>
+
           <div style="display: flex; flex-wrap: wrap">
             <v-chip variant="outlined" color="border" class="mr-2 labels">
               <v-icon icon="mdi-identifier" color="black" />
@@ -25,26 +31,36 @@
             <!-- TODO: add btn to link to building edit page once we have building edit page -->
           </div>
         </div>
-        <p>
-          {{ building.description }}
-        </p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap" class="mt-2">
+
+        <div class="d-flex mt-2" style="gap: 16px; flex-wrap: wrap">
+          <div class="me-auto d-flex" style="gap: 16px; flex-wrap: wrap">
+            <v-btn
+              class="text-none"
+              prepend-icon="mdi-map-search"
+              @click="tomaps()"
+              color="primary"
+            >
+              Kaarten
+            </v-btn>
+            <v-btn
+              class="text-none"
+              append-icon="mdi-download"
+              prepend-icon="mdi-file-pdf-box"
+              :href="'http://10.0.0.5:8080/file/' + building.manual?.id"
+              color="success"
+            >
+              Handleiding
+            </v-btn>
+          </div>
+
           <v-btn
-            class="text-none"
-            prepend-icon="mdi-map-search"
-            @click="tomaps()"
-            color="primary"
+            v-show="useAuthStore().auth?.admin"
+            class="text-none "
+            prepend-icon="mdi-delete"
+            @click="showRemovePopup = true"
+            color="error"
           >
-            Kaarten
-          </v-btn>
-          <v-btn
-            class="text-none"
-            append-icon="mdi-download"
-            prepend-icon="mdi-file-pdf-box"
-            :href="'http://10.0.0.5:8080/file/' + building.manual?.id"
-            color="success"
-          >
-            Handleiding
+            Verwijder
           </v-btn>
 
           <!-- TODO add in API
@@ -98,6 +114,7 @@
               @update:start-date="getTasks()"
             />
             <v-btn
+              v-show="noStudent"
               class="mx-1 text-none"
               prepend-icon="mdi-plus"
               :to="{ name: 'garbage_plan', params: { id: id } }"
@@ -137,7 +154,7 @@
         <div
           class="space-y-8"
           v-if="
-            useAuthStore().auth?.admin || useAuthStore().auth?.super_student
+            noStudent
           "
         >
           <div class="d-flex mt-8 flex-wrap align-center">
@@ -161,6 +178,33 @@
       </div>
     </v-card>
   </HFillWrapper>
+  <CardPopup
+    v-model="showRemovePopup"
+    :width="353"
+    title="Verwijder Ronde"
+    prepend-icon="mdi-delete"
+  >
+    <p class="ma-3">
+      Je staat op het punt dit gebouw te verwijderen. Ben je zeker dat je wilt
+      verder gaan?
+    </p>
+    <template v-slot:actions>
+      <v-btn
+        prepend-icon="mdi-close"
+        color="error"
+        variant="elevated"
+        @click="showRemovePopup = false"
+      >Annuleren</v-btn
+      >
+      <v-btn
+        prepend-icon="mdi-check"
+        color="success"
+        variant="elevated"
+        @click="deleteBuilding()"
+      >Verwijder gebouw</v-btn
+      >
+    </template>
+  </CardPopup>
 </template>
 
 <script lang="ts" setup>
@@ -182,18 +226,21 @@ import { useAuthStore } from "@/stores/auth";
 import DateRange from "@/components/filter/DateRange.vue";
 import { daysFromDate } from "@/assets/scripts/date";
 import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
+import {Building} from "@/types/Building";
+import CardPopup from "@/components/popups/CardPopup.vue";
+
+const showRemovePopup = ref(false);
 
 const noStudent: Boolean =
   useAuthStore().auth!.admin ||
-  useAuthStore().auth!.super_student ||
-  useAuthStore().auth!.syndicus.length !== 0;
+  useAuthStore().auth!.super_student;
 
 const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
 const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
 
 const takenStart: Ref<Date> = ref(daysFromDate(0));
 const takenEnd: Ref<Date> = noStudent
-  ? ref(daysFromDate(13))
+  ? ref(daysFromDate(6))
   : ref(daysFromDate(0));
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
@@ -326,6 +373,12 @@ async function getStudentTasks() {
       }
     }
   });
+}
+
+async function deleteBuilding(){
+  await tryOrAlertAsync(async () => {
+    await new BuildingQuery().deleteOne({id: building.value?.id});
+  })
 }
 </script>
 

@@ -15,7 +15,7 @@
       </div>
       <p>{{ round?.description }}</p>
 
-      <h2>Gebouwen</h2>
+      <h2 v-show="round?.description">Gebouwen</h2>
       <MapComponent :buildings="buildings" />
       <div class="grid">
         <BuildingCard
@@ -41,7 +41,7 @@
           Inplannen
         </v-btn>
       </div>
-
+      <p v-show="passedSchedules.length === 0">Er zijn geen planningen voor de geselecteerde periode.</p>
       <div class="space-y-8">
         <RoundCard
           v-for="schedule in schedules"
@@ -61,6 +61,7 @@
           v-model:end-date="geschiedenisEnd"
         />
       </div>
+      <p v-show="passedSchedules.length === 0">Er zijn geen planningen voor de geselecteerde periode.</p>
 
       <div class="space-y-8">
         <RoundCard
