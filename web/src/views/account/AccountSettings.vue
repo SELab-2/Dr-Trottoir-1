@@ -28,7 +28,7 @@
               if (!edit) {
                 edit = true;
               } else {
-                await router.go(0);
+                handleCancelEdit();
               }
             }
           "
@@ -293,8 +293,7 @@ const roles = ref<string[]>([]);
 
 /* Action handle functions */
 async function handleCancelEdit() {
-  await fetchUser();
-  edit.value = false;
+  window.location.reload();
 }
 
 async function handleRemove() {
@@ -350,13 +349,12 @@ async function handleSave() {
   await tryOrAlertAsync(async () => {
     await new AddressQuery().updateOne({
       id: user.value?.address.id,
-      city: user.value?.address.city,
-      zip_code: user.value?.address.zip_code,
       street: user.value?.address.street,
       number: user.value?.address.number,
+      city: user.value?.address.city,
+      zip_code: user.value?.address.zip_code,
     });
   });
-
   // update the user
   await tryOrAlertAsync(async () => {
     await new UserQuery().updateOne({
