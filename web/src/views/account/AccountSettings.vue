@@ -28,7 +28,7 @@
               if (!edit) {
                 edit = true;
               } else {
-                await router.go(0);
+                handleCancelEdit();;
               }
             }
           "
@@ -293,8 +293,7 @@ const roles = ref<string[]>([]);
 
 /* Action handle functions */
 async function handleCancelEdit() {
-  await fetchUser();
-  edit.value = false;
+  window.location.reload();
 }
 
 async function handleRemove() {
