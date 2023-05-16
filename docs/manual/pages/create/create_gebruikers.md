@@ -29,6 +29,6 @@ Het is mogelijk om een gebruiker meerdere rollen te geven.
 
 Een [syndicus](../../users/syndicus.md) maakt men aan zonder rollen (tenzij de syndicus ook student,
 superstudent of admin is). Bij het
-[aanmaken van een gebouw](./create_gebouwen.md) kiest men dan simpelweg deze gebruiker.
+[aanmaken van een gebouw](create_gebouwen.md) kiest men dan simpelweg deze gebruiker.
 De gebruiker zal dan automatisch syndicus van dat gebouw zijn.
 

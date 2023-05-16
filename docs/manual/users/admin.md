@@ -20,7 +20,7 @@ door middel van de applicatie.
 </details>
 
 ## Login
-Voordat een admin de applicatie kan gebruiken moet hij eerst [ingelogd](../pages/login.md) zijn.
+Voordat een admin de applicatie kan gebruiken moet hij eerst [ingelogd](../pages/account/login.md) zijn.
 
 ## Administratie
 De administratie sectie bevat lijsten van alle gebruikers, gebouwen en rondes, de admin kan

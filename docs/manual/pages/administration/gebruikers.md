@@ -17,7 +17,7 @@ sorteren volgens die kolom.
 - Admin: Geeft aan of de gebruiker al dan niet een administrator is.
 
 ## 2. Klikken op een rij
-Als u op een rij klikt zal u doorgestuurd worden naar de [account](../account.md) pagina
+Als u op een rij klikt zal u doorgestuurd worden naar de [account](../account/account.md) pagina
 van de gebruiker.
 
 ## 3. Nieuwe gebruiker aanmaken

@@ -9,7 +9,7 @@ een Dr Trottoir. Hiernaar kan u uw account aanvraag door sturen.
 
 |       Account aanvragen       |
 |:-----------------------------:|
-| ![](../assets/no_account.jpg) |
+| ![](../../assets/no_account.jpg) |
 
 ## Inloggen
 Als u beschikt over uw account gegevens kan u inloggen met de volgende 4 stappen:
@@ -22,4 +22,4 @@ knop te duwen.
 
 |            Inloggen            |
 |:------------------------------:|
-| ![](../assets/login_steps.jpg) |
+| ![](../../assets/login_steps.jpg) |
