@@ -1,6 +1,9 @@
 <template>
   <v-overlay v-model="show" class="d-flex align-center justify-center">
-    <CardLayout v-bind="{ ...$attrs }" style="max-width: 320px">
+    <CardLayout
+      v-bind="{ ...$attrs }"
+      :style="'max-width: ' + props.width + 'px'"
+    >
       <!-- Pass all the slots -->
       <template v-for="(_, slotName) in $slots" #[slotName]>
         <slot :name="slotName" />
@@ -21,7 +24,10 @@ import CardLayout from "@/layouts/CardLayout.vue";
 import { computed } from "vue";
 // use v-model
 // https://vuejs.org/guide/components/v-model.html
-const props = defineProps(["modelValue"]);
+const props = defineProps({
+  modelValue: Boolean,
+  width: { type: Number, default: 320 },
+});
 const emit = defineEmits(["update:modelValue"]);
 
 const show = computed({

@@ -149,21 +149,10 @@
             </div>
           </div>
         </div>
-        <div v-for="progress in progresses" :key="progress.id">
-          <RoundCard
-            :schedule="progress.schedule"
-            :status="
-              progress.arrival
-                ? progress.departure
-                  ? 'completed'
-                  : 'active'
-                : 'scheduled'
-            "
-            :comments="progress.report != null && progress.report !== ''"
-            :images="progress.images.length"
-          />
+        <div v-for="schedule in schedules" :key="schedule.id">
+          <RoundCard :schedule="schedule" />
         </div>
-        <div v-if="progresses.length === 0">
+        <div v-if="schedules.length === 0">
           <p>Geen bezoeken voor de geselecteerde periode.</p>
         </div>
       </div>
@@ -177,7 +166,12 @@ import router from "@/router";
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
-import { BuildingQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
+import {
+  BuildingQuery,
+  ProgressQuery,
+  Result,
+  ScheduleQuery,
+} from "@selab-2/groep-1-query";
 import { Ref, ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import RoundCard from "@/components/round/RoundCard.vue";
@@ -185,8 +179,8 @@ import { GarbageQuery } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
-const progresses: Ref<Array<Result<ProgressQuery>>> = ref([]);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
+const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 
 const scheduleMonth: Ref<string> = ref(
   `${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(
@@ -244,16 +238,24 @@ async function getVisits() {
     ).setHours(23, 59, 59, 999),
   );
   await tryOrAlertAsync(async () => {
-    if (building.value) {
-      progresses.value = [];
-      for (const progress of await new ProgressQuery().getAll({
-        building: building.value.id,
-      })) {
-        if (progress.schedule) {
-          const progressDay = new Date(progress.schedule.day);
-          if (progressDay > startOfMonth && progressDay < endOfMonth) {
-            progresses.value.push(progress);
-          }
+    if (!building.value) {
+      return;
+    }
+    const progresses = await new ProgressQuery().getAll({
+      building: building.value?.id,
+    });
+    for (const progress of progresses) {
+      if (progress.schedule) {
+        const progressDay = new Date(progress.schedule.day);
+        if (
+          progressDay > startOfMonth &&
+          progressDay < endOfMonth &&
+          progress.schedule_id
+        ) {
+          const schedule = await new ScheduleQuery().getOne(
+            progress.schedule_id,
+          );
+          schedules.value.push(schedule);
         }
       }
     }
