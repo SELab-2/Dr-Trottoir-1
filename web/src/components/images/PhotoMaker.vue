@@ -24,13 +24,14 @@
         @update:model-value="$emit('onUpdate', photo)"
         variant="outlined"
       ></v-file-input>
-      <v-text-field
+      <v-select
         v-if="isPhoto"
         variant="outlined"
+        :items='ImageTypes'
         @update:model-value="$emit('onUpdate', photo)"
-        label="Titel"
-        v-model="photo.label"
-      ></v-text-field>
+        label="Type"
+        v-model="photo.type"
+      ></v-select>
       <v-textarea
         @update:model-value="$emit('onUpdate', photo)"
         label="Commentaar"
@@ -55,6 +56,8 @@
 import Photo from "@/components/models/Photo";
 import { ref } from "vue";
 
+const ImageTypes = ['ARRIVAL', 'DEPARTURE', 'GARBAGE'];
+
 const props = defineProps({
   id: {
     type: String,
@@ -69,8 +72,8 @@ const props = defineProps({
 
 const photo = ref<Photo>({
   image: [],
-  comments: "",
-  label: "",
+  comments: "geen commentaar",
+  type: "ARRIVAL",
 });
 
 if (!props.isPhoto) {

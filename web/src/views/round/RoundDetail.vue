@@ -321,9 +321,9 @@ async function updateProgressWithPhoto(photo: Photo, isPhoto: boolean) {
           {
             location: "EXTERNAL",
             description: photo.comments,
-            path: "/",
+            path: photo.image.toString(),
             time: new Date(),
-            type: "GARBAGE",
+            type: photo.type,
             user_id: useAuthStore().auth?.id ?? -1,
           },
         );
