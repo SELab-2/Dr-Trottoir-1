@@ -22,6 +22,7 @@ updates:
       - "themessik"
     registries:
         - npm-gh
+    versioning-strategy: increase
 
   # API
   - package-ecosystem: "npm"
@@ -32,8 +33,9 @@ updates:
       - "themessik"
     registries:
         - npm-gh
+    versioning-strategy: increase
 
-  # ORM
+      # ORM
   - package-ecosystem: "npm"
     directory: "/orm"
     schedule:
@@ -42,8 +44,9 @@ updates:
       - "themessik"
     registries:
         - npm-gh
+    versioning-strategy: increase
 
-  # Query Builder
+    # Query Builder
   - package-ecosystem: "npm"
     directory: "/api_query"
     schedule:
@@ -52,3 +55,4 @@ updates:
       - "themessik"
     registries:
         - npm-gh
+    versioning-strategy: increase

@@ -4,6 +4,8 @@ import { CustomRequest, Routing, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { Validator } from "../validators/validator";
+import { RoundValidator } from "../validators/round.validator";
 
 export class RoundRouting extends Routing {
     private static includes: Prisma.RoundInclude = {
@@ -21,6 +23,9 @@ export class RoundRouting extends Routing {
             skip: Parser.number(req.query["skip"], 0),
             where: {
                 name: req.query["name"],
+                description: {
+                    contains: req.query["description"],
+                },
             },
             include: RoundRouting.includes,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
@@ -73,5 +78,9 @@ export class RoundRouting extends Routing {
         });
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new RoundValidator();
     }
 }

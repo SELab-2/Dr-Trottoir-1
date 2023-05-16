@@ -2,6 +2,10 @@ name: Web Linter
 
 on:
     workflow_dispatch:
+    push:
+        branches:
+            - 'develop'
+            - 'main'
     pull_request:
         branches:
             - 'develop'
@@ -32,9 +36,4 @@ jobs:
                 run: npm run test
                 env:
                     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-            -   name: "Cleanup"
-                if: always()
-                run: |
-                    chmod +x ../server/cleanup.sh
-                    ../server/cleanup.sh -p
-                shell: bash
+
