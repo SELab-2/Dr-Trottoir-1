@@ -34,10 +34,12 @@ describe("Round tests", () => {
         test("POST /round", async () => {
             const newRound = {
                 name: "new Round",
+                description: "Description of new round",
             };
 
             const expected = {
                 name: "new Round",
+                description: "Description of new round",
                 buildings: [],
             };
 
@@ -67,6 +69,7 @@ describe("Round tests", () => {
                                 id: 1,
                                 ivago_id: "ivago-1",
                                 name: "Building 1",
+                                description: "Description of building 1",
                             },
                             building_id: 1,
                             deleted: false,
@@ -76,6 +79,7 @@ describe("Round tests", () => {
                     ],
                     id: 1,
                     name: "Round 1",
+                    description: "Description of round 1",
                 },
                 {
                     buildings: [
@@ -94,6 +98,7 @@ describe("Round tests", () => {
                                 id: 2,
                                 ivago_id: "ivago-2",
                                 name: "Building 2",
+                                description: "Description of building 2",
                             },
                             building_id: 2,
                             deleted: false,
@@ -103,6 +108,7 @@ describe("Round tests", () => {
                     ],
                     id: 2,
                     name: "Round 2",
+                    description: "Description of round 2",
                 },
             ];
 
@@ -128,6 +134,7 @@ describe("Round tests", () => {
                                 id: 1,
                                 ivago_id: "ivago-1",
                                 name: "Building 1",
+                                description: "Description of building 1",
                             },
                             building_id: 1,
                             deleted: false,
@@ -137,6 +144,7 @@ describe("Round tests", () => {
                     ],
                     id: 1,
                     name: "Round 1",
+                    description: "Description of round 1",
                 },
             ];
 
@@ -145,8 +153,8 @@ describe("Round tests", () => {
 
         test("PATCH /round/:id", async () => {
             const newRound = {
-                id: 1,
                 name: "Updated Round 1",
+                description: "Updated description of round 1",
             };
 
             const expected = {
@@ -166,6 +174,7 @@ describe("Round tests", () => {
                             id: 1,
                             ivago_id: "ivago-1",
                             name: "Building 1",
+                            description: "Description of building 1",
                         },
                         building_id: 1,
                         deleted: false,
@@ -175,6 +184,7 @@ describe("Round tests", () => {
                 ],
                 id: 1,
                 name: "Updated Round 1",
+                description: "Updated description of round 1",
             };
 
             await runner.patch({
@@ -206,6 +216,7 @@ describe("Round tests", () => {
                                 id: 2,
                                 ivago_id: "ivago-2",
                                 name: "Building 2",
+                                description: "Description of building 2",
                             },
                             building_id: 2,
                             deleted: false,
@@ -215,6 +226,7 @@ describe("Round tests", () => {
                     ],
                     id: 2,
                     name: "Round 2",
+                    description: "Description of round 2",
                 },
             ];
             await runner.get({
@@ -337,13 +349,7 @@ describe("Round tests", () => {
 
             test("Find a nonexistent round", async () => {
                 await runner.get({
-                    url: "/round/0",
-                    expectedData: [notFoundResponse],
-                    statusCode: 404,
-                });
-
-                await runner.get({
-                    url: "/round/-1",
+                    url: "/round/6",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
@@ -351,19 +357,18 @@ describe("Round tests", () => {
 
             test("Update a nonexistent round", async () => {
                 const newRound = {
-                    id: 0,
                     name: "Updated Round 0",
                 };
 
                 await runner.patch({
-                    url: "/round/0",
+                    url: "/round/6",
                     data: newRound,
                     expectedResponse: notFoundResponse,
                     statusCode: 404,
                 });
             });
             test("Delete a nonexistent round", async () => {
-                await runner.delete({ url: "/round/0", statusCode: 404 });
+                await runner.delete({ url: "/round/9", statusCode: 404 });
             });
         });
 

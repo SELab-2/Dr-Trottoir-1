@@ -2,6 +2,10 @@ name: Web Linter
 
 on:
     workflow_dispatch:
+    push:
+        branches:
+            - 'develop'
+            - 'main'
     pull_request:
         branches:
             - 'develop'

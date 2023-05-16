@@ -47,6 +47,23 @@ services:
     networks:
       main:
         ipv4_address: 10.0.0.3
+    expose:
+      - 5432
+
+  postgres-dev:
+    container_name: postgres-dev
+    hostname: postgres-dev
+    image: postgres
+    env_file:
+      - .env
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - '~/volumes/postgresql-dev:/var/lib/postgresql/data'
+    restart: always
+    networks:
+      main:
+        ipv4_address: 10.0.0.13
     ports:
       - "2002:5432"
 
@@ -100,13 +117,14 @@ services:
     environment:
       CORS: "https://sel2-1.ugent.be"
       NPM_AUTH_TOKEN: $NPM_AUTH_TOKEN
+      SENTRY_DSN: $SENTRY_DSN
     restart: always
     ports:
       - "8080:8080"
 
-  frontend:
-    container_name: frontend
-    hostname: frontend
+  web:
+    container_name: web
+    hostname: web
     build:
       dockerfile: ../web/Dockerfile
       context: ../web

@@ -1,6 +1,10 @@
 name: API Test
 on:
     workflow_dispatch:
+    push:
+        branches:
+            - 'develop'
+            - 'main'
     pull_request:
         branches:
             - 'develop'
@@ -50,3 +54,9 @@ jobs:
                     npx prisma db push
             -   name: "Execute tests"
                 run: npm run test
+            -   name: "Upload CodeCov"
+                run: | 
+                    curl -Os https://uploader.codecov.io/latest/linux/codecov
+                    chmod +x codecov
+                    ./codecov
+                

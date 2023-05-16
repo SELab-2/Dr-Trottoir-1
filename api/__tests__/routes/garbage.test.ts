@@ -2,11 +2,7 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import {
-    deleteDatabaseData,
-    initialiseDatabase,
-    restoreTables,
-} from "../mock/database";
+import { resetDatabase, restoreTables } from "../mock/database";
 import {
     badRequestForeignKey,
     badRequestResponse,
@@ -14,6 +10,7 @@ import {
     notFoundResponse,
 } from "../utilities/constants";
 
+// turn authentication on, no matter what
 process.env["DISABLE_AUTH"] = "false";
 describe("Garbage tests", () => {
     let runner: Testrunner;
@@ -21,11 +18,9 @@ describe("Garbage tests", () => {
     beforeAll(async () => {
         const server = request(app);
         runner = new Testrunner(server);
-
-        await deleteDatabaseData();
-        await initialiseDatabase();
-
         runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+
+        return resetDatabase();
     });
 
     afterEach(async () => {
@@ -33,10 +28,11 @@ describe("Garbage tests", () => {
     });
 
     describe("Successful requests", () => {
-        beforeAll(() => {
+        beforeEach(() => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
         });
-        test("GET /garbage", async () => {
+
+        describe("GET /garbage with different roles", () => {
             const expectedData = [
                 {
                     action: { description: "action 1", id: 1 },
@@ -54,6 +50,7 @@ describe("Garbage tests", () => {
                         deleted: false,
                         id: 1,
                         ivago_id: "ivago-1",
+                        description: "Description of building 1",
                         name: "Building 1",
                     },
                     building_id: 1,
@@ -76,6 +73,7 @@ describe("Garbage tests", () => {
                         deleted: false,
                         id: 2,
                         ivago_id: "ivago-2",
+                        description: "Description of building 2",
                         name: "Building 2",
                     },
                     building_id: 2,
@@ -84,12 +82,60 @@ describe("Garbage tests", () => {
                 },
             ];
 
-            await runner.get({
-                url: "/garbage",
-                expectedData: expectedData,
+            test("GET /garbage as a superstudent", async () => {
+                runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+
+                await runner.get({
+                    url: "/garbage",
+                    expectedData: expectedData,
+                });
+            });
+
+            test("GET /garbage as a student", async () => {
+                runner.authLevel(AuthenticationLevel.STUDENT);
+
+                await runner.get({
+                    url: "/garbage",
+                    expectedData: expectedData,
+                });
+            });
+
+            test("GET /garbage as a syndicus", async () => {
+                runner.authLevel(AuthenticationLevel.SYNDICUS);
+                const expectedData = [
+                    {
+                        action: { description: "action 1", id: 1 },
+                        action_id: 1,
+                        building: {
+                            address: {
+                                city: "Sydney",
+                                id: 1,
+                                latitude: -33.865143,
+                                longitude: 151.2099,
+                                number: 42,
+                                street: "Wallaby Way",
+                                zip_code: 2000,
+                            },
+                            deleted: false,
+                            id: 1,
+                            ivago_id: "ivago-1",
+                            description: "Description of building 1",
+                            name: "Building 1",
+                        },
+                        building_id: 1,
+                        id: 1,
+                        pickup_time: "2023-05-04T12:00:00.000Z",
+                    },
+                ];
+
+                await runner.get({
+                    url: "/garbage?syndicus_id=1",
+                    expectedData: expectedData,
+                });
             });
         });
-        test("GET /garbage/:id", async () => {
+
+        describe("GET /garbage/:id with different roles", () => {
             const expected = [
                 {
                     id: 1,
@@ -101,6 +147,7 @@ describe("Garbage tests", () => {
                         id: 1,
                         name: "Building 1",
                         ivago_id: "ivago-1",
+                        description: "Description of building 1",
                         deleted: false,
                         address: {
                             id: 1,
@@ -114,16 +161,36 @@ describe("Garbage tests", () => {
                     },
                 },
             ];
-            await runner.get({
-                url: "/garbage/1",
-                expectedData: expected,
+
+            test("GET /garbage/:id as superstudent", async () => {
+                runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+                await runner.get({
+                    url: "/garbage/1",
+                    expectedData: expected,
+                });
+            });
+
+            test("GET /garbage/:id as student", async () => {
+                runner.authLevel(AuthenticationLevel.STUDENT);
+                await runner.get({
+                    url: "/garbage/1",
+                    expectedData: expected,
+                });
+            });
+
+            test("GET /garbage/:id as syndicus", async () => {
+                runner.authLevel(AuthenticationLevel.SYNDICUS);
+                await runner.get({
+                    url: "/garbage/1",
+                    expectedData: expected,
+                });
             });
         });
 
         test("PATCH /garbage/:id", async () => {
             const expected = {
-                id: 1,
                 pickup_time: "2023-02-02T00:00:00.000Z",
+                id: 1,
                 action_id: 1,
                 building_id: 1,
                 action: { id: 1, description: "action 1" },
@@ -131,6 +198,7 @@ describe("Garbage tests", () => {
                     id: 1,
                     name: "Building 1",
                     ivago_id: "ivago-1",
+                    description: "Description of building 1",
                     deleted: false,
                     address: {
                         id: 1,
@@ -166,6 +234,7 @@ describe("Garbage tests", () => {
                     id: 2,
                     name: "Building 2",
                     ivago_id: "ivago-2",
+                    description: "Description of building 2",
                     deleted: false,
                     address: {
                         id: 2,
@@ -186,8 +255,16 @@ describe("Garbage tests", () => {
         });
     });
 
+    /**
+     * Negative tests on the API.
+     */
     describe("Unsuccessful requests", () => {
         describe("Authentication tests", () => {
+            const garbage = {
+                pickup_time: new Date(2023, 5, 3, 0, 0, 0),
+                action_id: 1,
+                building_id: 1,
+            };
             test("Cannot use any path as unauthorized", async () => {
                 runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
                 await runner.get({
@@ -204,14 +281,14 @@ describe("Garbage tests", () => {
 
                 await runner.post({
                     url: "/garbage",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
 
                 await runner.patch({
                     url: "/garbage/1",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
@@ -221,8 +298,31 @@ describe("Garbage tests", () => {
                     statusCode: 403,
                 });
             });
-            test("Cannot use any path as Student except specific GET", async () => {
+            test("Cannot use any path as Student except GET", async () => {
                 runner.authLevel(AuthenticationLevel.STUDENT);
+
+                await runner.post({
+                    url: "/garbage",
+                    data: garbage,
+                    expectedResponse: forbiddenResponse,
+                    statusCode: 403,
+                });
+
+                await runner.patch({
+                    url: "/garbage/1",
+                    data: garbage,
+                    expectedResponse: forbiddenResponse,
+                    statusCode: 403,
+                });
+
+                await runner.delete({
+                    url: "/garbage/1",
+                    statusCode: 403,
+                });
+            });
+            test("Cannot use any path as Syndicus except GET with syndicus_id", async () => {
+                runner.authLevel(AuthenticationLevel.SYNDICUS);
+
                 await runner.get({
                     url: "/garbage",
                     expectedData: [forbiddenResponse],
@@ -231,14 +331,14 @@ describe("Garbage tests", () => {
 
                 await runner.post({
                     url: "/garbage",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
 
                 await runner.patch({
                     url: "/garbage/1",
-                    data: {},
+                    data: garbage,
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
@@ -256,14 +356,14 @@ describe("Garbage tests", () => {
             });
             test("Can't GET a non-existent garbage", async () => {
                 await runner.get({
-                    url: "/garbage/0",
+                    url: "/garbage/5",
                     expectedData: [notFoundResponse],
                     statusCode: 404,
                 });
             });
             test("Can't PATCH a non-existent garbage", async () => {
                 await runner.patch({
-                    url: "/garbage/0",
+                    url: "/garbage/5",
                     data: { pickup_time: "2023-05-04T12:00:00.000Z" },
                     expectedResponse: notFoundResponse,
                     statusCode: 404,
@@ -271,7 +371,7 @@ describe("Garbage tests", () => {
             });
             test("Can't DELETE a non-existent garbage", async () => {
                 await runner.delete({
-                    url: "/garbage/0",
+                    url: "/garbage/5",
                     statusCode: 404,
                 });
             });
@@ -291,7 +391,7 @@ describe("Garbage tests", () => {
         test("Change action id to non-existent one", async () => {
             await runner.patch({
                 url: "/garbage/1",
-                data: { action_id: 0 },
+                data: { action_id: 5 },
                 expectedResponse: badRequestForeignKey,
                 statusCode: 400,
             });
@@ -300,12 +400,13 @@ describe("Garbage tests", () => {
         test("Change building id to non-existent one", async () => {
             await runner.patch({
                 url: "/garbage/1",
-                data: { building_id: 0 },
+                data: { building_id: 5 },
                 expectedResponse: badRequestForeignKey,
                 statusCode: 400,
             });
         });
     });
+
     afterAll(() => {
         app.close();
     });
