@@ -1,4 +1,4 @@
-import { Image, Prisma } from "@selab-2/groep-1-orm";
+import { Prisma, File } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithoutAddress } from "./include";
 import { QueryError } from "./query_error";
@@ -71,34 +71,25 @@ export class BuildingQuery extends Query<
      * Voeg een nieuwe afbeelding toe via HTTP POST.
      * @throws QueryError
      */
-    async createImage(
-        id: number,
-        element: Partial<Image>,
-    ): Promise<BuildingAllInfo> {
+    async createImage(id: number, element: File): Promise<BuildingAllInfo> {
         if (Number.isNaN(id)) {
             throw new QueryError(400, "Bad Request");
         }
 
         const imageEndpoint = this.server + this.endpoint + "/" + id + "/image";
 
-        return this.fetchJSON(imageEndpoint, "POST", element);
+        return this.fetchJSON(imageEndpoint, "POST", {
+            image: element.id,
+        });
     }
 
     /**
      * Verwijder een specifieke afbeelding via HTTP DELETE
      * @throws QueryError
      */
-    async deleteImage(
-        id: number,
-        image_id: number,
-        hard = false,
-    ): Promise<void> {
-        if (Number.isNaN(id) || Number.isNaN(image_id)) {
-            throw new QueryError(400, "Bad Request");
-        }
-
+    async deleteImage(id: number, file: File, hard = false): Promise<void> {
         const imageEndpoint =
-            this.server + this.endpoint + "/" + id + "/image/" + image_id;
+            this.server + this.endpoint + "/" + id + "/image/" + file.id;
 
         return this.fetchJSON(imageEndpoint, "DELETE", { hardDelete: hard });
     }
