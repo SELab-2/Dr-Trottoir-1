@@ -290,19 +290,20 @@ function formatDate(d: Date | undefined): string {
 }
 
 async function submit() {
-  for (let garbageDetail of detailedDays.value) {
+  await Promise.all(detailedDays.value.map(async garbageDetail => {
     await tryOrAlertAsync(async () => {
       const dtDate = new Date(
         formatDate(garbageDetail?.date) + " " + garbageDetail?.time + ":00",
       );
-      console.log(dtDate);
+
       await new GarbageQuery().createOne({
         action_id: action.value?.id,
         building_id: buildingId,
         pickup_time: dtDate,
       });
     });
-  }
+  }));
+
   clearAll();
 }
 
