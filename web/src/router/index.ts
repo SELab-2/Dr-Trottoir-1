@@ -18,10 +18,11 @@ import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
 import ContactSyndicus from "@/views/contact/ContactSyndicus.vue";
 import Auth from "@/views/dev/Auth.vue";
-import { useAuthStore } from "@/stores/auth";
 import TryOrAlert from "@/views/dev/TryOrAlert.vue";
-import Round from "@/views/round/Round.vue";
 import TemplateBuilder from "@/views/contact/TemplateBuilder.vue";
+import Round from "@/views/round/Round.vue";
+import PageNotFound from "@/views/NotFound.vue";
+import { useAuthStore } from "@/stores/auth";
 
 const routes: any[] = [
   {
@@ -279,6 +280,19 @@ const routes: any[] = [
             syndicus: boolean,
             admin: boolean,
           ) => superstudent || admin,
+        },
+      },
+      {
+        path: "/:pathMatch(.*)*",
+        component: PageNotFound,
+        name: "PageNotFound",
+        meta: {
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student || superstudent || syndicus || admin,
         },
       },
     ],
