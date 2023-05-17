@@ -159,7 +159,6 @@ tryOrAlertAsync(async () => {
     );
     buildings.value.push(building);
   }
-  console.log(round.value);
 });
 
 tryOrAlertAsync(async () => {
