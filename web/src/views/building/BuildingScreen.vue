@@ -135,14 +135,15 @@
             v-for="action in garbage"
             :key="action.id"
           >
-            <div>
-              <h4>{{ action.action.description }}</h4>
-              <p>{{ new Date(action.pickup_time).toLocaleString() }}</p>
+            <div class="d-flex align-center w-100">
+              <h4 class="ml-2 me-auto">{{ action.action.description }}</h4>
+              <v-chip color="border" variant="outlined">
+                <v-icon icon="mdi-calendar-clock"></v-icon>
+                <p class="text-black mx-1">
+                  {{ new Date(action.pickup_time).toLocaleString("nl") }}
+                </p>
+              </v-chip>
             </div>
-            <div class="flex-grow-1"></div>
-            <v-icon icon="mdi-check" v-if="Math.random() < 0.5"></v-icon>
-            <v-icon v-else icon="mdi-plus"></v-icon>
-            <v-icon icon="mdi-trash-can-outline"></v-icon>
           </CardLayout>
         </div>
         <div v-if="garbage.length === 0">

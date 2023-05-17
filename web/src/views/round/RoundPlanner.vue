@@ -1,114 +1,205 @@
 <template>
   <div>
     <HFillWrapper>
+      <BorderCard class="mb-2"
+        ><v-tabs
+          v-model="showAllPlanned"
+          @update:model-value="updateFullScheme()"
+          align-tabs="center"
+        >
+          <v-spacer></v-spacer>
+          <v-tab :value="false">Ronde inplannen</v-tab>
+          <v-spacer></v-spacer>
+          <v-tab :value="true">Voorlopig schema</v-tab>
+          <v-spacer></v-spacer> </v-tabs
+      ></BorderCard>
       <BorderCard
         class="pa-8"
         style="display: flex; flex-direction: column; gap: 12px"
       >
-        <h2>Ronde inplannen: {{ current_round?.name }}</h2>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur.
-        </p>
-
-        <v-row class="pt-2">
-          <v-col
-            cols="1"
-            style="min-width: 100px; max-width: 100%"
-            class="flex-grow-1 flex-shrink-0"
-            ><v-select
-              label="Selecteer student"
-              :items="students"
-              v-model="student"
-              prepend-inner-icon="mdi-account"
-            >
-              <template v-slot:item="{ props, item }">
-                <v-list-item
+        <v-expand-transition
+          ><div v-show="!showAllPlanned">
+            <div class="d-flex">
+              <h2>Ronde inplannen voor:</h2>
+              <v-hover v-slot:default="{ isHovering, props }">
+                <h2
+                  class="mx-1"
                   v-bind="props"
-                  :title="item.name"
-                  :subtitle="item.name"
+                  @click="
+                    router.push({
+                      name: 'round',
+                      params: { id: current_round?.id },
+                    })
+                  "
+                  :class="isHovering ? 'text-decoration-underline' : ''"
                 >
-                  <p>{{ getFullStudentName(item.value) }}</p>
-                </v-list-item>
-              </template>
+                  {{ current_round?.name }}
+                </h2>
+              </v-hover>
+            </div>
+            <p>
+              Kies hier een student om hem/haar in te plannen voor de ronde
+              {{ current_round?.name }}. Kies een frequentie en datum(s) wanneer
+              deze ronde ingepland zou moeten worden. Druk op tijdelijk
+              toevoegen om een voorbeeld te zien van hoe deze inplanning er zal
+              uitzien. Hiervoor kunt u ook gebruik maken van "voorlopig schema".
+              Als u tevreden bent met deze inplanning, kan u deze opslaan door
+              op "ronde inplannen en opslaan" te drukken.
+            </p>
 
-              <template v-slot:selection="{ item }">
-                <p>{{ getFullStudentName(item.value) }}</p>
-              </template>
-            </v-select></v-col
-          ></v-row
+            <v-row class="pt-2">
+              <v-col
+                cols="1"
+                style="min-width: 100px; max-width: 100%"
+                class="flex-grow-1 flex-shrink-0"
+                ><v-select
+                  label="Selecteer student"
+                  :items="students"
+                  v-model="student"
+                  prepend-inner-icon="mdi-account"
+                >
+                  <template v-slot:item="{ props, item }">
+                    <v-list-item
+                      v-bind="props"
+                      :title="item.name"
+                      :subtitle="item.name"
+                    >
+                      <p>{{ getFullStudentName(item.value) }}</p>
+                    </v-list-item>
+                  </template>
+
+                  <template v-slot:selection="{ item }">
+                    <p>{{ getFullStudentName(item.value) }}</p>
+                  </template>
+                </v-select></v-col
+              ></v-row
+            >
+
+            <div
+              class="selectors"
+              :class="multipleday ? 'grid-cols-4' : 'grid-cols-3'"
+            >
+              <v-select
+                prepend-inner-icon="mdi-replay"
+                variant="outlined"
+                label="Frequentie"
+                v-model="frequency"
+                :items="frequencys"
+                @update:model-value="frequencyCheck()"
+              ></v-select>
+
+              <v-text-field
+                v-model="startDate"
+                prepend-inner-icon="mdi-calendar"
+                variant="outlined"
+                type="date"
+                label="Startdatum"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="endDate"
+                prepend-inner-icon="mdi-calendar"
+                variant="outlined"
+                type="date"
+                label="Einddatum"
+                v-if="multipleday"
+              ></v-text-field>
+
+              <v-text-field
+                prepend-inner-icon="mdi-clock-time-two-outline"
+                label="Starttijd"
+                variant="outlined"
+                type="time"
+                v-model="time"
+              ></v-text-field>
+            </div>
+
+            <div style="display: flex; align-items: center">
+              <v-btn
+                prepend-icon="mdi-plus"
+                @click="updateRounds()"
+                :disabled="student === undefined"
+                variant="tonal"
+                >Tijdelijk toevoegen</v-btn
+              >
+              <div class="flex-grow-1"></div>
+              <v-btn
+                prepend-icon="mdi-check"
+                @click="planRounds()"
+                :disabled="rounds?.length === 0"
+                variant="tonal"
+                >Ronde inplannen en opslaan</v-btn
+              >
+            </div>
+          </div></v-expand-transition
         >
-
-        <div
-          class="selectors"
-          :class="multipleday ? 'grid-cols-4' : 'grid-cols-3'"
+        <v-expand-transition
+          ><div v-show="showAllPlanned">
+            <div class="d-flex">
+              <h2>Voorlopig overzicht:</h2>
+              <v-hover v-slot:default="{ isHovering, props }">
+                <h2
+                  class="mx-1"
+                  v-bind="props"
+                  @click="
+                    router.push({
+                      name: 'round',
+                      params: { id: current_round?.id },
+                    })
+                  "
+                  :class="isHovering ? 'text-decoration-underline' : ''"
+                >
+                  {{ current_round?.name }}
+                </h2>
+              </v-hover>
+            </div>
+            <p>
+              Hier wordt er een voorlopig overzicht getoond van de planning van
+              deze ronde. Kies start- en einddatum door deze aan te passen in de
+              velden. Tussen dit overzicht staan ook de planningen van de rondes
+              die je nog niet bevestigd hebt. Ga hier na of de inplanning op die
+              dag wel of niet werkt.
+            </p>
+            <div class="d-flex mt-4">
+              <v-text-field
+                class="mr-1"
+                v-model="fullSchemeStartDate"
+                prepend-inner-icon="mdi-calendar"
+                variant="outlined"
+                type="date"
+                label="Startdatum"
+              ></v-text-field>
+              <v-text-field
+                class="ml-1"
+                v-model="fullSchemeEndDate"
+                prepend-inner-icon="mdi-calendar"
+                variant="outlined"
+                type="date"
+                label="Einddatum"
+              ></v-text-field>
+            </div>
+            <div class="d-flex">
+              <v-spacer></v-spacer>
+              <v-btn
+                prepend-icon="mdi-check"
+                @click="updateFullScheme()"
+                variant="tonal"
+                >Pas filter toe</v-btn
+              >
+            </div>
+          </div></v-expand-transition
         >
-          <v-select
-            prepend-inner-icon="mdi-replay"
-            variant="outlined"
-            label="Frequentie"
-            v-model="frequency"
-            :items="frequencys"
-            @update:model-value="frequencyCheck()"
-          ></v-select>
-
-          <v-text-field
-            v-model="startDate"
-            prepend-inner-icon="mdi-calendar"
-            variant="outlined"
-            type="date"
-            label="Startdatum"
-          ></v-text-field>
-
-          <v-text-field
-            v-model="endDate"
-            prepend-inner-icon="mdi-calendar"
-            variant="outlined"
-            type="date"
-            label="Einddatum"
-            v-if="multipleday"
-          ></v-text-field>
-
-          <v-text-field
-            prepend-inner-icon="mdi-clock-time-two-outline"
-            label="Starttijd"
-            variant="outlined"
-            type="time"
-            v-model="time"
-          ></v-text-field>
-        </div>
-
-        <div style="display: flex; align-items: center">
-          <v-btn
-            prepend-icon="mdi-plus"
-            @click="updateRounds()"
-            :disabled="student === undefined"
-            variant="tonal"
-            >Toevoegen</v-btn
-          >
-          <div class="flex-grow-1"></div>
-          <v-btn
-            prepend-icon="mdi-check"
-            @click="planRounds()"
-            :disabled="rounds?.length === 0"
-            variant="tonal"
-            >Ronde inplannen</v-btn
-          >
-        </div>
       </BorderCard>
 
       <RoundSelectCard
-        v-for="(round, i) in rounds"
+        v-for="(round, i) in showAllPlanned ? fullScheme : rounds"
         :key="i"
         @remove="removeFromRounds(i)"
         :name="round.name"
         :date="round.date"
         :time="round.time"
+        :already-planned="round.alreadyPlanned"
+        :removeable="!showAllPlanned"
       >
       </RoundSelectCard>
     </HFillWrapper>
@@ -127,7 +218,11 @@ import {
   ScheduleQuery,
 } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+
+const router = useRouter();
+
+const showAllPlanned = ref<boolean>(false);
 
 const route = useRoute();
 const round_id: number = Number(route.params.id);
@@ -144,6 +239,8 @@ onMounted(() => {
   tryOrAlertAsync(async () => {
     current_round.value = await new RoundQuery().getOne(round_id);
   });
+
+  updateFullScheme();
 });
 
 const frequencys = ["enkel", "wekelijks", "tweewekelijks", "maandelijks"];
@@ -160,14 +257,22 @@ const time = ref<string>("12:00");
 const frequency = ref<string>(frequencys[0]);
 const multipleday = ref<boolean>(false);
 
+const fullSchemeStartDate = ref<string>(
+  new Date().toISOString().substring(0, 10),
+);
+const fullSchemeEndDate = ref<string>(oneWeekLater());
+
 interface plannedRound {
   date: Date;
   name: string;
   time: string;
+  alreadyPlanned: boolean;
 }
+
 let rounds = ref<Array<plannedRound>>([]);
 
 function updateRounds() {
+  rounds.value = [];
   if (frequency.value === "enkel") {
     endDate.value = startDate.value;
   }
@@ -179,6 +284,7 @@ function updateRounds() {
       name: getFullStudentName(student.value),
       date: new Date(d),
       time: time.value,
+      alreadyPlanned: false,
     });
   }
 }
@@ -186,12 +292,51 @@ function frequencyCheck() {
   if (frequency.value == frequencys[0]) {
     multipleday.value = false;
   } else {
-    endDate.value = "";
     multipleday.value = true;
   }
 }
 function removeFromRounds(index: number) {
   rounds.value.splice(index, 1);
+  updateFullScheme();
+}
+
+const fullScheme = ref<plannedRound[]>([]);
+
+function updateFullScheme() {
+  tryOrAlertAsync(async () => {
+    fullScheme.value = [];
+    const schedules: Result<ScheduleQuery>[] = await new ScheduleQuery().getAll(
+      {
+        round_id: round_id,
+        after: new Date(fullSchemeStartDate.value),
+        before: new Date(fullSchemeEndDate.value),
+      },
+    );
+
+    schedules.forEach((plannedSchedule) =>
+      fullScheme.value.push({
+        name: `${plannedSchedule.user.first_name} ${plannedSchedule.user.last_name}`,
+        date: new Date(plannedSchedule.day),
+        time: new Date(plannedSchedule.day).toTimeString().substring(0, 5),
+        alreadyPlanned: true,
+      }),
+    );
+
+    for (let tempSchedule of rounds.value) {
+      if (
+        new Date(fullSchemeStartDate.value).getTime() <=
+          tempSchedule.date.getTime() &&
+        tempSchedule.date.getTime() <=
+          new Date(fullSchemeEndDate.value).getTime()
+      ) {
+        fullScheme.value.push(tempSchedule);
+      }
+    }
+
+    fullScheme.value.sort((a: plannedRound, b: plannedRound) => {
+      return a.date.getTime() - b.date.getTime();
+    });
+  });
 }
 
 function getFullStudentName(s: Result<UserQuery> | undefined): string {
@@ -204,6 +349,12 @@ function getFullStudentName(s: Result<UserQuery> | undefined): string {
 
 function formatDate(d: Date): string {
   return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+}
+
+function oneWeekLater() {
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 7);
+  return currentDate.toISOString().substring(0, 10);
 }
 
 function planRounds() {
