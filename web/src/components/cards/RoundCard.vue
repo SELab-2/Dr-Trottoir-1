@@ -61,9 +61,7 @@
     </v-chip>
     <v-chip label color="primary" class="ml-3">
       <v-icon icon="mdi-calendar" class="pr-1" />
-      {{
-        date.getDate() + "-" + date.getMonth() + 1 + "-" + date.getFullYear()
-      }}
+      {{ date.toLocaleDateString("nl") }}
     </v-chip>
     <v-chip v-if="round_start" label color="primary" class="ml-3">
       <v-icon icon="mdi-clock"></v-icon> {{ round_start }}
