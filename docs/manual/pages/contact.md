@@ -14,10 +14,9 @@ Het e-mailadres van de syndicus moet dus niet meer apart opgezocht worden.
 2. Hierbij kan een thema gekozen worden die een sjabloon e-mail invult in de velden van het onderwerp (3) en de inhoud (5).
 3. Het onderwerp wordt automatisch ingevuld bij het selecteren van een sjabloon, maar kan handmatig aangepast worden.
 4. Er kunnen meerdere bestanden als bijlage toegevoegd worden.
-5. Ook de inhoud wordt automatisch opgesteld bij het gebruiken van een sjabloon.
+5. Ook de inhoud van de mail wordt automatisch opgesteld bij het gebruiken van een sjabloon.
 Hierbij moeten echter nog enkele variabelen zelf ingevuld worden zoals de naam van het gebouw, de syndicus ...
 
-De mail kan dus verzonden worden door enkel gebruik te maken van de webapplicatie.
 
 | Mail sturen naar syndicus  |
 |:--------------------------:|
