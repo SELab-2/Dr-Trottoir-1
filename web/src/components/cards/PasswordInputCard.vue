@@ -27,8 +27,7 @@ const passwordValidator = joiPassword
       "Wachtwoord moet minstens {#min} hoofdletters bevatten",
     "password.minOfSpecialCharacters":
       "Wachtwoord moet minstens {#min} speciale karakter bevatten",
-    "password.minOfNumeric":
-      "Wachtwoord moet minstens {#min} getallen bevatten",
+    "password.minOfNumeric": "Wachtwoord moet minstens 1 getal bevatten",
     "string.min": "Wachtwoord moet minstens {#limit} karakters lang zijn",
   });
 const validPassword = (password: string) => {
