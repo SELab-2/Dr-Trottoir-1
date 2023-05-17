@@ -231,9 +231,9 @@ const emit = defineEmits(["changed", "requestPhotoAdd"]);
 
 async function start() {
   await new ScheduleQuery().updateOne({
-      id: props.schedule_id,
-      start: new Date(),
-    });
+    id: props.schedule_id,
+    start: new Date(),
+  });
 
   await tryOrAlertAsync(async () => {
     progress.value = await new ProgressQuery().updateOne({
