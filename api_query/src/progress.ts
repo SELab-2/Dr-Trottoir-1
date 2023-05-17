@@ -1,8 +1,8 @@
 import {
     Progress,
     Prisma,
-    FileLocation,
     ProgressImageType,
+    File,
 } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithoutAddress, includeBuilding } from "./include";
@@ -40,15 +40,6 @@ type ProgressAllInfo = Prisma.ProgressGetPayload<{
     };
 }>;
 
-type ProgressImage = {
-    time: Date;
-    location: FileLocation;
-    path: string;
-    user_id: number;
-    type: ProgressImageType;
-    description: string;
-};
-
 export class ProgressQuery extends Query<
     ProgressQueryParameters,
     Progress,
@@ -62,7 +53,8 @@ export class ProgressQuery extends Query<
      */
     async createImage(
         id: number,
-        element: Partial<ProgressImage>,
+        image: File,
+        element: { description: string; type: ProgressImageType },
     ): Promise<ProgressAllInfo> {
         if (Number.isNaN(id)) {
             throw new QueryError(400, "Bad Request");
@@ -70,7 +62,10 @@ export class ProgressQuery extends Query<
 
         const imageEndpoint = this.server + this.endpoint + "/" + id + "/image";
 
-        return super.fetchJSON(imageEndpoint, "POST", element);
+        return super.fetchJSON(imageEndpoint, "POST", {
+            ...element,
+            image_id: image.id,
+        });
     }
 
     /**
@@ -79,15 +74,11 @@ export class ProgressQuery extends Query<
      */
     async updateImage(
         id: number,
-        image_id: number,
-        element: Partial<ProgressImage>,
+        image: File,
+        element: Partial<{ description: string; type: ProgressImageType }>,
     ): Promise<ProgressAllInfo> {
-        if (Number.isNaN(id) || Number.isNaN(image_id)) {
-            throw new QueryError(400, "Bad Request");
-        }
-
         const imageEndpoint =
-            this.server + this.endpoint + "/" + id + "/image/" + image_id;
+            this.server + this.endpoint + "/" + id + "/image/" + image.id;
 
         return super.fetchJSON(imageEndpoint, "PATCH", element);
     }
@@ -96,17 +87,9 @@ export class ProgressQuery extends Query<
      * Verwijder een specifieke afbeelding via HTTP DELETE
      * @throws QueryError
      */
-    async deleteImage(
-        id: number,
-        image_id: number,
-        hard = false,
-    ): Promise<void> {
-        if (Number.isNaN(id) || Number.isNaN(image_id)) {
-            throw new QueryError(400, "Bad Request");
-        }
-
+    async deleteImage(id: number, image: File, hard = false): Promise<void> {
         const imageEndpoint =
-            this.server + this.endpoint + "/" + id + "/image/" + image_id;
+            this.server + this.endpoint + "/" + id + "/image/" + image.id;
 
         return super.fetchJSON(imageEndpoint, "DELETE", { hardDelete: hard });
     }
