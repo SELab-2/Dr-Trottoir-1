@@ -1,13 +1,15 @@
 name: Docker Build
 
 on:
-    workflow_run:
-        workflows: ["CI API", "CI Web", "CI API Query Builder"]
-        types:
-            - completed
+    workflow_dispatch:
+    push:
+        branches:
+            - 'develop'
+            - 'main'
+    pull_request:
 
 jobs:
-    docker-api:
+    docker-build:
         runs-on: ubuntu-latest
         defaults:
             run:
