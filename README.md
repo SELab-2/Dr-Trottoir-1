@@ -26,11 +26,3 @@ Software Engineering Lab II (2022 - 2023)
 ## Documentatie
 
 Er is documentatie te vinden op [GitHub Wiki](https://github.com/SELab-2/Dr-Trottoir-1/wiki), alsook in [`/api/README.md`](https://github.com/SELab-2/Dr-Trottoir-1/api/README.md) en [`./server/README.md`](https://github.com/SELab-2/Dr-Trottoir-1/server/README.md).
-
-## GitHub Packages
-
-Voor sommige NPM packages dien je aangemeld te zijn. [Meer info](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry).
-
-```shell
-npm login --scope=@selab-2 --auth-type=legacy --registry=https://npm.pkg.github.com
-```

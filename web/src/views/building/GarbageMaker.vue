@@ -290,21 +290,19 @@ function formatDate(d: Date | undefined): string {
 }
 
 async function submit() {
-  await Promise.all(
-    detailedDays.value.map(async (garbageDetail) => {
-      await tryOrAlertAsync(async () => {
-        const dtDate = new Date(
-          formatDate(garbageDetail?.date) + " " + garbageDetail?.time + ":00",
-        );
+  for (let garbageDetail of detailedDays.value) {
+    await tryOrAlertAsync(async () => {
+      const dtDate = new Date(
+        formatDate(garbageDetail?.date) + " " + garbageDetail?.time + ":00",
+      );
 
-        await new GarbageQuery().createOne({
-          action_id: action.value?.id,
-          building_id: buildingId,
-          pickup_time: dtDate,
-        });
+      await new GarbageQuery().createOne({
+        action_id: action.value?.id,
+        building_id: buildingId,
+        pickup_time: dtDate,
       });
-    }),
-  );
+    });
+  }
 
   clearAll();
 }
