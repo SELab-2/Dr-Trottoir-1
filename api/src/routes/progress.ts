@@ -1,4 +1,4 @@
-import { CustomRequest, Routing, includeUser, selectBuilding } from "./routing";
+import { CustomRequest, includeUser, Routing, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import express from "express";
 import { Parser } from "../parser";
@@ -158,17 +158,16 @@ export class ProgressRouting extends Routing {
     async createImage(req: CustomRequest, res: express.Response) {
         const progress_id = Number(Parser.number(req.params["id"]));
 
-        await prisma.image.create({
+        // For TypeScript's sake.
+        if (!progress_id) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
+        await prisma.progressImage.create({
             data: {
-                time: req.body.time,
-                location: req.body.location,
-                path: req.body.path,
-                user_id: req.body.user_id,
-                progress: {
-                    connect: {
-                        id: progress_id,
-                    },
-                },
+                progress_id,
+                ...req.body,
+                deleted: false,
             },
         });
 
@@ -203,19 +202,26 @@ export class ProgressRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async deleteImage(req: CustomRequest, res: express.Response) {
+        const progress_id = Parser.number(req.params["id"]);
+        const image_id = Parser.number(req.body["image"]);
+
+        // For TypeScript's sake.
+        if (!progress_id || !image_id) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
         if (Parser.bool(req.body["hardDelete"], false)) {
-            const result = await prisma.progressImage.findUniqueOrThrow({
+            const result = await prisma.progressImage.delete({
                 where: {
                     id: Parser.number(req.params["image_id"]),
                 },
             });
 
-            // Use cascade delete of Image
-            await prisma.image.delete({
-                where: {
-                    id: result.image_id,
-                },
-            });
+            if (!result) {
+                throw new APIError(APIErrorCode.NOT_FOUND);
+            }
+
+            // TODO: delete image data
         } else {
             await prisma.progressImage.update({
                 data: {
