@@ -11,10 +11,12 @@
     <v-list v-if="thisStudentAnalytics" class="mx-8">
       <v-list-item
         prepend-icon="mdi-briefcase-clock"
-        :title="`Deze student werkte ${formatTime(thisStudentAnalytics?.time)}`"
+        :title="`Deze student werkte ${formatTime(
+          thisStudentAnalytics?.time,
+        )}.`"
         :subtitle="`Andere studenten werkten gemiddeld ${formatTime(
           thisStudentAnalytics?.average,
-        )}`"
+        )}.`"
       ></v-list-item>
     </v-list>
     <div v-else class="centre text-center pa-5">
