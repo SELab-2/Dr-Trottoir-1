@@ -35,7 +35,7 @@ export class Template implements TableEntity<Result<MailTemplateQuery>> {
         id: 2,
         name: "",
         fit: true,
-        get: () => "mdi-close",
+        get: () => "mdi-delete",
         type: RowType.ICONBUTTON,
         sortable: false,
         onClick: (
