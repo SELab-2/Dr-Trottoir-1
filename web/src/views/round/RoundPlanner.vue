@@ -278,7 +278,6 @@ function calcNewRounds() {
   const start = new Date(startDate.value);
   const end = new Date(endDate.value);
   let frequencyCount = frequencyDict[frequency.value];
-  let index = rounds.value.length;
   for (const d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {
     rounds.value.push({
       name: getFullStudentName(student.value),
