@@ -1,23 +1,16 @@
 # Student
 Een student is een gebruiker die afval ophaalt bij toegekende gebouwen op gegeven dagen.
-Hier kan u een overzicht vinden over hoe de student de applicatie gebruikt om zijn taken te kunnen uitvoeren.
+Hier kan u een overzicht vinden van hoe de student de applicatie gebruikt om zijn taken te kunnen uitvoeren.
 
 ## Workflow
 
 ### Login
-Voordat een student de applicatie kan gebruiken, moet hij eerst [ingelogd](../pages/login.md) zijn.
+Voordat een student de applicatie kan gebruiken, moet hij eerst [ingelogd](../pages/account/login.md) zijn.
 
-### Navigatie balk
-Een student kan doorheen de applicatie navigeren door van de navigatiebalk gebruik te maken.
-De navigatiebalk kan men openen door op het hamburgermenu (☰) te klikken en sluiten door naast de
-openstaande navigatiebalk te klikken.
-
-|           Open navigatie            |           Sluit navigatie            |
-|:-----------------------------------:|:------------------------------------:|
-| ![](../assets/student_open_nav.jpg) | ![](../assets/student_close_nav.jpg) |
+### Student opties
 
 
-In de navigatiebalk heeft de student 3 opties.
+In de [navigatiebalk](../navbar.md#student) heeft de student 3 opties.
 
 |            Navigatie opties            |
 |:--------------------------------------:|
@@ -25,7 +18,7 @@ In de navigatiebalk heeft de student 3 opties.
 
 
 1. **Afmelden**: Klik op de `Afmelden` knop om uit de applicatie uit te loggen.
-2. [**Account**](../pages/account.md): Klik op de `Account` knop om de info over uw account te zien en te bewerken.
-3. [**Planning**](../pages/planning.md): Klik op de `Planning` knop om een overzicht van al uw ingeplande rondes te
+2. [**Account**](../pages/account/account.md): Klik op de `Account` knop om de info over uw account te zien en te bewerken.
+3. [**Planning**](../pages/overview/planning.md): Klik op de `Planning` knop om een overzicht van al uw ingeplande rondes te
 kunnen zien.
 
