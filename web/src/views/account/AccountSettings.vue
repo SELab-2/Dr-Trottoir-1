@@ -79,7 +79,16 @@
         </v-btn>
       </template>
     </BorderCard>
-
+    <v-expand-transition
+      ><UserAnalyticCard
+        :id="user.id"
+        v-show="
+          !edit &&
+          (useAuthStore().auth?.admin || user.id === useAuthStore().auth?.id) &&
+          !user.deleted
+        "
+      ></UserAnalyticCard
+    ></v-expand-transition>
     <!-- Section with the contact info -->
     <BorderCard class="mt-4" prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
@@ -241,6 +250,7 @@ import { AddressQuery, Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
+import UserAnalyticCard from "@/components/cards/UserAnalyticCard.vue";
 import Contact from "@/components/models/Contact";
 
 const display = useDisplay();

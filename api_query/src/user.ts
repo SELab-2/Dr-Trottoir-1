@@ -89,7 +89,7 @@ type RoundAnalytics = {
 
 // Het type dat het resultaat modelleert wanneer het aantal gewerkte minuten van de studenten worden opgevraagd
 // tussen een start- en einddatum
-type UserAnalytics = {
+export type UserAnalytics = {
     student: string;
     email: string;
     time: number;
