@@ -26,7 +26,7 @@
           @click="
             async () => {
               if (!edit) {
-                edit = true;
+                handleBeginEdit();
               } else {
                 handleCancelEdit();
               }
@@ -43,7 +43,7 @@
           @click="
             () => {
               if (!edit) {
-                edit = true;
+                handleBeginEdit();
               } else {
                 handleCancelEdit();
               }
@@ -245,7 +245,6 @@ import { useAuthStore } from "@/stores/auth";
 import RolesForm from "@/components/forms/RolesForm.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
 import Address from "@/components/models/Address";
-
 import { AddressQuery, Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
@@ -265,6 +264,7 @@ const password = ref("");
 const passwordCheck = ref("");
 const passwordHidden = ref(false);
 const user: Ref<Result<UserQuery> | null> = ref(null);
+const roles = ref<string[]>([]);
 
 function handleAddressUpdate(address: Address) {
   if (user.value) {
@@ -283,6 +283,10 @@ function handleContactUpdate(contact: Contact) {
 }
 
 async function fetchUser() {
+  // Force reactivity;
+  user.value = null;
+  roles.value = [];
+
   await tryOrAlertAsync(async () => {
     user.value = await new UserQuery().getOne(props.id);
     if (user.value.admin) {
@@ -299,11 +303,15 @@ async function fetchUser() {
 fetchUser();
 
 // reactive state for the roles
-const roles = ref<string[]>([]);
 
 /* Action handle functions */
-async function handleCancelEdit() {
-  window.location.reload();
+function handleBeginEdit() {
+  edit.value = true;
+}
+
+function handleCancelEdit() {
+  edit.value = false;
+  fetchUser();
 }
 
 async function handleRemove() {
