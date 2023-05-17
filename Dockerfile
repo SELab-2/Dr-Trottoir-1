@@ -70,9 +70,11 @@ COPY --from=orm_build /build/orm/dist/ /build/orm/dist/
 
 COPY --from=api_query_build /build/api_query /build/api_query/
 COPY --from=api_query_build /build/api_query/dist/ /build/api_query/dist/
-
+# https://stackoverflow.com/questions/51115856/docker-failed-to-export-image-failed-to-create-image-failed-to-get-layer
+RUN true
 # Generate artifacts
 COPY web ./
+RUN true
 RUN npm run build
 
 FROM nginx:alpine as web_production
