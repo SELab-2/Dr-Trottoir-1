@@ -78,30 +78,25 @@
           </v-timeline-item>
 
           <v-timeline-item
-            v-for="entry in data.round.buildings"
+            v-for="entry in data.round.buildings.map((e) => {
+              return {
+                building: e.building,
+                progress: progressItems.get(e.building_id),
+              };
+            })"
             v-bind:key="entry.building.id"
-            :dot-color="
-              progressItems.get(entry.building_id)?.departure
-                ? 'success'
-                : 'grey'
-            "
-            :icon="
-              progressItems.get(entry.building_id)?.departure
-                ? 'mdi-check'
-                : 'mdi-clock'
-            "
+            :dot-color="entry.progress?.departure ? 'success' : 'grey'"
+            :icon="entry.progress?.departure ? 'mdi-check' : 'mdi-clock'"
             size="large"
             width="100%"
           >
             <RoundDetailCard
               :class="mobile ? 'shiftUnderTimeLine' : ''"
-              :key="JSON.stringify(progressItems.get(entry.building_id))"
+              :key="JSON.stringify(entry.progress)"
               :entry="entry"
               :day="data.day"
               :schedule_id="schedule_id"
-              @changed="
-                progressUpdated(progressItems.get(entry.building_id)?.id)
-              "
+              @changed="progressUpdated(entry.progress?.id)"
               @requestPhotoAdd="
                 (progress) => {
                   currentProgress = progress;
