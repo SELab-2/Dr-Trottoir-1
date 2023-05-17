@@ -51,7 +51,7 @@ export default ({ mode }) => {
         },
         devOptions: {
           enabled: true
-        }
+        },
       }),
     ],
     define: {
@@ -59,12 +59,21 @@ export default ({ mode }) => {
     },
     resolve: {
       alias: {
-        "@": fileURLToPath(new URL("./src", import.meta.url))
+        "@selab-2/groep-1-query": fileURLToPath(new URL("../api_query", import.meta.url)),
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
       extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"]
     },
     server: {
       port: 3000
-    }
+    },
+    build: {
+      commonjsOptions: {
+        include: [/api_query/, /node_modules/],
+      },
+    },
+    optimizeDeps: {
+      include: ["@selab-2/groep-1-query"],
+    },
   });
 }
