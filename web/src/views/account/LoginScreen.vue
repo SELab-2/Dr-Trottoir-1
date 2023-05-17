@@ -103,7 +103,7 @@ async function logIn() {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // backgroud div. Nedded to center form div
 .background {
   height: 100%;
