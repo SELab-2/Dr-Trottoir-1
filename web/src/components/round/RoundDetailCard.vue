@@ -195,10 +195,10 @@ import { useDisplay } from "vuetify";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
-import { ProgressQuery } from "@selab-2/groep-1-query";
+import { ProgressQuery, ScheduleQuery } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
 
-const props = defineProps(["entry", "day"]);
+const props = defineProps(["entry", "day", "schedule_id"]);
 const progress = ref(
   props.entry.progress
     ? JSON.parse(JSON.stringify(props.entry.progress))
@@ -230,6 +230,11 @@ function report() {
 const emit = defineEmits(["changed", "requestPhotoAdd"]);
 
 async function start() {
+  await new ScheduleQuery().updateOne({
+      id: props.schedule_id,
+      start: new Date(),
+    });
+
   await tryOrAlertAsync(async () => {
     progress.value = await new ProgressQuery().updateOne({
       id: progress.value.id,

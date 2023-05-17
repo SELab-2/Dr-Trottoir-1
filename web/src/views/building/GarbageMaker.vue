@@ -295,7 +295,6 @@ async function submit() {
       const dtDate = new Date(
         formatDate(garbageDetail?.date) + " " + garbageDetail?.time + ":00",
       );
-      console.log(dtDate);
       await new GarbageQuery().createOne({
         action_id: action.value?.id,
         building_id: buildingId,
