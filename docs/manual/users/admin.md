@@ -23,12 +23,12 @@ door middel van de applicatie.
 Voordat een admin de applicatie kan gebruiken moet hij eerst [ingelogd](../pages/account/login.md) zijn.
 
 ## Administratie
-De administratie sectie bevat lijsten van alle gebruikers, gebouwen en rondes, de admin kan
-hier snel en eenvoudig een gebruiker, gebouw of ronde terug vinden.
+De administratie sectie bevat lijsten van alle gebruikers, gebouwen en rondes. De admin kan
+hier snel en eenvoudig een gebruiker, gebouw of ronde terugvinden.
 
 ### Gebruikers
 Ga naar `Administratie > Gebruikers` in de [navigatiebalk](../navbar.md#superstudent-syndicus-admin) .
-- Voor meer detail over de gebruikers pagina, klik [hier](../pages/administration/gebruikers.md).
+- Voor meer detail over de gebruikerspagina, klik [hier](../pages/administration/gebruikers.md).
 - Voor een beschrijving om een gebruiker aan te maken, klik [hier](../pages/administration/gebruikers.md#3-nieuwe-gebruiker-aanmaken).
 
 ### Gebouwen

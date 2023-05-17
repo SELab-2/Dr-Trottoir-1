@@ -22,4 +22,4 @@ van de gebruiker.
 
 ## 3. Nieuwe gebruiker aanmaken
 Om een nieuwe gebruiker aan te maken, klikt u op de `nieuwe gebruiker` knop. Dit zal u doorsturen
-naar de pagina om een [nieuwe gebruiker](./create_gebruikers.md) aan te maken.
+naar de pagina om een [nieuwe gebruiker](../create/create_gebruikers.md) aan te maken.
