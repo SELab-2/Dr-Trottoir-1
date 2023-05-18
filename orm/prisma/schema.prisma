@@ -255,6 +255,8 @@ model Round {
     buildings RoundBuilding[]
     schedule  Schedule[]
 
+    deleted Boolean @default(false)
+
     @@map("round")
 }
 
