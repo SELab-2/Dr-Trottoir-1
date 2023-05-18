@@ -4,14 +4,13 @@
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h1>{{ round?.name }}</h1>
         <div class="flex-grow-1"></div>
-        <v-btn
-          class="text-none"
+        <SimpleButton
           prepend-icon="mdi-delete"
           @click="showRemovePopup = true"
           color="error"
         >
           Verwijderen
-        </v-btn>
+        </SimpleButton>
       </div>
       <p>{{ round?.description }}</p>
 
@@ -32,14 +31,13 @@
           v-model:start-date="planningStart"
           v-model:end-date="planningEnd"
         />
-        <v-btn
-          class="text-none"
+        <SimpleButton
           prepend-icon="mdi-calendar"
           :to="{ name: 'round_plan', params: { id: round_id } }"
           color="primary"
         >
           Inplannen
-        </v-btn>
+        </SimpleButton>
       </div>
       <p v-show="passedSchedules.length === 0">
         Er zijn geen planningen voor de geselecteerde periode.
@@ -81,7 +79,7 @@
   </HFillWrapper>
   <CardPopup
     v-model="showRemovePopup"
-    :width="342"
+    :width="298"
     title="Verwijder Ronde"
     prepend-icon="mdi-delete"
   >
@@ -90,19 +88,19 @@
       verder gaan?
     </p>
     <template v-slot:actions>
-      <v-btn
+      <SimpleButton
         prepend-icon="mdi-close"
         color="error"
         variant="elevated"
         @click="showRemovePopup = false"
-        >Annuleren</v-btn
+        >Annuleren</SimpleButton
       >
-      <v-btn
+      <SimpleButton
         prepend-icon="mdi-check"
         color="success"
         variant="elevated"
         @click="deleteRound()"
-        >Verwijder ronde</v-btn
+        >Verwijder ronde</SimpleButton
       >
     </template>
   </CardPopup>
@@ -126,6 +124,7 @@ import DateRange from "@/components/filter/DateRange.vue";
 import MapComponent from "@/components/maps/MapComponent.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
 import { daysFromDate } from "@/assets/scripts/date";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 /**
  * Get a date days from a given date

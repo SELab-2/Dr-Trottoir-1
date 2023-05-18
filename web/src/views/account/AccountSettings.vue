@@ -19,8 +19,7 @@
         class="align-self-center"
       >
         <!-- Not mobile edit button -->
-        <v-btn
-          class="text-none"
+        <SimpleButton
           v-show="!mobile"
           :prepend-icon="!edit ? 'mdi-pencil' : 'mdi-close'"
           @click="
@@ -35,9 +34,9 @@
           :color="!edit ? 'primary' : 'warning'"
         >
           {{ !edit ? "Bewerk Account" : "Annuleer aanpassingen" }}
-        </v-btn>
+        </SimpleButton>
         <!-- Mobile edit button -->
-        <v-btn
+        <SimpleButton
           v-show="mobile"
           :icon="!edit ? 'mdi-pencil' : 'mdi-close'"
           @click="
@@ -60,23 +59,22 @@
       title="Deze account is verwijderd."
     >
       <template v-slot:append>
-        <v-btn
+        <SimpleButton
           color="success"
           @click="restore()"
           variant="elevated"
-          class="text-none mr-3"
+          class="mr-3"
           prepend-icon="mdi-delete-restore"
         >
           Herstel
-        </v-btn>
-        <v-btn
+        </SimpleButton>
+        <SimpleButton
           @click="handleRemovePopupPermanent()"
           color="error"
-          class="text-none"
           prepend-icon="mdi-delete-forever"
         >
           Verwijder
-        </v-btn>
+        </SimpleButton>
       </template>
     </BorderCard>
 
@@ -174,16 +172,16 @@
     <!-- Section that allows to save and remove the account -->
     <div v-if="edit" class="my-4">
       <div class="d-flex flex-row-reverse">
-        <v-btn
+        <SimpleButton
           prepend-icon="mdi-check"
           @click="handleSavePopup()"
           color="success"
           class="my-3 text-none"
         >
           Sla op
-        </v-btn>
+        </SimpleButton>
 
-        <v-btn
+        <SimpleButton
           v-if="
             useAuthStore().auth?.admin && user?.id !== useAuthStore().auth?.id
           "
@@ -193,34 +191,32 @@
           class="mx-5 my-3 text-none"
         >
           Verwijder account
-        </v-btn>
+        </SimpleButton>
       </div>
     </div>
   </HFillWrapper>
 
-  <CardPopup v-model="showPopup" :title="popupTitle" :prepend-icon="popupIcon">
+  <CardPopup v-model="showPopup" :title="popupTitle" :prepend-icon="popupIcon" :width="306">
     <p class="mx-3">
       {{ popupMsg }}
     </p>
     <v-card-actions>
-      <v-btn
+      <SimpleButton
         prepend-icon="mdi-close"
         color="error"
         @click="showPopup = false"
         variant="elevated"
-        class="text-none"
       >
         Annuleer
-      </v-btn>
-      <v-btn
+      </SimpleButton>
+      <SimpleButton
         prepend-icon="mdi-check"
         color="success"
         @click="popupSubmit()"
         variant="elevated"
-        class="text-none"
       >
         {{ popupSubmitMsg }}
-      </v-btn>
+      </SimpleButton>
     </v-card-actions>
   </CardPopup>
 </template>
@@ -241,6 +237,7 @@ import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import Contact from "@/components/models/Contact";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 const display = useDisplay();
 const mobile: Ref<boolean> = display.mobile;

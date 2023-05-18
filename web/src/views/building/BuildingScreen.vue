@@ -34,34 +34,31 @@
 
         <div class="d-flex mt-2" style="gap: 16px; flex-wrap: wrap">
           <div class="me-auto d-flex" style="gap: 16px; flex-wrap: wrap">
-            <v-btn
-              class="text-none"
+            <SimpleButton
               prepend-icon="mdi-map-search"
               @click="tomaps()"
               color="primary"
             >
               Kaarten
-            </v-btn>
-            <v-btn
-              class="text-none"
+            </SimpleButton>
+            <SimpleButton
               append-icon="mdi-download"
               prepend-icon="mdi-file-pdf-box"
               :href="'http://10.0.0.5:8080/file/' + building.manual?.id"
               color="success"
             >
               Handleiding
-            </v-btn>
+            </SimpleButton>
           </div>
 
-          <v-btn
+          <SimpleButton
             v-show="useAuthStore().auth?.admin"
-            class="text-none"
             prepend-icon="mdi-delete"
             @click="showRemovePopup = true"
             color="error"
           >
             Verwijder
-          </v-btn>
+          </SimpleButton>
 
           <!-- TODO add in API
           <RoundedButton icon="mdi-lock" @click="toClip('TODO')" value="TODO" /> -->
@@ -113,7 +110,7 @@
               @update:end-date="getTasks()"
               @update:start-date="getTasks()"
             />
-            <v-btn
+            <SimpleButton
               v-show="noStudent"
               class="mx-1 text-none"
               prepend-icon="mdi-plus"
@@ -121,11 +118,12 @@
               color="primary"
             >
               Toevoegen
-            </v-btn>
+            </SimpleButton>
           </div>
         </div>
         <div class="grid">
           <CardLayout
+            class="inner"
             style="
               display: flex;
               align-items: center;
@@ -176,7 +174,7 @@
   </HFillWrapper>
   <CardPopup
     v-model="showRemovePopup"
-    :width="353"
+    :width="312"
     title="Verwijder Ronde"
     prepend-icon="mdi-delete"
   >
@@ -185,19 +183,19 @@
       verder gaan?
     </p>
     <template v-slot:actions>
-      <v-btn
+      <SimpleButton
         prepend-icon="mdi-close"
         color="error"
         variant="elevated"
         @click="showRemovePopup = false"
-        >Annuleren</v-btn
+        >Annuleren</SimpleButton
       >
-      <v-btn
+      <SimpleButton
         prepend-icon="mdi-check"
         color="success"
         variant="elevated"
         @click="deleteBuilding()"
-        >Verwijder gebouw</v-btn
+        >Verwijder gebouw</SimpleButton
       >
     </template>
   </CardPopup>
@@ -222,6 +220,7 @@ import DateRange from "@/components/filter/DateRange.vue";
 import { daysFromDate } from "@/assets/scripts/date";
 import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 const showRemovePopup = ref(false);
 
@@ -404,15 +403,20 @@ async function deleteBuilding() {
   }
 }
 
-.grid {
+.grid{
   display: grid;
   gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-
-  @media (min-width: 700px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  @media (max-width: 600px){
+    display: flex;
+    flex-direction: column;
   }
+
+}
+
+.inner:last-child:nth-child(odd){
+  grid-column: 1 / span 2;
 }
 
 .grid-right {
