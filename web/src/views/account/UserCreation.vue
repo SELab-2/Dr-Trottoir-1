@@ -60,27 +60,12 @@
       </BorderCard>
 
       <!-- Text input field for the password-->
-      <PasswordInputCard class="mt-4" prepend-icon="mdi-lock" />
-
-      <!--      <BorderCard class="mt-4" prepend-icon="mdi-lock">-->
-      <!--        <template v-slot:title> Wachtwoord </template>-->
-      <!--        <v-list density="compact" :class="spacing">-->
-      <!--          <PasswordInputCard />-->
-      <!--          &lt;!&ndash; Text input field for the password confirmation&ndash;&gt;-->
-      <!--          <v-text-field-->
-      <!--            class="mt-2"-->
-      <!--            v-model="password2"-->
-      <!--            :prepend-inner-icon="'mdi-lock'"-->
-      <!--            :append-inner-icon="showPsswd ? 'mdi-eye' : 'mdi-eye-off'"-->
-      <!--            :type="showPsswd ? 'text' : 'password'"-->
-      <!--            :counter="8"-->
-      <!--            :rules="psswd2Rules"-->
-      <!--            label="Bevestig wachtwoord"-->
-      <!--            @click:append-inner="showPsswd = !showPsswd"-->
-      <!--            bg-->
-      <!--          ></v-text-field>-->
-      <!--        </v-list>-->
-      <!--      </BorderCard>-->
+      <PasswordInputCard
+        class="mt-4"
+        prepend-icon="mdi-lock"
+        @password="(v) => (password1 = v)"
+        @passwordRepeat="(v) => (password2 = v)"
+      />
 
       <!-- Selection box to determine the roles -->
       <BorderCard class="mt-4" prepend-icon="mdi-account-multiple">

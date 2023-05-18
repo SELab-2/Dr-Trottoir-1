@@ -119,7 +119,7 @@
         :phone="user.phone"
         :email="user.email"
         @onUpdate="(contact: Contact) => handleContactUpdate(contact)"
-      />validate in frontend
+      />
     </BorderCard>
 
     <!-- Section with the adress -->
@@ -151,8 +151,8 @@
       v-if="edit"
       class="mt-4"
       prepend-icon="mdi-lock"
-      @password="setPassword"
-      @password-repeat="setPasswordRepeat"
+      @password="(v) => (password = v)"
+      @password-repeat="(v) => (passwordCheck = v)"
     />
 
     <!-- Section that allows to save and remove the account -->
