@@ -56,6 +56,7 @@ describe("Progress tests", () => {
                     deleted: false,
                     round: {
                         id: 1,
+                        deleted: false,
                         name: "Round 1",
                         description: "Description of round 1",
                     },
@@ -117,6 +118,7 @@ describe("Progress tests", () => {
                     deleted: false,
                     round: {
                         id: 1,
+                        deleted: false,
                         name: "Round 1",
                         description: "Description of round 1",
                     },

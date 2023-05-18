@@ -59,6 +59,7 @@ describe("Round_building tests", () => {
                 deleted: false,
                 round: {
                     id: 1,
+                    deleted: false,
                     name: "Round 1",
                     description: "Description of round 1",
                 },
@@ -96,6 +97,7 @@ describe("Round_building tests", () => {
                     round: {
                         description: "Description of round 1",
                         id: 1,
+                        deleted: false,
                         name: "Round 1",
                     },
                     round_id: 1,
@@ -121,6 +123,7 @@ describe("Round_building tests", () => {
                     deleted: false,
                     id: 2,
                     round: {
+                        deleted: false,
                         description: "Description of round 2",
                         id: 2,
                         name: "Round 2",
@@ -158,6 +161,7 @@ describe("Round_building tests", () => {
                     deleted: false,
                     id: 1,
                     round: {
+                        deleted: false,
                         id: 1,
                         name: "Round 1",
                         description: "Description of round 1",
@@ -198,6 +202,7 @@ describe("Round_building tests", () => {
                 deleted: false,
                 id: 1,
                 round: {
+                    deleted: false,
                     id: 2,
                     name: "Round 2",
                     description: "Description of round 2",
@@ -245,6 +250,7 @@ describe("Round_building tests", () => {
                     deleted: false,
                     id: 2,
                     round: {
+                        deleted: false,
                         description: "Description of round 2",
                         id: 2,
                         name: "Round 2",
@@ -286,6 +292,7 @@ describe("Round_building tests", () => {
                     deleted: false,
                     id: 2,
                     round: {
+                        deleted: false,
                         description: "Description of round 2",
                         id: 2,
                         name: "Round 2",
@@ -326,9 +333,10 @@ describe("Round_building tests", () => {
                     deleted: true,
                     id: 1,
                     round: {
+                        deleted: false,
+                        description: "Description of round 1",
                         id: 1,
                         name: "Round 1",
-                        description: "Description of round 1",
                     },
                     round_id: 1,
                 },
@@ -353,9 +361,10 @@ describe("Round_building tests", () => {
                     deleted: false,
                     id: 2,
                     round: {
+                        deleted: false,
+                        description: "Description of round 2",
                         id: 2,
                         name: "Round 2",
-                        description: "Description of round 2",
                     },
                     round_id: 2,
                 },

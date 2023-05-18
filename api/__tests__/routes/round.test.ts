@@ -41,6 +41,7 @@ describe("Round tests", () => {
                 name: "new Round",
                 description: "Description of new round",
                 buildings: [],
+                deleted: false,
             };
 
             await runner.post({
@@ -66,10 +67,10 @@ describe("Round tests", () => {
                                     zip_code: 2000,
                                 },
                                 deleted: false,
+                                description: "Description of building 1",
                                 id: 1,
                                 ivago_id: "ivago-1",
                                 name: "Building 1",
-                                description: "Description of building 1",
                             },
                             building_id: 1,
                             deleted: false,
@@ -77,9 +78,10 @@ describe("Round tests", () => {
                             round_id: 1,
                         },
                     ],
+                    deleted: false,
+                    description: "Description of round 1",
                     id: 1,
                     name: "Round 1",
-                    description: "Description of round 1",
                 },
                 {
                     buildings: [
@@ -95,10 +97,10 @@ describe("Round tests", () => {
                                     zip_code: 9000,
                                 },
                                 deleted: false,
+                                description: "Description of building 2",
                                 id: 2,
                                 ivago_id: "ivago-2",
                                 name: "Building 2",
-                                description: "Description of building 2",
                             },
                             building_id: 2,
                             deleted: false,
@@ -106,9 +108,10 @@ describe("Round tests", () => {
                             round_id: 2,
                         },
                     ],
+                    deleted: false,
+                    description: "Description of round 2",
                     id: 2,
                     name: "Round 2",
-                    description: "Description of round 2",
                 },
             ];
 
@@ -142,6 +145,7 @@ describe("Round tests", () => {
                             round_id: 1,
                         },
                     ],
+                    deleted: false,
                     id: 1,
                     name: "Round 1",
                     description: "Description of round 1",
@@ -182,6 +186,7 @@ describe("Round tests", () => {
                         round_id: 1,
                     },
                 ],
+                deleted: false,
                 id: 1,
                 name: "Updated Round 1",
                 description: "Updated description of round 1",
