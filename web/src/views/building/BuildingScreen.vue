@@ -17,17 +17,16 @@
           </div>
 
           <div style="display: flex; flex-wrap: wrap">
-            <v-chip variant="outlined" color="border" class="mr-2 labels">
-              <v-icon icon="mdi-identifier" color="black" />
-              <p class="text-black">{{ building.ivago_id }}</p>
-            </v-chip>
-            <v-chip variant="outlined" color="border" class="labels">
-              <v-icon icon="mdi-map-marker" color="black" />
-              <p class="text-black">
-                {{ building.address.street }} {{ building.address.number }},
-                {{ building.address.zip_code }}, {{ building.address.city }}
-              </p>
-            </v-chip>
+            <RoundedInfoChip
+              class="mr-2 labels"
+              icon="mdi-identifier"
+              :text="building.ivago_id"
+            />
+            <RoundedInfoChip
+              class="labels"
+              icon="mdi-map-marker"
+              :text="building.address.street + building.address.number + building.address.zip_code + building.address.city"
+            />
             <!-- TODO: add btn to link to building edit page once we have building edit page -->
           </div>
         </div>
@@ -135,12 +134,10 @@
           >
             <div class="d-flex align-center w-100">
               <h4 class="ml-2 me-auto">{{ action.action.description }}</h4>
-              <v-chip color="border" variant="outlined">
-                <v-icon icon="mdi-calendar-clock"></v-icon>
-                <p class="text-black mx-1">
-                  {{ new Date(action.pickup_time).toLocaleString("nl") }}
-                </p>
-              </v-chip>
+              <RoundedInfoChip
+                icon="mdi-calendar-clock"
+                :text="new Date(action.pickup_time).toLocaleString('nl')"
+              />
             </div>
           </CardLayout>
         </div>
@@ -221,6 +218,7 @@ import { daysFromDate } from "@/assets/scripts/date";
 import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
 import SimpleButton from "@/components/buttons/SimpleButton.vue";
+import RoundedInfoChip from "@/components/chips/RoundedInfoChip.vue";
 
 const showRemovePopup = ref(false);
 
