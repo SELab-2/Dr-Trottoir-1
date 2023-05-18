@@ -524,7 +524,7 @@ describe("Schedule tests", () => {
 
     describe("Bugs", () => {
         describe("Issue 454: Student must be able to PATCH /schedule belonging to them", () => {
-            test("Expected behaviour", async () => {
+            test("Student is allowed to change the start and end date of their assigned schedule", async () => {
                 runner.authLevel(AuthenticationLevel.STUDENT);
                 const expected = {
                     id: 1,
@@ -632,6 +632,17 @@ describe("Schedule tests", () => {
                     },
                     expectedResponse: badRequestResponse,
                     statusCode: 400,
+                });
+            });
+            test("Student cannot change a schedule not assigned to them", async () => {
+                runner.authLevel(AuthenticationLevel.STUDENT);
+                await runner.patch({
+                    url: "/schedule/2",
+                    data: {
+                        start: "2023-05-18T13:53:22.831Z",
+                    },
+                    expectedResponse: forbiddenResponse,
+                    statusCode: 403,
                 });
             });
         });
