@@ -251,10 +251,19 @@ export class ProgressRouting extends Routing {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
-        let count: { count: number } = { count: 0 };
+        const count = await prisma.progressImage.count({
+            where: {
+                progress_id,
+                image_id,
+            },
+        });
+
+        if (count !== 1) {
+            throw new APIError(APIErrorCode.NOT_FOUND);
+        }
 
         if (Parser.bool(req.body["hardDelete"], false)) {
-            count = await prisma.progressImage.deleteMany({
+            await prisma.progressImage.deleteMany({
                 where: {
                     progress_id,
                     image_id,
@@ -263,7 +272,7 @@ export class ProgressRouting extends Routing {
 
             // TODO: delete image data
         } else {
-            count = await prisma.progressImage.updateMany({
+            await prisma.progressImage.updateMany({
                 data: {
                     deleted: true,
                 },
@@ -272,10 +281,6 @@ export class ProgressRouting extends Routing {
                     image_id,
                 },
             });
-        }
-
-        if (count.count !== 1) {
-            throw new APIError(APIErrorCode.NOT_FOUND);
         }
 
         const result = await prisma.progress.findUniqueOrThrow({

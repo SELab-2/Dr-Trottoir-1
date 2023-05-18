@@ -2,7 +2,7 @@ import { File } from "@selab-2/groep-1-orm";
 import { prisma } from "./prisma";
 
 export const manual = {
-    id: 10,
+    id: 1,
     user_id: 1,
     original_name: "handleiding.pdf",
     size_in_bytes: 1024,
