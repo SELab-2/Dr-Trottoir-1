@@ -272,22 +272,35 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ superStudent: true, syndicus: true })
     async deleteImage(req: CustomRequest, res: express.Response) {
-        const result = await prisma.buildingImages.findUniqueOrThrow({
+        const building_id = Parser.number(req.params["id"]);
+        const image_id = Parser.number(req.params["image_id"]);
+
+        // For TypeScript's sake.
+        if (!building_id || !image_id) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
+        const deleted = await prisma.buildingImages.deleteMany({
             where: {
-                id: Parser.number(req.params["image_id"]),
+                image_id,
+                building_id,
             },
         });
 
-        // Use cascade delete of Image
-        await prisma.buildingImages.delete({
-            where: {
-                id: result.image_id,
-            },
-        });
+        if (deleted.count !== 1) {
+            throw new APIError(APIErrorCode.NOT_FOUND);
+        }
 
         // TODO: delete data
 
-        return res.status(200).json({});
+        const result = await prisma.building.findUniqueOrThrow({
+            where: {
+                id: building_id,
+            },
+            select: BuildingRouting.selects,
+        });
+
+        return res.status(200).json(result);
     }
 
     getValidator(): Validator {

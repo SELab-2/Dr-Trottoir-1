@@ -87,7 +87,11 @@ export class BuildingQuery extends Query<
      * Verwijder een specifieke afbeelding via HTTP DELETE
      * @throws QueryError
      */
-    async deleteImage(id: number, file: File, hard = false): Promise<void> {
+    async deleteImage(
+        id: number,
+        file: { id: number },
+        hard = false,
+    ): Promise<BuildingAllInfo> {
         const imageEndpoint =
             this.server + this.endpoint + "/" + id + "/image/" + file.id;
 
