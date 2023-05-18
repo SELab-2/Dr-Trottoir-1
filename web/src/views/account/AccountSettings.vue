@@ -79,16 +79,14 @@
         </v-btn>
       </template>
     </BorderCard>
-    <v-expand-transition
-      ><UserAnalyticCard
-        :id="user.id"
-        v-show="
-          !edit &&
-          (useAuthStore().auth?.admin || user.id === useAuthStore().auth?.id) &&
-          !user.deleted
-        "
-      ></UserAnalyticCard
-    ></v-expand-transition>
+    <UserAnalyticCard
+      v-if="
+        !edit &&
+        (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) &&
+        !user.deleted
+      "
+      :id="user.id"
+    />
     <!-- Section with the contact info -->
     <BorderCard class="mt-4" prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
@@ -300,7 +298,7 @@ async function fetchUser() {
     }
   });
 }
-fetchUser();
+await fetchUser();
 
 // reactive state for the roles
 

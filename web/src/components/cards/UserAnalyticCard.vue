@@ -75,6 +75,7 @@ function updateAnalytics() {
   fullSchemeEndDate.value.setHours(23, 59, 59, 999);
   tryOrAlertAsync(async () => {
     thisStudentAnalytics.value = undefined;
+    console.log("HEY");
     const analytics: UserAnalytics[] = await new UserQuery().getAnalytics(
       new Date(fullSchemeStartDate.value),
       new Date(fullSchemeEndDate.value),
