@@ -17,7 +17,7 @@
 
       <v-select
         label="Syndicus"
-        :items="syndici"
+        :items="users"
         v-model="building.syndicus"
         prepend-inner-icon="mdi-account"
       >
@@ -114,13 +114,15 @@ import {
   AddressQuery,
   BuildingQuery,
   UserQuery,
+  SyndicusQuery,
 } from "@selab-2/groep-1-query";
 import router from "@/router";
 import "leaflet/dist/leaflet.css";
 import "leaflet/dist/leaflet.js";
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
 
-const syndici = await new UserQuery().getAll();
+const users = await new UserQuery().getAll();
+const syndici = await new SyndicusQuery().getAll();
 
 const address = ref({
   street: "",
@@ -142,8 +144,6 @@ const building = ref({
     first_name: "",
     last_name: ""
   },
-  address_id: 0,
-  manual_id: null,
 });
 
 const manual = ref(null)
@@ -159,11 +159,22 @@ function getFullStudentName(s: Result<UserQuery> | undefined): string {
 const zoom = ref(8);
 
 const submit = () => {
-  console.log(address.value)
-  console.log(latitude.value)
-  console.log(longitude.value)
-  /*
+  // check if the user is already a syndicus, else we need to make the user a syndicus
+  let createSyndicus: boolean = true;
+  for(const syndicus of syndici){
+    if(syndicus.user_id == building.value.syndicus.id){
+      createSyndicus = false;
+      building.value.syndicus.id = syndicus.id;
+      break;
+    }
+  }
   tryOrAlertAsync(async () => {
+    if (createSyndicus) {
+      let {id: syndicusId} = await new SyndicusQuery().createOne({
+        user_id: building.value.syndicus.id,
+      });
+      building.value.syndicus.id = syndicusId;
+    }
     const { id: addressId } = await new AddressQuery().createOne({
       street: address.value.street,
       number: address.value.number,
@@ -172,31 +183,26 @@ const submit = () => {
       latitude: latitude.value,
       longitude: longitude.value,
     });
-    console.log(addressId)
-    building.value.address_id = id;
     const { id: buildingId } = await new BuildingQuery().createOne({
-      // id: building.value.id,
       name: building.value.name,
       ivago_id: building.value.ivago_id,
       syndicus_id: building.value.syndicus.id,
       address_id: addressId,
-      manual_id: building.value.manual_id,
       }
     );
-
     // await new BuildingQuery().createImage({
       // id: buildingId,
       // image: ,
-    //}
+    //})
 
-    // await new BuildingQuery().createFile({ deze functie bestaat nog niet
-      // id: buildingId,
-      // file: manual.value,
-    //}
-
+    const {id: manualId} = await new BuildingQuery().createManual({
+      id: buildingId,
+      file: manual.value,
+    })
+    console.log(manualId)
     // await router.push(`/gebouw/${buildingId}`);
+
   });
-  */
 
 };
 </script>

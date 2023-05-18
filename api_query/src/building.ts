@@ -1,4 +1,4 @@
-import { Image, Prisma } from "@selab-2/groep-1-orm";
+import { Image, File, Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithoutAddress } from "./include";
 import { QueryError } from "./query_error";
@@ -101,6 +101,41 @@ export class BuildingQuery extends Query<
             this.server + this.endpoint + "/" + id + "/image/" + image_id;
 
         return this.fetchJSON(imageEndpoint, "DELETE", { hardDelete: hard });
+    }
+
+    /**
+     * Voeg een handleiding toe via HTTP POST
+     * @throws QueryError
+     */
+    async createManual(
+        id: number,
+        element: Partial<File>,
+    ): Promise<BuildingAllInfo> {
+        if (Number.isNaN(id)) {
+            throw new QueryError(400, "Bad Request");
+        }
+
+        const fileEndpoint = this.server + this.endpoint + "/" + id + "/file";
+
+        return this.fetchJSON(fileEndpoint, "POST", element);
+    }
+
+    /**
+     * Verwijder de handleiding via HTTP DELETE
+     * @throws QueryError
+     */
+    async deleteManual(
+        id: number,
+        manual_id: number,
+        hard = false,
+    ): Promise<BuildingAllInfo> {
+        if (Number.isNaN(id)) {
+            throw new QueryError(400, "Bad Request");
+        }
+
+        const fileEndpoint = this.server + this.endpoint + "/" + id + "/file/" + manual_id;
+
+        return this.fetchJSON(fileEndpoint, "DELETE", { hardDelete: hard });
     }
 
     async getAnalytics(
