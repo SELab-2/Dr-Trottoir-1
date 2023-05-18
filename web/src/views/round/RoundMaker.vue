@@ -22,6 +22,12 @@
           v-model="newRoundName"
           variant="outlined"
         />
+        <v-text-field
+          class="ml-3 mr-5"
+          label="Beschrijving"
+          v-model="description"
+          variant="outlined"
+        />
         <v-card-actions class="d-flex align-center"
           ><v-spacer></v-spacer
           ><v-btn class="ml-3" prepend-icon="mdi-check" @click="makeRound()"
@@ -103,6 +109,7 @@ onMounted(() => {
 const garbageinfo: Ref<boolean> = ref(true);
 
 const newRoundName = ref<string>("");
+const description = ref<string>("");
 
 // The query that will be used to filter all available buildings
 const searchquery: Ref<string> = ref("");
@@ -145,6 +152,7 @@ function makeRound() {
   tryOrAlertAsync(async () => {
     const newRound = await new RoundQuery().createOne({
       name: newRoundName.value,
+      description: description.value,
     });
 
     for (const building of newRoundBuildings.value) {
