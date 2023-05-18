@@ -157,15 +157,17 @@ export class ProgressRouting extends Routing {
     @Auth.authorization({ student: true, superStudent: false })
     async createImage(req: CustomRequest, res: express.Response) {
         const progress_id = Number(Parser.number(req.params["id"]));
+        const image_id = Parser.number(req.body["image_id"]);
 
         // For TypeScript's sake.
-        if (!progress_id) {
+        if (!progress_id || !image_id) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
         await prisma.progressImage.create({
             data: {
                 progress_id,
+                image_id,
                 ...req.body,
                 deleted: false,
             },
@@ -183,12 +185,25 @@ export class ProgressRouting extends Routing {
 
     @Auth.authorization({ student: true, superStudent: false })
     async updateImage(req: CustomRequest, res: express.Response) {
-        await prisma.progressImage.update({
+        const progress_id = Number(Parser.number(req.params["id"]));
+        const image_id = Parser.number(req.params["image_id"]);
+
+        // For TypeScript's sake.
+        if (!progress_id || !image_id) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
+        const updated = await prisma.progressImage.updateMany({
             data: req.body,
             where: {
-                id: Parser.number(req.params["image_id"]),
+                image_id,
+                progress_id,
             },
         });
+
+        if (updated.count !== 1) {
+            throw new APIError(APIErrorCode.NOT_FOUND);
+        }
 
         const result = await prisma.progress.findUniqueOrThrow({
             where: {
@@ -203,37 +218,48 @@ export class ProgressRouting extends Routing {
     @Auth.authorization({ student: true })
     async deleteImage(req: CustomRequest, res: express.Response) {
         const progress_id = Parser.number(req.params["id"]);
-        const image_id = Parser.number(req.body["image"]);
+        const image_id = Parser.number(req.params["image_id"]);
 
         // For TypeScript's sake.
         if (!progress_id || !image_id) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
         }
 
+        let count: { count: number } = { count: 0 };
+
         if (Parser.bool(req.body["hardDelete"], false)) {
-            const result = await prisma.progressImage.delete({
+            count = await prisma.progressImage.deleteMany({
                 where: {
-                    id: Parser.number(req.params["image_id"]),
+                    progress_id,
+                    image_id,
                 },
             });
 
-            if (!result) {
-                throw new APIError(APIErrorCode.NOT_FOUND);
-            }
-
             // TODO: delete image data
         } else {
-            await prisma.progressImage.update({
+            count = await prisma.progressImage.updateMany({
                 data: {
                     deleted: true,
                 },
                 where: {
-                    id: Parser.number(req.params["image_id"]),
+                    progress_id,
+                    image_id,
                 },
             });
         }
 
-        return res.status(200).json({});
+        if (count.count !== 1) {
+            throw new APIError(APIErrorCode.NOT_FOUND);
+        }
+
+        const result = await prisma.progress.findUniqueOrThrow({
+            where: {
+                id: progress_id,
+            },
+            include: ProgressRouting.includes,
+        });
+
+        return res.status(200).json(result);
     }
 
     getValidator(): Validator {

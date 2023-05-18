@@ -3,6 +3,7 @@ import {
     Prisma,
     ProgressImageType,
     File,
+    ProgressImage,
 } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithoutAddress, includeBuilding } from "./include";
@@ -40,6 +41,11 @@ type ProgressAllInfo = Prisma.ProgressGetPayload<{
     };
 }>;
 
+export type ProgressImageNew = Pick<
+    ProgressImage,
+    "type" | "description" | "image_id"
+>;
+
 export class ProgressQuery extends Query<
     ProgressQueryParameters,
     Progress,
@@ -53,8 +59,7 @@ export class ProgressQuery extends Query<
      */
     async createImage(
         id: number,
-        image: File,
-        element: { description: string; type: ProgressImageType },
+        image: ProgressImageNew,
     ): Promise<ProgressAllInfo> {
         if (Number.isNaN(id)) {
             throw new QueryError(400, "Bad Request");
@@ -63,9 +68,10 @@ export class ProgressQuery extends Query<
         const imageEndpoint = this.server + this.endpoint + "/" + id + "/image";
 
         return super.fetchJSON(imageEndpoint, "POST", {
-            ...element,
-            image_id: image.id,
-        });
+            image_id: image.image_id,
+            type: image.type,
+            description: image.description,
+        } satisfies ProgressImageNew);
     }
 
     /**
@@ -74,20 +80,26 @@ export class ProgressQuery extends Query<
      */
     async updateImage(
         id: number,
-        image: File,
-        element: Partial<{ description: string; type: ProgressImageType }>,
+        image: ProgressImageNew,
     ): Promise<ProgressAllInfo> {
         const imageEndpoint =
-            this.server + this.endpoint + "/" + id + "/image/" + image.id;
+            this.server + this.endpoint + "/" + id + "/image/" + image.image_id;
 
-        return super.fetchJSON(imageEndpoint, "PATCH", element);
+        return super.fetchJSON(imageEndpoint, "PATCH", {
+            type: image.type,
+            description: image.description,
+        });
     }
 
     /**
      * Verwijder een specifieke afbeelding via HTTP DELETE
      * @throws QueryError
      */
-    async deleteImage(id: number, image: File, hard = false): Promise<void> {
+    async deleteImage(
+        id: number,
+        image: File,
+        hard = false,
+    ): Promise<ProgressAllInfo> {
         const imageEndpoint =
             this.server + this.endpoint + "/" + id + "/image/" + image.id;
 
