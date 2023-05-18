@@ -303,6 +303,7 @@ async function submit() {
       });
     });
   }
+
   clearAll();
 }
 
@@ -324,10 +325,17 @@ function updateFullScheme() {
         date: new Date(garbage.pickup_time),
         time: new Date(garbage.pickup_time).toTimeString().substring(0, 5),
         preview: false,
+        func: () => {
+          tryOrAlertAsync(async () => {
+            await new GarbageQuery().deleteOne({ id: garbage.id });
+            updateFullScheme();
+          });
+        },
       });
     }
 
-    for (const garbage of detailedDays.value) {
+    for (let i = 0; i < detailedDays.value.length; i++) {
+      const garbage = detailedDays.value[i];
       if (
         garbage &&
         new Date(fullSchemeStartDate.value).getTime() <=
@@ -339,6 +347,10 @@ function updateFullScheme() {
           date: new Date(garbage.date),
           time: garbage.time,
           preview: true,
+          func: () => {
+            detailedDays.value.splice(i, 1);
+            updateFullScheme();
+          },
         });
       }
     }
