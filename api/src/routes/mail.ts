@@ -18,26 +18,22 @@ export class MailRouting {
             },
         });
 
-        // verify connection configuration
-        transporter.verify((error, succes) => {
-            if (error) {
-                throw new APIError(APIErrorCode.BAD_REQUEST);
-            }
-        });
+        // Verify connection configuration
+        if (!(await transporter.verify())) {
+            console.log("WARNING: Invalid SMTP Credentials");
+            throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
-        await transporter.sendMail(
-            {
+        try {
+            await transporter.sendMail({
                 from: process.env.SMTP_MAIL_ADDRESS,
                 to: req.body["to"],
                 subject: req.body["subject"],
                 text: req.body["content"],
-            },
-            (err, info) => {
-                if (err) {
-                    throw new APIError(APIErrorCode.BAD_REQUEST);
-                }
-            },
-        );
+            });
+        } catch (e) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
 
         return res.status(201).json({});
     }

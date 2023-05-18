@@ -37,7 +37,7 @@ export class BuildingValidator extends Validator {
                 ivago_id: Joi.string().min(1).required(),
                 description: Joi.string().trim(),
                 address_id: Joi.number().positive().required(),
-                manual_id: Joi.number().positive().required(),
+                manual_id: Joi.number().positive().allow(null),
                 syndicus_id: Joi.number().positive().required(),
                 hash: Joi.string().forbidden(),
                 expected_time: Joi.number().positive(),

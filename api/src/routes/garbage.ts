@@ -21,6 +21,7 @@ export class GarbageRouting extends Routing {
         if (
             !req.user?.super_student &&
             !req.user?.admin &&
+            !req.user?.student &&
             req.user?.syndicus.every(
                 (element) =>
                     element.id !== Parser.number(req.query["syndicus_id"]),

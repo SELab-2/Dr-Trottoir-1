@@ -1,12 +1,11 @@
 import { TableEntity } from "@/components/table/TableEntity";
 import { Header } from "@/components/table/Header";
 import { RowType } from "@/components/table/RowType";
+import { Result, ActionQuery } from "@selab-2/groep-1-query";
 
 export interface DetailedDay {
-  id: number;
   date: Date;
-  garbageType: string;
-  action: string;
+  action: Result<ActionQuery>;
   time: string;
 }
 
@@ -23,22 +22,14 @@ export class GarbageTable extends TableEntity<DetailedDay> {
       },
       {
         id: 1,
-        name: "Type",
+        name: "Actie",
         fit: false,
-        get: (e: DetailedDay) => e.garbageType,
+        get: (e: DetailedDay) => e.action.description,
         type: RowType.TEXT,
         sortable: false,
       },
       {
         id: 2,
-        name: "Actie",
-        fit: false,
-        get: (e: DetailedDay) => e.action,
-        type: RowType.TEXT,
-        sortable: false,
-      },
-      {
-        id: 3,
         name: "Tijd",
         fit: false,
         get: (e: DetailedDay) => e.time,
@@ -46,7 +37,7 @@ export class GarbageTable extends TableEntity<DetailedDay> {
         sortable: false,
       },
       {
-        id: 4,
+        id: 3,
         name: "",
         fit: true,
         get: () => "mdi-close",
