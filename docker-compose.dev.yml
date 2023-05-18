@@ -28,7 +28,7 @@ services:
     environment:
       DATABASE_URL: "postgresql://admin:password@localhost:5432/main?schema=public"
       FILE_STORAGE_DIRECTORY: "/files"
-      CORS: "http://localhost:3000"
+      CORS: "http://localhost"
       DISABLE_AUTH: "false"
       ERROR_LOGGER: "true"
     restart: always
@@ -45,12 +45,8 @@ services:
       target: "web_production"
       args:
         VUE_APP_API_SERVER_ADDRESS: "http://localhost:8080/"
-        VUE_APP_IMGPROXY_PROTOCOL: http
-        VUE_APP_IMGPROXY_LOCATION: localhost
-        VUE_APP_IMGPROXY_PORT: 8081
-        VUE_APP_IMGPROXY_ROOT: local
+        VUE_APP_IMGPROXY_SERVER_ADDRESS: "http://localhost:8081"
     network_mode: "host"
-    user: 1000:1000
 
   imgproxy:
     container_name: dr-trottoir-imgproxy
