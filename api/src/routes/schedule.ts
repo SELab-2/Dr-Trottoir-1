@@ -139,7 +139,7 @@ export class ScheduleRouting extends Routing {
             // a student may only change the start and end timestamp of their schedule
             const allowedFields = ["start", "end"];
 
-            for (let entry in req.body) {
+            for (const entry in req.body) {
                 if (!allowedFields.includes(entry)) {
                     throw new APIError(APIErrorCode.BAD_REQUEST);
                 }
