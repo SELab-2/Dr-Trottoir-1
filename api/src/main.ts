@@ -113,10 +113,12 @@ app.use(
 initializePassport();
 app.use(passport.session());
 
-app.use(((req, res, next) => {
-    console.log("body: " + JSON.stringify(req.body, null, 2));
-    next();
-}) as express.RequestHandler);
+if (process.env.BODY_LOGGER === "true") {
+    app.use(((req, res, next) => {
+        console.log("body: " + JSON.stringify(req.body, null, 2));
+        next();
+    }) as express.RequestHandler);
+}
 
 // Assign the appropriate routers
 app.use("/auth", new AuthRouting().toRouter());

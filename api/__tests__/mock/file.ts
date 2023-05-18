@@ -2,14 +2,14 @@ import { File } from "@selab-2/groep-1-orm";
 import { prisma } from "./prisma";
 
 export const manual = {
-    id: 1,
+    id: 10,
     user_id: 1,
     original_name: "handleiding.pdf",
     size_in_bytes: 1024,
     mime: "application/pdf",
     path: "manual.pdf",
-    createdAt: new Date("1970-01-01T00:00:00"),
-    updatedAt: new Date("1970-01-01T00:00:00"),
+    createdAt: new Date("1970-01-01T00:00:00Z"),
+    updatedAt: new Date("1970-01-01T00:00:00Z"),
 } satisfies File;
 
 export const image = {
@@ -19,8 +19,8 @@ export const image = {
     size_in_bytes: 1024,
     mime: "application/jpeg",
     path: "camera.jpg",
-    createdAt: new Date("1970-01-01T00:00:00"),
-    updatedAt: new Date("1970-01-01T00:00:00"),
+    createdAt: new Date("1970-01-01T00:00:00Z"),
+    updatedAt: new Date("1970-01-01T00:00:00Z"),
 } satisfies File;
 
 export async function initialiseFiles() {
