@@ -18,12 +18,12 @@
       <h2 v-show="round?.description">Gebouwen</h2>
       <MapComponent :buildings="buildings" />
       <div class="grid">
-        <BuildingCard
+        <RoundBuildingCard
           class="inner"
           v-for="building in buildings"
           :key="building.id"
           :building="building"
-        ></BuildingCard>
+        ></RoundBuildingCard>
       </div>
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Planning</h2>
@@ -119,7 +119,7 @@ import { ref, Ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import RoundCard from "@/components/round/RoundCard.vue";
-import BuildingCard from "@/components/building/BuildingCard.vue";
+import RoundBuildingCard from "@/components/cards/RoundBuildingCard.vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import DateRange from "@/components/filter/DateRange.vue";
@@ -159,7 +159,6 @@ tryOrAlertAsync(async () => {
     );
     buildings.value.push(building);
   }
-  console.log(round.value);
 });
 
 tryOrAlertAsync(async () => {

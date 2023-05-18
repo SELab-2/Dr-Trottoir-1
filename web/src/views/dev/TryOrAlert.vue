@@ -2,11 +2,13 @@
   <div class="ma-4 flex gap-4">
     <v-btn @click="badIdea">Divide By Zero (Blocking)</v-btn>
     <v-btn @click="badIdeaAsync">Divide By Zero (Non Blocking)</v-btn>
+    <v-btn @click="badQuery">Bad Query</v-btn>
   </div>
 </template>
 
 <script setup lang="ts">
 import { tryOrAlert, tryOrAlertAsync } from "@/try";
+import { QueryError } from "@selab-2/groep-1-query";
 
 /**
  * Dummy function which generates an exception.
@@ -42,6 +44,12 @@ async function badIdeaAsync() {
   });
 
   return result ?? Number.POSITIVE_INFINITY;
+}
+
+async function badQuery() {
+  await tryOrAlertAsync(async () => {
+    throw new QueryError(500, "Whoops");
+  });
 }
 </script>
 
