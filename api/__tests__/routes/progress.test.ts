@@ -145,7 +145,7 @@ describe("Progress tests", () => {
                         deleted: true,
                         image: {
                             id: 10,
-                            time: "1969-12-31T23:00:00.000Z",
+                            time: "1970-01-01T00:00:00.000Z",
                             location: "IMGPROXY",
                             path: "image.jpg",
                             user_id: 1,
