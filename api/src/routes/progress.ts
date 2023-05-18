@@ -11,6 +11,7 @@ import {
     ProgressValidator,
 } from "../validators/progress.validator";
 import { Validator } from "../validators/validator";
+import { SerializableUser } from "../types";
 
 export class ProgressRouting extends Routing {
     toRouter(): express.Router {
@@ -34,7 +35,7 @@ export class ProgressRouting extends Routing {
         return router;
     }
 
-    private static includes: Prisma.ProgressInclude = {
+    private static adminIncludes: Prisma.ProgressInclude = {
         building: selectBuilding(),
         schedule: {
             include: {
@@ -48,6 +49,31 @@ export class ProgressRouting extends Routing {
             },
         },
     };
+
+    private static nonAdminIncludes: Prisma.ProgressInclude = {
+        building: selectBuilding(),
+        schedule: {
+            include: {
+                round: true,
+                user: includeUser(false),
+            },
+        },
+        images: {
+            where: {
+                deleted: false,
+            },
+        },
+    };
+
+    private static getCorrectIncludes(
+        user: SerializableUser | null,
+    ): Prisma.ProgressInclude {
+        if (user?.admin) {
+            return ProgressRouting.adminIncludes;
+        }
+
+        return ProgressRouting.nonAdminIncludes;
+    }
 
     @Auth.authorization({ student: true })
     async getAll(req: CustomRequest, res: express.Response) {
@@ -90,7 +116,7 @@ export class ProgressRouting extends Routing {
                     user_id: Parser.number(req.query["user"]),
                 },
             },
-            include: ProgressRouting.includes,
+            include: ProgressRouting.getCorrectIncludes(req.user),
         });
 
         return res.status(200).json(result);
@@ -103,7 +129,7 @@ export class ProgressRouting extends Routing {
                 id: Parser.number(req.params["id"]),
                 deleted: req.user?.admin ? undefined : false,
             },
-            include: ProgressRouting.includes,
+            include: ProgressRouting.getCorrectIncludes(req.user),
         });
 
         return res.status(200).json(result);
@@ -113,7 +139,7 @@ export class ProgressRouting extends Routing {
     async createOne(req: CustomRequest, res: express.Response) {
         const user = await prisma.progress.create({
             data: req.body,
-            include: ProgressRouting.includes,
+            include: ProgressRouting.getCorrectIncludes(req.user),
         });
 
         return res.status(201).json(user);
@@ -126,7 +152,7 @@ export class ProgressRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            include: ProgressRouting.includes,
+            include: ProgressRouting.getCorrectIncludes(req.user),
         });
 
         return res.status(200).json(result);
@@ -158,17 +184,21 @@ export class ProgressRouting extends Routing {
     async createImage(req: CustomRequest, res: express.Response) {
         const progress_id = Number(Parser.number(req.params["id"]));
 
-        await prisma.image.create({
+        const newImage = await prisma.image.create({
             data: {
                 time: req.body.time,
                 location: req.body.location,
                 path: req.body.path,
                 user_id: req.body.user_id,
-                progress: {
-                    connect: {
-                        id: progress_id,
-                    },
-                },
+            },
+        });
+
+        await prisma.progressImage.create({
+            data: {
+                type: req.body.type,
+                description: req.body.description,
+                image_id: newImage.id,
+                progress_id: progress_id,
             },
         });
 
@@ -176,7 +206,7 @@ export class ProgressRouting extends Routing {
             where: {
                 id: progress_id,
             },
-            include: ProgressRouting.includes,
+            include: ProgressRouting.getCorrectIncludes(req.user),
         });
 
         return res.status(201).json(result);
@@ -195,7 +225,7 @@ export class ProgressRouting extends Routing {
             where: {
                 id: Parser.number(req.params["id"]),
             },
-            include: ProgressRouting.includes,
+            include: ProgressRouting.getCorrectIncludes(req.user),
         });
 
         return res.status(200).json(result);
