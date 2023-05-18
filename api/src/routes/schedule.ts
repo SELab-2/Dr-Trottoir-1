@@ -133,7 +133,7 @@ export class ScheduleRouting extends Routing {
         return res.status(201).json(schedule);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async updateOne(req: CustomRequest, res: express.Response) {
         if (req.user?.student) {
             // a student may only change the start and end timestamp of their schedule
