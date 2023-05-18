@@ -349,6 +349,12 @@ async function progressUpdated(id: number | undefined) {
       });
     }
 
+    await new ScheduleQuery().updateOne({
+      id: schedule_id,
+      start: getFirstBuilding()?.arrival,
+      end: getLastBuilding()?.departure
+    });
+
     setCurrentProgress();
   }
 }
