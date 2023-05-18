@@ -567,6 +567,7 @@ describe("Progress tests", () => {
         });
 
         test("SOFT DELETE /progress/:id (super-student)", async () => {
+            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
             await runner.delete({ url: "/progress/1" });
 
             // verify that the progress is soft deleted
