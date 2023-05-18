@@ -195,7 +195,7 @@ import { useDisplay } from "vuetify";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
-import { ProgressQuery, ScheduleQuery } from "@selab-2/groep-1-query";
+import { ProgressQuery } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
 
 const props = defineProps(["entry", "day", "schedule_id"]);

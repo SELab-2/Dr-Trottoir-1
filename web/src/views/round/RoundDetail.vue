@@ -349,12 +349,16 @@ async function progressUpdated(id: number | undefined) {
       });
     }
 
-    await new ScheduleQuery().updateOne({
-      id: schedule_id,
-      start: new Date(getFirstBuilding()?.arrival),
-      end: new Date(getLastBuilding()?.departure),
-      user_id: useAuthStore().auth.id
-    });
+    const firstBuilding = getFirstBuilding();
+    const lastBuilding = getLastBuilding();
+
+    if(firstBuilding?.arrival && lastBuilding?.departure) {
+      await new ScheduleQuery().updateOne({
+        id: schedule_id,
+        start: new Date(firstBuilding.arrival),
+        end: new Date(lastBuilding.departure),
+      });
+    }
 
     setCurrentProgress();
   }
