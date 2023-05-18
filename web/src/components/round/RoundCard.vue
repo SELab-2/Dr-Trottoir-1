@@ -18,13 +18,13 @@
     <RoundedInfoChip
       v-show="getImagesAmount(progress) !== 0"
       icon="mdi-image-outline"
-      :text="getImagesAmount(progress)"
+      :text="getImagesAmount(progress).toString()"
     />
     <!-- Amount of comments made indicator -->
     <RoundedInfoChip
       v-show="getCommentsAmount(progress) !== 0"
       icon="mdi-comment-outline"
-      :text="getCommentsAmount(progress)"
+      :text="getCommentsAmount(progress).toString()"
     />
 
     <!-- Active round indication -->
