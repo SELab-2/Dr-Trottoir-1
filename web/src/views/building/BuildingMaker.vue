@@ -103,7 +103,9 @@
     </BorderCard>
 
     <BorderCard prepend-icon="mdi-image" class="mb-3 px-4" title="Foto's">
-      <MultiAddImage/> <!-- mss een nieuwe component, want de foto's moeten hier geen opmerkingen hebben -->
+      <MultiAddImage/>
+      <!-- heb geprobeerd deze aan te passen zodat je lijst verkrijgt van de afbeeldingen, maar is niet gelukt.
+      mss beter gewoon een nieuwe component, want de foto's moeten hier geen opmerkingen hebben? -->
     </BorderCard>
 
     <v-btn
@@ -202,20 +204,30 @@ const submit = () => {
       longitude: longitude.value,
     });
 
+    // create File object for manual
+    // const response = await fetch('http://10.0.0.5:8080/file/',  {method: "POST", body: JSON.stringify(manual)});
+    // const man = await response.json()
+
     const { id: buildingId } = await new BuildingQuery().createOne({
       name: building.value.name,
       ivago_id: building.value.ivago_id,
       description: description.value,
       syndicus_id: building.value.syndicus.id,
       address_id: addressId,
-      // manual_id: manualId,
+      // manual_id: man.id,
       }
     );
+
     /*
     for(const image of images){
+      // create Image object from the image
+      const response = await fetch('http://10.0.0.5:8080/image/',  {method: "POST", body: JSON.stringify(image)});
+      const im = await response.json()
+
+      // add the image to the building
       await new BuildingQuery().createImage({
         id: buildingId,
-        image: image, // wss eerst de images omzetten naar Image type van db
+        image: im,
         });
     };
      */
