@@ -26,9 +26,9 @@
           @click="
             async () => {
               if (!edit) {
-                edit = true;
+                handleBeginEdit();
               } else {
-                await router.go(0);
+                handleCancelEdit();
               }
             }
           "
@@ -43,7 +43,7 @@
           @click="
             () => {
               if (!edit) {
-                edit = true;
+                handleBeginEdit();
               } else {
                 handleCancelEdit();
               }
@@ -220,7 +220,6 @@ import { useAuthStore } from "@/stores/auth";
 import RolesForm from "@/components/forms/RolesForm.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
 import Address from "@/components/models/Address";
-
 import { AddressQuery, Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
@@ -240,6 +239,7 @@ const password = ref("");
 const passwordCheck = ref("");
 // const passwordHidden = ref(false);
 const user: Ref<Result<UserQuery> | null> = ref(null);
+const roles = ref<string[]>([]);
 
 const setPassword = (pw) => {
   password.value = pw;
@@ -266,6 +266,10 @@ function handleContactUpdate(contact: Contact) {
 }
 
 async function fetchUser() {
+  // Force reactivity;
+  user.value = null;
+  roles.value = [];
+
   await tryOrAlertAsync(async () => {
     user.value = await new UserQuery().getOne(props.id);
     if (user.value.admin) {
@@ -282,12 +286,15 @@ async function fetchUser() {
 fetchUser();
 
 // reactive state for the roles
-const roles = ref<string[]>([]);
 
 /* Action handle functions */
-async function handleCancelEdit() {
-  await fetchUser();
+function handleBeginEdit() {
+  edit.value = true;
+}
+
+function handleCancelEdit() {
   edit.value = false;
+  fetchUser();
 }
 
 async function handleRemove() {
@@ -343,13 +350,12 @@ async function handleSave() {
   await tryOrAlertAsync(async () => {
     await new AddressQuery().updateOne({
       id: user.value?.address.id,
-      city: user.value?.address.city,
-      zip_code: user.value?.address.zip_code,
       street: user.value?.address.street,
       number: user.value?.address.number,
+      city: user.value?.address.city,
+      zip_code: user.value?.address.zip_code,
     });
   });
-
   // update the user
   await tryOrAlertAsync(async () => {
     await new UserQuery().updateOne({
