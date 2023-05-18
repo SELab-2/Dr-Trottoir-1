@@ -135,7 +135,8 @@ export class ScheduleRouting extends Routing {
 
     @Auth.authorization({ student: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        if (req.user?.student) {
+        // if user is a student, but not super_student, nor admin
+        if (req.user?.student && !(req.user.super_student || req.user.admin)) {
             // a student may only change the start and end timestamp of their schedule
             const allowedFields = ["start", "end"];
 
