@@ -25,7 +25,12 @@
             <RoundedInfoChip
               class="labels"
               icon="mdi-map-marker"
-              :text="building.address.street + building.address.number + building.address.zip_code + building.address.city"
+              :text="
+                building.address.street +
+                building.address.number +
+                building.address.zip_code +
+                building.address.city
+              "
             />
             <!-- TODO: add btn to link to building edit page once we have building edit page -->
           </div>
@@ -401,19 +406,18 @@ async function deleteBuilding() {
   }
 }
 
-.grid{
+.grid {
   display: grid;
   gap: 8px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  @media (max-width: 600px){
+  @media (max-width: 600px) {
     display: flex;
     flex-direction: column;
   }
-
 }
 
-.inner:last-child:nth-child(odd){
+.inner:last-child:nth-child(odd) {
   grid-column: 1 / span 2;
 }
 

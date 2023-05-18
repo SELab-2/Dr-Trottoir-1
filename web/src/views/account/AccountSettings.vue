@@ -196,7 +196,12 @@
     </div>
   </HFillWrapper>
 
-  <CardPopup v-model="showPopup" :title="popupTitle" :prepend-icon="popupIcon" :width="306">
+  <CardPopup
+    v-model="showPopup"
+    :title="popupTitle"
+    :prepend-icon="popupIcon"
+    :width="306"
+  >
     <p class="mx-3">
       {{ popupMsg }}
     </p>
