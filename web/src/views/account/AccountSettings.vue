@@ -55,9 +55,14 @@
     </div>
     <!-- Display if user has been removed -->
     <RemovedCard
-      :show="user.deleted"
+      :show="useAuthStore().auth?.admin && user.deleted"
       title="Deze account is verwijderd"
-      :restore="async () => {await restore()}"/>
+      :restore="
+        async () => {
+          await restore();
+        }
+      "
+    />
     <!-- Section with the contact info -->
     <BorderCard class="mt-4" prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
@@ -312,6 +317,7 @@ async function restore() {
   router.go(0);
 }
 
+/*
 async function handleRemovePermanent() {
   await tryOrAlertAsync(async () => {
     await new UserQuery().deleteOne({ id: user.value?.id }, true);
@@ -329,7 +335,7 @@ function handleRemovePopupPermanent() {
   popupSubmitMsg.value = "Verwijder account";
   popupSubmit.value = handleRemovePermanent;
   showPopup.value = true;
-}
+}*/
 
 async function handleSave() {
   // update the address

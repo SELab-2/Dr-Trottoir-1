@@ -1,9 +1,5 @@
 <template>
-  <BorderCard
-    v-show="show"
-    prepend-icon="mdi-alert"
-    :title="title"
-  >
+  <BorderCard v-show="show" prepend-icon="mdi-alert" :title="title">
     <template v-slot:append>
       <v-btn
         color="success"
@@ -20,8 +16,8 @@
 <script setup lang="ts">
 import BorderCard from "@/layouts/CardLayout.vue";
 defineProps({
-  show: {type: Boolean, default: false},
-  title: {type: String, default: "Herstel"},
-  restore: {type: Function, default: () => {}}
+  show: { type: Boolean, default: false },
+  title: { type: String, default: "Herstel" },
+  restore: { type: Function, default: () => {} },
 });
 </script>

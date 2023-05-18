@@ -7,9 +7,13 @@
         src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
       />
       <RemovedCard
-        :show="building.deleted"
+        :show="useAuthStore().auth?.admin && building.deleted"
         title="Dit gebouw is verwijderd."
-        :restore="async () => {await restoreBuilding()}"
+        :restore="
+          async () => {
+            await restoreBuilding();
+          }
+        "
       ></RemovedCard>
 
       <div>
@@ -382,11 +386,11 @@ async function deleteBuilding() {
   router.go(0);
 }
 
-async function restoreBuilding(){
+async function restoreBuilding() {
   await new BuildingQuery().updateOne({
     id: building.value?.id,
     deleted: false,
-  })
+  });
   router.go(0);
 }
 </script>
