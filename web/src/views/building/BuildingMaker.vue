@@ -47,7 +47,7 @@
     </BorderCard>
 
     <!-- card met alle info over de locatie -->
-    <BorderCard prepend-icon="mdi-map-marker" class="mb-3" title="Locatie info">
+    <BorderCard prepend-icon="mdi-map-marker" class="mb-3 px-4" title="Locatie info">
       <BorderCard style="height: 400px">
         <l-map ref="map" v-model:zoom="zoom" :center="[51, 4.4699]">
           <l-tile-layer
@@ -93,6 +93,19 @@
       </div>
     </BorderCard>
 
+    <BorderCard prepend-icon="mdi-text" class="mb-3 px-4" title="Beschrijving">
+      <v-text-field
+        required
+        type="text"
+        v-model="description"
+        label="Geef een beschrijving."
+      />
+    </BorderCard>
+
+    <BorderCard prepend-icon="mdi-image" class="mb-3 px-4" title="Foto's">
+      <MultiAddImage/> <!-- mss een nieuwe component, want de foto's moeten hier geen opmerkingen hebben -->
+    </BorderCard>
+
     <v-btn
       @click="submit"
       type="submit"
@@ -120,6 +133,7 @@ import router from "@/router";
 import "leaflet/dist/leaflet.css";
 import "leaflet/dist/leaflet.js";
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
+import MultiAddImage from "@/components/images/MultiAddImage.vue"
 
 const users = await new UserQuery().getAll();
 const syndici = await new SyndicusQuery().getAll();
@@ -146,7 +160,11 @@ const building = ref({
   },
 });
 
-const manual = ref(null)
+const manual = ref(null);
+
+const images = ref([]);
+
+const description = ref("");
 
 function getFullStudentName(s: Result<UserQuery> | undefined): string {
   if (s) {
@@ -183,24 +201,26 @@ const submit = () => {
       latitude: latitude.value,
       longitude: longitude.value,
     });
+
     const { id: buildingId } = await new BuildingQuery().createOne({
       name: building.value.name,
       ivago_id: building.value.ivago_id,
+      description: description.value,
       syndicus_id: building.value.syndicus.id,
       address_id: addressId,
+      // manual_id: manualId,
       }
     );
-    // await new BuildingQuery().createImage({
-      // id: buildingId,
-      // image: ,
-    //})
+    /*
+    for(const image of images){
+      await new BuildingQuery().createImage({
+        id: buildingId,
+        image: image, // wss eerst de images omzetten naar Image type van db
+        });
+    };
+     */
 
-    const {id: manualId} = await new BuildingQuery().createManual({
-      id: buildingId,
-      file: manual.value,
-    })
-    console.log(manualId)
-    // await router.push(`/gebouw/${buildingId}`);
+    await router.push(`/gebouw/${buildingId}`);
 
   });
 
