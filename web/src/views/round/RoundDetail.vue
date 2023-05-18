@@ -351,8 +351,9 @@ async function progressUpdated(id: number | undefined) {
 
     await new ScheduleQuery().updateOne({
       id: schedule_id,
-      start: getFirstBuilding()?.arrival,
-      end: getLastBuilding()?.departure
+      start: new Date(getFirstBuilding()?.arrival),
+      end: new Date(getLastBuilding()?.departure),
+      user_id: useAuthStore().auth.id
     });
 
     setCurrentProgress();
