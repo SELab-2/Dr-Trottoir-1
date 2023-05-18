@@ -15,6 +15,7 @@ import { UserRegionQuery } from "./user_region";
 import { QueryError } from "./query_error";
 import { Result, Parameter, Element } from "./query";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { FileQuery } from "./file";
 
 type AuthenticatedUser = Prisma.UserGetPayload<{
     select: {
@@ -60,4 +61,5 @@ export {
     Parameter,
     Element,
     MailTemplateQuery,
+    FileQuery,
 };

@@ -1,8 +1,9 @@
-import { Prisma, File } from "@selab-2/groep-1-orm";
+import { Prisma, File, Building } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithoutAddress } from "./include";
 import { QueryError } from "./query_error";
 import { ProgressQuery } from "./progress";
+import { FileQuery } from "./file";
 
 export type BuildingQueryParameters = {
     take: number;
@@ -71,15 +72,21 @@ export class BuildingQuery extends Query<
      * Voeg een nieuwe afbeelding toe via HTTP POST.
      * @throws QueryError
      */
-    async createImage(id: number, element: File): Promise<BuildingAllInfo> {
-        if (Number.isNaN(id)) {
+    async createImage(
+        building: { id: number },
+        elementId: string,
+    ): Promise<BuildingAllInfo> {
+        const file = await new FileQuery().createOne(elementId);
+
+        if (Number.isNaN(building.id)) {
             throw new QueryError(400, "Bad Request");
         }
 
-        const imageEndpoint = this.server + this.endpoint + "/" + id + "/image";
+        const imageEndpoint =
+            this.server + this.endpoint + "/" + building.id + "/image";
 
         return this.fetchJSON(imageEndpoint, "POST", {
-            image: element.id,
+            image: file.id,
         });
     }
 

@@ -10,50 +10,19 @@ const progressDescription = ref("");
 const progressType: Ref<string> = ref("GARBAGE");
 
 const uploadBuilding = async () => {
-  const data = document.getElementById("upload").files[0];
-  const form = new FormData();
-  form.append("file", data);
-
-  const file = (await fetch("http://localhost:8080/file", {
-    method: "POST",
-    body: form,
-    headers: {
-      Accept: "application/json",
-    },
-    credentials: "include",
-    redirect: "error",
-  }).then((res) => {
-    return res.json();
-  })) as File;
-
   building.value = await new BuildingQuery().createImage(
-    building.value.id,
-    file,
+    building.value,
+    "upload",
   );
 };
 
 const uploadProgress = async () => {
-  const data = document.getElementById("upload-progress").files[0];
-  const form = new FormData();
-  form.append("file", data);
-
-  const file = (await fetch("http://localhost:8080/file", {
-    method: "POST",
-    body: form,
-    headers: {
-      Accept: "application/json",
-    },
-    credentials: "include",
-    redirect: "error",
-  }).then((res) => {
-    return res.json();
-  })) as File;
-
-  progress.value = await new ProgressQuery().createImage(progress.value.id, {
-    image_id: file.id,
-    description: progressDescription.value,
-    type: progressType.value as ProgressImageType,
-  });
+  progress.value = await new ProgressQuery().createImage(
+    progress.value,
+    "upload-progress",
+    progressType.value as ProgressImageType,
+    progressDescription.value,
+  );
 };
 
 const removeBuilding = async (file: { id: number }) => {

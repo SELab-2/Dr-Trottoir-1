@@ -8,6 +8,7 @@ import {
 import { Query } from "./query";
 import { includeUserWithoutAddress, includeBuilding } from "./include";
 import { QueryError } from "./query_error";
+import { FileQuery } from "./file";
 
 export type ProgressQueryParameters = {
     take: number;
@@ -58,20 +59,21 @@ export class ProgressQuery extends Query<
      * @throws QueryErrror
      */
     async createImage(
-        id: number,
-        image: ProgressImageNew,
+        progress: { id: number },
+        elementId: string,
+        type: ProgressImageType,
+        description: string,
     ): Promise<ProgressAllInfo> {
-        if (Number.isNaN(id)) {
-            throw new QueryError(400, "Bad Request");
-        }
+        const file = await new FileQuery().createOne(elementId);
 
-        const imageEndpoint = this.server + this.endpoint + "/" + id + "/image";
+        const imageEndpoint =
+            this.server + this.endpoint + "/" + progress.id + "/image";
 
         return super.fetchJSON(imageEndpoint, "POST", {
-            image_id: image.image_id,
-            type: image.type,
-            description: image.description,
-        } satisfies ProgressImageNew);
+            image_id: file.id,
+            type,
+            description,
+        });
     }
 
     /**
