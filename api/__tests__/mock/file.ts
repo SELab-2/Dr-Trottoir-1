@@ -15,8 +15,8 @@ export const manual = {
     mime: "application/pdf",
     path: "manual.pdf",
     location: "FILE_SERVER",
-    createdAt: new Date("1970-01-01T00:00:00"),
-    updatedAt: new Date("1970-01-01T00:00:00"),
+    createdAt: new Date("1970-01-01T00:00:00Z"),
+    updatedAt: new Date("1970-01-01T00:00:00Z"),
 } satisfies File;
 
 export const testfile = {
@@ -32,8 +32,8 @@ export const testfile = {
 } satisfies File;
 
 export const image = {
-    id: 1,
-    time: new Date("1970-01-01T00:00:00"),
+    id: 10,
+    time: new Date("1970-01-01T00:00:00Z"),
     location: "IMGPROXY",
     path: "image.jpg",
     user_id: 1,
