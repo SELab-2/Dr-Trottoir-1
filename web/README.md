@@ -139,7 +139,7 @@ Je hoeft zelf geen beeldverwerking toe te passen bij het uploaden van afbeelding
 
 ### Router
 
-Nieuwe pagina's worden teogevoegd in `/web/src/router/index.ts`. Hierbij zijn er enkele aandachtspunten.
+Nieuwe pagina's worden toegevoegd in `/web/src/router/index.ts`. Hierbij zijn er enkele aandachtspunten.
 
 1. Als een pagina gebruik wilt maken van de algemene layout moet het als kind worden toegevoegd aan de `MainLayout`.
 2. Bij het gebruik van de algemene layout, dient er een titel opgegeven te worden in het `meta.title` veld.
@@ -365,3 +365,6 @@ Op de pagina `/dev/auth` kunnen we eenvoudig het aanmelden simuleren. Het result
 ```ts
 const isStudent: Boolean = useAuthStore().auth!.student;
 ```
+
+### Joi
+Om validatie van wachtwoorden op eenzelfde manier te doen als onze API wordt (evenals daar) gebruik gemaakt van de [Joi framework](https://github.com/hapijs/joi).
