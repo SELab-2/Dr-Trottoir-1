@@ -340,15 +340,15 @@ async function progressUpdated(id: number | undefined) {
     const firstBuilding = getFirstBuilding();
     const lastBuilding = getLastBuilding();
 
-    if (firstBuilding?.arrival && lastBuilding?.departure) {
-      await tryOrAlertAsync(async () => {
+    await tryOrAlertAsync(async () => {
+      if (firstBuilding?.arrival && lastBuilding?.departure) {
         await new ScheduleQuery().updateOne({
           id: schedule_id,
           start: new Date(firstBuilding.arrival),
           end: new Date(lastBuilding.departure),
         });
-      });
-    }
+      }
+    });
 
     setCurrentProgress();
   }
