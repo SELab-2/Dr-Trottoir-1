@@ -337,26 +337,16 @@ async function progressUpdated(id: number | undefined) {
     const progress = await new ProgressQuery().getOne(id);
     progressItems.value.set(progress.building_id, progress);
 
-    // Check if this is the last progressitem and if the departure gets updated
-    // At this point the schedule should be updated too
-    const lastProgressItem = progressItems.value.get(lastBuildingId.value);
-    if (lastProgressItem?.departure) {
-      tryOrAlertAsync(async () => {
-        await new ScheduleQuery().updateOne({
-          id: schedule_id,
-          end: lastProgressItem.departure,
-        });
-      });
-    }
-
     const firstBuilding = getFirstBuilding();
     const lastBuilding = getLastBuilding();
 
-    if(firstBuilding?.arrival && lastBuilding?.departure) {
-      await new ScheduleQuery().updateOne({
-        id: schedule_id,
-        start: new Date(firstBuilding.arrival),
-        end: new Date(lastBuilding.departure),
+    if (firstBuilding?.arrival && lastBuilding?.departure) {
+      await tryOrAlertAsync(async () => {
+        await new ScheduleQuery().updateOne({
+          id: schedule_id,
+          start: new Date(firstBuilding.arrival),
+          end: new Date(lastBuilding.departure),
+        });
       });
     }
 
