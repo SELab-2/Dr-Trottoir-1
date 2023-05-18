@@ -241,14 +241,6 @@ const passwordCheck = ref("");
 const user: Ref<Result<UserQuery> | null> = ref(null);
 const roles = ref<string[]>([]);
 
-const setPassword = (pw) => {
-  password.value = pw;
-};
-
-const setPasswordRepeat = (pw) => {
-  passwordCheck.value = pw;
-};
-
 function handleAddressUpdate(address: Address) {
   if (user.value) {
     user.value.address.street = address.street;
@@ -367,6 +359,7 @@ async function handleSave() {
       student: roles.value.includes("Student"),
       super_student: roles.value.includes("Superstudent"),
       admin: roles.value.includes("Admin"),
+      password: password.value,
     });
   });
   showPopup.value = false;
