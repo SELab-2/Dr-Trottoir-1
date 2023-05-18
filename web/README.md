@@ -64,6 +64,35 @@ We maken gebruik van [Sass](https://sass-lang.com/) als CSS preprocessor.
 
 [Vuetify](https://vuetifyjs.com/en/) is een componentenbibliotheek gebaseerd op de *Material Design guidelines*.
 
+#### display
+Vuetify maakt responsief design op kleinere schermen heel eenvoudig door een display te definiëren.
+Deze display vindt je terug in `/src/plugins/vuetify.ts`.
+
+```TypeScript
+display: {
+    mobileBreakpoint: "lg",
+    thresholds: {
+      xs: 0,
+      sm: 340,
+      md: 540,
+      lg: 750,
+      xl: 1280,
+    },
+  },
+```
+
+Hier leggen we enkele schermstandaarden vast waardoor we overal in de applicatie deze zelfde grenzen gebruiken.
+Vuetify biedt ons een display aan die we kunnen gebruiken in de components.
+Zo kunnen we eenvoudig testen of we op een mobiel scherm zitten.
+
+```TypeScript
+import { Ref } from "vue";
+import { useDisplay } from "vuetify";
+
+const display = useDisplay();
+const mobile: Ref<boolean> = display.mobile;
+```
+
 ### ImgProxy
 
 #### Over
@@ -115,7 +144,7 @@ Nieuwe pagina's worden teogevoegd in `/web/src/router/index.ts`. Hierbij zijn er
 1. Als een pagina gebruik wilt maken van de algemene layout moet het als kind worden toegevoegd aan de `MainLayout`.
 2. Bij het gebruik van de algemene layout, dient er een titel opgegeven te worden in het `meta.title` veld.
    Deze titel wordt dan in de topbar van de algemene layout gerenderd.
-3. In de `meta` sectie wordt ook `meta.auth` toegevoegd. Dit zorgt ervoor dat een pagina enkel 
+3. In de `meta` sectie wordt ook `meta.auth` toegevoegd. Dit zorgt ervoor dat een pagina enkel
 beschikbaar is voor bepaalde rollen.
 
 ```ts
@@ -125,7 +154,7 @@ const routes = [
     component: LoginScreen,
     name: "login",
     meta: {
-      auth: ( 
+      auth: (
         student: boolean,
         superstudent: boolean,
         syndicus: boolean,
@@ -307,7 +336,7 @@ We maken gebruik van [Pinia](https://pinia.vuejs.org) om stores te voorzien, gez
 In `web/src/stores/auth.ts` wordt de `useAuthStore` aangeboden. Deze voorziet de *reactive* variabele `auth`, die een `User` object kan bevatten, of simpelweg `null`.
 `APIErrors` worden vooraf al afgehandeld door de `getAuth()` functie.
 
-Om een gebruiker aan te melden kunnen we gebruik maken van de `useAuthStore::logIn` functie. De browser zal zelf de sessie/cookies onderhouden, aangezien we gebruik maken van de `fetch` functionaliteit. 
+Om een gebruiker aan te melden kunnen we gebruik maken van de `useAuthStore::logIn` functie. De browser zal zelf de sessie/cookies onderhouden, aangezien we gebruik maken van de `fetch` functionaliteit.
 
 ```typescript
 export const useAuthStore = defineStore("auth", () => {
@@ -327,7 +356,7 @@ VUE_APP_DISABLE_AUTHENTICATION=<true|false>
 ```
 
 #### Debugging pagina
-Op de pagina `/dev/auth` kunnen we eenvoudig het aanmelden simuleren. Het resultaat wordt automatisch geupdatet met behulp van de `useAuthStore`. 
+Op de pagina `/dev/auth` kunnen we eenvoudig het aanmelden simuleren. Het resultaat wordt automatisch geupdatet met behulp van de `useAuthStore`.
 
 
 ### Authenticatie

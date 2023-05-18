@@ -7,6 +7,8 @@ import crypto from "crypto";
 import { Prisma, User } from "@selab-2/groep-1-orm";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import { UserValidator } from "../validators/user.validator";
+import { Validator } from "../validators/validator";
 
 export class UserRouting extends Routing {
     private static selects: Prisma.UserSelect = {
@@ -58,10 +60,10 @@ export class UserRouting extends Routing {
                 },
                 OR: {
                     first_name: {
-                        contains: Parser.string(req.query["name"], ""),
+                        contains: Parser.string(req.query["first_name"], ""),
                     },
                     last_name: {
-                        contains: Parser.string(req.query["name"], ""),
+                        contains: Parser.string(req.query["last_name"], ""),
                     },
                 },
                 // get all users assigned to a certain region
@@ -80,7 +82,7 @@ export class UserRouting extends Routing {
         return res.status(200).json(result);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.user.findFirstOrThrow({
             where: {
@@ -95,16 +97,11 @@ export class UserRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async createOne(req: CustomRequest, res: express.Response) {
-        // The body of a request can't be empty and can't contain a hash or salt
-        if (!req.body == null || req.body.hash || req.body.salt) {
-            throw new APIError(APIErrorCode.BAD_REQUEST);
-        }
-
         // We choose a random salt, calculate the hash-value and save these in their corresponding fields
         const password = req.body.password;
         delete req.body.password;
         const user: User = req.body;
-        user.salt = crypto.randomBytes(32).toString();
+        user.salt = crypto.randomBytes(32).toString("hex");
         user.hash = crypto
             .createHash("sha256")
             .update(password + user.salt)
@@ -118,11 +115,11 @@ export class UserRouting extends Routing {
         return res.status(201).json(result);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async updateOne(req: CustomRequest, res: express.Response) {
-        // Students are only allowed to change their own account
+        // Students and syndici are only allowed to change their own account
         if (
-            req.user?.student &&
+            (req.user?.student || req.user?.syndicus) &&
             !req.user?.super_student &&
             !req.user?.admin &&
             Parser.number(req.params["id"]) !== req.user?.id
@@ -137,7 +134,7 @@ export class UserRouting extends Routing {
 
         // The request might want to change the password
         if (req.body.password) {
-            req.body.salt = crypto.randomBytes(32).toString();
+            req.body.salt = crypto.randomBytes(32).toString("hex");
             req.body.hash = crypto
                 .createHash("sha256")
                 .update(req.body.password + req.body.salt)
@@ -177,5 +174,9 @@ export class UserRouting extends Routing {
             });
         }
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new UserValidator();
     }
 }

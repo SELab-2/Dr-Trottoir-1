@@ -1,12 +1,17 @@
 <template>
   <BorderCard class="round-select-card">
     <div>
-      <h3>{{ date?.toLocaleDateString() }}</h3>
+      <div v-if="alreadyPlanned">
+        <h3>{{ date?.toLocaleDateString() }}</h3>
+      </div>
+      <div class="d-flex" v-else>
+        <v-icon color="green" icon="mdi-new-box" class="mr-1"></v-icon>
+        <h3>{{ date?.toLocaleDateString() }}</h3>
+      </div>
       <p>{{ name }}</p>
     </div>
 
     <div class="flex-grow-1"></div>
-
     <RoundedButton
       icon="mdi-clock-time-two-outline"
       :value="time"
@@ -26,6 +31,7 @@ defineProps({
   date: Date,
   time: String,
   id: String,
+  alreadyPlanned: { type: Boolean, required: true },
 });
 </script>
 

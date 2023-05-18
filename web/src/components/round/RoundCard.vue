@@ -10,41 +10,89 @@
     "
   >
     <div>
-      <h3>{{ new Date(schedule.day).toLocaleDateString() }}</h3>
-      <p>{{ schedule.user.first_name }} {{ schedule.user.last_name }}</p>
+      <h3>{{ new Date(schedule?.day).toLocaleDateString("nl") }}</h3>
+      <p>{{ schedule.user.first_name }} {{ schedule?.user.last_name }}</p>
     </div>
     <div class="flex-grow-1"></div>
-    <RoundedButton
-      class="bg-green-lighten-5"
-      v-if="status == 'active'"
-      icon="mdi-bicycle-cargo"
-      value="Actief"
-    ></RoundedButton>
-    <RoundedButton
-      v-if="status != 'scheduled' && Math.random() < 0.75"
-      icon="mdi-note-edit-outline"
-      value="Opmerkingen"
-    ></RoundedButton>
-    <RoundedButton
-      v-if="status != 'scheduled'"
-      icon="mdi-image"
-      value="10"
-    ></RoundedButton>
-    <v-icon v-if="status != 'scheduled'" icon="mdi-chevron-right"></v-icon>
-    <v-icon v-else icon="mdi-trash-can-outline"></v-icon>
+    <!-- Amount of images taken indicator -->
+    <v-chip
+      color="border"
+      variant="outlined"
+      v-show="getImagesAmount(progress) !== 0"
+    >
+      <v-icon icon="mdi-image-outline" class="mr-1" color="black" />
+      <p class="text-black">{{ getImagesAmount(progress) }}</p>
+    </v-chip>
+
+    <!-- Amount of comments made indicator -->
+    <v-chip
+      color="border"
+      variant="outlined"
+      v-show="getCommentsAmount(progress) !== 0"
+    >
+      <v-icon icon="mdi-comment-outline" class="mr-1" color="black" />
+      <p class="text-black">{{ getCommentsAmount(progress) }}</p>
+    </v-chip>
+
+    <!-- Active round indication -->
+    <v-chip
+      color="yellow-darken-3"
+      variant="outlined"
+      v-show="
+        roundStarted(progress) &&
+        getCompletedBuildings(progress) !== progress.length
+      "
+    >
+      <v-icon icon="mdi-bicycle-cargo" class="mr-1" />
+      Actief
+    </v-chip>
+
+    <!-- Done round indication -->
+    <v-chip
+      color="success"
+      variant="outlined"
+      v-show="getCompletedBuildings(progress) === progress.length"
+    >
+      <v-icon icon="mdi-check" class="mr-1" />
+      Klaar
+    </v-chip>
+
+    <v-icon
+      icon="mdi-chevron-right"
+      @click="
+        router.push({
+          name: 'round_detail',
+          params: { id: schedule.round_id, schedule: schedule.id },
+        })
+      "
+    ></v-icon>
   </CardLayout>
 </template>
 
 <script lang="ts" setup>
 import router from "@/router";
 import CardLayout from "@/layouts/CardLayout.vue";
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
-import { Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import { ref, Ref } from "vue";
+import { tryOrAlertAsync } from "@/try";
+import {
+  getCommentsAmount,
+  getCompletedBuildings,
+  getImagesAmount,
+  roundStarted,
+} from "@/assets/scripts/roundProgress";
 
-defineProps<{
+const props = defineProps<{
   schedule: Result<ScheduleQuery>;
-  status: "completed" | "active" | "scheduled";
 }>();
+
+const progress: Ref<Array<Result<ProgressQuery>>> = ref([]);
+
+tryOrAlertAsync(async () => {
+  progress.value = await new ProgressQuery().getAll({
+    schedule: props.schedule.id,
+  });
+});
 </script>
 
 <style lang="sass">

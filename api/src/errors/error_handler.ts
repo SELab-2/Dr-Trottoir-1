@@ -3,6 +3,7 @@ import { Prisma } from "@selab-2/groep-1-orm";
 import { APIError } from "./api_error";
 import { APIErrorCode, errorMessage } from "./api_error_code";
 import { errorMessagePrismaClient } from "./prisma_error";
+import { isCelebrateError } from "celebrate";
 
 /**
  * The ErrorHandler class contains a static method which will handle any thrown
@@ -13,6 +14,10 @@ import { errorMessagePrismaClient } from "./prisma_error";
  */
 export class ErrorHandler {
     static handle(err: Error, req: Request, res: Response, next: NextFunction) {
+        if (process.env.ERROR_LOGGER === "true") {
+            console.error(err);
+        }
+
         // If a PrismaORM error occurs, we send a more detailed message.
         if (err instanceof Prisma.PrismaClientKnownRequestError) {
             const { code, detail } = errorMessagePrismaClient(err);
@@ -25,6 +30,12 @@ export class ErrorHandler {
         // The Prisma query was invalid. This may happen for a variety of
         // reasons, such as invalid sorting parameters.
         if (err instanceof Prisma.PrismaClientValidationError) {
+            return res.status(APIErrorCode.BAD_REQUEST).json({
+                message: errorMessage(APIErrorCode.BAD_REQUEST),
+            });
+        }
+
+        if (isCelebrateError(err)) {
             return res.status(APIErrorCode.BAD_REQUEST).json({
                 message: errorMessage(APIErrorCode.BAD_REQUEST),
             });

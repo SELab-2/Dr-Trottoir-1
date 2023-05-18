@@ -1,8 +1,0 @@
-dist
-node_modules
-.env
-.gitignore
-.prettierrc.json
-README.md
-.prettierignore
-example.env

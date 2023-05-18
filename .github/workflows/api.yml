@@ -1,0 +1,74 @@
+name: CI API
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - 'develop'
+            - 'main'
+    pull_request:
+        branches:
+            - "develop"
+            - "main"
+            - "api/**"
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./api
+        steps:
+            -   name: "Checkout"
+                uses: actions/checkout@v3
+            -   uses: actions/setup-node@v3
+            -   name: "Install dependencies"
+                run: npm ci
+            -   name: "Check for linting and errors"
+                run: npm run lint
+            -   name: "Verify the code compiles"
+                run: npm run build
+
+    test:
+        runs-on: ubuntu-latest
+        needs: lint
+        defaults:
+            run:
+                working-directory: ./api
+        env:
+            DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/main"
+            NODE_ENV: "test"
+
+        services:
+            postgres:
+                image: postgres
+                # Set health checks to wait until postgres has started
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
+                env:
+                    POSTGRES_DB: main
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+
+        steps:
+            -   name: "Checkout the repo code"
+                uses: actions/checkout@v3
+            -   uses: actions/setup-node@v3
+            -   name: "Clean install"
+                run: npm ci
+            -   name: "Setup the database"
+                working-directory: ./orm
+                run: |
+                    npm install
+                    npx prisma db push
+            -   name: "Execute tests"
+                run: npm run test
+            -   name: "Upload CodeCov"
+                run: |
+                    curl -Os https://uploader.codecov.io/latest/linux/codecov
+                    chmod +x codecov
+                    ./codecov

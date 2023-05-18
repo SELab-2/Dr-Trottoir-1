@@ -12,26 +12,73 @@
         </template>
       </v-list-item>
       <div
-        v-if="
-          useAuthStore().auth?.admin || user?.id === useAuthStore().auth?.id
+        v-show="
+          (useAuthStore().auth?.admin || user.id === useAuthStore().auth?.id) &&
+          !user.deleted
         "
+        class="align-self-center"
       >
+        <!-- Not mobile edit button -->
         <v-btn
-          v-if="!edit"
-          prepend-icon="mdi-pencil"
-          @click="edit = !edit"
-          color="primary"
-          >Bewerk Account</v-btn
+          class="text-none"
+          v-show="!mobile"
+          :prepend-icon="!edit ? 'mdi-pencil' : 'mdi-close'"
+          @click="
+            async () => {
+              if (!edit) {
+                handleBeginEdit();
+              } else {
+                handleCancelEdit();
+              }
+            }
+          "
+          :color="!edit ? 'primary' : 'warning'"
         >
+          {{ !edit ? "Bewerk Account" : "Annuleer aanpassingen" }}
+        </v-btn>
+        <!-- Mobile edit button -->
         <v-btn
-          v-else
-          prepend-icon="mdi-close"
-          @click="handleCancelEdit()"
-          color="warning"
-          >Annuleer aanpassingen</v-btn
-        >
+          v-show="mobile"
+          :icon="!edit ? 'mdi-pencil' : 'mdi-close'"
+          @click="
+            () => {
+              if (!edit) {
+                handleBeginEdit();
+              } else {
+                handleCancelEdit();
+              }
+            }
+          "
+          variant="text"
+        />
       </div>
     </div>
+    <!-- Display if user has been removed -->
+    <BorderCard
+      v-show="user.deleted"
+      prepend-icon="mdi-alert"
+      title="Deze account is verwijderd."
+    >
+      <template v-slot:append>
+        <v-btn
+          color="success"
+          @click="restore()"
+          variant="elevated"
+          class="text-none mr-3"
+          prepend-icon="mdi-delete-restore"
+        >
+          Herstel
+        </v-btn>
+        <v-btn
+          @click="handleRemovePopupPermanent()"
+          color="error"
+          class="text-none"
+          prepend-icon="mdi-delete-forever"
+        >
+          Verwijder
+        </v-btn>
+      </template>
+    </BorderCard>
 
     <!-- Section with the contact info -->
     <BorderCard class="mt-4" prepend-icon="mdi-account-details">
@@ -69,10 +116,10 @@
       <ContactForm
         :class="edit ? 'mx-4' : 'mx-10'"
         :readonly="!edit"
-        :phone="user?.phone"
-        :email="user?.email"
-      >
-      </ContactForm>
+        :phone="user.phone"
+        :email="user.email"
+        @onUpdate="(contact: Contact) => handleContactUpdate(contact)"
+      />
     </BorderCard>
 
     <!-- Section with the adress -->
@@ -131,9 +178,10 @@
           prepend-icon="mdi-check"
           @click="handleSavePopup()"
           color="success"
-          class="my-3"
-          >Sla op</v-btn
+          class="my-3 text-none"
         >
+          Sla op
+        </v-btn>
 
         <v-btn
           v-if="
@@ -142,19 +190,15 @@
           prepend-icon="mdi-delete"
           @click="handleRemovePopup()"
           color="error"
-          class="mx-5 my-3"
-          >Verwijder account</v-btn
+          class="mx-5 my-3 text-none"
         >
+          Verwijder account
+        </v-btn>
       </div>
     </div>
   </HFillWrapper>
 
-  <CardPopup
-    v-model="showPopup"
-    :title="popupTitle"
-    :prepend-icon="popupIcon"
-    width="400"
-  >
+  <CardPopup v-model="showPopup" :title="popupTitle" :prepend-icon="popupIcon">
     <p class="mx-3">
       {{ popupMsg }}
     </p>
@@ -164,10 +208,17 @@
         color="error"
         @click="showPopup = false"
         variant="elevated"
+        class="text-none"
       >
         Annuleer
       </v-btn>
-      <v-btn prepend-icon="mdi-check" color="success" @click="popupSubmit()">
+      <v-btn
+        prepend-icon="mdi-check"
+        color="success"
+        @click="popupSubmit()"
+        variant="elevated"
+        class="text-none"
+      >
         {{ popupSubmitMsg }}
       </v-btn>
     </v-card-actions>
@@ -185,10 +236,14 @@ import { useAuthStore } from "@/stores/auth";
 import RolesForm from "@/components/forms/RolesForm.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
 import Address from "@/components/models/Address";
-
-import { Result, UserQuery } from "@selab-2/groep-1-query";
+import { AddressQuery, Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
+import { useDisplay } from "vuetify";
+import Contact from "@/components/models/Contact";
+
+const display = useDisplay();
+const mobile: Ref<boolean> = display.mobile;
 
 const router = useRouter();
 
@@ -199,6 +254,7 @@ const password = ref("");
 const passwordCheck = ref("");
 const passwordHidden = ref(false);
 const user: Ref<Result<UserQuery> | null> = ref(null);
+const roles = ref<string[]>([]);
 
 function handleAddressUpdate(address: Address) {
   if (user.value) {
@@ -209,8 +265,19 @@ function handleAddressUpdate(address: Address) {
   }
 }
 
+function handleContactUpdate(contact: Contact) {
+  if (user.value) {
+    user.value.email = contact.email;
+    user.value.phone = contact.phone;
+  }
+}
+
 async function fetchUser() {
-  tryOrAlertAsync(async () => {
+  // Force reactivity;
+  user.value = null;
+  roles.value = [];
+
+  await tryOrAlertAsync(async () => {
     user.value = await new UserQuery().getOne(props.id);
     if (user.value.admin) {
       roles.value.push("Admin");
@@ -226,34 +293,77 @@ async function fetchUser() {
 fetchUser();
 
 // reactive state for the roles
-const roles = ref<string[]>([]);
 
 /* Action handle functions */
-async function handleCancelEdit() {
-  fetchUser();
+function handleBeginEdit() {
+  edit.value = true;
+}
+
+function handleCancelEdit() {
   edit.value = false;
+  fetchUser();
 }
 
 async function handleRemove() {
   await tryOrAlertAsync(async () => {
-    new UserQuery().deleteOne({ id: user.value?.id });
+    await new UserQuery().deleteOne({ id: user.value?.id });
   });
   showPopup.value = false;
   edit.value = false;
-  router.push({ name: "user_overview" });
+  await router.go(0);
 }
 
 function handleRemovePopup() {
   popupIcon.value = "mdi-delete-alert-outline";
   popupTitle.value = "Verwijder account";
   popupMsg.value =
-    "Je staat op het punt deze account permanent te verwijderen. Ben je zeker dat je wilt verdergaan?";
+    "Je staat op het punt deze account te verwijderen. Ben je zeker dat je wilt verdergaan?";
   popupSubmitMsg.value = "Verwijder account";
   popupSubmit.value = handleRemove;
   showPopup.value = true;
 }
 
+async function restore() {
+  await tryOrAlertAsync(async () => {
+    await new UserQuery().updateOne({
+      id: user.value?.id,
+      deleted: false,
+    });
+  });
+  router.go(0);
+}
+
+async function handleRemovePermanent() {
+  await tryOrAlertAsync(async () => {
+    await new UserQuery().deleteOne({ id: user.value?.id }, true);
+  });
+  showPopup.value = false;
+  edit.value = false;
+  await router.push({ name: "user_overview" });
+}
+
+function handleRemovePopupPermanent() {
+  popupIcon.value = "mdi-delete-alert-outline";
+  popupTitle.value = "Verwijder account";
+  popupMsg.value =
+    "Je staat op het punt deze account permanent te verwijderen. Ben je zeker dat je wilt verdergaan?";
+  popupSubmitMsg.value = "Verwijder account";
+  popupSubmit.value = handleRemovePermanent;
+  showPopup.value = true;
+}
+
 async function handleSave() {
+  // update the address
+  await tryOrAlertAsync(async () => {
+    await new AddressQuery().updateOne({
+      id: user.value?.address.id,
+      street: user.value?.address.street,
+      number: user.value?.address.number,
+      city: user.value?.address.city,
+      zip_code: user.value?.address.zip_code,
+    });
+  });
+  // update the user
   await tryOrAlertAsync(async () => {
     await new UserQuery().updateOne({
       id: user.value?.id,
@@ -261,7 +371,6 @@ async function handleSave() {
       first_name: user.value?.first_name,
       last_name: user.value?.last_name,
       phone: user.value?.phone,
-      address_id: user.value?.address_id,
       student: roles.value.includes("Student"),
       super_student: roles.value.includes("Superstudent"),
       admin: roles.value.includes("Admin"),
