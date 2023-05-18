@@ -1,6 +1,7 @@
 import request from "supertest";
 import { expect } from "@jest/globals";
 import { constants } from "http2";
+import * as util from "util";
 
 /**
  * Describes different authentication levels.
@@ -112,6 +113,7 @@ export class Testrunner {
 
         const response = await this.server.get(url).set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
+        console.log(util.inspect(response.body, { depth: null }));
         this.verifyBody(expectedData, response);
 
         return response;
