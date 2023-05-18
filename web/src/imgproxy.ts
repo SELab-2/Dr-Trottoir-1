@@ -1,6 +1,5 @@
 import { ParamBuilder } from "@bitpatty/imgproxy-url-builder";
-import { Image } from "@selab-2/groep-1-orm";
-import * as process from "process";
+import { File } from "@selab-2/groep-1-orm";
 
 /***
  * Abstraction over the URl of an ImgProxy instance. Provides a `url` function
@@ -17,6 +16,7 @@ export class ImgProxyServer {
    * specified in the environment variables.
    * */
   public static env: ImgProxyServer = (() => {
+    console.log(import.meta);
     const protocol = process.env.VUE_APP_IMGPROXY_PROTOCOL as "http" | "https";
     const location = process.env.VUE_APP_IMGPROXY_LOCATION;
     const port: number = parseInt(process.env.VUE_APP_IMGPROXY_PORT ?? "");
@@ -58,7 +58,7 @@ export class ImgProxyServer {
    * Retrieve the base url of the ImgProxy instance as a single string.
    */
   url(): string {
-    return `${this.protocol}://${this.path}:${this.port}/${this.root}`;
+    return `${this.protocol}://${this.path}:${this.port}`;
   }
 }
 
@@ -92,14 +92,10 @@ export class ImgProxy extends ParamBuilder {
    * For example:
    * <img alt={image.alt} src={ImageProxy.env.width(50).height(50).url(image)}>
    */
-  url(image: Image): string {
-    if (image.location !== "IMGPROXY") {
-      throw new Error("IMGPROXY: Cannot retrieve external image.");
-    }
-
+  url(image: File): string {
     return this.build({
       baseUrl: this.server.url(),
-      path: `local://${image.path}@jpg`,
+      path: `local://images/${image.path}@jpg`,
       plain: true,
     });
   }

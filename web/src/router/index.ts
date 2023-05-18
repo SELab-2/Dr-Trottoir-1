@@ -23,6 +23,7 @@ import TemplateBuilder from "@/views/contact/TemplateBuilder.vue";
 import Round from "@/views/round/Round.vue";
 import PageNotFound from "@/views/NotFound.vue";
 import { useAuthStore } from "@/stores/auth";
+import ImageTest from "@/views/dev/ImageTest.vue";
 
 const routes: any[] = [
   {
@@ -317,6 +318,19 @@ const devRoutes: any[] = [
     path: "/dev/try",
     component: TryOrAlert,
     name: "try",
+    meta: {
+      auth: (
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
+  },
+  {
+    path: "/dev/image",
+    component: ImageTest,
+    name: "image",
     meta: {
       auth: (
         student: boolean,
