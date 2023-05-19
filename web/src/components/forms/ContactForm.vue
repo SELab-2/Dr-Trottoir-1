@@ -12,7 +12,7 @@
       @update:model-value="$emit('onUpdate', contact)"
     >
       <template v-slot:prepend-inner>
-        <v-icon icon='mdi-phone' :class='readonly ? "mt-1" : ""'/>
+        <v-icon icon="mdi-phone" :class="readonly ? 'mt-1' : ''" />
       </template>
     </v-text-field>
     <v-text-field
@@ -26,7 +26,7 @@
       @update:model-value="$emit('onUpdate', contact)"
     >
       <template v-slot:prepend-inner>
-        <v-icon icon='mdi-email' :class='readonly ? "mt-1" : ""'/>
+        <v-icon icon="mdi-email" :class="readonly ? 'mt-1' : ''" />
       </template>
     </v-text-field>
   </v-list>

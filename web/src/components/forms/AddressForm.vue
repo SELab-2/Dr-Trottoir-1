@@ -18,7 +18,7 @@
           @update:model-value="$emit('onUpdate', address)"
         >
           <template v-slot:prepend-inner>
-            <v-icon icon='mdi-road-variant' :class='readonly ? "mt-1" : ""'/>
+            <v-icon icon="mdi-road-variant" :class="readonly ? 'mt-1' : ''" />
           </template>
         </v-text-field>
       </v-col>
@@ -61,7 +61,7 @@
           :rules="cityRules"
         >
           <template v-slot:prepend-inner>
-            <v-icon icon='mdi-city-variant' :class='readonly ? "mt-1" : ""'/>
+            <v-icon icon="mdi-city-variant" :class="readonly ? 'mt-1' : ''" />
           </template>
         </v-text-field>
       </v-col>
