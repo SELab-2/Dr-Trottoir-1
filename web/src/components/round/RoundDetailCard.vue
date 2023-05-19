@@ -29,18 +29,17 @@
           </p>
         </div>
         <div class="d-flex mt-1" v-if="mobile" style="align-items: center">
-
           <!--Start hour-->
           <RoundedInfoChip
             class="mr-1"
             v-if="progress.arrival"
             icon="mdi-clock-start"
             :text="
-            new Date(progress.arrival).toLocaleTimeString('nl', {
-              hour: '2-digit',
-              minute: '2-digit',
-            })
-          "
+              new Date(progress.arrival).toLocaleTimeString('nl', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })
+            "
           />
           <!--Start button-->
           <SimpleButton
@@ -58,11 +57,11 @@
             v-if="progress.departure"
             icon="mdi-clock-end"
             :text="
-            new Date(progress.departure).toLocaleTimeString('nl', {
-              hour: '2-digit',
-              minute: '2-digit',
-            })
-          "
+              new Date(progress.departure).toLocaleTimeString('nl', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })
+            "
           />
           <!--End button-->
           <SimpleButton
@@ -97,6 +96,7 @@
           prepend-icon="mdi-play"
           color="success"
           @click.stop="() => start()"
+          rounded
         >
           Start
         </SimpleButton>
@@ -117,7 +117,7 @@
           prepend-icon="mdi-stop"
           @click.stop="() => end()"
           color="error"
-
+          rounded
         >
           Eindig
         </SimpleButton>
@@ -143,29 +143,38 @@
           v-model="progress.report"
           style="margin-bottom: -20px"
         />
-        <RoundedButton
+        <SimpleButton
           v-if="editMode"
-          icon="mdi-check"
-          value="Opslaan"
+          prepend-icon="mdi-check"
           class="mt-4"
           @click="() => report()"
-        />
-        <RoundedButton
+          rounded
+          color="success"
+        >
+          Opslaan
+        </SimpleButton>
+        <SimpleButton
           v-else-if="progress?.report !== '' && canEdit"
-          icon="mdi-pencil"
-          value="Bewerken"
+          prepend-icon="mdi-pencil"
           class="mt-4"
           @click="() => (editMode = !editMode)"
-        />
+          color="primary"
+          rounded
+        >
+          Bewerken
+        </SimpleButton>
         <div v-else-if="progress?.report === ''">
           <p style="opacity: 75%">Geen opmerkingen toegevoegd.</p>
-          <RoundedButton
+          <SimpleButton
             v-if="canEdit"
-            icon="mdi-plus"
-            value="Toevoegen"
+            prepend-icon="mdi-plus"
             class="mt-4"
             @click="() => (editMode = !editMode)"
-          />
+            rounded
+            color="success"
+          >
+            Toevoegen
+          </SimpleButton>
         </div>
 
         <divider-layout class="my-4" />
@@ -189,13 +198,16 @@
             </div>
           </div>
           <p v-else style="opacity: 75%">Geen foto's toegevoegd.</p>
-          <RoundedButton
+          <SimpleButton
             v-if="canEdit"
-            icon="mdi-plus"
-            value="Toevoegen"
+            prepend-icon="mdi-plus"
             class="mt-4"
             @click="() => addImage()"
-          />
+            rounded
+            color="success"
+          >
+            Toevoegen
+          </SimpleButton>
         </div>
       </div>
     </v-expand-transition>
@@ -204,7 +216,6 @@
 
 <script lang="ts" setup>
 import CardLayout from "@/layouts/CardLayout.vue";
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useDisplay } from "vuetify";
 import { useRouter } from "vue-router";
