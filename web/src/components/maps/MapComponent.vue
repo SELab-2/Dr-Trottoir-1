@@ -30,10 +30,9 @@ import "leaflet/dist/leaflet.js";
 import CardLayout from "@/layouts/CardLayout.vue";
 import { BuildingQuery, Result } from "@selab-2/groep-1-query";
 import { LMap, LTileLayer, LMarker, LTooltip, LPolyline } from "@vue-leaflet/vue-leaflet";
-import { ref,computed, onMounted, watchEffect } from "vue";
+import { ref,computed } from "vue";
 
 const zoom = ref(14);
-const map = ref(null);
 
 const props = defineProps<{
   buildings: Array<Result<BuildingQuery>>;
