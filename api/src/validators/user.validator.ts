@@ -41,6 +41,7 @@ export class UserValidator extends Validator {
         return celebrate({
             params: Joi.object({
                 id: Joi.number().positive().required(),
+                deleted: Joi.bool(),
             }),
         });
     }
@@ -60,7 +61,7 @@ export class UserValidator extends Validator {
                     .trim()
                     .min(1)
                     // accept a potential + sign at the beginning of the number and at least 1 digit
-                    .regex(/^\+?\d+$/)
+                    .regex(/^\+?[0-9]+$/)
                     .required(),
                 address: Joi.object({
                     create: Joi.object({
@@ -99,8 +100,9 @@ export class UserValidator extends Validator {
                     phone: Joi.string()
                         .min(1)
                         // accept a potential + sign at the beginning of the number and at least 1 digit
-                        .regex(/^\\+?d\\+$/),
+                        .regex(/^\+?[0-9]+$/),
                     address_id: Joi.number().positive(),
+                    deleted: Joi.bool(),
                     student: Joi.boolean(),
                     super_student: Joi.boolean(),
                     admin: Joi.boolean(),

@@ -133,8 +133,31 @@ export class ScheduleRouting extends Routing {
         return res.status(201).json(schedule);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async updateOne(req: CustomRequest, res: express.Response) {
+        // if user is a student, but not super_student, nor admin
+        if (req.user?.student && !(req.user.super_student || req.user.admin)) {
+            // a student may only change the start and end timestamp of their schedule
+            const allowedFields = ["start", "end", "id"];
+
+            for (const entry in req.body) {
+                if (!allowedFields.includes(entry)) {
+                    throw new APIError(APIErrorCode.BAD_REQUEST);
+                }
+            }
+
+            const schedule = await prisma.schedule.findUniqueOrThrow({
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+
+            // should the user try to change a schedule they're not linked to, throw an error
+            if (schedule.user_id !== req.user?.id) {
+                throw new APIError(APIErrorCode.FORBIDDEN);
+            }
+        }
+
         const result = await prisma.schedule.update({
             data: req.body,
             where: {

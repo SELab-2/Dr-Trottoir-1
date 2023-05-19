@@ -14,13 +14,17 @@ import BuildingScreen from "@/views/building/BuildingScreen.vue";
 import BuildingFollowup from "@/views/building/BuildingFollowup.vue";
 import GarbageMaker from "@/views/building/GarbageMaker.vue";
 import UserOverview from "@/views/dashboard/Users.vue";
+import TemplateOverview from "@/views/dashboard/Template.vue";
 import BuildingOverview from "@/views/dashboard/Buildings.vue";
 import RoundOverview from "@/views/dashboard/Round.vue";
 import ContactSyndicus from "@/views/contact/ContactSyndicus.vue";
 import Auth from "@/views/dev/Auth.vue";
-import { useAuthStore } from "@/stores/auth";
 import TryOrAlert from "@/views/dev/TryOrAlert.vue";
+import TemplateBuilder from "@/views/contact/TemplateBuilder.vue";
 import Round from "@/views/round/Round.vue";
+import PageNotFound from "@/views/NotFound.vue";
+import { useAuthStore } from "@/stores/auth";
+import ImageTest from "@/views/dev/ImageTest.vue";
 
 const routes: any[] = [
   {
@@ -183,7 +187,7 @@ const routes: any[] = [
         },
       },
       {
-        path: "/contact",
+        path: "/contact/:id?",
         name: "contact_syndicus",
         component: ContactSyndicus,
         meta: {
@@ -266,6 +270,47 @@ const routes: any[] = [
           ) => superstudent || admin,
         },
       },
+      {
+        path: "/sjabloon/nieuw/:id?",
+        component: TemplateBuilder,
+        name: "template_new",
+        meta: {
+          title: "",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
+        },
+      },
+      {
+        path: "/sjabloon",
+        component: TemplateOverview,
+        name: "template_overview",
+        meta: {
+          title: "Sjablonen",
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => superstudent || admin,
+        },
+      },
+      {
+        path: "/:pathMatch(.*)*",
+        component: PageNotFound,
+        name: "PageNotFound",
+        meta: {
+          auth: (
+            student: boolean,
+            superstudent: boolean,
+            syndicus: boolean,
+            admin: boolean,
+          ) => student || superstudent || syndicus || admin,
+        },
+      },
     ],
   },
 ];
@@ -297,9 +342,22 @@ const devRoutes: any[] = [
       ) => true,
     },
   },
+  {
+    path: "/dev/image",
+    component: ImageTest,
+    name: "image",
+    meta: {
+      auth: (
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
+  },
 ];
 
-if (import.meta.env.MODE === "development") {
+if (import.meta.env.MODE !== "development") {
   routes.push(...devRoutes);
 }
 

@@ -141,6 +141,12 @@
               value="rounds"
               id="rounds"
             ></v-list-item>
+            <v-list-item
+              :to="{ name: 'template_overview' }"
+              prepend-icon="mdi-email"
+              title="Templates"
+              value="templates"
+            ></v-list-item>
           </div>
         </v-list>
 
