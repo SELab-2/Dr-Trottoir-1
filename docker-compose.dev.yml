@@ -15,6 +15,7 @@ services:
     volumes:
       - './volumes/postgres:/var/lib/postgresql/data'
     network_mode: "host"
+    user: 1000:1000
 
   api:
     container_name: dr-trottoir-api
@@ -33,6 +34,7 @@ services:
     restart: always
     volumes:
       - './volumes/files:/files'
+    user: 1000:1000
 
   web:
     container_name: dr-trottoir-web
@@ -43,6 +45,7 @@ services:
       target: "web_production"
       args:
         VUE_APP_API_SERVER_ADDRESS: "http://localhost:8080/"
+        VUE_APP_IMGPROXY_SERVER_ADDRESS: "http://localhost:8081"
     network_mode: "host"
 
   imgproxy:
@@ -59,3 +62,4 @@ services:
     volumes:
       - './volumes/files:/images:ro'
     network_mode: "host"
+    user: 1000:1000

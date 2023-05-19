@@ -53,31 +53,16 @@
       </div>
     </div>
     <!-- Display if user has been removed -->
-    <BorderCard
-      v-show="user.deleted"
-      prepend-icon="mdi-alert"
-      title="Deze account is verwijderd."
-    >
-      <template v-slot:append>
-        <SimpleButton
-          color="success"
-          @click="restore()"
-          variant="elevated"
-          class="mr-3"
-          prepend-icon="mdi-delete-restore"
-        >
-          Herstel
-        </SimpleButton>
-        <SimpleButton
-          @click="handleRemovePopupPermanent()"
-          color="error"
-          prepend-icon="mdi-delete-forever"
-        >
-          Verwijder
-        </SimpleButton>
-      </template>
-    </BorderCard>
 
+    <RemovedCard
+      :show="useAuthStore().auth?.admin && user.deleted"
+      title="Deze account is verwijderd"
+      :restore="
+        async () => {
+          await restore();
+        }
+      "
+    />
     <!-- Section with the contact info -->
     <BorderCard class="mt-4" prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
@@ -243,6 +228,7 @@ import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import Contact from "@/components/models/Contact";
 import SimpleButton from "@/components/buttons/SimpleButton.vue";
+import RemovedCard from "@/components/cards/RemovedCard.vue";
 
 const display = useDisplay();
 const mobile: Ref<boolean> = display.mobile;
@@ -335,6 +321,7 @@ async function restore() {
   router.go(0);
 }
 
+/*
 async function handleRemovePermanent() {
   await tryOrAlertAsync(async () => {
     await new UserQuery().deleteOne({ id: user.value?.id }, true);
@@ -352,7 +339,7 @@ function handleRemovePopupPermanent() {
   popupSubmitMsg.value = "Verwijder account";
   popupSubmit.value = handleRemovePermanent;
   showPopup.value = true;
-}
+}*/
 
 async function handleSave() {
   // update the address

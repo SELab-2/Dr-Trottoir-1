@@ -439,7 +439,7 @@ describe("Schedule tests", () => {
                     statusCode: 403,
                 });
             });
-            test("Can't reach any path as Student except specific GET", async () => {
+            test("Can't reach any path as Student except specific GET and PATCH", async () => {
                 runner.authLevel(AuthenticationLevel.STUDENT);
                 await runner.get({
                     url: "/schedule",
@@ -454,13 +454,6 @@ describe("Schedule tests", () => {
                         user_id: 1,
                         round_id: 1,
                     },
-                    expectedResponse: forbiddenResponse,
-                    statusCode: 403,
-                });
-
-                await runner.patch({
-                    url: "/schedule/1",
-                    data: { user_id: 1 },
                     expectedResponse: forbiddenResponse,
                     statusCode: 403,
                 });
@@ -525,6 +518,132 @@ describe("Schedule tests", () => {
                 data: { user_id: "foo" },
                 expectedResponse: badRequestResponse,
                 statusCode: 400,
+            });
+        });
+    });
+
+    describe("Bugs", () => {
+        describe("Issue 454: Student must be able to PATCH /schedule belonging to them", () => {
+            test("Student is allowed to change the start and end date of their assigned schedule", async () => {
+                runner.authLevel(AuthenticationLevel.STUDENT);
+                const expected = {
+                    id: 1,
+                    day: "2023-05-04T12:00:00.000Z",
+                    start: "2023-05-18T13:53:22.831Z",
+                    end: "2023-05-18T13:58:04.457Z",
+                    user_id: 1,
+                    round_id: 1,
+                    deleted: false,
+                    user: {
+                        id: 1,
+                        email: "student@trottoir.be",
+                        first_name: "Dirk",
+                        last_name: "De Student",
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        date_added: "2023-05-04T12:00:00.000Z",
+                        phone: "0123456789",
+                        address_id: 1,
+                        address: {
+                            id: 1,
+                            street: "Wallaby Way",
+                            number: 42,
+                            city: "Sydney",
+                            zip_code: 2000,
+                            latitude: -33.865143,
+                            longitude: 151.2099,
+                        },
+                        student: true,
+                        super_student: false,
+                        admin: false,
+                        deleted: false,
+                    },
+                    round: {
+                        id: 1,
+                        name: "Round 1",
+                        description: "Description of round 1",
+                        buildings: [
+                            {
+                                id: 1,
+                                round_id: 1,
+                                building_id: 1,
+                                deleted: false,
+                                building: {
+                                    id: 1,
+                                    name: "Building 1",
+                                    ivago_id: "ivago-1",
+                                    description: "Description of building 1",
+                                    deleted: false,
+                                    address: {
+                                        id: 1,
+                                        street: "Wallaby Way",
+                                        number: 42,
+                                        city: "Sydney",
+                                        zip_code: 2000,
+                                        latitude: -33.865143,
+                                        longitude: 151.2099,
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                };
+                await runner.patch({
+                    url: "/schedule/1",
+                    data: {
+                        start: "2023-05-18T13:53:22.831Z",
+                        end: "2023-05-18T13:58:04.457Z",
+                    },
+                    expectedResponse: expected,
+                });
+            });
+            test("Student cannot change any other fields than `start` and `end`", async () => {
+                runner.authLevel(AuthenticationLevel.STUDENT);
+                await runner.patch({
+                    url: "/schedule/1",
+                    data: {
+                        day: "2023-05-18T13:58:04.457Z",
+                    },
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+
+                await runner.patch({
+                    url: "/schedule/1",
+                    data: {
+                        user_id: 2,
+                    },
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+
+                await runner.patch({
+                    url: "/schedule/1",
+                    data: {
+                        round_id: 5,
+                    },
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+
+                await runner.patch({
+                    url: "/schedule/1",
+                    data: {
+                        deleted: true,
+                    },
+                    expectedResponse: badRequestResponse,
+                    statusCode: 400,
+                });
+            });
+            test("Student cannot change a schedule not assigned to them", async () => {
+                runner.authLevel(AuthenticationLevel.STUDENT);
+                await runner.patch({
+                    url: "/schedule/2",
+                    data: {
+                        start: "2023-05-18T13:53:22.831Z",
+                    },
+                    expectedResponse: forbiddenResponse,
+                    statusCode: 403,
+                });
             });
         });
     });
