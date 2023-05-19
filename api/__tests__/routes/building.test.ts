@@ -221,18 +221,7 @@ describe("Building tests", () => {
                     },
                     deleted: false,
                     description: "Description of building 1",
-                    garbage: [
-                        {
-                            action: {
-                                description: "action 1",
-                                id: 1,
-                            },
-                            action_id: 1,
-                            building_id: 1,
-                            id: 1,
-                            pickup_time: "2023-05-04T12:00:00.000Z",
-                        },
-                    ],
+                    garbage: [],
                     id: 1,
                     images: [
                         {
@@ -251,7 +240,7 @@ describe("Building tests", () => {
                     ivago_id: "ivago-1",
                     manual: {
                         createdAt: "1970-01-01T00:00:00.000Z",
-                        id: 1,
+                        id: 10,
                         location: "FILE_SERVER",
                         mime: "application/pdf",
                         original_name: "handleiding.pdf",
@@ -261,63 +250,7 @@ describe("Building tests", () => {
                         user_id: 1,
                     },
                     name: "Building 1",
-                    progress: [
-                        {
-                            arrival: "2023-05-04T12:00:00.000Z",
-                            building_id: 1,
-                            deleted: false,
-                            departure: "2023-05-04T12:00:00.000Z",
-                            id: 1,
-                            images: [
-                                {
-                                    deleted: false,
-                                    description:
-                                        "Description of progress image 1",
-                                    id: 1,
-                                    image: {
-                                        id: image.id,
-                                        location: "IMGPROXY",
-                                        path: "image.jpg",
-                                        time: "1970-01-01T00:00:00.000Z",
-                                        user_id: 1,
-                                    },
-                                    image_id: image.id,
-                                    progress_id: 1,
-                                    type: "ARRIVAL",
-                                },
-                            ],
-                            report: "Report 1",
-                            schedule: {
-                                day: "2023-05-04T12:00:00.000Z",
-                                start: "2023-05-04T12:10:00.000Z",
-                                end: "2023-05-04T12:20:00.000Z",
-                                deleted: false,
-                                id: 1,
-                                round: {
-                                    id: 1,
-                                    name: "Round 1",
-                                    description: "Description of round 1",
-                                },
-                                round_id: 1,
-                                user: {
-                                    address_id: 1,
-                                    admin: false,
-                                    date_added: "2023-05-04T12:00:00.000Z",
-                                    deleted: false,
-                                    email: "student@trottoir.be",
-                                    first_name: "Dirk",
-                                    id: 1,
-                                    last_login: "2023-05-04T12:00:00.000Z",
-                                    last_name: "De Student",
-                                    phone: "0123456789",
-                                    student: true,
-                                    super_student: false,
-                                },
-                                user_id: 1,
-                            },
-                            schedule_id: 1,
-                        },
-                    ],
+                    progress: [],
                     syndicus: {
                         id: 1,
                         user: {
@@ -451,7 +384,7 @@ describe("Building tests", () => {
                     },
                 },
                 manual: {
-                    id: 1,
+                    id: 10,
                     createdAt: "1970-01-01T00:00:00.000Z",
                     path: "manual.pdf",
                     original_name: "handleiding.pdf",
@@ -584,7 +517,7 @@ describe("Building tests", () => {
                     ivago_id: "ivago-2",
                     manual: {
                         createdAt: "1970-01-01T00:00:00.000Z",
-                        id: 1,
+                        id: 10,
                         location: "FILE_SERVER",
                         mime: "application/pdf",
                         original_name: "handleiding.pdf",
@@ -644,7 +577,7 @@ describe("Building tests", () => {
                     ivago_id: "ivago-3",
                     manual: {
                         createdAt: "1970-01-01T00:00:00.000Z",
-                        id: 1,
+                        id: 10,
                         location: "FILE_SERVER",
                         mime: "application/pdf",
                         original_name: "handleiding.pdf",
@@ -720,7 +653,7 @@ describe("Building tests", () => {
                     ivago_id: "ivago-1",
                     manual: {
                         createdAt: "1970-01-01T00:00:00.000Z",
-                        id: 1,
+                        id: 10,
                         location: "FILE_SERVER",
                         mime: "application/pdf",
                         original_name: "handleiding.pdf",
@@ -780,7 +713,7 @@ describe("Building tests", () => {
                     ivago_id: "ivago-2",
                     manual: {
                         createdAt: "1970-01-01T00:00:00.000Z",
-                        id: 1,
+                        id: 10,
                         location: "FILE_SERVER",
                         mime: "application/pdf",
                         original_name: "handleiding.pdf",
@@ -840,7 +773,7 @@ describe("Building tests", () => {
                     ivago_id: "ivago-3",
                     manual: {
                         createdAt: "1970-01-01T00:00:00.000Z",
-                        id: 1,
+                        id: 10,
                         location: "FILE_SERVER",
                         mime: "application/pdf",
                         original_name: "handleiding.pdf",
@@ -915,7 +848,7 @@ describe("Building tests", () => {
                     ivago_id: "ivago-2",
                     manual: {
                         createdAt: "1970-01-01T00:00:00.000Z",
-                        id: 1,
+                        id: 10,
                         location: "FILE_SERVER",
                         mime: "application/pdf",
                         original_name: "handleiding.pdf",
@@ -1001,7 +934,7 @@ describe("Building tests", () => {
                 ],
                 ivago_id: "ivago-1",
                 manual: {
-                    id: 1,
+                    id: 10,
                     location: "FILE_SERVER",
                     mime: "application/pdf",
                     original_name: "handleiding.pdf",
@@ -1069,7 +1002,7 @@ describe("Building tests", () => {
                 images: [],
                 ivago_id: "ivago-1",
                 manual: {
-                    id: 1,
+                    id: 10,
                     createdAt: "1970-01-01T00:00:00.000Z",
                     location: "FILE_SERVER",
                     path: "manual.pdf",
