@@ -6,6 +6,15 @@
         id="banner"
         src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
       />
+      <RemovedCard
+        :show="useAuthStore().auth?.admin && building.deleted"
+        title="Dit gebouw is verwijderd."
+        :restore="
+          async () => {
+            await restoreBuilding();
+          }
+        "
+      ></RemovedCard>
 
       <div>
         <div class="flex-container">
@@ -54,7 +63,7 @@
           </div>
 
           <v-btn
-            v-show="useAuthStore().auth?.admin"
+            v-show="useAuthStore().auth?.admin && !building.deleted"
             class="text-none"
             prepend-icon="mdi-delete"
             @click="showRemovePopup = true"
@@ -114,7 +123,7 @@
               @update:start-date="getTasks()"
             />
             <v-btn
-              v-show="noStudent"
+              v-show="noStudent && !building.deleted"
               class="mx-1 text-none"
               prepend-icon="mdi-plus"
               :to="{ name: 'garbage_plan', params: { id: id } }"
@@ -222,6 +231,7 @@ import DateRange from "@/components/filter/DateRange.vue";
 import { daysFromDate } from "@/assets/scripts/date";
 import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
+import RemovedCard from "@/components/cards/RemovedCard.vue";
 import router from "@/router";
 
 const showRemovePopup = ref(false);
@@ -371,6 +381,15 @@ async function deleteBuilding() {
   await tryOrAlertAsync(async () => {
     await new BuildingQuery().deleteOne({ id: building.value?.id });
   });
+  router.go(0);
+}
+
+async function restoreBuilding() {
+  await new BuildingQuery().updateOne({
+    id: building.value?.id,
+    deleted: false,
+  });
+  router.go(0);
 }
 </script>
 
