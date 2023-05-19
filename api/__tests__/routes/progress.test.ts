@@ -1069,7 +1069,7 @@ describe("Progress tests", () => {
                 expectedData: [expected],
             });
         });
-        
+
         test("SOFT DELETE /progress/:id/image/:id (superstudent)", async () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
             await runner.delete({ url: "/progress/1/image/1" });
