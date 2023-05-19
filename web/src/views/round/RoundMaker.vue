@@ -12,8 +12,7 @@
         title="Ronde aanmaken"
         subtitle="De ronde zal in de volgorde van onderstaande lijst opgeslaan worden"
       >
-        <template v-slot:append
-        ></template>
+        <template v-slot:append></template>
         <v-text-field
           class="ml-3 mr-5"
           label="Naam ronde"

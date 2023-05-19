@@ -25,7 +25,6 @@
         icon="mdi-close"
       />
     </template>
-    
   </BorderCard>
 </template>
 
@@ -74,15 +73,6 @@ const props = defineProps({
     default: true,
   },
 });
-
-function handleGarbageMap(garbageType: String, day: number) {
-  const planningArray = garbageMap.value.get(garbageType);
-  if (planningArray) {
-    return planningArray[day];
-  } else {
-    return false;
-  }
-}
 </script>
 
 <style scoped>
