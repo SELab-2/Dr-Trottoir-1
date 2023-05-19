@@ -10,10 +10,10 @@
     />
     <!-- Set round name as title -->
     <template v-slot:title>
-      {{ roundName }}
+      {{ filtered.roundName }}
       <v-icon
         end
-        v-if="amountOfComments !== 0"
+        v-if="filtered.amountOfComments !== 0"
         icon="mdi-comment-alert-outline"
         size="small"
       />
@@ -21,8 +21,8 @@
 
     <!-- Set student as subtitle -->
     <template v-slot:subtitle>
-      <Avatar :name="studentName" size="x-small" />
-      {{ studentName }}
+      <Avatar :name="filtered.studentName" size="x-small" />
+      {{ filtered.studentName }}
     </template>
 
     <!-- Set progress top right -->
@@ -30,7 +30,7 @@
       <v-chip
         label
         :color="
-          progress() === 0 && !roundStart
+          progress() === 0 && !filtered.roundStart
             ? 'error'
             : progress() === 100
             ? 'success'
@@ -39,7 +39,7 @@
       >
         <v-icon
           :icon="
-            progress() === 0 && !roundStart
+            progress() === 0 && !filtered.roundStart
               ? 'mdi-close'
               : progress() === 100
               ? 'mdi-check'
@@ -47,35 +47,35 @@
           "
         ></v-icon>
         {{
-          progress() === 0 && !roundStart
+          progress() === 0 && !filtered.roundStart
             ? "Niet begonnen"
             : progress() === 100
             ? "Klaar"
-            : "Bezig " + completedBuildings + "/" + totalBuildings
+            : "Bezig " + filtered.completedBuildings + "/" + filtered.totalBuildings
         }}
       </v-chip>
     </template>
     <v-chip label color="brown" class="ml-3">
       <v-icon icon="mdi-office-building"></v-icon>
-      {{ totalBuildings }}
+      {{ filtered.totalBuildings }}
     </v-chip>
     <v-chip label color="primary" class="ml-3">
       <v-icon icon="mdi-calendar" class="pr-1" />
-      {{ new Date(roundDate).toLocaleDateString("nl") }}
+      {{ new Date(filtered.roundDate).toLocaleDateString("nl") }}
     </v-chip>
-    <v-chip v-if="roundStart" label color="primary" class="ml-3">
+    <v-chip v-if="filtered.roundStart" label color="primary" class="ml-3">
       <v-icon icon="mdi-clock"></v-icon>
       {{
-        new Date(roundStart).toLocaleTimeString("nl", {
+        new Date(filtered.roundStart).toLocaleTimeString("nl", {
           hour: "2-digit",
           minute: "2-digit",
         })
       }}
     </v-chip>
-    <v-chip v-if="roundEnd" label color="primary" class="ml-3">
+    <v-chip v-if="filtered.roundEnd" label color="primary" class="ml-3">
       <v-icon icon="mdi-clock-check"></v-icon>
       {{
-        new Date(roundEnd).toLocaleTimeString("nl", {
+        new Date(filtered.roundEnd).toLocaleTimeString("nl", {
           hour: "2-digit",
           minute: "2-digit",
         })
@@ -88,24 +88,16 @@
 import { PropType } from "vue";
 import Avatar from "@/components/Avatar.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
+import FilteredSchedule from "@/components/models/FilteredSchedule";
 
 const props = defineProps({
-  roundName: { type: String, required: true },
-  roundStart: {
-    type: [String, null] as PropType<string | null>,
-    required: true,
-  },
-  roundEnd: { type: [String, null] as PropType<string | null>, required: true },
-  roundDate: { type: String, required: true },
-  studentName: { type: String, required: true },
-  completedBuildings: { type: Number, required: true },
-  totalBuildings: { type: Number, required: true },
-  amountOfComments: { type: Number, required: true },
-  roundProgress: { type: Number, required: true },
+  filtered: { type: Object as PropType<FilteredSchedule>, required: true },
 });
 
 // Value which calculates the percentage that will be shown in the progressbar
 function progress() {
-  return Math.round((props.completedBuildings / props.totalBuildings) * 100);
+  return Math.round(
+    (props.filtered.completedBuildings / props.filtered.totalBuildings) * 100,
+  );
 }
 </script>

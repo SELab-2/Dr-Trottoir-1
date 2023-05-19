@@ -21,16 +21,7 @@
     <RoundCard
       v-for="schedule in filtered"
       :key="schedule.schedule.id"
-      :schedule="schedule.schedule"
-      :amountOfComments="schedule.amountOfComments"
-      :completedBuildings="schedule.completedBuildings"
-      :roundEnd="schedule.roundEnd"
-      :roundStart="schedule.roundStart"
-      :roundDate="schedule.roundDate"
-      :roundName="schedule.roundName"
-      :studentName="schedule.studentName"
-      :totalBuildings="schedule.totalBuildings"
-      :roundProgress="schedule.roundProgress"
+      :filtered="schedule"
       @click="
         redirect_to_detail(schedule.schedule.round_id, schedule.schedule.id)
       "
@@ -52,6 +43,7 @@ import {
 } from "@/assets/scripts/roundProgress";
 import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
+import FilteredSchedule from "@/components/models/FilteredSchedule";
 
 // the router constant
 const router = useRouter();
@@ -67,19 +59,6 @@ const filtered: Ref<Array<FilteredSchedule>> = ref([]);
 /**
  * Update the schedules state with new schedules
  */
-interface FilteredSchedule {
-  schedule: Result<ScheduleQuery>;
-  progresses: Result<ProgressQuery>[];
-  roundName: string;
-  roundStart: Date | null;
-  roundEnd: Date | null;
-  roundDate: Date;
-  studentName: string;
-  completedBuildings: number;
-  totalBuildings: number;
-  amountOfComments: number;
-  roundProgress: number;
-}
 
 async function updateSchedules() {
   // fetch schedules
