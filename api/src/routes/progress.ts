@@ -62,6 +62,9 @@ export class ProgressRouting extends Routing {
             where: {
                 deleted: false,
             },
+            include: {
+                image:true,
+            }
         },
     };
 
