@@ -8,7 +8,6 @@
       >
         <!-- Text input field for the street name -->
         <v-text-field
-          prepend-inner-icon="mdi-road-variant"
           v-model="address.street"
           label="Straat"
           type="text"
@@ -17,7 +16,11 @@
           :readonly="readonly"
           :rules="streetRules"
           @update:model-value="$emit('onUpdate', address)"
-        ></v-text-field>
+        >
+          <template v-slot:prepend-inner>
+            <v-icon icon='mdi-road-variant' :class='readonly ? "mt-1" : ""'/>
+          </template>
+        </v-text-field>
       </v-col>
       <v-col
         v-show="!mobile"
@@ -48,7 +51,6 @@
       >
         <!-- Text input field for the city name -->
         <v-text-field
-          prepend-inner-icon="mdi-city-variant"
           v-model="address.city"
           label="Stad"
           type="text"
@@ -57,7 +59,11 @@
           :variant="readonly ? 'plain' : 'outlined'"
           :readonly="readonly"
           :rules="cityRules"
-        ></v-text-field>
+        >
+          <template v-slot:prepend-inner>
+            <v-icon icon='mdi-city-variant' :class='readonly ? "mt-1" : ""'/>
+          </template>
+        </v-text-field>
       </v-col>
       <v-col
         v-show="!mobile"
