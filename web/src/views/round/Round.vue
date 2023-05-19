@@ -4,48 +4,46 @@
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h1>{{ round?.name }}</h1>
         <div class="flex-grow-1"></div>
-        <RoundedButton
-          icon="mdi-delete-outline"
-          value="Verwijderen"
-          @click="deleteRound()"
-        ></RoundedButton>
+        <v-btn
+          class="text-none"
+          prepend-icon="mdi-delete"
+          @click="showRemovePopup = true"
+          color="error"
+        >
+          Verwijderen
+        </v-btn>
       </div>
+      <p>{{ round?.description }}</p>
 
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </p>
-
-      <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
-        <h2>Gebouwen</h2>
-        <div class="flex-grow-1"></div>
-        <RoundedButton icon="mdi-calendar" value="Wijzigen"></RoundedButton>
-      </div>
-
+      <h2 v-show="round?.description">Gebouwen</h2>
+      <MapComponent :buildings="buildings" />
       <div class="grid">
-        <img src="@/assets/images/dummyMap.png" class="map" alt="Map" />
-        <BuildingCard
+        <RoundBuildingCard
+          class="inner"
           v-for="building in buildings"
           :key="building.id"
           :building="building"
-        ></BuildingCard>
+        ></RoundBuildingCard>
       </div>
-
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Planning</h2>
         <div class="flex-grow-1"></div>
-        <RoundedButton
-          icon="mdi-calendar"
-          value="Inplannen"
-          @click="router.push({ name: 'round_plan', params: { id: round_id } })"
-        ></RoundedButton>
+        <DateRange
+          v-model:start-date="planningStart"
+          v-model:end-date="planningEnd"
+        />
+        <v-btn
+          class="text-none"
+          prepend-icon="mdi-calendar"
+          :to="{ name: 'round_plan', params: { id: round_id } }"
+          color="primary"
+        >
+          Inplannen
+        </v-btn>
       </div>
-
+      <p v-show="passedSchedules.length === 0">
+        Er zijn geen planningen voor de geselecteerde periode.
+      </p>
       <div class="space-y-8">
         <RoundCard
           v-for="schedule in schedules"
@@ -60,14 +58,20 @@
       <div style="display: flex; gap: 8px; align-items: center" class="mt-8">
         <h2>Recent</h2>
         <div class="flex-grow-1"></div>
-        <RoundedButton icon="mdi-history" value="Alles"></RoundedButton>
+        <DateRange
+          v-model:start-date="geschiedenisStart"
+          v-model:end-date="geschiedenisEnd"
+        />
       </div>
+      <p v-show="passedSchedules.length === 0">
+        Er zijn geen planningen voor de geselecteerde periode.
+      </p>
 
       <div class="space-y-8">
         <RoundCard
           :schedule="schedule"
           :status="'completed'"
-          v-for="schedule in schedules"
+          v-for="schedule in passedSchedules"
           v-bind:key="schedule.id"
           :comments="false"
           :images="0"
@@ -75,6 +79,33 @@
       </div>
     </div>
   </HFillWrapper>
+  <CardPopup
+    v-model="showRemovePopup"
+    :width="342"
+    title="Verwijder Ronde"
+    prepend-icon="mdi-delete"
+  >
+    <p class="ma-3">
+      Je staat op het punt deze ronde te verwijderen. Ben je zeker dat je wilt
+      verder gaan?
+    </p>
+    <template v-slot:actions>
+      <v-btn
+        prepend-icon="mdi-close"
+        color="error"
+        variant="elevated"
+        @click="showRemovePopup = false"
+        >Annuleren</v-btn
+      >
+      <v-btn
+        prepend-icon="mdi-check"
+        color="success"
+        variant="elevated"
+        @click="deleteRound()"
+        >Verwijder ronde</v-btn
+      >
+    </template>
+  </CardPopup>
 </template>
 
 <script setup lang="ts">
@@ -87,35 +118,77 @@ import {
 import { ref, Ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
 import RoundCard from "@/components/round/RoundCard.vue";
-import BuildingCard from "@/components/building/BuildingCard.vue";
+import RoundBuildingCard from "@/components/cards/RoundBuildingCard.vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
+import DateRange from "@/components/filter/DateRange.vue";
+import MapComponent from "@/components/maps/MapComponent.vue";
+import CardPopup from "@/components/popups/CardPopup.vue";
+import { daysFromDate } from "@/assets/scripts/date";
+
+/**
+ * Get a date days from a given date
+ * @param days Amount of dates from the given date
+ * @param date Given date, defaults to moment of the function call
+ */
+
+const showRemovePopup = ref(false);
+
+const planningStart: Ref<Date> = ref(new Date());
+const planningEnd: Ref<Date> = ref(daysFromDate(6));
+
+const geschiedenisEnd: Ref<Date> = ref(daysFromDate(-1));
+const geschiedenisStart: Ref<Date> = ref(daysFromDate(-7));
 
 const route = useRoute();
 const round_id: number = Number(route.params.id);
 
 const buildings: Ref<Array<Result<BuildingQuery>>> = ref([]);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
+const passedSchedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 const round = ref<Result<RoundQuery>>();
 
 tryOrAlertAsync(async () => {
   round.value = await new RoundQuery().getOne(round_id);
+  // get the buildings
+  // eslint-disable-next-line no-unsafe-optional-chaining
+  for (const round_building of round.value?.buildings) {
+    const building = await new BuildingQuery().getOne(
+      round_building.building.id,
+    );
+    buildings.value.push(building);
+  }
 });
 
 tryOrAlertAsync(async () => {
-  buildings.value = await new BuildingQuery().getAll({ take: 5 });
+  planningStart.value.setHours(0, 0, 0, 0);
+  planningEnd.value.setHours(23, 59, 59, 999);
+
+  // fetch future schedules
+  schedules.value = await new ScheduleQuery().getAll({
+    round_id: round_id,
+    after: planningStart.value,
+    before: planningEnd.value,
+  });
 });
 
 tryOrAlertAsync(async () => {
-  schedules.value = await new ScheduleQuery().getAll({ take: 5 });
+  geschiedenisStart.value.setHours(0, 0, 0, 0);
+  geschiedenisEnd.value.setHours(23, 59, 59, 999);
+
+  // fetch past schedules
+  passedSchedules.value = await new ScheduleQuery().getAll({
+    round_id: round_id,
+    after: geschiedenisStart.value,
+    before: geschiedenisEnd.value,
+  });
 });
 
 function deleteRound() {
   tryOrAlertAsync(async () => {
     await new RoundQuery().deleteOne({ id: round_id, name: round.value?.name });
-    router.push({ name: "round_overview" });
+    await router.push({ name: "round_overview" });
   });
 }
 </script>
@@ -136,6 +209,10 @@ function deleteRound() {
   @media (max-width: 600px)
     display: flex
     flex-direction: column
+
+.inner:last-child:nth-child(odd)
+  grid-column: 1 / span 2
+
 
 .space-y-8
   & > *
