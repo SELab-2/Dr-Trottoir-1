@@ -1,7 +1,6 @@
 import request from "supertest";
 import { expect } from "@jest/globals";
 import { constants } from "http2";
-import * as util from "util";
 
 /**
  * Describes different authentication levels.
