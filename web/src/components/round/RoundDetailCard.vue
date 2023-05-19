@@ -111,6 +111,7 @@
       </div>
       <v-icon icon="mdi-chevron-right" />
       <v-btn
+        id="expand"
         @click.stop="expanded = !expanded"
         :icon="expanded ? 'mdi-menu-up' : 'mdi-menu-down'"
         class="dropdown-button"
@@ -125,12 +126,14 @@
         <p v-if="!editMode">{{ progress?.report }}</p>
         <!-- eslint-disable-next-line vue/no-mutating-props -->
         <v-text-field
+          id="writecomment"
           type="text"
           v-else
           v-model="progress.report"
           style="margin-bottom: -20px"
         />
         <RoundedButton
+          id="savecomment"
           v-if="editMode"
           icon="mdi-check"
           value="Opslaan"
@@ -138,6 +141,7 @@
           @click="() => report()"
         />
         <RoundedButton
+          id="editcomment"
           v-else-if="progress?.report !== '' && canEdit"
           icon="mdi-pencil"
           value="Bewerken"
@@ -147,6 +151,7 @@
         <div v-else-if="progress?.report === ''">
           <p style="opacity: 75%">Geen opmerkingen toegevoegd.</p>
           <RoundedButton
+            id="addcomment"
             v-if="canEdit"
             icon="mdi-plus"
             value="Toevoegen"
@@ -177,6 +182,7 @@
           </div>
           <p v-else style="opacity: 75%">Geen foto's toegevoegd.</p>
           <RoundedButton
+            id="addimage"
             v-if="canEdit"
             icon="mdi-plus"
             value="Toevoegen"

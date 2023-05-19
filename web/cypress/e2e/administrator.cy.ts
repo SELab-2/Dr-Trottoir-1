@@ -45,7 +45,7 @@ describe('admin tests', () => {
     cy.get('#editcancel').click()
     // alter user data
     // most of this has been tested in the student tests,
-    // however only admins can change name, roles or password of a user
+    // however only admins can change name or roles of a user
     cy.get("#firstname").clear().type("nieuwe")
     cy.get("#lastname").clear().type("gebruiker")
     cy.get('#roles').then(() => {
@@ -76,6 +76,10 @@ describe('admin tests', () => {
     // user should not be present in the table
     // cy.get('#users').click()
     cy.contains('nieuwe gebruiker').should('not.exist')
+  })
+
+  it('restore deleted user', () => {
+
   })
 
   it('check the profitability statistics', () => {
@@ -181,6 +185,18 @@ describe('admin tests', () => {
     // deletion not yet implemented
     // delete
     // confirm?
+  })
+
+  it('add new template', () => {
+
+  })
+
+  it('edit template', () => {
+
+  })
+
+  it('delete templete', () => {
+
   })
 
 })

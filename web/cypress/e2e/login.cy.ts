@@ -13,7 +13,6 @@ describe('login tests', () => {
     Cypress.session.clearAllSavedSessions()
     // there is a check in the login function to see if it passed
     cy.login('administrator@trottoir.be', 'administrator')
-    cy.visit('/account')
     cy.get('#logout').click()
     // we should be back at the log in
     cy.get('#login')
@@ -37,12 +36,10 @@ describe('login tests', () => {
     cy.get('#login')
   })
 
-  // TODO: user doesn't yet have a login
   it('ask login data', () => {
     Cypress.session.clearAllSavedSessions()
     cy.get('#contact').click()
     cy.get('#popup').should('be.visible')
-    // example@drtrottoi in the popup is still a hardcoded email, this will be changed
   })
 
 })
