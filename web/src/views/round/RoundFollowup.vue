@@ -35,7 +35,10 @@ import { useRouter } from "vue-router";
 import { Ref, ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
-import { getCompletedBuildings, getCommentsAmount } from "@/assets/scripts/roundProgress"
+import {
+  getCompletedBuildings,
+  getCommentsAmount,
+} from "@/assets/scripts/roundProgress";
 import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 
@@ -43,9 +46,70 @@ import { tryOrAlertAsync } from "@/try";
 const router = useRouter();
 
 // filter props to pass to largefilter component
-const query_labels = ["Ronde", "Persoon"];
+const query_labels = ["Ronde", "Student"];
 const filter_options = ["Klaar", "Bezig", "Niet begonnen"];
-const sort_items = ["Voortgang", "Gebouwen"];
+const sort_items = ["Voortgang"];
+
+const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
+const progress = ref<Map<Result<ScheduleQuery>, number>>(); // completed buildings of each schedule
+
+// fetch the schedules, for today
+/**
+ * Update the schedules state with new schedules
+ */
+interface FilteredSchedule {
+  schedule: Result<ScheduleQuery>;
+  progresses: Result<ProgressQuery>[];
+  roundName: string;
+  roundStart: Date | null;
+  roundEnd: Date | null;
+  roundDate: Date;
+  studentName: string;
+  completedBuildings: number;
+  totalBuildings: number;
+  amountOfComments: number;
+}
+
+async function updateSchedules() {
+  // fetch schedules
+
+  let filteredSchedules: FilteredSchedule[] = [];
+  let schedules: Array<Result<ScheduleQuery>> = [];
+  await tryOrAlertAsync(async () => {
+    schedules = await new ScheduleQuery().getAll({
+      after: filter_data.value.start_day,
+      before: filter_data.value.end_day,
+      //sort: [filter_data.value.sort_by],
+      //ord: (filter_data.value.sort_ascending ? ['asc'] : ['desc']),
+    });
+  });
+
+  for (const schedule of schedules) {
+    tryOrAlertAsync(async () => {
+      const progresses = await new ProgressQuery().getAll({
+        schedule: schedule.id,
+      });
+
+      filteredSchedules.push({
+        schedule: schedule,
+        progresses: progresses,
+        roundName: schedule.round.name,
+        roundStart: schedule.start,
+        roundEnd: schedule.end,
+        roundDate: schedule.day,
+        studentName: schedule.user.first_name,
+        completedBuildings: getCompletedBuildings(progresses),
+        totalBuildings: schedule.round.buildings.length,
+        amountOfComments: getCommentsAmount(progresses),
+      });
+    });
+  }
+
+  // apply filters
+  filteredSchedules = filtered_data(filteredSchedules);
+
+  schedules.value = schedules;
+}
 
 // All the filter options
 const filter_data = ref<FilterData>({
@@ -99,38 +163,7 @@ async function completedBuildings(
   return count;
 }
 
-const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
-const progress = ref<Map<Result<ScheduleQuery>, number>>(); // completed buildings of each schedule
-
-// fetch the schedules, for today
 handleFilterUpdate(filter_data.value);
-
-/**
- * Update the schedules state with new schedules
- */
-async function updadeSchedules() {
-  // fetch schedules
-  let result: Array<Result<ScheduleQuery>> = [];
-  await tryOrAlertAsync(async () => {
-    result = await new ScheduleQuery().getAll({
-      after: filter_data.value.start_day,
-      before: filter_data.value.end_day,
-      //sort: [filter_data.value.sort_by],
-      //ord: (filter_data.value.sort_ascending ? ['asc'] : ['desc']),
-    });
-  });
-  // fetch progress
-  const newProgress = new Map();
-  for (const schedule of result) {
-    newProgress.set(schedule, await completedBuildings(schedule));
-  }
-  progress.value = newProgress;
-
-  // apply filters
-  result = filtered_data(result);
-
-  schedules.value = result;
-}
 
 /* Data filtering */
 async function handleFilterUpdate(data: FilterData) {
@@ -139,55 +172,14 @@ async function handleFilterUpdate(data: FilterData) {
   filter_data.value.start_day.setHours(0, 0, 0, 0);
   // set at end of the day
   filter_data.value.end_day.setHours(23, 59, 59, 999);
-  await updadeSchedules();
+  await updateSchedules();
 }
 
-function filter_query(schedule: Result<ScheduleQuery>): boolean {
-  let search_by: string = "";
-  switch (filter_data.value.search_label) {
-    case query_labels[0]:
-      search_by = schedule.round.name.toLowerCase();
-      break;
-    case query_labels[1]:
-      search_by = schedule.user.first_name.toLowerCase();
-      break;
-  }
-  return (
-    search_by.includes(filter_data.value.query.toLowerCase()) ||
-    filter_data.value.query.length == 0
-  );
-}
 
 function progressOfSchedule(schedule: Result<ScheduleQuery>): number {
   return progress.value?.get(schedule)!;
 }
 
-function filter_filters(schedule: Result<ScheduleQuery>): boolean {
-  if (filter_data.value.filters.length == 0) {
-    return true;
-  }
-  let result: boolean = false;
-  for (const option of filter_data.value.filters) {
-    switch (option) {
-      case "Klaar":
-        result =
-          progressOfSchedule(schedule) == schedule.round.buildings.length;
-        break;
-      case "Bezig":
-        result =
-          0 < progressOfSchedule(schedule) &&
-          progressOfSchedule(schedule) < schedule.round.buildings.length;
-        break;
-      case "Niet begonnen":
-        result = progressOfSchedule(schedule) == 0;
-        break;
-    }
-    if (result) {
-      return result;
-    }
-  }
-  return result;
-}
 
 function calculateProgress(done: number, total: number): number {
   return Math.round((done / total) * 100);
@@ -195,9 +187,9 @@ function calculateProgress(done: number, total: number): number {
 
 // The list of data after filtering
 function filtered_data(
-  schedules: Result<ScheduleQuery>[],
-): Result<ScheduleQuery>[] {
-  const result: Result<ScheduleQuery>[] = [];
+  schedules: FilteredSchedule[],
+): FilterData[] {
+  const result: FilteredSchedule[] = [];
   // filtering
   schedules.forEach((schedule) => {
     let can_add = true;
@@ -231,6 +223,48 @@ function filtered_data(
   // set sorting order
   if (!filter_data.value.sort_ascending) {
     result.reverse();
+  }
+  return result;
+}
+
+
+function filter_query(schedule: FilteredSchedule): boolean {
+  let search_by: string = "";
+  switch (filter_data.value.search_label) {
+    case query_labels[0]:
+      search_by = schedule.roundName.toLowerCase();
+      break;
+    case query_labels[1]:
+      search_by = schedule.studentName.toLowerCase();
+      break;
+  }
+  return (
+    search_by.includes(filter_data.value.query.toLowerCase()) ||
+    filter_data.value.query.length == 0
+  );
+}
+
+
+function filter_filters(schedule: FilteredSchedule): boolean {
+  if (filter_data.value.filters.length == 0) {
+    return true;
+  }
+  let result: boolean = false;
+  for (const option of filter_data.value.filters) {
+    switch (option) {
+      case "Klaar":
+        result = schedule.roundEnd !== null
+        break;
+      case "Bezig":
+        result = (schedule.roundStart !== null) && (schedule.roundEnd === null)
+        break;
+      case "Niet begonnen":
+        result = schedule.roundStart === null
+        break;
+    }
+    if (result) {
+      return result;
+    }
   }
   return result;
 }
