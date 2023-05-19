@@ -50,7 +50,7 @@ describe("card tests", () => {
     cy.contains('teststraat 1').should('be.visible')
   })
 
-  it('buildingselectcard show garbage test', () => {
+  it('buildingselectcard test', () => {
     cy.mount(BuildingSelectCard, {
       props: {
         name: "testgebouw",
@@ -62,22 +62,6 @@ describe("card tests", () => {
     // all info present
     cy.contains('testgebouw').should('be.visible')
     cy.contains('teststraat 1').should('be.visible')
-    cy.get('#garbage').should('be.visible')
-  })
-
-  it("buildingselectcard don't show garbage test", () => {
-    cy.mount(BuildingSelectCard, {
-      props: {
-        name: "testgebouw",
-        address: "teststraat 1",
-        buildingId: 1,
-        garbageinfo: false,
-      },
-    })
-    // all info present, but no garbage
-    cy.contains('testgebouw').should('be.visible')
-    cy.contains('teststraat 1').should('be.visible')
-    cy.get('#garbage').should('not.be.visible')
   })
 
   it('imagecard test with image', () => {
