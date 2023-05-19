@@ -31,6 +31,10 @@ describe("Progress tests", () => {
     });
 
     describe("Succesful requests", () => {
+        beforeEach(() => {
+            runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+        });
+
         test("POST /progress", async () => {
             const timestamp: Date = new Date(Date.UTC(2023, 7, 4, 16, 0, 0));
 
@@ -134,13 +138,16 @@ describe("Progress tests", () => {
                             description: "Description of progress image 1",
                             id: 1,
                             image: {
-                                id: 10,
-                                location: "IMGPROXY",
-                                path: "image.jpg",
-                                time: "1970-01-01T00:00:00.000Z",
+                                createdAt: "1970-01-01T00:00:00.000Z",
+                                id: 2,
+                                mime: "application/jpeg",
+                                original_name: "camera.jpg",
+                                path: "camera.jpg",
+                                size_in_bytes: 1024,
+                                updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 10,
+                            image_id: 2,
                             progress_id: 1,
                             type: "ARRIVAL",
                         },
@@ -204,13 +211,16 @@ describe("Progress tests", () => {
                             description: "Description of progress image 2",
                             id: 2,
                             image: {
-                                id: 10,
-                                location: "IMGPROXY",
-                                path: "image.jpg",
-                                time: "1970-01-01T00:00:00.000Z",
+                                createdAt: "1970-01-01T00:00:00.000Z",
+                                id: 2,
+                                mime: "application/jpeg",
+                                original_name: "camera.jpg",
+                                path: "camera.jpg",
+                                size_in_bytes: 1024,
+                                updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 10,
+                            image_id: 2,
                             progress_id: 2,
                             type: "GARBAGE",
                         },
@@ -281,13 +291,16 @@ describe("Progress tests", () => {
                             description: "Description of progress image 1",
                             id: 1,
                             image: {
-                                id: 10,
-                                location: "IMGPROXY",
-                                path: "image.jpg",
-                                time: "1970-01-01T00:00:00.000Z",
+                                createdAt: "1970-01-01T00:00:00.000Z",
+                                id: 2,
+                                mime: "application/jpeg",
+                                original_name: "camera.jpg",
+                                path: "camera.jpg",
+                                size_in_bytes: 1024,
+                                updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 10,
+                            image_id: 2,
                             progress_id: 1,
                             type: "ARRIVAL",
                         },
@@ -362,13 +375,16 @@ describe("Progress tests", () => {
                         description: "Description of progress image 1",
                         id: 1,
                         image: {
-                            id: 10,
-                            location: "IMGPROXY",
-                            path: "image.jpg",
-                            time: "1970-01-01T00:00:00.000Z",
+                            createdAt: "1970-01-01T00:00:00.000Z",
+                            id: 2,
+                            mime: "application/jpeg",
+                            original_name: "camera.jpg",
+                            path: "camera.jpg",
+                            size_in_bytes: 1024,
+                            updatedAt: "1970-01-01T00:00:00.000Z",
                             user_id: 1,
                         },
-                        image_id: 10,
+                        image_id: 2,
                         progress_id: 1,
                         type: "ARRIVAL",
                     },
@@ -446,13 +462,16 @@ describe("Progress tests", () => {
                             description: "Description of progress image 1",
                             id: 1,
                             image: {
-                                id: 10,
-                                location: "IMGPROXY",
-                                path: "image.jpg",
-                                time: "1970-01-01T00:00:00.000Z",
+                                createdAt: "1970-01-01T00:00:00.000Z",
+                                id: 2,
+                                mime: "application/jpeg",
+                                original_name: "camera.jpg",
+                                path: "camera.jpg",
+                                size_in_bytes: 1024,
+                                updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 10,
+                            image_id: 2,
                             progress_id: 1,
                             type: "ARRIVAL",
                         },
@@ -516,13 +535,16 @@ describe("Progress tests", () => {
                             description: "Description of progress image 2",
                             id: 2,
                             image: {
-                                id: 10,
-                                location: "IMGPROXY",
-                                path: "image.jpg",
-                                time: "1970-01-01T00:00:00.000Z",
+                                createdAt: "1970-01-01T00:00:00.000Z",
+                                id: 2,
+                                mime: "application/jpeg",
+                                original_name: "camera.jpg",
+                                path: "camera.jpg",
+                                size_in_bytes: 1024,
+                                updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 10,
+                            image_id: 2,
                             progress_id: 2,
                             type: "GARBAGE",
                         },
@@ -599,13 +621,16 @@ describe("Progress tests", () => {
                             description: "Description of progress image 2",
                             id: 2,
                             image: {
-                                id: 10,
-                                location: "IMGPROXY",
-                                path: "image.jpg",
-                                time: "1970-01-01T00:00:00.000Z",
+                                createdAt: "1970-01-01T00:00:00.000Z",
+                                id: 2,
+                                mime: "application/jpeg",
+                                original_name: "camera.jpg",
+                                path: "camera.jpg",
+                                size_in_bytes: 1024,
+                                updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 10,
+                            image_id: 2,
                             progress_id: 2,
                             type: "GARBAGE",
                         },
@@ -683,13 +708,16 @@ describe("Progress tests", () => {
                             description: "Description of progress image 2",
                             id: 2,
                             image: {
-                                id: 10,
-                                location: "IMGPROXY",
-                                path: "image.jpg",
-                                time: "1970-01-01T00:00:00.000Z",
+                                createdAt: "1970-01-01T00:00:00.000Z",
+                                id: 2,
+                                mime: "application/jpeg",
+                                original_name: "camera.jpg",
+                                path: "camera.jpg",
+                                size_in_bytes: 1024,
+                                updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 10,
+                            image_id: 2,
                             progress_id: 2,
                             type: "GARBAGE",
                         },
@@ -732,14 +760,11 @@ describe("Progress tests", () => {
             });
         });
         test("POST /progress/:id/image", async () => {
-            const timestamp: Date = new Date(Date.UTC(2023, 7, 4, 17, 0, 0));
+            runner.authLevel(AuthenticationLevel.STUDENT);
             const newImage = {
-                path: "image2.jpg",
-                user_id: 1,
-                time: timestamp,
-                location: "IMGPROXY",
-                description: "vuilnis",
+                image_id: 2,
                 type: "ARRIVAL",
+                description: "arrival image",
             };
             const expected = {
                 arrival: "2023-05-04T12:00:00.000Z",
@@ -768,28 +793,34 @@ describe("Progress tests", () => {
                         description: "Description of progress image 1",
                         id: 1,
                         image: {
-                            id: 10,
-                            location: "IMGPROXY",
-                            path: "image.jpg",
-                            time: "1970-01-01T00:00:00.000Z",
+                            createdAt: "1970-01-01T00:00:00.000Z",
+                            id: 2,
+                            mime: "application/jpeg",
+                            original_name: "camera.jpg",
+                            path: "camera.jpg",
+                            size_in_bytes: 1024,
+                            updatedAt: "1970-01-01T00:00:00.000Z",
                             user_id: 1,
                         },
-                        image_id: 10,
+                        image_id: 2,
                         progress_id: 1,
                         type: "ARRIVAL",
                     },
                     {
                         deleted: false,
-                        description: "vuilnis",
+                        description: "arrival image",
                         id: 3,
                         image: {
-                            id: 1,
-                            location: "IMGPROXY",
-                            path: "image2.jpg",
-                            time: "2023-08-04T17:00:00.000Z",
+                            createdAt: "1970-01-01T00:00:00.000Z",
+                            id: 2,
+                            mime: "application/jpeg",
+                            original_name: "camera.jpg",
+                            path: "camera.jpg",
+                            size_in_bytes: 1024,
+                            updatedAt: "1970-01-01T00:00:00.000Z",
                             user_id: 1,
                         },
-                        image_id: 1,
+                        image_id: 2,
                         progress_id: 1,
                         type: "ARRIVAL",
                     },
@@ -833,6 +864,7 @@ describe("Progress tests", () => {
         });
 
         test("PATCH /progress/:id/image/:id", async () => {
+            runner.authLevel(AuthenticationLevel.STUDENT);
             const newImage = {
                 description: "REST",
             };
@@ -864,13 +896,16 @@ describe("Progress tests", () => {
                         description: "REST",
                         id: 1,
                         image: {
-                            id: 10,
-                            location: "IMGPROXY",
-                            path: "image.jpg",
-                            time: "1970-01-01T00:00:00.000Z",
+                            createdAt: "1970-01-01T00:00:00.000Z",
+                            id: 2,
+                            mime: "application/jpeg",
+                            original_name: "camera.jpg",
+                            path: "camera.jpg",
+                            size_in_bytes: 1024,
+                            updatedAt: "1970-01-01T00:00:00.000Z",
                             user_id: 1,
                         },
-                        image_id: 10,
+                        image_id: 2,
                         progress_id: 1,
                         type: "ARRIVAL",
                     },
@@ -908,7 +943,7 @@ describe("Progress tests", () => {
             };
 
             await runner.patch({
-                url: "/progress/1/image/1",
+                url: "/progress/1/image/2",
                 data: newImage,
                 expectedResponse: expected,
             });
@@ -919,7 +954,7 @@ describe("Progress tests", () => {
             const deleted = {
                 hardDelete: true,
             };
-            await runner.delete({ url: "/progress/1/image/1", data: deleted });
+            await runner.delete({ url: "/progress/1/image/2", data: deleted });
 
             // verify that the progress image is truly deleted
 
@@ -987,7 +1022,7 @@ describe("Progress tests", () => {
         test("SOFT DELETE /progress/:id/image/:id (admin)", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             await runner.delete({
-                url: "/progress/1/image/1",
+                url: "/progress/1/image/2",
             });
 
             // verify that the progress image is deleted
@@ -1020,13 +1055,16 @@ describe("Progress tests", () => {
                         description: "Description of progress image 1",
                         id: 1,
                         image: {
-                            id: 10,
-                            location: "IMGPROXY",
-                            path: "image.jpg",
-                            time: "1970-01-01T00:00:00.000Z",
+                            createdAt: "1970-01-01T00:00:00.000Z",
+                            id: 2,
+                            mime: "application/jpeg",
+                            original_name: "camera.jpg",
+                            path: "camera.jpg",
+                            size_in_bytes: 1024,
+                            updatedAt: "1970-01-01T00:00:00.000Z",
                             user_id: 1,
                         },
-                        image_id: 10,
+                        image_id: 2,
                         progress_id: 1,
                         type: "ARRIVAL",
                     },
@@ -1071,7 +1109,7 @@ describe("Progress tests", () => {
 
         test("SOFT DELETE /progress/:id/image/:id (superstudent)", async () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
-            await runner.delete({ url: "/progress/1/image/1" });
+            await runner.delete({ url: "/progress/1/image/2" });
 
             // verify that the progress image is soft deleted
             // super-student should not see the deleted image
@@ -1158,11 +1196,9 @@ describe("Progress tests", () => {
             };
 
             const newImage = {
-                time: timestamp,
-                location: "FILE_SERVER",
-                path: "path/to/file_server_image",
-                description: "vuilnis",
-                user_id: 1,
+                image_id: 2,
+                type: "ARRIVAL",
+                description: "arrival image",
             };
 
             describe("Cannot reach any path without authorisation", () => {
@@ -1302,7 +1338,7 @@ describe("Progress tests", () => {
                 await runner.patch({
                     url: "/progress/1/image/100",
                     data: newImage,
-                    expectedResponse: notFoundResponse,
+                    expectedResponse: { message: "Not Found" },
                     statusCode: 404,
                 });
             });
