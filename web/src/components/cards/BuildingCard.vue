@@ -136,8 +136,8 @@ tryOrAlertAsync(async () => {
   can_expand.value = can_expand.value && progresses.value.length > 0;
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function route(date: Date | null) {
-  console.log(`TODO: link to ${date}`);
   if (props.building) {
     router.push({
       name: "building_id",
