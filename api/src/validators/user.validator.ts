@@ -41,6 +41,7 @@ export class UserValidator extends Validator {
         return celebrate({
             params: Joi.object({
                 id: Joi.number().positive().required(),
+                deleted: Joi.bool(),
             }),
         });
     }
@@ -101,6 +102,7 @@ export class UserValidator extends Validator {
                         // accept a potential + sign at the beginning of the number and at least 1 digit
                         .regex(/^\+?[0-9]+$/),
                     address_id: Joi.number().positive(),
+                    deleted: Joi.bool(),
                     student: Joi.boolean(),
                     super_student: Joi.boolean(),
                     admin: Joi.boolean(),
