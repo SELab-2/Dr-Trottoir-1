@@ -138,7 +138,7 @@ export class ScheduleRouting extends Routing {
         // if user is a student, but not super_student, nor admin
         if (req.user?.student && !(req.user.super_student || req.user.admin)) {
             // a student may only change the start and end timestamp of their schedule
-            const allowedFields = ["start", "end"];
+            const allowedFields = ["start", "end", "id"];
 
             for (const entry in req.body) {
                 if (!allowedFields.includes(entry)) {
