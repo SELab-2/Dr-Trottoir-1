@@ -5,11 +5,7 @@
       <v-card-title v-else>Opmerking toevoegen</v-card-title></template
     >
     <template v-slot:append
-      ><v-icon
-        @click="$emit('confirm', photo)"
-        color="error"
-        icon="mdi-close"
-      ></v-icon
+      ><v-icon @click="$emit('cancel')" color="error" icon="mdi-close"></v-icon
     ></template>
 
     <div class="mx-4 my-2">
@@ -25,14 +21,15 @@
         @update:model-value="$emit('onUpdate', photo)"
         variant="outlined"
       ></v-file-input>
-      <v-text-field
+      <v-select
         v-if="isPhoto"
-        id="label"
+        id="type"
         variant="outlined"
+        :items="ImageTypes"
         @update:model-value="$emit('onUpdate', photo)"
-        label="Titel"
-        v-model="photo.label"
-      ></v-text-field>
+        label="Type"
+        v-model="photo.type"
+      ></v-select>
       <v-textarea
         @update:model-value="$emit('onUpdate', photo)"
         id="comment"
@@ -59,6 +56,8 @@
 import Photo from "@/components/models/Photo";
 import { ref } from "vue";
 
+const ImageTypes = ["ARRIVAL", "DEPARTURE", "GARBAGE"];
+
 const props = defineProps({
   id: {
     type: String,
@@ -74,7 +73,7 @@ const props = defineProps({
 const photo = ref<Photo>({
   image: [],
   comments: "",
-  label: "",
+  type: "",
 });
 
 if (!props.isPhoto) {

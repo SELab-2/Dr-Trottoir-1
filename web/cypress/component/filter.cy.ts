@@ -1,8 +1,10 @@
-import Filter from '@/components/filter/LargeFilter.vue'
+import LargeFilter from '@/components/filter/LargeFilter.vue'
+import DashBoardSearch from '@/components/filter/DashBoardSearch.vue'
+import DateRange from '@/components/filter/DateRange.vue'
 
 describe("filter tests", () => {
   it('largefilter test', () => {
-    cy.mount(Filter, {
+    cy.mount(LargeFilter, {
       props: {
         search_by_labels: ["test1", "test2"],
         filter_items: ["status1", "status2"],
@@ -35,5 +37,47 @@ describe("filter tests", () => {
     // hide filters again
     cy.get("#showfilters").click()
     cy.get('#dropdown').should('not.be.visible')
+  })
+
+  it('dashboardsearch admin test', () => {
+    cy.mount(DashBoardSearch, {
+      props: {
+        admin: true,
+      },
+    })
+    cy.contains('Verborgen').click()
+    cy.get('#hidden').should('be.checked')
+    cy.contains('Zoek in de tabel').should('be.visible')
+    cy.get('#search').type('test')
+    cy.get('#search').should('have.value', 'test')
+  })
+
+  it('dashboardsearch not admin test', () => {
+    cy.mount(DashBoardSearch, {
+      props: {
+        admin: false,
+      },
+    })
+    cy.contains('Verborgen').should('not.exist')
+    cy.contains('Zoek in de tabel').should('be.visible')
+    cy.get('#search').type('test')
+    cy.get('#search').should('have.value', 'test')
+  })
+
+  it('daterange test', () => {
+    const start:Date = new Date('2023-05-12')
+    const end:Date = new Date('2023-06-01')
+    cy.mount(DateRange, {
+      props: {
+        startDate: start,
+        endDate: end,
+      },
+    })
+    cy.get('#start').should('have.value', '2023-05-12')
+    cy.get('#end').should('have.value', '2023-06-01')
+    cy.get('#start').click().type('2023-06-01')
+    cy.get('#end').click().type('2023-06-06')
+    cy.get('#start').should('have.value', '2023-06-01')
+    cy.get('#end').should('have.value', '2023-06-06')
   })
 })

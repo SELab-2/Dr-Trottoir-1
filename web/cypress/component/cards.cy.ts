@@ -4,6 +4,7 @@ import BuildingSelectCard from '@/components/cards/BuildingSelectCard.vue'
 import ImageCard from '@/components/cards/ImageCard.vue'
 import RoundCard from '@/components/cards/RoundCard.vue'
 import RoundSelectCard from '@/components/cards/RoundSelectCard.vue'
+import RoundBuildingCard from '@/components/cards/RoundBuildingCard.vue'
 
 describe("card tests", () => {
   it('buildingcard test', () => {
@@ -134,8 +135,10 @@ describe("card tests", () => {
     cy.get('#end').should('be.visible')
     cy.contains('test student').should('be.visible')
     cy.contains(datum.toLocaleDateString()).should('be.visible')
-    cy.contains('5').should('be.visible')
+    cy.get('#buildings').contains('5').should('be.visible')
     cy.contains('Niet begonnen').should('be.visible')
+    cy.contains("startdate or time").should('be.visible')
+    cy.contains("enddate or time").should('be.visible')
   })
 
   it('roundcard with some progress', () => {
@@ -154,8 +157,10 @@ describe("card tests", () => {
     cy.get('#start').should('not.exist')
     cy.get('#end').should('not.exist')
     cy.contains('test student').should('be.visible')
-    cy.contains('5').should('be.visible')
+    cy.get('#buildings').contains('5').should('be.visible')
     cy.contains('Bezig 4/5').should('be.visible')
+    cy.contains("startdate or time").should('not.exist')
+    cy.contains("enddate or time").should('not.exist')
   })
 
   it('roundcard with full progress', () => {
@@ -176,8 +181,10 @@ describe("card tests", () => {
     cy.get('#start').should('be.visible')
     cy.get('#end').should('be.visible')
     cy.contains('test student').should('be.visible')
-    cy.contains('5').should('be.visible')
+    cy.get('#buildings').contains('5').should('be.visible')
     cy.contains('Klaar').should('be.visible')
+    cy.contains("startdate or time").should('be.visible')
+    cy.contains("enddate or time").should('be.visible')
   })
 
   it('roundselectcard test', () => {
@@ -196,4 +203,23 @@ describe("card tests", () => {
     cy.contains(datum.toLocaleDateString()).should('be.visible')
     cy.get('#remove').should('be.visible')
   })
+
+  it('roundbuildingcard test', () => {
+    cy.mount(RoundBuildingCard, {
+      props: {
+        building: {
+          id: 1,
+          name: "test gebouw",
+          address: {
+            street: "teststraat",
+            number: "1",
+            city: "Gent",
+            zip_code: "9000",
+          }
+        }},
+    })
+    cy.contains("test gebouw").should('be.visible')
+    cy.contains("teststraat 1").should('be.visible')
+    cy.contains("9000 Gent").should('be.visible')
+  });
 })
