@@ -20,15 +20,8 @@
     <!-- TODO: fix comment when db ready for it-->
     <RoundCard
       v-for="(schedule, i) in schedules"
+      :schedule="schedule"
       :key="i"
-      :round_name="schedule.round.name"
-      round_start=""
-      round_end=""
-      :student_name="schedule.user.first_name"
-      :building_index="progress?.get(schedule)!"
-      :total_buildings="schedule.round.buildings.length"
-      :round_comments="progress?.get(schedule)! != 0"
-      :date="new Date(schedule.day)"
       @click="redirect_to_detail(schedule.round_id, schedule.id)"
       style="cursor: pointer"
     ></RoundCard>

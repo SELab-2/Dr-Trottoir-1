@@ -1,73 +1,76 @@
 <template>
-  <!-- TODO: Container around the card to show the edges a bit more, should be removed in the future -->
   <BorderCard class="mb-3 mx-1 pb-2">
     <v-progress-linear
       absolute
-      :model-value="progress()"
-      :color="
-        progress() === 0 ? 'error' : progress() === 100 ? 'success' : 'warning'
-      "
+      :model-value="ratio * 100"
+      :color="ratio === 0 ? 'error' : ratio ? 'success' : 'warning'"
     />
-    <!-- Set round name as title -->
+
     <template v-slot:title>
-      {{ round_name }}
-      <v-icon
-        end
-        v-if="round_comments"
-        icon="mdi-comment-alert-outline"
-        size="small"
-      />
+      {{ schedule.round.name }}
     </template>
 
-    <!-- Set student as subtitle -->
     <template v-slot:subtitle>
-      <Avatar :name="student_name" size="x-small" />
-      {{ student_name }}
+      <Avatar
+        :name="schedule.user.first_name + ' ' + schedule.user.last_name"
+        size="x-small"
+      />
+      {{ schedule.user.first_name + " " + schedule.user.last_name }}
     </template>
 
-    <!-- Set progress top right -->
     <template v-slot:append>
       <v-chip
         label
-        :color="
-          progress() === 0
-            ? 'error'
-            : progress() === 100
-            ? 'success'
-            : 'warning'
-        "
+        :color="ratio === 0 ? 'error' : ratio === 1 ? 'success' : 'warning'"
       >
         <v-icon
           :icon="
-            progress() === 0
+            ratio === 0
               ? 'mdi-close'
-              : progress() === 100
+              : ratio === 1
               ? 'mdi-check'
               : 'mdi-progress-clock'
           "
         ></v-icon>
         {{
-          progress() === 0
+          schedule.start === null
             ? "Niet begonnen"
-            : progress() === 100
+            : schedule.end !== null
             ? "Klaar"
-            : "Bezig " + building_index + "/" + total_buildings
+            : "Bezig " +
+              progresses.filter((e) => e.departure !== null).length +
+              "/" +
+              progresses.length
         }}
       </v-chip>
     </template>
     <v-chip label color="brown" class="ml-3">
       <v-icon icon="mdi-office-building"></v-icon>
-      {{ total_buildings }}
+      {{ schedule.round.buildings.length }}
     </v-chip>
+
     <v-chip label color="primary" class="ml-3">
       <v-icon icon="mdi-calendar" class="pr-1" />
-      {{ date.toLocaleDateString("nl") }}
+      {{ new Date(schedule.day).toLocaleDateString("nl") }}
     </v-chip>
-    <v-chip v-if="round_start" label color="primary" class="ml-3">
-      <v-icon icon="mdi-clock"></v-icon> {{ round_start }}
+
+    <v-chip v-if="schedule.start" label color="primary" class="ml-3">
+      <v-icon icon="mdi-clock"></v-icon>
+      {{ new Date(schedule.start).toLocaleTimeString() }}
     </v-chip>
-    <v-chip v-if="round_end" label color="primary" class="ml-3">
-      <v-icon icon="mdi-clock-check"></v-icon> {{ round_end }}
+
+    <v-chip v-if="schedule.end" label color="primary" class="ml-3">
+      <v-icon icon="mdi-clock-check"></v-icon>
+      {{ new Date(schedule.end).toLocaleTimeString() }}
+    </v-chip>
+
+    <v-chip
+      v-if="progresses.filter((e) => e.report !== '').length > 0"
+      label
+      color="gray"
+      class="ml-3"
+    >
+      <v-icon icon="mdi-comment-alert-outline"></v-icon> Opmerkingen
     </v-chip>
   </BorderCard>
 </template>
@@ -75,22 +78,23 @@
 <script lang="ts" setup>
 import Avatar from "@/components/Avatar.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
+import { ScheduleQuery, Result, ProgressQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
+import { Ref, ref } from "vue";
 
-// TODO: maybe too much props to give to a component, could be changed to an object in the future
-// Default props for this component
-const props = defineProps({
-  round_name: String,
-  round_start: String,
-  round_end: String,
-  student_name: String,
-  date: { type: Date, required: true },
-  total_buildings: { type: Number, required: true },
-  building_index: { type: Number, required: true },
-  round_comments: { type: Boolean, default: false },
+const props = defineProps<{
+  schedule: Result<ScheduleQuery>;
+}>();
+
+const progresses: Ref<Array<Result<ProgressQuery>>> = ref([]);
+
+await tryOrAlertAsync(async () => {
+  progresses.value = await new ProgressQuery().getAll({
+    schedule: props.schedule.id,
+  });
 });
 
-// Value which calculates the percentage that will be shown in the progressbar
-function progress() {
-  return Math.round((props.building_index / props.total_buildings) * 100);
-}
+const ratio =
+  progresses.value.filter((e) => e.departure !== null).length /
+  progresses.value.length;
 </script>
