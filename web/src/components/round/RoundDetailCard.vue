@@ -28,84 +28,99 @@
             {{ entry.building.address.city }}
           </p>
         </div>
-        <div class="d-flex mt-1" v-if="mobile">
-          <RoundedButton
+        <div class="d-flex mt-1" v-if="mobile" style="align-items: center">
+
+          <!--Start hour-->
+          <RoundedInfoChip
             class="mr-1"
             v-if="progress.arrival"
             icon="mdi-clock-start"
-            :value="
-              new Date(progress.arrival).toLocaleTimeString('nl', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })
-            "
+            :text="
+            new Date(progress.arrival).toLocaleTimeString('nl', {
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          "
           />
-          <RoundedButton
-            class="mr-1"
+          <!--Start button-->
+          <SimpleButton
             v-else-if="canEdit"
-            value="start"
-            icon="mdi-play"
+            prepend-icon="mdi-play"
+            color="success"
             @click.stop="() => start()"
-          />
-          <RoundedButton
-            class="ml-1"
+            rounded
+          >
+            Start
+          </SimpleButton>
+
+          <!--End hour-->
+          <RoundedInfoChip
             v-if="progress.departure"
             icon="mdi-clock-end"
-            :value="
-              new Date(progress.departure).toLocaleTimeString('nl', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })
-            "
+            :text="
+            new Date(progress.departure).toLocaleTimeString('nl', {
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          "
           />
-          <RoundedButton
-            class="mr-1"
+          <!--End button-->
+          <SimpleButton
             v-else-if="progress.arrival && canEdit"
-            value="eindig"
-            icon="mdi-stop"
+            prepend-icon="mdi-stop"
             @click.stop="() => end()"
-          />
+            color="error"
+            rounded
+          >
+            Eindig
+          </SimpleButton>
         </div>
       </div>
       <div class="flex-grow-1"></div>
 
-      <div class="d-flex" v-if="!mobile">
-        <RoundedButton
-          class="ma-1"
+      <div class="d-flex" v-if="!mobile" style="align-items: center">
+        <!--Start hour-->
+        <RoundedInfoChip
+          class="mr-2"
           v-if="progress.arrival"
           icon="mdi-clock-start"
-          :value="
+          :text="
             new Date(progress.arrival).toLocaleTimeString('nl', {
               hour: '2-digit',
               minute: '2-digit',
             })
           "
         />
-        <RoundedButton
-          class="ma-1"
+        <!--Start button-->
+        <SimpleButton
           v-else-if="canEdit"
-          value="start"
-          icon="mdi-play"
+          prepend-icon="mdi-play"
+          color="success"
           @click.stop="() => start()"
-        />
-        <RoundedButton
-          class="ma-1"
+        >
+          Start
+        </SimpleButton>
+        <!--End hour-->
+        <RoundedInfoChip
           v-if="progress.departure"
           icon="mdi-clock-end"
-          :value="
+          :text="
             new Date(progress.departure).toLocaleTimeString('nl', {
               hour: '2-digit',
               minute: '2-digit',
             })
           "
         />
-        <RoundedButton
-          class="ma-1"
+        <!--End button-->
+        <SimpleButton
           v-else-if="progress.arrival && canEdit"
-          value="eindig"
-          icon="mdi-stop"
+          prepend-icon="mdi-stop"
           @click.stop="() => end()"
-        />
+          color="error"
+
+        >
+          Eindig
+        </SimpleButton>
       </div>
       <v-icon icon="mdi-chevron-right" />
       <v-btn
@@ -197,6 +212,8 @@ import { ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import { ProgressQuery } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
+import RoundedInfoChip from "@/components/chips/RoundedInfoChip.vue";
 
 const props = defineProps(["entry", "day", "schedule_id"]);
 const progress = ref(
