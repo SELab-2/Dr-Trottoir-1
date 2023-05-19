@@ -60,13 +60,13 @@
               ></v-textarea
             ></v-col>
           </v-row>
-          <v-btn
+          <SimpleButton
             color="primary"
             prepend-icon="mdi-content-save"
             variant="tonal"
             class="mb-6 ml-6"
             @click="saveTemplate()"
-            >Opslaan</v-btn
+            >Opslaan</SimpleButton
           >
         </BorderCard> </v-col
       ><v-col
@@ -101,6 +101,7 @@ import { ref } from "vue";
 import { Result, MailTemplateQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRoute } from "vue-router";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 const templateName = ref<string>("");
 const subject = ref<string>("");
