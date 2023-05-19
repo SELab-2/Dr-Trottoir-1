@@ -63,6 +63,14 @@
         }
       "
     />
+    <UserAnalyticCard
+      v-if="
+        !edit &&
+        (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) &&
+        !user.deleted
+      "
+      :id="user.id"
+    />
     <!-- Section with the contact info -->
     <BorderCard class="mt-4" prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
@@ -223,6 +231,7 @@ import { AddressQuery, Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
+import UserAnalyticCard from "@/components/cards/UserAnalyticCard.vue";
 import Contact from "@/components/models/Contact";
 import RemovedCard from "@/components/cards/RemovedCard.vue";
 
@@ -274,7 +283,7 @@ async function fetchUser() {
     }
   });
 }
-fetchUser();
+await fetchUser();
 
 // reactive state for the roles
 
