@@ -24,6 +24,7 @@ import TemplateBuilder from "@/views/contact/TemplateBuilder.vue";
 import Round from "@/views/round/Round.vue";
 import PageNotFound from "@/views/NotFound.vue";
 import { useAuthStore } from "@/stores/auth";
+import ImageTest from "@/views/dev/ImageTest.vue";
 
 const routes: any[] = [
   {
@@ -341,9 +342,22 @@ const devRoutes: any[] = [
       ) => true,
     },
   },
+  {
+    path: "/dev/image",
+    component: ImageTest,
+    name: "image",
+    meta: {
+      auth: (
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
+  },
 ];
 
-if (import.meta.env.MODE === "development") {
+if (import.meta.env.MODE !== "development") {
   routes.push(...devRoutes);
 }
 
