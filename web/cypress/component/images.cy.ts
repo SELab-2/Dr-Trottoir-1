@@ -40,6 +40,8 @@ describe("images tests", () => {
     cy.contains('afbeelding toevoegen').click()
     // check if an extra image field was added
     cy.get('button:contains("Verwijder afbeelding")').should('have.length', 2);
+    cy.get("#input").selectFile('src/assets/images/drtroittoir_logo.png')
+    cy.contains("drtroittoir_logo.png").should('be.visible')
     // delete image
     cy.get('#delete').click()
     cy.get('button:contains("Verwijder afbeelding")').should('have.length', 1);
@@ -48,7 +50,7 @@ describe("images tests", () => {
     cy.get('button:contains("Verwijder afbeelding")').should('have.length', 1);
   })
 
-  it.only('photomaker test', () => {
+  it('photomaker test', () => {
     cy.mount(PhotoMaker, {
       id: "test",
       isPhoto: true,
