@@ -82,21 +82,10 @@ export class BuildingImageValidator extends Validator {
     createOneValidator() {
         return celebrate({
             body: Joi.object({
-                time: Joi.date().required(),
-                location: Joi.string()
-                    .valid(
-                        "EXTERNAL",
-                        "IMGPROXY",
-                        "STATIC_FILES",
-                        "FILE_SERVER",
-                    )
-                    .required(),
-                path: Joi.string().min(1).required(),
-                user_id: Joi.number().positive().required(),
+                image: Joi.number().positive().required(),
             }),
-
             params: Joi.object({
-                id: Joi.number().positive(),
+                id: Joi.number().positive().required(),
             }),
         });
     }
