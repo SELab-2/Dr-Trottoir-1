@@ -25,30 +25,6 @@
         icon="mdi-close"
       />
     </template>
-    <v-expand-transition>
-      <v-table v-show="garbageinfo" class="mx-2 my-2" density="compact">
-        <thead>
-          <tr>
-            <th
-              v-for="day in ['MA', 'DI', 'WO', 'DO', 'VR', 'ZA', 'ZO']"
-              :key="day"
-              class="text-center"
-            >
-              {{ day }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in ['REST', 'GFT', 'PMD']" :key="item">
-            <td class="text-center" v-for="index in 7" :key="index">
-              <v-chip size="small" v-if="handleGarbageMap(item, index)">{{
-                item
-              }}</v-chip>
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
-    </v-expand-transition>
   </BorderCard>
 </template>
 
@@ -97,15 +73,6 @@ const props = defineProps({
     default: true,
   },
 });
-
-function handleGarbageMap(garbageType: String, day: number) {
-  const planningArray = garbageMap.value.get(garbageType);
-  if (planningArray) {
-    return planningArray[day];
-  } else {
-    return false;
-  }
-}
 </script>
 
 <style scoped>
