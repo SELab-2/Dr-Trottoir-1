@@ -190,16 +190,22 @@
   </HFillWrapper>
 
   <CardPopup v-model="showPopup">
-    <div class="pa-4">
+    <div class="pa-4" style="max-width: 400px">
       <div class="d-flex align-center" style="gap: 12px">
         <v-icon icon="mdi-content-save-alert-outline" size="large"></v-icon>
-        <h2>Bewaar aanpassingen</h2>
+        <h2>{{ popupTitle }}</h2>
       </div>
       <p style="opacity: 90%" class="pt-2 pb-4">
-        Je staat op het punt deze account permanent te<br />bewerken. Ben je
-        zeker dat je wilt verdergaan?
+        {{ popupMsg }}
       </p>
-      <div class="d-flex" style="gap: 12px; min-width: fit-content">
+      <div
+        style="
+          display: grid;
+          gap: 12px;
+          min-width: fit-content;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        "
+      >
         <v-btn
           prepend-icon="mdi-close"
           color="error"
@@ -216,7 +222,7 @@
           variant="elevated"
           class="text-none"
         >
-          Bewaar aanpassingen
+          Bevestig
         </v-btn>
       </div>
     </div>
@@ -318,7 +324,6 @@ function handleRemovePopup() {
   popupTitle.value = "Verwijder account";
   popupMsg.value =
     "Je staat op het punt deze account te verwijderen. Ben je zeker dat je wilt verdergaan?";
-  popupSubmitMsg.value = "Verwijder account";
   popupSubmit.value = handleRemove;
   showPopup.value = true;
 }
@@ -386,7 +391,6 @@ function handleSavePopup() {
   popupTitle.value = "Bewaar aanpassingen";
   popupMsg.value =
     "Je staat op het punt deze account permanent te bewerken. Ben je zeker dat je wilt verdergaan?";
-  popupSubmitMsg.value = "Bewaar aanpassingen";
   popupSubmit.value = handleSave;
   showPopup.value = true;
 }
@@ -397,7 +401,6 @@ const showPopup = ref(false);
 const popupIcon = ref("");
 const popupTitle = ref("");
 const popupMsg = ref("");
-const popupSubmitMsg = ref("");
 const popupSubmit: Ref<() => void> = ref(() => {});
 </script>
 
