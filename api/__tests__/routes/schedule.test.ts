@@ -565,6 +565,7 @@ describe("Schedule tests", () => {
                     round: {
                         id: 1,
                         name: "Round 1",
+                        deleted: false,
                         description: "Description of round 1",
                         buildings: [
                             {
