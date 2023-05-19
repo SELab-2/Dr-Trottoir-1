@@ -63,7 +63,7 @@ describe("Mail Template tests", () => {
                     content:
                         "Ivago heeft de ingeplande container niet meegenomen bij $(gebouw_naam)",
                     id: 3,
-                    mail_subject: "Ivago is niet langs $(building) gekomen",
+                    mail_subject: "Ivago is niet langs $(gebouw_naam) gekomen",
                     name: "Ivago",
                 },
             ];
@@ -118,8 +118,8 @@ describe("Mail Template tests", () => {
             const expected = {
                 id: 1,
                 name: "Updated name mail template",
-                mail_subject: "Vuilnis in $(building)",
-                content: "In $(building) ligt er vuilnis op de grond",
+                mail_subject: "Vuilnis in $(gebouw_naam)",
+                content: "In $(gebouw_naam) ligt er vuilnis op de grond",
             };
 
             await runner.patch({
@@ -137,13 +137,13 @@ describe("Mail Template tests", () => {
                 {
                     id: 2,
                     name: "Code",
-                    mail_subject: "Code werkt niet in $(building)",
+                    mail_subject: "Code werkt niet in $(gebouw_naam)",
                     content: "In $(gebouw_naam) werkt de code niet meer",
                 },
                 {
                     id: 3,
                     name: "Ivago",
-                    mail_subject: "Ivago is niet langs $(building) gekomen",
+                    mail_subject: "Ivago is niet langs $(gebouw_naam) gekomen",
                     content:
                         "Ivago heeft de ingeplande container niet meegenomen bij $(gebouw_naam)",
                 },
