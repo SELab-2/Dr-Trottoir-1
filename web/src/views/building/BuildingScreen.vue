@@ -1,11 +1,16 @@
 <template>
   <HFillWrapper v-if="building !== null">
     <v-card variant="text" class="space-y">
-      <img
-        alt="banner"
-        id="banner"
-        src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
-      />
+      <v-carousel hide-delimiters>
+        <v-carousel-item
+          v-for="entry in building.images"
+          :key="entry.id"
+          cover
+          :src="ImgProxy.env.url(entry.image)"
+        >
+        </v-carousel-item>
+      </v-carousel>
+
       <RemovedCard
         :show="useAuthStore().auth?.admin && building.deleted"
         title="Dit gebouw is verwijderd."
@@ -233,6 +238,7 @@ import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
 import RemovedCard from "@/components/cards/RemovedCard.vue";
 import router from "@/router";
+import { ImgProxy } from "@/imgproxy";
 
 const showRemovePopup = ref(false);
 
@@ -394,7 +400,7 @@ async function restoreBuilding() {
 </script>
 
 <style lang="scss" scoped>
-#banner {
+.banner {
   width: 100%;
   max-height: 34vh;
   object-fit: cover;
