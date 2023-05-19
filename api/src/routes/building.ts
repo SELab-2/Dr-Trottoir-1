@@ -245,18 +245,18 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ superStudent: true, syndicus: true })
     async createImage(req: CustomRequest, res: express.Response) {
-        const building_id = Number(Parser.number(req.params["id"]));
-        await prisma.image.create({
+        const building_id = Parser.number(req.params["id"]);
+        const image_id = Parser.number(req.body["image"]);
+
+        // For TypeScript's sake.
+        if (!building_id || !image_id) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
+        await prisma.buildingImages.create({
             data: {
-                time: req.body.time,
-                location: req.body.location,
-                path: req.body.path,
-                user_id: req.body.user_id,
-                buildings: {
-                    connect: {
-                        id: building_id,
-                    },
-                },
+                building_id,
+                image_id,
             },
         });
 
@@ -272,20 +272,35 @@ export class BuildingRouting extends Routing {
 
     @Auth.authorization({ superStudent: true, syndicus: true })
     async deleteImage(req: CustomRequest, res: express.Response) {
-        const result = await prisma.buildingImages.findUniqueOrThrow({
+        const building_id = Parser.number(req.params["id"]);
+        const image_id = Parser.number(req.params["image_id"]);
+
+        // For TypeScript's sake.
+        if (!building_id || !image_id) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
+        const deleted = await prisma.buildingImages.deleteMany({
             where: {
-                id: Parser.number(req.params["image_id"]),
+                image_id,
+                building_id,
             },
         });
 
-        // Use cascade delete of Image
-        await prisma.image.delete({
+        if (deleted.count !== 1) {
+            throw new APIError(APIErrorCode.NOT_FOUND);
+        }
+
+        // TODO: delete data
+
+        const result = await prisma.building.findUniqueOrThrow({
             where: {
-                id: result.image_id,
+                id: building_id,
             },
+            select: BuildingRouting.selects,
         });
 
-        return res.status(200).json({});
+        return res.status(200).json(result);
     }
 
     getValidator(): Validator {
