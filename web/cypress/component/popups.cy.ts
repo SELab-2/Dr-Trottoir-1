@@ -6,7 +6,8 @@ describe("popup tests", () => {
   it('cardpopup test', () => {
     cy.mount(CardPopup, {
       props: {
-        modelValue: true
+        modelValue: true,
+        width: 400,
       }
     })
     // this is a blank canvas to create a popup, where modelValue indicates if the popup is active/visible or not

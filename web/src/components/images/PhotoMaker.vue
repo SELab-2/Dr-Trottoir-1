@@ -23,7 +23,7 @@
       ></v-file-input>
       <v-select
         v-if="isPhoto"
-        id="label"
+        id="type"
         variant="outlined"
         :items="ImageTypes"
         @update:model-value="$emit('onUpdate', photo)"
@@ -72,8 +72,8 @@ const props = defineProps({
 
 const photo = ref<Photo>({
   image: [],
-  comments: "geen commentaar",
-  type: "ARRIVAL",
+  comments: "",
+  type: "",
 });
 
 if (!props.isPhoto) {

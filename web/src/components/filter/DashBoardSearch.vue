@@ -2,6 +2,7 @@
   <div class="d-flex align-center box">
     <v-icon icon="mdi-magnify" class="mx-2" size="x-large"></v-icon>
     <v-text-field
+      id="search"
       class="w-100"
       label="Zoek in de tabel"
       v-model="searchString"
@@ -9,6 +10,7 @@
       variant="underlined"
     />
     <v-checkbox
+      id="hidden"
       v-if="admin"
       class="mt-4 checkbox"
       label="Verborgen"
