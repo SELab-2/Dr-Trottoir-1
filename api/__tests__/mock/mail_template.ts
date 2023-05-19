@@ -16,7 +16,8 @@ export async function initialiseMailTemplate() {
     const mailTemplate3 = {
         name: "Ivago",
         mail_subject: "Ivago is niet langs $(gebouw_naam) gekomen",
-        content: "Ivago heeft de ingeplande container niet meegenomen bij $(gebouw_naam)",
+        content:
+            "Ivago heeft de ingeplande container niet meegenomen bij $(gebouw_naam)",
     };
     await prisma.mailTemplate.createMany({
         data: [mailTemplate1, mailTemplate2, mailTemplate3],
