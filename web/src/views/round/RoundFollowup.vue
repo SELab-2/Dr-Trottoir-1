@@ -12,17 +12,19 @@
       "
     />
     <v-card
-      v-if="schedules.length === 0"
+      v-if="filtered.length === 0"
       color="background"
       variant="flat"
       subtitle="Er zijn geen rondes ingepland voor de geselecteerde data."
     />
     <!-- TODO: fix comment when db ready for it-->
     <RoundCard
-      v-for="(schedule, i) in schedules"
-      :key="i"
-      :schedule="schedule"
-      @click="redirect_to_detail(schedule.round_id, schedule.id)"
+      v-for="(schedule, i) in filtered"
+      :key="schedule.schedule.id"
+      :schedule="schedule.schedule"
+      @click="
+        redirect_to_detail(schedule.schedule.round_id, schedule.schedule.id)
+      "
       style="cursor: pointer"
     ></RoundCard>
   </HFillWrapper>
@@ -50,7 +52,7 @@ const query_labels = ["Ronde", "Student"];
 const filter_options = ["Klaar", "Bezig", "Niet begonnen"];
 const sort_items = ["Voortgang"];
 
-const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
+const filtered: Ref<Array<FilteredSchedule>> = ref([]);
 const progress = ref<Map<Result<ScheduleQuery>, number>>(); // completed buildings of each schedule
 
 // fetch the schedules, for today
@@ -68,6 +70,7 @@ interface FilteredSchedule {
   completedBuildings: number;
   totalBuildings: number;
   amountOfComments: number;
+  roundProgress: number;
 }
 
 async function updateSchedules() {
@@ -85,10 +88,12 @@ async function updateSchedules() {
   });
 
   for (const schedule of schedules) {
-    tryOrAlertAsync(async () => {
+    await tryOrAlertAsync(async () => {
       const progresses = await new ProgressQuery().getAll({
         schedule: schedule.id,
       });
+
+      const completed = getCompletedBuildings(progresses);
 
       filteredSchedules.push({
         schedule: schedule,
@@ -98,9 +103,12 @@ async function updateSchedules() {
         roundEnd: schedule.end,
         roundDate: schedule.day,
         studentName: schedule.user.first_name,
-        completedBuildings: getCompletedBuildings(progresses),
+        completedBuildings: completed,
         totalBuildings: schedule.round.buildings.length,
         amountOfComments: getCommentsAmount(progresses),
+        roundProgress: Math.round(
+          (completed / schedule.round.buildings.length) * 100,
+        ),
       });
     });
   }
@@ -108,7 +116,7 @@ async function updateSchedules() {
   // apply filters
   filteredSchedules = filtered_data(filteredSchedules);
 
-  schedules.value = schedules;
+  filtered.value = filteredSchedules;
 }
 
 // All the filter options
@@ -129,66 +137,18 @@ function redirect_to_detail(round_id: number, schedule_id: number) {
   });
 }
 
-/* Data fetching */
-
-//interface ExtendedSchedule extends Result<ScheduleQuery>, Result<ProgressQuery> {};
-
-async function fetchBuildingProgress(
-  schedule_id: number,
-  building_id: number,
-): Promise<Result<ProgressQuery> | null> {
-  let result: Array<Result<ProgressQuery>> = [];
-  await tryOrAlertAsync(async () => {
-    result = await new ProgressQuery().getAll({
-      schedule: schedule_id,
-      building: building_id,
-    });
-  });
-  return result.length == 0 ? null : result[0];
-}
-
-async function completedBuildings(
-  schedule: Result<ScheduleQuery>,
-): Promise<number> {
-  let count = 0;
-  for (const building of schedule.round.buildings) {
-    const progress = await fetchBuildingProgress(
-      schedule.id,
-      building.building_id,
-    );
-    if (progress) {
-      count++;
-    }
-  }
-  return count;
-}
-
 handleFilterUpdate(filter_data.value);
 
 /* Data filtering */
 async function handleFilterUpdate(data: FilterData) {
   filter_data.value = data;
-  // set at start of the day
   filter_data.value.start_day.setHours(0, 0, 0, 0);
-  // set at end of the day
   filter_data.value.end_day.setHours(23, 59, 59, 999);
   await updateSchedules();
 }
 
-
-function progressOfSchedule(schedule: Result<ScheduleQuery>): number {
-  return progress.value?.get(schedule)!;
-}
-
-
-function calculateProgress(done: number, total: number): number {
-  return Math.round((done / total) * 100);
-}
-
 // The list of data after filtering
-function filtered_data(
-  schedules: FilteredSchedule[],
-): FilterData[] {
+function filtered_data(schedules: FilteredSchedule[]): FilteredSchedule[] {
   const result: FilteredSchedule[] = [];
   // filtering
   schedules.forEach((schedule) => {
@@ -205,20 +165,8 @@ function filtered_data(
   });
 
   // sort the results
-  result.sort((a: Result<ScheduleQuery>, b: Result<ScheduleQuery>) => {
-    if (filter_data.value.sort_by == "Gebouwen") {
-      return a.round.buildings.length > b.round.buildings.length ? 1 : -1;
-    } else {
-      const ap = calculateProgress(
-        progressOfSchedule(a),
-        a.round.buildings.length,
-      );
-      const bp = calculateProgress(
-        progressOfSchedule(b),
-        b.round.buildings.length,
-      );
-      return ap > bp ? 1 : -1;
-    }
+  result.sort((a: FilteredSchedule, b: FilteredSchedule) => {
+    return a.roundProgress > b.roundProgress ? 1 : -1;
   });
   // set sorting order
   if (!filter_data.value.sort_ascending) {
@@ -226,7 +174,6 @@ function filtered_data(
   }
   return result;
 }
-
 
 function filter_query(schedule: FilteredSchedule): boolean {
   let search_by: string = "";
@@ -238,12 +185,12 @@ function filter_query(schedule: FilteredSchedule): boolean {
       search_by = schedule.studentName.toLowerCase();
       break;
   }
+
   return (
     search_by.includes(filter_data.value.query.toLowerCase()) ||
     filter_data.value.query.length == 0
   );
 }
-
 
 function filter_filters(schedule: FilteredSchedule): boolean {
   if (filter_data.value.filters.length == 0) {
@@ -253,13 +200,13 @@ function filter_filters(schedule: FilteredSchedule): boolean {
   for (const option of filter_data.value.filters) {
     switch (option) {
       case "Klaar":
-        result = schedule.roundEnd !== null
+        result = schedule.roundEnd !== null;
         break;
       case "Bezig":
-        result = (schedule.roundStart !== null) && (schedule.roundEnd === null)
+        result = schedule.roundStart !== null && schedule.roundEnd === null;
         break;
       case "Niet begonnen":
-        result = schedule.roundStart === null
+        result = schedule.roundStart === null;
         break;
     }
     if (result) {
