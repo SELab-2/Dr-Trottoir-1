@@ -1,7 +1,10 @@
 <template>
   <BorderCard
     class="mx-1 mb-3"
-    v-on="{ click: () => router.push({name: 'building_id', params: {id: props.building.id }})}"
+    v-on="{
+      click: () =>
+        router.push({ name: 'building_id', params: { id: props.building.id } }),
+    }"
   >
     <v-row class="flex-nowrap">
       <v-col cols="2" class="flex-grow-0 flex-shrink-0">
@@ -39,13 +42,11 @@
 
           <template v-slot:append>
             <!-- Date -->
-            <v-chip
-              label
-              color="blue"
-              class="ml-3 align-top"
-            >
+            <v-chip label color="blue" class="ml-3 align-top">
               <v-icon icon="mdi-calendar-clock"></v-icon>
-              <p class="ml-2">{{ filter_data.start_day.toLocaleDateString("nl") }}</p>
+              <p class="ml-2">
+                {{ filter_data.start_day.toLocaleDateString("nl") }}
+              </p>
             </v-chip>
             <!-- Date expansion button-->
             <v-btn
@@ -53,7 +54,7 @@
               :icon="expanded ? 'mdi-menu-up' : 'mdi-menu-down'"
               class="dropdown-button"
               variant="text"
-              v-if='can_expand'
+              v-if="can_expand"
             />
           </template>
         </v-card>
@@ -69,10 +70,19 @@
             label
             class="w-100"
             variant="text"
-            @click="router.push({name: 'round_detail', params: {id: progress.schedule.round_id, schedule: progress.schedule_id }})"
+            @click="
+              router.push({
+                name: 'round_detail',
+                params: {
+                  id: progress.schedule?.round_id,
+                  schedule: progress.schedule_id,
+                },
+              })
+            "
           >
-            <v-icon color="blue" icon="mdi-calendar-clock"></v-icon>
+            <v-icon color="blue" icon="mdi-bicycle-cargo"></v-icon>
             <p class="ml-2">
+              {{ progress.schedule?.round.name }} op
               {{
                 new Date(progress.arrival ?? new Date()).toLocaleDateString(
                   "nl",
@@ -95,7 +105,7 @@ import { ref, Ref } from "vue";
 import { useRouter } from "vue-router";
 import BorderCard from "@/layouts/CardLayout.vue";
 import DividerLayout from "@/layouts/DividerLayout.vue";
-import Filterdata from '@/components/filter/FilterData'
+import Filterdata from "@/components/filter/FilterData";
 import { Result, BuildingQuery, ProgressQuery } from "@selab-2/groep-1-query";
 import { PropType } from "vue";
 import { tryOrAlertAsync } from "@/try";
@@ -124,7 +134,7 @@ const comments = ref<Boolean>(false);
 
 let progresses: Ref<Array<Result<ProgressQuery>>> = ref([]);
 
-const can_expand: Ref<boolean> = ref();
+const can_expand: Ref<boolean> = ref(false);
 
 function getStartOfDay(day: Date) {
   return new Date(day.setHours(0, 0, 0, 0));
@@ -148,7 +158,7 @@ tryOrAlertAsync(async () => {
     if (hasComments) {
       comments.value = hasComments;
     }
-    if(props.filter_data.filters[0] === "Opmerkingen"){
+    if (props.filter_data.filters[0] === "Opmerkingen") {
       return hasComments;
     }
     return true;

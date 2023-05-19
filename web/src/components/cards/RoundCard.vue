@@ -13,7 +13,7 @@
       {{ roundName }}
       <v-icon
         end
-        v-if="comments"
+        v-if="amountOfComments !== 0"
         icon="mdi-comment-alert-outline"
         size="small"
       />
@@ -61,50 +61,51 @@
     </v-chip>
     <v-chip label color="primary" class="ml-3">
       <v-icon icon="mdi-calendar" class="pr-1" />
-      {{ roundDate.toLocaleDateString("nl") }}
+      {{ new Date(roundDate).toLocaleDateString("nl") }}
     </v-chip>
     <v-chip v-if="roundStart" label color="primary" class="ml-3">
-      <v-icon icon="mdi-clock"></v-icon> {{ roundStart.toLocaleTimeString() }}
+      <v-icon icon="mdi-clock"></v-icon>
+      {{
+        new Date(roundStart).toLocaleTimeString("nl", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      }}
     </v-chip>
     <v-chip v-if="roundEnd" label color="primary" class="ml-3">
-      <v-icon icon="mdi-clock-check"></v-icon> {{ roundEnd.toLocaleTimeString() }}
+      <v-icon icon="mdi-clock-check"></v-icon>
+      {{
+        new Date(roundEnd).toLocaleTimeString("nl", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      }}
     </v-chip>
   </BorderCard>
 </template>
 
 <script lang="ts" setup>
-import { ref, PropType } from "vue";
+import { PropType } from "vue";
 import Avatar from "@/components/Avatar.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
-import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
-import { tryOrAlertAsync } from "@/try";
-import { getCompletedBuildings, getCommentsAmount } from "@/assets/scripts/roundProgress"
 
 const props = defineProps({
-  schedule: {type: Object as PropType<Result<ScheduleQuery>>, required: true},
+  roundName: { type: String, required: true },
+  roundStart: {
+    type: [String, null] as PropType<string | null>,
+    required: true,
+  },
+  roundEnd: { type: [String, null] as PropType<string | null>, required: true },
+  roundDate: { type: String, required: true },
+  studentName: { type: String, required: true },
+  completedBuildings: { type: Number, required: true },
+  totalBuildings: { type: Number, required: true },
+  amountOfComments: { type: Number, required: true },
+  roundProgress: { type: Number, required: true },
 });
-
-console.log(props.schedule)
-
-const progresses = ref<Result<ProgressQuery>[]>([])
-
-await tryOrAlertAsync(async () => {
-  progresses.value = await new ProgressQuery().getAll({schedule: props.schedule.id})
-})
-
-const roundName = props.schedule.round.name
-const roundStart = props.schedule.start? new Date(props.schedule.start) : null
-const roundEnd = props.schedule.end? new Date(props.schedule.end) : null
-const roundDate = new Date(props.schedule.day)
-const studentName = props.schedule.user.first_name
-
-const completedBuildings = getCompletedBuildings(progresses.value)
-const totalBuildings = progresses.value.length
-const comments = getCommentsAmount(progresses.value) === 0
-
 
 // Value which calculates the percentage that will be shown in the progressbar
 function progress() {
-  return Math.round((completedBuildings / totalBuildings) * 100);
+  return Math.round((props.completedBuildings / props.totalBuildings) * 100);
 }
 </script>

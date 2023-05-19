@@ -19,9 +19,18 @@
     />
     <!-- TODO: fix comment when db ready for it-->
     <RoundCard
-      v-for="(schedule, i) in filtered"
+      v-for="schedule in filtered"
       :key="schedule.schedule.id"
       :schedule="schedule.schedule"
+      :amountOfComments="schedule.amountOfComments"
+      :completedBuildings="schedule.completedBuildings"
+      :roundEnd="schedule.roundEnd"
+      :roundStart="schedule.roundStart"
+      :roundDate="schedule.roundDate"
+      :roundName="schedule.roundName"
+      :studentName="schedule.studentName"
+      :totalBuildings="schedule.totalBuildings"
+      :roundProgress="schedule.roundProgress"
       @click="
         redirect_to_detail(schedule.schedule.round_id, schedule.schedule.id)
       "
@@ -53,7 +62,6 @@ const filter_options = ["Klaar", "Bezig", "Niet begonnen"];
 const sort_items = ["Voortgang"];
 
 const filtered: Ref<Array<FilteredSchedule>> = ref([]);
-const progress = ref<Map<Result<ScheduleQuery>, number>>(); // completed buildings of each schedule
 
 // fetch the schedules, for today
 /**
