@@ -1,8 +1,9 @@
-import { Image, Prisma } from "@selab-2/groep-1-orm";
+import { Prisma, File, Building } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithoutAddress } from "./include";
 import { QueryError } from "./query_error";
 import { ProgressQuery } from "./progress";
+import { FileQuery } from "./file";
 
 export type BuildingQueryParameters = {
     take: number;
@@ -72,16 +73,21 @@ export class BuildingQuery extends Query<
      * @throws QueryError
      */
     async createImage(
-        id: number,
-        element: Partial<Image>,
+        building: { id: number },
+        elementId: string,
     ): Promise<BuildingAllInfo> {
-        if (Number.isNaN(id)) {
+        const file = await new FileQuery().createOne(elementId);
+
+        if (Number.isNaN(building.id)) {
             throw new QueryError(400, "Bad Request");
         }
 
-        const imageEndpoint = this.server + this.endpoint + "/" + id + "/image";
+        const imageEndpoint =
+            this.server + this.endpoint + "/" + building.id + "/image";
 
-        return this.fetchJSON(imageEndpoint, "POST", element);
+        return this.fetchJSON(imageEndpoint, "POST", {
+            image: file.id,
+        });
     }
 
     /**
@@ -90,15 +96,11 @@ export class BuildingQuery extends Query<
      */
     async deleteImage(
         id: number,
-        image_id: number,
+        file: { id: number },
         hard = false,
-    ): Promise<void> {
-        if (Number.isNaN(id) || Number.isNaN(image_id)) {
-            throw new QueryError(400, "Bad Request");
-        }
-
+    ): Promise<BuildingAllInfo> {
         const imageEndpoint =
-            this.server + this.endpoint + "/" + id + "/image/" + image_id;
+            this.server + this.endpoint + "/" + id + "/image/" + file.id;
 
         return this.fetchJSON(imageEndpoint, "DELETE", { hardDelete: hard });
     }
