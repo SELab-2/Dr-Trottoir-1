@@ -1,4 +1,7 @@
 <template>
+  <div class="py-0 my-2 mx-5">
+    <MapComponent :buildings="newRoundBuildings" />
+  </div>
   <v-row class="py-0 my-2 mx-2">
     <v-col
       cols="1"
@@ -9,13 +12,7 @@
         title="Ronde aanmaken"
         subtitle="De ronde zal in de volgorde van onderstaande lijst opgeslagen worden"
       >
-        <template v-slot:append
-          ><v-switch
-            color="primary"
-            v-model="garbageinfo"
-            label="Toon afvalkalender"
-          ></v-switch
-        ></template>
+        <template v-slot:append></template>
         <v-text-field
           id="roundname"
           class="ml-3 mr-5"
@@ -83,8 +80,9 @@ import { Result, BuildingQuery, RoundQuery } from "@selab-2/groep-1-query";
 import { RoundBuildingQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import router from "@/router";
+import MapComponent from "@/components/maps/MapComponent.vue";
 
-const availableBuildings = ref<Result<BuildingQuery>[]>([]);
+const availableBuildings: Ref<Array<Result<BuildingQuery>>> = ref([]);
 
 onMounted(() => {
   tryOrAlertAsync(async () => {

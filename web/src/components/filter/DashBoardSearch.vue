@@ -38,5 +38,6 @@ defineEmits(["changed"]);
 }
 .box {
   height: 50px;
+  padding-top: 15px;
 }
 </style>
