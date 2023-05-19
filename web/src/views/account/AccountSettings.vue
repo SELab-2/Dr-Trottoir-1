@@ -189,30 +189,37 @@
     </div>
   </HFillWrapper>
 
-  <CardPopup v-model="showPopup" :title="popupTitle" :prepend-icon="popupIcon">
-    <p class="mx-3">
-      {{ popupMsg }}
-    </p>
-    <v-card-actions>
-      <v-btn
-        prepend-icon="mdi-close"
-        color="error"
-        @click="showPopup = false"
-        variant="elevated"
-        class="text-none"
-      >
-        Annuleer
-      </v-btn>
-      <v-btn
-        prepend-icon="mdi-check"
-        color="success"
-        @click="popupSubmit()"
-        variant="elevated"
-        class="text-none"
-      >
-        {{ popupSubmitMsg }}
-      </v-btn>
-    </v-card-actions>
+  <CardPopup v-model="showPopup">
+    <div class="pa-4">
+      <div class="d-flex align-center" style="gap: 12px">
+        <v-icon icon="mdi-content-save-alert-outline" size="large"></v-icon>
+        <h2>Bewaar aanpassingen</h2>
+      </div>
+      <p style="opacity: 90%" class="pt-2 pb-4">
+        Je staat op het punt deze account permanent te<br />bewerken. Ben je
+        zeker dat je wilt verdergaan?
+      </p>
+      <div class="d-flex" style="gap: 12px; min-width: fit-content">
+        <v-btn
+          prepend-icon="mdi-close"
+          color="error"
+          @click="showPopup = false"
+          variant="elevated"
+          class="text-none"
+        >
+          Annuleer
+        </v-btn>
+        <v-btn
+          prepend-icon="mdi-check"
+          color="success"
+          @click="popupSubmit()"
+          variant="elevated"
+          class="text-none"
+        >
+          Bewaar aanpassingen
+        </v-btn>
+      </div>
+    </div>
   </CardPopup>
 </template>
 
