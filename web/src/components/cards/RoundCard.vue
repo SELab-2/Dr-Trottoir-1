@@ -67,7 +67,8 @@
       <v-icon icon="mdi-clock"></v-icon> {{ roundStart.toLocaleTimeString() }}
     </v-chip>
     <v-chip v-if="roundEnd" label color="primary" class="ml-3">
-      <v-icon icon="mdi-clock-check"></v-icon> {{ roundEnd.toLocaleTimeString() }}
+      <v-icon icon="mdi-clock-check"></v-icon>
+      {{ roundEnd.toLocaleTimeString() }}
     </v-chip>
   </BorderCard>
 </template>
@@ -78,30 +79,34 @@ import Avatar from "@/components/Avatar.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
-import { getCompletedBuildings, getCommentsAmount } from "@/assets/scripts/roundProgress"
+import {
+  getCompletedBuildings,
+  getCommentsAmount,
+} from "@/assets/scripts/roundProgress";
 
 const props = defineProps({
-  schedule: {type: Object as PropType<Result<ScheduleQuery>>, required: true},
+  schedule: { type: Object as PropType<Result<ScheduleQuery>>, required: true },
 });
 
-console.log(props.schedule)
+console.log(props.schedule);
 
-const progresses = ref<Result<ProgressQuery>[]>([])
+const progresses = ref<Result<ProgressQuery>[]>([]);
 
 await tryOrAlertAsync(async () => {
-  progresses.value = await new ProgressQuery().getAll({schedule: props.schedule.id})
-})
+  progresses.value = await new ProgressQuery().getAll({
+    schedule: props.schedule.id,
+  });
+});
 
-const roundName = props.schedule.round.name
-const roundStart = props.schedule.start? new Date(props.schedule.start) : null
-const roundEnd = props.schedule.end? new Date(props.schedule.end) : null
-const roundDate = new Date(props.schedule.day)
-const studentName = props.schedule.user.first_name
+const roundName = props.schedule.round.name;
+const roundStart = props.schedule.start ? new Date(props.schedule.start) : null;
+const roundEnd = props.schedule.end ? new Date(props.schedule.end) : null;
+const roundDate = new Date(props.schedule.day);
+const studentName = props.schedule.user.first_name;
 
-const completedBuildings = getCompletedBuildings(progresses.value)
-const totalBuildings = progresses.value.length
-const comments = getCommentsAmount(progresses.value) === 0
-
+const completedBuildings = getCompletedBuildings(progresses.value);
+const totalBuildings = progresses.value.length;
+const comments = getCommentsAmount(progresses.value) === 0;
 
 // Value which calculates the percentage that will be shown in the progressbar
 function progress() {

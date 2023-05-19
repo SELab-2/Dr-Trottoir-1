@@ -35,7 +35,10 @@ import { useRouter } from "vue-router";
 import { Ref, ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
-import { getCompletedBuildings, getCommentsAmount } from "@/assets/scripts/roundProgress"
+import {
+  getCompletedBuildings,
+  getCommentsAmount,
+} from "@/assets/scripts/roundProgress";
 import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 

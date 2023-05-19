@@ -9,7 +9,7 @@
     />
     <building-card
       :building="building"
-      :filter_data='filter_data'
+      :filter_data="filter_data"
       v-for="building in buildings"
       :key="building.id + ':' + JSON.stringify(filter_data)"
     />
@@ -22,7 +22,7 @@ import Filterdata from "@/components/filter/FilterData";
 import { ref, Ref } from "vue";
 import BuildingCard from "@/components/cards/BuildingCard.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
-import { Result, BuildingQuery } from '@selab-2/groep-1-query'
+import { Result, BuildingQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 
 const query_labels = ["Gebouw", "Syndicus", "Adres"];
@@ -58,19 +58,24 @@ function filterQuery(buildings: Array<Result<BuildingQuery>>) {
   return buildings.filter((building) => {
     switch (filter_data.value.search_label) {
       case "Gebouw": {
-        return building.name.toLowerCase().includes(filter_data.value.query.toLowerCase());
+        return building.name
+          .toLowerCase()
+          .includes(filter_data.value.query.toLowerCase());
       }
       case "Syndicus": {
-        return full_syndicus_name(building).toLowerCase().includes(filter_data.value.query.toLowerCase());
+        return full_syndicus_name(building)
+          .toLowerCase()
+          .includes(filter_data.value.query.toLowerCase());
       }
       case "Adres": {
-        return full_address(building).toLowerCase().includes(filter_data.value.query.toLowerCase());
+        return full_address(building)
+          .toLowerCase()
+          .includes(filter_data.value.query.toLowerCase());
       }
       default: {
         return true;
       }
     }
-
   });
 }
 
@@ -81,7 +86,6 @@ async function getBuildings() {
   });
 }
 await getBuildings();
-
 </script>
 
 <style scoped lang="scss"></style>
