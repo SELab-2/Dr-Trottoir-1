@@ -34,8 +34,8 @@ describe("Mail Template tests", () => {
         test("POST /mail_template", async () => {
             const newMailTemplate = {
                 name: "new mail template",
-                mail_subject: "new mail template subject $(building)",
-                content: "new content for $(building)",
+                mail_subject: "new mail template subject $(gebouw_naam)",
+                content: "new content for $(gebouw_naam)",
             };
 
             await runner.post({
@@ -48,22 +48,22 @@ describe("Mail Template tests", () => {
         test("GET /mail_template", async () => {
             const expected = [
                 {
-                    content: "In $(building) ligt er vuilnis op de grond",
+                    content: "In $(gebouw_naam) ligt er vuilnis op de grond",
                     id: 1,
-                    mail_subject: "Vuilnis in $(building)",
+                    mail_subject: "Vuilnis in $(gebouw_naam)",
                     name: "Vuilnis",
                 },
                 {
-                    content: "In $(building) werkt $(code) niet meer",
+                    content: "In $(gebouw_naam) werkt de code niet meer",
                     id: 2,
-                    mail_subject: "Code werkt niet in $(building)",
+                    mail_subject: "Code werkt niet in $(gebouw_naam)",
                     name: "Code",
                 },
                 {
                     content:
-                        "Ivago heeft $(garbage_type) niet meegenomen bij $(building)",
+                        "Ivago heeft de ingeplande container niet meegenomen bij $(gebouw_naam)",
                     id: 3,
-                    mail_subject: "Ivago is niet langs $(building) gekomen",
+                    mail_subject: "Ivago is niet langs $(gebouw_naam) gekomen",
                     name: "Ivago",
                 },
             ];
@@ -74,16 +74,16 @@ describe("Mail Template tests", () => {
         test("GET /mail_template with filter", async () => {
             const expected = [
                 {
-                    content: "In $(building) werkt $(code) niet meer",
+                    content: "In $(gebouw_naam) werkt de code niet meer",
                     id: 2,
-                    mail_subject: "Code werkt niet in $(building)",
+                    mail_subject: "Code werkt niet in $(gebouw_naam)",
                     name: "Code",
                 },
                 {
                     content:
-                        "Ivago heeft $(garbage_type) niet meegenomen bij $(building)",
+                        "Ivago heeft de ingeplande container niet meegenomen bij $(gebouw_naam)",
                     id: 3,
-                    mail_subject: "Ivago is niet langs $(building) gekomen",
+                    mail_subject: "Ivago is niet langs $(gebouw_naam) gekomen",
                     name: "Ivago",
                 },
             ];
@@ -99,8 +99,8 @@ describe("Mail Template tests", () => {
                 {
                     id: 1,
                     name: "Vuilnis",
-                    mail_subject: "Vuilnis in $(building)",
-                    content: "In $(building) ligt er vuilnis op de grond",
+                    mail_subject: "Vuilnis in $(gebouw_naam)",
+                    content: "In $(gebouw_naam) ligt er vuilnis op de grond",
                 },
             ];
 
@@ -118,8 +118,8 @@ describe("Mail Template tests", () => {
             const expected = {
                 id: 1,
                 name: "Updated name mail template",
-                mail_subject: "Vuilnis in $(building)",
-                content: "In $(building) ligt er vuilnis op de grond",
+                mail_subject: "Vuilnis in $(gebouw_naam)",
+                content: "In $(gebouw_naam) ligt er vuilnis op de grond",
             };
 
             await runner.patch({
@@ -137,15 +137,15 @@ describe("Mail Template tests", () => {
                 {
                     id: 2,
                     name: "Code",
-                    mail_subject: "Code werkt niet in $(building)",
-                    content: "In $(building) werkt $(code) niet meer",
+                    mail_subject: "Code werkt niet in $(gebouw_naam)",
+                    content: "In $(gebouw_naam) werkt de code niet meer",
                 },
                 {
                     id: 3,
                     name: "Ivago",
-                    mail_subject: "Ivago is niet langs $(building) gekomen",
+                    mail_subject: "Ivago is niet langs $(gebouw_naam) gekomen",
                     content:
-                        "Ivago heeft $(garbage_type) niet meegenomen bij $(building)",
+                        "Ivago heeft de ingeplande container niet meegenomen bij $(gebouw_naam)",
                 },
             ];
             await runner.get({
