@@ -154,7 +154,7 @@
   <v-overlay v-model="showOverlay" class="align-center justify-center">
     <PhotoMaker
       @cancel="showOverlay = false"
-      @confirm="updateProgressWithPhoto"
+      @confirm="() => {}"
       :is-photo="overlayIsPhoto"
       :current-comments="currentProgress?.report"
     />
@@ -174,7 +174,6 @@ import { useDisplay } from "vuetify";
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRoute, useRouter } from "vue-router";
-import Photo from "@/components/models/Photo";
 import { useAuthStore } from "@/stores/auth";
 
 const router = useRouter();
@@ -335,38 +334,6 @@ async function progressUpdated(id: number | undefined) {
     progressItems.value.set(progress.building_id, progress);
     setCurrentProgress();
   }
-}
-
-async function updateProgressWithPhoto(photo: Photo, isPhoto: boolean) {
-  if (isPhoto) {
-    //TODO add photo with file query builder
-    await tryOrAlertAsync(async () => {
-      if (currentProgress.value) {
-        currentProgress.value = await new ProgressQuery().createImage(
-          currentProgress.value.id,
-          {
-            location: "EXTERNAL",
-            description: photo.comments,
-            path: photo.image.toString(),
-            time: new Date(),
-            type: photo.type,
-            user_id: useAuthStore().auth?.id ?? -1,
-          },
-        );
-      }
-    });
-  } else {
-    await tryOrAlertAsync(async () => {
-      if (currentProgress.value) {
-        currentProgress.value = await new ProgressQuery().updateOne({
-          id: currentProgress.value.id,
-          report: photo.comments,
-        });
-      }
-    });
-  }
-  await progressUpdated(currentProgress.value?.id);
-  showOverlay.value = false;
 }
 </script>
 

@@ -1,12 +1,14 @@
 import {
     Progress,
     Prisma,
-    FileLocation,
     ProgressImageType,
+    File,
+    ProgressImage,
 } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithoutAddress, includeBuilding } from "./include";
 import { QueryError } from "./query_error";
+import { FileQuery } from "./file";
 
 export type ProgressQueryParameters = {
     take: number;
@@ -40,14 +42,10 @@ type ProgressAllInfo = Prisma.ProgressGetPayload<{
     };
 }>;
 
-type ProgressImage = {
-    time: Date;
-    location: FileLocation;
-    path: string;
-    user_id: number;
-    type: ProgressImageType;
-    description: string;
-};
+export type ProgressImageNew = Pick<
+    ProgressImage,
+    "type" | "description" | "image_id"
+>;
 
 export class ProgressQuery extends Query<
     ProgressQueryParameters,
@@ -61,16 +59,21 @@ export class ProgressQuery extends Query<
      * @throws QueryErrror
      */
     async createImage(
-        id: number,
-        element: Partial<ProgressImage>,
+        progress: { id: number },
+        elementId: string,
+        type: ProgressImageType,
+        description: string,
     ): Promise<ProgressAllInfo> {
-        if (Number.isNaN(id)) {
-            throw new QueryError(400, "Bad Request");
-        }
+        const file = await new FileQuery().createOne(elementId);
 
-        const imageEndpoint = this.server + this.endpoint + "/" + id + "/image";
+        const imageEndpoint =
+            this.server + this.endpoint + "/" + progress.id + "/image";
 
-        return super.fetchJSON(imageEndpoint, "POST", element);
+        return super.fetchJSON(imageEndpoint, "POST", {
+            image_id: file.id,
+            type,
+            description,
+        });
     }
 
     /**
@@ -79,17 +82,15 @@ export class ProgressQuery extends Query<
      */
     async updateImage(
         id: number,
-        image_id: number,
-        element: Partial<ProgressImage>,
+        image: ProgressImageNew,
     ): Promise<ProgressAllInfo> {
-        if (Number.isNaN(id) || Number.isNaN(image_id)) {
-            throw new QueryError(400, "Bad Request");
-        }
-
         const imageEndpoint =
-            this.server + this.endpoint + "/" + id + "/image/" + image_id;
+            this.server + this.endpoint + "/" + id + "/image/" + image.image_id;
 
-        return super.fetchJSON(imageEndpoint, "PATCH", element);
+        return super.fetchJSON(imageEndpoint, "PATCH", {
+            type: image.type,
+            description: image.description,
+        });
     }
 
     /**
@@ -98,15 +99,11 @@ export class ProgressQuery extends Query<
      */
     async deleteImage(
         id: number,
-        image_id: number,
+        image: File,
         hard = false,
-    ): Promise<void> {
-        if (Number.isNaN(id) || Number.isNaN(image_id)) {
-            throw new QueryError(400, "Bad Request");
-        }
-
+    ): Promise<ProgressAllInfo> {
         const imageEndpoint =
-            this.server + this.endpoint + "/" + id + "/image/" + image_id;
+            this.server + this.endpoint + "/" + id + "/image/" + image.id;
 
         return super.fetchJSON(imageEndpoint, "DELETE", { hardDelete: hard });
     }

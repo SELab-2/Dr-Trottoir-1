@@ -1,64 +1,29 @@
 import { ParamBuilder } from "@bitpatty/imgproxy-url-builder";
-import { Image } from "@selab-2/groep-1-orm";
-import * as process from "process";
+import { File } from "@selab-2/groep-1-orm";
 
 /***
  * Abstraction over the URl of an ImgProxy instance. Provides a `url` function
  * to retrieve the location of the server.
  */
 export class ImgProxyServer {
-  private readonly protocol: "http" | "https";
-  private readonly path: string;
-  private readonly port: number;
-  private readonly root: string;
+  readonly url: string;
 
   /**
    * A singleton object which contains the information about ImgProxy instance
    * specified in the environment variables.
    * */
   public static env: ImgProxyServer = (() => {
-    const protocol = process.env.VUE_APP_IMGPROXY_PROTOCOL as "http" | "https";
-    const location = process.env.VUE_APP_IMGPROXY_LOCATION;
-    const port: number = parseInt(process.env.VUE_APP_IMGPROXY_PORT ?? "");
-    const root = process.env.VUE_APP_IMGPROXY_ROOT;
+    const url = process.env.VUE_APP_IMGPROXY_SERVER_ADDRESS;
 
-    // Protocol must be either `http` or `https`!
-    if (!["http", "https"].includes(protocol)) {
-      throw new Error("IMGPROXY: Invalid protocol supplied.");
+    if (url === undefined) {
+      throw new Error("IMGPROXY: Invalid base URL supplied.");
     }
 
-    if (location === undefined) {
-      throw new Error("IMGPROXY: Invalid location supplied.");
-    }
-
-    if (Number.isNaN(port)) {
-      throw new Error("IMGPROXY: Invalid port supplied.");
-    }
-
-    if (root === undefined) {
-      throw new Error("IMGPROXY: Invalid root supplied.");
-    }
-
-    return new ImgProxyServer(protocol, location, port, root);
+    return new ImgProxyServer(url);
   })();
 
-  constructor(
-    protocol: "http" | "https",
-    path: string,
-    port: number,
-    root: string,
-  ) {
-    this.protocol = protocol;
-    this.path = path;
-    this.port = port;
-    this.root = root;
-  }
-
-  /**
-   * Retrieve the base url of the ImgProxy instance as a single string.
-   */
-  url(): string {
-    return `${this.protocol}://${this.path}:${this.port}/${this.root}`;
+  constructor(url: string) {
+    this.url = url;
   }
 }
 
@@ -92,14 +57,10 @@ export class ImgProxy extends ParamBuilder {
    * For example:
    * <img alt={image.alt} src={ImageProxy.env.width(50).height(50).url(image)}>
    */
-  url(image: Image): string {
-    if (image.location !== "IMGPROXY") {
-      throw new Error("IMGPROXY: Cannot retrieve external image.");
-    }
-
+  url(image: File): string {
     return this.build({
-      baseUrl: this.server.url(),
-      path: `local://${image.path}@jpg`,
+      baseUrl: this.server.url,
+      path: `local://images/${image.path}@jpg`,
       plain: true,
     });
   }
