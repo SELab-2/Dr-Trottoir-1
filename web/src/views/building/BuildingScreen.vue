@@ -400,13 +400,6 @@ async function restoreBuilding() {
 </script>
 
 <style lang="scss" scoped>
-.banner {
-  width: 100%;
-  max-height: 34vh;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
 .space-y {
   & > * {
     margin-bottom: 32px;
