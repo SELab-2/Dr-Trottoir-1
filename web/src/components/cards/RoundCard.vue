@@ -10,10 +10,10 @@
     />
     <!-- Set round name as title -->
     <template v-slot:title>
-      {{ round_name }}
+      {{ roundName }}
       <v-icon
         end
-        v-if="round_comments"
+        v-if="comments"
         icon="mdi-comment-alert-outline"
         size="small"
       />
@@ -21,8 +21,8 @@
 
     <!-- Set student as subtitle -->
     <template v-slot:subtitle>
-      <Avatar :name="student_name" size="x-small" />
-      {{ student_name }}
+      <Avatar :name="studentName" size="x-small" />
+      {{ studentName }}
     </template>
 
     <!-- Set progress top right -->
@@ -30,7 +30,7 @@
       <v-chip
         label
         :color="
-          progress() === 0
+          progress() === 0 && !roundStart
             ? 'error'
             : progress() === 100
             ? 'success'
@@ -39,7 +39,7 @@
       >
         <v-icon
           :icon="
-            progress() === 0
+            progress() === 0 && !roundStart
               ? 'mdi-close'
               : progress() === 100
               ? 'mdi-check'
@@ -47,50 +47,64 @@
           "
         ></v-icon>
         {{
-          progress() === 0
+          progress() === 0 && !roundStart
             ? "Niet begonnen"
             : progress() === 100
             ? "Klaar"
-            : "Bezig " + building_index + "/" + total_buildings
+            : "Bezig " + completedBuildings + "/" + totalBuildings
         }}
       </v-chip>
     </template>
     <v-chip label color="brown" class="ml-3">
       <v-icon icon="mdi-office-building"></v-icon>
-      {{ total_buildings }}
+      {{ totalBuildings }}
     </v-chip>
     <v-chip label color="primary" class="ml-3">
       <v-icon icon="mdi-calendar" class="pr-1" />
-      {{ date.toLocaleDateString("nl") }}
+      {{ roundDate.toLocaleDateString("nl") }}
     </v-chip>
-    <v-chip v-if="round_start" label color="primary" class="ml-3">
-      <v-icon icon="mdi-clock"></v-icon> {{ round_start }}
+    <v-chip v-if="roundStart" label color="primary" class="ml-3">
+      <v-icon icon="mdi-clock"></v-icon> {{ roundStart.toLocaleTimeString() }}
     </v-chip>
-    <v-chip v-if="round_end" label color="primary" class="ml-3">
-      <v-icon icon="mdi-clock-check"></v-icon> {{ round_end }}
+    <v-chip v-if="roundEnd" label color="primary" class="ml-3">
+      <v-icon icon="mdi-clock-check"></v-icon> {{ roundEnd.toLocaleTimeString() }}
     </v-chip>
   </BorderCard>
 </template>
 
 <script lang="ts" setup>
+import { ref, PropType } from "vue";
 import Avatar from "@/components/Avatar.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
+import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
+import { getCompletedBuildings, getCommentsAmount } from "@/assets/scripts/roundProgress"
 
-// TODO: maybe too much props to give to a component, could be changed to an object in the future
-// Default props for this component
 const props = defineProps({
-  round_name: String,
-  round_start: String,
-  round_end: String,
-  student_name: String,
-  date: { type: Date, required: true },
-  total_buildings: { type: Number, required: true },
-  building_index: { type: Number, required: true },
-  round_comments: { type: Boolean, default: false },
+  schedule: {type: Object as PropType<Result<ScheduleQuery>>, required: true},
 });
+
+console.log(props.schedule)
+
+const progresses = ref<Result<ProgressQuery>[]>([])
+
+await tryOrAlertAsync(async () => {
+  progresses.value = await new ProgressQuery().getAll({schedule: props.schedule.id})
+})
+
+const roundName = props.schedule.round.name
+const roundStart = props.schedule.start? new Date(props.schedule.start) : null
+const roundEnd = props.schedule.end? new Date(props.schedule.end) : null
+const roundDate = new Date(props.schedule.day)
+const studentName = props.schedule.user.first_name
+
+const completedBuildings = getCompletedBuildings(progresses.value)
+const totalBuildings = progresses.value.length
+const comments = getCommentsAmount(progresses.value) === 0
+
 
 // Value which calculates the percentage that will be shown in the progressbar
 function progress() {
-  return Math.round((props.building_index / props.total_buildings) * 100);
+  return Math.round((completedBuildings / totalBuildings) * 100);
 }
 </script>

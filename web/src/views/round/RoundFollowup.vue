@@ -21,14 +21,7 @@
     <RoundCard
       v-for="(schedule, i) in schedules"
       :key="i"
-      :round_name="schedule.round.name"
-      round_start=""
-      round_end=""
-      :student_name="schedule.user.first_name"
-      :building_index="progress?.get(schedule)!"
-      :total_buildings="schedule.round.buildings.length"
-      :round_comments="progress?.get(schedule)! != 0"
-      :date="new Date(schedule.day)"
+      :schedule="schedule"
       @click="redirect_to_detail(schedule.round_id, schedule.id)"
       style="cursor: pointer"
     ></RoundCard>
@@ -42,7 +35,7 @@ import { useRouter } from "vue-router";
 import { Ref, ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
-
+import { getCompletedBuildings, getCommentsAmount } from "@/assets/scripts/roundProgress"
 import { ScheduleQuery, ProgressQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 
@@ -148,8 +141,6 @@ async function handleFilterUpdate(data: FilterData) {
   filter_data.value.end_day.setHours(23, 59, 59, 999);
   await updadeSchedules();
 }
-
-//Filtering TODO: replace with API calls
 
 function filter_query(schedule: Result<ScheduleQuery>): boolean {
   let search_by: string = "";
