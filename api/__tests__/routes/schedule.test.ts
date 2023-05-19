@@ -60,6 +60,7 @@ describe("Schedule tests", () => {
                         round_id: 1,
                     },
                 ],
+                deleted: false,
                 id: 1,
                 name: "Round 1",
                 description: "Description of round 1",
@@ -96,9 +97,8 @@ describe("Schedule tests", () => {
                 {
                     day: "2023-05-04T12:00:00.000Z",
                     deleted: false,
-                    id: 1,
-                    start: "2023-05-04T12:10:00.000Z",
                     end: "2023-05-04T12:20:00.000Z",
+                    id: 1,
                     round: {
                         buildings: [
                             {
@@ -113,9 +113,9 @@ describe("Schedule tests", () => {
                                         zip_code: 2000,
                                     },
                                     deleted: false,
+                                    description: "Description of building 1",
                                     id: 1,
                                     ivago_id: "ivago-1",
-                                    description: "Description of building 1",
                                     name: "Building 1",
                                 },
                                 building_id: 1,
@@ -124,11 +124,13 @@ describe("Schedule tests", () => {
                                 round_id: 1,
                             },
                         ],
+                        deleted: false,
+                        description: "Description of round 1",
                         id: 1,
                         name: "Round 1",
-                        description: "Description of round 1",
                     },
                     round_id: 1,
+                    start: "2023-05-04T12:10:00.000Z",
                     user: {
                         address: {
                             city: "Sydney",
@@ -157,9 +159,8 @@ describe("Schedule tests", () => {
                 {
                     day: "2023-05-04T12:00:00.000Z",
                     deleted: false,
-                    id: 2,
-                    start: "2023-05-04T12:10:00.000Z",
                     end: "2023-05-04T12:20:00.000Z",
+                    id: 2,
                     round: {
                         buildings: [
                             {
@@ -174,9 +175,9 @@ describe("Schedule tests", () => {
                                         zip_code: 9000,
                                     },
                                     deleted: false,
+                                    description: "Description of building 2",
                                     id: 2,
                                     ivago_id: "ivago-2",
-                                    description: "Description of building 2",
                                     name: "Building 2",
                                 },
                                 building_id: 2,
@@ -185,11 +186,13 @@ describe("Schedule tests", () => {
                                 round_id: 2,
                             },
                         ],
+                        deleted: false,
+                        description: "Description of round 2",
                         id: 2,
                         name: "Round 2",
-                        description: "Description of round 2",
                     },
                     round_id: 2,
+                    start: "2023-05-04T12:10:00.000Z",
                     user: {
                         address: {
                             city: "Ghent",
@@ -280,6 +283,7 @@ describe("Schedule tests", () => {
                 round: {
                     id: 2,
                     name: "Round 2",
+                    deleted: false,
                     description: "Description of round 2",
                     buildings: [
                         {
@@ -348,6 +352,7 @@ describe("Schedule tests", () => {
                 },
                 round: {
                     id: 1,
+                    deleted: false,
                     name: "Round 1",
                     description: "Description of round 1",
                     buildings: [

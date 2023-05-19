@@ -78,29 +78,25 @@
           </v-timeline-item>
 
           <v-timeline-item
-            v-for="entry in data.round.buildings"
+            v-for="entry in data.round.buildings.map((e) => {
+              return {
+                building: e.building,
+                progress: progressItems.get(e.building_id),
+              };
+            })"
             v-bind:key="entry.building.id"
-            :dot-color="
-              progressItems.get(entry.building_id)?.departure
-                ? 'success'
-                : 'grey'
-            "
-            :icon="
-              progressItems.get(entry.building_id)?.departure
-                ? 'mdi-check'
-                : 'mdi-clock'
-            "
+            :dot-color="entry.progress?.departure ? 'success' : 'grey'"
+            :icon="entry.progress?.departure ? 'mdi-check' : 'mdi-clock'"
             size="large"
             width="100%"
           >
             <RoundDetailCard
               :class="mobile ? 'shiftUnderTimeLine' : ''"
-              :key="JSON.stringify(progressItems.get(entry.building_id))"
+              :key="JSON.stringify(entry.progress)"
               :entry="entry"
               :day="data.day"
-              @changed="
-                progressUpdated(progressItems.get(entry.building_id)?.id)
-              "
+              :schedule_id="schedule_id"
+              @changed="progressUpdated(entry.progress?.id)"
               @requestPhotoAdd="
                 (progress) => {
                   currentProgress = progress;
@@ -250,12 +246,19 @@ const schedule_id: number = Number(route.params.schedule);
 const data: Ref<Result<ScheduleQuery> | null> = ref(null);
 const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
 const currentProgress: Ref<Result<ProgressQuery> | null> = ref(null);
+const lastBuildingId = ref<number>(0);
 
 const display = useDisplay();
 const mobile = display.mobile;
 
 await tryOrAlertAsync(async () => {
   data.value = await new ScheduleQuery().getOne(schedule_id);
+
+  lastBuildingId.value =
+    data.value.round.buildings[
+      data.value.round.buildings.length - 1
+    ].building_id;
+
   for (const progress of await new ProgressQuery().getAll({
     schedule: schedule_id,
     user: data.value.user.id,
@@ -332,6 +335,20 @@ async function progressUpdated(id: number | undefined) {
   if (id) {
     const progress = await new ProgressQuery().getOne(id);
     progressItems.value.set(progress.building_id, progress);
+
+    const firstBuilding = getFirstBuilding();
+    const lastBuilding = getLastBuilding();
+
+    await tryOrAlertAsync(async () => {
+      if (firstBuilding?.arrival && lastBuilding?.departure) {
+        await new ScheduleQuery().updateOne({
+          id: schedule_id,
+          start: new Date(firstBuilding.arrival),
+          end: new Date(lastBuilding.departure),
+        });
+      }
+    });
+
     setCurrentProgress();
   }
 }
