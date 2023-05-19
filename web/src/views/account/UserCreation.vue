@@ -122,7 +122,7 @@ import ContactForm from "@/components/forms/ContactForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import RolesForm from "@/components/forms/RolesForm.vue";
-import { UserQuery } from "@selab-2/groep-1-query";
+import { UserQuery } from '@selab-2/groep-1-query'
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 
@@ -203,7 +203,6 @@ const psswd2Rules = [
 async function submitForm() {
   // check if form is valid before submitting
   if (valid.value) {
-    // :to="{ name: 'account_settings', params: { id: 0 } }"
     let user;
     await tryOrAlertAsync(async () => {
       user = await new UserQuery().createOne({
@@ -214,10 +213,8 @@ async function submitForm() {
         student: roles.value.includes("Student"),
         super_student: roles.value.includes("Superstudent"),
         admin: roles.value.includes("Admin"),
-        //@ts-ignore TODO: fix build errors
         password: password2.value,
         address: {
-          //@ts-ignore TODO: fix build errors
           create: {
             city: address.value.city,
             latitude: 0,
@@ -229,7 +226,7 @@ async function submitForm() {
         },
         date_added: new Date(),
         last_login: new Date(),
-      });
+      } as any);
       router.push({ name: "account_settings", params: { id: user.id } });
     });
   }
