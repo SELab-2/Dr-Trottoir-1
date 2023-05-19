@@ -2,7 +2,6 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import { FileLocation } from "@selab-2/groep-1-orm";
 import {
     deleteDatabaseData,
     initialiseDatabase,
@@ -1160,7 +1159,7 @@ describe("Progress tests", () => {
 
             const newImage = {
                 time: timestamp,
-                location: FileLocation.FILE_SERVER,
+                location: "FILE_SERVER",
                 path: "path/to/file_server_image",
                 description: "vuilnis",
                 user_id: 1,
