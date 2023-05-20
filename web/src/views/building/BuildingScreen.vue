@@ -1,11 +1,25 @@
 <template>
   <HFillWrapper v-if="building !== null">
     <v-card variant="text" class="space-y">
-      <img
-        alt="banner"
-        id="banner"
-        src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
-      />
+      <v-carousel hide-delimiters>
+        <v-carousel-item
+          v-for="entry in building.images"
+          :key="entry.id"
+          cover
+          :src="ImgProxy.env.url(entry.image)"
+        >
+        </v-carousel-item>
+      </v-carousel>
+
+      <RemovedCard
+        :show="useAuthStore().auth?.admin && building.deleted"
+        title="Dit gebouw is verwijderd."
+        :restore="
+          async () => {
+            await restoreBuilding();
+          }
+        "
+      ></RemovedCard>
 
       <div>
         <div class="flex-container">
@@ -54,7 +68,7 @@
           </div>
 
           <v-btn
-            v-show="useAuthStore().auth?.admin"
+            v-show="useAuthStore().auth?.admin && !building.deleted"
             class="text-none"
             prepend-icon="mdi-delete"
             @click="showRemovePopup = true"
@@ -114,7 +128,7 @@
               @update:start-date="getTasks()"
             />
             <v-btn
-              v-show="noStudent"
+              v-show="noStudent && !building.deleted"
               class="mx-1 text-none"
               prepend-icon="mdi-plus"
               :to="{ name: 'garbage_plan', params: { id: id } }"
@@ -222,6 +236,9 @@ import DateRange from "@/components/filter/DateRange.vue";
 import { daysFromDate } from "@/assets/scripts/date";
 import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
+import RemovedCard from "@/components/cards/RemovedCard.vue";
+import router from "@/router";
+import { ImgProxy } from "@/imgproxy";
 
 const showRemovePopup = ref(false);
 
@@ -245,15 +262,13 @@ function getBuildingDescription(): string {
   return castedBuilding.description;
 }
 
+function mail() {
+  router.push({ name: "contact_syndicus", params: { id: building.value?.id } });
+}
+
 function call(number: string | undefined) {
   if (number) {
     location.href = "tel:" + number;
-  }
-}
-
-function mail(address: string | undefined) {
-  if (address) {
-    location.href = "mailto:" + address;
   }
 }
 
@@ -372,17 +387,19 @@ async function deleteBuilding() {
   await tryOrAlertAsync(async () => {
     await new BuildingQuery().deleteOne({ id: building.value?.id });
   });
+  router.go(0);
+}
+
+async function restoreBuilding() {
+  await new BuildingQuery().updateOne({
+    id: building.value?.id,
+    deleted: false,
+  });
+  router.go(0);
 }
 </script>
 
 <style lang="scss" scoped>
-#banner {
-  width: 100%;
-  max-height: 34vh;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
 .space-y {
   & > * {
     margin-bottom: 32px;
