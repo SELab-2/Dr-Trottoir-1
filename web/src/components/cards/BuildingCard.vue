@@ -7,11 +7,17 @@
     }"
   >
     <v-row class="flex-nowrap">
-      <v-col cols="2" class="flex-grow-0 flex-shrink-0">
+      <v-col cols="3" class="flex-grow-0 flex-shrink-0">
         <!-- The image -->
         <v-img
           cover
-          :src="ImgProxy.env.url(building.images[0].image)"
+          v-if="building.images.length > 0"
+          :src="
+            ImgProxy.env
+              .resize({ width: 200, height: 200 })
+              .maxBytes(50 * 1024)
+              .url(building.images[0].image)
+          "
           class="prepend-img"
         />
       </v-col>
