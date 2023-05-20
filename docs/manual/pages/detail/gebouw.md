@@ -23,13 +23,13 @@ Volgende elementen ziet elke gebruiker:
 
 ### Student
 
-Volgende elemeten ziet een [student](../../users/student.md) extra:
+Volgende elementen ziet een [student](../../users/student.md) extra:
 
 9. Deze knop geeft het telefoon nummer van de syndicus weer. Als u op deze knop klikt gaat u bellen naar de syndicus.
 
 ### Super-student
 
-Volgende elemeten ziet een [superstudent](../../users/superstudent.md) extra:
+Volgende elementen ziet een [superstudent](../../users/superstudent.md) extra:
 
 10. Met deze knop kunt u extra [taken toevoegen](../create/create_afval.md)
 11. Geeft alle bezoeken tussen 2 datums weer.
@@ -37,7 +37,7 @@ Volgende elemeten ziet een [superstudent](../../users/superstudent.md) extra:
 
 ### Administrators
 
-Volgende elemeten ziet een [administrator](../../users/admin.md) extra:
+Volgende elementen ziet een [administrator](../../users/admin.md) extra:
 
 13. Met deze knop kunt u een gebouw verwijderen.
 
