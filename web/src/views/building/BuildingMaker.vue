@@ -126,6 +126,7 @@ import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import { tryOrAlertAsync } from "@/try";
 import {
+  Result,
   AddressQuery,
   BuildingQuery,
   UserQuery,
@@ -163,8 +164,6 @@ const building = ref({
 });
 
 const manual = ref(null);
-
-const images = ref([]);
 
 const description = ref("");
 
