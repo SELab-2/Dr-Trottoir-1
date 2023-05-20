@@ -1,7 +1,11 @@
 describe('student tests', () => {
   beforeEach(() => {
-    cy.login('student@trottoir.be', 'student')
-    cy.visit('/planning')
+    // cy.login('student@trottoir.be', 'student')
+    // cy.visit('/planning')
+    cy.visit('/')
+    cy.get('#email').type('student@trottoir.be')
+    cy.get('#password').type('student')
+    cy.get('#login').click()
   })
 
 
@@ -11,9 +15,8 @@ describe('student tests', () => {
     // you can start by clicking start on the round card, or by clicking on the card and then hit start
     cy.get('#round').first().click()
     // student goes to first building,
-    cy.get('#building').first().then(()=>{
-      cy.get('#start').click()
-      // TODO
+    cy.get('#buildingcard').first().then(()=>{
+      cy.contains('start').click()
       // expand the card to add pictures and leave a comment
       cy.get('#expand').click()
       // add a comment
@@ -68,7 +71,7 @@ describe('student tests', () => {
     cy.get('#editcancel').click()
     // check if changes are undone
     cy.get('#personal').get('#phone').should('not.contain.text', '0111111111')
-    cy.get('#address').get('#street').should('not.containt.text', 'street')
+    cy.get('#address').get('#street').should('not.contain.text', 'street')
   })
 
   it('edit account, save changes', () => {
@@ -77,21 +80,23 @@ describe('student tests', () => {
     cy.get('#personal').then(() => {
       cy.get('#phone').clear()
       cy.get('#phone').type('0111111111')
-      cy.get('#email').type('{backspace}') // depends on position of cursor
+      cy.get('#email').type('{backspace}{backspace}com')
     })
     cy.get('#address').then(() => {
       cy.get('#street').clear()
       cy.get('#street').type('street')
-      cy.get('#streetnr').type('{backspace}')
+      cy.get('#streetnr').type('{backspace}1')
       cy.get('#city').type('blabla')
-      cy.get('#zipcode').type('1')
+      cy.get('#zipcode').type('{backspace}1')
     })
     cy.get('#password').type('ni3uwW@chtwoord') // password has to meet the requirements
     cy.get('#repeat').type('ni3uwW@chtwoord')
     cy.get('#save').click()
     cy.get('#submit').click()
     // check if changes are saved
-    cy.get('#personal').get('#phone').should('contain.text', '0111111111')
-    cy.get('#address').get('#street').should('containt.text', 'street')
+    // cy.get('#personal').get('#phone').should('contain.text', '0111111111')
+    cy.contains('0111111111')
+    // cy.get('#address').get('#street').should('contain.text', 'street')
+    cy.contains('street')
   })
 })

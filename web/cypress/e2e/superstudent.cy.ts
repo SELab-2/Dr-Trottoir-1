@@ -137,7 +137,7 @@ describe('superstudent tests', () => {
   })
 
 
-  it.only('observe students currently doing a round', () => {
+  it('observe students currently doing a round', () => {
     // make sure there is a student currently doing Round X: maybe add a test that creates this?
     // give round to student -> student starts round
     const round: string = "Round 2"

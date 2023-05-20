@@ -136,7 +136,7 @@ describe('admin tests', () => {
     // add garbage
     cy.get('#addgarbage').click()
     cy.get('#garbage').select('REST')
-    cy.get('#action').select('buiten zetten')
+    cy.get('#action').type('buiten zetten')
     cy.get('frequency').select('wekelijks')
     // TODO: add an actual date
     cy.get('startdate').type('')

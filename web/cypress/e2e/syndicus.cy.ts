@@ -1,15 +1,18 @@
 describe('syndicus tests', () => {
   beforeEach(() => {
-    cy.login('syndicus@trottoir.be', 'syndicus')
+    // cy.login('syndicus@trottoir.be', 'syndicus')
+    cy.visit('/')
+    cy.get('#email').type('syndicus@trottoir.be')
+    cy.get('#password').type('syndicus')
+    cy.get('#login').click()
 
   })
 
   it('check building', () => {
-    // syndicus checks for comments left on one of their buildings
-    cy.visit('/account/settings/4')
+    // syndicus checks on one of their buildings
     cy.get('#building').first().click()
     cy.contains('Building 1')
-    // can't change the date of Taken
+    cy.contains('Taken')
   })
 
 })
