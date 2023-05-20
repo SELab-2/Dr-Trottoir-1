@@ -1,4 +1,4 @@
-import { File, Image } from "@selab-2/groep-1-orm";
+import { File } from "@selab-2/groep-1-orm";
 import { prisma } from "./prisma";
 import { writeFileSync } from "fs";
 import path from "path";
@@ -8,13 +8,12 @@ process.env[
 ] = `${path.resolve()}/__tests__/mock/file_server`;
 
 export const manual = {
-    id: 10,
+    id: 1,
     user_id: 1,
     original_name: "handleiding.pdf",
     size_in_bytes: 1024,
     mime: "application/pdf",
     path: "manual.pdf",
-    location: "FILE_SERVER",
     createdAt: new Date("1970-01-01T00:00:00Z"),
     updatedAt: new Date("1970-01-01T00:00:00Z"),
 } satisfies File;
@@ -32,12 +31,15 @@ export const testfile = {
 } satisfies File;
 
 export const image = {
-    id: 10,
-    time: new Date("1970-01-01T00:00:00Z"),
-    location: "IMGPROXY",
-    path: "image.jpg",
+    id: 2,
     user_id: 1,
-} satisfies Image;
+    original_name: "camera.jpg",
+    size_in_bytes: 1024,
+    mime: "application/jpeg",
+    path: "camera.jpg",
+    createdAt: new Date("1970-01-01T00:00:00Z"),
+    updatedAt: new Date("1970-01-01T00:00:00Z"),
+} satisfies File;
 
 export async function initialiseFiles() {
     await prisma.file.create({

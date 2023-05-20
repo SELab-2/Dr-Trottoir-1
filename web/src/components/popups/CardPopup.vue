@@ -1,9 +1,6 @@
 <template>
   <v-overlay v-model="show" class="d-flex align-center justify-center">
-    <CardLayout
-      v-bind="{ ...$attrs }"
-      :style="'max-width: ' + props.width + 'px'"
-    >
+    <CardLayout v-bind="{ ...$attrs }">
       <!-- Pass all the slots -->
       <template v-for="(_, slotName) in $slots" #[slotName]>
         <slot :name="slotName" />

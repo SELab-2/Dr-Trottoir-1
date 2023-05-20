@@ -36,16 +36,9 @@ export class FileRouting extends Routing {
             },
         });
 
-        switch (result.location) {
-            case "FILE_SERVER":
-                return res.sendFile(
-                    `${process.env.FILE_STORAGE_DIRECTORY}/${result.path}`,
-                );
-            case "EXTERNAL":
-                return res.redirect(result.path);
-            default:
-                throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
-        }
+        return res.sendFile(
+            `${process.env.FILE_STORAGE_DIRECTORY}/${result.path}`,
+        );
     }
 
     @Auth.authorization({ student: true })
@@ -61,7 +54,6 @@ export class FileRouting extends Routing {
                 size_in_bytes: file.size,
                 original_name: file.originalname,
                 user_id: req.user?.id ?? 1,
-                location: "FILE_SERVER",
             },
         });
 
@@ -76,11 +68,7 @@ export class FileRouting extends Routing {
             },
         });
 
-        if (result.location === "FILE_SERVER") {
-            fs.unlinkSync(
-                `${process.env.FILE_STORAGE_DIRECTORY}/${result.path}`,
-            );
-        }
+        fs.unlinkSync(`${process.env.FILE_STORAGE_DIRECTORY}/${result.path}`);
 
         return res.status(200).json({});
     }
