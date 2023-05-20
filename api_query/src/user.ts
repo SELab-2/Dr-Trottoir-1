@@ -19,7 +19,6 @@ export type UserQueryParameters = {
     name: string;
     region_id: number;
     sort: string[];
-    password: string;
     ord: Array<"asc" | "desc">;
 };
 

@@ -53,7 +53,6 @@ export abstract class Query<Parameters, Element, Result> {
         try {
             res = await fetch(url, options);
         } catch (e) {
-            console.log(e);
             throw new QueryError(503, "Service Unavailable");
         }
 
