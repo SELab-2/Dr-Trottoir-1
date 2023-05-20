@@ -63,17 +63,7 @@ export class UserValidator extends Validator {
                     // accept a potential + sign at the beginning of the number and at least 1 digit
                     .regex(/^\+?[0-9]+$/)
                     .required(),
-                address: Joi.object({
-                    create: Joi.object({
-                        city: Joi.string().trim().min(1),
-                        latitude: Joi.number().min(-90).max(90),
-                        longitude: Joi.number().min(-180).max(180),
-                        number: Joi.number(),
-                        street: Joi.string().trim().min(1),
-                        zip_code: Joi.number(),
-                    }),
-                }),
-
+                address_id: Joi.number().positive().required(),
                 student: Joi.boolean().required(),
                 super_student: Joi.boolean().required(),
                 admin: Joi.boolean().required(),
