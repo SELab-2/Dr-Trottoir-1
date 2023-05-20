@@ -41,16 +41,17 @@
           </v-select>
         </v-col>
 
-        <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
+        <v-col cols="5" class="flex-grow-1 flex-shrink-0 py-0 my-0">
           <v-select
             label="Sjabloon"
             v-model="selected_template"
-            :items="templates"
+            :items="allTemplates"
             :item-value="'name'"
             :item-title="'name'"
             return-object
             prepend-inner-icon="mdi-list-box"
             :disabled="building === null"
+            @update:model-value="updateFields()"
           >
           </v-select>
         </v-col>
@@ -63,9 +64,9 @@
           class="flex-grow-1 flex-shrink-0 py-0 my-0"
         >
           <v-text-field
+            v-model="subject"
             prepend-inner-icon="mdi-text-short"
             label="Onderwerp"
-            :model-value="selected_template.subject"
           >
           </v-text-field>
         </v-col>
@@ -75,23 +76,8 @@
           cols="1"
           style="min-width: 100px; max-width: 100%"
           class="flex-grow-1 flex-shrink-0 py-0 my-0"
-          ><v-file-input
-            prepend-icon=""
-            prepend-inner-icon="mdi-upload"
-            label="Bestanden"
-          ></v-file-input></v-col
-      ></v-row>
-      <v-row class="py-0 my-0 mx-3"
-        ><v-col
-          cols="1"
-          style="min-width: 100px; max-width: 100%"
-          class="flex-grow-1 flex-shrink-0 py-0 my-0"
         >
-          <v-textarea
-            rows="17"
-            label="Inhoud"
-            :model-value="selected_template.content"
-          ></v-textarea
+          <v-textarea v-model="content" rows="17" label="Inhoud"></v-textarea
         ></v-col>
       </v-row>
       <v-btn
@@ -99,6 +85,7 @@
         prepend-icon="mdi-send"
         variant="tonal"
         class="mb-6 ml-6"
+        @click="sendMail()"
         >Versturen</v-btn
       >
     </BorderCard>
@@ -106,47 +93,65 @@
 </template>
 
 <script lang="ts" setup>
-import Template from "@/components/models/Template";
-import { ref, computed, reactive, Ref } from "vue";
+import { ref, onMounted } from "vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import { tryOrAlertAsync } from "@/try";
-import { Result, BuildingQuery } from "@selab-2/groep-1-query";
+import {
+  Result,
+  BuildingQuery,
+  MailTemplateQuery,
+  MailQuery,
+} from "@selab-2/groep-1-query";
+import { parseTemplate } from "@/assets/scripts/templateParser";
+import { useRoute } from "vue-router";
 
-const building: Ref<Result<BuildingQuery> | null> = ref(null);
+const allTemplates = ref<Result<MailTemplateQuery>[]>([]);
+const selected_template = ref<Result<MailTemplateQuery>>();
 
-const buildings =
-  (await tryOrAlertAsync<Array<Result<BuildingQuery>>>(async () => {
-    return await new BuildingQuery().getAll({});
-  })) ?? [];
+const buildings = ref<Result<BuildingQuery>[]>();
+const building = ref<Result<BuildingQuery>>();
 
-const templates: Template[] = reactive([
-  { name: "Andere", subject: "", content: "" },
-  {
-    name: "Opmerking",
-    subject: computed(() => `Opmerking: ${building.value?.name}`),
-    content: computed(
-      () =>
-        `Beste ${building?.value?.syndicus?.user.first_name},\n\nWij hebben een opmerking ontvangen..\n\nMet vriendelijke groeten,\nDr Trottoir team`,
-    ),
-  },
-  {
-    name: "Klacht",
-    subject: computed(() => `Klacht: ${building.value?.name}`),
-    content: computed(
-      () =>
-        `Beste ${building?.value?.syndicus?.user.first_name},\n\nWij zijn ontevreden met..\n\nMet vriendelijke groeten,\nDr Trottoir team`,
-    ),
-  },
-  {
-    name: "Schade",
-    subject: computed(() => `Schade: ${building.value?.name}`),
-    content: computed(
-      () =>
-        `Beste ${building?.value?.syndicus?.user.first_name},Wij hebben schade vastgesteld..\n\nMet vriendelijke groeten,\nDr Trottoir team`,
-    ),
-  },
-]);
+const subject = ref<string>("");
+const content = ref<string>("");
 
-const selected_template = ref<Template>(templates[0]);
+const route = useRoute();
+const buildingId: number = Number(route.params.id);
+
+onMounted(() => {
+  tryOrAlertAsync(async () => {
+    allTemplates.value = await new MailTemplateQuery().getAll();
+  });
+
+  tryOrAlertAsync(async () => {
+    buildings.value = await new BuildingQuery().getAll();
+  });
+
+  tryOrAlertAsync(async () => {
+    building.value = await new BuildingQuery().getOne(buildingId);
+  });
+});
+
+function parseString(str: string | undefined): string {
+  if (building.value && str) {
+    return parseTemplate(building.value, str);
+  }
+  return "";
+}
+function updateFields() {
+  subject.value = parseString(selected_template?.value?.mail_subject);
+  content.value = parseString(selected_template?.value?.content);
+}
+function sendMail() {
+  tryOrAlertAsync(async () => {
+    await new MailQuery().createOne({
+      to: building.value?.syndicus.user.email,
+      subject: subject.value,
+      content: content.value,
+    });
+
+    subject.value = "";
+    content.value = "";
+  });
+}
 </script>

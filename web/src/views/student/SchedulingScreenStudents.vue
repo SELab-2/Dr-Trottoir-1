@@ -204,6 +204,11 @@ function showStartButton(schedule: {
 
 async function saveStartTime() {
   await tryOrAlertAsync(async () => {
+    await new ScheduleQuery().updateOne({
+      id: current_schedule_id.value,
+      start: new Date(),
+    });
+
     await new ProgressQuery().updateOne({
       id: current_progress_id.value,
       arrival: new Date(),

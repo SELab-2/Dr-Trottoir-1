@@ -21,7 +21,7 @@ export class RoundTable implements TableEntity<Result<RoundQuery>> {
       {
         id: 4,
         name: "Gebouwen",
-        fit: false,
+        fit: true,
         get: (e: Result<RoundQuery>) => e.buildings.length,
         type: RowType.TEXT,
         sortable: true,
