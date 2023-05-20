@@ -90,7 +90,6 @@
 
               <v-text-field
                 v-model="startDate"
-                prepend-inner-icon="mdi-calendar"
                 variant="outlined"
                 type="date"
                 label="Startdatum"
@@ -98,7 +97,6 @@
 
               <v-text-field
                 v-model="endDate"
-                prepend-inner-icon="mdi-calendar"
                 variant="outlined"
                 type="date"
                 label="Einddatum"
@@ -106,7 +104,6 @@
               ></v-text-field>
 
               <v-text-field
-                prepend-inner-icon="mdi-clock-time-two-outline"
                 label="Starttijd"
                 variant="outlined"
                 type="time"
