@@ -23,7 +23,7 @@ export type UserQueryParameters = {
 };
 
 // Het type dat de body van een POST en PATCH request modelleert.
-type Element = Prisma.UserGetPayload<{
+export type Element = Prisma.UserGetPayload<{
     select: {
         id: true;
         email: true;
@@ -39,10 +39,9 @@ type Element = Prisma.UserGetPayload<{
         deleted: true;
         hash: false;
         salt: false;
-        password: string;
         address: true;
     };
-}>;
+}> & { password: string };
 
 type UserAllInfo = Prisma.UserGetPayload<{
     select: {
