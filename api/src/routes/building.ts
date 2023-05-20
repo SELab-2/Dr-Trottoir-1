@@ -206,9 +206,6 @@ export class BuildingRouting extends Routing {
                     },
                 },
                 garbage: {
-                    include: {
-                        action: true,
-                    },
                     where: {
                         pickup_time: this.twoWeekDelta,
                     },
