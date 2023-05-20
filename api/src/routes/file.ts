@@ -7,7 +7,6 @@ import multer from "multer";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 import fs from "fs";
-import path from "path";
 
 export class FileRouting extends Routing {
     private upload = multer({
