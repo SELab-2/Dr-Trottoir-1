@@ -1,4 +1,7 @@
 <template>
+  <div class="py-0 my-2 mx-5">
+    <MapComponent :buildings="newRoundBuildings" />
+  </div>
   <v-row class="py-0 my-2 mx-2">
     <v-col
       cols="1"
@@ -9,17 +12,17 @@
         title="Ronde aanmaken"
         subtitle="De ronde zal in de volgorde van onderstaande lijst opgeslaan worden"
       >
-        <template v-slot:append
-          ><v-switch
-            color="primary"
-            v-model="garbageinfo"
-            label="Toon afvalkalender"
-          ></v-switch
-        ></template>
+        <template v-slot:append></template>
         <v-text-field
           class="ml-3 mr-5"
           label="Naam ronde"
           v-model="newRoundName"
+          variant="outlined"
+        />
+        <v-text-field
+          class="ml-3 mr-5"
+          label="Beschrijving"
+          v-model="description"
           variant="outlined"
         />
         <v-card-actions class="d-flex align-center"
@@ -78,8 +81,9 @@ import { Result, BuildingQuery, RoundQuery } from "@selab-2/groep-1-query";
 import { RoundBuildingQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import router from "@/router";
+import MapComponent from "@/components/maps/MapComponent.vue";
 
-const availableBuildings = ref<Result<BuildingQuery>[]>([]);
+const availableBuildings: Ref<Array<Result<BuildingQuery>>> = ref([]);
 
 onMounted(() => {
   tryOrAlertAsync(async () => {
@@ -103,6 +107,7 @@ onMounted(() => {
 const garbageinfo: Ref<boolean> = ref(true);
 
 const newRoundName = ref<string>("");
+const description = ref<string>("");
 
 // The query that will be used to filter all available buildings
 const searchquery: Ref<string> = ref("");
@@ -145,6 +150,7 @@ function makeRound() {
   tryOrAlertAsync(async () => {
     const newRound = await new RoundQuery().createOne({
       name: newRoundName.value,
+      description: description.value,
     });
 
     for (const building of newRoundBuildings.value) {

@@ -89,8 +89,8 @@ type RoundAnalytics = {
 
 // Het type dat het resultaat modelleert wanneer het aantal gewerkte minuten van de studenten worden opgevraagd
 // tussen een start- en einddatum
-type UserAnalytics = {
-    student: string;
+export type UserAnalytics = {
+    student: number;
     email: string;
     time: number;
     average: number;
@@ -279,7 +279,7 @@ export class UserQuery extends Query<
                 total_time += time;
                 worked++;
                 analytics.push({
-                    student: user.first_name + " " + user.last_name,
+                    student: user.id,
                     email: user.email,
                     time: time,
                     average: 0,

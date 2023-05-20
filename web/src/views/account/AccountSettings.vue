@@ -54,32 +54,23 @@
       </div>
     </div>
     <!-- Display if user has been removed -->
-    <BorderCard
-      v-show="user.deleted"
-      prepend-icon="mdi-alert"
-      title="Deze account is verwijderd."
-    >
-      <template v-slot:append>
-        <v-btn
-          color="success"
-          @click="restore()"
-          variant="elevated"
-          class="text-none mr-3"
-          prepend-icon="mdi-delete-restore"
-        >
-          Herstel
-        </v-btn>
-        <v-btn
-          @click="handleRemovePopupPermanent()"
-          color="error"
-          class="text-none"
-          prepend-icon="mdi-delete-forever"
-        >
-          Verwijder
-        </v-btn>
-      </template>
-    </BorderCard>
-
+    <RemovedCard
+      :show="useAuthStore().auth?.admin && user.deleted"
+      title="Deze account is verwijderd"
+      :restore="
+        async () => {
+          await restore();
+        }
+      "
+    />
+    <UserAnalyticCard
+      v-if="
+        !edit &&
+        (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) &&
+        !user.deleted
+      "
+      :id="user.id"
+    />
     <!-- Section with the contact info -->
     <BorderCard class="mt-4" prepend-icon="mdi-account-details">
       <template v-slot:title> Persoonlijke gegevens </template>
@@ -182,30 +173,43 @@
     </div>
   </HFillWrapper>
 
-  <CardPopup v-model="showPopup" :title="popupTitle" :prepend-icon="popupIcon">
-    <p class="mx-3">
-      {{ popupMsg }}
-    </p>
-    <v-card-actions>
-      <v-btn
-        prepend-icon="mdi-close"
-        color="error"
-        @click="showPopup = false"
-        variant="elevated"
-        class="text-none"
+  <CardPopup v-model="showPopup">
+    <div class="pa-4" style="max-width: 400px">
+      <div class="d-flex align-center" style="gap: 12px">
+        <v-icon icon="mdi-content-save-alert-outline" size="large"></v-icon>
+        <h2>{{ popupTitle }}</h2>
+      </div>
+      <p style="opacity: 90%" class="pt-2 pb-4">
+        {{ popupMsg }}
+      </p>
+      <div
+        style="
+          display: grid;
+          gap: 12px;
+          min-width: fit-content;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        "
       >
-        Annuleer
-      </v-btn>
-      <v-btn
-        prepend-icon="mdi-check"
-        color="success"
-        @click="popupSubmit()"
-        variant="elevated"
-        class="text-none"
-      >
-        {{ popupSubmitMsg }}
-      </v-btn>
-    </v-card-actions>
+        <v-btn
+          prepend-icon="mdi-close"
+          color="error"
+          @click="showPopup = false"
+          variant="elevated"
+          class="text-none"
+        >
+          Annuleer
+        </v-btn>
+        <v-btn
+          prepend-icon="mdi-check"
+          color="success"
+          @click="popupSubmit()"
+          variant="elevated"
+          class="text-none"
+        >
+          Bevestig
+        </v-btn>
+      </div>
+    </div>
   </CardPopup>
 </template>
 
@@ -229,12 +233,14 @@ import {
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
+import UserAnalyticCard from "@/components/cards/UserAnalyticCard.vue";
 import Contact from "@/components/models/Contact";
 import PasswordInputCard from "@/components/cards/PasswordInputCard.vue";
 import {
   Element as UserElement,
   UserQueryParameters,
 } from "@selab-2/groep-1-query/src/user";
+import RemovedCard from "@/components/cards/RemovedCard.vue";
 
 const display = useDisplay();
 const mobile: Ref<boolean> = display.mobile;
@@ -284,7 +290,7 @@ async function fetchUser() {
     }
   });
 }
-fetchUser();
+await fetchUser();
 
 // reactive state for the roles
 
@@ -312,7 +318,6 @@ function handleRemovePopup() {
   popupTitle.value = "Verwijder account";
   popupMsg.value =
     "Je staat op het punt deze account te verwijderen. Ben je zeker dat je wilt verdergaan?";
-  popupSubmitMsg.value = "Verwijder account";
   popupSubmit.value = handleRemove;
   showPopup.value = true;
 }
@@ -327,6 +332,7 @@ async function restore() {
   router.go(0);
 }
 
+/*
 async function handleRemovePermanent() {
   await tryOrAlertAsync(async () => {
     await new UserQuery().deleteOne({ id: user.value?.id }, true);
@@ -344,7 +350,7 @@ function handleRemovePopupPermanent() {
   popupSubmitMsg.value = "Verwijder account";
   popupSubmit.value = handleRemovePermanent;
   showPopup.value = true;
-}
+}*/
 
 async function handleSave() {
   // update the address
@@ -387,7 +393,6 @@ function handleSavePopup() {
   popupTitle.value = "Bewaar aanpassingen";
   popupMsg.value =
     "Je staat op het punt deze account permanent te bewerken. Ben je zeker dat je wilt verdergaan?";
-  popupSubmitMsg.value = "Bewaar aanpassingen";
   popupSubmit.value = handleSave;
   showPopup.value = true;
 }
@@ -398,7 +403,6 @@ const showPopup = ref(false);
 const popupIcon = ref("");
 const popupTitle = ref("");
 const popupMsg = ref("");
-const popupSubmitMsg = ref("");
 const popupSubmit: Ref<() => void> = ref(() => {});
 </script>
 
