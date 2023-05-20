@@ -47,7 +47,7 @@
               op "ronde inplannen en opslaan" te drukken.
             </p>
 
-            <v-row class="pt-2">
+            <v-row class="pt-2 mt-1">
               <v-col
                 cols="1"
                 style="min-width: 100px; max-width: 100%"
@@ -117,7 +117,7 @@
             <div style="display: flex; align-items: center">
               <v-btn
                 prepend-icon="mdi-plus"
-                @click="updateRounds()"
+                @click="calcNewRounds()"
                 :disabled="student === undefined"
                 variant="tonal"
                 >Tijdelijk toevoegen</v-btn
@@ -194,12 +194,11 @@
       <RoundSelectCard
         v-for="(round, i) in showAllPlanned ? fullScheme : rounds"
         :key="i"
-        @remove="removeFromRounds(i)"
+        @remove="round.func(i)"
         :name="round.name"
         :date="round.date"
         :time="round.time"
         :already-planned="round.alreadyPlanned"
-        :removeable="!showAllPlanned"
       >
       </RoundSelectCard>
     </HFillWrapper>
@@ -267,12 +266,12 @@ interface plannedRound {
   name: string;
   time: string;
   alreadyPlanned: boolean;
+  func: (i: number) => void;
 }
 
 let rounds = ref<Array<plannedRound>>([]);
 
-function updateRounds() {
-  rounds.value = [];
+function calcNewRounds() {
   if (frequency.value === "enkel") {
     endDate.value = startDate.value;
   }
@@ -285,6 +284,7 @@ function updateRounds() {
       date: new Date(d),
       time: time.value,
       alreadyPlanned: false,
+      func: (i: number) => removeFromRounds(i),
     });
   }
 }
@@ -295,9 +295,17 @@ function frequencyCheck() {
     multipleday.value = true;
   }
 }
+
 function removeFromRounds(index: number) {
   rounds.value.splice(index, 1);
   updateFullScheme();
+}
+
+function deleteFromDatabase(id: number, index: number) {
+  tryOrAlertAsync(async () => {
+    await new ScheduleQuery().deleteOne({ id: id });
+    fullScheme.value.splice(index, 1);
+  });
 }
 
 const fullScheme = ref<plannedRound[]>([]);
@@ -319,6 +327,7 @@ function updateFullScheme() {
         date: new Date(plannedSchedule.day),
         time: new Date(plannedSchedule.day).toTimeString().substring(0, 5),
         alreadyPlanned: true,
+        func: (i: number) => deleteFromDatabase(plannedSchedule.id, i),
       }),
     );
 

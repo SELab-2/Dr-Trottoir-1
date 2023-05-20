@@ -41,6 +41,7 @@ describe("Round tests", () => {
                 name: "new Round",
                 description: "Description of new round",
                 buildings: [],
+                deleted: false,
             };
 
             await runner.post({
@@ -66,10 +67,10 @@ describe("Round tests", () => {
                                     zip_code: 2000,
                                 },
                                 deleted: false,
+                                description: "Description of building 1",
                                 id: 1,
                                 ivago_id: "ivago-1",
                                 name: "Building 1",
-                                description: "Description of building 1",
                             },
                             building_id: 1,
                             deleted: false,
@@ -77,9 +78,10 @@ describe("Round tests", () => {
                             round_id: 1,
                         },
                     ],
+                    deleted: false,
+                    description: "Description of round 1",
                     id: 1,
                     name: "Round 1",
-                    description: "Description of round 1",
                 },
                 {
                     buildings: [
@@ -95,10 +97,10 @@ describe("Round tests", () => {
                                     zip_code: 9000,
                                 },
                                 deleted: false,
+                                description: "Description of building 2",
                                 id: 2,
                                 ivago_id: "ivago-2",
                                 name: "Building 2",
-                                description: "Description of building 2",
                             },
                             building_id: 2,
                             deleted: false,
@@ -106,9 +108,10 @@ describe("Round tests", () => {
                             round_id: 2,
                         },
                     ],
+                    deleted: false,
+                    description: "Description of round 2",
                     id: 2,
                     name: "Round 2",
-                    description: "Description of round 2",
                 },
             ];
 
@@ -142,6 +145,7 @@ describe("Round tests", () => {
                             round_id: 1,
                         },
                     ],
+                    deleted: false,
                     id: 1,
                     name: "Round 1",
                     description: "Description of round 1",
@@ -182,6 +186,7 @@ describe("Round tests", () => {
                         round_id: 1,
                     },
                 ],
+                deleted: false,
                 id: 1,
                 name: "Updated Round 1",
                 description: "Updated description of round 1",
@@ -194,43 +199,122 @@ describe("Round tests", () => {
             });
         });
 
-        test("DELETE /round/:id", async () => {
+        test("Soft DELETE /round/:id", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             await runner.delete({ url: "/round/1" });
 
             // verify that the round is truly deleted
             const expected = [
                 {
+                    id: 1,
+                    name: "Round 1",
+                    description: "Description of round 1",
+                    deleted: true,
                     buildings: [
                         {
-                            building: {
-                                address: {
-                                    city: "Ghent",
-                                    id: 2,
-                                    latitude: 51.04732,
-                                    longitude: 3.7282,
-                                    number: 25,
-                                    street: "Sint-Pietersnieuwstraat",
-                                    zip_code: 9000,
-                                },
-                                deleted: false,
-                                id: 2,
-                                ivago_id: "ivago-2",
-                                name: "Building 2",
-                                description: "Description of building 2",
-                            },
-                            building_id: 2,
+                            id: 1,
+                            round_id: 1,
+                            building_id: 1,
                             deleted: false,
-                            id: 2,
-                            round_id: 2,
+                            building: {
+                                id: 1,
+                                name: "Building 1",
+                                ivago_id: "ivago-1",
+                                description: "Description of building 1",
+                                deleted: false,
+                                address: {
+                                    id: 1,
+                                    street: "Wallaby Way",
+                                    number: 42,
+                                    city: "Sydney",
+                                    zip_code: 2000,
+                                    latitude: -33.865143,
+                                    longitude: 151.2099,
+                                },
+                            },
                         },
                     ],
+                },
+                {
                     id: 2,
                     name: "Round 2",
                     description: "Description of round 2",
+                    deleted: false,
+                    buildings: [
+                        {
+                            id: 2,
+                            round_id: 2,
+                            building_id: 2,
+                            deleted: false,
+                            building: {
+                                id: 2,
+                                name: "Building 2",
+                                ivago_id: "ivago-2",
+                                description: "Description of building 2",
+                                deleted: false,
+                                address: {
+                                    id: 2,
+                                    street: "Sint-Pietersnieuwstraat",
+                                    number: 25,
+                                    city: "Ghent",
+                                    zip_code: 9000,
+                                    latitude: 51.04732,
+                                    longitude: 3.7282,
+                                },
+                            },
+                        },
+                    ],
                 },
             ];
             await runner.get({
-                url: "/round",
+                url: "/round?deleted=true",
+                expectedData: expected,
+            });
+        });
+
+        test("Hard DELETE /round/:id", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            await runner.delete({
+                url: "/round/1",
+                data: {
+                    hardDelete: true,
+                },
+            });
+
+            const expected = [
+                {
+                    id: 2,
+                    name: "Round 2",
+                    description: "Description of round 2",
+                    deleted: false,
+                    buildings: [
+                        {
+                            id: 2,
+                            round_id: 2,
+                            building_id: 2,
+                            deleted: false,
+                            building: {
+                                id: 2,
+                                name: "Building 2",
+                                ivago_id: "ivago-2",
+                                description: "Description of building 2",
+                                deleted: false,
+                                address: {
+                                    id: 2,
+                                    street: "Sint-Pietersnieuwstraat",
+                                    number: 25,
+                                    city: "Ghent",
+                                    zip_code: 9000,
+                                    latitude: 51.04732,
+                                    longitude: 3.7282,
+                                },
+                            },
+                        },
+                    ],
+                },
+            ];
+            await runner.get({
+                url: "/round?deleted=true",
                 expectedData: expected,
             });
         });
@@ -405,9 +489,9 @@ describe("Round tests", () => {
                 });
             });
         });
+    });
 
-        afterAll(() => {
-            app.close();
-        });
+    afterAll(() => {
+        app.close();
     });
 });

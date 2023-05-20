@@ -78,29 +78,25 @@
           </v-timeline-item>
 
           <v-timeline-item
-            v-for="entry in data.round.buildings"
+            v-for="entry in data.round.buildings.map((e) => {
+              return {
+                building: e.building,
+                progress: progressItems.get(e.building_id),
+              };
+            })"
             v-bind:key="entry.building.id"
-            :dot-color="
-              progressItems.get(entry.building_id)?.departure
-                ? 'success'
-                : 'grey'
-            "
-            :icon="
-              progressItems.get(entry.building_id)?.departure
-                ? 'mdi-check'
-                : 'mdi-clock'
-            "
+            :dot-color="entry.progress?.departure ? 'success' : 'grey'"
+            :icon="entry.progress?.departure ? 'mdi-check' : 'mdi-clock'"
             size="large"
             width="100%"
           >
             <RoundDetailCard
               :class="mobile ? 'shiftUnderTimeLine' : ''"
-              :key="JSON.stringify(progressItems.get(entry.building_id))"
+              :key="JSON.stringify(entry.progress)"
               :entry="entry"
               :day="data.day"
-              @changed="
-                progressUpdated(progressItems.get(entry.building_id)?.id)
-              "
+              :schedule_id="schedule_id"
+              @changed="progressUpdated(entry.progress?.id)"
               @requestPhotoAdd="
                 (progress) => {
                   currentProgress = progress;
@@ -154,7 +150,7 @@
   <v-overlay v-model="showOverlay" class="align-center justify-center">
     <PhotoMaker
       @cancel="showOverlay = false"
-      @confirm="updateProgressWithPhoto"
+      @confirm="() => {}"
       :is-photo="overlayIsPhoto"
       :current-comments="currentProgress?.report"
     />
@@ -174,7 +170,6 @@ import { useDisplay } from "vuetify";
 import { ProgressQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRoute, useRouter } from "vue-router";
-import Photo from "@/components/models/Photo";
 import { useAuthStore } from "@/stores/auth";
 
 const router = useRouter();
@@ -251,12 +246,19 @@ const schedule_id: number = Number(route.params.schedule);
 const data: Ref<Result<ScheduleQuery> | null> = ref(null);
 const progressItems: Ref<Map<Number, Result<ProgressQuery>>> = ref(new Map());
 const currentProgress: Ref<Result<ProgressQuery> | null> = ref(null);
+const lastBuildingId = ref<number>(0);
 
 const display = useDisplay();
 const mobile = display.mobile;
 
 await tryOrAlertAsync(async () => {
   data.value = await new ScheduleQuery().getOne(schedule_id);
+
+  lastBuildingId.value =
+    data.value.round.buildings[
+      data.value.round.buildings.length - 1
+    ].building_id;
+
   for (const progress of await new ProgressQuery().getAll({
     schedule: schedule_id,
     user: data.value.user.id,
@@ -333,40 +335,22 @@ async function progressUpdated(id: number | undefined) {
   if (id) {
     const progress = await new ProgressQuery().getOne(id);
     progressItems.value.set(progress.building_id, progress);
-    setCurrentProgress();
-  }
-}
 
-async function updateProgressWithPhoto(photo: Photo, isPhoto: boolean) {
-  if (isPhoto) {
-    //TODO add photo with file query builder
+    const firstBuilding = getFirstBuilding();
+    const lastBuilding = getLastBuilding();
+
     await tryOrAlertAsync(async () => {
-      if (currentProgress.value) {
-        currentProgress.value = await new ProgressQuery().createImage(
-          currentProgress.value.id,
-          {
-            location: "EXTERNAL",
-            description: photo.comments,
-            path: photo.image.toString(),
-            time: new Date(),
-            type: photo.type,
-            user_id: useAuthStore().auth?.id ?? -1,
-          },
-        );
-      }
-    });
-  } else {
-    await tryOrAlertAsync(async () => {
-      if (currentProgress.value) {
-        currentProgress.value = await new ProgressQuery().updateOne({
-          id: currentProgress.value.id,
-          report: photo.comments,
+      if (firstBuilding?.arrival && lastBuilding?.departure) {
+        await new ScheduleQuery().updateOne({
+          id: schedule_id,
+          start: new Date(firstBuilding.arrival),
+          end: new Date(lastBuilding.departure),
         });
       }
     });
+
+    setCurrentProgress();
   }
-  await progressUpdated(currentProgress.value?.id);
-  showOverlay.value = false;
 }
 </script>
 
