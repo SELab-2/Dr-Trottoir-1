@@ -11,7 +11,6 @@ import { APIErrorCode } from "../errors/api_error_code";
 
 export class GarbageRouting extends Routing {
     private static includes: Prisma.GarbageInclude = {
-        action: true,
         building: selectBuilding(),
     };
 
@@ -42,7 +41,9 @@ export class GarbageRouting extends Routing {
                 // get all garbage for a certain building
                 building_id: Parser.number(req.query["building_id"]),
                 // get all garbage where a certain action needs to be executed
-                action_id: Parser.number(req.query["action_id"]),
+                description: {
+                    contains: req.query["description"],
+                },
                 // get garbage for all buildings belonging to a certain syndicus
                 building: {
                     syndicus_id: Parser.number(req.query["syndicus_id"]),

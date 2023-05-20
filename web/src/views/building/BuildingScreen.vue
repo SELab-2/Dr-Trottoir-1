@@ -109,6 +109,7 @@
 
         <div class="grid-right">
           <SyndicusButtons
+            v-if="!syndicus"
             :email="building.syndicus.user.email"
             :click-email="mail"
             :phone="building.syndicus.user.phone"
@@ -150,7 +151,7 @@
             :key="action.id"
           >
             <div class="d-flex align-center w-100">
-              <h4 class="ml-2 me-auto">{{ action.action.description }}</h4>
+              <h4 class="ml-2 me-auto">{{ action.description }}</h4>
               <v-chip color="border" variant="outlined">
                 <v-icon icon="mdi-calendar-clock"></v-icon>
                 <p class="text-black mx-1">
@@ -245,6 +246,8 @@ const showRemovePopup = ref(false);
 const noStudent: Boolean =
   useAuthStore().auth!.admin || useAuthStore().auth!.super_student;
 
+const syndicus: Boolean = useAuthStore().auth!.syndicus.length > 0;
+
 const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
 const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
 
@@ -277,11 +280,6 @@ function tomaps() {
     `https://maps.google.com/maps?q=${building.value?.address.number}+${building.value?.address.street},+${building.value?.address.city},+${building.value?.address.zip_code}`,
   );
 }
-
-/*
-function toClip(text: string) {
-  navigator.clipboard.writeText(text);
-}*/
 
 const props = defineProps({
   id: {
@@ -331,7 +329,7 @@ if (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) {
 async function getTasks() {
   takenStart.value.setHours(0, 0, 0, 0);
   takenEnd.value.setHours(23, 59, 59, 999);
-  if (noStudent) {
+  if (noStudent || syndicus) {
     await getNoneStudentTasks();
   } else {
     await getStudentTasks();
