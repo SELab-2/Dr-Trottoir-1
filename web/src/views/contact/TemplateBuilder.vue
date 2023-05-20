@@ -4,7 +4,7 @@
 
     <p>
       Maak hier een nieuwe email template aan. Aan de rechterkant vindt u codes
-      die u kan gebruiken voor uw email dynamisch in te laden wanneer u deze
+      die u kan gebruiken om uw email dynamisch in te laden wanneer u deze
       gebruikt.
     </p>
     <v-row class="py-0 my-0 mx-0">
@@ -24,6 +24,7 @@
               style="min-width: 100px; max-width: 100%"
               class="flex-grow-1 flex-shrink-0 py-0 my-0 mx-3"
               ><v-text-field
+                id="templatename"
                 v-model="templateName"
                 prepend-inner-icon="mdi-file-document-outline"
                 label="Template naam"
@@ -38,6 +39,7 @@
               class="flex-grow-1 flex-shrink-0 py-0 my-0"
             >
               <v-text-field
+                id="subject"
                 prepend-inner-icon="mdi-text-short"
                 label="Template onderwerp"
                 v-model="subject"
@@ -53,6 +55,7 @@
               class="flex-grow-1 flex-shrink-0 py-0 my-0"
             >
               <v-textarea
+                id="templatebody"
                 rows="17"
                 label="Template inhoud"
                 prepend-inner-icon="mdi-text"
@@ -61,6 +64,7 @@
             ></v-col>
           </v-row>
           <v-btn
+            id="savetemplate"
             color="primary"
             prepend-icon="mdi-content-save"
             variant="tonal"

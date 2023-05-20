@@ -2,6 +2,7 @@
   <BorderCard v-show="show" prepend-icon="mdi-alert" :title="title">
     <template v-slot:append>
       <v-btn
+        id="restore"
         color="success"
         @click="restore()"
         variant="elevated"

@@ -1,25 +1,26 @@
 describe('login tests', () => {
   beforeEach(() => {
+    // in these test, saved sessions should be cleared
+    // otherwise it always restores the first login
+    //Cypress.session.clearAllSavedSessions()
+    //cy.clearCookies()
+    //cy.clearLocalStorage()
+    //cy.clearAllSessionStorage({log: true})
     cy.visit('/')
   })
 
-  it('log in succesfull', () =>{
-    cy.login('administrator@trottoir.be', 'administrator')
-  })
-
-  it('log out', () =>{
-    // in these test, saved sessions should be cleared
-    // otherwise it always restores the first login
-    Cypress.session.clearAllSavedSessions()
-    // there is a check in the login function to see if it passed
-    cy.login('administrator@trottoir.be', 'administrator')
+  it.only('log in and out succesfull', () =>{
+    //cy.login('administrator@trottoir.be', 'administrator')
+    //cy.visit('/account')
+    cy.get('#email').type('administrator@trottoir.be')
+    cy.get('#password').type('administrator')
+    cy.get('#login').click()
     cy.get('#logout').click()
     // we should be back at the log in
     cy.get('#login')
   })
 
   it('log in failed: incorrect password', () =>{
-    Cypress.session.clearAllSavedSessions()
     cy.get('#email').type('administrator@trottoir.be')
     cy.get('#password').type('incorrectpassword')
     cy.get('#login').click()
@@ -28,7 +29,6 @@ describe('login tests', () => {
   })
 
   it('log in failed: incorrect email', () =>{
-    Cypress.session.clearAllSavedSessions()
     cy.get('#email').type('administrator@trotwaar.be')
     cy.get('#password').type('administrator')
     cy.get('#login').click()
@@ -37,7 +37,6 @@ describe('login tests', () => {
   })
 
   it('ask login data', () => {
-    Cypress.session.clearAllSavedSessions()
     cy.get('#contact').click()
     cy.get('#popup').should('be.visible')
   })

@@ -140,7 +140,7 @@
       prepend-icon="mdi-account-multiple"
     >
       <template v-slot:title> Rollen </template>
-      <RolesForm :readonly="!edit" v-model="roles" />
+      <RolesForm id="roles" :readonly="!edit" v-model="roles" />
     </BorderCard>
 
     <!-- Section to set new password -->
@@ -148,6 +148,7 @@
       <template v-slot:title> Nieuw wachtwoord </template>
       <v-list density="compact" class="mx-4">
         <v-text-field
+          id="password"
           v-model="password"
           :prepend-inner-icon="'mdi-lock'"
           :append-inner-icon="passwordHidden ? 'mdi-eye' : 'mdi-eye-off'"
@@ -157,6 +158,7 @@
           bg
         ></v-text-field>
         <v-text-field
+          id="repeat"
           v-model="passwordCheck"
           :prepend-inner-icon="'mdi-lock'"
           :append-inner-icon="passwordHidden ? 'mdi-eye' : 'mdi-eye-off'"
@@ -215,6 +217,7 @@
         "
       >
         <v-btn
+          id="cancel"
           prepend-icon="mdi-close"
           color="error"
           @click="showPopup = false"
@@ -224,6 +227,7 @@
           Annuleer
         </v-btn>
         <v-btn
+          id="submit"
           prepend-icon="mdi-check"
           color="success"
           @click="popupSubmit()"

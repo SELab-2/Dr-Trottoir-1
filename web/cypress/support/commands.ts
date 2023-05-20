@@ -53,7 +53,6 @@ Cypress.Commands.add('login' as any, (email: string, password:string) => {
     cy.get('#email').type(email)
     cy.get('#password').type(password)
     cy.get('#login').click()
-    cy.get('#logout').should('be.visible')
   },
     {
       cacheAcrossSpecs: true

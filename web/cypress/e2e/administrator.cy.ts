@@ -1,7 +1,11 @@
 describe('admin tests', () => {
   beforeEach(() => {
-    cy.login('administrator@trottoir.be', 'administrator')
-    cy.visit('/ronde/overzicht')
+    //cy.login('administrator@trottoir.be', 'administrator')
+    cy.visit('/')
+    cy.get('#email').type('administrator@trottoir.be')
+    cy.get('#password').type('administrator')
+    cy.get('#login').click()
+    //cy.visit('/ronde/overzicht')
   })
 
   it('add new user', () => {
@@ -18,22 +22,26 @@ describe('admin tests', () => {
     })
     cy.get('#address').then(() => {
       cy.get('#street').type('teststraat')
-      cy.get('#streetnr').type('1')
+      cy.get('#streetnr').type('{backspace}1')
       cy.get('#city').type('Teststad')
-      cy.get('#zipcode').type('1234')
+      cy.get('#zipcode').type('{backspace}1234')
     })
-    cy.get('#password').type('testwachtwoord')
-    cy.get('#repeat').type('testwachtwoord')
+    cy.get('#password').type('t3stw@chtwOord')
+    cy.get('#repeat').type('t3stw@chtwOord')
     cy.get('#roles').then(() => {
       cy.get('#student').check()
       cy.get('#superstudent').check()
       cy.get('#administrator').check()
     })
     cy.get('#create').click()
-    cy.get('#submit').click()
-    // check if user in userlist
+    // confirm
+    // cy.get('#submit').click()
+    // we are now at the new user page
     cy.contains('test naam')
-    // click on user and check if all fields are ok? or is this more for backend testing?
+    cy.contains('Persoonlijke gegevens')
+    // check if user in userlist
+    cy.get('#users').click()
+    cy.contains('test naam')
   })
 
   it('edit a user', () => {
@@ -51,8 +59,6 @@ describe('admin tests', () => {
     cy.get('#roles').then(() => {
       cy.get('#administrator').uncheck()
     })
-    cy.get('#password').type('nieuwwachtwoord')
-    cy.get('#repeat').type('nieuwwachtwoord')
     // save
     cy.get('#save').click()
     // confirm
@@ -68,18 +74,27 @@ describe('admin tests', () => {
     // click user
     cy.contains('nieuwe gebruiker').click()
     // press edit button
-    cy.get('#edit').click()
+    cy.get('#editcancel').click()
     // press delete
     cy.get('#delete').click()
     // press confirm
     cy.get('#submit').click()
+    cy.contains('Deze account is verwijderd')
     // user should not be present in the table
-    // cy.get('#users').click()
+    cy.get('#users').click()
     cy.contains('nieuwe gebruiker').should('not.exist')
   })
 
   it('restore deleted user', () => {
-
+    // go to user overview
+    cy.get('#users').click()
+    // see hidden users
+    cy.get('#hidden').check()
+    // click user
+    cy.contains('nieuwe gebruiker').click()
+    cy.get('#restore').click()
+    // messaeg saying user is deleted should be gone
+    cy.contains('Deze account is verwijderd').should('not.exist')
   })
 
   it('check the profitability statistics', () => {
@@ -188,10 +203,22 @@ describe('admin tests', () => {
   })
 
   it('add new template', () => {
-
+    // go to template list
+    cy.get('#templates').click()
+    // click add button
+    cy.get('#addtemplate').click()
+    // fill in the fields
+    cy.get('#templatename').type('test template')
+    cy.get('#subject').type('test the templates')
+    cy.get('#templatebody').type('This is a test template and should not be used for real emails/messages!')
+    // save
+    cy.get('#savetemplate').click()
+    // check if template is in the list
+    cy.get('#templates').click()
+    cy.contains('test template')
   })
 
-  it('edit template', () => {
+  it.only('edit template', () => {
 
   })
 

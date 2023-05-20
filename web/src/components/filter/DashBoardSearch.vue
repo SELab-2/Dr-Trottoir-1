@@ -9,6 +9,7 @@
       variant="underlined"
     />
     <v-checkbox
+      id="hidden"
       v-if="admin"
       class="mt-4 checkbox"
       label="Verborgen"
