@@ -83,17 +83,7 @@ export class ProgressImageValidator extends Validator {
                 id: Joi.number().positive().required(),
             }),
             body: Joi.object({
-                time: Joi.date().iso().required(),
-                location: Joi.string()
-                    .valid(
-                        "EXTERNAL",
-                        "IMGPROXY",
-                        "STATIC_FILES",
-                        "FILE_SERVER",
-                    )
-                    .required(),
-                path: Joi.string().trim().min(1).required(),
-                user_id: Joi.number().positive().required(),
+                image_id: Joi.number().positive().required(),
                 type: Joi.string()
                     .trim()
                     .valid("ARRIVAL", "DEPARTURE", "GARBAGE"),
@@ -110,13 +100,10 @@ export class ProgressImageValidator extends Validator {
                     image_id: Joi.number().positive().required(),
                 }),
                 body: Joi.object({
-                    id: Joi.ref("$params.id"),
                     type: Joi.string()
                         .trim()
                         .valid("ARRIVAL", "DEPARTURE", "GARBAGE"),
                     description: Joi.string().trim().min(1),
-                    image_id: Joi.number().positive(),
-                    progress_id: Joi.number().positive(),
                 }),
             },
             undefined,

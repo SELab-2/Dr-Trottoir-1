@@ -198,7 +198,7 @@ import { tryOrAlertAsync } from "@/try";
 import { ProgressQuery } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
 
-const props = defineProps(["entry", "day"]);
+const props = defineProps(["entry", "day", "schedule_id"]);
 const progress = ref(
   props.entry.progress
     ? JSON.parse(JSON.stringify(props.entry.progress))
