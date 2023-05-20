@@ -224,22 +224,14 @@ import { useAuthStore } from "@/stores/auth";
 import RolesForm from "@/components/forms/RolesForm.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
 import Address from "@/components/models/Address";
-import {
-  AddressQuery,
-  Element as AddressElement,
-  Result,
-  UserQuery,
-} from "@selab-2/groep-1-query";
+import { AddressQuery, Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import UserAnalyticCard from "@/components/cards/UserAnalyticCard.vue";
 import Contact from "@/components/models/Contact";
 import PasswordInputCard from "@/components/cards/PasswordInputCard.vue";
-import {
-  Element as UserElement,
-  UserQueryParameters,
-} from "@selab-2/groep-1-query/src/user";
+import { Element as UserElement } from "@selab-2/groep-1-query/src/user";
 import RemovedCard from "@/components/cards/RemovedCard.vue";
 
 const display = useDisplay();

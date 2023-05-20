@@ -150,7 +150,7 @@
             :key="action.id"
           >
             <div class="d-flex align-center w-100">
-              <h4 class="ml-2 me-auto">{{ action.action.description }}</h4>
+              <h4 class="ml-2 me-auto">{{ action.description }}</h4>
               <v-chip color="border" variant="outlined">
                 <v-icon icon="mdi-calendar-clock"></v-icon>
                 <p class="text-black mx-1">
@@ -277,11 +277,6 @@ function tomaps() {
     `https://maps.google.com/maps?q=${building.value?.address.number}+${building.value?.address.street},+${building.value?.address.city},+${building.value?.address.zip_code}`,
   );
 }
-
-/*
-function toClip(text: string) {
-  navigator.clipboard.writeText(text);
-}*/
 
 const props = defineProps({
   id: {
