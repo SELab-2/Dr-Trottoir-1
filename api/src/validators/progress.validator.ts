@@ -127,6 +127,7 @@ export class ProgressImageValidator extends Validator {
     deleteOneValidator() {
         return celebrate({
             params: Joi.object({
+                id: Joi.number().positive().required(),
                 image_id: Joi.number().positive().required(),
             }),
             body: Joi.object({
