@@ -21,6 +21,7 @@
           variant="outlined"
         />
         <v-text-field
+          id="description"
           class="ml-3 mr-5"
           label="Beschrijving"
           v-model="description"

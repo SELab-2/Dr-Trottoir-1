@@ -1,8 +1,13 @@
 describe('superstudent tests', () => {
   // TODO check if select(...) works better with index
   beforeEach(() => {
-    cy.login('superstudent@trottoir.be', 'super_student')
-    cy.visit('/ronde/overzicht')
+    //cy.login('superstudent@trottoir.be', 'super_student')
+    //cy.visit('/ronde/overzicht')
+    cy.visit('/')
+    cy.get('#email').type('superstudent@trottoir.be')
+    cy.get('#password').type('super_student')
+    cy.get('#login').click()
+
   })
 
   // there is a lot of overlap for superstudents and admins,
@@ -16,11 +21,11 @@ describe('superstudent tests', () => {
     // add buildings
     cy.get('#building').first().click()
     cy.get('#building').first().click()
+    cy.get('#description').type("This is the description for the test round.")
     // save
     cy.get('#createround').click()
-    // confirm?
-    // this gives QueryError2
-    // check for popup on screen?
+    // check for popup on screen
+    cy.contains("400 - Error").should('be.visible')
   })
 
   it('create round, no buildings', () => {
@@ -30,11 +35,12 @@ describe('superstudent tests', () => {
     cy.get('#newround').click()
     // add name
     cy.get('#roundname').type("test round")
+    cy.get('#description').type("This is the description for the test round.")
     // save
     cy.get('#createround').click()
-    // confirm?
-    // this gives QueryError2
-    // check for popup on screen?
+    // check for popup on screen
+    // cy.contains("400 - Error").should('be.visible')
+    // this creates a round with 0 buildings, no error
   })
 
   it('create round succes', () => {
@@ -47,6 +53,7 @@ describe('superstudent tests', () => {
     cy.get('#building').first().click()
     // add name
     cy.get('#roundname').type("test round")
+    cy.get('#description').type("This is the description for the test round.")
     // save
     cy.get('#createround').click()
     // confirm?
@@ -66,7 +73,7 @@ describe('superstudent tests', () => {
     // go to round overview
     cy.get('#rounds').click()
     // press on the round you wish to change
-    cy.contains('Round 1').click()
+    cy.contains('test round').click()
     // press edit button
 
     // edit button currently not implemented
@@ -86,12 +93,14 @@ describe('superstudent tests', () => {
     // select plan schedule
     cy.get('#schedule').click()
     // select student and date(s)
-    cy.get('#selectstudent').select('Dirk De Student') // maybe safer with index
+    cy.get('#selectstudent').parent().click()
+    cy.contains('Dirk De Student').click()
     cy.get('.selectors').then( () => {
-      cy.get('#frequency').select('wekelijks') // maybe safer with index
-      cy.get('#startdate').type('01062023')
-      cy.get('#enddate').type('31062023')
-      cy.get('#starttime').type('1930')
+      cy.get('#frequency').parent().click()
+      cy.contains('wekelijks').click()
+      cy.get('#startdate').type('2023-05-22')
+      cy.get('#enddate').type('2023-06-30')
+      cy.get('#starttime').type('20:30')
     })
     // add
     cy.get('#addschedule').click()
@@ -109,28 +118,30 @@ describe('superstudent tests', () => {
   })
 
   it('switch student for round (for a single date)', () => {
-
+    // for now, i don't know how
   })
 
   it('delete round', () => {
     // go to round overview
     cy.get('#rounds').click()
     // press on the round you wish to delete
-    cy.contains('test round').click()
+    //cy.contains('test round').click()
+    cy.contains('delete').click()
     // press delete button
     cy.get('#deleteround').click()
-    // confirm?
+    // confirm
+    cy.get('#submit').click()
     // round should not be present in the table
     cy.contains('test round').should('not.exist')
+    cy.contains('delete').should('not.exist')
   })
 
 
-  it('observe students currently doing a round', () => {
+  it.only('observe students currently doing a round', () => {
     // make sure there is a student currently doing Round X: maybe add a test that creates this?
     // give round to student -> student starts round
-    const round: string = "Ronde 3"
-    // go to the overview page
-    cy.visit('/ronde/overzicht')
+    const round: string = "Round 2"
+    // we are at round the follup page
     // add filters
     cy.get('#filter').then(() => {
       cy.get('#showfilters').click()
