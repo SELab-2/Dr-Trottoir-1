@@ -31,10 +31,8 @@ const passwordValidator = joiPassword
     "string.min": "Wachtwoord moet minstens {#limit} karakters lang zijn",
   });
 const validPassword = (password: string) => {
-  // disabling eslint for this line, as there is no real way around it
-  // eslint-disable-next-line no-unused-vars
   const { error, value } = passwordValidator.validate(password);
-  return error === undefined ? true : error.message;
+  return error === undefined && value !== undefined ? true : error.message;
 };
 
 const passwordRules = [

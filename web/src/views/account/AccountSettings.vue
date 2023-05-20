@@ -220,12 +220,21 @@ import { useAuthStore } from "@/stores/auth";
 import RolesForm from "@/components/forms/RolesForm.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
 import Address from "@/components/models/Address";
-import { AddressQuery, Result, UserQuery } from "@selab-2/groep-1-query";
+import {
+  AddressQuery,
+  Element as AddressElement,
+  Result,
+  UserQuery,
+} from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import Contact from "@/components/models/Contact";
 import PasswordInputCard from "@/components/cards/PasswordInputCard.vue";
+import {
+  Element as UserElement,
+  UserQueryParameters,
+} from "@selab-2/groep-1-query/src/user";
 
 const display = useDisplay();
 const mobile: Ref<boolean> = display.mobile;
@@ -348,19 +357,26 @@ async function handleSave() {
       zip_code: user.value?.address.zip_code,
     });
   });
+
+  const userPatch: Partial<UserElement> = {
+    id: user.value?.id,
+    email: user.value?.email,
+    first_name: user.value?.first_name,
+    last_name: user.value?.last_name,
+    phone: user.value?.phone,
+    student: roles.value.includes("Student"),
+    super_student: roles.value.includes("Superstudent"),
+    admin: roles.value.includes("Admin"),
+  };
+
+  // if both password and passwordCheck are nonempty, submit the password with the request
+  if (password.value !== "" && passwordCheck.value !== "") {
+    userPatch.password = "HelloWorld1.";
+  }
+
   // update the user
   await tryOrAlertAsync(async () => {
-    await new UserQuery().updateOne({
-      id: user.value?.id,
-      email: user.value?.email,
-      first_name: user.value?.first_name,
-      last_name: user.value?.last_name,
-      phone: user.value?.phone,
-      student: roles.value.includes("Student"),
-      super_student: roles.value.includes("Superstudent"),
-      admin: roles.value.includes("Admin"),
-      password: password.value,
-    });
+    await new UserQuery().updateOne(userPatch);
   });
   showPopup.value = false;
   edit.value = false;
