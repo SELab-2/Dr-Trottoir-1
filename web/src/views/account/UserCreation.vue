@@ -144,12 +144,9 @@ const nameRules = [
   },
 ];
 
-/* Form submission */
-
 async function submitForm() {
   // check if form is valid before submitting
   if (valid.value) {
-    let user;
     await tryOrAlertAsync(async () => {
       const userAddress = await new AddressQuery().createOne({
         city: address.value.city,
@@ -159,7 +156,8 @@ async function submitForm() {
         street: address.value.street,
         zip_code: Number(address.value.zip_code),
       });
-      user = await new UserQuery().createOne({
+
+      const user = await new UserQuery().createOne({
         first_name: first_name.value,
         last_name: last_name.value,
         email: contact.value.email,
@@ -172,7 +170,8 @@ async function submitForm() {
         date_added: new Date(),
         last_login: new Date(),
       });
-      router.push({ name: "account_settings", params: { id: user.id } });
+
+      await router.push({ name: "account_settings", params: { id: user.id } });
     });
   }
 }
