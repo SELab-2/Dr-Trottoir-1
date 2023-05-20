@@ -78,6 +78,7 @@ describe("Progress tests", () => {
                     id: 1,
                     round: {
                         id: 1,
+                        deleted: false,
                         name: "Round 1",
                         description: "Description of round 1",
                     },
@@ -162,6 +163,7 @@ describe("Progress tests", () => {
                             description: "Description of round 1",
                             id: 1,
                             name: "Round 1",
+                            deleted: false,
                         },
                         round_id: 1,
                         start: "2023-05-04T12:10:00.000Z",
@@ -235,6 +237,7 @@ describe("Progress tests", () => {
                             description: "Description of round 2",
                             id: 2,
                             name: "Round 2",
+                            deleted: false,
                         },
                         round_id: 2,
                         start: "2023-05-04T12:10:00.000Z",
@@ -316,6 +319,7 @@ describe("Progress tests", () => {
                             id: 1,
                             description: "Description of round 1",
                             name: "Round 1",
+                            deleted: false,
                         },
                         round_id: 1,
                         user: {
@@ -400,6 +404,7 @@ describe("Progress tests", () => {
                         id: 1,
                         description: "Description of round 1",
                         name: "Round 1",
+                        deleted: false,
                     },
                     round_id: 1,
                     user: {
@@ -486,6 +491,7 @@ describe("Progress tests", () => {
                             description: "Description of round 1",
                             id: 1,
                             name: "Round 1",
+                            deleted: false,
                         },
                         round_id: 1,
                         start: "2023-05-04T12:10:00.000Z",
@@ -559,6 +565,7 @@ describe("Progress tests", () => {
                             description: "Description of round 2",
                             id: 2,
                             name: "Round 2",
+                            deleted: false,
                         },
                         round_id: 2,
                         start: "2023-05-04T12:10:00.000Z",
@@ -645,6 +652,7 @@ describe("Progress tests", () => {
                             description: "Description of round 2",
                             id: 2,
                             name: "Round 2",
+                            deleted: false,
                         },
                         round_id: 2,
                         start: "2023-05-04T12:10:00.000Z",
@@ -732,6 +740,7 @@ describe("Progress tests", () => {
                             description: "Description of round 2",
                             id: 2,
                             name: "Round 2",
+                            deleted: false,
                         },
                         round_id: 2,
                         start: "2023-05-04T12:10:00.000Z",
@@ -836,6 +845,7 @@ describe("Progress tests", () => {
                         id: 1,
                         description: "Description of round 1",
                         name: "Round 1",
+                        deleted: false,
                     },
                     round_id: 1,
                     user: {
@@ -921,6 +931,7 @@ describe("Progress tests", () => {
                         id: 1,
                         name: "Round 1",
                         description: "Description of round 1",
+                        deleted: false,
                     },
                     round_id: 1,
                     user: {
@@ -992,6 +1003,7 @@ describe("Progress tests", () => {
                         id: 1,
                         name: "Round 1",
                         description: "Description of round 1",
+                        deleted: false,
                     },
                     round_id: 1,
                     user: {
@@ -1080,6 +1092,7 @@ describe("Progress tests", () => {
                         id: 1,
                         name: "Round 1",
                         description: "Description of round 1",
+                        deleted: false,
                     },
                     round_id: 1,
                     user: {
@@ -1149,6 +1162,7 @@ describe("Progress tests", () => {
                         id: 1,
                         name: "Round 1",
                         description: "Description of round 1",
+                        deleted: false,
                     },
                     user: {
                         id: 1,
