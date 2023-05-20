@@ -1,7 +1,10 @@
 <template>
   <BorderCard
     class="mx-1 mb-3"
-    v-on="!can_expand ? { click: () => route(start_date) } : {}"
+    v-on="{
+      click: () =>
+        router.push({ name: 'building_id', params: { id: props.building.id } }),
+    }"
   >
     <v-row class="flex-nowrap">
       <v-col cols="2" class="flex-grow-0 flex-shrink-0">
@@ -39,14 +42,11 @@
 
           <template v-slot:append>
             <!-- Date -->
-            <v-chip
-              label
-              color="blue"
-              class="ml-3 align-top"
-              v-if="!can_expand"
-            >
+            <v-chip label color="blue" class="ml-3 align-top">
               <v-icon icon="mdi-calendar-clock"></v-icon>
-              <p class="ml-2">{{ start_date.toLocaleDateString() }}</p>
+              <p class="ml-2">
+                {{ filter_data.start_day.toLocaleDateString() }}
+              </p>
             </v-chip>
             <!-- Date expansion button-->
             <v-btn
@@ -54,7 +54,7 @@
               :icon="expanded ? 'mdi-menu-up' : 'mdi-menu-down'"
               class="dropdown-button"
               variant="text"
-              v-else
+              v-if="can_expand"
             />
           </template>
         </v-card>
@@ -65,15 +65,24 @@
         <DividerLayout />
         <div class="w-100 px-4 py-2" v-if="progresses.length">
           <v-chip
-            v-for="(progress, id) of progresses"
-            :key="id"
+            v-for="progress of progresses"
+            :key="progress.id"
             label
             class="w-100"
             variant="text"
-            @click="route(progress.arrival)"
+            @click="
+              router.push({
+                name: 'round_detail',
+                params: {
+                  id: progress.schedule?.round_id,
+                  schedule: progress.schedule_id,
+                },
+              })
+            "
           >
-            <v-icon color="blue" icon="mdi-calendar-clock"></v-icon>
+            <v-icon color="blue" icon="mdi-bicycle-cargo"></v-icon>
             <p class="ml-2">
+              {{ progress.schedule?.round.name }} op
               {{
                 new Date(progress.arrival ?? new Date()).toLocaleDateString()
               }}
@@ -94,6 +103,7 @@ import { ref, Ref } from "vue";
 import { useRouter } from "vue-router";
 import BorderCard from "@/layouts/CardLayout.vue";
 import DividerLayout from "@/layouts/DividerLayout.vue";
+import Filterdata from "@/components/filter/FilterData";
 import { Result, BuildingQuery, ProgressQuery } from "@selab-2/groep-1-query";
 import { PropType } from "vue";
 import { tryOrAlertAsync } from "@/try";
@@ -102,8 +112,7 @@ const router = useRouter();
 
 const props = defineProps({
   building: { type: Object as PropType<Result<BuildingQuery>>, required: true },
-  start_date: { type: Date, required: true },
-  end_date: { type: Date, required: true },
+  filter_data: { type: Object as PropType<Filterdata>, required: true },
 });
 
 function full_syndicus_name() {
@@ -121,34 +130,39 @@ function full_address() {
 const expanded = ref<Boolean>(false);
 const comments = ref<Boolean>(false);
 
-let progresses: Ref<Result<ProgressQuery>[]> = ref([]);
+let progresses: Ref<Array<Result<ProgressQuery>>> = ref([]);
 
-const can_expand: Ref<boolean> = ref(
-  props.start_date.toLocaleDateString() !== props.end_date.toLocaleDateString(),
-);
+const can_expand: Ref<boolean> = ref(false);
+
+function getStartOfDay(day: Date) {
+  return new Date(day.setHours(0, 0, 0, 0));
+}
+
+function getEndOfDay(day: Date) {
+  return new Date(
+    new Date(day.setHours(0, 0, 0, 0)).setDate(day.getDate() + 1),
+  );
+}
 
 tryOrAlertAsync(async () => {
-  progresses.value = await new ProgressQuery().getAll({
+  const result = await new ProgressQuery().getAll({
     building: props.building?.id,
-    arrived_after: props.start_date,
-    arrived_before: props.end_date,
+    arrived_after: getStartOfDay(props.filter_data.start_day),
+    arrived_before: getEndOfDay(props.filter_data.end_day),
   });
-  can_expand.value = can_expand.value && progresses.value.length > 0;
-});
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function route(date: Date | null) {
-  if (props.building) {
-    router.push({
-      name: "building_id",
-      params: {
-        id: props.building.id,
-        // TODO change to different route with:
-        //  date: new Date(date).toLocaleDateString(),
-      },
-    });
-  }
-}
+  progresses.value = result.filter((progress) => {
+    const hasComments: boolean = !!progress.report;
+    if (hasComments) {
+      comments.value = hasComments;
+    }
+    if (props.filter_data.filters[0] === "Opmerkingen") {
+      return hasComments;
+    }
+    return true;
+  });
+  can_expand.value = progresses.value.length > 0;
+});
 </script>
 
 <style scoped lang="scss">
