@@ -25,13 +25,13 @@ Volgende elementen ziet elke gebruiker:
 
 Volgende elementen ziet een [student](../../users/student.md) extra:
 
-9. Deze knop geeft het telefoon nummer van de syndicus weer. Als u op deze knop klikt gaat u bellen naar de syndicus.
+9. Deze knop geeft het telefoon nummer van de syndicus weer. Als u op deze knop klikt zal u bellen naar de syndicus.
 
 ### Super-student
 
 Volgende elementen ziet een [superstudent](../../users/superstudent.md) extra:
 
-10. Met deze knop kunt u extra [taken toevoegen](../create/create_afval.md)
+10. Met deze knop kunt u extra [taken toevoegen](../create/create_afval.md).
 11. Geeft alle bezoeken tussen 2 datums weer.
 12. Deze knop verwijst u naar een [contactformulier](../../pages/contact/contact_syndicus.md).
 
