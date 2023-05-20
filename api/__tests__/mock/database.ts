@@ -13,7 +13,7 @@ import {
 } from "./schedule";
 import { initialiseRound, initialiseRoundBuilding } from "./round";
 import { initialiseFiles } from "./file";
-import { initialiseAction, initialiseGarbage } from "./garbage";
+import { initialiseGarbage } from "./garbage";
 import { initialiseMailTemplate } from "./mail_template";
 import { prisma } from "./prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
@@ -31,7 +31,6 @@ const initialiseFunctions: { [name: string]: () => Promise<any> } = {
     syndicus: initialiseSyndicus,
     building: initialiseBuilding,
     building_image: initialiseBuildingImages,
-    action: initialiseAction,
     garbage: initialiseGarbage,
     round: initialiseRound,
     round_building: initialiseRoundBuilding,
