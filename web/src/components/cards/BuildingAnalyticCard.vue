@@ -14,9 +14,10 @@
         :title="`Er is in dit gebouw ${formatTime(
           thisBuildingAnalytics?.total,
         )} gewerkt.`"
-        :subtitle="`Er werd verwacht om ${formatTime(expectedTime)} in gebouw te werken.`"
+        :subtitle="`Er werd verwacht om ${formatTime(
+          expectedTime,
+        )} in dit gebouw te werken.`"
       ></v-list-item>
-
     </v-list>
     <div v-else class="centre text-center pa-5">
       <v-icon icon="mdi-alert-circle" size="x-large" />
@@ -28,7 +29,7 @@
 <script setup lang="ts">
 import BorderCard from "@/layouts/CardLayout.vue";
 import DateRange from "@/components/filter/DateRange.vue";
-import { Ref,ref, onMounted } from "vue";
+import { Ref, ref, onMounted } from "vue";
 import { BuildingAnalytics } from "@selab-2/groep-1-query/dist/building";
 import { Result, BuildingQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
@@ -37,7 +38,7 @@ const props = defineProps({
   id: { type: Number, required: true },
 });
 
-const expectedTime:Ref<number>= ref(0);
+const expectedTime: Ref<number> = ref(0);
 
 onMounted(() => {
   updateAnalytics();
@@ -73,7 +74,9 @@ function formatTime(time: number | undefined) {
 
 function calculateExpectedTime(start: Date, end: Date, expectedTime: number) {
   const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-  const diffDays = Math.round(Math.abs((start.getTime() - end.getTime()) / oneDay));
+  const diffDays = Math.round(
+    Math.abs((start.getTime() - end.getTime()) / oneDay),
+  );
 
   // Calculate proportion of the month (30 days)
   const proportionOfMonth = diffDays / 30;
@@ -84,21 +87,25 @@ function calculateExpectedTime(start: Date, end: Date, expectedTime: number) {
   return Math.round(expectedTimeForPeriod);
 }
 
-
 function updateAnalytics() {
   fullSchemeStartDate.value.setHours(0, 0, 0, 0);
   fullSchemeEndDate.value.setHours(23, 59, 59, 999);
   tryOrAlertAsync(async () => {
     thisBuildingAnalytics.value = undefined;
-    const analytics: BuildingAnalytics[] = await new BuildingQuery().getAnalytics(
-      new Date(fullSchemeStartDate.value),
-      new Date(fullSchemeEndDate.value),
-    );
+    const analytics: BuildingAnalytics[] =
+      await new BuildingQuery().getAnalytics(
+        new Date(fullSchemeStartDate.value),
+        new Date(fullSchemeEndDate.value),
+      );
     for (const analytic of analytics) {
-        console.log(analytic)
+      console.log(analytic);
       if (analytic.name === thisBuilding.value?.name) {
         thisBuildingAnalytics.value = analytic;
-        expectedTime.value = calculateExpectedTime(fullSchemeStartDate.value, fullSchemeEndDate.value, thisBuildingAnalytics.value?.expected || 0);
+        expectedTime.value = calculateExpectedTime(
+          fullSchemeStartDate.value,
+          fullSchemeEndDate.value,
+          thisBuildingAnalytics.value?.expected || 0,
+        );
       }
     }
   });

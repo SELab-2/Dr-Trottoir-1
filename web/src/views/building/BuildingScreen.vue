@@ -82,7 +82,6 @@
         </div>
       </div>
 
-    
       <CardLayout class="grid pt-3 pb-1 px-3" style="align-items: center">
         <div>
           <div style="gap: 16px; flex-wrap: wrap" class="d-flex flex-row">
@@ -119,12 +118,12 @@
       </CardLayout>
 
       <BuildingAnalyticCard
-      v-if="
-        (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) &&
-        !building.deleted
-      "
-      :id="building.id"
-    />
+        v-if="
+          (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) &&
+          !building.deleted
+        "
+        :id="building.id"
+      />
 
       <div class="space-y-8">
         <div class="d-flex mt-8 flex-wrap align-center">
@@ -248,7 +247,7 @@ import CardPopup from "@/components/popups/CardPopup.vue";
 import RemovedCard from "@/components/cards/RemovedCard.vue";
 import router from "@/router";
 import { ImgProxy } from "@/imgproxy";
-import BuildingAnalyticCard from "@/components/cards/BuildingAnalyticCard.vue"
+import BuildingAnalyticCard from "@/components/cards/BuildingAnalyticCard.vue";
 
 const showRemovePopup = ref(false);
 
