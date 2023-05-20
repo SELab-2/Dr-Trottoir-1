@@ -58,6 +58,7 @@ export const useAuthStore = defineStore("auth", () => {
         });
       }
     });
+    await getAuth();
   }
 
   /**

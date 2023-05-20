@@ -50,11 +50,10 @@ model User {
     deleted Boolean @default(false)
 
     // Relaties
-    regions         UserRegion[]
-    syndicus        Syndicus[]
-    schedule        Schedule[]
-    uploaded_images Image[]
-    files           File[]
+    regions  UserRegion[]
+    syndicus Syndicus[]
+    schedule Schedule[]
+    files    File[]
 
     @@map("user")
 }
@@ -81,8 +80,7 @@ model File {
     original_name String
 
     // Waar het bestand zich bevindt
-    location FileLocation
-    path     String
+    path String
 
     // Gebruiker die de file geupload heeft.
     user_id Int?
@@ -92,37 +90,12 @@ model File {
     buildings Building[]
 
     // Metadata
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt      DateTime         @default(now())
+    updatedAt      DateTime         @updatedAt
+    BuildingImages BuildingImages[]
+    ProgressImage  ProgressImage[]
 
     @@map("file")
-}
-
-// Geeft aan waar een bestand zich bevindt op het web
-enum FileLocation {
-    EXTERNAL // Externe server, absolute padnaam
-    IMGPROXY // Onze eigen ImgProxy instantie, relatieve padnaam
-    STATIC_FILES // De static file endpoint van onze web server, relatieve padnaam
-    FILE_SERVER // File endpoint van onze API, relatieve padnaam
-
-    @@map("image_location")
-}
-
-// Bij een afbeelding kan de tijd optioneel opgeslagen worden waarop de foto genomen werd.
-model Image {
-    id       Int          @id @default(autoincrement())
-    time     DateTime     @default(now())
-    location FileLocation
-    path     String
-
-    // Gebruiker die het bestand geupload heeft.
-    user_id Int?
-    user    User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
-
-    buildings BuildingImages[]
-    progress  ProgressImage[]
-
-    @@map("image")
 }
 
 // Het adres van een gebouw wordt in een apart model bijgehouden. Hierin wordt niet enkel de straat, huisnummer
@@ -152,7 +125,7 @@ model BuildingImages {
     building    Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
 
     image_id Int
-    image    Image @relation(fields: [image_id], references: [id], onDelete: Cascade)
+    image    File @relation(fields: [image_id], references: [id], onDelete: Cascade)
 
     @@map("building_image")
 }
@@ -255,6 +228,8 @@ model Round {
     buildings RoundBuilding[]
     schedule  Schedule[]
 
+    deleted Boolean @default(false)
+
     @@map("round")
 }
 
@@ -316,7 +291,7 @@ model ProgressImage {
     description String
 
     image_id Int
-    image    Image @relation(fields: [image_id], references: [id], onDelete: Cascade)
+    image    File @relation(fields: [image_id], references: [id], onDelete: Cascade)
 
     progress_id Int
     progress    Progress @relation(fields: [progress_id], references: [id], onDelete: Cascade)

@@ -15,6 +15,7 @@ export class RoundBuildingValidator extends Validator {
                 ivago_id: Joi.string().trim().min(1),
                 sort: Joi.string().trim().min(1),
                 ord: Joi.string().trim().min(1),
+                deleted: Joi.bool(),
             }),
         });
     }
