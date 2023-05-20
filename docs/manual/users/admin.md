@@ -22,17 +22,15 @@ door middel van de applicatie.
 ## Login
 Voordat een admin de applicatie kan gebruiken moet hij eerst [ingelogd](../pages/account/login.md) zijn.
 
+## Account
+Links boven in de [navigatiebalk](../navbar.md#superstudent-syndicus-admin) kan de admin op zijn naam klikken
+zo wordt hij doorverwezen naar de [accountpagina](../pages/account/account.md) waar hij zijn
+account kan bekijken en aanpassen.
+
+## Opvolging
+In de [navigatiebalk](../navbar.md#superstudent-syndicus-admin) onder `Opvolging` kan men eenvoudig
+ronde's en gebouwen opvolgen, de details hierover kan u [hier](nav_sections/followup.md) terug vinden.
+
 ## Administratie
-De administratie sectie bevat lijsten van alle gebruikers, gebouwen en rondes. De admin kan
-hier snel en eenvoudig een gebruiker, gebouw of ronde terugvinden.
-
-### Gebruikers
-Ga naar `Administratie > Gebruikers` in de [navigatiebalk](../navbar.md#superstudent-syndicus-admin) .
-- Voor meer detail over de gebruikerspagina, klik [hier](../pages/administration/gebruikers.md).
-- Voor een beschrijving om een gebruiker aan te maken, klik [hier](../pages/administration/gebruikers.md#3-nieuwe-gebruiker-aanmaken).
-
-### Gebouwen
-Ga naar `Administratie > Gebouwen` in de [navigatiebalk](../navbar.md#superstudent-syndicus-admin).
-
-### Rondes
-Ga naar `Administratie > Rondes` in de [navigatiebalk](../navbar.md#superstudent-syndicus-admin).
+De admin kan heel wat administratieve taken uitvoeren, zoals gebouwen, rondes, etc. aanmaken. Deze zijn noodzakelijk, zodat
+iedereen de applicatie productief kan gebruiken. Een overzicht vindt u [hier](nav_sections/administration.md) terug.
