@@ -13,9 +13,7 @@
         style="min-width: 100px; max-width: 100%"
         class="flex-grow-1 flex-shrink-0 py-0 my-0"
       >
-        <BorderCard
-          class="mt-5 "
-        >
+        <BorderCard class="mt-5">
           <v-row class="py-0 my-0 mx-0 mt-5">
             <v-col
               cols="1"

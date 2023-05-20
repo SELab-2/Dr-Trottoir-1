@@ -357,7 +357,7 @@ const devRoutes: any[] = [
   },
 ];
 
-if (import.meta.env.MODE !== "development") {
+if (import.meta.env.MODE === "development") {
   routes.push(...devRoutes);
 }
 
