@@ -55,7 +55,7 @@ interface PostParametersFile {
     url: string;
     expectedResponse: object;
     statusCode?: number;
-    file?: string;
+    file: string;
 }
 
 interface PatchParameters {
@@ -159,8 +159,6 @@ export class Testrunner {
      * Acquires authentication if required and performs a POST request to the passed URL.
      * Also performs verification on the response.
      * @param url URL to POST to
-     * @param path path on server
-     * @param location File location
      * @param file file path on current host
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
@@ -170,7 +168,7 @@ export class Testrunner {
         url,
         expectedResponse,
         statusCode = constants.HTTP_STATUS_CREATED,
-        file = "",
+        file,
     }: PostParametersFile): Promise<request.Response> => {
         const cookie = await this.authenticate();
 

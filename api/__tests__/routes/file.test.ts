@@ -2,12 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import {
-    deleteDatabaseData,
-    initialiseDatabase,
-    resetDatabase,
-    restoreTables,
-} from "../mock/database";
+import { resetDatabase, restoreTables } from "../mock/database";
 import {
     badRequestResponse,
     forbiddenResponse,
@@ -37,12 +32,27 @@ describe("File tests", () => {
     });
 
     describe("Succesful requests", () => {
+        // test("POST /file", async () => {
+
+        //     const expected = {
+        //         mime: "text/plain",
+        //         original_name: "test2.txt",
+        //         size_in_bytes: 13,
+        //         user_id: 2,
+        //     };
+
+        //     await runner.postFile({
+        //         url: "/file",
+        //         file: `${path.resolve()}/__tests__/mock/file/test2.txt`,
+        //         expectedResponse: expected,
+        //     });
+        // });
+
         test("GET /file", async () => {
             const expected = [
                 {
                     createdAt: "1970-01-01T00:00:00.000Z",
-                    id: 10,
-                    location: "FILE_SERVER",
+                    id: 1,
                     mime: "application/pdf",
                     original_name: "handleiding.pdf",
                     path: "manual.pdf",
@@ -53,7 +63,6 @@ describe("File tests", () => {
                 {
                     createdAt: "1970-01-01T00:00:00.000Z",
                     id: 11,
-                    location: "FILE_SERVER",
                     mime: "text/plain",
                     original_name: "example.txt",
                     path: "example.txt",
@@ -79,8 +88,7 @@ describe("File tests", () => {
             const expected = [
                 {
                     createdAt: "1970-01-01T00:00:00.000Z",
-                    id: 10,
-                    location: "FILE_SERVER",
+                    id: 1,
                     mime: "application/pdf",
                     original_name: "handleiding.pdf",
                     path: "manual.pdf",
@@ -98,18 +106,7 @@ describe("File tests", () => {
     });
 
     describe("Unsuccesful requests", () => {
-        let runner: Testrunner;
-        beforeAll(async () => {
-            const server = request(app);
-            runner = new Testrunner(server);
-
-            await deleteDatabaseData();
-            await initialiseDatabase();
-        });
-
         describe("Must be correctly authorized to use any path", () => {
-            const newFile = {};
-
             describe("Cannot reach any path without authorisation", () => {
                 beforeEach(() => {
                     runner.authLevel(AuthenticationLevel.UNAUTHORIZED);
@@ -213,7 +210,7 @@ describe("File tests", () => {
             });
         });
 
-        test("PATCH request has to be allowed", async () => {
+        test("PATCH  /file not allowed", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             const updateFile = {
                 path: "newPath",

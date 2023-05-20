@@ -25,9 +25,8 @@ export const testfile = {
     size_in_bytes: 13,
     mime: "text/plain",
     path: "example.txt",
-    location: "FILE_SERVER",
-    createdAt: new Date("1970-01-01T00:00:00"),
-    updatedAt: new Date("1970-01-01T00:00:00"),
+    createdAt: new Date("1970-01-01T00:00:00Z"),
+    updatedAt: new Date("1970-01-01T00:00:00Z"),
 } satisfies File;
 
 export const image = {
@@ -54,7 +53,7 @@ export async function initialiseFiles() {
         data: testfile,
     });
 
-    await prisma.image.create({
+    await prisma.file.create({
         data: image,
     });
 }
