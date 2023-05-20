@@ -109,6 +109,7 @@
 
         <div class="grid-right">
           <SyndicusButtons
+            v-if="!syndicus"
             :email="building.syndicus.user.email"
             :click-email="mail"
             :phone="building.syndicus.user.phone"
@@ -245,6 +246,8 @@ const showRemovePopup = ref(false);
 const noStudent: Boolean =
   useAuthStore().auth!.admin || useAuthStore().auth!.super_student;
 
+const syndicus: Boolean = useAuthStore().auth!.syndicus.length > 0;
+
 const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
 const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
 
@@ -331,7 +334,7 @@ if (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) {
 async function getTasks() {
   takenStart.value.setHours(0, 0, 0, 0);
   takenEnd.value.setHours(23, 59, 59, 999);
-  if (noStudent) {
+  if (noStudent || syndicus) {
     await getNoneStudentTasks();
   } else {
     await getStudentTasks();
