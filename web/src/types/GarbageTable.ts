@@ -1,11 +1,10 @@
 import { TableEntity } from "@/components/table/TableEntity";
 import { Header } from "@/components/table/Header";
 import { RowType } from "@/components/table/RowType";
-import { Result, ActionQuery } from "@selab-2/groep-1-query";
 
 export interface DetailedDay {
   date: Date;
-  action: Result<ActionQuery>;
+  action: string;
   time: string;
 }
 
@@ -24,7 +23,7 @@ export class GarbageTable extends TableEntity<DetailedDay> {
         id: 1,
         name: "Actie",
         fit: false,
-        get: (e: DetailedDay) => e.action.description,
+        get: (e: DetailedDay) => e.action,
         type: RowType.TEXT,
         sortable: false,
       },

@@ -1,4 +1,3 @@
-import { ActionQuery } from "./action";
 import { AddressQuery } from "./address";
 import { BuildingQuery } from "./building";
 import { GarbageQuery } from "./garbage";
@@ -42,7 +41,6 @@ type AuthenticatedUser = Prisma.UserGetPayload<{
 }>;
 
 export {
-    ActionQuery,
     AddressQuery,
     AuthenticatedUser,
     BuildingQuery,
