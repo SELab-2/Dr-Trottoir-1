@@ -25,8 +25,7 @@ import Round from "@/views/round/Round.vue";
 import PageNotFound from "@/views/NotFound.vue";
 import { useAuthStore } from "@/stores/auth";
 import ImageTest from "@/views/dev/ImageTest.vue";
-import VisitPage from '@/views/building/VisitPage.vue'
-
+import VisitPage from "@/views/building/VisitPage.vue";
 
 const routes: any[] = [
   {

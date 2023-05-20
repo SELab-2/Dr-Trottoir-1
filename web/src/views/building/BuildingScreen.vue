@@ -62,7 +62,7 @@
             </v-btn>
             <v-btn
               class="text-none"
-              append-icon="mdi-content-copy"
+              :append-icon="copyIcon"
               prepend-icon="mdi-account"
               @click="copyToClipboard()"
               color="success"
@@ -342,10 +342,16 @@ async function getTasks() {
 }
 await getTasks();
 
+const copyIcon = ref<string>("mdi-content-copy");
+
 function copyToClipboard() {
   // TODO make it route with hash
   if (building.value?.name) {
     navigator.clipboard.writeText(building.value?.name);
+    copyIcon.value = "mdi-check-all";
+    setTimeout(() => {
+      copyIcon.value = "mdi-content-copy";
+    }, 1000);
   }
 }
 

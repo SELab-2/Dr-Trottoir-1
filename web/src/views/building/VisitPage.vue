@@ -114,7 +114,7 @@
 import Avatar from "@/components/Avatar.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import CardLayout from "@/layouts/CardLayout.vue";
-import { BuildingQuery, Result, ScheduleQuery } from "@selab-2/groep-1-query";
+import { BuildingQuery, Result } from "@selab-2/groep-1-query";
 import { Ref, ref } from "vue";
 import { tryOrAlertAsync } from "@/try";
 import { GarbageQuery } from "@selab-2/groep-1-query";
@@ -134,7 +134,7 @@ function getBuildingDescription(): string {
 }
 
 function mail() {
-  location.href = "mailto:" + building.value?.syndicus.user.email
+  location.href = "mailto:" + building.value?.syndicus.user.email;
 }
 
 function call(number: string | undefined) {
