@@ -41,6 +41,6 @@ Volgende elemeten ziet een [administrator](../../users/admin.md) extra:
 
 13. Met deze knop kunt u een gebouw verwijderen.
 
-|             Detail Gebouw             |
-| :-----------------------------------: |
-| ![](../../assets/building_detail.png) |
+|            Detail Gebouw            |
+| :---------------------------------: |
+| ![](../../assets/gebouw_detail.png) |
