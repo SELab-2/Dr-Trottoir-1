@@ -1,11 +1,10 @@
 <template>
   <HFillWrapper margin="mx-4">
-    <h2>Nieuwe email template</h2>
+    <h2>Nieuw email sjabloon</h2>
 
     <p>
-      Maak hier een nieuwe email template aan. Aan de rechterkant vindt u codes
-      die u kan gebruiken om uw email dynamisch in te laden wanneer u deze
-      gebruikt.
+      Maak hier een nieuwe email sjabloon aan. Aan de rechterkant vindt u codes
+      die u kan gebruiken om uw email dynamisch in te laden wanneer u deze gebruikt.
     </p>
     <v-row class="py-0 my-0 mx-0">
       <v-col
@@ -14,11 +13,9 @@
         class="flex-grow-1 flex-shrink-0 py-0 my-0"
       >
         <BorderCard
-          prepend-icon="mdi-file-document-outline"
-          title="Nieuwe email template"
-          class="mt-5"
+          class="mt-5 "
         >
-          <v-row class="py-0 my-0 mx-0">
+          <v-row class="py-0 my-0 mx-0 mt-5">
             <v-col
               cols="1"
               style="min-width: 100px; max-width: 100%"
