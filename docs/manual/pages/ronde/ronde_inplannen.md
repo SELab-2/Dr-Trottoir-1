@@ -1,0 +1,33 @@
+### Ronde inplannen
+Een [superstudent](../../users/superstudent.md) of [admin](../../users/admin.md) kan op deze pagina een ronde inplannen.
+
+|           Ronde inplannen            |
+|:------------------------------------:|
+| ![](../../assets/round_schedule.jpg) |
+
+### Student
+Selecteer de student die de ronde moet uitvoeren
+
+### Frequentie
+Selecteer de frequentie waarmee de student deze ronde zal uitvoeren.
+Het kan zijn dat de student deze ronde eenmalig, wekelijks, tweewekelijks of maandelijks moet uitvoeren.
+
+### Start- en einddatum
+Geef de datum op waarop de student deze ronde voor het eerst moet doen.
+Geef ook de datum op waarop de student mag stoppen met deze ronde te doen.
+De startdatum bepaalt op welke dag van de week de ronde moet uitgevoerd worden.
+Wanneer bijvoorbeeld de frequentie ``wekelijks`` is aangeduid, met als start- en einddatum
+respectievelijk 1 en 20 juni 2023, zal de student gepland worden om deze ronde op donderdag 1, 8, en 16 juni 2023 uit te voeren.
+
+### Starttijd
+Geef het tijdstip waarop de student met de ronde moet beginnen.
+
+### Tijdelijk toevoegen
+Wanneer u op de knop ``tijdelijk toevoegen`` drukt, wordt de ronde toegevoegd aan het voorlopig schema.
+U kan op dit moment dus nog rondes toevoegen of verwijderen.
+
+### Voorlopig schema
+Hier ziet u een duidelijker overzicht van de taken die aan het voorlopig schema zijn toegevoegd.
+
+### Inplannen
+Wanneer u op de knop ``inplannen`` drukt, plant u het voorlopig schema in.
