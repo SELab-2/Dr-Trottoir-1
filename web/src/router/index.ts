@@ -25,12 +25,28 @@ import Round from "@/views/round/Round.vue";
 import PageNotFound from "@/views/NotFound.vue";
 import { useAuthStore } from "@/stores/auth";
 import ImageTest from "@/views/dev/ImageTest.vue";
+import VisitPage from '@/views/building/VisitPage.vue'
+
 
 const routes: any[] = [
   {
     path: "/",
     component: LoginScreen,
     name: "login",
+    meta: {
+      auth: (
+        student: boolean,
+        superstudent: boolean,
+        syndicus: boolean,
+        admin: boolean,
+      ) => true,
+    },
+  },
+  {
+    path: "/visitor/:id",
+    component: VisitPage,
+    name: "visit_page",
+    props: true,
     meta: {
       auth: (
         student: boolean,
