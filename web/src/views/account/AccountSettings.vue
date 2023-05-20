@@ -377,7 +377,7 @@ async function handleSave() {
 
   // if both password and passwordCheck are nonempty, submit the password with the request
   if (password.value !== "" && passwordCheck.value !== "") {
-    userPatch.password = "HelloWorld1.";
+    userPatch.password = password.value;
   }
 
   // update the user
