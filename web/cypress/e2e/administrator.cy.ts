@@ -218,7 +218,7 @@ describe('admin tests', () => {
     cy.contains('test template')
   })
 
-  it.only('edit template', () => {
+  it('edit template', () => {
 
   })
 

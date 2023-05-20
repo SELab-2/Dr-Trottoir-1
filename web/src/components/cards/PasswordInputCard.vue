@@ -62,6 +62,7 @@ const passwordRepeatRules = [
     <template v-slot:title> Wachtwoord</template>
     <v-list density="compact" :class="spacing">
       <v-text-field
+        id="password"
         class="mt-2"
         v-model="password"
         :prepend-inner-icon="'mdi-lock'"
@@ -76,6 +77,7 @@ const passwordRepeatRules = [
       ></v-text-field>
       <!-- Text input field for the password confirmation-->
       <v-text-field
+        id="repeat"
         class="mt-2"
         v-model="passwordRepeat"
         :prepend-inner-icon="'mdi-lock'"

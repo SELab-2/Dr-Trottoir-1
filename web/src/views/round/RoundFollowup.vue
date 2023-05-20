@@ -20,6 +20,7 @@
     />
     <!-- TODO: fix comment when db ready for it-->
     <RoundCard
+      id="roundcard"
       v-for="schedule in filtered"
       :key="schedule.schedule.id"
       :filtered="schedule"

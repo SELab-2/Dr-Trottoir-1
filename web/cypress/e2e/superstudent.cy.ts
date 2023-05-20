@@ -153,7 +153,10 @@ describe('superstudent tests', () => {
     cy.contains(round)
     // full name wasn't visible in the round selection, but it is once you clicked on the round
     cy.contains("Dirk De Student")
-    // gebouw cards uitklappen om opmerkingen/afbeeldingen te zien
+    // expand building cards to view comments and images
+    cy.get('#expand').click()
+    cy.get('#comments').should('be.visible')
+    cy.get('#images').should('be.visible')
   })
 
 })

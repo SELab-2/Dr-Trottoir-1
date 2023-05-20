@@ -122,7 +122,7 @@
     <v-expand-transition v-on:click.stop>
       <div v-show="expanded" class="px-8 pb-8">
         <divider-layout class="mb-4" />
-        <h4 class="mb-2">Opmerkingen</h4>
+        <h4 id="comments" class="mb-2">Opmerkingen</h4>
         <p v-if="!editMode">{{ progress?.report }}</p>
         <!-- eslint-disable-next-line vue/no-mutating-props -->
         <v-text-field
@@ -163,7 +163,7 @@
         <divider-layout class="my-4" />
 
         <div>
-          <h4 class="mb-2">Afbeeldingen</h4>
+          <h4 id="images" class="mb-2">Afbeeldingen</h4>
           <div class="carousel" v-if="progress?.images.length ?? 0 > 0">
             <div
               class="carousel-item"
