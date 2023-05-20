@@ -21,5 +21,8 @@ Voeg hier een beschrijving toe.
 ### Foto's
 Upload enkele foto's van het gebouw.
 
+### Verwachte werktijd
+Vul hier in wat de verwachte werktijd voor een student zal zijn in dit gebouw.
+
 ### Aanmaken
 Na het aanmaken van het nieuwe gebouw wordt de gebruiker doorgestuurd naar de [gebouwenpagina](../detail/gebouw.md) van dat gebouw.
