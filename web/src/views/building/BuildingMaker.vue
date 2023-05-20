@@ -21,10 +21,10 @@
       ></v-select>
 
       <v-file-input
-        disabled
+        id="manual-id"
         prepend-icon=""
         prepend-inner-icon="mdi-file"
-        label="Manual"
+        label="Handleiding"
       ></v-file-input>
     </BorderCard>
 
@@ -92,6 +92,7 @@ import { tryOrAlertAsync } from "@/try";
 import {
   AddressQuery,
   BuildingQuery,
+  FileQuery,
   SyndicusQuery,
 } from "@selab-2/groep-1-query";
 import router from "@/router";
@@ -114,16 +115,25 @@ const building = ref({
   ivago_id: "",
   syndicus_id: 0,
   address_id: 0,
-  manual_id: null,
+  manual_id: 0,
 });
 
 const submit = () => {
   tryOrAlertAsync(async () => {
+    // Create address
     const { id } = await new AddressQuery().createOne(address.value);
     building.value.address_id = id;
+
+    // Upload file
+    const file = await new FileQuery().createOne("manual-id");
+    building.value.manual_id = file.id;
+
+    // Create building
     const { id: buildingId } = await new BuildingQuery().createOne(
       building.value,
     );
+
+    // Redirect
     await router.push(`/gebouw/${buildingId}`);
   });
 };
