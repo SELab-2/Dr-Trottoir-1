@@ -97,7 +97,7 @@ import ContactForm from "@/components/forms/ContactForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import RolesForm from "@/components/forms/RolesForm.vue";
-import { UserQuery } from '@selab-2/groep-1-query'
+import { AddressQuery, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 import PasswordInputCard from "@/components/cards/PasswordInputCard.vue";
@@ -151,6 +151,14 @@ async function submitForm() {
   if (valid.value) {
     let user;
     await tryOrAlertAsync(async () => {
+      const userAddress = await new AddressQuery().createOne({
+        city: address.value.city,
+        latitude: 0,
+        longitude: 0,
+        number: Number(address.value.number),
+        street: address.value.street,
+        zip_code: Number(address.value.zip_code),
+      });
       user = await new UserQuery().createOne({
         first_name: first_name.value,
         last_name: last_name.value,
@@ -160,19 +168,10 @@ async function submitForm() {
         super_student: roles.value.includes("Superstudent"),
         admin: roles.value.includes("Admin"),
         password: password2.value,
-        address: {
-          create: {
-            city: address.value.city,
-            latitude: 0,
-            longitude: 0,
-            number: Number(address.value.number),
-            street: address.value.street,
-            zip_code: Number(address.value.zip_code),
-          },
-        },
+        address_id: userAddress.id,
         date_added: new Date(),
         last_login: new Date(),
-      } as any);
+      });
       router.push({ name: "account_settings", params: { id: user.id } });
     });
   }
