@@ -10,10 +10,11 @@ import {
 } from "../utilities/constants";
 import { opendirSync, unlinkSync } from "fs";
 import path from "path";
+import * as util from "util";
 
 process.env[
     "FILE_STORAGE_DIRECTORY"
-] = `${path.resolve()}/__tests__/mock/file_server`;
+] = `${path.resolve()}/__tests__/file_server`;
 
 describe("File tests", () => {
     let runner: Testrunner;
@@ -33,6 +34,7 @@ describe("File tests", () => {
 
     describe("Succesful requests", () => {
         test("POST /file", async () => {
+            // upload a file from upload_files
             const expected = {
                 mime: "text/plain",
                 original_name: "test2.txt",
@@ -42,7 +44,7 @@ describe("File tests", () => {
 
             await runner.postFile({
                 url: "/file",
-                file: `${path.resolve()}/__tests__/mock/file/test2.txt`,
+                file: `${path.resolve()}/__tests__/mock/upload_files/test2.txt`,
                 expectedResponse: expected,
             });
         });
@@ -84,8 +86,11 @@ describe("File tests", () => {
         });
 
         test("GET /file/:id", async () => {
-            const expected = {};
-            await runner.get({ url: "/file/1", expectedData: [expected] });
+            const expected = "Hello world!\n";
+            const response = await runner.getFile({
+                url: "/file/2",
+                expectedContents: expected,
+            });
         });
 
         test("DELETE /file/:id", async () => {
@@ -237,15 +242,15 @@ describe("File tests", () => {
         app.close();
 
         //delete added files
-        const dir = opendirSync(`${process.env.FILE_STORAGE_DIRECTORY}`);
-        let dirent;
-        while ((dirent = dir.readSync()) !== null) {
-            if (dirent.name != "INIT.txt") {
-                unlinkSync(
-                    `${process.env.FILE_STORAGE_DIRECTORY}/${dirent.name}`,
-                );
-            }
-        }
-        dir.closeSync();
+        // const dir = opendirSync(`${process.env.FILE_STORAGE_DIRECTORY}`);
+        // let dirent;
+        // while ((dirent = dir.readSync()) !== null) {
+        //     if (dirent.name != "INIT.txt") {
+        //         unlinkSync(
+        //             `${process.env.FILE_STORAGE_DIRECTORY}/${dirent.name}`,
+        //         );
+        //     }
+        // }
+        // dir.closeSync();
     });
 });

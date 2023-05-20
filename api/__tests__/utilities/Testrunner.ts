@@ -58,6 +58,12 @@ interface PostParametersFile {
     file: string;
 }
 
+interface GetFileParameters {
+    url: string;
+    expectedContents: string;
+    statusCode?: number;
+}
+
 interface PatchParameters {
     url: string;
     data: object;
@@ -111,6 +117,27 @@ export class Testrunner {
         const response = await this.server.get(url).set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
         this.verifyBody(expectedData, response);
+
+        return response;
+    };
+
+    /**
+     * Acquires authentication if required and performs a GET request to the passed URL.
+     * @param url URL of the file
+     * @param expectedContents Contents the file should have
+     * @param statusCode expected status code of the response.
+     * @return the Response object for further testing, should it be required
+     */
+    getFile = async ({
+        url,
+        expectedContents,
+        statusCode = 200,
+    }: GetFileParameters): Promise<request.Response> => {
+        const cookie: string = await this.authenticate();
+        const response = await this.server.get(url).set("Cookie", [cookie]);
+
+        expect(response.statusCode).toEqual(statusCode);
+        expect(response.text).toEqual(expectedContents);
 
         return response;
     };

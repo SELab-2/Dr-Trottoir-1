@@ -1,4 +1,3 @@
-import { File } from "@selab-2/groep-1-orm";
 import { prisma } from "./prisma";
 import { writeFileSync } from "fs";
 import path from "path";
@@ -38,19 +37,7 @@ export const image = {
 };
 
 export async function initialiseFiles() {
-    await prisma.file.create({
-        data: manual,
-    });
-
-    writeFileSync(
-        `${process.env.FILE_STORAGE_DIRECTORY}/example.txt`,
-        "hello world 0",
-    );
-    await prisma.file.create({
-        data: testfile,
-    });
-
-    await prisma.file.create({
-        data: image,
+    await prisma.file.createMany({
+        data: [manual, testfile, image],
     });
 }
