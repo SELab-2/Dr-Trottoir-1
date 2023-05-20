@@ -256,15 +256,13 @@ function getBuildingDescription(): string {
   return castedBuilding.description;
 }
 
+function mail() {
+  router.push({ name: "contact_syndicus", params: { id: building.value?.id } });
+}
+
 function call(number: string | undefined) {
   if (number) {
     location.href = "tel:" + number;
-  }
-}
-
-function mail(address: string | undefined) {
-  if (address) {
-    location.href = "mailto:" + address;
   }
 }
 
