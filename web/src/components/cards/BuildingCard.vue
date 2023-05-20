@@ -170,7 +170,6 @@ tryOrAlertAsync(async () => {
 
 <style scoped lang="scss">
 .prepend-img {
-  height: 100%;
   height: 130px;
 }
 
