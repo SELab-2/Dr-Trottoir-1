@@ -126,15 +126,15 @@ export async function initialiseUser() {
     const student_salt2 = crypto.randomBytes(32).toString("hex");
     const student_hash2 = crypto
         .createHash("sha256")
-        .update("student" + student_salt)
+        .update("student" + student_salt2)
         .digest("hex");
 
-    // create  second student
+    // create second student
     await prisma.user.create({
         data: {
             email: "student2@trottoir.be",
-            first_name: "Dirk",
-            last_name: "De Student",
+            first_name: "Denise",
+            last_name: "De Studente",
             date_added: timestamp,
             last_login: timestamp,
             phone: "0123456789",
@@ -148,6 +148,52 @@ export async function initialiseUser() {
                     id: 1,
                 },
             },
+        },
+    });
+
+    // omni user
+    const omniSalt = crypto.randomBytes(32).toString("hex");
+    const omniHash = crypto
+        .createHash("sha256")
+        .update("omni" + omniSalt)
+        .digest("hex");
+    await prisma.user.create({
+        data: {
+            email: "omni@trottoir.be",
+            first_name: "Omni",
+            last_name: "User",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "0123456789",
+            student: true,
+            super_student: true,
+            admin: true,
+            salt: omniSalt,
+            hash: omniHash,
+            address_id: 1,
+        },
+    });
+
+    // UGent as example syndicus
+    const ugentSalt = crypto.randomBytes(32).toString("hex");
+    const ugentHash = crypto
+        .createHash("sha256")
+        .update("ugent" + ugentSalt)
+        .digest("hex");
+    await prisma.user.create({
+        data: {
+            email: "ugent@trottoir.be",
+            first_name: "De Universiteit",
+            last_name: "Gent",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "0123456789",
+            student: false,
+            super_student: false,
+            admin: false,
+            salt: ugentSalt,
+            hash: ugentHash,
+            address_id: 2,
         },
     });
 }
@@ -177,7 +223,12 @@ export async function initialiseSyndicus() {
         user_id: 1,
     };
 
+    // UGent syndicus for demo
+    const ugent = {
+        user_id: 7,
+    };
+
     await prisma.syndicus.createMany({
-        data: [syndicus1, syndicus2],
+        data: [syndicus1, syndicus2, ugent],
     });
 }

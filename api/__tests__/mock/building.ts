@@ -1,6 +1,12 @@
 import crypto from "crypto";
 import { prisma } from "./prisma";
-import { image, manual } from "./file";
+import {
+    image,
+    manual,
+    manualDeBrug,
+    manualDunant,
+    manualSterre,
+} from "./file";
 
 export async function initialiseBuilding() {
     const passwordB1 = crypto
@@ -56,8 +62,43 @@ export async function initialiseBuilding() {
         hash: passwordB3,
     };
 
+    // buildings for demo
+    const deBrug = {
+        name: "Resto De Brug",
+        ivago_id: "ivago-de-brug",
+        description: "Resto De Brug van Universiteit Gent",
+        expected_time: 100,
+        address_id: 5,
+        manual_id: manualDeBrug.id,
+        syndicus_id: 3,
+        hash: "visitor-de-brug",
+        deleted: false,
+    };
+
+    const dunant = {
+        name: "Resto Dunant",
+        ivago_id: "ivago-dunant",
+        description: "Resto Dunant van Universiteit Gent",
+        expected_time: 200,
+        address_id: 6,
+        manual_id: manualDunant.id,
+        syndicus_id: 3,
+        hash: "visitor-dunant",
+    };
+
+    const sterre = {
+        name: "Resto Sterre",
+        ivago_id: "ivago-sterre",
+        description: "Resto Sterre van Universiteit Gent",
+        expected_time: 300,
+        address_id: 7,
+        manual_id: manualSterre.id,
+        syndicus_id: 3,
+        hash: "visitor-sterre",
+    };
+
     await prisma.building.createMany({
-        data: [building1, building2, building3],
+        data: [building1, building2, building3, deBrug, dunant, sterre],
     });
 }
 
