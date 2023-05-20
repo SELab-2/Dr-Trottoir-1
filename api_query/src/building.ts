@@ -55,7 +55,7 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
     };
 }>;
 
-type BuildingAnalytics = {
+export type BuildingAnalytics = {
     name: string;
     expected: number | null;
     total: number;
