@@ -57,7 +57,7 @@
                 <v-text-field
                   v-model="actionDescription"
                   label="Beschrijving van de actie"
-                /></v-col>
+              /></v-col>
               <v-col
                 cols="1"
                 style="min-width: 100px; max-width: 100%"
@@ -206,17 +206,12 @@ import {
   GarbageOverviewEntry,
   GarbageOverviewTable,
 } from "@/types/GarbageOverviewTable";
-import {
-  Result,
-  GarbageQuery,
-  BuildingQuery,
-} from "@selab-2/groep-1-query";
+import { Result, GarbageQuery, BuildingQuery } from "@selab-2/groep-1-query";
 import { useRoute, useRouter } from "vue-router";
 
-const actionDescription = ref<string>('')
+const actionDescription = ref<string>("");
 
 const router = useRouter();
-
 
 const frequenties = ["enkel", "wekelijks", "tweewekelijks", "maandelijks"];
 const fullSchemeStartDate = ref<string>(
@@ -225,7 +220,6 @@ const fullSchemeStartDate = ref<string>(
 const fullSchemeEndDate = ref<string>(oneWeekLater());
 const currentBuilding = ref<Result<BuildingQuery>>();
 onMounted(() => {
-
   tryOrAlertAsync(async () => {
     currentBuilding.value = await new BuildingQuery().getOne(buildingId);
   });
