@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import { prisma } from "./prisma";
 import { image, manual } from "./file";
 
@@ -9,7 +8,7 @@ export async function initialiseBuilding() {
         description: "Description of building 1",
         expected_time: 100,
         address_id: 1,
-        manual_id: manual.id,
+        manual_id: 1,
 
         deleted: false,
         syndicus_id: 1,
@@ -23,7 +22,7 @@ export async function initialiseBuilding() {
         description: "Description of building 2",
         expected_time: 200,
         address_id: 2,
-        manual_id: manual.id,
+        manual_id: 1,
         deleted: false,
         syndicus_id: 2,
 
@@ -36,7 +35,7 @@ export async function initialiseBuilding() {
         description: "Description of building 3",
         expected_time: 150,
         address_id: 3,
-        manual_id: manual.id,
+        manual_id: 1,
         syndicus_id: 1,
         deleted: true,
 
@@ -51,17 +50,17 @@ export async function initialiseBuilding() {
 export async function initialiseBuildingImages() {
     const e1 = {
         building_id: 1,
-        image_id: image.id,
+        image_id: 3,
     };
 
     const e2 = {
         building_id: 2,
-        image_id: image.id,
+        image_id: 3,
     };
 
     const e3 = {
         building_id: 3,
-        image_id: image.id,
+        image_id: 3,
     };
 
     await prisma.buildingImages.createMany({

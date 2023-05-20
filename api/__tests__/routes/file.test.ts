@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@jest/globals";
+import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
@@ -32,21 +32,20 @@ describe("File tests", () => {
     });
 
     describe("Succesful requests", () => {
-        // test("POST /file", async () => {
+        test("POST /file", async () => {
+            const expected = {
+                mime: "text/plain",
+                original_name: "test2.txt",
+                size_in_bytes: 13,
+                user_id: 2,
+            };
 
-        //     const expected = {
-        //         mime: "text/plain",
-        //         original_name: "test2.txt",
-        //         size_in_bytes: 13,
-        //         user_id: 2,
-        //     };
-
-        //     await runner.postFile({
-        //         url: "/file",
-        //         file: `${path.resolve()}/__tests__/mock/file/test2.txt`,
-        //         expectedResponse: expected,
-        //     });
-        // });
+            await runner.postFile({
+                url: "/file",
+                file: `${path.resolve()}/__tests__/mock/file/test2.txt`,
+                expectedResponse: expected,
+            });
+        });
 
         test("GET /file", async () => {
             const expected = [
@@ -62,7 +61,7 @@ describe("File tests", () => {
                 },
                 {
                     createdAt: "1970-01-01T00:00:00.000Z",
-                    id: 11,
+                    id: 2,
                     mime: "text/plain",
                     original_name: "example.txt",
                     path: "example.txt",
@@ -70,13 +69,23 @@ describe("File tests", () => {
                     updatedAt: "1970-01-01T00:00:00.000Z",
                     user_id: 2,
                 },
+                {
+                    createdAt: "1970-01-01T00:00:00.000Z",
+                    id: 3,
+                    mime: "application/jpeg",
+                    original_name: "camera.jpg",
+                    path: "camera.jpg",
+                    size_in_bytes: 1024,
+                    updatedAt: "1970-01-01T00:00:00.000Z",
+                    user_id: 1,
+                },
             ];
             await runner.get({ url: "/file", expectedData: expected });
         });
 
         test("GET /file/:id", async () => {
             const expected = {};
-            await runner.get({ url: "/file/11", expectedData: [expected] });
+            await runner.get({ url: "/file/1", expectedData: [expected] });
         });
 
         test("DELETE /file/:id", async () => {

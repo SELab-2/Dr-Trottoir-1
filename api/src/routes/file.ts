@@ -46,13 +46,15 @@ export class FileRouting extends Routing {
             throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
         }
         const file = (req.files as Express.Multer.File[])[0];
+
+        const userId = req.user?.id ?? 1;
         const result = await prisma.file.create({
             data: {
-                path: file.filename,
+                user_id: userId,
+                path: file.path,
                 mime: file.mimetype,
                 size_in_bytes: file.size,
                 original_name: file.originalname,
-                user_id: req.user?.id ?? 1,
             },
         });
 

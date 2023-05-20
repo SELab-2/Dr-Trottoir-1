@@ -8,7 +8,6 @@ process.env[
 ] = `${path.resolve()}/__tests__/mock/file_server`;
 
 export const manual = {
-    id: 1,
     user_id: 1,
     original_name: "handleiding.pdf",
     size_in_bytes: 1024,
@@ -16,10 +15,9 @@ export const manual = {
     path: "manual.pdf",
     createdAt: new Date("1970-01-01T00:00:00Z"),
     updatedAt: new Date("1970-01-01T00:00:00Z"),
-} satisfies File;
+};
 
 export const testfile = {
-    id: 11,
     user_id: 2,
     original_name: "example.txt",
     size_in_bytes: 13,
@@ -27,10 +25,9 @@ export const testfile = {
     path: "example.txt",
     createdAt: new Date("1970-01-01T00:00:00Z"),
     updatedAt: new Date("1970-01-01T00:00:00Z"),
-} satisfies File;
+};
 
 export const image = {
-    id: 2,
     user_id: 1,
     original_name: "camera.jpg",
     size_in_bytes: 1024,
@@ -38,7 +35,7 @@ export const image = {
     path: "camera.jpg",
     createdAt: new Date("1970-01-01T00:00:00Z"),
     updatedAt: new Date("1970-01-01T00:00:00Z"),
-} satisfies File;
+};
 
 export async function initialiseFiles() {
     await prisma.file.create({
