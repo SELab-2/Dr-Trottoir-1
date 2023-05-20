@@ -37,12 +37,10 @@
       </v-select>
 
       <v-file-input
-        single
-        v-model="manual"
-        accept="application/pdf"
+        id="manual-id"
         prepend-icon=""
         prepend-inner-icon="mdi-file"
-        label="Handleiding toevoegen"
+        label="Handleiding"
       ></v-file-input>
     </BorderCard>
 
@@ -130,6 +128,7 @@ import {
   AddressQuery,
   BuildingQuery,
   UserQuery,
+  FileQuery,
   SyndicusQuery,
 } from "@selab-2/groep-1-query";
 import router from "@/router";
@@ -163,7 +162,7 @@ const building = ref({
   },
 });
 
-const manual = ref(null);
+const manual = ref<File[] | undefined>();
 
 const description = ref("");
 
@@ -194,7 +193,7 @@ const submit = () => {
       });
       building.value.syndicus.id = syndicusId;
     }
-    const { id: addressId } = await new AddressQuery().createOne({
+    const newAddress = await new AddressQuery().createOne({
       street: address.value.street,
       number: address.value.number,
       city: address.value.city,
@@ -206,13 +205,16 @@ const submit = () => {
     // create File object for manual
     // const response = await fetch('http://10.0.0.5:8080/file/',  {method: "POST", body: JSON.stringify(manual)});
     // const man = await response.json()
+    
+    const element = document.getElementById("manual-id")
+    const file = await new FileQuery().createOne("manual-id");
 
+    /*
     const { id: buildingId } = await new BuildingQuery().createOne({
       name: building.value.name,
       ivago_id: building.value.ivago_id,
       description: description.value,
-      syndicus_id: building.value.syndicus.id,
-      address_id: addressId,
+      address: newAddress,
       // manual_id: man.id,
       }
     );
