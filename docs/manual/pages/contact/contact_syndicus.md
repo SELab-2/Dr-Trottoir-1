@@ -3,6 +3,7 @@ Het is mogelijk dat een syndicus gecontacteerd moet worden over zijn gebouw.
 In dit geval kan een mail opgesteld en gestuurd worden via de site zelf.
 Om dit gebruiksvriendelijker te maken, kunnen sjablonen van mails gebruikt worden.
 Hierbij is de mail grotendeels al geschreven en moeten slecht enkele specifieke aspecten aangepast worden zoals namen van gebouwen, syndicus ...
+Deze sjablonen kunnen via een [andere pagina](../administration/email-sjablonen.md) toegevoegd worden.
 
 Enkel superstudenten en administrators hebben toegang tot deze pagina.
 Studenten kunnen dus zelf geen mails versturen,
