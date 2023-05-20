@@ -23,3 +23,5 @@
 !web/tsconfig.node.json
 !web/vite.config.ts
 !web/.browserslistrc
+
+!server/nginx.conf
