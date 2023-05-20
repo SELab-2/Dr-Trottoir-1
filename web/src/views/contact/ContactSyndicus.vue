@@ -140,12 +140,7 @@ function parseString(str: string | undefined): string {
 }
 function updateFields() {
   subject.value = parseString(selected_template?.value?.mail_subject);
-  content.value =
-    "Geachte heer/mevrouw " +
-    building.value?.syndicus.user.last_name +
-    ",\n\n" +
-    parseString(selected_template?.value?.content) +
-    "\n\nMet vriendelijke groeten, \nDr. Trottoir";
+  content.value = parseString(selected_template?.value?.content);
 }
 function sendMail() {
   tryOrAlertAsync(async () => {
