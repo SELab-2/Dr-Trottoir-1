@@ -58,6 +58,7 @@ ENTRYPOINT npm run start
 
 FROM node:19-bullseye AS web_build
 ARG VUE_APP_API_SERVER_ADDRESS
+ARG VUE_APP_IMGPROXY_SERVER_ADDRESS
 WORKDIR /build/web
 
 # Dependencies

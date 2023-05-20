@@ -3,6 +3,7 @@ import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
 import { resetDatabase } from "../mock/database";
+import { image } from "../mock/file";
 
 describe("Progress tests", () => {
     let runner: Testrunner;
@@ -18,7 +19,7 @@ describe("Progress tests", () => {
     describe("Bugs", () => {
         test("Superstudent must not see deleted progress images", async () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
-            await runner.delete({ url: "/progress/1/image/1" });
+            await runner.delete({ url: `/progress/1/image/${image.id}` });
 
             // verify that the progress image is soft deleted
             // super-student should not see the deleted image
@@ -56,6 +57,7 @@ describe("Progress tests", () => {
                     deleted: false,
                     round: {
                         id: 1,
+                        deleted: false,
                         name: "Round 1",
                         description: "Description of round 1",
                     },
@@ -117,6 +119,7 @@ describe("Progress tests", () => {
                     deleted: false,
                     round: {
                         id: 1,
+                        deleted: false,
                         name: "Round 1",
                         description: "Description of round 1",
                     },
@@ -137,19 +140,13 @@ describe("Progress tests", () => {
                 },
                 images: [
                     {
-                        id: 1,
-                        type: "ARRIVAL",
-                        description: "Description of progress image 1",
-                        image_id: 10,
-                        progress_id: 1,
                         deleted: true,
-                        image: {
-                            id: 10,
-                            time: "1970-01-01T00:00:00.000Z",
-                            location: "IMGPROXY",
-                            path: "image.jpg",
-                            user_id: 1,
-                        },
+                        description: "Description of progress image 1",
+                        id: 1,
+                        image: image,
+                        image_id: 2,
+                        progress_id: 1,
+                        type: "ARRIVAL",
                     },
                 ],
             };

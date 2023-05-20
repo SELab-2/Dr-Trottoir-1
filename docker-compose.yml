@@ -98,6 +98,7 @@ services:
       target: "web_production"
       args:
         VUE_APP_API_SERVER_ADDRESS: https://sel2-1.ugent.be/api/
+        VUE_APP_IMGPROXY_SERVER_ADDRESS: https://sel2-1.ugent.be/imgproxy
     networks:
       main:
         ipv4_address:  10.0.0.6
