@@ -27,7 +27,7 @@
             class="garbage-card"
           >
             <div class="spread-out">
-              <p class="garbage-type">{{ item.action.description }}</p>
+              <p class="garbage-type">{{ "test" }}</p>
               <p class="garbage-time">
                 {{ new Date(item.pickup_time).toLocaleTimeString() }}
               </p>
