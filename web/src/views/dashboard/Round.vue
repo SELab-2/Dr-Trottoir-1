@@ -1,14 +1,14 @@
 <template>
   <div class="d-flex flex-row-reverse toprow">
-    <v-btn
+    <SimpleButton
       id="newround"
       prepend-icon="mdi-plus"
       color="primary"
-      class="mr-3 text-none"
+      class="mr-3"
       :to="{ name: 'round_new' }"
     >
       Nieuwe ronde maken
-    </v-btn>
+    </SimpleButton>
   </div>
   <DashBoardSearch :admin="false" @changed="(_, b) => getRounds(b)" />
   <Table
@@ -27,6 +27,7 @@ import { Result, RoundQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { RoundTable } from "@/types/Schedule";
 import { ref, Ref } from "vue";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 const rounds: Ref<Array<Result<RoundQuery>>> = ref([]);
 await getRounds("");

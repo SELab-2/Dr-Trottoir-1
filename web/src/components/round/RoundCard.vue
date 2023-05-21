@@ -16,24 +16,17 @@
     </div>
     <div class="flex-grow-1"></div>
     <!-- Amount of images taken indicator -->
-    <v-chip
-      color="border"
-      variant="outlined"
+    <RoundedInfoChip
       v-show="getImagesAmount(progress) !== 0"
-    >
-      <v-icon icon="mdi-image-outline" class="mr-1" color="black" />
-      <p class="text-black">{{ getImagesAmount(progress) }}</p>
-    </v-chip>
-
+      icon="mdi-image-outline"
+      :text="getImagesAmount(progress).toString()"
+    />
     <!-- Amount of comments made indicator -->
-    <v-chip
-      color="border"
-      variant="outlined"
+    <RoundedInfoChip
       v-show="getCommentsAmount(progress) !== 0"
-    >
-      <v-icon icon="mdi-comment-outline" class="mr-1" color="black" />
-      <p class="text-black">{{ getCommentsAmount(progress) }}</p>
-    </v-chip>
+      icon="mdi-comment-outline"
+      :text="getCommentsAmount(progress).toString()"
+    />
 
     <!-- Active round indication -->
     <v-chip
@@ -81,6 +74,7 @@ import {
   getImagesAmount,
   roundStarted,
 } from "@/assets/scripts/roundProgress";
+import RoundedInfoChip from "@/components/chips/RoundedInfoChip.vue";
 
 const props = defineProps<{
   schedule: Result<ScheduleQuery>;

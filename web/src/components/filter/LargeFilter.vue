@@ -14,7 +14,7 @@
       />
     </template>
     <template v-slot:append>
-      <v-btn
+      <SimpleButton
         id="showfilters"
         prepend-icon="mdi-filter"
         :append-icon="dropdown ? 'mdi-menu-up' : 'mdi-menu-down'"
@@ -22,7 +22,7 @@
         variant="flat"
       >
         Filter
-      </v-btn>
+      </SimpleButton>
     </template>
     <v-expand-transition>
       <div id="dropdown" v-show="dropdown">
@@ -124,6 +124,7 @@ import { ref } from "vue";
 import FilterData from "@/components/filter/FilterData";
 import BorderCard from "@/layouts/CardLayout.vue";
 import DividerLayout from "@/layouts/DividerLayout.vue";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 // The filter data is emitted with the 'onUpdate' tag
 const props = defineProps({
