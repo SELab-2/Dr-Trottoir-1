@@ -13,6 +13,7 @@ describe('syndicus tests', () => {
     cy.get('#building').first().click()
     cy.contains('Building 1')
     cy.contains('Taken')
+    cy.contains('ID')
   })
 
 })

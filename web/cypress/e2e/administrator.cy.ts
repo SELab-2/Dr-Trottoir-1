@@ -97,8 +97,28 @@ describe('admin tests', () => {
     cy.contains('Deze account is verwijderd').should('not.exist')
   })
 
-  it('check the profitability statistics', () => {
-    // not yet implemented
+  it('check the profitability statistics user', () => {
+    // go to user overview
+    cy.get('#users').click()
+    // click user
+    cy.contains('nieuwe gebruiker').click()
+    // check if stats are present
+    cy.contains('Prestaties').should('be.visible')
+    cy.contains('Bekijk het aantal gepresteerde uren per maand.').should('be.visible')
+    cy.get('#year').should('have.value', 2023)
+  })
+
+  it('check the profitability statistics building', () => {
+    // go to building overview
+    cy.get('#buildings').click()
+    // click building
+    cy.contains('Building 1').click()
+    // it can take a while to load all the schedules
+    cy.wait(10000)
+    // check if stats are present
+    cy.contains('Prestaties').should('be.visible')
+    cy.contains('Bekijk het aantal gepresteerde uren per maand.').should('be.visible')
+    cy.get('#year').should('have.value', 2023)
   })
 
   it('add building', () => {
@@ -133,25 +153,32 @@ describe('admin tests', () => {
     cy.get('#buildings').click()
     // select building
     cy.contains('Building 1').click()
+    // it can take a while to load all the schedules
+    cy.wait(10000)
     // add garbage
     cy.get('#addgarbage').click()
-    cy.get('#garbage').select('REST')
     cy.get('#action').type('buiten zetten')
-    cy.get('frequency').select('wekelijks')
+    cy.get('#frequency').parent().click()
+    cy.contains('wekelijks').click()
     // TODO: add an actual date
-    cy.get('startdate').type('')
-    cy.get('#enddate').type('')
-    cy.get('time').type('2000')
+    cy.get('#startdate').type('2023-05-22')
+    cy.get('#enddate').type('2023-06-22')
+    cy.get('#starttime').type('20:00')
     cy.get('#addtoschedule').click()
     cy.get('#schedule').click()
     // check if schedule is added
     cy.get('#buildings').click()
     cy.contains('Building 1').click()
+    // it can take a while to load all the schedules
+    cy.wait(10000)
+    cy.contains('buiten zetten')
     // onder Taken bij het gebouw, of nee toch niet, dus waar kan je dit zien? wss zo bij het aanmaken van een ronde
   })
 
   it('edit garbage schedule of a building', () => {
     cy.get('#buildings').click()
+    // it can take a while to load all the schedules
+    cy.wait(10000)
     // select building
     cy.contains('test building').click()
     //edit garbage
@@ -159,6 +186,8 @@ describe('admin tests', () => {
 
   it('delete garbage schedule of a building', () => {
     cy.get('#buildings').click()
+    // it can take a while to load all the schedules
+    cy.wait(10000)
     // select building
     cy.contains('test building').click()
     // delete garbage
@@ -168,6 +197,8 @@ describe('admin tests', () => {
     cy.get('#buildings').click()
     // press building from buildings overview
     cy.contains('test building').click()
+    // it can take a while to load all the schedules
+    cy.wait(10000)
     // press edit button
     cy.contains('#edit').click()
     // alter building data
@@ -196,7 +227,9 @@ describe('admin tests', () => {
 
   it('delete building', () => {
     cy.contains('test building').click()
-    cy.get('#edit').click()
+    // it can take a while to load all the schedules
+    cy.wait(10000)
+    cy.get('#delete').click()
     // deletion not yet implemented
     // delete
     // confirm?
@@ -219,11 +252,24 @@ describe('admin tests', () => {
   })
 
   it('edit template', () => {
+    cy.get('#templates').click()
+    cy.get(':nth-child(4) > :nth-child(2) > .v-btn').click()
+    cy.get('#templatename').clear()
+    cy.get('#templatename').type('new template')
+    cy.get('#subject').type('.')
+    cy.get('#templatebody').type('Delete this template.')
+    // save
+    cy.get('#savetemplate').click()
+    // check if template is in the list
+    cy.get('#templates').click()
+    cy.contains('new template')
 
   })
 
-  it('delete templete', () => {
-
+  it.only('delete templete', () => {
+    cy.get('#templates').click()
+    cy.get(':nth-child(4) > :nth-child(3) > .v-btn').click()
+    cy.contains('new template').should('not.exist')
   })
 
 })

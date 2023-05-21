@@ -138,6 +138,7 @@
               @update:start-date="getTasks()"
             />
             <SimpleButton
+              id="addgarbage"
               v-show="noStudent && !building.deleted"
               class="mx-1 text-none"
               prepend-icon="mdi-plus"
