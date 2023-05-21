@@ -27,12 +27,15 @@ Wanneer u op de knop ``tijdelijk toevoegen`` drukt, wordt de ronde toegevoegd aa
 U kan op dit moment dus nog rondes toevoegen of verwijderen.
 
 ### 6. Voorlopig schema
-Hier ziet u een duidelijker overzicht van de taken die aan het voorlopig schema zijn toegevoegd,
+Hier ziet u een duidelijker overzicht van de taken die u net aan het voorlopig schema heeft toegevoegd,
+samen met de reeds ingeplande taken van deze ronde,
 waarbij u kunt filteren op datum.
+De taken met de tag ``new`` zijn degene die u zojuist aan het voorlopig schema heeft toegevoegd.
 
 |            Voorlopig schema            |
 |:--------------------------------------:|
 | ![](../../assets/schedule_round_2.jpg) |
+
 
 ### 7. Inplannen
 Wanneer u op de knop ``inplannen`` drukt, plant u het voorlopig schema in.
