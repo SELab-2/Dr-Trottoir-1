@@ -221,6 +221,7 @@ describe("Garbage tests", () => {
             };
 
             const expectedResponse = {
+                id: 3,
                 pickup_time: "2023-05-04T12:00:00.000Z",
                 description: "action 1",
                 building_id: 2,

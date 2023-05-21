@@ -69,6 +69,7 @@ describe("Progress tests", () => {
                 deleted: false,
                 departure: "2023-08-04T16:00:00.000Z",
                 images: [],
+                id: 3,
                 report: "Report 2",
                 schedule: {
                     day: "2023-05-04T12:00:00.000Z",
@@ -140,7 +141,7 @@ describe("Progress tests", () => {
                             id: 1,
                             image: {
                                 createdAt: "1970-01-01T00:00:00.000Z",
-                                id: 2,
+                                id: 3,
                                 mime: "application/jpeg",
                                 original_name: "camera.jpg",
                                 path: "camera.jpg",
@@ -148,7 +149,7 @@ describe("Progress tests", () => {
                                 updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 3,
                             progress_id: 1,
                             type: "ARRIVAL",
                         },
@@ -160,10 +161,10 @@ describe("Progress tests", () => {
                         end: "2023-05-04T12:20:00.000Z",
                         id: 1,
                         round: {
+                            deleted: false,
                             description: "Description of round 1",
                             id: 1,
                             name: "Round 1",
-                            deleted: false,
                         },
                         round_id: 1,
                         start: "2023-05-04T12:10:00.000Z",
@@ -214,7 +215,7 @@ describe("Progress tests", () => {
                             id: 2,
                             image: {
                                 createdAt: "1970-01-01T00:00:00.000Z",
-                                id: 2,
+                                id: 3,
                                 mime: "application/jpeg",
                                 original_name: "camera.jpg",
                                 path: "camera.jpg",
@@ -222,7 +223,7 @@ describe("Progress tests", () => {
                                 updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 3,
                             progress_id: 2,
                             type: "GARBAGE",
                         },
@@ -234,10 +235,10 @@ describe("Progress tests", () => {
                         end: "2023-05-04T12:20:00.000Z",
                         id: 2,
                         round: {
+                            deleted: false,
                             description: "Description of round 2",
                             id: 2,
                             name: "Round 2",
-                            deleted: false,
                         },
                         round_id: 2,
                         start: "2023-05-04T12:10:00.000Z",
@@ -295,7 +296,7 @@ describe("Progress tests", () => {
                             id: 1,
                             image: {
                                 createdAt: "1970-01-01T00:00:00.000Z",
-                                id: 2,
+                                id: 3,
                                 mime: "application/jpeg",
                                 original_name: "camera.jpg",
                                 path: "camera.jpg",
@@ -303,7 +304,7 @@ describe("Progress tests", () => {
                                 updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 3,
                             progress_id: 1,
                             type: "ARRIVAL",
                         },
@@ -380,7 +381,7 @@ describe("Progress tests", () => {
                         id: 1,
                         image: {
                             createdAt: "1970-01-01T00:00:00.000Z",
-                            id: 2,
+                            id: 3,
                             mime: "application/jpeg",
                             original_name: "camera.jpg",
                             path: "camera.jpg",
@@ -388,7 +389,7 @@ describe("Progress tests", () => {
                             updatedAt: "1970-01-01T00:00:00.000Z",
                             user_id: 1,
                         },
-                        image_id: 2,
+                        image_id: 3,
                         progress_id: 1,
                         type: "ARRIVAL",
                     },
@@ -468,7 +469,7 @@ describe("Progress tests", () => {
                             id: 1,
                             image: {
                                 createdAt: "1970-01-01T00:00:00.000Z",
-                                id: 2,
+                                id: 3,
                                 mime: "application/jpeg",
                                 original_name: "camera.jpg",
                                 path: "camera.jpg",
@@ -476,7 +477,7 @@ describe("Progress tests", () => {
                                 updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 3,
                             progress_id: 1,
                             type: "ARRIVAL",
                         },
@@ -488,10 +489,10 @@ describe("Progress tests", () => {
                         end: "2023-05-04T12:20:00.000Z",
                         id: 1,
                         round: {
+                            deleted: false,
                             description: "Description of round 1",
                             id: 1,
                             name: "Round 1",
-                            deleted: false,
                         },
                         round_id: 1,
                         start: "2023-05-04T12:10:00.000Z",
@@ -542,7 +543,7 @@ describe("Progress tests", () => {
                             id: 2,
                             image: {
                                 createdAt: "1970-01-01T00:00:00.000Z",
-                                id: 2,
+                                id: 3,
                                 mime: "application/jpeg",
                                 original_name: "camera.jpg",
                                 path: "camera.jpg",
@@ -550,7 +551,7 @@ describe("Progress tests", () => {
                                 updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 3,
                             progress_id: 2,
                             type: "GARBAGE",
                         },
@@ -562,10 +563,10 @@ describe("Progress tests", () => {
                         end: "2023-05-04T12:20:00.000Z",
                         id: 2,
                         round: {
+                            deleted: false,
                             description: "Description of round 2",
                             id: 2,
                             name: "Round 2",
-                            deleted: false,
                         },
                         round_id: 2,
                         start: "2023-05-04T12:10:00.000Z",
@@ -629,7 +630,7 @@ describe("Progress tests", () => {
                             id: 2,
                             image: {
                                 createdAt: "1970-01-01T00:00:00.000Z",
-                                id: 2,
+                                id: 3,
                                 mime: "application/jpeg",
                                 original_name: "camera.jpg",
                                 path: "camera.jpg",
@@ -637,7 +638,7 @@ describe("Progress tests", () => {
                                 updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 3,
                             progress_id: 2,
                             type: "GARBAGE",
                         },
@@ -649,10 +650,10 @@ describe("Progress tests", () => {
                         end: "2023-05-04T12:20:00.000Z",
                         id: 2,
                         round: {
+                            deleted: false,
                             description: "Description of round 2",
                             id: 2,
                             name: "Round 2",
-                            deleted: false,
                         },
                         round_id: 2,
                         start: "2023-05-04T12:10:00.000Z",
@@ -717,7 +718,7 @@ describe("Progress tests", () => {
                             id: 2,
                             image: {
                                 createdAt: "1970-01-01T00:00:00.000Z",
-                                id: 2,
+                                id: 3,
                                 mime: "application/jpeg",
                                 original_name: "camera.jpg",
                                 path: "camera.jpg",
@@ -725,7 +726,7 @@ describe("Progress tests", () => {
                                 updatedAt: "1970-01-01T00:00:00.000Z",
                                 user_id: 1,
                             },
-                            image_id: 2,
+                            image_id: 3,
                             progress_id: 2,
                             type: "GARBAGE",
                         },
@@ -737,10 +738,10 @@ describe("Progress tests", () => {
                         end: "2023-05-04T12:20:00.000Z",
                         id: 2,
                         round: {
+                            deleted: false,
                             description: "Description of round 2",
                             id: 2,
                             name: "Round 2",
-                            deleted: false,
                         },
                         round_id: 2,
                         start: "2023-05-04T12:10:00.000Z",
@@ -776,95 +777,96 @@ describe("Progress tests", () => {
                 description: "arrival image",
             };
             const expected = {
+                id: 1,
+                report: "Report 1",
                 arrival: "2023-05-04T12:00:00.000Z",
+                departure: "2023-05-04T12:00:00.000Z",
+                building_id: 1,
+                schedule_id: 1,
+                deleted: false,
                 building: {
+                    id: 1,
+                    name: "Building 1",
+                    ivago_id: "ivago-1",
+                    description: "Description of building 1",
+                    deleted: false,
                     address: {
-                        city: "Sydney",
                         id: 1,
+                        street: "Wallaby Way",
+                        number: 42,
+                        city: "Sydney",
+                        zip_code: 2000,
                         latitude: -33.865143,
                         longitude: 151.2099,
-                        number: 42,
-                        street: "Wallaby Way",
-                        zip_code: 2000,
                     },
-                    deleted: false,
-                    description: "Description of building 1",
-                    id: 1,
-                    ivago_id: "ivago-1",
-                    name: "Building 1",
                 },
-                building_id: 1,
-                deleted: false,
-                departure: "2023-05-04T12:00:00.000Z",
-                images: [
-                    {
-                        deleted: false,
-                        description: "Description of progress image 1",
-                        id: 1,
-                        image: {
-                            createdAt: "1970-01-01T00:00:00.000Z",
-                            id: 2,
-                            mime: "application/jpeg",
-                            original_name: "camera.jpg",
-                            path: "camera.jpg",
-                            size_in_bytes: 1024,
-                            updatedAt: "1970-01-01T00:00:00.000Z",
-                            user_id: 1,
-                        },
-                        image_id: 2,
-                        progress_id: 1,
-                        type: "ARRIVAL",
-                    },
-                    {
-                        deleted: false,
-                        description: "arrival image",
-                        id: 3,
-                        image: {
-                            createdAt: "1970-01-01T00:00:00.000Z",
-                            id: 2,
-                            mime: "application/jpeg",
-                            original_name: "camera.jpg",
-                            path: "camera.jpg",
-                            size_in_bytes: 1024,
-                            updatedAt: "1970-01-01T00:00:00.000Z",
-                            user_id: 1,
-                        },
-                        image_id: 2,
-                        progress_id: 1,
-                        type: "ARRIVAL",
-                    },
-                ],
-                report: "Report 1",
                 schedule: {
-                    day: "2023-05-04T12:00:00.000Z",
-                    deleted: false,
-                    end: "2023-05-04T12:20:00.000Z",
-                    start: "2023-05-04T12:10:00.000Z",
                     id: 1,
+                    day: "2023-05-04T12:00:00.000Z",
+                    start: "2023-05-04T12:10:00.000Z",
+                    end: "2023-05-04T12:20:00.000Z",
+                    user_id: 1,
+                    round_id: 1,
+                    deleted: false,
                     round: {
                         id: 1,
-                        description: "Description of round 1",
                         name: "Round 1",
+                        description: "Description of round 1",
                         deleted: false,
                     },
-                    round_id: 1,
                     user: {
-                        address_id: 1,
-                        admin: false,
-                        date_added: "2023-05-04T12:00:00.000Z",
-                        deleted: false,
+                        id: 1,
                         email: "student@trottoir.be",
                         first_name: "Dirk",
-                        id: 1,
-                        last_login: "2023-05-04T12:00:00.000Z",
                         last_name: "De Student",
+                        last_login: "2023-05-04T12:00:00.000Z",
+                        date_added: "2023-05-04T12:00:00.000Z",
                         phone: "0123456789",
+                        address_id: 1,
                         student: true,
                         super_student: false,
+                        admin: false,
+                        deleted: false,
                     },
-                    user_id: 1,
                 },
-                schedule_id: 1,
+                images: [
+                    {
+                        id: 1,
+                        type: "ARRIVAL",
+                        description: "Description of progress image 1",
+                        image_id: 3,
+                        progress_id: 1,
+                        deleted: false,
+                        image: {
+                            id: 3,
+                            mime: "application/jpeg",
+                            size_in_bytes: 1024,
+                            original_name: "camera.jpg",
+                            path: "camera.jpg",
+                            user_id: 1,
+                            createdAt: "1970-01-01T00:00:00.000Z",
+                            updatedAt: "1970-01-01T00:00:00.000Z",
+                        },
+                    },
+                    {
+                        id: 3,
+                        type: "ARRIVAL",
+                        description: "arrival image",
+                        image_id: 2,
+                        progress_id: 1,
+                        deleted: false,
+                        image: {
+                            id: 2,
+                            mime: "text/plain",
+                            size_in_bytes: 13,
+                            original_name: "example.txt",
+                            path: "example.txt",
+                            user_id: 2,
+                            createdAt: "1970-01-01T00:00:00.000Z",
+                            updatedAt: "1970-01-01T00:00:00.000Z",
+                        },
+                    },
+                ],
             };
             await runner.post({
                 url: "/progress/1/image",
@@ -907,7 +909,7 @@ describe("Progress tests", () => {
                         id: 1,
                         image: {
                             createdAt: "1970-01-01T00:00:00.000Z",
-                            id: 2,
+                            id: 3,
                             mime: "application/jpeg",
                             original_name: "camera.jpg",
                             path: "camera.jpg",
@@ -915,7 +917,7 @@ describe("Progress tests", () => {
                             updatedAt: "1970-01-01T00:00:00.000Z",
                             user_id: 1,
                         },
-                        image_id: 2,
+                        image_id: 3,
                         progress_id: 1,
                         type: "ARRIVAL",
                     },
@@ -954,7 +956,7 @@ describe("Progress tests", () => {
             };
 
             await runner.patch({
-                url: "/progress/1/image/2",
+                url: "/progress/1/image/3",
                 data: newImage,
                 expectedResponse: expected,
             });
@@ -965,7 +967,7 @@ describe("Progress tests", () => {
             const deleted = {
                 hardDelete: true,
             };
-            await runner.delete({ url: "/progress/1/image/2", data: deleted });
+            await runner.delete({ url: "/progress/1/image/3", data: deleted });
 
             // verify that the progress image is truly deleted
 
@@ -1034,7 +1036,7 @@ describe("Progress tests", () => {
         test("SOFT DELETE /progress/:id/image/:id (admin)", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             await runner.delete({
-                url: "/progress/1/image/2",
+                url: "/progress/1/image/3",
             });
 
             // verify that the progress image is deleted
@@ -1068,7 +1070,7 @@ describe("Progress tests", () => {
                         id: 1,
                         image: {
                             createdAt: "1970-01-01T00:00:00.000Z",
-                            id: 2,
+                            id: 3,
                             mime: "application/jpeg",
                             original_name: "camera.jpg",
                             path: "camera.jpg",
@@ -1076,7 +1078,7 @@ describe("Progress tests", () => {
                             updatedAt: "1970-01-01T00:00:00.000Z",
                             user_id: 1,
                         },
-                        image_id: 2,
+                        image_id: 3,
                         progress_id: 1,
                         type: "ARRIVAL",
                     },
@@ -1122,7 +1124,7 @@ describe("Progress tests", () => {
 
         test("SOFT DELETE /progress/:id/image/:id (superstudent)", async () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
-            await runner.delete({ url: "/progress/1/image/2" });
+            await runner.delete({ url: "/progress/1/image/3" });
 
             // verify that the progress image is soft deleted
             // super-student should not see the deleted image

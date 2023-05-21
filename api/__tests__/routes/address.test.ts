@@ -47,11 +47,20 @@ describe("Address tests", () => {
                 latitude: 0.0,
                 zip_code: 2500,
             };
+            const expected = {
+                id: 5,
+                street: "Straatnaam",
+                longitude: 0.0,
+                city: "Gent",
+                number: 64,
+                latitude: 0.0,
+                zip_code: 2500,
+            };
 
             await runner.post({
                 url: "/address",
                 data: value,
-                expectedResponse: value,
+                expectedResponse: expected,
             });
         });
 

@@ -1,6 +1,7 @@
 import request from "supertest";
 import { expect } from "@jest/globals";
 import { constants } from "http2";
+import * as util from "util";
 
 /**
  * Describes different authentication levels.
@@ -53,11 +54,15 @@ interface PostParameters {
 
 interface PostParametersFile {
     url: string;
-    path: string;
-    location: string;
     expectedResponse: object;
     statusCode?: number;
-    file?: string;
+    file: string;
+}
+
+interface GetFileParameters {
+    url: string;
+    expectedContents: string;
+    statusCode?: number;
 }
 
 interface PatchParameters {
@@ -118,6 +123,27 @@ export class Testrunner {
     };
 
     /**
+     * Acquires authentication if required and performs a GET request to the passed URL.
+     * @param url URL of the file
+     * @param expectedContents Contents the file should have
+     * @param statusCode expected status code of the response.
+     * @return the Response object for further testing, should it be required
+     */
+    getFile = async ({
+        url,
+        expectedContents,
+        statusCode = 200,
+    }: GetFileParameters): Promise<request.Response> => {
+        const cookie: string = await this.authenticate();
+        const response = await this.server.get(url).set("Cookie", [cookie]);
+
+        expect(response.statusCode).toEqual(statusCode);
+        expect(response.text).toEqual(expectedContents);
+
+        return response;
+    };
+
+    /**
      * Acquires authentication and performs a GET method on the URL, without doing any testing
      * Useful for getting the responses from the API and capturing them in the test suites
      * @param url URL to GET
@@ -149,9 +175,6 @@ export class Testrunner {
             .send(data)
             .set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
-        // drop the id, as we cannot predict that
-        delete response.body["id"];
-
         this.verifyBody([expectedResponse], response);
 
         return response;
@@ -161,8 +184,6 @@ export class Testrunner {
      * Acquires authentication if required and performs a POST request to the passed URL.
      * Also performs verification on the response.
      * @param url URL to POST to
-     * @param path path on server
-     * @param location File location
      * @param file file path on current host
      * @param statusCode expected status code of the response. Suppose testing of different authentication levels, set this property to make the test expect the correct status code
      * @return the Response object for further testing, should it be required.
@@ -170,24 +191,21 @@ export class Testrunner {
 
     postFile = async ({
         url,
-        path,
-        location,
         expectedResponse,
         statusCode = constants.HTTP_STATUS_CREATED,
-        file = "",
+        file,
     }: PostParametersFile): Promise<request.Response> => {
         const cookie = await this.authenticate();
 
         const response = await this.server
             .post(url)
-            .field("path", path)
-            .field("location", location)
             .set("Cookie", [cookie])
             .attach("file", file);
         expect(response.statusCode).toEqual(statusCode);
 
-        // drop the id, as we cannot predict that
-        delete response.body["id"];
+        // drop createdAt, updatedAt as we cannot predict that with each test
+        delete response.body["createdAt"];
+        delete response.body["updatedAt"];
 
         this.verifyBody([expectedResponse], response);
 
