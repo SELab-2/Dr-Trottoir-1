@@ -55,7 +55,7 @@ export class FileRouting extends Routing {
     @Auth.authorization({ student: true })
     async createOne(req: CustomRequest, res: express.Response) {
         if (!req.files || req.files.length !== 1) {
-            throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
+            throw new APIError(APIErrorCode.BAD_REQUEST);
         }
         const file = (req.files as Express.Multer.File[])[0];
 
