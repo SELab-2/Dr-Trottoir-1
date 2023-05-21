@@ -115,7 +115,6 @@
         </v-btn>
       </div>
     </div>
-
   </CardPopup>
 </template>
 
