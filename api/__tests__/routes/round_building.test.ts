@@ -39,6 +39,7 @@ describe("Round_building tests", () => {
             };
 
             const expected = {
+                id: 3,
                 building: {
                     address: {
                         city: "Ghent",

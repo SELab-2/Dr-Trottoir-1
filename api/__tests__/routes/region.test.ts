@@ -37,6 +37,7 @@ describe("Region tests", () => {
             };
 
             const expectedRegion = {
+                id: 4,
                 name: "new Region",
                 deleted: false,
                 users: [],

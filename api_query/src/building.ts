@@ -1,5 +1,5 @@
-import { Prisma, File, Building } from "@selab-2/groep-1-orm";
-import { Query, Result } from "./query";
+import { Prisma } from "@selab-2/groep-1-orm";
+import { Query } from "./query";
 import { includeUserWithoutAddress } from "./include";
 import { QueryError } from "./query_error";
 import { ProgressQuery } from "./progress";
@@ -27,7 +27,9 @@ type Element = Prisma.BuildingGetPayload<{
         expected_time: true;
         deleted: true;
         hash: boolean;
-        address: true;
+        address_id: true;
+        syndicus_id: true;
+        manual_id: true;
     };
 }>;
 

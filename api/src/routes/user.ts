@@ -127,6 +127,11 @@ export class UserRouting extends Routing {
             throw new APIError(APIErrorCode.FORBIDDEN);
         }
 
+        // only admins are allowed to change permission levels
+        if (!req.user?.admin && containsPermChange(req.body)) {
+            throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
         // The body of a request can't be empty and can't contain a hash or salt
         if (req.body == null || req.body.hash || req.body.salt) {
             throw new APIError(APIErrorCode.BAD_REQUEST);
@@ -180,3 +185,7 @@ export class UserRouting extends Routing {
         return new UserValidator();
     }
 }
+
+const containsPermChange = (body: object): boolean => {
+    return "admin" in body || "super_student" in body || "student" in body;
+};

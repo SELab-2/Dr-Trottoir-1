@@ -23,9 +23,8 @@
 
 <script setup lang="ts">
 import BorderCard from "@/layouts/CardLayout.vue";
-import { Ref, ref, onMounted, computed } from "vue";
-import { Result, BuildingQuery, ProgressQuery } from "@selab-2/groep-1-query";
-import { tryOrAlertAsync } from "@/try";
+import { Ref, ref, computed } from "vue";
+import { ProgressQuery } from "@selab-2/groep-1-query";
 import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -53,7 +52,6 @@ const props = defineProps({
 });
 
 const totalTimeSpent: Ref<number[]> = ref([...Array(12)].map(() => 0));
-const building = ref<Result<BuildingQuery>>();
 const statsYear = ref(2023);
 const months = [...Array(12)]
   .map((e, i) => new Date().setMonth(i))
@@ -83,13 +81,6 @@ const chartOptions: ChartOptions = {
     },
   },
 };
-
-onMounted(() => {
-  tryOrAlertAsync(async () => {
-    building.value = await new BuildingQuery().getOne(props.id);
-  });
-});
-
 async function retrieve() {
   totalTimeSpent.value = await Promise.all(
     [...Array(12)].map(async (e, i) => {

@@ -7,14 +7,28 @@ import multer from "multer";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 import fs from "fs";
+import { File } from "@selab-2/groep-1-orm";
 
 export class FileRouting extends Routing {
+    private storage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            if (process.env.FILE_STORAGE_DIRECTORY !== undefined) {
+                cb(null, process.env.FILE_STORAGE_DIRECTORY);
+            } else {
+                cb(null, "/tmp");
+            }
+        },
+        filename: (req, file, cb) => {
+            cb(null, file.originalname);
+        },
+    });
     private upload = multer({
-        dest: process.env.FILE_STORAGE_DIRECTORY,
+        // dest: process.env.FILE_STORAGE_DIRECTORY,
         limits: {
             files: 1,
             fileSize: 5 * 1024 * 1024, // 5 MB
         },
+        storage: this.storage,
     });
 
     @Auth.authorization({ superStudent: true })
@@ -40,25 +54,29 @@ export class FileRouting extends Routing {
         );
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async createOne(req: CustomRequest, res: express.Response) {
         if (!req.files || req.files.length !== 1) {
-            throw new APIError(APIErrorCode.INTERNAL_SERVER_ERROR);
+            throw new APIError(APIErrorCode.BAD_REQUEST);
         }
-
         const file = (req.files as Express.Multer.File[])[0];
 
+        const userId = req.user?.id ?? 1;
         const result = await prisma.file.create({
             data: {
-                path: file.filename,
+                user_id: userId,
+                path: file.originalname,
                 mime: file.mimetype,
                 size_in_bytes: file.size,
                 original_name: file.originalname,
-                user_id: req.user?.id ?? 1,
             },
         });
 
-        return res.status(201).json(result);
+        // drop path, as we do not want to expose the internal location
+        const ret = { ...result } as Partial<File>;
+        delete ret["path"];
+
+        return res.status(201).json(ret);
     }
 
     @Auth.authorization({ superStudent: true })
@@ -74,6 +92,10 @@ export class FileRouting extends Routing {
         return res.status(200).json({});
     }
 
+    async updateOne(req: CustomRequest, res: express.Response) {
+        throw new APIError(APIErrorCode.FORBIDDEN);
+    }
+
     toRouter(): express.Router {
         const router = express.Router();
         const validator = this.getValidator();
@@ -86,6 +108,7 @@ export class FileRouting extends Routing {
             this.createOne,
         );
         router.delete("/:id", validator.deleteOneValidator(), this.deleteOne);
+        router.patch("/:id", validator.updateOneValidator(), this.updateOne);
         return router;
     }
 }

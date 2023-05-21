@@ -1,14 +1,14 @@
 <template>
   <div class="toprow">
-    <v-btn
+    <SimpleButton
       v-if="useAuthStore().auth?.admin"
       prepend-icon="mdi-plus"
       color="primary"
-      class="mr-3 text-none"
+      class="mr-3"
       :to="{ name: 'user_new' }"
     >
       Nieuwe Gebruiker
-    </v-btn>
+    </SimpleButton>
   </div>
   <DashBoardSearch
     :admin="useAuthStore().auth?.admin"
@@ -30,6 +30,7 @@ import { ref, Ref } from "vue";
 import { User } from "@/types/User";
 import { Result, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 const users: Ref<Array<Result<UserQuery>>> = ref([]);
 await getUsers(false, "");

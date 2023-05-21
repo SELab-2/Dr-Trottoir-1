@@ -38,6 +38,7 @@ describe("Round tests", () => {
             };
 
             const expected = {
+                id: 3,
                 name: "new Round",
                 description: "Description of new round",
                 buildings: [],

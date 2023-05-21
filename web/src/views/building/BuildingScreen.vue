@@ -31,51 +31,62 @@
           </div>
 
           <div style="display: flex; flex-wrap: wrap">
-            <v-chip variant="outlined" color="border" class="mr-2 labels">
-              <v-icon icon="mdi-identifier" color="black" />
-              <p class="text-black">{{ building.ivago_id }}</p>
-            </v-chip>
-            <v-chip variant="outlined" color="border" class="labels">
-              <v-icon icon="mdi-map-marker" color="black" />
-              <p class="text-black">
-                {{ building.address.street }} {{ building.address.number }},
-                {{ building.address.zip_code }}, {{ building.address.city }}
-              </p>
-            </v-chip>
+            <RoundedInfoChip
+              class="mr-2 labels"
+              icon="mdi-identifier"
+              :text="building.ivago_id"
+            />
+            <RoundedInfoChip
+              class="labels"
+              icon="mdi-map-marker"
+              :text="
+                building.address.street +
+                building.address.number +
+                building.address.zip_code +
+                building.address.city
+              "
+            />
             <!-- TODO: add btn to link to building edit page once we have building edit page -->
           </div>
         </div>
 
         <div class="d-flex mt-2" style="gap: 16px; flex-wrap: wrap">
           <div class="me-auto d-flex" style="gap: 16px; flex-wrap: wrap">
-            <v-btn
-              class="text-none"
+            <SimpleButton
               prepend-icon="mdi-map-search"
               @click="tomaps()"
               color="primary"
             >
               Kaarten
-            </v-btn>
-            <v-btn
-              class="text-none"
+            </SimpleButton>
+            <SimpleButton
+              v-if="manual"
               append-icon="mdi-download"
               prepend-icon="mdi-file-pdf-box"
-              :href="'http://10.0.0.5:8080/file/' + building.manual?.id"
+              :href="manual!"
               color="success"
             >
               Handleiding
-            </v-btn>
+            </SimpleButton>
           </div>
-
-          <v-btn
+          <SimpleButton
             v-show="useAuthStore().auth?.admin && !building.deleted"
             class="text-none"
+            prepend-icon="mdi-pencil"
+            @click="routeToChange()"
+            color="primary"
+          >
+            Pas aan
+          </SimpleButton>
+
+          <SimpleButton
+            v-show="useAuthStore().auth?.admin && !building.deleted"
             prepend-icon="mdi-delete"
             @click="showRemovePopup = true"
             color="error"
           >
             Verwijder
-          </v-btn>
+          </SimpleButton>
 
           <!-- TODO add in API
           <RoundedButton icon="mdi-lock" @click="toClip('TODO')" value="TODO" /> -->
@@ -136,7 +147,7 @@
               @update:end-date="getTasks()"
               @update:start-date="getTasks()"
             />
-            <v-btn
+            <SimpleButton
               v-show="noStudent && !building.deleted"
               class="mx-1 text-none"
               prepend-icon="mdi-plus"
@@ -144,11 +155,12 @@
               color="primary"
             >
               Toevoegen
-            </v-btn>
+            </SimpleButton>
           </div>
         </div>
         <div class="grid">
           <CardLayout
+            class="inner"
             style="
               display: flex;
               align-items: center;
@@ -160,12 +172,10 @@
           >
             <div class="d-flex align-center w-100">
               <h4 class="ml-2 me-auto">{{ action.description }}</h4>
-              <v-chip color="border" variant="outlined">
-                <v-icon icon="mdi-calendar-clock"></v-icon>
-                <p class="text-black mx-1">
-                  {{ new Date(action.pickup_time).toLocaleString("nl") }}
-                </p>
-              </v-chip>
+              <RoundedInfoChip
+                icon="mdi-calendar-clock"
+                :text="new Date(action.pickup_time).toLocaleString('nl')"
+              />
             </div>
           </CardLayout>
         </div>
@@ -199,7 +209,7 @@
   </HFillWrapper>
   <CardPopup
     v-model="showRemovePopup"
-    :width="353"
+    :width="312"
     title="Verwijder Ronde"
     prepend-icon="mdi-delete"
   >
@@ -208,19 +218,19 @@
       verder gaan?
     </p>
     <template v-slot:actions>
-      <v-btn
+      <SimpleButton
         prepend-icon="mdi-close"
         color="error"
         variant="elevated"
         @click="showRemovePopup = false"
-        >Annuleren</v-btn
+        >Annuleren</SimpleButton
       >
-      <v-btn
+      <SimpleButton
         prepend-icon="mdi-check"
         color="success"
         variant="elevated"
         @click="deleteBuilding()"
-        >Verwijder gebouw</v-btn
+        >Verwijder gebouw</SimpleButton
       >
     </template>
   </CardPopup>
@@ -245,6 +255,9 @@ import DateRange from "@/components/filter/DateRange.vue";
 import { daysFromDate } from "@/assets/scripts/date";
 import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
+import RoundedInfoChip from "@/components/chips/RoundedInfoChip.vue";
+
 import RemovedCard from "@/components/cards/RemovedCard.vue";
 import router from "@/router";
 import { ImgProxy } from "@/imgproxy";
@@ -266,6 +279,7 @@ const takenEnd: Ref<Date> = noStudent
   : ref(daysFromDate(0));
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
+const manual: Ref<string | null> = ref(null);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 
@@ -299,6 +313,13 @@ const props = defineProps({
 
 await tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
+  const manualOrNull = building.value?.manual;
+
+  if (manualOrNull) {
+    manual.value = `${process.env.VUE_APP_API_SERVER_ADDRESS}file/${manualOrNull.id}`;
+  } else {
+    manual.value = null;
+  }
 });
 
 async function getVisits() {
@@ -404,6 +425,10 @@ async function restoreBuilding() {
   });
   router.go(0);
 }
+
+function routeToChange() {
+  router.push({ name: "building_new", params: { id: building.value?.id } });
+}
 </script>
 
 <style lang="scss" scoped>
@@ -431,12 +456,16 @@ async function restoreBuilding() {
 .grid {
   display: grid;
   gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-
-  @media (min-width: 700px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  @media (max-width: 600px) {
+    display: flex;
+    flex-direction: column;
   }
+}
+
+.inner:last-child:nth-child(odd) {
+  grid-column: 1 / span 2;
 }
 
 .grid-right {
