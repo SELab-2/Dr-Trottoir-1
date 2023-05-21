@@ -2,35 +2,30 @@
   <div class="grid">
     <MapComponent :buildings="newRoundBuildings" id="map" />
     <div>
-      <border-card
-        class="pa-2"
-        title="Ronde"
-        subtitle="De ronde zal in de volgorde van onderstaande lijst opgeslaan worden"
-      >
+      <border-card class="pa-5 mb-5">
+        <h2>Ronde</h2>
+        <p>De ronde wordt opgeslagen in onderstaande volgorde.</p>
         <v-text-field
-          class="ml-3 mr-5"
+          class="mt-3"
           label="Naam ronde"
           v-model="newRoundName"
           variant="outlined"
         />
         <v-textarea
-          class="ml-3 mr-5"
           label="Beschrijving"
           v-model="description"
           variant="outlined"
         />
-        <v-card-actions class="d-flex align-center"
-          ><v-spacer></v-spacer
-          ><v-btn
-            :disabled="
-              newRoundName === '' ||
-              description === '' ||
-              newRoundBuildings.length === 0
-            "
-            prepend-icon="mdi-check"
-            @click="makeRound()"
-            >Ronde aanmaken</v-btn
-          ></v-card-actions
+        <v-btn
+          :disabled="
+            newRoundName === '' ||
+            description === '' ||
+            newRoundBuildings.length === 0
+          "
+          style="width: 100%"
+          prepend-icon="mdi-check"
+          @click="makeRound()"
+          >Ronde aanmaken</v-btn
         >
       </border-card>
 
@@ -211,13 +206,11 @@ function moveBuildingDown(index: number) {
   display: grid;
   gap: 24px;
   padding: 0 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  @media (min-width: 501px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media (max-width: 500px) {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
+  @media (max-width: 700px) {
+    display: flex;
+    flex-direction: column;
   }
 }
 
