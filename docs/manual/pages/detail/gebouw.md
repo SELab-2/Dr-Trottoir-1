@@ -2,7 +2,7 @@
 
 ## Hoe bereiken
 
-De gebouw detailpagina kan gevonden worden door als [student](../../users/student.md) in [ronde detail](../ronde/rondedetail.md)op een gebouw te klikken. [Superstudenten](../users/superstudent.md) (& [administrators](../../users/admin.md)) kunnen de pagina bereiken via de [gebouw opvolg](../../pages/followup/gebouw_opvolging.md) pagina, de [gebouwen](../administration/gebouwen.md) pagina en in de [ronde detail](../../pages/detail/ronde.md)pagina. [Syndicus](../../users/syndicus.md) kan deze pagina vinden door in de [navbar](../../navbar.md) bij `Mijn gebouwen` een gebouw te selecteren.
+De gebouw detailpagina kan gevonden worden door als [student](../../users/student.md) in [ronde detail](../ronde/rondedetail.md) op een gebouw te klikken. [Superstudenten](../users/superstudent.md) (& [administrators](../../users/admin.md)) kunnen de pagina bereiken via de [gebouw opvolg](../../pages/followup/gebouw_opvolging.md) pagina, de [gebouwen](../administration/gebouwen.md) pagina en in de [ronde detail](../../pages/ronde/rondedetail.md) pagina. [Syndicus](../../users/syndicus.md) kan deze pagina vinden door in de [navbar](../../navbar.md) bij `Mijn gebouwen` een gebouw te selecteren.
 
 ## Overzicht
 

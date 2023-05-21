@@ -30,4 +30,4 @@ Wanneer een verkeerd gebouw werd toegevoegd, kan deze verwijderd worden door op 
 
 ### 6. Aanmaken
 De ronde wordt aangemaakt wanneer op de knop ```ronde aanmaken``` wordt gedrukt.
-Hierna wordt u doorgestuurd naar de [rondepagina](../detail/ronde.md) van de net aangemaakte ronde.
+Hierna wordt u doorgestuurd naar de [rondepagina](../ronde/rondedetail.md) van de net aangemaakte ronde.
