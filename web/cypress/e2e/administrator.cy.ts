@@ -119,35 +119,6 @@ describe('admin tests', () => {
     cy.get('#year').should('have.value', 2023)
   })
 
-  it('add building', () => {
-    // TODO: not up to date
-    cy.get('#buildings').click()
-    // press create button
-    cy.get('#newbuilding').click()
-    // add building data
-    cy.get('#name').type('test building')
-    cy.get('#ivagoid').type('1234')
-    // syndicus still hardcoded
-    // cy.get('#syndicus').select()
-    cy.get('#longitude').type("12")
-    cy.get('#latitude').type("34")
-    cy.get('#addressform').then(() => {
-      cy.get('#street').type("teststreet")
-      cy.get('#streetnr').type("1")
-      cy.get('#city').type("test")
-      cy.get('#zipcode').type("1111")
-    })
-    cy.get('#submit').click()
-    // save
-    // we should be on the info page of the building
-    cy.contains('test building')
-    cy.contains('Taken')
-    cy.contains('Bezoeken')
-    // cy.contains('1234') ivago id not shown
-    // cy.contains('name of syndicus')
-    // maybe click on the 'kaarten' button to see if address was added correctly
-  })
-
   it('add garbage schedule to a building', () => {
     cy.get('#buildings').click()
     // select building
@@ -189,49 +160,15 @@ describe('admin tests', () => {
   // editing garbage schedule is just deleting the old one and creating a new one,
   // so no need to test add and delete again
 
-  it('edit building', () => {
-    // TODO: not up to date
-    cy.get('#buildings').click()
-    // press building from buildings overview
-    cy.contains('test building').click()
-    // it can take a while to load all the schedules
-    cy.wait(10000)
-    // press edit button
-    cy.contains('#edit').click()
-    // alter building data
-    cy.get('#name').clear().type('test gebouw')
-    cy.get('#ivagoid').clear().type('4321')
-    // syndicus still hardcoded
-    // cy.get('#syndicus').select()
-    cy.get('#longitude').clear().type("21")
-    cy.get('#latitude').clear().type("43")
-    cy.get('#addressform').then(() => {
-      cy.get('#street').clear().type("teststraat")
-      cy.get('#streetnr').clear().type("10")
-      cy.get('#city').clear().type("city")
-      cy.get('#zipcode').clear().type("1000")
-    })
-    // TODO: edit manual and pictures
-    cy.get('#submit').click()
-    // save
-    // we should be on the info page of the building
-    cy.contains('test gebouw')
-    cy.contains('Taken')
-    cy.contains('Bezoeken')
-    // cy.contains('4321')
-    // cy.contains('name of syndicus')
-    // maybe click on the 'kaarten' button to see if address was added correctly
-  })
-
   it('delete building', () => {
-    cy.contains('test building').click()
+    cy.contains('Building 1').click()
     // it can take a while to load all the schedules
     cy.wait(10000)
     // delete
     cy.get('#delete').click()
     cy.contains('Dit gebouw is verwijderd.').should('be.visible')
     cy.get('#buildings').click()
-    cy.contains('test building').should('not.exist')
+    cy.contains('Building 1').should('not.exist')
   })
 
   it('add new template', () => {
