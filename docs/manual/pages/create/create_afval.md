@@ -17,7 +17,7 @@ Taken kunnen eenmalig, wekelijks, tweewekelijks of maandelijks gebeuren.
 Geef een start- en einddatum op.
 De startdatum bepaalt op welke dag van de week de taak moet uitgevoerd worden.
 Wanneer bijvoorbeeld de frequentie ``wekelijks`` is aangeduid, met als start- en einddatum
-respectievelijk 1 en 20 juni 2023, zal de taak gepland worden op donderdag 1, 8, en 16 juni 2023.
+respectievelijk 1 en 20 juni 2023, zal de taak gepland worden op donderdag 1, 8, en 15 juni 2023.
 
 ### 5. Starttijd
 Geef op om welk uur de taak uitgevoerd moet worden.
