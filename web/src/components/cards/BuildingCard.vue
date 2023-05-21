@@ -28,7 +28,7 @@
           <Avatar
             :name="syndicusName ?? undefined"
             size="x-small"
-            :key="syndicusName"
+            :key="syndicusName ?? undefined"
           />
           <p>{{ syndicusName ?? "Geen syndicus aangesteld" }}</p>
         </div>
