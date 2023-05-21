@@ -17,7 +17,7 @@ Geef de datum op waarop de student deze ronde voor het eerst moet doen.
 Geef ook de datum op waarop de student mag stoppen met deze ronde te doen.
 De startdatum bepaalt op welke dag van de week de ronde moet uitgevoerd worden.
 Wanneer bijvoorbeeld de frequentie ``wekelijks`` is aangeduid, met als start- en einddatum
-respectievelijk 1 en 20 juni 2023, zal de student gepland worden om deze ronde op donderdag 1, 8, en 16 juni 2023 uit te voeren.
+respectievelijk 1 en 20 juni 2023, zal de student gepland worden om deze ronde op donderdag 1, 8, en 15 juni 2023 uit te voeren.
 
 ### 4. Starttijd
 Geef het tijdstip waarop de student met de ronde moet beginnen.
