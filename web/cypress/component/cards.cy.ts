@@ -42,8 +42,7 @@ describe("card tests", () => {
     // all info present
     cy.contains('testgebouw').should('be.visible')
     cy.contains('test gebruiker').should('be.visible')
-    cy.contains('teststraat 5 Gent').should('be.visible')
-    cy.contains(date.toLocaleDateString()).should('be.visible')
+    cy.contains('teststraat 5, 9000 Gent').should('be.visible')
   })
 
   it('buildinginfocard test', () => {

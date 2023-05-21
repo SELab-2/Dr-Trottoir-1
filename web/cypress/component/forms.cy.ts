@@ -31,6 +31,9 @@ describe("form tests", () => {
     it('addressform incorrect input test', () => {
       cy.mount(AdressForm, {
         // default props
+        props:{
+          readonly: false,
+        }
       })
       // fill in the fields with incorrect input
       cy.get('#streetnrfield').then(()=>{
@@ -69,9 +72,8 @@ describe("form tests", () => {
       cy.get('#zipcodefield').get('#zipcode').clear()
       cy.contains('Geef een straat op.').should('be.visible')
       cy.contains('Geef een stad op.').should('be.visible')
-      // cy.get('#streetnrfield').contains('Geef een huisnummer.').should('be.visible')
-      // cy.contains('Geef een postcode.').should('be.visible')
-      // i don't know why these commented lines don't work, the sentences are actually there, but cypress can't find them
+      cy.get('#streetnr-messages > .v-messages__message').contains('Geef een huisnummer.').should('be.visible')
+      cy.get('#zipcode-messages > .v-messages__message').contains('Geef een postcode.').should('be.visible')
     })
   })
 
@@ -97,9 +99,6 @@ describe("form tests", () => {
         // default props
       })
       // fill in the field with incorrect input
-      // TODO uncomment once you can only add numbers in phone field
-      // cy.get('#phone').type('hallo') // you should only be able to enter numbers,
-      // cy.get('#phone').should('be.empty') // this not yet implemented now
       cy.get('#phone').type("012345") // phone number too short
       cy.contains('Telefoonnummer moet minimaal 9 tekens lang zijn.')
       cy.get('#email').type('thisisnotanemail') // email has to have the correct template
@@ -114,8 +113,7 @@ describe("form tests", () => {
       cy.get('#phone').type('x{backspace}')
       cy.contains('Geef een telefoonnummer op.')
       cy.get('#email').type('x{backspace}')
-      // cy.contains('Geef een e-mail adres op.')
-      // i don't know why these commented lines don't work, the sentence is actually there, but cypress can't find them
+      cy.contains('Geef een e-mail adres op.')
     })
 
     it('contactform readonly test', () => {
