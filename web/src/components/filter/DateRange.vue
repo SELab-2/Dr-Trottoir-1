@@ -1,8 +1,8 @@
 <template>
   <v-btn :ripple="false" variant="flat" class="text-none" border="border">
-    <input type="date" v-model="startValue" />
+    <input type="date" v-model="startValue" :max="endValue" />
     -
-    <input type="date" v-model="endValue" />
+    <input type="date" v-model="endValue" :min="startValue" />
   </v-btn>
 </template>
 <script setup lang="ts">

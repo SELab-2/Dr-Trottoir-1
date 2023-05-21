@@ -1,11 +1,16 @@
 <template>
   <HFillWrapper v-if="building !== null">
     <v-card variant="text" class="space-y">
-      <img
-        alt="banner"
-        id="banner"
-        src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
-      />
+      <v-carousel hide-delimiters>
+        <v-carousel-item
+          v-for="entry in building.images"
+          :key="entry.id"
+          cover
+          :src="ImgProxy.env.url(entry.image)"
+        >
+        </v-carousel-item>
+      </v-carousel>
+
       <RemovedCard
         :show="useAuthStore().auth?.admin && building.deleted"
         title="Dit gebouw is verwijderd."
@@ -105,6 +110,7 @@
 
         <div class="grid-right">
           <SyndicusButtons
+            v-if="!syndicus"
             :email="building.syndicus.user.email"
             :click-email="mail"
             :phone="building.syndicus.user.phone"
@@ -112,6 +118,14 @@
           />
         </div>
       </CardLayout>
+
+      <BuildingAnalyticCard
+        v-if="
+          (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) &&
+          !building.deleted
+        "
+        :id="building.id"
+      />
 
       <div class="space-y-8">
         <div class="d-flex mt-8 flex-wrap align-center">
@@ -147,7 +161,7 @@
             :key="action.id"
           >
             <div class="d-flex align-center w-100">
-              <h4 class="ml-2 me-auto">{{ action.action.description }}</h4>
+              <h4 class="ml-2 me-auto">{{ action.description }}</h4>
               <RoundedInfoChip
                 icon="mdi-calendar-clock"
                 :text="new Date(action.pickup_time).toLocaleString('nl')"
@@ -237,11 +251,15 @@ import RoundedInfoChip from "@/components/chips/RoundedInfoChip.vue";
 
 import RemovedCard from "@/components/cards/RemovedCard.vue";
 import router from "@/router";
+import { ImgProxy } from "@/imgproxy";
+import BuildingAnalyticCard from "@/components/cards/BuildingAnalyticCard.vue";
 
 const showRemovePopup = ref(false);
 
 const noStudent: Boolean =
   useAuthStore().auth!.admin || useAuthStore().auth!.super_student;
+
+const syndicus: Boolean = useAuthStore().auth!.syndicus.length > 0;
 
 const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
 const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
@@ -275,11 +293,6 @@ function tomaps() {
     `https://maps.google.com/maps?q=${building.value?.address.number}+${building.value?.address.street},+${building.value?.address.city},+${building.value?.address.zip_code}`,
   );
 }
-
-/*
-function toClip(text: string) {
-  navigator.clipboard.writeText(text);
-}*/
 
 const props = defineProps({
   id: {
@@ -329,7 +342,7 @@ if (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) {
 async function getTasks() {
   takenStart.value.setHours(0, 0, 0, 0);
   takenEnd.value.setHours(23, 59, 59, 999);
-  if (noStudent) {
+  if (noStudent || syndicus) {
     await getNoneStudentTasks();
   } else {
     await getStudentTasks();
@@ -398,13 +411,6 @@ async function restoreBuilding() {
 </script>
 
 <style lang="scss" scoped>
-#banner {
-  width: 100%;
-  max-height: 34vh;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
 .space-y {
   & > * {
     margin-bottom: 32px;
