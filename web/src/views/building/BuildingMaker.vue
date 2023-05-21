@@ -16,7 +16,6 @@
       ></v-text-field>
 
       <v-select
-        :disabled="edit"
         label="Syndicus"
         :items="possibleUsers"
         v-model="building.syndicus"
