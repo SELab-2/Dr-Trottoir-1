@@ -60,9 +60,10 @@
               Kaarten
             </SimpleButton>
             <SimpleButton
+              v-if="manual"
               append-icon="mdi-download"
               prepend-icon="mdi-file-pdf-box"
-              :href="'http://10.0.0.5:8080/file/' + building.manual?.id"
+              :href="manual!"
               color="success"
             >
               Handleiding
@@ -245,7 +246,6 @@ import DateRange from "@/components/filter/DateRange.vue";
 import { daysFromDate } from "@/assets/scripts/date";
 import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
-
 import SimpleButton from "@/components/buttons/SimpleButton.vue";
 import RoundedInfoChip from "@/components/chips/RoundedInfoChip.vue";
 
@@ -270,6 +270,7 @@ const takenEnd: Ref<Date> = noStudent
   : ref(daysFromDate(0));
 
 const building: Ref<Result<BuildingQuery> | null> = ref(null);
+const manual: Ref<string | null> = ref(null);
 const garbage: Ref<Array<Result<GarbageQuery>>> = ref([]);
 const schedules: Ref<Array<Result<ScheduleQuery>>> = ref([]);
 
@@ -303,6 +304,13 @@ const props = defineProps({
 
 await tryOrAlertAsync(async () => {
   building.value = await new BuildingQuery().getOne(Number(props.id));
+  const manualOrNull = building.value?.manual;
+
+  if (manualOrNull) {
+    manual.value = `${process.env.VUE_APP_API_SERVER_ADDRESS}file/${manualOrNull.id}`;
+  } else {
+    manual.value = null;
+  }
 });
 
 async function getVisits() {

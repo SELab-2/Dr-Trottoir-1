@@ -385,9 +385,9 @@ async function handleSave() {
   // update the user
   await tryOrAlertAsync(async () => {
     await new UserQuery().updateOne(userPatch);
+    edit.value = false;
   });
   showPopup.value = false;
-  edit.value = false;
 }
 
 function handleSavePopup() {
