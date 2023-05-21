@@ -9,7 +9,7 @@ describe('login tests', () => {
     cy.visit('/')
   })
 
-  it.only('log in and out succesfull', () =>{
+  it('log in and out succesfull', () =>{
     //cy.login('administrator@trottoir.be', 'administrator')
     //cy.visit('/account')
     cy.get('#email').type('administrator@trottoir.be')
