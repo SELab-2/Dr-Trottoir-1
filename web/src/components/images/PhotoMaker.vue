@@ -13,6 +13,7 @@
         v-if="isPhoto"
         single
         v-model="photo.image"
+        id="upload-progress"
         label="Selecteer afbeelding"
         accept="image/*"
         prepend-icon=""
@@ -38,7 +39,10 @@
       <div class="d-flex mb-4">
         <v-spacer></v-spacer
         ><SimpleButton
-          @click="$emit('confirm', photo, isPhoto)"
+          @click="
+            upload();
+            $emit('update', newProgress?.id);
+          "
           color="primary"
           prepend-icon="mdi-check"
           >Opslaan</SimpleButton
@@ -52,6 +56,10 @@
 import Photo from "@/components/models/Photo";
 import { ref } from "vue";
 import SimpleButton from "@/components/buttons/SimpleButton.vue";
+import { ProgressQuery, Result } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
+import { PropType } from "vue";
+import { ProgressImageType } from "@selab-2/groep-1-orm";
 
 const ImageTypes = ["ARRIVAL", "DEPARTURE", "GARBAGE"];
 
@@ -64,8 +72,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  currentComments: String,
+  progress: { type: Object as PropType<Result<ProgressQuery>>, required: true },
 });
+
+const newProgress = ref<Result<ProgressQuery>>(props.progress);
 
 const photo = ref<Photo>({
   image: [],
@@ -73,7 +83,36 @@ const photo = ref<Photo>({
   type: "ARRIVAL",
 });
 
+async function upload() {
+  if (props.isPhoto) {
+    await uploadImage();
+  } else {
+    await report();
+  }
+}
+
+async function report() {
+  console.log(props.progress?.id);
+  tryOrAlertAsync(async () => {
+    newProgress.value = await new ProgressQuery().updateOne({
+      id: newProgress.value?.id,
+      report: photo.value.comments,
+    });
+  });
+}
+
+async function uploadImage() {
+  tryOrAlertAsync(async () => {
+    newProgress.value = await new ProgressQuery().createImage(
+      newProgress.value!,
+      "upload-progress",
+      photo.value.type as ProgressImageType,
+      photo.value.comments,
+    );
+  });
+}
+
 if (!props.isPhoto) {
-  photo.value.comments = String(props.currentComments);
+  photo.value.comments = "";
 }
 </script>
