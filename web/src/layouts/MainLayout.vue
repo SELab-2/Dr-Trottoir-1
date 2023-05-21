@@ -144,7 +144,7 @@
             <v-list-item
               :to="{ name: 'template_overview' }"
               prepend-icon="mdi-email"
-              title="Templates"
+              title="Sjablonen"
               value="templates"
             ></v-list-item>
           </div>

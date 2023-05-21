@@ -1,11 +1,10 @@
 import { TableEntity } from "@/components/table/TableEntity";
 import { Header } from "@/components/table/Header";
 import { RowType } from "@/components/table/RowType";
-import { Result, ActionQuery } from "@selab-2/groep-1-query";
 
 export interface GarbageOverviewEntry {
   date: Date;
-  action: Result<ActionQuery>;
+  action: string;
   time: string;
   preview: boolean;
   func: () => void;
@@ -35,7 +34,7 @@ export class GarbageOverviewTable extends TableEntity<GarbageOverviewEntry> {
         id: 2,
         name: "Actie",
         fit: false,
-        get: (e: GarbageOverviewEntry) => e.action.description,
+        get: (e: GarbageOverviewEntry) => e.action,
         type: RowType.TEXT,
         sortable: false,
       },

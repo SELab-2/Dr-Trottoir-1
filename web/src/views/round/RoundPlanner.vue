@@ -90,23 +90,22 @@
 
             <v-text-field
               v-model="startDate"
-              prepend-inner-icon="mdi-calendar"
               variant="outlined"
               type="date"
               label="Startdatum"
+              :max="multipleday ? endDate : '2100'"
             ></v-text-field>
 
             <v-text-field
               v-model="endDate"
-              prepend-inner-icon="mdi-calendar"
               variant="outlined"
               type="date"
               label="Einddatum"
               v-if="multipleday"
+              :min="startDate"
             ></v-text-field>
 
             <v-text-field
-              prepend-inner-icon="mdi-clock-time-two-outline"
               label="Starttijd"
               variant="outlined"
               type="time"
@@ -168,6 +167,7 @@
               variant="outlined"
               type="date"
               label="Startdatum"
+              :max="fullSchemeEndDate"
             ></v-text-field>
             <v-text-field
               class="ml-1"
@@ -176,6 +176,7 @@
               variant="outlined"
               type="date"
               label="Einddatum"
+              :min="fullSchemeStartDate"
             ></v-text-field>
           </div>
           <div class="d-flex">

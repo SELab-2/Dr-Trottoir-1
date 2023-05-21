@@ -175,27 +175,13 @@ model Syndicus {
     @@map("syndicus")
 }
 
-// Dit model houdt een lijst van speciale acties bij die gegeven kunnen worden bij de afvalophaling.
-// Voorbeelden hiervan zijn het afspuiten van containers, het aanvullen van PDM zakken ...
-// Bij de beschrijving moet ook altijd het type afval vermeld worden.
-model Action {
-    id          Int    @id @default(autoincrement())
-    description String
-
-    garbage Garbage[]
-
-    @@map("action")
-}
-
 // Dit model bevat een gebouw, het tijdstip dat het afval daar opgehaald wordt en
 // een (speciale) actie voor het afval (waarin ook het type afval vermeld staat).
 model Garbage {
     id Int @id @default(autoincrement())
 
     pickup_time DateTime
-
-    action_id Int
-    action    Action @relation(fields: [action_id], references: [id], onDelete: Restrict)
+    description String
 
     building_id Int
     building    Building @relation(fields: [building_id], references: [id], onDelete: Cascade)
