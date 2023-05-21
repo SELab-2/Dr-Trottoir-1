@@ -162,6 +162,7 @@ const routes: any[] = [
         path: "/gebouw/nieuw/:id?",
         name: "building_new",
         component: BuildingMaker,
+        props: true,
         meta: {
           title: "Nieuw gebouw",
           auth: (

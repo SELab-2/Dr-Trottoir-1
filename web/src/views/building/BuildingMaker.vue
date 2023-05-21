@@ -18,7 +18,7 @@
       <v-select
         :disabled="edit"
         label="Syndicus"
-        :items="users"
+        :items="possibleUsers"
         v-model="building.syndicus"
         prepend-inner-icon="mdi-account"
       >
@@ -103,15 +103,57 @@
           </v-col>
         </v-row>
         <!-- addres forum gebruiken -->
-        <AddressForm
-          v-model="address"
-          :readonly="false"
-          :city="address.city"
-          :number="address.number.toString()"
-          :zip_code="address.zip_code.toString()"
-          :street="address.street"
-          @onUpdate="(newAddress) => (address = newAddress)"
-        ></AddressForm>
+        <v-row class="py-0 my-0 mt-2">
+          <v-col
+            cols="1"
+            style="min-width: 100px; max-width: 100%"
+            class="flex-grow-1 flex-shrink-0 py-0 my-0"
+          >
+            <!-- Text input field for the street name -->
+            <v-text-field
+              v-model="address.street"
+              label="Straat"
+              type="text"
+              required
+              variant="outlined"
+              :rules="streetRules"
+            >
+              <template v-slot:prepend-inner>
+                <v-icon icon="mdi-road-variant" />
+              </template>
+            </v-text-field>
+          </v-col>
+          <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
+            <!-- Text input field for the house number -->
+            <HomeNumberInputField :readonly="false" v-model="address.number" />
+          </v-col>
+        </v-row>
+
+        <v-row class="py-0 my-0 mt-2 mb-1">
+          <v-col
+            cols="1"
+            style="min-width: 100px; max-width: 100%"
+            class="flex-grow-1 flex-shrink-0 py-0 my-0"
+          >
+            <!-- Text input field for the city name -->
+            <v-text-field
+              v-model="address.city"
+              label="Stad"
+              type="text"
+              required
+              variant="outlined"
+              :rules="cityRules"
+            >
+              <template v-slot:prepend-inner>
+                <v-icon icon="mdi-city-variant" />
+              </template>
+            </v-text-field>
+          </v-col>
+          <v-col cols="3" class="flex-grow-0 flex-shrink-0 py-0 my-0">
+            <!-- Text input field for the zip code -->
+            <ZipCodeInputField :readonly="false" v-model="address.zip_code" />
+          </v-col>
+        </v-row>
       </div>
     </BorderCard>
 
@@ -142,7 +184,6 @@
       <v-file-input
         class="mt-1 mx-5"
         :multiple="false"
-        :id="new"
         accept="image/jpeg"
         prepend-icon=""
         prepend-inner-icon="mdi-file"
@@ -160,11 +201,7 @@
                 style="width: 75px; height: 75px; object-fit: cover"
             /></template>
             <template v-slot:append
-              ><v-icon
-                class="ml-2"
-                icon="mdi-delete"
-                @click="removeImage(entry.id)"
-              ></v-icon
+              ><v-icon class="ml-2" icon="mdi-delete"></v-icon
             ></template> </BorderCard
         ></v-list-item>
       </v-list>
@@ -183,7 +220,6 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import AddressForm from "@/components/forms/AddressForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import { tryOrAlertAsync } from "@/try";
@@ -200,31 +236,11 @@ import router from "@/router";
 import "leaflet/dist/leaflet.css";
 import "leaflet/dist/leaflet.js";
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
-import { useRoute } from "vue-router";
 import { ImgProxy } from "@/imgproxy";
+import HomeNumberInputField from "@/components/inputfields/HomeNumberInputField.vue";
+import ZipCodeInputField from "@/components/inputfields/ZipCodeInputField.vue";
 
-const fileIds = ref<string[]>(["Hoofdafbeelding"]);
-const fileContent = ref<Array<File[]>>([[]]);
-
-const images = ref<
-  (BuildingImages & {
-    image: File;
-  })[]
->();
-
-function addFileId() {
-  fileIds.value.push("Afbeelding " + fileIds.value.length);
-  fileContent.value.push([]);
-}
-
-function removeFileId() {
-  if (fileIds.value.length > 1) {
-    fileIds.value.pop();
-    fileContent.value.pop();
-  }
-}
-
-const users = await new UserQuery().getAll({
+const possibleUsers = await new UserQuery().getAll({
   admin: false,
   student: false,
   super_student: false,
@@ -232,19 +248,17 @@ const users = await new UserQuery().getAll({
 
 const expectedTimeInHours = ref<number>(0);
 const syndici = await new SyndicusQuery().getAll();
-console.log(syndici);
 
 const address = ref({
   street: "",
-  number: 0,
+  number: "0",
   city: "",
-  zip_code: 0,
+  zip_code: "0",
 });
-
-// latitude and longitude have to be separated from address,
-// because the AddressForm overwrites the address and that messes up the coordinates
 const latitude = ref(0);
 const longitude = ref(0);
+
+const address_id = ref<number>(0);
 
 const building = ref({
   name: "",
@@ -259,27 +273,42 @@ const building = ref({
   manual_id: 1,
 });
 
-const route = useRoute();
-const buildingId: number = Number(route.params.id);
-const edit: boolean = buildingId !== 0;
+const props = defineProps({
+  id: {
+    type: String,
+    default: "",
+  },
+});
 
-if (buildingId) {
-  setFields()
+const images = ref<
+  (BuildingImages & {
+    image: File;
+  })[]
+>();
+
+const fileIds = ref<string[]>(["Hoofdafbeelding"]);
+
+function addFileId() {
+  fileIds.value.push("Afbeelding " + fileIds.value.length);
 }
 
-async function removeImage(id: number){
-  await new BuildingQuery().deleteImage(
-    buildingId,
-    {id: id},
-    true,
-  );
-  await setFields()
-};
+function removeFileId() {
+  if (fileIds.value.length > 1) {
+    fileIds.value.pop();
+  }
+}
 
-async function setFields(){
+const buildingId = ref<number>(Number(props.id));
+const edit: boolean = props.id !== "";
+
+if (edit) {
+  setFields();
+}
+
+async function setFields() {
   tryOrAlertAsync(async () => {
     const requestedBuilding: Result<BuildingQuery> =
-      await new BuildingQuery().getOne(buildingId);
+      await new BuildingQuery().getOne(buildingId.value);
 
     const thisSyndicus = requestedBuilding.syndicus;
     const thisAddress = requestedBuilding.address;
@@ -295,19 +324,99 @@ async function setFields(){
       ? requestedBuilding.description
       : "";
 
+    address_id.value = thisAddress.id;
+    expectedTimeInHours.value = requestedBuilding.expected_time
+      ? Math.floor(requestedBuilding.expected_time / 60)
+      : 0;
+
     address.value = {
       street: thisAddress.street,
-      number: thisAddress.number,
+      number: thisAddress.number.toString(),
       city: thisAddress.city,
-      zip_code: thisAddress.zip_code,
+      zip_code: thisAddress.zip_code.toString(),
     };
     latitude.value = requestedBuilding.address.latitude;
     longitude.value = requestedBuilding.address.longitude;
-
     images.value = requestedBuilding.images;
   });
 }
 
+const submit = () => {
+  tryOrAlertAsync(async () => {
+    const buildingUnwrapped = building.value;
+
+    const formattedAddress = {
+      street: address.value.street,
+      number: Number(address.value.number),
+      city: address.value.city,
+      zip_code: Number(address.value.zip_code),
+    };
+
+    if (!edit) {
+      const isNewSyndicus: boolean = syndici.some(
+        (s: Result<SyndicusQuery>) => {
+          return s.user_id === buildingUnwrapped.syndicus.id;
+        },
+      );
+
+      // Create address
+      const newAddress = await new AddressQuery().createOne({
+        ...formattedAddress,
+        ...{ latitude: latitude.value, longitude: longitude.value },
+      });
+
+      if (isNewSyndicus) {
+        let { id: syndicusId } = await new SyndicusQuery().createOne({
+          user_id: buildingUnwrapped.syndicus.id,
+        });
+        buildingUnwrapped.syndicus.id = syndicusId;
+      }
+
+      const file = await new FileQuery().createOne("manual-id");
+
+      const newBuilding = await new BuildingQuery().createOne({
+        name: buildingUnwrapped.name,
+        address_id: newAddress.id,
+        description: buildingUnwrapped.description,
+        ivago_id: buildingUnwrapped.ivago_id,
+        expected_time: expectedTimeInHours.value * 60,
+        syndicus_id: buildingUnwrapped.syndicus.id,
+        manual_id: file.id,
+      });
+
+      
+      for (const fileId of fileIds.value) {
+        const element: any = document.getElementById(fileId);
+        console.log(element.files.length);
+        if (element.files.length > 0) {
+          await new BuildingQuery().createImage(newBuilding, fileId);
+        }
+      }
+      await router.push(`/gebouw/${newBuilding.id}`);
+    } else {
+      // Create address
+      console.log(formattedAddress);
+      const newAddress = await new AddressQuery().updateOne({
+        ...{ id: address_id.value },
+        ...formattedAddress,
+        ...{ latitude: latitude.value, longitude: longitude.value },
+      });
+      console.log(newAddress);
+
+      const newBuilding = await new BuildingQuery().updateOne({
+        id: buildingId.value,
+        name: buildingUnwrapped.name,
+        address_id: newAddress.id,
+        description: buildingUnwrapped.description,
+        ivago_id: buildingUnwrapped.ivago_id,
+        expected_time: expectedTimeInHours.value * 60,
+      });
+      await router.push(`/gebouw/${newBuilding.id}`);
+    }
+
+    // Redirect
+  });
+};
 
 function getFullStudentName(s: Result<UserQuery> | undefined): string {
   if (s) {
@@ -317,96 +426,26 @@ function getFullStudentName(s: Result<UserQuery> | undefined): string {
   }
 }
 
+/* below are the rule checks*/
+
+const streetRules = [
+  // check if street is present
+  (street: string) => {
+    return street ? true : "Geef een straat op.";
+  },
+];
+
+const cityRules = [
+  // check if city is present
+  (city: string) => {
+    return city ? true : "Geef een stad op.";
+  },
+
+  // check if city only contains chars
+  (city: string) => {
+    return /^[a-zA-Z]+$/.test(city) ? true : "Stad kan geen nummers bevatten.";
+  },
+];
+
 const zoom = ref(8);
-
-const submit = () => {
-  tryOrAlertAsync(async () => {
-    /*
-    const newAddress = await new AddressQuery().createOne({
-      street: address.value.street,
-      number: address.value.number,
-      city: address.value.city,
-      zip_code: address.value.zip_code,
-      latitude: latitude.value,
-      longitude: longitude.value,
-    });
-
-    // create File object for manual
-    // const response = await fetch('http://10.0.0.5:8080/file/',  {method: "POST", body: JSON.stringify(manual)});
-    // const man = await response.json()
-
-    const element = document.getElementById("manual-id");
-
-    //
-
-    /*
-    const { id: buildingId } = await new BuildingQuery().createOne({
-      name: building.value.name,
-      ivago_id: building.value.ivago_id,
-      description: description.value,
-      address: newAddress,
-      // manual_id: man.id,
-      }
-    );
-
-    /*
-    for(const image of images){
-      // create Image object from the image
-      const response = await fetch('http://10.0.0.5:8080/image/',  {method: "POST", body: JSON.stringify(image)});
-      const im = await response.json()
-
-      // add the image to the building
-      await new BuildingQuery().createImage({
-        id: buildingId,
-        image: im,
-        });
-    };
-     */
-
-    // Upload file
-    //const file = await new FileQuery().createOne("manual-id");
-    //building.value.manual_id = file.id;
-    const buildingUnwrapped = building.value;
-
-    const isNewSyndicus: boolean = syndici.some((s: Result<SyndicusQuery>) => {
-      return s.user_id === buildingUnwrapped.syndicus.id;
-    });
-
-    // Create address
-    const newAddress = await new AddressQuery().createOne({
-      ...address.value,
-      ...{ latitude: latitude.value, longitude: longitude.value },
-    });
-
-    if (isNewSyndicus) {
-      let { id: syndicusId } = await new SyndicusQuery().createOne({
-        user_id: buildingUnwrapped.syndicus.id,
-      });
-      buildingUnwrapped.syndicus.id = syndicusId;
-    }
-
-    const file = await new FileQuery().createOne("manual-id");
-
-    const newBuilding = await new BuildingQuery().createOne({
-      name: buildingUnwrapped.name,
-      address_id: newAddress.id,
-      description: buildingUnwrapped.description,
-      ivago_id: buildingUnwrapped.ivago_id,
-      expected_time: expectedTimeInHours.value * 60,
-      syndicus_id: buildingUnwrapped.syndicus.id,
-      manual_id: file.id,
-    });
-
-    for (const fileId of fileIds.value) {
-      const element: any = document.getElementById(fileId);
-      console.log(element.files.length);
-      if (element.files.length > 0) {
-        await new BuildingQuery().createImage(newBuilding, fileId);
-      }
-    }
-
-    // Redirect
-    await router.push(`/gebouw/${newBuilding.id}`);
-  });
-};
 </script>
