@@ -3,22 +3,6 @@ Een admin is een beheerder van de applicatie met de meeste privileges van alle g
 Hier kan u een overzicht vinden over hoe de admin zijn verschillende taken kan uitvoeren
 door middel van de applicatie.
 
-<details>
-<summary>Inhoudstafel</summary>
-
-- [Login](#login)
-- Administratie
-  - [Gebruikers](#gebruikers)
-    - Overzicht gebruikers
-    - Gebruiker aanmaken
-  - [Gebouwen](#gebouwen)
-    - Overzicht gebouwen
-    - Gebouw aanmaken
-  - [Rondes](#rondes)
-    - Overzicht rondes
-    - Ronde aanmaken
-</details>
-
 ## Login
 Voordat een admin de applicatie kan gebruiken moet hij eerst [ingelogd](../pages/account/login.md) zijn.
 
@@ -34,3 +18,4 @@ ronde's en gebouwen opvolgen, de details hierover kan u [hier](nav_sections/foll
 ## Administratie
 De admin kan heel wat administratieve taken uitvoeren, zoals gebouwen, rondes, etc. aanmaken. Deze zijn noodzakelijk, zodat
 iedereen de applicatie productief kan gebruiken. Een overzicht vindt u [hier](nav_sections/administration.md) terug.
+

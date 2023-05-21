@@ -18,6 +18,11 @@ export class RoundRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
+            deleted = undefined;
+        }
+
         const result = await prisma.round.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
@@ -26,6 +31,7 @@ export class RoundRouting extends Routing {
                 description: {
                     contains: req.query["description"],
                 },
+                deleted: deleted,
             },
             include: RoundRouting.includes,
             orderBy: Parser.order(req.query["sort"], req.query["ord"]),
@@ -71,11 +77,22 @@ export class RoundRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async deleteOne(req: CustomRequest, res: express.Response) {
-        await prisma.round.delete({
-            where: {
-                id: Parser.number(req.params["id"]),
-            },
-        });
+        if (Parser.bool(req.body["hardDelete"], false)) {
+            await prisma.round.delete({
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+        } else {
+            await prisma.round.update({
+                data: {
+                    deleted: true,
+                },
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+        }
 
         return res.status(200).json({});
     }

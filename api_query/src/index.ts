@@ -1,4 +1,3 @@
-import { ActionQuery } from "./action";
 import { AddressQuery } from "./address";
 import { BuildingQuery } from "./building";
 import { GarbageQuery } from "./garbage";
@@ -15,6 +14,7 @@ import { UserRegionQuery } from "./user_region";
 import { QueryError } from "./query_error";
 import { Result, Parameter, Element } from "./query";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { FileQuery } from "./file";
 
 type AuthenticatedUser = Prisma.UserGetPayload<{
     select: {
@@ -41,7 +41,6 @@ type AuthenticatedUser = Prisma.UserGetPayload<{
 }>;
 
 export {
-    ActionQuery,
     AddressQuery,
     AuthenticatedUser,
     BuildingQuery,
@@ -60,4 +59,5 @@ export {
     Parameter,
     Element,
     MailTemplateQuery,
+    FileQuery,
 };

@@ -18,4 +18,6 @@ Ga naar `Administratie > Rondes` in de [navigatiebalk](../../navbar.md#superstud
 - Voor meer detail over de ronde pagina, klik [hier](../../pages/administration/rondes.md).
 - Voor een beschrijving om een gebouw aan te maken, klik [hier](../../pages/administration/rondes.md).
 -
-## Templates
+## Sjablonen
+Ga naar `Administratie > Sjablonen` in de [navigatiebalk](../../navbar.md#superstudent-syndicus-admin).
+- Voor meer detail over de sjablonen pagina, klik [hier](../../pages/administration/email-sjablonen.md).

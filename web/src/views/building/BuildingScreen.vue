@@ -1,11 +1,25 @@
 <template>
   <HFillWrapper v-if="building !== null">
     <v-card variant="text" class="space-y">
-      <img
-        alt="banner"
-        id="banner"
-        src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
-      />
+      <v-carousel hide-delimiters>
+        <v-carousel-item
+          v-for="entry in building.images"
+          :key="entry.id"
+          cover
+          :src="ImgProxy.env.url(entry.image)"
+        >
+        </v-carousel-item>
+      </v-carousel>
+
+      <RemovedCard
+        :show="useAuthStore().auth?.admin && building.deleted"
+        title="Dit gebouw is verwijderd."
+        :restore="
+          async () => {
+            await restoreBuilding();
+          }
+        "
+      ></RemovedCard>
 
       <div>
         <div class="flex-container">
@@ -54,7 +68,7 @@
           </div>
 
           <v-btn
-            v-show="useAuthStore().auth?.admin"
+            v-show="useAuthStore().auth?.admin && !building.deleted"
             class="text-none"
             prepend-icon="mdi-delete"
             @click="showRemovePopup = true"
@@ -95,6 +109,7 @@
 
         <div class="grid-right">
           <SyndicusButtons
+            v-if="!syndicus"
             :email="building.syndicus.user.email"
             :click-email="mail"
             :phone="building.syndicus.user.phone"
@@ -114,7 +129,7 @@
               @update:start-date="getTasks()"
             />
             <v-btn
-              v-show="noStudent"
+              v-show="noStudent && !building.deleted"
               class="mx-1 text-none"
               prepend-icon="mdi-plus"
               :to="{ name: 'garbage_plan', params: { id: id } }"
@@ -136,7 +151,7 @@
             :key="action.id"
           >
             <div class="d-flex align-center w-100">
-              <h4 class="ml-2 me-auto">{{ action.action.description }}</h4>
+              <h4 class="ml-2 me-auto">{{ action.description }}</h4>
               <v-chip color="border" variant="outlined">
                 <v-icon icon="mdi-calendar-clock"></v-icon>
                 <p class="text-black mx-1">
@@ -222,11 +237,16 @@ import DateRange from "@/components/filter/DateRange.vue";
 import { daysFromDate } from "@/assets/scripts/date";
 import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
+import RemovedCard from "@/components/cards/RemovedCard.vue";
+import router from "@/router";
+import { ImgProxy } from "@/imgproxy";
 
 const showRemovePopup = ref(false);
 
 const noStudent: Boolean =
   useAuthStore().auth!.admin || useAuthStore().auth!.super_student;
+
+const syndicus: Boolean = useAuthStore().auth!.syndicus.length > 0;
 
 const bezoekenStart: Ref<Date> = ref(daysFromDate(-14));
 const bezoekenEnd: Ref<Date> = ref(daysFromDate(13));
@@ -245,15 +265,13 @@ function getBuildingDescription(): string {
   return castedBuilding.description;
 }
 
+function mail() {
+  router.push({ name: "contact_syndicus", params: { id: building.value?.id } });
+}
+
 function call(number: string | undefined) {
   if (number) {
     location.href = "tel:" + number;
-  }
-}
-
-function mail(address: string | undefined) {
-  if (address) {
-    location.href = "mailto:" + address;
   }
 }
 
@@ -262,11 +280,6 @@ function tomaps() {
     `https://maps.google.com/maps?q=${building.value?.address.number}+${building.value?.address.street},+${building.value?.address.city},+${building.value?.address.zip_code}`,
   );
 }
-
-/*
-function toClip(text: string) {
-  navigator.clipboard.writeText(text);
-}*/
 
 const props = defineProps({
   id: {
@@ -316,7 +329,7 @@ if (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) {
 async function getTasks() {
   takenStart.value.setHours(0, 0, 0, 0);
   takenEnd.value.setHours(23, 59, 59, 999);
-  if (noStudent) {
+  if (noStudent || syndicus) {
     await getNoneStudentTasks();
   } else {
     await getStudentTasks();
@@ -372,17 +385,19 @@ async function deleteBuilding() {
   await tryOrAlertAsync(async () => {
     await new BuildingQuery().deleteOne({ id: building.value?.id });
   });
+  router.go(0);
+}
+
+async function restoreBuilding() {
+  await new BuildingQuery().updateOne({
+    id: building.value?.id,
+    deleted: false,
+  });
+  router.go(0);
 }
 </script>
 
 <style lang="scss" scoped>
-#banner {
-  width: 100%;
-  max-height: 34vh;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
 .space-y {
   & > * {
     margin-bottom: 32px;

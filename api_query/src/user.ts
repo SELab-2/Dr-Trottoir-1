@@ -23,7 +23,7 @@ export type UserQueryParameters = {
 };
 
 // Het type dat de body van een POST en PATCH request modelleert.
-type Element = Prisma.UserGetPayload<{
+export type Element = Prisma.UserGetPayload<{
     select: {
         id: true;
         email: true;
@@ -39,10 +39,9 @@ type Element = Prisma.UserGetPayload<{
         deleted: true;
         hash: false;
         salt: false;
-        password: string;
         address: true;
     };
-}>;
+}> & { password: string };
 
 type UserAllInfo = Prisma.UserGetPayload<{
     select: {
@@ -89,8 +88,8 @@ type RoundAnalytics = {
 
 // Het type dat het resultaat modelleert wanneer het aantal gewerkte minuten van de studenten worden opgevraagd
 // tussen een start- en einddatum
-type UserAnalytics = {
-    student: string;
+export type UserAnalytics = {
+    student: number;
     email: string;
     time: number;
     average: number;
@@ -279,7 +278,7 @@ export class UserQuery extends Query<
                 total_time += time;
                 worked++;
                 analytics.push({
-                    student: user.first_name + " " + user.last_name,
+                    student: user.id,
                     email: user.email,
                     time: time,
                     average: 0,
