@@ -116,8 +116,9 @@
         ><v-icon class="ml-2" icon="mdi-delete" @click="removeFileId()"></v-icon
       ></template>
       <v-list>
-        <v-list-item v-for="fileId of fileIds">
-          <v-file-input class="mt-1"
+        <v-list-item v-for="fileId of fileIds" :key="fileId">
+          <v-file-input
+            class="mt-1"
             :multiple="false"
             :id="fileId"
             accept="image/jpeg"
@@ -152,7 +153,6 @@ import {
   BuildingQuery,
   UserQuery,
   SyndicusQuery,
-  FileQuery,
 } from "@selab-2/groep-1-query";
 import router from "@/router";
 import "leaflet/dist/leaflet.css";
@@ -218,15 +218,6 @@ function getFullStudentName(s: Result<UserQuery> | undefined): string {
 const zoom = ref(8);
 
 const submit = () => {
-  // check if the user is already a syndicus, else we need to make the user a syndicus
-  let createSyndicus: boolean = true;
-  for (const syndicus of syndici) {
-    if (syndicus.user_id == building.value.syndicus.id) {
-      createSyndicus = false;
-      building.value.syndicus.id = syndicus.id;
-      break;
-    }
-  }
   tryOrAlertAsync(async () => {
     /*
     const newAddress = await new AddressQuery().createOne({
