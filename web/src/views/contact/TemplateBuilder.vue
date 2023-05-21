@@ -49,7 +49,7 @@
               </v-col>
             </v-row>
 
-            <v-row class="py-0 my-0 mx-3"
+            <v-row class="py-0 mt-2 mx-3"
               ><v-col
                 cols="1"
                 style="min-width: 100px; max-width: 100%"
@@ -70,7 +70,7 @@
               color="primary"
               prepend-icon="mdi-content-save"
               variant="tonal"
-              class="mb-6 ml-6"
+              class="mb-6 mt-3 ml-6"
               type="submit"
               >Opslaan</SimpleButton
             >
