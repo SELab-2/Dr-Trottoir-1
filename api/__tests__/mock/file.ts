@@ -1,8 +1,11 @@
-import { File } from "@selab-2/groep-1-orm";
 import { prisma } from "./prisma";
+import path from "path";
+
+process.env[
+    "FILE_STORAGE_DIRECTORY"
+] = `${path.resolve()}/__tests__/mock/file_server`;
 
 export const manual = {
-    id: 1,
     user_id: 1,
     original_name: "handleiding.pdf",
     size_in_bytes: 1024,
@@ -10,10 +13,19 @@ export const manual = {
     path: "manual.pdf",
     createdAt: new Date("1970-01-01T00:00:00Z"),
     updatedAt: new Date("1970-01-01T00:00:00Z"),
-} satisfies File;
+};
+
+export const testfile = {
+    user_id: 2,
+    original_name: "example.txt",
+    size_in_bytes: 13,
+    mime: "text/plain",
+    path: "example.txt",
+    createdAt: new Date("1970-01-01T00:00:00Z"),
+    updatedAt: new Date("1970-01-01T00:00:00Z"),
+};
 
 export const image = {
-    id: 2,
     user_id: 1,
     original_name: "camera.jpg",
     size_in_bytes: 1024,
@@ -21,10 +33,10 @@ export const image = {
     path: "camera.jpg",
     createdAt: new Date("1970-01-01T00:00:00Z"),
     updatedAt: new Date("1970-01-01T00:00:00Z"),
-} satisfies File;
+};
 
 export async function initialiseFiles() {
-    await prisma.file.createMany({
-        data: [manual, image],
+    const result = await prisma.file.createMany({
+        data: [manual, testfile, image],
     });
 }
