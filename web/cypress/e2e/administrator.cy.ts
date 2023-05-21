@@ -120,6 +120,7 @@ describe('admin tests', () => {
   })
 
   it('add building', () => {
+    // TODO: not up to date
     cy.get('#buildings').click()
     // press create button
     cy.get('#newbuilding').click()
@@ -158,7 +159,6 @@ describe('admin tests', () => {
     cy.get('#action').type('buiten zetten')
     cy.get('#frequency').parent().click()
     cy.contains('wekelijks').click()
-    // TODO: add an actual date
     cy.get('#startdate').type('2023-05-22')
     cy.get('#enddate').type('2023-06-22')
     cy.get('#starttime').type('20:00')
@@ -190,6 +190,7 @@ describe('admin tests', () => {
   // so no need to test add and delete again
 
   it('edit building', () => {
+    // TODO: not up to date
     cy.get('#buildings').click()
     // press building from buildings overview
     cy.contains('test building').click()
