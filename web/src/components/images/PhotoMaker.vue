@@ -37,11 +37,11 @@
       ></v-textarea>
       <div class="d-flex mb-4">
         <v-spacer></v-spacer
-        ><v-btn
+        ><SimpleButton
           @click="$emit('confirm', photo, isPhoto)"
           color="primary"
           prepend-icon="mdi-check"
-          >Opslaan</v-btn
+          >Opslaan</SimpleButton
         >
       </div>
     </div>
@@ -51,6 +51,7 @@
 <script lang="ts" setup>
 import Photo from "@/components/models/Photo";
 import { ref } from "vue";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 const ImageTypes = ["ARRIVAL", "DEPARTURE", "GARBAGE"];
 

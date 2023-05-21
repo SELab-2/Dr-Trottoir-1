@@ -19,8 +19,7 @@
         class="align-self-center"
       >
         <!-- Not mobile edit button -->
-        <v-btn
-          class="text-none"
+        <SimpleButton
           v-show="!mobile"
           :prepend-icon="!edit ? 'mdi-pencil' : 'mdi-close'"
           @click="
@@ -35,9 +34,9 @@
           :color="!edit ? 'primary' : 'warning'"
         >
           {{ !edit ? "Bewerk Account" : "Annuleer aanpassingen" }}
-        </v-btn>
+        </SimpleButton>
         <!-- Mobile edit button -->
-        <v-btn
+        <SimpleButton
           v-show="mobile"
           :icon="!edit ? 'mdi-pencil' : 'mdi-close'"
           @click="
@@ -54,6 +53,7 @@
       </div>
     </div>
     <!-- Display if user has been removed -->
+
     <RemovedCard
       :show="useAuthStore().auth?.admin && user.deleted"
       title="Deze account is verwijderd"
@@ -149,16 +149,16 @@
     <!-- Section that allows to save and remove the account -->
     <div v-if="edit" class="my-4">
       <div class="d-flex flex-row-reverse">
-        <v-btn
+        <SimpleButton
           prepend-icon="mdi-check"
           @click="handleSavePopup()"
           color="success"
           class="my-3 text-none"
         >
           Sla op
-        </v-btn>
+        </SimpleButton>
 
-        <v-btn
+        <SimpleButton
           v-if="
             useAuthStore().auth?.admin && user?.id !== useAuthStore().auth?.id
           "
@@ -168,7 +168,7 @@
           class="mx-5 my-3 text-none"
         >
           Verwijder account
-        </v-btn>
+        </SimpleButton>
       </div>
     </div>
   </HFillWrapper>
@@ -230,8 +230,10 @@ import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import UserAnalyticCard from "@/components/cards/UserAnalyticCard.vue";
 import Contact from "@/components/models/Contact";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 import PasswordInputCard from "@/components/cards/PasswordInputCard.vue";
 import { Element as UserElement } from "@selab-2/groep-1-query/src/user";
+
 import RemovedCard from "@/components/cards/RemovedCard.vue";
 
 const display = useDisplay();
