@@ -74,7 +74,7 @@ const props = defineProps({
 const photo = ref<Photo>({
   image: [],
   comments: "",
-  type: "",
+  type: "ARRIVAL",
 });
 
 if (!props.isPhoto) {
