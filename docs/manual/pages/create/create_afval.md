@@ -1,10 +1,10 @@
 ### Afval toevoegen
 
-Een [superstudent](../../user/superstudent.md) of een [admin](../../users/admin.md) kan op deze pagina afval toevoegen aan een gebouw.
+Een [superstudent](../../users/superstudent.md) of een [admin](../../users/admin.md) kan op deze pagina afval toevoegen aan een gebouw.
 
-|                      Nieuw schema                       |
-|:-------------------------------------------------------:|
-| ![](../../assets/garbage_creation_1.jpg) |
+|                Nieuw schema                |
+|:------------------------------------------:|
+| ![](../../assets/garbage_creation_1.jpg)   |
 
 
 ### 1. Beschrijving van de actie
