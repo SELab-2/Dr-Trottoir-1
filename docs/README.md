@@ -1,3 +1,3 @@
 # Documentatie
-
-Documentatie omtrent dit project kan terug gevonden worden op de [wiki](https://github.com/SELab-2/Dr-Trottoir-1/wiki).
+Alle belangerijke mappen in dit project hebben een `README.md` file waarin documentatie over hun map staat.
+De handleiding van de applicatie is [hier](manual/manual_home.md) terug te vinden.
