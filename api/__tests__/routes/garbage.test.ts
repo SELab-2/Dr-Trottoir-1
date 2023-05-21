@@ -35,8 +35,6 @@ describe("Garbage tests", () => {
         describe("GET /garbage with different roles", () => {
             const expectedData = [
                 {
-                    action: { description: "action 1", id: 1 },
-                    action_id: 1,
                     building: {
                         address: {
                             city: "Sydney",
@@ -56,10 +54,9 @@ describe("Garbage tests", () => {
                     building_id: 1,
                     id: 1,
                     pickup_time: "2023-05-04T12:00:00.000Z",
+                    description: "action 1",
                 },
                 {
-                    action: { description: "action 2", id: 2 },
-                    action_id: 2,
                     building: {
                         address: {
                             city: "Ghent",
@@ -79,6 +76,7 @@ describe("Garbage tests", () => {
                     building_id: 2,
                     id: 2,
                     pickup_time: "2023-05-04T12:00:00.000Z",
+                    description: "action 2",
                 },
             ];
 
@@ -104,8 +102,6 @@ describe("Garbage tests", () => {
                 runner.authLevel(AuthenticationLevel.SYNDICUS);
                 const expectedData = [
                     {
-                        action: { description: "action 1", id: 1 },
-                        action_id: 1,
                         building: {
                             address: {
                                 city: "Sydney",
@@ -125,6 +121,7 @@ describe("Garbage tests", () => {
                         building_id: 1,
                         id: 1,
                         pickup_time: "2023-05-04T12:00:00.000Z",
+                        description: "action 1",
                     },
                 ];
 
@@ -140,9 +137,8 @@ describe("Garbage tests", () => {
                 {
                     id: 1,
                     pickup_time: "2023-05-04T12:00:00.000Z",
-                    action_id: 1,
+                    description: "action 1",
                     building_id: 1,
-                    action: { id: 1, description: "action 1" },
                     building: {
                         id: 1,
                         name: "Building 1",
@@ -190,10 +186,9 @@ describe("Garbage tests", () => {
         test("PATCH /garbage/:id", async () => {
             const expected = {
                 pickup_time: "2023-02-02T00:00:00.000Z",
+                description: "action 1",
                 id: 1,
-                action_id: 1,
                 building_id: 1,
-                action: { id: 1, description: "action 1" },
                 building: {
                     id: 1,
                     name: "Building 1",
@@ -221,16 +216,15 @@ describe("Garbage tests", () => {
         test("POST /garbage", async () => {
             const newGarbage = {
                 pickup_time: "2023-05-04T12:00:00.000Z",
-                action_id: 1,
+                description: "action 1",
                 building_id: 2,
             };
 
             const expectedResponse = {
                 id: 3,
                 pickup_time: "2023-05-04T12:00:00.000Z",
-                action_id: 1,
+                description: "action 1",
                 building_id: 2,
-                action: { id: 1, description: "action 1" },
                 building: {
                     id: 2,
                     name: "Building 2",
@@ -263,7 +257,7 @@ describe("Garbage tests", () => {
         describe("Authentication tests", () => {
             const garbage = {
                 pickup_time: new Date(2023, 5, 3, 0, 0, 0),
-                action_id: 1,
+                description: "action 1",
                 building_id: 1,
             };
             test("Cannot use any path as unauthorized", async () => {
@@ -385,15 +379,6 @@ describe("Garbage tests", () => {
                 // UNIX timestamp
                 data: { pickup_time: 1682538300 },
                 expectedResponse: badRequestResponse,
-                statusCode: 400,
-            });
-        });
-
-        test("Change action id to non-existent one", async () => {
-            await runner.patch({
-                url: "/garbage/1",
-                data: { action_id: 5 },
-                expectedResponse: badRequestForeignKey,
                 statusCode: 400,
             });
         });

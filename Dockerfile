@@ -87,4 +87,7 @@ RUN rm -rf ./*
 # Copy artifacts
 COPY --from=web_build /build/web/dist ./
 
+# Copy configuration file
+COPY server/nginx.conf /etc/nginx/nginx.conf
+
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

@@ -11,20 +11,15 @@
       <p>{{ name }}</p>
     </div>
 
-    <div class="flex-grow-1"></div>
-    <RoundedButton
-      icon="mdi-clock-time-two-outline"
-      :value="time"
-      class="bg-grey-lighten-2"
-    ></RoundedButton>
-
+    <div class="flex-grow-1" />
+    <RoundedInfoChip icon="mdi-clock-time-two-outline" :text="time" />
     <v-icon @click="$emit('remove')" color="error" icon="mdi-close" />
   </BorderCard>
 </template>
 
 <script setup lang="ts">
 import BorderCard from "@/layouts/CardLayout.vue";
-import RoundedButton from "@/components/buttons/RoundedButton.vue";
+import RoundedInfoChip from "@/components/chips/RoundedInfoChip.vue";
 
 defineProps({
   name: String,

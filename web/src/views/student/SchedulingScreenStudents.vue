@@ -1,10 +1,10 @@
 <template>
   <HFillWrapper v-if="days !== undefined">
     <div class="d-flex">
-      <v-btn class="ma-1" variant="outlined" @click="previousWeek()">
+      <SimpleButton class="ma-1" variant="outlined" @click="previousWeek()">
         <v-icon icon="mdi-menu-left" />
         <div v-if="!mobile">Vorige week</div>
-      </v-btn>
+      </SimpleButton>
       <v-spacer />
       <h4 class="mt-4">
         {{ mondayOfTheWeek.toLocaleDateString("nl") }} tot
@@ -15,10 +15,10 @@
         }}
       </h4>
       <v-spacer />
-      <v-btn class="ma-1" variant="outlined" @click="nextWeek()">
+      <SimpleButton class="ma-1" variant="outlined" @click="nextWeek()">
         <div v-if="!mobile">Volgende week</div>
         <v-icon icon="mdi-menu-right" />
-      </v-btn>
+      </SimpleButton>
     </div>
 
     <div v-if="!empty">
@@ -99,14 +99,13 @@
 
           <div class="pa-4 d-flex align-center" v-if="showStartButton(item)">
             <v-spacer />
-            <v-btn
-              class="text-none"
+            <SimpleButton
               prepend-icon="mdi-play"
               color="primary"
               v-on:click.stop="openPopup(item)"
             >
               Start ronde
-            </v-btn>
+            </SimpleButton>
           </div>
         </BorderCard>
       </div>
@@ -148,6 +147,7 @@ import {
   getCompletedBuildings,
   roundStarted,
 } from "@/assets/scripts/roundProgress";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 const snackbar = ref(false);
 const current_round_id = ref(0);
