@@ -2,6 +2,11 @@ import { QueryError } from "./query_error";
 import { File } from "@selab-2/groep-1-orm";
 
 export class FileQuery {
+    static server =
+        process.env.API_SERVER_ADDRESS ??
+        process.env.VUE_APP_API_SERVER_ADDRESS ??
+        "";
+
     async createOne(id: string): Promise<File> {
         const element = document.getElementById(id);
 
@@ -23,7 +28,7 @@ export class FileQuery {
         let res: Response;
 
         try {
-            res = await fetch("http://localhost:8080/file", {
+            res = await fetch(`${FileQuery.server}file`, {
                 method: "POST",
                 body: form,
                 headers: {
