@@ -2,7 +2,6 @@
   <v-list class="ma-0 pa-0">
     <v-text-field
       class="mt-2"
-      prepend-inner-icon="mdi-phone"
       label="Telefoonnummer"
       v-model="contact.phone"
       :variant="readonly ? 'plain' : 'outlined'"
@@ -11,10 +10,13 @@
       :counter="9"
       placeholder="0412345678"
       @update:model-value="$emit('onUpdate', contact)"
-    ></v-text-field>
+    >
+      <template v-slot:prepend-inner>
+        <v-icon icon="mdi-phone" :class="readonly ? 'mt-1' : ''" />
+      </template>
+    </v-text-field>
     <v-text-field
       class="mt-2 mb-1"
-      prepend-inner-icon="mdi-email"
       label="e-mail"
       v-model="contact.email"
       :variant="readonly ? 'plain' : 'outlined'"
@@ -22,7 +24,11 @@
       :rules="emailRules"
       placeholder="voorbeeld@voorbeeld.com"
       @update:model-value="$emit('onUpdate', contact)"
-    ></v-text-field>
+    >
+      <template v-slot:prepend-inner>
+        <v-icon icon="mdi-email" :class="readonly ? 'mt-1' : ''" />
+      </template>
+    </v-text-field>
   </v-list>
 </template>
 <script lang="ts" setup>
@@ -43,6 +49,8 @@ const props = defineProps({
     default: "",
   },
 });
+
+defineEmits(["onUpdate"]);
 
 const contact = ref<Contact>({
   phone: props.phone,

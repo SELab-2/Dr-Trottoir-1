@@ -2,15 +2,21 @@
   <v-app>
     <v-main>
       <v-navigation-drawer
-        :temporary="!permanentDrawer"
-        :permanent="!!permanentDrawer"
+        :temporary="mobile"
+        :permanent="!mobile"
         v-model="drawer"
         class="sidebar"
         style="position: fixed !important; height: 100vh !important"
         color="background"
       >
         <v-list density="compact" nav>
-          <v-list-item lines="two">
+          <v-list-item
+            lines="two"
+            :to="{
+              name: 'account_settings',
+              params: { id: id },
+            }"
+          >
             <template v-slot:prepend>
               <Avatar :name="studentName" />
             </template>
@@ -25,7 +31,10 @@
                 >
                   Super Student
                 </v-list-item-subtitle>
-                <v-list-item-subtitle v-else> Student </v-list-item-subtitle>
+                <v-list-item-subtitle v-else-if="useAuthStore()?.auth?.student">
+                  Student
+                </v-list-item-subtitle>
+                <v-list-item-subtitle v-else> Syndicus </v-list-item-subtitle>
               </div>
             </div>
           </v-list-item>
@@ -38,19 +47,6 @@
               title="Afmelden"
               value="logout"
             />
-
-            <router-link
-              :to="{
-                name: 'account_settings',
-                params: { id: id },
-              }"
-            >
-              <v-list-item
-                prepend-icon="mdi-cog"
-                title="Account"
-                value="account"
-              />
-            </router-link>
           </div>
 
           <div class="py-2">
@@ -94,7 +90,7 @@
             </div>
           </div>
 
-          <div v-if="isAdmin && syndicusBuildings.length > 0">
+          <div v-if="syndicusBuildings.length > 0">
             <p class="pa-2 font-weight-medium text-caption">Mijn gebouwen</p>
 
             <div v-for="building of syndicusBuildings" :key="building.id">
@@ -140,6 +136,12 @@
               title="Rondes"
               value="rounds"
             ></v-list-item>
+            <v-list-item
+              :to="{ name: 'template_overview' }"
+              prepend-icon="mdi-email"
+              title="Templates"
+              value="templates"
+            ></v-list-item>
           </div>
         </v-list>
 
@@ -167,8 +169,6 @@
         <v-toolbar-title class="font-weight-medium">
           {{ route.meta.title }}
         </v-toolbar-title>
-
-        <v-spacer />
       </v-app-bar>
       <Suspense :key="route.fullPath">
         <template #fallback>
@@ -189,8 +189,11 @@ import DividerLayout from "@/layouts/DividerLayout.vue";
 import { useAuthStore } from "@/stores/auth";
 import { BuildingQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
+import { useDisplay } from "vuetify";
 
 const router = useRouter();
+const display = useDisplay();
+const mobile = display.mobile;
 // reactive state to show the drawer or not
 const drawer = ref(true);
 // get the route object, needed to show the title
@@ -202,10 +205,8 @@ const isAdmin: Boolean = useAuthStore().auth!.admin;
 const syndicusBuildings: Ref<Result<BuildingQuery>[]> = ref([]);
 
 tryOrAlertAsync(async () => {
-  if (isAdmin) {
-    syndicusBuildings.value = await new BuildingQuery().getAll({
-      syndicus_id: 89, // TODO: change id
-    });
+  for (const building of useAuthStore().auth!.syndicus) {
+    syndicusBuildings.value.push(await new BuildingQuery().getOne(building.id));
   }
 });
 
@@ -216,12 +217,6 @@ const studentName: string =
 // account display settings
 const id = useAuthStore().auth!.id;
 
-const thresholdWidth: number = 750;
-const permanentDrawer = ref<Boolean>(window.innerWidth > thresholdWidth);
-window.addEventListener(
-  "resize",
-  () => (permanentDrawer.value = window.innerWidth > thresholdWidth),
-);
 async function logOut() {
   await router.push({ name: "login" });
   await useAuthStore().logOut();

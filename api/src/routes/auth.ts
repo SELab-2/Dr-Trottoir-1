@@ -3,6 +3,7 @@ import passport from "passport";
 import { CustomRequest } from "./routing";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import { loginValidator } from "../validators/auth.validator";
 
 /**
  * `The AuthRouting class will implement all facilities to login, signup, and
@@ -29,6 +30,7 @@ export class AuthRouting {
          */
         router.post(
             "/login",
+            loginValidator(),
             passport.authenticate("local", {
                 session: true,
                 authInfo: true,

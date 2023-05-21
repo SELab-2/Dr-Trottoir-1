@@ -8,12 +8,26 @@ import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 import crypto from "crypto";
 import * as dateMath from "date-arithmetic";
+import {
+    BuildingImageValidator,
+    BuildingValidator,
+} from "../validators/building.validator";
+import { Validator } from "../validators/validator";
 
 export class BuildingRouting extends Routing {
     toRouter(): express.Router {
         const router = super.toRouter();
-        router.post("/:id/image", this.createImage);
-        router.delete("/:id/image/:image_id", this.deleteImage);
+        const biValidator = new BuildingImageValidator();
+        router.post(
+            "/:id/image",
+            biValidator.createOneValidator(),
+            this.createImage,
+        );
+        router.delete(
+            "/:id/image/:image_id",
+            biValidator.deleteOneValidator(),
+            this.deleteImage,
+        );
         return router;
     }
 
@@ -21,6 +35,8 @@ export class BuildingRouting extends Routing {
         id: true,
         name: true,
         ivago_id: true,
+        description: true,
+        expected_time: true,
         deleted: true,
         hash: false,
         address: true,
@@ -46,8 +62,20 @@ export class BuildingRouting extends Routing {
         super();
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ superStudent: true, syndicus: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        // A syndicus is only allowed to see his own buildings
+        if (
+            !req.user?.super_student &&
+            !req.user?.admin &&
+            req.user?.syndicus.every(
+                (element) =>
+                    element.id !== Parser.number(req.query["syndicus_id"]),
+            )
+        ) {
+            throw new APIError(APIErrorCode.FORBIDDEN);
+        }
+
         // only admins can choose to see deleted entries too
         let deleted: boolean | undefined = false;
         if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
@@ -60,6 +88,9 @@ export class BuildingRouting extends Routing {
             where: {
                 name: req.query["name"],
                 ivago_id: req.query["ivago_id"],
+                description: {
+                    contains: req.query["description"],
+                },
                 syndicus_id: Parser.number(req.query["syndicus_id"]),
                 deleted: deleted,
             },
@@ -134,7 +165,7 @@ export class BuildingRouting extends Routing {
         return res.status(200).json({});
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     static async internal(req: CustomRequest, res: express.Response) {
         const result = await prisma.building.findFirstOrThrow({
             where: {
@@ -159,6 +190,7 @@ export class BuildingRouting extends Routing {
                 id: true,
                 name: true,
                 ivago_id: true,
+                description: true,
                 deleted: true,
                 hash: false,
                 address: true,
@@ -211,18 +243,20 @@ export class BuildingRouting extends Routing {
         return res.json(result);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ superStudent: true, syndicus: true })
     async createImage(req: CustomRequest, res: express.Response) {
-        const building_id = Number(Parser.number(req.params["id"]));
-        await prisma.image.create({
+        const building_id = Parser.number(req.params["id"]);
+        const image_id = Parser.number(req.body["image"]);
+
+        // For TypeScript's sake.
+        if (!building_id || !image_id) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
+        await prisma.buildingImages.create({
             data: {
-                time: req.body.time,
-                location: req.body.location,
-                path: req.body.path,
-                user_id: req.body.user_id,
-                buildings: {
-                    create: [{ building_id: building_id }],
-                },
+                building_id,
+                image_id,
             },
         });
 
@@ -236,21 +270,40 @@ export class BuildingRouting extends Routing {
         return res.status(201).json(result);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ superStudent: true, syndicus: true })
     async deleteImage(req: CustomRequest, res: express.Response) {
-        const result = await prisma.buildingImages.findUniqueOrThrow({
+        const building_id = Parser.number(req.params["id"]);
+        const image_id = Parser.number(req.params["image_id"]);
+
+        // For TypeScript's sake.
+        if (!building_id || !image_id) {
+            throw new APIError(APIErrorCode.BAD_REQUEST);
+        }
+
+        const deleted = await prisma.buildingImages.deleteMany({
             where: {
-                id: Parser.number(req.params["image_id"]),
+                image_id,
+                building_id,
             },
         });
 
-        // Use cascade delete of Image
-        await prisma.image.delete({
+        if (deleted.count !== 1) {
+            throw new APIError(APIErrorCode.NOT_FOUND);
+        }
+
+        // TODO: delete data
+
+        const result = await prisma.building.findUniqueOrThrow({
             where: {
-                id: result.image_id,
+                id: building_id,
             },
+            select: BuildingRouting.selects,
         });
 
-        return res.status(200).json({});
+        return res.status(200).json(result);
+    }
+
+    getValidator(): Validator {
+        return new BuildingValidator();
     }
 }

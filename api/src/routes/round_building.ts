@@ -4,6 +4,8 @@ import { CustomRequest, Routing, selectBuilding } from "./routing";
 import { Auth } from "../auth/auth";
 import { Parser } from "../parser";
 import { Prisma } from "@selab-2/groep-1-orm";
+import { Validator } from "../validators/validator";
+import { RoundBuildingValidator } from "../validators/round_building.validator";
 
 export class RoundBuildingRouting extends Routing {
     private static includes: Prisma.RoundBuildingInclude = {
@@ -13,10 +15,16 @@ export class RoundBuildingRouting extends Routing {
 
     @Auth.authorization({ superStudent: true })
     async getAll(req: CustomRequest, res: express.Response) {
+        let deleted: boolean | undefined = false;
+        if (req.user?.admin && Parser.bool(req.query["deleted"], false)) {
+            deleted = undefined;
+        }
+
         const result = await prisma.roundBuilding.findMany({
             take: Parser.number(req.query["take"], 1024),
             skip: Parser.number(req.query["skip"], 0),
             where: {
+                deleted: deleted,
                 round_id: Parser.number(req.query["round_id"]),
                 building_id: Parser.number(req.query["building_id"]),
                 round: {
@@ -89,5 +97,9 @@ export class RoundBuildingRouting extends Routing {
         }
 
         return res.status(200).json({});
+    }
+
+    getValidator(): Validator {
+        return new RoundBuildingValidator();
     }
 }

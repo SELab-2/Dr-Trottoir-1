@@ -2,11 +2,7 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import {
-    deleteDatabaseData,
-    initialiseDatabase,
-    restoreTables,
-} from "../mock/database";
+import { resetDatabase, restoreTables } from "../mock/database";
 import {
     badRequestForeignKey,
     badRequestResponse,
@@ -20,12 +16,11 @@ describe("Syndicus tests", () => {
         const server = request(app);
         runner = new Testrunner(server);
 
-        await deleteDatabaseData();
-        await initialiseDatabase();
+        return resetDatabase();
     });
 
     afterEach(async () => {
-        await restoreTables("user", "syndicus", "building");
+        await restoreTables();
     });
 
     describe("Successful requests", () => {
@@ -49,6 +44,7 @@ describe("Syndicus tests", () => {
                             deleted: false,
                             id: 1,
                             ivago_id: "ivago-1",
+                            description: "Description of building 1",
                             name: "Building 1",
                         },
                         {
@@ -64,6 +60,7 @@ describe("Syndicus tests", () => {
                             deleted: true,
                             id: 3,
                             ivago_id: "ivago-3",
+                            description: "Description of building 3",
                             name: "Building 3",
                         },
                     ],
@@ -108,6 +105,7 @@ describe("Syndicus tests", () => {
                             deleted: false,
                             id: 2,
                             ivago_id: "ivago-2",
+                            description: "Description of building 2",
                             name: "Building 2",
                         },
                     ],
@@ -178,6 +176,7 @@ describe("Syndicus tests", () => {
                             id: 1,
                             name: "Building 1",
                             ivago_id: "ivago-1",
+                            description: "Description of building 1",
                             deleted: false,
                             address: {
                                 id: 1,
@@ -193,6 +192,7 @@ describe("Syndicus tests", () => {
                             id: 3,
                             name: "Building 3",
                             ivago_id: "ivago-3",
+                            description: "Description of building 3",
                             deleted: true,
                             address: {
                                 id: 3,
@@ -286,6 +286,7 @@ describe("Syndicus tests", () => {
                         id: 1,
                         name: "Building 1",
                         ivago_id: "ivago-1",
+                        description: "Description of building 1",
                         deleted: false,
                         address: {
                             id: 1,
@@ -301,6 +302,7 @@ describe("Syndicus tests", () => {
                         id: 3,
                         name: "Building 3",
                         ivago_id: "ivago-3",
+                        description: "Description of building 3",
                         deleted: true,
                         address: {
                             id: 3,
@@ -323,6 +325,14 @@ describe("Syndicus tests", () => {
 
         test("DELETE /syndicus/:id", async () => {
             await runner.delete({
+                url: "/building/1",
+                data: { hardDelete: true },
+            });
+            await runner.delete({
+                url: "/building/3",
+                data: { hardDelete: true },
+            });
+            await runner.delete({
                 url: "/syndicus/1",
             });
         });
@@ -333,8 +343,14 @@ describe("Syndicus tests", () => {
             runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
         });
 
+        test("Deleting syndicus who's linked to a building", async () => {
+            await runner.delete({
+                url: "/syndicus/1",
+                statusCode: 400,
+            });
+        });
         test("Requests using non-existent syndicus", async () => {
-            const url = "/syndicus/0";
+            const url = "/syndicus/9";
             await runner.get({
                 url: url,
                 expectedData: [notFoundResponse],

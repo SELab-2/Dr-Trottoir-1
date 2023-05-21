@@ -21,7 +21,10 @@ import CardLayout from "@/layouts/CardLayout.vue";
 import { computed } from "vue";
 // use v-model
 // https://vuejs.org/guide/components/v-model.html
-const props = defineProps(["modelValue"]);
+const props = defineProps({
+  modelValue: Boolean,
+  width: { type: Number, default: 320 },
+});
 const emit = defineEmits(["update:modelValue"]);
 
 const show = computed({

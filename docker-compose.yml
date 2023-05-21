@@ -1,0 +1,144 @@
+version: '3.5'
+
+name: dr-trottoir
+
+services:
+  traefik:
+    image: "traefik:latest"
+    container_name: dr-trottoir-traefik
+    hostname: dr-trottoir-traefik
+    command:
+      # Docker
+      - "--providers.docker.swarmMode=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=main"
+      # Configure entrypoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # HTTPS
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=jens.pots@ugent.be"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # Global HTTP -> HTTPS
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      # Disable dashboard
+      - "--api.dashboard=false"
+    ports:
+      - "443:443"
+      - "80:80"
+      # Dashboard: - "8080:8080"
+    networks:
+      main:
+        ipv4_address: 10.0.0.2
+    volumes:
+      - "~/volumes/traefik:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  postgres:
+    container_name: dr-trottoir-postgres
+    hostname: dr-trottoir-postgres
+    image: postgres
+    environment:
+      POSTGRES_DB: main
+      POSTGRES_USER: admin
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    volumes:
+      - '$HOME/volumes/postgres:/var/lib/postgresql/data'
+    restart: always
+    networks:
+      main:
+        ipv4_address: 10.0.0.3
+    expose:
+      - 5432
+
+  api:
+    container_name: dr-trottoir-api
+    hostname: dr-trottoir-api
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+      target: "api_production"
+    networks:
+      main:
+        ipv4_address: 10.0.0.5
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dr-trottoir-api.rule=Host(`sel2-1.ugent.be`)"
+      - "traefik.http.routers.dr-trottoir-api.rule=PathPrefix(`/api/`)"
+      - "traefik.http.routers.dr-trottoir-api.entrypoints=websecure"
+      - "traefik.http.routers.dr-trottoir-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.dr-trottoir-api.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.dr-trottoir-api-stripprefix.stripprefix.prefixes=/api/"
+      - "traefik.http.routers.dr-trottoir-api.middlewares=dr-trottoir-api-stripprefix"
+    environment:
+      DATABASE_URL: $DATABASE_URL
+      FILE_STORAGE_DIRECTORY: "/files"
+      CORS: "https://api.jenspots.com"
+      DISABLE_AUTH: "false"
+      ERROR_LOGGER: "false"
+      SMTP_HOST: ""
+      SMTP_PORT: ""
+      SMTP_MAIL_ADDRESS: ""
+      SMTP_MAIL_PASSWORD: $SMTP_MAIL_PASSWORD
+      SENTRY_DSN: $SENTRY_DSN
+    restart: always
+    volumes:
+      - '$HOME/volumes/files:/files'
+
+  web:
+    container_name: dr-trottoir-web
+    hostname: dr-trottoir-web
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+      target: "web_production"
+      args:
+        VUE_APP_API_SERVER_ADDRESS: https://sel2-1.ugent.be/api/
+        VUE_APP_IMGPROXY_SERVER_ADDRESS: https://sel2-1.ugent.be/imgproxy
+    networks:
+      main:
+        ipv4_address:  10.0.0.6
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`sel2-1.ugent.be`)"
+      - "traefik.http.routers.web.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.web.entrypoints=websecure"
+      - "traefik.http.routers.web.tls.certresolver=letsencrypt"
+      - "traefik.http.services.web.loadbalancer.server.port=80"
+    restart: always
+
+  imgproxy:
+    container_name: dr-trottoir-imgproxy
+    hostname: dr-trottoir-imgproxy
+    image: darthsim/imgproxy
+    environment:
+      IMGPROXY_LOCAL_FILESYSTEM_ROOT: /images/.
+      IMGPROXY_ALLOWED_SOURCES: local://
+      IMGPROXY_DEVELOPMENT_ERRORS_MODE: 'true'
+      IMGPROXY_MAX_SRC_RESOLUTION: 100
+      IMGPROXY_JPEG_PROGRESSIVE: 'true'
+      IMGPROXY_BIND: ":8081"
+    volumes:
+      - '$HOME/volumes/files:/images:ro'
+    networks:
+      main:
+        ipv4_address: 10.0.0.4
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.imgproxy.rule=Host(`sel2-1.ugent.be`)"
+      - "traefik.http.routers.imgproxy.rule=PathPrefix(`/imgproxy/`)"
+      - "traefik.http.routers.imgproxy.entrypoints=websecure"
+      - "traefik.http.routers.imgproxy.tls.certresolver=letsencrypt"
+      - "traefik.http.services.imgproxy.loadbalancer.server.port=8081"
+      - "traefik.http.middlewares.imgproxy.stripprefix.prefixes=/imgproxy/"
+
+networks:
+  main:
+    name: main
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24

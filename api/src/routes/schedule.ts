@@ -6,6 +6,8 @@ import { prisma } from "../prisma";
 import { Prisma } from "@selab-2/groep-1-orm";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
+import { Validator } from "../validators/validator";
+import { ScheduleValidator } from "../validators/schedule.validator";
 
 export class ScheduleRouting extends Routing {
     private static includes: Prisma.ScheduleInclude = {
@@ -21,7 +23,7 @@ export class ScheduleRouting extends Routing {
         },
     };
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getAll(req: CustomRequest, res: express.Response) {
         // Students are only allowed to see their own schedules
         if (
@@ -53,10 +55,13 @@ export class ScheduleRouting extends Routing {
                 user: {
                     OR: {
                         first_name: {
-                            contains: Parser.string(req.query["user_name"], ""),
+                            contains: Parser.string(
+                                req.query["first_name"],
+                                "",
+                            ),
                         },
                         last_name: {
-                            contains: Parser.string(req.query["user_name"], ""),
+                            contains: Parser.string(req.query["last_name"], ""),
                         },
                     },
                 },
@@ -80,7 +85,7 @@ export class ScheduleRouting extends Routing {
         return res.status(200).json(result);
     }
 
-    @Auth.authorization({ student: true })
+    @Auth.authorization({ student: true, syndicus: true })
     async getOne(req: CustomRequest, res: express.Response) {
         const result = await prisma.schedule.findFirstOrThrow({
             where: {
@@ -128,8 +133,31 @@ export class ScheduleRouting extends Routing {
         return res.status(201).json(schedule);
     }
 
-    @Auth.authorization({ superStudent: true })
+    @Auth.authorization({ student: true })
     async updateOne(req: CustomRequest, res: express.Response) {
+        // if user is a student, but not super_student, nor admin
+        if (req.user?.student && !(req.user.super_student || req.user.admin)) {
+            // a student may only change the start and end timestamp of their schedule
+            const allowedFields = ["start", "end", "id"];
+
+            for (const entry in req.body) {
+                if (!allowedFields.includes(entry)) {
+                    throw new APIError(APIErrorCode.BAD_REQUEST);
+                }
+            }
+
+            const schedule = await prisma.schedule.findUniqueOrThrow({
+                where: {
+                    id: Parser.number(req.params["id"]),
+                },
+            });
+
+            // should the user try to change a schedule they're not linked to, throw an error
+            if (schedule.user_id !== req.user?.id) {
+                throw new APIError(APIErrorCode.FORBIDDEN);
+            }
+        }
+
         const result = await prisma.schedule.update({
             data: req.body,
             where: {
@@ -162,5 +190,9 @@ export class ScheduleRouting extends Routing {
         }
 
         return res.status(200).json(result);
+    }
+
+    getValidator(): Validator {
+        return new ScheduleValidator();
     }
 }

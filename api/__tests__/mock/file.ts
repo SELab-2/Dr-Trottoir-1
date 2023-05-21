@@ -1,63 +1,30 @@
-import { FileLocation } from "@selab-2/groep-1-orm";
+import { File } from "@selab-2/groep-1-orm";
 import { prisma } from "./prisma";
 
-export async function initialiseFile() {
-    const file1 = {
-        path: "path/to/static_file",
-        location: FileLocation.STATIC_FILES,
-    };
+export const manual = {
+    id: 1,
+    user_id: 1,
+    original_name: "handleiding.pdf",
+    size_in_bytes: 1024,
+    mime: "application/pdf",
+    path: "manual.pdf",
+    createdAt: new Date("1970-01-01T00:00:00Z"),
+    updatedAt: new Date("1970-01-01T00:00:00Z"),
+} satisfies File;
 
-    const file2 = {
-        path: "path/to/imgproxy_file",
-        location: FileLocation.IMGPROXY,
-    };
+export const image = {
+    id: 2,
+    user_id: 1,
+    original_name: "camera.jpg",
+    size_in_bytes: 1024,
+    mime: "application/jpeg",
+    path: "camera.jpg",
+    createdAt: new Date("1970-01-01T00:00:00Z"),
+    updatedAt: new Date("1970-01-01T00:00:00Z"),
+} satisfies File;
 
-    const file3 = {
-        path: "path/to/file_server_file",
-        location: FileLocation.FILE_SERVER,
-    };
-
-    const file4 = {
-        path: "https://example.com/path/to/external_file",
-        location: FileLocation.EXTERNAL,
-    };
-
+export async function initialiseFiles() {
     await prisma.file.createMany({
-        data: [file1, file2, file3, file4],
-    });
-}
-
-export async function initialiseImage() {
-    const timestamp: Date = new Date(Date.UTC(2023, 4, 4, 12, 0, 0));
-    const image1 = {
-        time: timestamp,
-        location: FileLocation.FILE_SERVER,
-        path: "path/to/file_server_image",
-        user_id: 1,
-    };
-
-    const image2 = {
-        time: timestamp,
-        location: FileLocation.IMGPROXY,
-        path: "path/to/img_proxy_image",
-        user_id: 1,
-    };
-
-    const image3 = {
-        time: timestamp,
-        location: FileLocation.EXTERNAL,
-        path: "https://example.com/path/to/external_image",
-        user_id: 2,
-    };
-
-    const image4 = {
-        time: timestamp,
-        location: FileLocation.STATIC_FILES,
-        path: "path/to/static_file_image",
-        user_id: 3,
-    };
-
-    await prisma.image.createMany({
-        data: [image1, image2, image3, image4],
+        data: [manual, image],
     });
 }

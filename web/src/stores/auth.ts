@@ -1,8 +1,9 @@
 import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
-import { User } from "@selab-2/groep-1-orm";
+import { AuthenticatedUser } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 
-const defaultUser: User = {
+const defaultUser: AuthenticatedUser = {
   id: 0,
   email: "dev@trottoir.be",
   first_name: "Admin",
@@ -14,9 +15,16 @@ const defaultUser: User = {
   student: true,
   super_student: false,
   admin: true,
-  hash: "?",
-  salt: "?",
-  deleted: false,
+  address: {
+    id: 0,
+    street: "Straatnaam",
+    zip_code: 9000,
+    number: 123,
+    city: "Gent",
+    latitude: 0.0,
+    longitude: 0.0,
+  },
+  syndicus: [{ id: 0 }, { id: 1 }, { id: 2 }],
 };
 
 /**
@@ -25,7 +33,7 @@ const defaultUser: User = {
  */
 export const useAuthStore = defineStore("auth", () => {
   /* The state of this store. */
-  const auth: Ref<User | null> = ref(null);
+  const auth: Ref<AuthenticatedUser | null> = ref(null);
 
   /**
    * Attempt to log-in using a simple API call.
@@ -33,7 +41,7 @@ export const useAuthStore = defineStore("auth", () => {
    * @param password The plaintext password.
    */
   async function logIn(username: string, password: string): Promise<void> {
-    try {
+    await tryOrAlertAsync(async () => {
       if (process.env.VUE_APP_DISABLE_AUTHENTICATION !== "true") {
         await fetch(process.env.VUE_APP_API_SERVER_ADDRESS + "auth/login/", {
           method: "POST",
@@ -49,19 +57,15 @@ export const useAuthStore = defineStore("auth", () => {
           credentials: "include",
         });
       }
-
-      await getAuth();
-    } catch (e) {
-      // Fallback error. TODO: expand error handling.
-      alert("Internal Server Error (logging In)");
-    }
+    });
+    await getAuth();
   }
 
   /**
    * Attempt a logout, which will set the current state to null if successful.
    */
   async function logOut(): Promise<void> {
-    try {
+    await tryOrAlertAsync(async () => {
       if (process.env.VUE_APP_DISABLE_AUTHENTICATION !== "true") {
         await fetch(process.env.VUE_APP_API_SERVER_ADDRESS + "auth/logout/", {
           method: "POST",
@@ -75,14 +79,11 @@ export const useAuthStore = defineStore("auth", () => {
 
         await getAuth();
       }
-    } catch (e) {
-      // Fallback error. TODO: expand error handling.
-      alert("Internal Server Error (logging out)");
-    }
+    });
   }
 
   async function getAuth(): Promise<void> {
-    try {
+    await tryOrAlertAsync(async () => {
       if (process.env.VUE_APP_DISABLE_AUTHENTICATION === "true") {
         auth.value = defaultUser;
       } else {
@@ -102,12 +103,7 @@ export const useAuthStore = defineStore("auth", () => {
           auth.value = null;
         }
       }
-    } catch (e) {
-      console.log(e);
-      // Fallback error. TODO: expand error handling.
-      alert("Internal Server Error (fetching Auth)");
-      auth.value = null;
-    }
+    });
   }
 
   return { auth, logIn, logOut, getAuth };

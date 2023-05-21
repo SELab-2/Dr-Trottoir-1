@@ -57,12 +57,11 @@ describe("Example test suite", () => {
         });
 
         // clean up after ourselves
-        await restoreTables("action");
+        await restoreTables();
     });
 
     test("Example PATCH", async () => {
         const updatedAction = {
-            id: 1,
             description: "Update!",
         };
 
@@ -71,7 +70,7 @@ describe("Example test suite", () => {
             data: updatedAction,
             // for succesful PATCH requests, expectedResponse should be equal to data
             // for PATCH requests that are expected to fail, provide the expected response
-            expectedResponse: updatedAction,
+            expectedResponse: { id: 1, description: "Update!" },
         });
     });
 
@@ -88,7 +87,7 @@ describe("Example test suite", () => {
         // clean up after ourselves
         // The tests must be kept idempotent => make sure you restore all tables you (might) have changed!
         // Also be very careful with the order of the restoration of tables!
-        await restoreTables("action", "garbage");
+        await restoreTables();
     });
 
     afterAll(() => {

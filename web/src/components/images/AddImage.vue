@@ -63,17 +63,12 @@ const previewImage = () => {
 };
 // code voor later
 // const submit = () => {
-//   try {
+//   tryOrAlert(() => {
 //     const formData = new FormData();
 //     formData.append("image", image.value);
 //     formData.append("label", label.value);
 //     formData.append("comment", comments.value);
-//     console.log("verzonden");
-//     // for (const value of formData.values()) {
-//     //   console.log(value);
-//     // }
 //     //const response = await axios.post("/images", formData);
-//     //console.log(response.data);
 //     // reset form after submit
 //     //file.value = null;
 //     preview.value = ref(null);
@@ -81,9 +76,7 @@ const previewImage = () => {
 //     comments.value = "";
 //     image.value = null;
 //     //emit("form-submitted", formData);
-//   } catch (error) {
-//     console.log(error);
-//   }
+//   });
 // };
 </script>
 

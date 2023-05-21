@@ -1,0 +1,31 @@
+name: CI API Query Builder
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - 'develop'
+            - 'main'
+    pull_request:
+        branches:
+            - 'develop'
+            - 'main'
+            - 'api_query/**'
+jobs:
+    api-query-test:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./api_query
+        env:
+            DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/main"
+            NODE_ENV: "test"
+        steps:
+            -   name: "Checkout the repo code"
+                uses: actions/checkout@v3
+            -   uses: actions/setup-node@v3
+            -   name: "Clean install"
+                run: npm ci
+            -   name: "Lint the code"
+                run: npm run lint
+            -   name: "Execute tests"
+                run: npm run test
