@@ -25,4 +25,5 @@ Software Engineering Lab II (2022 - 2023)
 
 ## Documentatie
 
-Er is documentatie te vinden op [GitHub Wiki](https://github.com/SELab-2/Dr-Trottoir-1/wiki), alsook in [`/api/README.md`](https://github.com/SELab-2/Dr-Trottoir-1/api/README.md) en [`./server/README.md`](https://github.com/SELab-2/Dr-Trottoir-1/server/README.md).
+Elk van bovenstaande mappen bevat een `README.md` file die documentatie over dat onderwerp aanbiedt.
+De handleiding van de applicatie is [hier](docs/manual/manual_home.md) terug te vinden.

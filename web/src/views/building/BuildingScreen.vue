@@ -69,6 +69,15 @@
               Handleiding
             </SimpleButton>
           </div>
+          <SimpleButton
+            v-show="useAuthStore().auth?.admin && !building.deleted"
+            class="text-none"
+            prepend-icon="mdi-pencil"
+            @click="routeToChange()"
+            color="primary"
+          >
+            Pas aan
+          </SimpleButton>
 
           <SimpleButton
             v-show="useAuthStore().auth?.admin && !building.deleted"
@@ -417,6 +426,10 @@ async function restoreBuilding() {
     deleted: false,
   });
   router.go(0);
+}
+
+function routeToChange() {
+  router.push({ name: "building_new", params: { id: building.value?.id } });
 }
 </script>
 

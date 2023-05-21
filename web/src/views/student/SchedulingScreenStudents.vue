@@ -61,7 +61,9 @@
                 variant="text"
                 size="compact"
               >
-                {{ new Date(item.schedule.day).toLocaleTimeString().slice(0,5) }}
+                {{
+                  new Date(item.schedule.day).toLocaleTimeString().slice(0, 5)
+                }}
               </v-chip>
               <v-chip label color="primary" class="mr-2">
                 <v-icon
