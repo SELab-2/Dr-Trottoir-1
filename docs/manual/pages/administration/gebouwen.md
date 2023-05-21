@@ -4,7 +4,7 @@ Op deze pagina kan u een oplijsting terugvinden van alle gebouwen.
 
 |           Gebouwen pagina            |
 | :----------------------------------: |
-| ![](docs/manual/assets/gebouwen.png) |
+| ![](../../assets/gebouwen.png) |
 
 ## 1. Zoekbalk
 

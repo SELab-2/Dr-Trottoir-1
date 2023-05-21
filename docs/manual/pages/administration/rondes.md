@@ -4,7 +4,7 @@ Op deze pagina kan u een oplijsting terugvinden van alle rondes.
 
 |            Ronde pagina            |
 | :--------------------------------: |
-| ![](docs/manual/assets/rondes.png) |
+| ![](../../assets/rondes.png) |
 
 ## 1. Zoekbalk
 
