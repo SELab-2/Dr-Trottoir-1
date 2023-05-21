@@ -1,7 +1,6 @@
 import BuildingCard from '@/components/cards/BuildingCard.vue'
 import BuildingInfoCard from '@/components/cards/BuildingInfoCard.vue'
 import BuildingSelectCard from '@/components/cards/BuildingSelectCard.vue'
-import ImageCard from '@/components/cards/ImageCard.vue'
 import RoundCard from '@/components/cards/RoundCard.vue'
 import RoundSelectCard from '@/components/cards/RoundSelectCard.vue'
 import RoundBuildingCard from '@/components/cards/RoundBuildingCard.vue'
@@ -73,41 +72,6 @@ describe("card tests", () => {
     cy.get('#up').should('be.visible')
     cy.get('#down').should('be.visible')
     cy.get('#remove').should('be.visible')
-  })
-
-  it('imagecard test with image', () => {
-    cy.mount(ImageCard, {
-      props: {
-        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Grosser_Panda.JPG/1200px-Grosser_Panda.JPG",
-        title: "test image",
-        titleIcon: "mdi-domain",
-        text: "text",
-        textIcon: "mdi-domain",
-        btnIcon: "mdi-domain",
-        btnText: "button",
-      },
-    })
-    // all info present, since there is an image, the title and text should not be visible/exist
-    cy.contains('test image').should('not.exist')
-    cy.contains('text').should('not.exist')
-    cy.contains('button').should('be.visible')
-  })
-
-  it('imagecard test without image', () => {
-    cy.mount(ImageCard, {
-      props: {
-        title: "test image",
-        titleIcon: "mdi-domain",
-        text: "text",
-        textIcon: "mdi-domain",
-        btnIcon: "mdi-domain",
-        btnText: "button",
-      },
-    })
-    // all info present, since there is an image, the title and text should be visible/exist
-    cy.contains('test image').should('be.visible')
-    cy.contains('text').should('be.visible')
-    cy.contains('button').should('be.visible')
   })
 
   it('passwordinputcard test', () => {

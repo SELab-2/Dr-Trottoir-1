@@ -1,16 +1,15 @@
-import RoundedButton from '@/components/buttons/RoundedButton.vue'
+import SimpleButton from '@/components/buttons/SimpleButton.vue'
 import AddButton from '@/components/buttons/AddButton.vue'
 import Button from '@/components/models/Button.vue';
 
 describe("buttons test", () => {
-  it('roundedbutton test', () => {
-    cy.mount(RoundedButton, {
-      props: {
-        icon: 'mdi-domain',
-        value: 'Click me!',
-      },
+  it('simplebutton test', () => {
+    cy.mount(SimpleButton, {
+      slots: {
+        default: 'Click me!',
+      }
     })
-    cy.get('#button').should('contains.text', 'Click me!')
+    cy.contains("Click me!")
   })
 
   it('addbutton test', () => {
