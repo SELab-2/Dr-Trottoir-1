@@ -26,7 +26,7 @@ De rondes hoeven niet in volgorde toegevoegd te worden.
 De volgorde kan gewijzigd worden door op de blauwe pijlen te drukken.
 In de finale volgorde is het gebouw dat boven de anderen staat ook het eerste gebouw in de ronde.
 Via de indices die bij de gebouwen op de kaart staan, wordt dit ook duidelijker.
-Wanneer een verkeerd gebouw werd toegevoegd, kan deze verwijderd worden door op het rood kruisje te drukken.
+Wanneer een verkeerd gebouw werd toegevoegd, kan deze verwijderd worden door op het rode kruisje te drukken.
 
 ### 6. Aanmaken
 De ronde wordt aangemaakt wanneer op de knop ```ronde aanmaken``` wordt gedrukt.

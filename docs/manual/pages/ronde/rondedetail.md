@@ -65,7 +65,7 @@ Met deze knop kan het volgende gedaan worden:
 
 - Een niet-gestart gebouw starten.
 - Een foto toevoegen aan een huidig gebouw.
-- Je opmerkingen over het huidig gebouw wijzigen.
+- Je opmerkingen over het huidige gebouw wijzigen.
 - Het huidig gebouw beëindigen.
 
 |            Toevoegknop                      |
