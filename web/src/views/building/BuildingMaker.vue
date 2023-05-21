@@ -16,7 +16,7 @@
       ></v-text-field>
 
       <v-select
-        :disabled="buildingId !== undefined"
+        :disabled="edit"
         label="Syndicus"
         :items="users"
         v-model="building.syndicus"
@@ -42,7 +42,6 @@
       ></v-text-field>
 
       <v-file-input
-        v-model="manualContent"
         id="manual-id"
         prepend-icon=""
         prepend-inner-icon="mdi-file"
@@ -61,7 +60,6 @@
 
     <!-- card met alle info over de locatie -->
     <BorderCard
-      v-if="buildingId === undefined"
       prepend-icon="mdi-map-marker"
       class="mb-3 px-4"
       title="Locatie info"
@@ -107,6 +105,7 @@
         <!-- addres forum gebruiken -->
         <AddressForm
           v-model="address"
+          :readonly="false"
           :city="address.city"
           :number="address.number.toString()"
           :zip_code="address.zip_code.toString()"
@@ -116,7 +115,7 @@
       </div>
     </BorderCard>
 
-    <BorderCard class="mb-3 px-4">
+    <BorderCard v-if="!edit" class="mb-3 px-4">
       <template v-slot:prepend><v-icon icon="mdi-image" /></template>
       <template v-slot:title>Foto's</template>
       <template v-slot:append
@@ -129,13 +128,45 @@
             class="mt-1"
             :multiple="false"
             :id="fileId"
-            v-model="fileContent[id]"
             accept="image/jpeg"
             prepend-icon=""
             prepend-inner-icon="mdi-file"
             :label="fileId"
           ></v-file-input>
-        </v-list-item>
+        </v-list-item> </v-list
+    ></BorderCard>
+
+    <BorderCard v-else class="mb-3 px-4">
+      <template v-slot:prepend><v-icon icon="mdi-image" /></template>
+      <template v-slot:title>Foto's</template>
+      <v-file-input
+        class="mt-1 mx-5"
+        :multiple="false"
+        :id="new"
+        accept="image/jpeg"
+        prepend-icon=""
+        prepend-inner-icon="mdi-file"
+        label="Nieuwe afbeelding"
+      ></v-file-input
+      ><v-btn type="submit" color="success" class="ml-5" @click="addFileId()"
+        >Voeg afbeelding toe</v-btn
+      >
+      <v-list>
+        <v-list-item v-for="entry in images" :key="entry.id"
+          ><BorderCard class="mb-3 px-4">
+            <template v-slot:prepend
+              ><v-img
+                :src="ImgProxy.env.url(entry.image)"
+                style="width: 75px; height: 75px; object-fit: cover"
+            /></template>
+            <template v-slot:append
+              ><v-icon
+                class="ml-2"
+                icon="mdi-delete"
+                @click="removeImage(entry.id)"
+              ></v-icon
+            ></template> </BorderCard
+        ></v-list-item>
       </v-list>
     </BorderCard>
 
@@ -164,27 +195,32 @@ import {
   SyndicusQuery,
   FileQuery,
 } from "@selab-2/groep-1-query";
+import { File, BuildingImages } from "@selab-2/groep-1-orm";
 import router from "@/router";
 import "leaflet/dist/leaflet.css";
 import "leaflet/dist/leaflet.js";
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
 import { useRoute } from "vue-router";
-
+import { ImgProxy } from "@/imgproxy";
 
 const fileIds = ref<string[]>(["Hoofdafbeelding"]);
-const fileContent = ref<Array<File[]>>([[]])
+const fileContent = ref<Array<File[]>>([[]]);
 
-const manualContent = ref<File[]>()
+const images = ref<
+  (BuildingImages & {
+    image: File;
+  })[]
+>();
 
 function addFileId() {
   fileIds.value.push("Afbeelding " + fileIds.value.length);
-  fileContent.value.push([])
+  fileContent.value.push([]);
 }
 
 function removeFileId() {
   if (fileIds.value.length > 1) {
     fileIds.value.pop();
-    fileContent.value.pop()
+    fileContent.value.pop();
   }
 }
 
@@ -225,8 +261,22 @@ const building = ref({
 
 const route = useRoute();
 const buildingId: number = Number(route.params.id);
+const edit: boolean = buildingId !== 0;
 
 if (buildingId) {
+  setFields()
+}
+
+async function removeImage(id: number){
+  await new BuildingQuery().deleteImage(
+    buildingId,
+    {id: id},
+    true,
+  );
+  await setFields()
+};
+
+async function setFields(){
   tryOrAlertAsync(async () => {
     const requestedBuilding: Result<BuildingQuery> =
       await new BuildingQuery().getOne(buildingId);
@@ -254,14 +304,10 @@ if (buildingId) {
     latitude.value = requestedBuilding.address.latitude;
     longitude.value = requestedBuilding.address.longitude;
 
-
-    manualContent.value = requestedBuilding.manual? [requestedBuilding.manual] as any : []
-
-    fileContent.value = requestedBuilding.images[0].image as any
-    console.log(fileContent.value)
-
+    images.value = requestedBuilding.images;
   });
 }
+
 
 function getFullStudentName(s: Result<UserQuery> | undefined): string {
   if (s) {
