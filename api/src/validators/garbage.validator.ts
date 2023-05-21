@@ -12,7 +12,7 @@ export class GarbageValidator extends Validator {
                 before: Joi.date().iso(),
                 after: Joi.date().iso(),
                 building_id: Joi.number(),
-                action_id: Joi.number(),
+                description: Joi.string().trim(),
                 syndicus_id: Joi.number(),
                 round_id: Joi.number(),
                 sort: Joi.string(),
@@ -33,7 +33,7 @@ export class GarbageValidator extends Validator {
         return celebrate({
             body: Joi.object({
                 pickup_time: Joi.date().iso().required(),
-                action_id: Joi.number().positive().required(),
+                description: Joi.string().trim().min(1).required(),
                 building_id: Joi.number().positive().required(),
             }),
         });
@@ -48,7 +48,7 @@ export class GarbageValidator extends Validator {
                 body: Joi.object({
                     id: Joi.ref("$params.id"),
                     pickup_time: Joi.date().iso(),
-                    action_id: Joi.number().positive(),
+                    description: Joi.string().trim().min(1),
                     building_id: Joi.number().positive(),
                 }),
             },

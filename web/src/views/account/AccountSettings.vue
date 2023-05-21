@@ -138,29 +138,13 @@
     </BorderCard>
 
     <!-- Section to set new password -->
-    <BorderCard v-if="edit" class="mt-4" prepend-icon="mdi-lock">
-      <template v-slot:title> Nieuw wachtwoord </template>
-      <v-list density="compact" class="mx-4">
-        <v-text-field
-          v-model="password"
-          :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="passwordHidden ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="passwordHidden ? 'text' : 'password'"
-          label="Nieuw wachtwoord"
-          @click:append-inner="passwordHidden = !passwordHidden"
-          bg
-        ></v-text-field>
-        <v-text-field
-          v-model="passwordCheck"
-          :prepend-inner-icon="'mdi-lock'"
-          :append-inner-icon="passwordHidden ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="passwordHidden ? 'text' : 'password'"
-          label="Bevestig nieuw wachtwoord"
-          @click:append-inner="passwordHidden = !passwordHidden"
-          bg
-        ></v-text-field>
-      </v-list>
-    </BorderCard>
+    <PasswordInputCard
+      v-if="edit"
+      class="mt-4"
+      prepend-icon="mdi-lock"
+      @password="(v) => (password = v)"
+      @password-repeat="(v) => (passwordCheck = v)"
+    />
 
     <!-- Section that allows to save and remove the account -->
     <div v-if="edit" class="my-4">
@@ -246,6 +230,8 @@ import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import UserAnalyticCard from "@/components/cards/UserAnalyticCard.vue";
 import Contact from "@/components/models/Contact";
+import PasswordInputCard from "@/components/cards/PasswordInputCard.vue";
+import { Element as UserElement } from "@selab-2/groep-1-query/src/user";
 import RemovedCard from "@/components/cards/RemovedCard.vue";
 
 const display = useDisplay();
@@ -258,7 +244,7 @@ const props = defineProps(["id"]);
 const edit = ref(false);
 const password = ref("");
 const passwordCheck = ref("");
-const passwordHidden = ref(false);
+// const passwordHidden = ref(false);
 const user: Ref<Result<UserQuery> | null> = ref(null);
 const roles = ref<string[]>([]);
 
@@ -369,18 +355,26 @@ async function handleSave() {
       zip_code: user.value?.address.zip_code,
     });
   });
+
+  const userPatch: Partial<UserElement> = {
+    id: user.value?.id,
+    email: user.value?.email,
+    first_name: user.value?.first_name,
+    last_name: user.value?.last_name,
+    phone: user.value?.phone,
+    student: roles.value.includes("Student"),
+    super_student: roles.value.includes("Superstudent"),
+    admin: roles.value.includes("Admin"),
+  };
+
+  // if both password and passwordCheck are nonempty, submit the password with the request
+  if (password.value !== "" && passwordCheck.value !== "") {
+    userPatch.password = password.value;
+  }
+
   // update the user
   await tryOrAlertAsync(async () => {
-    await new UserQuery().updateOne({
-      id: user.value?.id,
-      email: user.value?.email,
-      first_name: user.value?.first_name,
-      last_name: user.value?.last_name,
-      phone: user.value?.phone,
-      student: roles.value.includes("Student"),
-      super_student: roles.value.includes("Superstudent"),
-      admin: roles.value.includes("Admin"),
-    });
+    await new UserQuery().updateOne(userPatch);
   });
   showPopup.value = false;
   edit.value = false;
