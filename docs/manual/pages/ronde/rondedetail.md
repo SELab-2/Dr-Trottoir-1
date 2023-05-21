@@ -4,16 +4,16 @@ Voor [administrators](../../users/admin.md) & [superstudenten](../../users/super
 De pagina is niet toehankelijk voor [syndici](../../users/syndicus.md).
 
 ## Hoe bereiken
-De rondedetailpagina kan gevonden worden door als [student](../../users/student.md) een ronde te selecteren in zijn [planning](../planning/planning.md). [Superstudenten](../users/superstudent.md)  (& [administrators](../../users/admin.md)) kunnen de pagina bereiken via doorklikken op de opvolgpagina's: [rondeopvolging](../followup/ronde_opvolging.md) & [gebouwopvolging](../followup/gebouw_opvolging.md).
+De rondedetailpagina kan gevonden worden door als [student](../../users/student.md) een ronde te selecteren in zijn [planning](../overview/planning.md). [Superstudenten](../users/superstudent.md)  (& [administrators](../../users/admin.md)) kunnen de pagina bereiken via doorklikken op de opvolgpagina's: [rondeopvolging](../followup/ronde_opvolging.md) & [gebouwopvolging](../followup/gebouw_opvolging.md).
 
 ## Overzicht
-De pagina is zowel beschikbaar op een computer- als een mobiel scherm. 
+De pagina is zowel beschikbaar op een computer- als een mobiel scherm.
 
 ### Algemeen
 De pagina bevat zowel voor beide formaten enkele algemene kenmerken. Deze geven overzichtelijk de huidige status van de pagina weer. Dit is belangrijk aangezien de pagina veel geupdate zal worden.
 
 #### Hoofding
-De pagina bevat een kleine header die kort en bondig de info van de ingeplande ronde weergeeft. 
+De pagina bevat een kleine header die kort en bondig de info van de ingeplande ronde weergeeft.
 |           Rondedetail Hoofding           |
 |:----------------------------------------:|
 | ![](../../assets/rounddetail_header.png) |
@@ -41,7 +41,7 @@ Elk onderdeel van de timeline bevat een kaartje met gebouweninfo. Hierin kunnen 
 
 In de hoofding (ingeklapt gedeelte) van het kaartje bevind zicht enkele algemene info: de naam van het gebouw (titel), het adres van het gebouw (subtitel) en het start en het einduur voor de opvolging van dit specifieke gebouw (info-chips).
 Verder bevindt er zich in de rechteronderhoek een menu-icoontje dat gebruikt kan worden om te schakelen tussen de ingeklapte en uitgeklapte toestand.
-Door klikken op de hoofding van het kaartje stuurt de gebruiker door naar de [gebouwenpagina](../building/gebouw_overzicht.md). 
+Door klikken op de hoofding van het kaartje stuurt de gebruiker door naar de [gebouwenpagina](../detail/gebouw.md).
 
 In de rest van het kaartje bevinden zicht de opmerkingen en afbeeldingen voor de planning van het gebouw. Een [student](../../users/student.md) heeft de mogelijkheid deze toe te voegen en aan te passen wanneer de ronde vandaag of in het verleden plaatsvindt. Dit gebeurt door middel van enkele voor de hand liggende knoppen in het kaartje of in de toevoegknop zoals hieronder zal worden beschreven.
 
@@ -60,7 +60,7 @@ Op mobiele schermen bevindt er zicht rechts onderaan een blauwe toevoegknop. Dez
 |:-------------------------------------------:|
 | ![](../../assets/rounddetail_addbutton.png) |
 
-Voor het toevoegen van foto's en opmerkingen wordt er een pop-up geopent met de relevante informatie. 
+Voor het toevoegen van foto's en opmerkingen wordt er een pop-up geopent met de relevante informatie.
 
 |           Opmerkingen aanpassen           |            Foto's toevoegen            |
 |:-----------------------------------------:|:--------------------------------------:|
@@ -79,7 +79,7 @@ Dit gebeurt door middel van 2 knoppen die zich in de header van het kaartje bevi
 #### Foto's en opmerkingen toevoegen
 Foto's en opmerkingen kunnen ook toegevoegd worden in het kaartje zelf. Dit gebeurt via de voor de hand liggende knoppen in de relevante sectie. Het aanpassen van opmerkingen kan je gewoon in het tekstveld doen maar de toevoegknop voor een foto opent dezelfde popup als de toevoegknop.
 
- 
+
 |            Opmerkingen en afbeeldingen            |
 |:-------------------------------------------------:|
 | ![](../../assets/rounddetail_photoandcomment.png) |

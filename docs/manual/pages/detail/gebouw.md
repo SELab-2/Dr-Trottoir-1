@@ -4,8 +4,8 @@
 
 De gebouw-detailpagina kan gevonden worden door als [student](../../users/student.md) in [ronde-detail](../ronde/rondedetail.md)
 op een gebouw te klikken. [Superstudenten](../../users/superstudent.md) (en [administrators](../../users/admin.md))
-kunnen de pagina bereiken via de [gebouw-opvolgpagina](../../pages/followup/gebouw_opvolging.md),
-de [gebouwenpagina](../administration/gebouwen.md) en in de [ronde-detailpagina](../../pages/detail/ronde.md).
+kunnen de pagina bereiken via de [gebouw-opvolgingspagina](../../pages/followup/gebouw_opvolging.md),
+de [gebouwenpagina](../administration/gebouwen.md) en in de [ronde-detailpagina](../../pages/ronde/rondedetail.md).
 De [syndicus](../../users/syndicus.md) kan deze pagina vinden door in de [navbar](../../navbar.md) bij `Mijn gebouwen` een gebouw te selecteren.
 
 ## Overzicht
