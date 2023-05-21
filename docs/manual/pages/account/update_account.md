@@ -1,7 +1,12 @@
 # Account bewerken
 
-Een [student](../../users/student.md), [administrator](../../users/admin.md), [superstudent](../../users/superstudent.md)
-of [syndicus](../../users/syndicus.md) kan zijn persoonlijke informatie op deze pagina aanpassen, zoals email, telefoonnummer, adres en wachtwoord.
+
+|       Account bewerken pagina        |
+|:------------------------------------:|
+| ![](../../assets/update_account.png) |
+
+Een [student](../../users/student.md), [administrators](../../users/admin.md),[superstudenten](../../users/superstudent.md) en [syndici](../../users/syndicus.md) kan zijn persoonlijke informatie op deze pagina veranderen. (email,telefoonnummer,adres, wachtwoord)
+
 
 ## Hoe bereiken
 
