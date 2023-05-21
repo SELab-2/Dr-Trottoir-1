@@ -132,9 +132,7 @@ describe('superstudent tests', () => {
 
 
   it('observe students currently doing a round', () => {
-    // make sure there is a student currently doing Round X: maybe add a test that creates this?
-    // give round to student -> student starts round
-    const round: string = "Round 2"
+    const round: string = "Round 1"
     // we are at round the follup page
     // add filters
     cy.get('#filter').then(() => {
