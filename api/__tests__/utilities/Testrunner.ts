@@ -203,13 +203,9 @@ export class Testrunner {
             .attach("file", file);
         expect(response.statusCode).toEqual(statusCode);
 
-        // drop the id, as we cannot predict that
-        delete response.body["id"];
         // drop createdAt, updatedAt as we cannot predict that with each test
         delete response.body["createdAt"];
         delete response.body["updatedAt"];
-        // drop path as we cannot predict that
-        delete response.body["path"];
 
         this.verifyBody([expectedResponse], response);
 

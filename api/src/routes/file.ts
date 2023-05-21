@@ -7,14 +7,25 @@ import multer from "multer";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 import fs from "fs";
+import path from "path";
+import { File } from "@selab-2/groep-1-orm";
 
 export class FileRouting extends Routing {
+    private storage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, process.env.FILE_STORAGE_DIRECTORY!!);
+        },
+        filename: (req, file, cb) => {
+            cb(null, file.originalname);
+        },
+    });
     private upload = multer({
-        dest: process.env.FILE_STORAGE_DIRECTORY,
+        // dest: process.env.FILE_STORAGE_DIRECTORY,
         limits: {
             files: 1,
             fileSize: 5 * 1024 * 1024, // 5 MB
         },
+        storage: this.storage,
     });
 
     @Auth.authorization({ superStudent: true })
@@ -35,9 +46,7 @@ export class FileRouting extends Routing {
             },
         });
 
-        return res.sendFile(
-            `${process.env.FILE_STORAGE_DIRECTORY}/${result.path}`,
-        );
+        return res.sendFile(result.path);
     }
 
     @Auth.authorization({ student: true })
@@ -58,7 +67,11 @@ export class FileRouting extends Routing {
             },
         });
 
-        return res.status(201).json(result);
+        // drop path, as we do not want to expose the internal location
+        let ret = { ...result } as Partial<File>;
+        delete ret["path"];
+
+        return res.status(201).json(ret);
     }
 
     @Auth.authorization({ superStudent: true })

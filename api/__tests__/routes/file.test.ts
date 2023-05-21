@@ -44,16 +44,23 @@ describe("File tests", () => {
     describe("Succesful requests", () => {
         test("POST /file", async () => {
             const expected = {
+                id: 4,
                 mime: "text/plain",
                 original_name: "test2.txt",
                 size_in_bytes: 13,
                 user_id: 2,
             };
 
-            await runner.postFile({
+            const response = await runner.postFile({
                 url: "/file",
                 file: `${path.resolve()}/__tests__/mock/upload_files/test2.txt`,
                 expectedResponse: expected,
+            });
+
+            // verify the file has been uploaded
+            await runner.getFile({
+                url: `/file/${response.body.id}`,
+                expectedContents: "hello world 2",
             });
         });
 
