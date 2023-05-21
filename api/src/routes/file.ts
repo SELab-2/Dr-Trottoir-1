@@ -7,13 +7,16 @@ import multer from "multer";
 import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 import fs from "fs";
-import path from "path";
 import { File } from "@selab-2/groep-1-orm";
 
 export class FileRouting extends Routing {
     private storage = multer.diskStorage({
         destination: (req, file, cb) => {
-            cb(null, process.env.FILE_STORAGE_DIRECTORY!!);
+            if (process.env.FILE_STORAGE_DIRECTORY !== undefined) {
+                cb(null, process.env.FILE_STORAGE_DIRECTORY);
+            } else {
+                cb(null, "/tmp");
+            }
         },
         filename: (req, file, cb) => {
             cb(null, file.originalname);
@@ -68,7 +71,7 @@ export class FileRouting extends Routing {
         });
 
         // drop path, as we do not want to expose the internal location
-        let ret = { ...result } as Partial<File>;
+        const ret = { ...result } as Partial<File>;
         delete ret["path"];
 
         return res.status(201).json(ret);
