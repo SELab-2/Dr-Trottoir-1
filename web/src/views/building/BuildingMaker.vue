@@ -22,11 +22,7 @@
         prepend-inner-icon="mdi-account"
       >
         <template v-slot:item="{ props, item }">
-          <v-list-item
-            v-bind="props"
-            :title="item.name"
-            :subtitle="item.name"
-          >
+          <v-list-item v-bind="props" :title="item.name" :subtitle="item.name">
             <p>{{ getFullStudentName(item.value) }}</p>
           </v-list-item>
         </template>
@@ -36,6 +32,14 @@
         </template>
       </v-select>
 
+      <v-text-field
+        required
+        type="number"
+        prepend-inner-icon="mdi-clock"
+        v-model="expectedTimeInHours"
+        label="Verwachte werktijd in uur"
+      ></v-text-field>
+
       <v-file-input
         id="manual-id"
         prepend-icon=""
@@ -44,9 +48,22 @@
       ></v-file-input>
     </BorderCard>
 
+    <BorderCard prepend-icon="mdi-text" class="mb-3 px-4" title="Beschrijving">
+      <v-textarea
+        rows="4"
+        label="Beschrijving van het gebouw"
+        prepend-inner-icon="mdi-text"
+        v-model="description"
+      ></v-textarea>
+    </BorderCard>
+
     <!-- card met alle info over de locatie -->
-    <BorderCard prepend-icon="mdi-map-marker" class="mb-3 px-4" title="Locatie info">
-      <BorderCard style="height: 400px">
+    <BorderCard
+      prepend-icon="mdi-map-marker"
+      class="mb-3 px-4"
+      title="Locatie info"
+    >
+      <BorderCard style="height: 400px" class="mx-4">
         <l-map ref="map" v-model:zoom="zoom" :center="[51, 4.4699]">
           <l-tile-layer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -54,7 +71,7 @@
             name="OpenStreetMap"
           />
           <l-marker
-            :key="building.id"
+            :key="building.ivago_id"
             :lat-lng="[latitude, longitude]"
             name="building"
           >
@@ -91,19 +108,25 @@
       </div>
     </BorderCard>
 
-    <BorderCard prepend-icon="mdi-text" class="mb-3 px-4" title="Beschrijving">
-      <v-text-field
-        required
-        type="text"
-        v-model="description"
-        label="Geef een beschrijving."
-      />
-    </BorderCard>
-
-    <BorderCard prepend-icon="mdi-image" class="mb-3 px-4" title="Foto's">
-      <MultiAddImage/>
-      <!-- heb geprobeerd deze aan te passen zodat je lijst verkrijgt van de afbeeldingen, maar is niet gelukt.
-      mss beter gewoon een nieuwe component, want de foto's moeten hier geen opmerkingen hebben? -->
+    <BorderCard class="mb-3 px-4">
+      <template v-slot:prepend><v-icon icon="mdi-image" /></template>
+      <template v-slot:title>Foto's</template>
+      <template v-slot:append
+        ><v-icon class="mr-2" icon="mdi-plus" @click="addFileId()"></v-icon
+        ><v-icon class="ml-2" icon="mdi-delete" @click="removeFileId()"></v-icon
+      ></template>
+      <v-list>
+        <v-list-item v-for="fileId of fileIds">
+          <v-file-input class="mt-1"
+            :multiple="false"
+            :id="fileId"
+            accept="image/jpeg"
+            prepend-icon=""
+            prepend-inner-icon="mdi-file"
+            :label="fileId"
+          ></v-file-input>
+        </v-list-item>
+      </v-list>
     </BorderCard>
 
     <v-btn
@@ -128,17 +151,35 @@ import {
   AddressQuery,
   BuildingQuery,
   UserQuery,
-  FileQuery,
   SyndicusQuery,
+  FileQuery,
 } from "@selab-2/groep-1-query";
 import router from "@/router";
 import "leaflet/dist/leaflet.css";
 import "leaflet/dist/leaflet.js";
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
-import MultiAddImage from "@/components/images/MultiAddImage.vue"
 
-const users = await new UserQuery().getAll();
+const fileIds = ref<string[]>(["Hoofdafbeelding"]);
+
+function addFileId() {
+  fileIds.value.push("Afbeelding " + fileIds.value.length);
+}
+
+function removeFileId() {
+  if (fileIds.value.length > 1) {
+    fileIds.value.pop();
+  }
+}
+
+const users = await new UserQuery().getAll({
+  admin: false,
+  student: false,
+  super_student: false,
+});
+
+const expectedTimeInHours = ref<number>(0);
 const syndici = await new SyndicusQuery().getAll();
+console.log(syndici);
 
 const address = ref({
   street: "",
@@ -158,11 +199,11 @@ const building = ref({
   syndicus: {
     id: 0,
     first_name: "",
-    last_name: ""
+    last_name: "",
   },
+  address_id: 0,
+  manual_id: 1,
 });
-
-const manual = ref<File[] | undefined>();
 
 const description = ref("");
 
@@ -179,20 +220,15 @@ const zoom = ref(8);
 const submit = () => {
   // check if the user is already a syndicus, else we need to make the user a syndicus
   let createSyndicus: boolean = true;
-  for(const syndicus of syndici){
-    if(syndicus.user_id == building.value.syndicus.id){
+  for (const syndicus of syndici) {
+    if (syndicus.user_id == building.value.syndicus.id) {
       createSyndicus = false;
       building.value.syndicus.id = syndicus.id;
       break;
     }
   }
   tryOrAlertAsync(async () => {
-    if (createSyndicus) {
-      let {id: syndicusId} = await new SyndicusQuery().createOne({
-        user_id: building.value.syndicus.id,
-      });
-      building.value.syndicus.id = syndicusId;
-    }
+    /*
     const newAddress = await new AddressQuery().createOne({
       street: address.value.street,
       number: address.value.number,
@@ -205,9 +241,10 @@ const submit = () => {
     // create File object for manual
     // const response = await fetch('http://10.0.0.5:8080/file/',  {method: "POST", body: JSON.stringify(manual)});
     // const man = await response.json()
-    
-    const element = document.getElementById("manual-id")
-    const file = await new FileQuery().createOne("manual-id");
+
+    const element = document.getElementById("manual-id");
+
+    //
 
     /*
     const { id: buildingId } = await new BuildingQuery().createOne({
@@ -233,9 +270,52 @@ const submit = () => {
     };
      */
 
-    await router.push(`/gebouw/${buildingId}`);
+    // Upload file
+    //const file = await new FileQuery().createOne("manual-id");
+    //building.value.manual_id = file.id;
+    const buildingUnwrapped = building.value;
 
+    const isNewSyndicus: boolean = syndici.some((s: Result<SyndicusQuery>) => {
+      return s.user_id === buildingUnwrapped.syndicus.id;
+    });
+
+    // Create address
+    const newAddress = await new AddressQuery().createOne({
+      ...address.value,
+      ...{ latitude: latitude.value, longitude: longitude.value },
+    });
+
+    if (isNewSyndicus) {
+      let { id: syndicusId } = await new SyndicusQuery().createOne({
+        user_id: buildingUnwrapped.syndicus.id,
+      });
+      buildingUnwrapped.syndicus.id = syndicusId;
+    }
+
+    /*
+    const file = await new FileQuery().createOne("manual-id");
+    */
+
+    const newBuilding = await new BuildingQuery().createOne({
+      name: buildingUnwrapped.name,
+      address_id: newAddress.id,
+      description: description.value,
+      ivago_id: buildingUnwrapped.ivago_id,
+      expected_time: expectedTimeInHours.value * 60,
+      syndicus_id: buildingUnwrapped.syndicus.id,
+      manual_id: buildingUnwrapped.manual_id,
+    });
+
+    for (const fileId of fileIds.value) {
+      const element: any = document.getElementById(fileId);
+      console.log(element.files.length);
+      if (element.files.length > 0) {
+        await new BuildingQuery().createImage(newBuilding, fileId);
+      }
+    }
+
+    // Redirect
+    await router.push(`/gebouw/${newBuilding.id}`);
   });
-
 };
 </script>

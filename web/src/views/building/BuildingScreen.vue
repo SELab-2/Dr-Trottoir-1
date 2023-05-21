@@ -1,11 +1,16 @@
 <template>
   <HFillWrapper v-if="building !== null">
     <v-card variant="text" class="space-y">
-      <img
-        alt="banner"
-        id="banner"
-        src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
-      />
+      <v-carousel hide-delimiters>
+        <v-carousel-item
+          v-for="entry in building.images"
+          :key="entry.id"
+          cover
+          :src="ImgProxy.env.url(entry.image)"
+        >
+        </v-carousel-item>
+      </v-carousel>
+
       <RemovedCard
         :show="useAuthStore().auth?.admin && building.deleted"
         title="Dit gebouw is verwijderd."
@@ -145,7 +150,7 @@
             :key="action.id"
           >
             <div class="d-flex align-center w-100">
-              <h4 class="ml-2 me-auto">{{ action.action.description }}</h4>
+              <h4 class="ml-2 me-auto">{{ action.description }}</h4>
               <v-chip color="border" variant="outlined">
                 <v-icon icon="mdi-calendar-clock"></v-icon>
                 <p class="text-black mx-1">
@@ -233,6 +238,7 @@ import SyndicusButtons from "@/components/building/SyndicusButtons.vue";
 import CardPopup from "@/components/popups/CardPopup.vue";
 import RemovedCard from "@/components/cards/RemovedCard.vue";
 import router from "@/router";
+import { ImgProxy } from "@/imgproxy";
 
 const showRemovePopup = ref(false);
 
@@ -271,11 +277,6 @@ function tomaps() {
     `https://maps.google.com/maps?q=${building.value?.address.number}+${building.value?.address.street},+${building.value?.address.city},+${building.value?.address.zip_code}`,
   );
 }
-
-/*
-function toClip(text: string) {
-  navigator.clipboard.writeText(text);
-}*/
 
 const props = defineProps({
   id: {
@@ -394,13 +395,6 @@ async function restoreBuilding() {
 </script>
 
 <style lang="scss" scoped>
-#banner {
-  width: 100%;
-  max-height: 34vh;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
 .space-y {
   & > * {
     margin-bottom: 32px;

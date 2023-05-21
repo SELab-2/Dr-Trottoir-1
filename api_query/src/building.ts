@@ -27,7 +27,9 @@ type Element = Prisma.BuildingGetPayload<{
         expected_time: true;
         deleted: true;
         hash: boolean;
-        address: true;
+        address_id: true;
+        syndicus_id: true;
+        manual_id: true;
     };
 }>;
 
