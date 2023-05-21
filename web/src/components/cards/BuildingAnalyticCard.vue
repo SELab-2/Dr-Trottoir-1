@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import BorderCard from "@/layouts/CardLayout.vue";
 import { Ref, ref, onMounted, computed } from "vue";
-import { Result, BuildingQuery, ProgressQuery } from "@selab-2/groep-1-query";
+import { Result, BuildingQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { Bar } from "vue-chartjs";
 import {
@@ -100,23 +100,11 @@ async function retrieve() {
       const end = new Date(start);
       end.setMonth(Number(i) + 1);
 
-      const progressItems = await new ProgressQuery().getAll({
-        arrived_after: start,
-        left_before: end,
-        user: props.id,
-      });
-
-      let time = 0;
-
-      for (const progress of progressItems) {
-        if (progress.arrival !== null && progress.departure !== null) {
-          const departure = new Date(progress.departure);
-          const arrival = new Date(progress.arrival);
-          time += (departure.getTime() - arrival.getTime()) / (1000 * 60 * 60);
-        }
-      }
-
-      return time;
+      return await new BuildingQuery().totalTimeSpent(
+        props.id ?? 0,
+        start,
+        end,
+      );
     }),
   );
 }

@@ -18,7 +18,7 @@ sorteren volgens die kolom.
 
 ## 2. Klikken op een rij
 Wanneer u op een rij klikt, zal u doorgestuurd worden naar de [accountpagina](../account/account.md)
-van de gebruiker.
+van de gebruiker. Daar kan u ook de statistieken van de gebruiker terug vinden.
 
 ## 3. Nieuwe gebruiker aanmaken
 Om een nieuwe gebruiker aan te maken, klikt u op de `nieuwe gebruiker` knop. Dit zal u doorsturen

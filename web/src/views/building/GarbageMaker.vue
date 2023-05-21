@@ -79,6 +79,7 @@
                 variant="outlined"
                 type="date"
                 label="Startdatum"
+                :max="frequency != 'enkel' ? endDate : '2100'"
               ></v-text-field>
 
               <v-text-field
@@ -86,6 +87,7 @@
                 variant="outlined"
                 type="date"
                 label="Einddatum"
+                :min="startDate"
                 v-if="frequency != 'enkel'"
               ></v-text-field>
 
@@ -155,6 +157,7 @@
                 variant="outlined"
                 type="date"
                 label="Startdatum"
+                :max="fullSchemeEndDate"
               ></v-text-field>
               <v-text-field
                 class="ml-1"
@@ -163,6 +166,7 @@
                 variant="outlined"
                 type="date"
                 label="Einddatum"
+                :min="fullSchemeStartDate"
               ></v-text-field>
             </div>
             <div class="d-flex">
