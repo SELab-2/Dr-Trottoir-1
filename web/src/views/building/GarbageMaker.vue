@@ -54,15 +54,10 @@
                 style="min-width: 100px; max-width: 100%"
                 class="flex-grow-1 flex-shrink-0"
               >
-                <v-select
-                  v-model="action"
-                  :items="actions"
-                  item-value="description"
-                  item-title="description"
-                  return-object
-                  label="Actie"
-                ></v-select
-              ></v-col>
+                <v-text-field
+                  v-model="actionDescription"
+                  label="Beschrijving van de actie"
+              /></v-col>
               <v-col
                 cols="1"
                 style="min-width: 100px; max-width: 100%"
@@ -81,23 +76,22 @@
             >
               <v-text-field
                 v-model="startDate"
-                prepend-inner-icon="mdi-calendar"
                 variant="outlined"
                 type="date"
                 label="Startdatum"
+                :max="frequency != 'enkel' ? endDate : '2100'"
               ></v-text-field>
 
               <v-text-field
                 v-model="endDate"
-                prepend-inner-icon="mdi-calendar"
                 variant="outlined"
                 type="date"
                 label="Einddatum"
+                :min="startDate"
                 v-if="frequency != 'enkel'"
               ></v-text-field>
 
               <v-text-field
-                prepend-inner-icon="mdi-clock-time-two-outline"
                 label="Starttijd"
                 variant="outlined"
                 type="time"
@@ -114,7 +108,7 @@
                 prepend-icon="mdi-plus-circle"
                 @click="add"
                 variant="tonal"
-                :disabled="action === undefined"
+                :disabled="actionDescription === ''"
                 >Tijdelijk toevoegen</v-btn
               ><v-spacer></v-spacer>
               <v-btn
@@ -163,6 +157,7 @@
                 variant="outlined"
                 type="date"
                 label="Startdatum"
+                :max="fullSchemeEndDate"
               ></v-text-field>
               <v-text-field
                 class="ml-1"
@@ -171,6 +166,7 @@
                 variant="outlined"
                 type="date"
                 label="Einddatum"
+                :min="fullSchemeStartDate"
               ></v-text-field>
             </div>
             <div class="d-flex">
@@ -214,17 +210,13 @@ import {
   GarbageOverviewEntry,
   GarbageOverviewTable,
 } from "@/types/GarbageOverviewTable";
-import {
-  Result,
-  ActionQuery,
-  GarbageQuery,
-  BuildingQuery,
-} from "@selab-2/groep-1-query";
+import { Result, GarbageQuery, BuildingQuery } from "@selab-2/groep-1-query";
 import { useRoute, useRouter } from "vue-router";
+
+const actionDescription = ref<string>("");
 
 const router = useRouter();
 
-const actions = ref<Result<ActionQuery>[]>([]);
 const frequenties = ["enkel", "wekelijks", "tweewekelijks", "maandelijks"];
 const fullSchemeStartDate = ref<string>(
   new Date().toISOString().substring(0, 10),
@@ -232,10 +224,6 @@ const fullSchemeStartDate = ref<string>(
 const fullSchemeEndDate = ref<string>(oneWeekLater());
 const currentBuilding = ref<Result<BuildingQuery>>();
 onMounted(() => {
-  tryOrAlertAsync(async () => {
-    actions.value = await new ActionQuery().getAll();
-  });
-
   tryOrAlertAsync(async () => {
     currentBuilding.value = await new BuildingQuery().getOne(buildingId);
   });
@@ -257,7 +245,6 @@ const frequencyDict: Record<string, number> = {
 
 const route = useRoute();
 const buildingId: number = Number(route.params.id);
-const action = ref<Result<ActionQuery>>();
 const startDate = ref<string>(new Date().toISOString().substring(0, 10));
 const endDate = ref<string>(new Date().toISOString().substring(0, 10));
 const time = ref<string>("12:00");
@@ -276,7 +263,7 @@ function add() {
   for (const d = start; d <= end; d.setDate(d.getDate() + frequencyCount)) {
     detailedDays.value.push({
       date: new Date(d),
-      action: action.value!,
+      action: actionDescription.value!,
       time: time.value,
     });
   }
@@ -290,19 +277,21 @@ function formatDate(d: Date | undefined): string {
 }
 
 async function submit() {
-  for (let garbageDetail of detailedDays.value) {
-    await tryOrAlertAsync(async () => {
-      const dtDate = new Date(
-        formatDate(garbageDetail?.date) + " " + garbageDetail?.time + ":00",
-      );
+  await Promise.all(
+    detailedDays.value.map(async (garbageDetail) => {
+      await tryOrAlertAsync(async () => {
+        const dtDate = new Date(
+          formatDate(garbageDetail?.date) + " " + garbageDetail?.time + ":00",
+        );
 
-      await new GarbageQuery().createOne({
-        action_id: action.value?.id,
-        building_id: buildingId,
-        pickup_time: dtDate,
+        await new GarbageQuery().createOne({
+          description: actionDescription.value,
+          building_id: buildingId,
+          pickup_time: dtDate,
+        });
       });
-    });
-  }
+    }),
+  );
 
   clearAll();
 }
@@ -321,7 +310,7 @@ function updateFullScheme() {
 
     for (const garbage of scheduledGarbage) {
       fullScheme.value.push({
-        action: garbage.action,
+        action: garbage.description,
         date: new Date(garbage.pickup_time),
         time: new Date(garbage.pickup_time).toTimeString().substring(0, 5),
         preview: false,

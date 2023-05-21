@@ -1,8 +1,9 @@
-import { Image, Prisma } from "@selab-2/groep-1-orm";
-import { Query } from "./query";
+import { Prisma, File, Building } from "@selab-2/groep-1-orm";
+import { Query, Result } from "./query";
 import { includeUserWithoutAddress } from "./include";
 import { QueryError } from "./query_error";
 import { ProgressQuery } from "./progress";
+import { FileQuery } from "./file";
 
 export type BuildingQueryParameters = {
     take: number;
@@ -54,12 +55,6 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
     };
 }>;
 
-type BuildingAnalytics = {
-    name: string;
-    expected: number | null;
-    total: number;
-};
-
 export class BuildingQuery extends Query<
     BuildingQueryParameters,
     Element,
@@ -72,16 +67,21 @@ export class BuildingQuery extends Query<
      * @throws QueryError
      */
     async createImage(
-        id: number,
-        element: Partial<Image>,
+        building: { id: number },
+        elementId: string,
     ): Promise<BuildingAllInfo> {
-        if (Number.isNaN(id)) {
+        const file = await new FileQuery().createOne(elementId);
+
+        if (Number.isNaN(building.id)) {
             throw new QueryError(400, "Bad Request");
         }
 
-        const imageEndpoint = this.server + this.endpoint + "/" + id + "/image";
+        const imageEndpoint =
+            this.server + this.endpoint + "/" + building.id + "/image";
 
-        return this.fetchJSON(imageEndpoint, "POST", element);
+        return this.fetchJSON(imageEndpoint, "POST", {
+            image: file.id,
+        });
     }
 
     /**
@@ -90,59 +90,38 @@ export class BuildingQuery extends Query<
      */
     async deleteImage(
         id: number,
-        image_id: number,
+        file: { id: number },
         hard = false,
-    ): Promise<void> {
-        if (Number.isNaN(id) || Number.isNaN(image_id)) {
-            throw new QueryError(400, "Bad Request");
-        }
-
+    ): Promise<BuildingAllInfo> {
         const imageEndpoint =
-            this.server + this.endpoint + "/" + id + "/image/" + image_id;
+            this.server + this.endpoint + "/" + id + "/image/" + file.id;
 
         return this.fetchJSON(imageEndpoint, "DELETE", { hardDelete: hard });
     }
 
-    async getAnalytics(
-        startdate: Date,
-        enddate: Date,
-    ): Promise<Array<BuildingAnalytics>> {
-        const analytics = [];
-        const buildings: Array<BuildingAllInfo> = await this.fetchJSON(
-            this.server + this.endpoint,
-        );
+    async totalTimeSpent(
+        building: number,
+        startDate: Date,
+        endDate: Date,
+    ): Promise<number> {
+        let time = 0;
 
-        for (const building of buildings) {
-            // bereken de totaal gespendeerde tijd
-            let time = 0;
+        const progressItems = await new ProgressQuery().getAll({
+            arrived_after: startDate,
+            left_before: endDate,
+            building,
+        });
 
-            const parameters = {
-                arrived_after: startdate,
-                left_before: enddate,
-                building: building.id,
-            };
-
-            const progresses = await new ProgressQuery().getAll(parameters);
-            for (const progress of progresses) {
-                if (progress.arrival !== null && progress.departure != null) {
-                    const departure = new Date(progress.departure);
-                    const arrival = new Date(progress.arrival);
-                    const hours = departure.getHours() - arrival.getHours();
-                    const minutes =
-                        departure.getMinutes() - arrival.getMinutes();
-
-                    time += 60 * hours + minutes;
-                }
+        for (const progress of progressItems) {
+            if (progress.arrival !== null && progress.departure != null) {
+                const departure = new Date(progress.departure);
+                const arrival = new Date(progress.arrival);
+                time +=
+                    (departure.getTime() - arrival.getTime()) /
+                    (1000 * 60 * 60);
             }
-
-            const analysis = {
-                name: building.name,
-                expected: building.expected_time,
-                total: time,
-            };
-            analytics.push(analysis);
         }
 
-        return analytics;
+        return time;
     }
 }

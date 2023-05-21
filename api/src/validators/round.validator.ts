@@ -12,6 +12,7 @@ export class RoundValidator extends Validator {
                 description: Joi.string().trim(),
                 sort: Joi.string().trim().min(1),
                 ord: Joi.string().trim().min(1),
+                deleted: Joi.bool(),
             }),
         });
     }

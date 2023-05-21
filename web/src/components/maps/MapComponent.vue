@@ -16,6 +16,7 @@
           {{ index + 1 }}. {{ building.name }}
         </l-tooltip>
       </l-marker>
+      <l-polyline :latLngs="polylines" :options="{ color: 'red' }"></l-polyline>
     </l-map>
   </CardLayout>
 </template>
@@ -25,17 +26,25 @@ import "leaflet/dist/leaflet.css";
 import "leaflet/dist/leaflet.js";
 import CardLayout from "@/layouts/CardLayout.vue";
 import { BuildingQuery, Result } from "@selab-2/groep-1-query";
-import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
-import { ref } from "vue";
+import {
+  LMap,
+  LTileLayer,
+  LMarker,
+  LTooltip,
+  LPolyline,
+} from "@vue-leaflet/vue-leaflet";
+import { ref, computed } from "vue";
 
 const zoom = ref(14);
 
-defineProps<{
+const props = defineProps<{
   buildings: Array<Result<BuildingQuery>>;
 }>();
 
 function loc(building: Result<BuildingQuery>): [number, number] {
-  if (!building) return [0, 0];
+  if (!building) return [51.0229823, 3.7103475];
   return [building.address.latitude, building.address.longitude];
 }
+
+const polylines = computed(() => props.buildings.map(loc));
 </script>
