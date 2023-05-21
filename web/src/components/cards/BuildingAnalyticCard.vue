@@ -1,113 +1,113 @@
 <template>
-  <BorderCard prepend-icon="mdi-chart-box-outline">
-    <template v-slot:title>Statistieken</template>
-    <template v-slot:append>
-      <DateRange
-        v-model:end-date="fullSchemeEndDate"
-        v-model:start-date="fullSchemeStartDate"
-        @update:end-date="updateAnalytics()"
-        @update:start-date="updateAnalytics()"
-    /></template>
-    <v-list v-if="thisBuildingAnalytics" class="mx-8">
-      <v-list-item
-        prepend-icon="mdi-briefcase-clock"
-        :title="`Er is in dit gebouw ${formatTime(
-          thisBuildingAnalytics?.total,
-        )} gewerkt.`"
-        :subtitle="`Er werd verwacht om ${formatTime(
-          expectedTime,
-        )} in dit gebouw te werken.`"
-      ></v-list-item>
-    </v-list>
-    <div v-else class="centre text-center pa-5">
-      <v-icon icon="mdi-alert-circle" size="x-large" />
-      <h3>Geen statistieken voor de gevraagde periode.</h3>
+  <BorderCard class="pa-5">
+    <div class="d-flex mb-2">
+      <div>
+        <h3>Prestaties</h3>
+        <p>Bekijk het aantal gepresteerde uren per maand.</p>
+      </div>
+      <div class="flex-grow-1"></div>
+      <input
+        type="number"
+        min="2020"
+        max="2120"
+        step="1"
+        v-model="statsYear"
+        style="width: 60px"
+        v-on:change="retrieve"
+      />
     </div>
+
+    <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
   </BorderCard>
 </template>
 
 <script setup lang="ts">
 import BorderCard from "@/layouts/CardLayout.vue";
-import DateRange from "@/components/filter/DateRange.vue";
-import { Ref, ref, onMounted } from "vue";
-import { BuildingAnalytics } from "@selab-2/groep-1-query/dist/building";
+import { Ref, ref, onMounted, computed } from "vue";
 import { Result, BuildingQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
+import { Bar } from "vue-chartjs";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  ChartOptions,
+} from "chart.js";
+
+// This is required to use ChartJS.
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+);
 
 const props = defineProps({
   id: { type: Number, required: true },
 });
 
-const expectedTime: Ref<number> = ref(0);
+const totalTimeSpent: Ref<number[]> = ref([...Array(12)].map(() => 0));
+const building = ref<Result<BuildingQuery>>();
+const statsYear = ref(2023);
+const months = [...Array(12)]
+  .map((e, i) => new Date().setMonth(i))
+  .map((e) => new Date(e).toLocaleDateString("default", { month: "long" }));
+
+// The data of the charts is dependent on `totalTimeSpent`, so it must be a computed value.
+const chartData = computed(() => {
+  return {
+    labels: months,
+    datasets: [
+      {
+        data: totalTimeSpent.value,
+        backgroundColor: ["rgba(54, 162, 235, 0.2)"],
+        borderColor: ["rgb(54, 162, 235)"],
+        borderWidth: 1,
+      },
+    ],
+  };
+});
+
+// Configuration of the chart.
+const chartOptions: ChartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      display: false,
+    },
+  },
+};
 
 onMounted(() => {
-  updateAnalytics();
-
   tryOrAlertAsync(async () => {
-    thisBuilding.value = await new BuildingQuery().getOne(props.id);
+    building.value = await new BuildingQuery().getOne(props.id);
   });
 });
 
-const thisBuildingAnalytics = ref<BuildingAnalytics>();
-const thisBuilding = ref<Result<BuildingQuery>>();
+async function retrieve() {
+  totalTimeSpent.value = await Promise.all(
+    [...Array(12)].map(async (e, i) => {
+      const start = new Date();
+      start.setUTCFullYear(statsYear.value, Number(i), 1);
+      start.setHours(0, 0, 0);
 
-const fullSchemeStartDate = ref<Date>(new Date());
-const fullSchemeEndDate = ref<Date>(oneWeekLater());
-function oneWeekLater() {
-  const currentDate = new Date();
-  currentDate.setDate(currentDate.getDate() + 7);
-  return currentDate;
-}
+      const end = new Date(start);
+      end.setMonth(Number(i) + 1);
 
-function formatTime(time: number | undefined) {
-  if (time) {
-    const hours: string = Math.floor(time / 60)
-      .toString()
-      .padStart(2, "0");
-    const minutes: string = (Math.floor(time) % 60).toString().padStart(2, "0");
-
-    return `${hours} uur en ${minutes} minuten`;
-  } else {
-    return "00:00";
-  }
-}
-
-function calculateExpectedTime(start: Date, end: Date, expectedTime: number) {
-  const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-  const diffDays = Math.round(
-    Math.abs((start.getTime() - end.getTime()) / oneDay),
-  );
-
-  // Calculate proportion of the month (30 days)
-  const proportionOfMonth = diffDays / 30;
-
-  // Calculate expected time for the period.
-  const expectedTimeForPeriod = proportionOfMonth * expectedTime;
-
-  return Math.round(expectedTimeForPeriod);
-}
-
-function updateAnalytics() {
-  fullSchemeStartDate.value.setHours(0, 0, 0, 0);
-  fullSchemeEndDate.value.setHours(23, 59, 59, 999);
-  tryOrAlertAsync(async () => {
-    thisBuildingAnalytics.value = undefined;
-    const analytics: BuildingAnalytics[] =
-      await new BuildingQuery().getAnalytics(
-        new Date(fullSchemeStartDate.value),
-        new Date(fullSchemeEndDate.value),
+      return await new BuildingQuery().totalTimeSpent(
+        props.id ?? 0,
+        start,
+        end,
       );
-    for (const analytic of analytics) {
-      console.log(analytic);
-      if (analytic.name === thisBuilding.value?.name) {
-        thisBuildingAnalytics.value = analytic;
-        expectedTime.value = calculateExpectedTime(
-          fullSchemeStartDate.value,
-          fullSchemeEndDate.value,
-          thisBuildingAnalytics.value?.expected || 0,
-        );
-      }
-    }
-  });
+    }),
+  );
 }
+
+retrieve();
 </script>
