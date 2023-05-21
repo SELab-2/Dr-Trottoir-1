@@ -8,7 +8,7 @@ Hierbij wordt ook enkel de planning getoond die toegekend is aan de ingelogde st
 aangezien planningen van andere studenten voor hem niet van toepassing zijn.
 
 De superstudent en admin kunnen deze pagina niet zien.
-Zij kunnen studenten opvolgen via de [ronde-opvolgingspagina](../followup/ronde_overzicht.md).
+Zij kunnen studenten opvolgen via de [ronde-opvolgingspagina](../followup/ronde_opvolging.md).
 
 
 ## Workflow
@@ -16,7 +16,7 @@ Bij het openen van de pagina worden alle rondes getoond die de student de huidig
 Hierbij wordt belangrijke informatie ook getoond zodat de student hiervoor niet telkens een andere pagina moet bezoeken.
 
 1. Via de knoppen bovenaan kan de student zijn planning bekijken van vorige en volgende weken.
-2. Als een student op deze balk klikt, wordt hij doorverwezen naar de [voortgangspagina](../detail/ronde_scheule.md) van de ronde,
+2. Als een student op deze balk klikt, wordt hij doorverwezen naar de [voortgangspagina](../detail/ronde_schedule.md) van de ronde,
    waar hij dan de ronde kan starten.
 3. Als een student bezig is met een ronde of deze al voltooid heeft, worden extra iconen getoond op de pagina.
    Indien de ronde nog niet klaar is, kan de student zien hoeveel gebouwen hij wel al afgerond heeft.
