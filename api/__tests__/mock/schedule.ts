@@ -58,14 +58,14 @@ export async function initialiseProgressImage() {
     const pi1 = {
         type: ProgressImageType.ARRIVAL,
         description: "Description of progress image 1",
-        image_id: image.id,
+        image_id: 3,
         progress_id: 1,
     };
 
     const pi2 = {
         type: ProgressImageType.GARBAGE,
         description: "Description of progress image 2",
-        image_id: image.id,
+        image_id: 3,
         progress_id: 2,
     };
 

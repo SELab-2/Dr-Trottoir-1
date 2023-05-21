@@ -1,25 +1,26 @@
 <template>
-  <v-btn
-    class="text-none mr-2"
+  <SimpleButton
+    class="mr-2"
     prepend-icon="mdi-phone"
     @click="clickPhone(phone)"
     color="primary"
     rounded
   >
     {{ phone }}
-  </v-btn>
-  <v-btn
-    class="text-none"
+  </SimpleButton>
+  <SimpleButton
     prepend-icon="mdi-mail"
     @click="clickEmail(email)"
     color="primary"
     rounded
   >
     E-mail
-  </v-btn>
+  </SimpleButton>
 </template>
 
 <script setup lang="ts">
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
+
 defineProps({
   phone: String,
   email: String,

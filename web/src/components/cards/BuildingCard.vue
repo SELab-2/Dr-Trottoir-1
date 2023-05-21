@@ -1,98 +1,116 @@
 <template>
   <BorderCard
-    class="mx-1 mb-3"
+    class="mb-4"
+    v-if="props.building?.id"
     v-on="{
-      click: () =>
-        router.push({ name: 'building_id', params: { id: props.building.id } }),
+      click: () => {
+        router.push({ name: 'building_id', params: { id: props.building!.id } })
+      }
     }"
   >
-    <v-row class="flex-nowrap">
-      <v-col cols="2" class="flex-grow-0 flex-shrink-0">
-        <!-- The image -->
-        <v-img
-          cover
-          src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
-          class="prepend-img"
-        />
-      </v-col>
-      <v-col
-        class="flex-grow-1 flex-shrink-0"
-        style="min-width: 100px; max-width: 100%"
-      >
-        <!-- The content -->
-        <v-card variant="flat" size="compact">
-          <!-- Title -->
-          <template v-slot:title>
-            {{ building!.name }}
-            <v-icon end v-if="comments"> mdi-comment-alert-outline </v-icon>
-          </template>
-          <!-- Subtitle -->
-          <template v-slot:subtitle>
-            <Avatar
-              :name="full_syndicus_name()"
-              size="x-small"
-              :key="full_syndicus_name()"
-            />
-            {{ full_syndicus_name() }} <br />
-            <v-chip label color="brown" class="mt-4">
-              <v-icon icon="mdi-office-building-marker-outline"></v-icon>
-              <p class="ml-2">{{ full_address() }}</p>
-            </v-chip>
-          </template>
+    <div class="d-flex align-center">
+      <img
+        v-if="building.images.length > 0"
+        :src="
+          ImgProxy.env
+            .resize({ width: 200, height: 200 })
+            .maxBytes(50 * 1024)
+            .url(building.images[0].image)
+        "
+        alt="Banner"
+        class="prepend-img"
+      />
 
-          <template v-slot:append>
-            <!-- Date -->
-            <v-chip label color="blue" class="ml-3 align-top">
-              <v-icon icon="mdi-calendar-clock"></v-icon>
-              <p class="ml-2">
-                {{ filter_data.start_day.toLocaleDateString("nl") }}
-              </p>
-            </v-chip>
-            <!-- Date expansion button-->
-            <v-btn
-              @click.stop="expanded = !expanded"
-              :icon="expanded ? 'mdi-menu-up' : 'mdi-menu-down'"
-              class="dropdown-button"
-              variant="text"
-              v-if="can_expand"
-            />
-          </template>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-expand-transition v-on:click.stop>
-      <div v-show="progresses.length && expanded">
-        <DividerLayout />
-        <div class="w-100 px-4 py-2" v-if="progresses.length">
+      <div class="pa-5">
+        <h3>{{ building.name }}</h3>
+
+        <div class="d-flex align-center mt-1" style="gap: 12px">
+          <Avatar
+            :name="syndicusName ?? undefined"
+            size="x-small"
+            :key="syndicusName ?? undefined"
+          />
+          <p>{{ syndicusName ?? "Geen syndicus aangesteld" }}</p>
+        </div>
+
+        <div class="d-flex mt-3" style="gap: 12px">
+          <v-chip label color="brown">
+            <v-icon icon="mdi-office-building-marker-outline"></v-icon>
+            <p class="ml-2">{{ fullAddress }}</p>
+          </v-chip>
+
           <v-chip
-            v-for="progress of progresses"
-            :key="progress.id"
             label
-            class="w-100"
-            variant="text"
-            @click="
-              router.push({
-                name: 'round_detail',
-                params: {
-                  id: progress.schedule?.round_id,
-                  schedule: progress.schedule_id,
-                },
-              })
-            "
+            color="red"
+            v-if="progressItems.filter((e) => e.report !== '').length > 0"
           >
-            <v-icon color="blue" icon="mdi-bicycle-cargo"></v-icon>
-            <p class="ml-2">
-              {{ progress.schedule?.round.name }} op
+            <v-icon icon="mdi-comment-alert-outline"></v-icon>
+            <p class="ml-2">Opmerkingen</p>
+          </v-chip>
+        </div>
+      </div>
+
+      <div class="d-flex" style="gap: 12px"></div>
+
+      <div class="flex-grow-1"></div>
+
+      <v-btn
+        @click.stop="expanded = !expanded"
+        :icon="expanded ? 'mdi-menu-up' : 'mdi-menu-down'"
+        variant="text"
+        v-if="progressItems.length > 0"
+      />
+    </div>
+
+    <v-expand-transition v-on:click.stop>
+      <div v-show="expanded">
+        <divider-layout></divider-layout>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          "
+          class="pa-3 font-weight-medium"
+        >
+          <p>Datum</p>
+          <p>Ronde</p>
+          <p>Opmerkingen</p>
+        </div>
+
+        <div
+          v-for="progress of progressItems"
+          :key="progress.id"
+          @click="
+            router.push({
+              name: 'round_detail',
+              params: {
+                id: progress.schedule?.round_id,
+                schedule: progress.schedule_id,
+              },
+            })
+          "
+        >
+          <divider-layout></divider-layout>
+
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+            "
+            class="pa-3"
+          >
+            <p>
               {{
-                new Date(progress.arrival ?? new Date()).toLocaleDateString(
-                  "nl",
-                )
+                new Date(progress.arrival ?? new Date()).toLocaleDateString()
               }}
             </p>
-            <v-icon end color="black" v-if="progress.report">
-              mdi-comment-alert-outline
-            </v-icon>
-          </v-chip>
+            <p>{{ progress.schedule?.round.name }}</p>
+            <p>
+              {{ progress.report.slice(0, 20) }}
+              {{ progress.report.length > 20 ? ".." : "" }}
+            </p>
+          </div>
         </div>
       </div>
     </v-expand-transition>
@@ -109,32 +127,38 @@ import Filterdata from "@/components/filter/FilterData";
 import { Result, BuildingQuery, ProgressQuery } from "@selab-2/groep-1-query";
 import { PropType } from "vue";
 import { tryOrAlertAsync } from "@/try";
-
-const router = useRouter();
+import { ImgProxy } from "@/imgproxy";
 
 const props = defineProps({
   building: { type: Object as PropType<Result<BuildingQuery>>, required: true },
   filter_data: { type: Object as PropType<Filterdata>, required: true },
 });
 
-function full_syndicus_name() {
-  const user = props.building.syndicus?.user;
-  return user?.first_name + " " + user?.last_name;
-}
-
-function full_address() {
-  const addressprops = props.building.address;
-  return (
-    addressprops.street + " " + addressprops.number + " " + addressprops.city
-  );
-}
-
+const router = useRouter();
 const expanded = ref<Boolean>(false);
-const comments = ref<Boolean>(false);
+const progressItems: Ref<Array<Result<ProgressQuery>>> = ref([]);
 
-let progresses: Ref<Array<Result<ProgressQuery>>> = ref([]);
+// We compute the name of the syndicus once.
+const syndicusName: string | null = (() => {
+  const syndicus = props.building?.syndicus.user;
 
-const can_expand: Ref<boolean> = ref(false);
+  if (syndicus === undefined) {
+    return null;
+  }
+
+  return `${syndicus.first_name} ${syndicus.last_name}`;
+})();
+
+// We compute the full address once.
+const fullAddress: string | null = (() => {
+  const address = props.building?.address;
+
+  if (!address) {
+    return null;
+  }
+
+  return `${address.street} ${address.number}, ${address.zip_code} ${address.city}`;
+})();
 
 function getStartOfDay(day: Date) {
   return new Date(day.setHours(0, 0, 0, 0));
@@ -147,29 +171,31 @@ function getEndOfDay(day: Date) {
 }
 
 tryOrAlertAsync(async () => {
-  const result = await new ProgressQuery().getAll({
+  // Retrieve items within given time range.
+  const start = props.filter_data?.start_day;
+  const end = props.filter_data?.end_day;
+
+  let result = await new ProgressQuery().getAll({
     building: props.building?.id,
-    arrived_after: getStartOfDay(props.filter_data.start_day),
-    arrived_before: getEndOfDay(props.filter_data.end_day),
+    arrived_after: start ? getStartOfDay(start) : undefined,
+    arrived_before: end ? getEndOfDay(end) : undefined,
   });
 
-  progresses.value = result.filter((progress) => {
-    const hasComments: boolean = !!progress.report;
-    if (hasComments) {
-      comments.value = hasComments;
-    }
-    if (props.filter_data.filters[0] === "Opmerkingen") {
-      return hasComments;
-    }
-    return true;
-  });
-  can_expand.value = progresses.value.length > 0;
+  // Filter based on comments if required.
+  if (props.filter_data?.filters.includes("Opmerkingen")) {
+    result = result.filter((e) => e.report !== "");
+  }
+
+  // Set results
+  progressItems.value = result;
 });
 </script>
 
 <style scoped lang="scss">
 .prepend-img {
-  height: 100%;
+  height: 150px;
+  object-fit: cover;
+  width: 200px;
 }
 
 .dropdown-button {

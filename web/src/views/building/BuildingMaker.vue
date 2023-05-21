@@ -37,15 +37,16 @@
         required
         type="number"
         prepend-inner-icon="mdi-clock"
-        v-model="expectedTimeInHours"
+        v-model="building.expectedTimeInHours"
         label="Verwachte werktijd in uur"
       ></v-text-field>
 
       <v-file-input
         id="manual-id"
+        v-model="uploadedManual"
         prepend-icon=""
         prepend-inner-icon="mdi-file"
-        label="Handleiding"
+        :label="edit ? `${manualName}` : 'Handleiding'"
       ></v-file-input>
     </BorderCard>
 
@@ -182,6 +183,7 @@
       <template v-slot:prepend><v-icon icon="mdi-image" /></template>
       <template v-slot:title>Foto's</template>
       <v-file-input
+        id="soloImage"
         class="mt-1 mx-5"
         :multiple="false"
         accept="image/jpeg"
@@ -189,7 +191,7 @@
         prepend-inner-icon="mdi-file"
         label="Nieuwe afbeelding"
       ></v-file-input
-      ><v-btn type="submit" color="success" class="ml-5" @click="addFileId()"
+      ><v-btn type="submit" color="success" class="ml-5" @click="addSoloImage()"
         >Voeg afbeelding toe</v-btn
       >
       <v-list>
@@ -201,7 +203,11 @@
                 style="width: 75px; height: 75px; object-fit: cover"
             /></template>
             <template v-slot:append
-              ><v-icon class="ml-2" icon="mdi-delete"></v-icon
+              ><v-icon
+                class="ml-2"
+                icon="mdi-delete"
+                @click="removeSoloImage(entry.image_id)"
+              ></v-icon
             ></template> </BorderCard
         ></v-list-item>
       </v-list>
@@ -246,7 +252,6 @@ const possibleUsers = await new UserQuery().getAll({
   super_student: false,
 });
 
-const expectedTimeInHours = ref<number>(0);
 const syndici = await new SyndicusQuery().getAll();
 
 const address = ref({
@@ -271,6 +276,7 @@ const building = ref({
   },
   address_id: 0,
   manual_id: 1,
+  expectedTimeInHours: 0,
 });
 
 const props = defineProps({
@@ -288,6 +294,9 @@ const images = ref<
 
 const fileIds = ref<string[]>(["Hoofdafbeelding"]);
 
+const uploadedManual = ref();
+const manualName = ref<string>();
+
 function addFileId() {
   fileIds.value.push("Afbeelding " + fileIds.value.length);
 }
@@ -298,21 +307,23 @@ function removeFileId() {
   }
 }
 
+const fullBuilding = ref<Result<BuildingQuery>>();
+
 const buildingId = ref<number>(Number(props.id));
 const edit: boolean = props.id !== "";
 
 if (edit) {
-  setFields();
+  const requestedBuilding: Result<BuildingQuery> =
+    await new BuildingQuery().getOne(buildingId.value);
+  setFields(requestedBuilding);
 }
 
-async function setFields() {
+async function setFields(requestedBuilding: Result<BuildingQuery>) {
   tryOrAlertAsync(async () => {
-    const requestedBuilding: Result<BuildingQuery> =
-      await new BuildingQuery().getOne(buildingId.value);
-
     const thisSyndicus = requestedBuilding.syndicus;
     const thisAddress = requestedBuilding.address;
 
+    fullBuilding.value = requestedBuilding;
     building.value.name = requestedBuilding.name;
     building.value.ivago_id = requestedBuilding.ivago_id;
     building.value.syndicus = {
@@ -323,9 +334,10 @@ async function setFields() {
     building.value.description = requestedBuilding.description
       ? requestedBuilding.description
       : "";
+    building.value.manual_id = requestedBuilding.manual?.id ?? 1;
 
     address_id.value = thisAddress.id;
-    expectedTimeInHours.value = requestedBuilding.expected_time
+    building.value.expectedTimeInHours = requestedBuilding.expected_time
       ? Math.floor(requestedBuilding.expected_time / 60)
       : 0;
 
@@ -338,7 +350,26 @@ async function setFields() {
     latitude.value = requestedBuilding.address.latitude;
     longitude.value = requestedBuilding.address.longitude;
     images.value = requestedBuilding.images;
+    manualName.value = requestedBuilding.manual?.original_name;
   });
+}
+
+async function addSoloImage() {
+  if (fullBuilding.value) {
+    const newBuilding: Result<BuildingQuery> =
+      await new BuildingQuery().createImage(fullBuilding.value, "soloImage");
+    setFields(newBuilding);
+  }
+}
+
+async function removeSoloImage(id: number) {
+  const removeBuilding = await new BuildingQuery().deleteImage(
+    buildingId.value,
+    { id: id },
+    true,
+  );
+
+  setFields(removeBuilding);
 }
 
 const submit = () => {
@@ -346,10 +377,13 @@ const submit = () => {
     const buildingUnwrapped = building.value;
 
     const formattedAddress = {
-      street: address.value.street,
-      number: Number(address.value.number),
-      city: address.value.city,
-      zip_code: Number(address.value.zip_code),
+      ...{
+        street: address.value.street,
+        number: Number(address.value.number),
+        city: address.value.city,
+        zip_code: Number(address.value.zip_code),
+      },
+      ...{ latitude: latitude.value, longitude: longitude.value },
     };
 
     if (!edit) {
@@ -360,10 +394,7 @@ const submit = () => {
       );
 
       // Create address
-      const newAddress = await new AddressQuery().createOne({
-        ...formattedAddress,
-        ...{ latitude: latitude.value, longitude: longitude.value },
-      });
+      const newAddress = await new AddressQuery().createOne(formattedAddress);
 
       if (isNewSyndicus) {
         let { id: syndicusId } = await new SyndicusQuery().createOne({
@@ -379,7 +410,7 @@ const submit = () => {
         address_id: newAddress.id,
         description: buildingUnwrapped.description,
         ivago_id: buildingUnwrapped.ivago_id,
-        expected_time: expectedTimeInHours.value * 60,
+        expected_time: buildingUnwrapped.expectedTimeInHours * 60,
         syndicus_id: buildingUnwrapped.syndicus.id,
         manual_id: file.id,
       });
@@ -393,12 +424,16 @@ const submit = () => {
       }
       await router.push(`/gebouw/${newBuilding.id}`);
     } else {
+      if (uploadedManual.value) {
+        const file = await new FileQuery().createOne("manual-id");
+        building.value.manual_id = file.id;
+      }
+
       // Create address
       console.log(formattedAddress);
       const newAddress = await new AddressQuery().updateOne({
         ...{ id: address_id.value },
         ...formattedAddress,
-        ...{ latitude: latitude.value, longitude: longitude.value },
       });
       console.log(newAddress);
 
@@ -408,7 +443,8 @@ const submit = () => {
         address_id: newAddress.id,
         description: buildingUnwrapped.description,
         ivago_id: buildingUnwrapped.ivago_id,
-        expected_time: expectedTimeInHours.value * 60,
+        expected_time: buildingUnwrapped.expectedTimeInHours * 60,
+        manual_id: building.value.manual_id,
       });
       await router.push(`/gebouw/${newBuilding.id}`);
     }

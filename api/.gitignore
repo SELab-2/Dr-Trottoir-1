@@ -3,3 +3,5 @@ node_modules
 .env
 # Keep the secrets out of version control
 **/.npmrc
+
+__tests__/file_server

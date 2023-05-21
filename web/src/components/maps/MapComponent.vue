@@ -42,7 +42,7 @@ const props = defineProps<{
 }>();
 
 function loc(building: Result<BuildingQuery>): [number, number] {
-  if (!building) return [0, 0];
+  if (!building) return [51.0229823, 3.7103475];
   return [building.address.latitude, building.address.longitude];
 }
 
