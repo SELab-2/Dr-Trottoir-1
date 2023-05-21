@@ -1,4 +1,4 @@
-# Overzicht rondes
+# Opvolging rondes
 
 In het overzicht van de rondes kan een super student of een administrator de opvolging van de rondes bekijken.
 

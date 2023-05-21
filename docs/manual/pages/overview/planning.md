@@ -8,7 +8,7 @@ Hierbij wordt ook enkel de planning getoond die toegekend is aan de ingelogde st
 aangezien planningen van andere studenten voor hem niet van toepassing zijn.
 
 De superstudent en admin kunnen deze pagina niet zien.
-Zij kunnen studenten opvolgen via de [ronde-opvolgingspagina](../followup/ronde_overzicht.md).
+Zij kunnen studenten opvolgen via de [ronde-opvolgingspagina](../followup/round_followup.md).
 
 
 ## Workflow
