@@ -1,21 +1,24 @@
-# Account pagina
+# Accountpagina
 
-Een [student](../../users/student.md), [administrators](../../users/admin.md), [superstudenten](../../users/superstudent.md) en [syndici](../../users/syndicus.md) kan zijn persoonlijke informatie op deze pagina terugvinden. (email,telefoonnummer,adres)
+Een [student](../../users/student.md), [administrator](../../users/admin.md), [superstudent](../../users/superstudent.md)
+of [syndicus](../../users/syndicus.md) kan zijn persoonlijke informatie op deze pagina terugvinden, zoals email, telefoonnummer, adres...
 
 ## Hoe bereiken
 
-De account pagina kan gevonden worden door elke gebruiker door op zijn eigen naam te klikken links boven.
+De accountpagina kan gevonden worden door elke gebruiker door linksboven op zijn eigen naam te klikken.
 
 ## Workflow
 
-Bij het openen van die pagina wordt alle informatie getoond over de gebruiker. Als men deze wil wijzigen kan men op de knop [Bewerk account](update_account.md) clicken.
+Bij het openen van die pagina wordt alle informatie getoond over de gebruiker.
+Als men deze wil wijzigen, kan men op de knop [Bewerk account](update_account.md) klikken.
 
 ## Gebruikers
 
 ### Studenten (mobiel)
 
-Voor [studenten](../../users/student.md) zal de pagina meestal op een kleiner scherm gebruikt worden. Hiervoor voorzien we in de plaats van de grote 'Bewerk Account' knop een klein knop met een potlood in.
+Voor [studenten](../../users/student.md) zal de pagina meestal op een kleiner scherm gebruikt worden.
+Hiervoor voorzien we in plaats van de grote `Bewerk Account` knop een kleinere knop met een potlood in.
 
 ### Admin
 
-De [administrators](../../users/admin.md) gaat ook zijn verschillende rollen kunnen zien.
+De [administrator](../../users/admin.md) gaat ook zijn verschillende rollen kunnen zien.
