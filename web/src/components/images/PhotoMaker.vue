@@ -10,7 +10,6 @@
 
     <div class="mx-4 my-2">
       <v-file-input
-        id="select"
         v-if="isPhoto"
         single
         v-model="photo.image"

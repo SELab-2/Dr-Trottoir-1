@@ -28,7 +28,7 @@ describe('student tests', () => {
       // add images
       // add arrival image
       cy.get('#addimage').click()
-      cy.get("#select").selectFile('src/assets/images/drtroittoir_logo.png')
+      cy.get("#upload-progress").selectFile('src/assets/images/drtroittoir_logo.png')
       //the standard type is arrival, so doesn't need change here
       cy.get('#comment').type('Arrival picture.')
       cy.get('#save').click()

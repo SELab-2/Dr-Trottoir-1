@@ -66,7 +66,6 @@
       "
     />
     <UserAnalyticCard
-      id="useranalytics"
       v-if="
         !edit &&
         (useAuthStore().auth?.admin || useAuthStore().auth?.super_student) &&
