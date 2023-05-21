@@ -33,6 +33,13 @@ Ga naar `Administratie > Gebruikers` in de [navigatiebalk](../navbar.md#superstu
 
 ### Gebouwen
 Ga naar `Administratie > Gebouwen` in de [navigatiebalk](../navbar.md#superstudent-syndicus-admin).
+- Voor meer detail over de gebouwenpagina, klik [hier](../pages/administration/gebouwen.md).
+- Voor een beschrijving om een gebouw aan te maken, klik [hier](../pages/administration/gebouwen.md).
+<!-- Deze routing moet nog aangepast worden -->
+
 
 ### Rondes
 Ga naar `Administratie > Rondes` in de [navigatiebalk](../navbar.md#superstudent-syndicus-admin).
+- Voor meer detail over de rondespagina, klik [hier](../pages/administration/rondes.md).
+- Voor een beschrijving om een ronde aan te maken, klik [hier](../pages/administration/rondes.md).
+<!-- Deze routing moet nog aangepast worden -->
