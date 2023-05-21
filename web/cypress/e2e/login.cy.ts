@@ -1,17 +1,9 @@
 describe('login tests', () => {
   beforeEach(() => {
-    // in these test, saved sessions should be cleared
-    // otherwise it always restores the first login
-    //Cypress.session.clearAllSavedSessions()
-    //cy.clearCookies()
-    //cy.clearLocalStorage()
-    //cy.clearAllSessionStorage({log: true})
     cy.visit('/')
   })
 
   it('log in and out succesfull', () =>{
-    //cy.login('administrator@trottoir.be', 'administrator')
-    //cy.visit('/account')
     cy.get('#email').type('administrator@trottoir.be')
     cy.get('#password').type('administrator')
     cy.get('#login').click()

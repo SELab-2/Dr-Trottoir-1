@@ -1,11 +1,9 @@
 describe('admin tests', () => {
   beforeEach(() => {
-    //cy.login('administrator@trottoir.be', 'administrator')
     cy.visit('/')
     cy.get('#email').type('administrator@trottoir.be')
     cy.get('#password').type('administrator')
     cy.get('#login').click()
-    //cy.visit('/ronde/overzicht')
   })
 
   it('add new user', () => {
@@ -175,23 +173,21 @@ describe('admin tests', () => {
     // onder Taken bij het gebouw, of nee toch niet, dus waar kan je dit zien? wss zo bij het aanmaken van een ronde
   })
 
-  it('edit garbage schedule of a building', () => {
-    cy.get('#buildings').click()
-    // it can take a while to load all the schedules
-    cy.wait(10000)
-    // select building
-    cy.contains('test building').click()
-    //edit garbage
-  })
-
   it('delete garbage schedule of a building', () => {
     cy.get('#buildings').click()
     // it can take a while to load all the schedules
     cy.wait(10000)
     // select building
     cy.contains('test building').click()
-    // delete garbage
+    cy.get('#addgarbage').click()
+    cy.contains('Voorlopig schema').click()
+    // remove first task
+    cy.get('#remove').click()
+    //edit garbage
   })
+
+  // editing garbage schedule is just deleting the old one and creating a new one,
+  // so no need to test add and delete again
 
   it('edit building', () => {
     cy.get('#buildings').click()
@@ -214,13 +210,14 @@ describe('admin tests', () => {
       cy.get('#city').clear().type("city")
       cy.get('#zipcode').clear().type("1000")
     })
+    // TODO: edit manual and pictures
     cy.get('#submit').click()
     // save
     // we should be on the info page of the building
     cy.contains('test gebouw')
     cy.contains('Taken')
     cy.contains('Bezoeken')
-    // cy.contains('4321') ivago id not shown
+    // cy.contains('4321')
     // cy.contains('name of syndicus')
     // maybe click on the 'kaarten' button to see if address was added correctly
   })
@@ -230,9 +227,7 @@ describe('admin tests', () => {
     // it can take a while to load all the schedules
     cy.wait(10000)
     cy.get('#delete').click()
-    // deletion not yet implemented
     // delete
-    // confirm?
   })
 
   it('add new template', () => {

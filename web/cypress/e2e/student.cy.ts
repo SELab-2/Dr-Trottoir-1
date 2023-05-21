@@ -1,8 +1,5 @@
 describe('student tests', () => {
   beforeEach(() => {
-    // cy.login('student@trottoir.be', 'student')
-    // cy.visit('/planning')
-
     cy.visit('/')
     cy.get('#email').type('student@trottoir.be')
     cy.get('#password').type('student')
@@ -21,9 +18,9 @@ describe('student tests', () => {
       // expand the card to add pictures and leave a comment
       cy.get('#expand').click()
       // add a comment
-      //cy.get('#addcomment').click()
-      //cy.get('#writecomment').type('This is a commen')
-      //cy.get('#savecomment').click()
+      cy.get('#addcomment').click()
+      cy.get('#writecomment').type('This is a commen')
+      cy.get('#savecomment').click()
       // oh no, we made a spelling error. Luckily we can edit our comment!
       cy.get('#editcomment').click()
       cy.get('#writecomment').type('t.')

@@ -1,6 +1,5 @@
 describe('syndicus tests', () => {
   beforeEach(() => {
-    // cy.login('syndicus@trottoir.be', 'syndicus')
     cy.visit('/')
     cy.get('#email').type('syndicus@trottoir.be')
     cy.get('#password').type('syndicus')

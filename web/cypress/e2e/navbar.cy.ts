@@ -1,7 +1,5 @@
 describe('navigation bar tests', () => {
   beforeEach(() => {
-    //cy.login('administrator@trottoir.be', 'password')
-    // cy.visit('/planning')
     cy.visit('/')
     cy.get('#email').type('administrator@trottoir.be')
     cy.get('#password').type('administrator')

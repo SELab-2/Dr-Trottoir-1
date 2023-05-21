@@ -1,7 +1,5 @@
 describe('superstudent tests', () => {
   beforeEach(() => {
-    //cy.login('superstudent@trottoir.be', 'super_student')
-    //cy.visit('/ronde/overzicht')
     cy.visit('/')
     cy.get('#email').type('superstudent@trottoir.be')
     cy.get('#password').type('super_student')
@@ -102,7 +100,7 @@ describe('superstudent tests', () => {
     cy.get('#schedule').click()
     // go to the already planned tasks
     cy.contains('Voorlopig schema').click()
-    // remove scheduled round
+    // remove first scheduled round
     cy.get('#remove').click()
     // add new one
     cy.contains('Ronde inplannen').click()
