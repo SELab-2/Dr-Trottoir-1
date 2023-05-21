@@ -49,7 +49,9 @@ export class FileRouting extends Routing {
             },
         });
 
-        return res.sendFile(result.path);
+        return res.sendFile(
+            `${process.env.FILE_STORAGE_DIRECTORY}/${result.path}`,
+        );
     }
 
     @Auth.authorization({ student: true })
@@ -63,7 +65,7 @@ export class FileRouting extends Routing {
         const result = await prisma.file.create({
             data: {
                 user_id: userId,
-                path: file.path,
+                path: file.originalname,
                 mime: file.mimetype,
                 size_in_bytes: file.size,
                 original_name: file.originalname,
