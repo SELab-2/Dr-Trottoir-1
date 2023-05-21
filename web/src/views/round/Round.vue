@@ -79,32 +79,44 @@
       </div>
     </div>
   </HFillWrapper>
-  <CardPopup
-    v-model="showRemovePopup"
-    :width="342"
-    title="Verwijder Ronde"
-    prepend-icon="mdi-delete"
-  >
-    <p class="ma-3">
-      Je staat op het punt deze ronde te verwijderen. Ben je zeker dat je wilt
-      verder gaan?
-    </p>
-    <template v-slot:actions>
-      <v-btn
-        prepend-icon="mdi-close"
-        color="error"
-        variant="elevated"
-        @click="showRemovePopup = false"
-        >Annuleren</v-btn
+  <CardPopup v-model="showRemovePopup">
+    <div class="pa-4" style="max-width: 400px">
+      <div class="d-flex align-center" style="gap: 12px">
+        <v-icon icon="mdi-content-save-alert-outline" size="large"></v-icon>
+        <h2>Ronde verwijderen</h2>
+      </div>
+      <p style="opacity: 90%" class="pt-2 pb-4">
+        Je staat op het punt deze ronde te verwijderen. Ben je zeker dat je wilt
+        verder gaan?
+      </p>
+      <div
+        style="
+          display: grid;
+          gap: 12px;
+          min-width: fit-content;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        "
       >
-      <v-btn
-        prepend-icon="mdi-check"
-        color="success"
-        variant="elevated"
-        @click="deleteRound()"
-        >Verwijder ronde</v-btn
-      >
-    </template>
+        <v-btn
+          prepend-icon="mdi-close"
+          color="error"
+          @click="showRemovePopup = false"
+          variant="elevated"
+          class="text-none"
+        >
+          Annuleer
+        </v-btn>
+        <v-btn
+          prepend-icon="mdi-check"
+          color="success"
+          @click="deleteRound()"
+          variant="elevated"
+          class="text-none"
+        >
+          Bevestig
+        </v-btn>
+      </div>
+    </div>
   </CardPopup>
 </template>
 
