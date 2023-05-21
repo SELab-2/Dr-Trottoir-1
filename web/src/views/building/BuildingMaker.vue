@@ -153,6 +153,7 @@ import {
   BuildingQuery,
   UserQuery,
   SyndicusQuery,
+  FileQuery,
 } from "@selab-2/groep-1-query";
 import router from "@/router";
 import "leaflet/dist/leaflet.css";
@@ -283,9 +284,7 @@ const submit = () => {
       buildingUnwrapped.syndicus.id = syndicusId;
     }
 
-    /*
     const file = await new FileQuery().createOne("manual-id");
-    */
 
     const newBuilding = await new BuildingQuery().createOne({
       name: buildingUnwrapped.name,
@@ -294,7 +293,7 @@ const submit = () => {
       ivago_id: buildingUnwrapped.ivago_id,
       expected_time: expectedTimeInHours.value * 60,
       syndicus_id: buildingUnwrapped.syndicus.id,
-      manual_id: buildingUnwrapped.manual_id,
+      manual_id: file.id,
     });
 
     for (const fileId of fileIds.value) {
