@@ -416,7 +416,6 @@ const submit = () => {
 
       for (const fileId of fileIds.value) {
         const element: any = document.getElementById(fileId);
-        console.log(element.files.length);
         if (element.files.length > 0) {
           await new BuildingQuery().createImage(newBuilding, fileId);
         }
@@ -429,12 +428,22 @@ const submit = () => {
       }
 
       // Create address
-      console.log(formattedAddress);
       const newAddress = await new AddressQuery().updateOne({
         ...{ id: address_id.value },
         ...formattedAddress,
       });
-      console.log(newAddress);
+
+      let syndicus = (
+        await new SyndicusQuery().getAll({
+          user: buildingUnwrapped.syndicus.id,
+        })
+      ).pop();
+
+      if (!syndicus) {
+        syndicus = await new SyndicusQuery().createOne({
+          user_id: buildingUnwrapped.syndicus.id,
+        });
+      }
 
       const newBuilding = await new BuildingQuery().updateOne({
         id: buildingId.value,
@@ -444,11 +453,11 @@ const submit = () => {
         ivago_id: buildingUnwrapped.ivago_id,
         expected_time: buildingUnwrapped.expectedTimeInHours * 60,
         manual_id: building.value.manual_id,
+        syndicus_id: syndicus.id,
       });
+
       await router.push(`/gebouw/${newBuilding.id}`);
     }
-
-    // Redirect
   });
 };
 
