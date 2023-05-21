@@ -150,9 +150,14 @@
   <v-overlay v-model="showOverlay" class="align-center justify-center">
     <PhotoMaker
       @cancel="showOverlay = false"
-      @confirm="() => {}"
+      @update="
+        (id) => {
+          showOverlay = false;
+          progressUpdated(id);
+        }
+      "
       :is-photo="overlayIsPhoto"
-      :current-comments="currentProgress?.report"
+      :progress="currentProgress!"
     />
   </v-overlay>
 </template>
@@ -186,6 +191,7 @@ const actions: Button[] = [
     title: "Opmerking toevoegen",
     clicked: () => {
       showOverlay.value = true;
+      setCurrentProgress();
       overlayIsPhoto.value = false;
     },
   },
