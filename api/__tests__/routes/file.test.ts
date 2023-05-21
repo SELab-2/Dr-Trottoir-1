@@ -20,11 +20,7 @@ const resetFileServer = () => {
     // copy the initial setting into the folder
     const source = `${path.resolve()}/__tests__/mock/file_server`;
     const dest = `${path.resolve()}/__tests__/file_server`;
-    try {
-        fse.copySync(source, dest, { overwrite: true });
-    } catch (e) {
-        console.log(e);
-    }
+    fse.copySync(source, dest, { overwrite: true });
 };
 
 describe("File tests", () => {
@@ -167,7 +163,7 @@ describe("File tests", () => {
                 test("Cannot reach POST /file", async () => {
                     await runner.postFile({
                         url: "/file",
-                        file: "__tests__/mock/file/test2.txt",
+                        file: "__tests__/mock/upload_files/test2.txt",
                         expectedResponse: forbiddenResponse,
                         statusCode: 403,
                     });
@@ -246,7 +242,7 @@ describe("File tests", () => {
             });
         });
 
-        test("PATCH  /file not allowed", async () => {
+        test("PATCH /file not allowed", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             const updateFile = {
                 path: "newPath",
@@ -262,17 +258,5 @@ describe("File tests", () => {
 
     afterAll(() => {
         app.close();
-
-        //delete added files
-        // const dir = opendirSync(`${process.env.FILE_STORAGE_DIRECTORY}`);
-        // let dirent;
-        // while ((dirent = dir.readSync()) !== null) {
-        //     if (dirent.name != "INIT.txt") {
-        //         unlinkSync(
-        //             `${process.env.FILE_STORAGE_DIRECTORY}/${dirent.name}`,
-        //         );
-        //     }
-        // }
-        // dir.closeSync();
     });
 });
