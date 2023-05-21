@@ -72,13 +72,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  progress: Object as PropType<Result<ProgressQuery>>,
+  progress: { type: Object as PropType<Result<ProgressQuery>>, required: true },
 });
 
-const newProgress = ref<Result<ProgressQuery>>();
-if (props.progress) {
-  newProgress.value = props.progress;
-}
+const newProgress = ref<Result<ProgressQuery>>(props.progress);
 
 const photo = ref<Photo>({
   image: [],
