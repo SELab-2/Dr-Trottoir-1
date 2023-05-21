@@ -226,8 +226,11 @@ describe('admin tests', () => {
     cy.contains('test building').click()
     // it can take a while to load all the schedules
     cy.wait(10000)
-    cy.get('#delete').click()
     // delete
+    cy.get('#delete').click()
+    cy.contains('Dit gebouw is verwijderd.').should('be.visible')
+    cy.get('#buildings').click()
+    cy.contains('test building').should('not.exist')
   })
 
   it('add new template', () => {

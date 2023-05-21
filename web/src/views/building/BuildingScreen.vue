@@ -218,6 +218,7 @@
         >Annuleren</SimpleButton
       >
       <SimpleButton
+        id="delete"
         prepend-icon="mdi-check"
         color="success"
         variant="elevated"
