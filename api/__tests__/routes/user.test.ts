@@ -165,6 +165,7 @@ describe("User tests", () => {
             };
 
             const expected = {
+                id: 6,
                 email: "foo@bar.com",
                 first_name: "Foo",
                 last_name: "Bar",

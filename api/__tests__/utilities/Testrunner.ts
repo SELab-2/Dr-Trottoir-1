@@ -1,6 +1,7 @@
 import request from "supertest";
 import { expect } from "@jest/globals";
 import { constants } from "http2";
+import * as util from "util";
 
 /**
  * Describes different authentication levels.
@@ -174,9 +175,6 @@ export class Testrunner {
             .send(data)
             .set("Cookie", [cookie]);
         expect(response.statusCode).toEqual(statusCode);
-        // drop the id, as we cannot predict that
-        delete response.body["id"];
-
         this.verifyBody([expectedResponse], response);
 
         return response;

@@ -36,10 +36,15 @@ describe("Action tests", () => {
                 description: "new action",
             };
 
+            const expected = {
+                id: 4,
+                description: "new action",
+            };
+
             await runner.post({
                 url: "/action",
                 data: newAction,
-                expectedResponse: newAction,
+                expectedResponse: expected,
             });
         });
 

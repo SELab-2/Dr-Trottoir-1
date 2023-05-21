@@ -219,6 +219,7 @@ describe("Syndicus tests", () => {
             };
 
             const expected = {
+                id: 3,
                 user_id: 3,
                 user: {
                     id: 3,

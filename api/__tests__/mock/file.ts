@@ -36,7 +36,7 @@ export const image = {
 };
 
 export async function initialiseFiles() {
-    await prisma.file.createMany({
+    const result = await prisma.file.createMany({
         data: [manual, testfile, image],
     });
 }
