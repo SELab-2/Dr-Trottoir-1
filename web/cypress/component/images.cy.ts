@@ -18,7 +18,7 @@ describe("images tests", () => {
     cy.get('#type').parent().click()
     cy.contains('DEPARTURE').click()
     cy.get('#type').should('have.value', 'DEPARTURE')
-    cy.get("#select").selectFile('src/assets/images/drtroittoir_logo.png')
+    cy.get("#upload-progress").selectFile('src/assets/images/drtroittoir_logo.png')
     cy.contains("drtroittoir_logo.png").should('be.visible')
     cy.get("#save").should('be.visible')
   })
