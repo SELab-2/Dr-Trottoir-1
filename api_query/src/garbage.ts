@@ -8,7 +8,7 @@ export type GarbageQueryParameters = {
     before: Date;
     after: Date;
     building_id: number;
-    action_id: number;
+    description: string;
     syndicus_id: number;
     round_id: number;
     sort: string[];
@@ -17,7 +17,6 @@ export type GarbageQueryParameters = {
 
 type GarbageAllInfo = Prisma.GarbageGetPayload<{
     include: {
-        action: true;
         building: typeof includeBuilding;
     };
 }>;

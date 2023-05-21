@@ -3,10 +3,6 @@ import { prisma } from "./prisma";
 import { image, manual } from "./file";
 
 export async function initialiseBuilding() {
-    const passwordB1 = crypto
-        .createHash("sha256")
-        .update("password_building1")
-        .digest("hex");
     const building1 = {
         name: "Building 1",
         ivago_id: "ivago-1",
@@ -18,13 +14,9 @@ export async function initialiseBuilding() {
         deleted: false,
         syndicus_id: 1,
 
-        hash: passwordB1,
+        hash: "aaaa",
     };
 
-    const passwordB2 = crypto
-        .createHash("sha256")
-        .update("password_building2")
-        .digest("hex");
     const building2 = {
         name: "Building 2",
         ivago_id: "ivago-2",
@@ -35,13 +27,8 @@ export async function initialiseBuilding() {
         deleted: false,
         syndicus_id: 2,
 
-        hash: passwordB2,
+        hash: "abcd",
     };
-
-    const passwordB3 = crypto
-        .createHash("sha256")
-        .update("password_building3")
-        .digest("hex");
 
     const building3 = {
         name: "Building 3",
@@ -53,7 +40,7 @@ export async function initialiseBuilding() {
         syndicus_id: 1,
         deleted: true,
 
-        hash: passwordB3,
+        hash: "klmno",
     };
 
     await prisma.building.createMany({
