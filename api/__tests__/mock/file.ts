@@ -1,5 +1,4 @@
 import { prisma } from "./prisma";
-import { writeFileSync } from "fs";
 import path from "path";
 
 process.env[

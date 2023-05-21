@@ -2,19 +2,30 @@ import { describe, test } from "@jest/globals";
 import { AuthenticationLevel, Testrunner } from "../utilities/Testrunner";
 import request from "supertest";
 import app from "../../src/main";
-import { resetDatabase, restoreTables } from "../mock/database";
+import { resetDatabase } from "../mock/database";
 import {
     badRequestResponse,
     forbiddenResponse,
     notFoundResponse,
 } from "../utilities/constants";
-import { opendirSync, unlinkSync } from "fs";
 import path from "path";
-import * as util from "util";
+import * as fse from "fs-extra";
 
 process.env[
     "FILE_STORAGE_DIRECTORY"
 ] = `${path.resolve()}/__tests__/file_server`;
+
+const resetFileServer = () => {
+    fse.emptyDirSync(`${path.resolve()}/__tests__/file_server`);
+    // copy the initial setting into the folder
+    const source = `${path.resolve()}/__tests__/mock/file_server`;
+    const dest = `${path.resolve()}/__tests__/file_server`;
+    try {
+        fse.copySync(source, dest, { overwrite: true });
+    } catch (e) {
+        console.log(e);
+    }
+};
 
 describe("File tests", () => {
     let runner: Testrunner;
@@ -25,16 +36,17 @@ describe("File tests", () => {
 
         runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
 
+        resetFileServer();
         return resetDatabase();
     });
 
     afterEach(async () => {
-        await restoreTables();
+        resetFileServer();
+        await resetDatabase();
     });
 
     describe("Succesful requests", () => {
         test("POST /file", async () => {
-            // upload a file from upload_files
             const expected = {
                 mime: "text/plain",
                 original_name: "test2.txt",
@@ -96,16 +108,26 @@ describe("File tests", () => {
         test("DELETE /file/:id", async () => {
             runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
             await runner.delete({
-                url: "/file/11",
+                url: "/file/1",
             });
 
             const expected = [
                 {
                     createdAt: "1970-01-01T00:00:00.000Z",
-                    id: 1,
-                    mime: "application/pdf",
-                    original_name: "handleiding.pdf",
-                    path: "manual.pdf",
+                    id: 2,
+                    mime: "text/plain",
+                    original_name: "example.txt",
+                    path: "example.txt",
+                    size_in_bytes: 13,
+                    updatedAt: "1970-01-01T00:00:00.000Z",
+                    user_id: 2,
+                },
+                {
+                    createdAt: "1970-01-01T00:00:00.000Z",
+                    id: 3,
+                    mime: "application/jpeg",
+                    original_name: "camera.jpg",
+                    path: "camera.jpg",
                     size_in_bytes: 1024,
                     updatedAt: "1970-01-01T00:00:00.000Z",
                     user_id: 1,
