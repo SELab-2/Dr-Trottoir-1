@@ -1,5 +1,5 @@
 # Navigatie -> Administratie
-De administratie sectie bevat lijsten van alle gebruikers, gebouwen en rondes. De admin kan
+De administratieve sectie bevat lijsten van alle gebruikers, gebouwen en rondes. De admin kan
 hier snel en eenvoudig een gebruiker, gebouw of ronde terugvinden.
 
 ## Gebruikers
@@ -16,8 +16,8 @@ Ga naar `Administratie > Gebouwen` in de [navigatiebalk](../../navbar.md#superst
 ## Rondes
 Ga naar `Administratie > Rondes` in de [navigatiebalk](../../navbar.md#superstudent-syndicus-admin).
 - Voor meer detail over de ronde pagina, klik [hier](../../pages/administration/rondes.md).
-- Voor een beschrijving om een gebouw aan te maken, klik [hier](../../pages/administration/rondes.md).
--
+- Voor een beschrijving om een ronde aan te maken, klik [hier](../../pages/administration/rondes.md).
+
 ## Sjablonen
 Ga naar `Administratie > Sjablonen` in de [navigatiebalk](../../navbar.md#superstudent-syndicus-admin).
 - Voor meer detail over de sjablonen pagina, klik [hier](../../pages/administration/email-sjablonen.md).

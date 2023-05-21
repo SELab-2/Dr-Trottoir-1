@@ -19,7 +19,7 @@ De naam van het sjabloon geeft meer informatie over de inhoud van de mail.
 
 Als een gebruiker een sjabloon wil bewerken of toevoegen, wordt hij doorverwezen naar een andere pagina, hieronder afgebeeld.
 1. Bij het opstellen van een sjabloon kunnen verschillende variabelen gebruikt worden.
-Voordat de e-mail dan gestuurd wordt (via een [ander pagina](../contact/contact_syndicus.md)),
+Voordat de e-mail dan [gestuurd wordt](../contact/contact_syndicus.md),
 moet de superstudent/admin deze variabelen nog vervangen door de bijhorende waarden.
 2. In dit veld wordt de naam van het sjabloon bijgehouden zodat de inhoud ervan meteen duidelijk is.
 Hierin worden geen variabelen gebruikt, dit is louter ter informatie voor de superstudent/admin.
