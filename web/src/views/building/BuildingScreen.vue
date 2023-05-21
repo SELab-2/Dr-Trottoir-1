@@ -401,11 +401,9 @@ async function restoreBuilding() {
   router.go(0);
 }
 
-function routeToChange(){
-  router.push({name: 'building_new', params: {id: building.value?.id}})
+function routeToChange() {
+  router.push({ name: "building_new", params: { id: building.value?.id } });
 }
-
-
 </script>
 
 <style lang="scss" scoped>

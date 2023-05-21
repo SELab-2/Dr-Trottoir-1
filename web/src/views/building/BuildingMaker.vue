@@ -165,7 +165,7 @@
         ><v-icon class="ml-2" icon="mdi-delete" @click="removeFileId()"></v-icon
       ></template>
       <v-list>
-        <v-list-item v-for="(fileId, id) of fileIds" :key="fileId">
+        <v-list-item v-for="fileId of fileIds" :key="fileId">
           <v-file-input
             class="mt-1"
             :multiple="false"
