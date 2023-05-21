@@ -39,6 +39,7 @@ describe("User_region tests", () => {
             };
 
             const expected = {
+                id: 3,
                 region: { deleted: false, id: 3, name: "Region 3" },
                 region_id: 3,
                 user: {
