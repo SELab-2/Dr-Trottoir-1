@@ -213,7 +213,7 @@
       color="success"
       prepend-icon="mdi-check"
       class="mb-12"
-      >Maak gebouw</v-btn
+      >{{ edit ? "Pas wijzigingen toe" : "Maak gebouw" }}</v-btn
     >
   </HFillWrapper>
 </template>
@@ -384,7 +384,6 @@ const submit = () => {
         manual_id: file.id,
       });
 
-      
       for (const fileId of fileIds.value) {
         const element: any = document.getElementById(fileId);
         console.log(element.files.length);

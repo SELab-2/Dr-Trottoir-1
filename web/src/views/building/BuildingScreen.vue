@@ -66,7 +66,15 @@
               Handleiding
             </v-btn>
           </div>
-
+          <v-btn
+            v-show="useAuthStore().auth?.admin && !building.deleted"
+            class="text-none"
+            prepend-icon="mdi-pencil"
+            @click="routeToChange()"
+            color="primary"
+          >
+            Pas aan
+          </v-btn>
           <v-btn
             v-show="useAuthStore().auth?.admin && !building.deleted"
             class="text-none"
@@ -392,6 +400,12 @@ async function restoreBuilding() {
   });
   router.go(0);
 }
+
+function routeToChange(){
+  router.push({name: 'building_new', params: {id: building.value?.id}})
+}
+
+
 </script>
 
 <style lang="scss" scoped>
