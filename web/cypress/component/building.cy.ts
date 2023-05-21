@@ -1,7 +1,7 @@
 import SyndicusButtons from '@/components/building/SyndicusButtons.vue'
 
 describe("building component test", () => {
-  it('buildingcard test', () => {
+  it('syndicus buttons test', () => {
     cy.mount(SyndicusButtons, {
       props: {
         phone: "0123456789",

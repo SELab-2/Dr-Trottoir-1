@@ -24,9 +24,9 @@ const passwordValidator = joiPassword
   .messages({
     "string.empty": "Wachtwoord mag niet leeg zijn!",
     "password.minOfUppercase":
-      "Wachtwoord moet minstens {#min} hoofdletters bevatten",
+      "Wachtwoord moet minstens {#min} hoofdletter(s) bevatten",
     "password.minOfSpecialCharacters":
-      "Wachtwoord moet minstens {#min} speciale karakter bevatten",
+      "Wachtwoord moet minstens {#min} speciale karakter(s) bevatten",
     "password.minOfNumeric": "Wachtwoord moet minstens 1 getal bevatten",
     "string.min": "Wachtwoord moet minstens {#limit} karakters lang zijn",
   });
@@ -62,6 +62,7 @@ const passwordRepeatRules = [
     <template v-slot:title> Wachtwoord</template>
     <v-list density="compact" :class="spacing">
       <v-text-field
+        id="password"
         class="mt-2"
         v-model="password"
         :prepend-inner-icon="'mdi-lock'"
@@ -76,6 +77,7 @@ const passwordRepeatRules = [
       ></v-text-field>
       <!-- Text input field for the password confirmation-->
       <v-text-field
+        id="repeat"
         class="mt-2"
         v-model="passwordRepeat"
         :prepend-inner-icon="'mdi-lock'"

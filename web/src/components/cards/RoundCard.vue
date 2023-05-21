@@ -14,6 +14,7 @@
       {{ filtered.roundName }}
       <v-icon
         end
+        id="comments"
         v-if="filtered.amountOfComments !== 0"
         icon="mdi-comment-alert-outline"
         size="small"
@@ -65,7 +66,7 @@
     </v-chip>
     <v-chip label color="primary" class="ml-3">
       <v-icon icon="mdi-calendar" class="pr-1" />
-      {{ new Date(filtered.roundDate).toLocaleDateString("nl") }}
+      {{ new Date(filtered.roundDate).toLocaleDateString() }}
     </v-chip>
     <v-chip v-if="filtered.roundStart" label color="primary" class="ml-3">
       <v-icon icon="mdi-clock"></v-icon>

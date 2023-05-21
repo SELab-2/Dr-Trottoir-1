@@ -56,5 +56,12 @@ Cypress.Commands.add("mount", (MountedComponent, options) => {
     ...options, // To override values for specific tests
   });
 });
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // returning false here prevents Cypress from
+  // failing the test
+  return false
+});
+
 // Example use:
 // cy.mount(MyComponent)

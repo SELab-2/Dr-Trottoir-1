@@ -7,18 +7,21 @@
     ><template v-slot:subtitle>{{ address }}</template>
     <template v-slot:append>
       <v-icon
+        id="up"
         @click="$emit('up')"
         class="mx-1"
         color="primary"
         icon="mdi-chevron-up"
       />
       <v-icon
+        id="down"
         @click="$emit('down')"
         class="mx-1"
         color="primary"
         icon="mdi-chevron-down"
       />
       <v-icon
+        id="remove"
         @click="$emit('remove')"
         class="mx-1"
         color="error"

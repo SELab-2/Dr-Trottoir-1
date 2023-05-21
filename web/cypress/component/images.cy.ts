@@ -48,7 +48,7 @@ describe("images tests", () => {
     cy.get('button:contains("Verwijder afbeelding")').should('have.length', 1);
   })
 
-  it.only('photomaker test', () => {
+  it('photomaker test', () => {
     cy.mount(PhotoMaker, {
       id: "test",
       isPhoto: true,

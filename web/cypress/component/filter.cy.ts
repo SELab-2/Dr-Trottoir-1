@@ -25,7 +25,11 @@ describe("filter tests", () => {
     // now the filters are visible
     cy.get('#dropdown').should('be.visible')
     // add filters
-    cy.contains("Eerste dag").parent().type('2023-01-04') // has to be YYYY-MM-DD format
+    // can't add first day later than last day
+    cy.contains("Eerste dag").parent().type('2023-07-04') // has to be YYYY-MM-DD format
+    cy.contains("Eerste dag").parent().should('have.value', '')
+    cy.contains("Eerste dag").parent().type('2023-05-04')
+    cy.contains("Laatste dag").parent().type('2023-06-04')
     cy.contains('Zoekcategorie').parent().click()
     cy.contains("test2").click()
     // now the searchbar should say "zoek per test2"
