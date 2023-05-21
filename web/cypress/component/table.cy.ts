@@ -1,6 +1,6 @@
-import Table from '../../src/components/table/Table.vue'
-import {Header} from "../../src/components/table/Header";
-import {RowType} from "../../src/components/table/RowType";
+import Table from '@/components/table/Table.vue'
+import {Header} from "@/components/table/Header";
+import {RowType} from "@/components/table/RowType";
 import {BuildingQuery, Result} from "@selab-2/groep-1-query";
 
 

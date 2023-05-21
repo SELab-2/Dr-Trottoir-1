@@ -1,6 +1,6 @@
 import SimpleButton from '@/components/buttons/SimpleButton.vue'
 import AddButton from '@/components/buttons/AddButton.vue'
-import Button from '@/components/models/Button.vue';
+import Button from '@/components/models/Button';
 
 describe("buttons test", () => {
   it('simplebutton test', () => {
