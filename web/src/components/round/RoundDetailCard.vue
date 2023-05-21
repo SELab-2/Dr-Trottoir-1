@@ -194,10 +194,7 @@
               v-for="image in progress?.images"
               :key="image.id"
             >
-              <img
-                src="https://unsplash.com/photos/u_khkgVDmxA/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Mnx8YmFzZW1lbnR8ZW58MHx8fHwxNjgxNzA5NzIx&force=true&w=640"
-                alt="opvolgfoto"
-              />
+              <img :src="ImgProxy.env.url(image.image)" alt="opvolgfoto" />
               <p style="font-weight: 700; font-size: 14px" class="mt-2">
                 {{ image.type }}
               </p>
@@ -233,6 +230,7 @@ import { ProgressQuery } from "@selab-2/groep-1-query";
 import { useAuthStore } from "@/stores/auth";
 import SimpleButton from "@/components/buttons/SimpleButton.vue";
 import RoundedInfoChip from "@/components/chips/RoundedInfoChip.vue";
+import { ImgProxy } from "@/imgproxy";
 
 const props = defineProps(["entry", "day", "schedule_id"]);
 const progress = ref(
@@ -240,6 +238,9 @@ const progress = ref(
     ? JSON.parse(JSON.stringify(props.entry.progress))
     : undefined,
 );
+
+console.log(progress);
+console.log(progress.value.images);
 
 const isStudent = useAuthStore().auth?.student;
 const canEdit =
