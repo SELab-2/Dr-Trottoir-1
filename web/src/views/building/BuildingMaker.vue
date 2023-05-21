@@ -16,6 +16,7 @@
       ></v-text-field>
 
       <v-select
+        :disabled="buildingId !== undefined"
         label="Syndicus"
         :items="users"
         v-model="building.syndicus"
@@ -41,6 +42,7 @@
       ></v-text-field>
 
       <v-file-input
+        v-model="manualContent"
         id="manual-id"
         prepend-icon=""
         prepend-inner-icon="mdi-file"
@@ -53,12 +55,13 @@
         rows="4"
         label="Beschrijving van het gebouw"
         prepend-inner-icon="mdi-text"
-        v-model="description"
+        v-model="building.description"
       ></v-textarea>
     </BorderCard>
 
     <!-- card met alle info over de locatie -->
     <BorderCard
+      v-if="buildingId === undefined"
       prepend-icon="mdi-map-marker"
       class="mb-3 px-4"
       title="Locatie info"
@@ -103,6 +106,11 @@
         </v-row>
         <!-- addres forum gebruiken -->
         <AddressForm
+          v-model="address"
+          :city="address.city"
+          :number="address.number.toString()"
+          :zip_code="address.zip_code.toString()"
+          :street="address.street"
           @onUpdate="(newAddress) => (address = newAddress)"
         ></AddressForm>
       </div>
@@ -116,11 +124,12 @@
         ><v-icon class="ml-2" icon="mdi-delete" @click="removeFileId()"></v-icon
       ></template>
       <v-list>
-        <v-list-item v-for="fileId of fileIds" :key="fileId">
+        <v-list-item v-for="(fileId, id) of fileIds" :key="fileId">
           <v-file-input
             class="mt-1"
             :multiple="false"
             :id="fileId"
+            v-model="fileContent[id]"
             accept="image/jpeg"
             prepend-icon=""
             prepend-inner-icon="mdi-file"
@@ -159,16 +168,23 @@ import router from "@/router";
 import "leaflet/dist/leaflet.css";
 import "leaflet/dist/leaflet.js";
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
+import { useRoute } from "vue-router";
+
 
 const fileIds = ref<string[]>(["Hoofdafbeelding"]);
+const fileContent = ref<Array<File[]>>([[]])
+
+const manualContent = ref<File[]>()
 
 function addFileId() {
   fileIds.value.push("Afbeelding " + fileIds.value.length);
+  fileContent.value.push([])
 }
 
 function removeFileId() {
   if (fileIds.value.length > 1) {
     fileIds.value.pop();
+    fileContent.value.pop()
   }
 }
 
@@ -197,6 +213,7 @@ const longitude = ref(0);
 const building = ref({
   name: "",
   ivago_id: "",
+  description: "",
   syndicus: {
     id: 0,
     first_name: "",
@@ -206,7 +223,45 @@ const building = ref({
   manual_id: 1,
 });
 
-const description = ref("");
+const route = useRoute();
+const buildingId: number = Number(route.params.id);
+
+if (buildingId) {
+  tryOrAlertAsync(async () => {
+    const requestedBuilding: Result<BuildingQuery> =
+      await new BuildingQuery().getOne(buildingId);
+
+    const thisSyndicus = requestedBuilding.syndicus;
+    const thisAddress = requestedBuilding.address;
+
+    building.value.name = requestedBuilding.name;
+    building.value.ivago_id = requestedBuilding.ivago_id;
+    building.value.syndicus = {
+      id: thisSyndicus.id,
+      first_name: thisSyndicus.user.first_name,
+      last_name: thisSyndicus.user.last_name,
+    };
+    building.value.description = requestedBuilding.description
+      ? requestedBuilding.description
+      : "";
+
+    address.value = {
+      street: thisAddress.street,
+      number: thisAddress.number,
+      city: thisAddress.city,
+      zip_code: thisAddress.zip_code,
+    };
+    latitude.value = requestedBuilding.address.latitude;
+    longitude.value = requestedBuilding.address.longitude;
+
+
+    manualContent.value = requestedBuilding.manual? [requestedBuilding.manual] as any : []
+
+    fileContent.value = requestedBuilding.images[0].image as any
+    console.log(fileContent.value)
+
+  });
+}
 
 function getFullStudentName(s: Result<UserQuery> | undefined): string {
   if (s) {
@@ -289,7 +344,7 @@ const submit = () => {
     const newBuilding = await new BuildingQuery().createOne({
       name: buildingUnwrapped.name,
       address_id: newAddress.id,
-      description: description.value,
+      description: buildingUnwrapped.description,
       ivago_id: buildingUnwrapped.ivago_id,
       expected_time: expectedTimeInHours.value * 60,
       syndicus_id: buildingUnwrapped.syndicus.id,
