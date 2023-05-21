@@ -12,9 +12,7 @@
         style="min-width: 100px; max-width: 100%"
         class="flex-grow-1 flex-shrink-0 py-0 my-0"
       >
-        <BorderCard
-          class="mt-5 "
-        >
+        <BorderCard class="mt-5">
           <v-row class="py-0 my-0 mx-0 mt-5">
             <v-col
               cols="1"
@@ -60,14 +58,14 @@
               ></v-textarea
             ></v-col>
           </v-row>
-          <v-btn
+          <SimpleButton
             id="savetemplate"
             color="primary"
             prepend-icon="mdi-content-save"
             variant="tonal"
             class="mb-6 ml-6"
             @click="saveTemplate()"
-            >Opslaan</v-btn
+            >Opslaan</SimpleButton
           >
         </BorderCard> </v-col
       ><v-col
@@ -102,6 +100,7 @@ import { ref } from "vue";
 import { Result, MailTemplateQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRoute } from "vue-router";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 const templateName = ref<string>("");
 const subject = ref<string>("");

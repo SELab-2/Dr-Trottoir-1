@@ -102,7 +102,7 @@ import ContactForm from "@/components/forms/ContactForm.vue";
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import RolesForm from "@/components/forms/RolesForm.vue";
-import { UserQuery } from "@selab-2/groep-1-query";
+import { AddressQuery, UserQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRouter } from "vue-router";
 import PasswordInputCard from "@/components/cards/PasswordInputCard.vue";
@@ -149,15 +149,20 @@ const nameRules = [
   },
 ];
 
-/* Form submission */
-
 async function submitForm() {
   // check if form is valid before submitting
   if (valid.value) {
-    // :to="{ name: 'account_settings', params: { id: 0 } }"
-    let user;
     await tryOrAlertAsync(async () => {
-      user = await new UserQuery().createOne({
+      const userAddress = await new AddressQuery().createOne({
+        city: address.value.city,
+        latitude: 0,
+        longitude: 0,
+        number: Number(address.value.number),
+        street: address.value.street,
+        zip_code: Number(address.value.zip_code),
+      });
+
+      const user = await new UserQuery().createOne({
         first_name: first_name.value,
         last_name: last_name.value,
         email: contact.value.email,
@@ -165,23 +170,13 @@ async function submitForm() {
         student: roles.value.includes("Student"),
         super_student: roles.value.includes("Superstudent"),
         admin: roles.value.includes("Admin"),
-        //@ts-ignore TODO: fix build errors
         password: password2.value,
-        address: {
-          //@ts-ignore TODO: fix build errors
-          create: {
-            city: address.value.city,
-            latitude: 0,
-            longitude: 0,
-            number: Number(address.value.number),
-            street: address.value.street,
-            zip_code: Number(address.value.zip_code),
-          },
-        },
+        address_id: userAddress.id,
         date_added: new Date(),
         last_login: new Date(),
       });
-      router.push({ name: "account_settings", params: { id: user.id } });
+
+      await router.push({ name: "account_settings", params: { id: user.id } });
     });
   }
 }

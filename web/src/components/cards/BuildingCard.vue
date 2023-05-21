@@ -7,11 +7,17 @@
     }"
   >
     <v-row class="flex-nowrap">
-      <v-col cols="2" class="flex-grow-0 flex-shrink-0">
+      <v-col cols="3" class="flex-grow-0 flex-shrink-0">
         <!-- The image -->
         <v-img
           cover
-          src="https://unsplash.com/photos/95YCW2X5jUc/download?force=true&w=1920"
+          v-if="building.images.length > 0"
+          :src="
+            ImgProxy.env
+              .resize({ width: 200, height: 200 })
+              .maxBytes(50 * 1024)
+              .url(building.images[0].image)
+          "
           class="prepend-img"
         />
       </v-col>
@@ -107,6 +113,7 @@ import Filterdata from "@/components/filter/FilterData";
 import { Result, BuildingQuery, ProgressQuery } from "@selab-2/groep-1-query";
 import { PropType } from "vue";
 import { tryOrAlertAsync } from "@/try";
+import { ImgProxy } from "@/imgproxy";
 
 const router = useRouter();
 
@@ -167,7 +174,7 @@ tryOrAlertAsync(async () => {
 
 <style scoped lang="scss">
 .prepend-img {
-  height: 100%;
+  height: 130px;
 }
 
 .dropdown-button {

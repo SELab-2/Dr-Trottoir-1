@@ -2,7 +2,7 @@
   <div class="d-flex flex-row-reverse">
     <v-btn
       id="addtemplate"
-      v-if="useAuthStore().auth?.admin"
+      v-if="useAuthStore().auth?.admin || useAuthStore().auth?.super_student"
       prepend-icon="mdi-plus"
       color="primary"
       class="mr-3 text-none"

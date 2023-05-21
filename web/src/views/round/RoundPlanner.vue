@@ -96,6 +96,7 @@
                 variant="outlined"
                 type="date"
                 label="Startdatum"
+                :max="multipleday ? endDate : '2100'"
               ></v-text-field>
 
               <v-text-field
@@ -105,6 +106,7 @@
                 type="date"
                 label="Einddatum"
                 v-if="multipleday"
+                :min="startDate"
               ></v-text-field>
 
               <v-text-field
@@ -117,22 +119,22 @@
             </div>
 
             <div style="display: flex; align-items: center">
-              <v-btn
+              <SimpleButton
                 id="addschedule"
                 prepend-icon="mdi-plus"
                 @click="calcNewRounds()"
                 :disabled="student === undefined"
                 variant="tonal"
-                >Tijdelijk toevoegen</v-btn
+                >Tijdelijk toevoegen</SimpleButton
               >
               <div class="flex-grow-1"></div>
-              <v-btn
+              <SimpleButton
                 id="planschedule"
                 prepend-icon="mdi-check"
                 @click="planRounds()"
                 :disabled="rounds?.length === 0"
                 variant="tonal"
-                >Ronde inplannen en opslaan</v-btn
+                >Ronde inplannen en opslaan</SimpleButton
               >
             </div>
           </div></v-expand-transition
@@ -172,6 +174,7 @@
                 variant="outlined"
                 type="date"
                 label="Startdatum"
+                :max="fullSchemeEndDate"
               ></v-text-field>
               <v-text-field
                 class="ml-1"
@@ -180,15 +183,16 @@
                 variant="outlined"
                 type="date"
                 label="Einddatum"
+                :min="fullSchemeStartDate"
               ></v-text-field>
             </div>
             <div class="d-flex">
               <v-spacer></v-spacer>
-              <v-btn
+              <SimpleButton
                 prepend-icon="mdi-check"
                 @click="updateFullScheme()"
                 variant="tonal"
-                >Pas filter toe</v-btn
+                >Pas filter toe</SimpleButton
               >
             </div>
           </div></v-expand-transition
@@ -222,6 +226,7 @@ import {
 } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRoute, useRouter } from "vue-router";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 const router = useRouter();
 

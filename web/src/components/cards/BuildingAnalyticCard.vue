@@ -23,8 +23,9 @@
 
 <script setup lang="ts">
 import BorderCard from "@/layouts/CardLayout.vue";
-import { Ref, ref, computed } from "vue";
-import { ProgressQuery } from "@selab-2/groep-1-query";
+import { Ref, ref, onMounted, computed } from "vue";
+import { Result, BuildingQuery } from "@selab-2/groep-1-query";
+import { tryOrAlertAsync } from "@/try";
 import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -52,6 +53,7 @@ const props = defineProps({
 });
 
 const totalTimeSpent: Ref<number[]> = ref([...Array(12)].map(() => 0));
+const building = ref<Result<BuildingQuery>>();
 const statsYear = ref(2023);
 const months = [...Array(12)]
   .map((e, i) => new Date().setMonth(i))
@@ -81,6 +83,13 @@ const chartOptions: ChartOptions = {
     },
   },
 };
+
+onMounted(() => {
+  tryOrAlertAsync(async () => {
+    building.value = await new BuildingQuery().getOne(props.id);
+  });
+});
+
 async function retrieve() {
   totalTimeSpent.value = await Promise.all(
     [...Array(12)].map(async (e, i) => {
@@ -91,23 +100,11 @@ async function retrieve() {
       const end = new Date(start);
       end.setMonth(Number(i) + 1);
 
-      const progressItems = await new ProgressQuery().getAll({
-        arrived_after: start,
-        left_before: end,
-        user: props.id,
-      });
-
-      let time = 0;
-
-      for (const progress of progressItems) {
-        if (progress.arrival !== null && progress.departure !== null) {
-          const departure = new Date(progress.departure);
-          const arrival = new Date(progress.arrival);
-          time += (departure.getTime() - arrival.getTime()) / (1000 * 60 * 60);
-        }
-      }
-
-      return time;
+      return await new BuildingQuery().totalTimeSpent(
+        props.id ?? 0,
+        start,
+        end,
+      );
     }),
   );
 }

@@ -1,43 +1,37 @@
 <template>
-  <div class="py-0 my-2 mx-5">
-    <MapComponent :buildings="newRoundBuildings" />
-  </div>
-  <v-row class="py-0 my-2 mx-2">
-    <v-col
-      cols="1"
-      style="min-width: 100px; max-width: 100%"
-      class="flex-grow-1 flex-shrink-0 py-0 my-0"
-      ><border-card
-        class="mb-4"
-        title="Ronde aanmaken"
-        subtitle="De ronde zal in de volgorde van onderstaande lijst opgeslagen worden"
-      >
-        <template v-slot:append></template>
+  <div class="grid">
+    <MapComponent :buildings="newRoundBuildings" id="map" />
+    <div>
+      <border-card class="pa-5 mb-5">
+        <h2>Ronde</h2>
+        <p>De ronde wordt opgeslagen in onderstaande volgorde.</p>
         <v-text-field
           id="roundname"
-          class="ml-3 mr-5"
+          class="mt-3"
           label="Naam ronde"
           v-model="newRoundName"
           variant="outlined"
         />
-        <v-text-field
+        <v-textarea
           id="description"
-          class="ml-3 mr-5"
           label="Beschrijving"
           v-model="description"
           variant="outlined"
         />
-        <v-card-actions class="d-flex align-center"
-          ><v-spacer></v-spacer
-          ><v-btn
-            id="createround"
-            class="ml-3"
-            prepend-icon="mdi-check"
-            @click="makeRound()"
-            >Ronde aanmaken</v-btn
-          ></v-card-actions
+        <v-btn
+          id="createround"
+          :disabled="
+            newRoundName === '' ||
+            description === '' ||
+            newRoundBuildings.length === 0
+          "
+          style="width: 100%"
+          prepend-icon="mdi-check"
+          @click="makeRound()"
+          >Ronde aanmaken</v-btn
         >
       </border-card>
+
       <building-select-card
         v-for="(building, i) in newRoundBuildings"
         :key="i"
@@ -49,22 +43,16 @@
         :address="getFullAddress(building)"
         :garbageinfo="garbageinfo"
       ></building-select-card>
-    </v-col>
-    <v-col
-      cols="2"
-      style="min-width: 100px; max-width: 100%"
-      class="flex-grow-1 flex-shrink-0 py-0 ml-5"
-      ><border-card
-        title="Zoeken in gebouwen"
-        subtitle="Klik op een gebouw om deze toe te voegen aan de lijst"
-        class="mb-4 pt-3"
-        ><v-text-field
-          class="ml-3 mr-5 mt-3"
-          label="Naam van gebouw"
-          v-model="searchquery"
-          variant="outlined"
-        />
-      </border-card>
+    </div>
+
+    <div>
+      <v-text-field
+        label="Naam van gebouw"
+        bg-color="white"
+        prepend-inner-icon="mdi-map-search"
+        v-model="searchquery"
+        variant="outlined"
+      />
 
       <building-info-card
         v-for="entry in filterlist()"
@@ -72,10 +60,9 @@
         :name="entry.building.name"
         :address="getFullAddress(entry.building)"
         @clicked="deleteBuildingFromAvailable(entry.listID, entry.building)"
-      >
-      </building-info-card>
-    </v-col>
-  </v-row>
+      />
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -216,3 +203,21 @@ function moveBuildingDown(index: number) {
   }
 }
 </script>
+
+<style lang="scss">
+.grid {
+  display: grid;
+  gap: 24px;
+  padding: 0 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @media (max-width: 700px) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+#map {
+  grid-column: span 2 / span 2;
+}
+</style>

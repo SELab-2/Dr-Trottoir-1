@@ -1,15 +1,15 @@
 <template>
   <div class="d-flex flex-row-reverse toprow">
-    <v-btn
+    <SimpleButton
       id="newbuilding"
       v-if="useAuthStore().auth?.admin"
       prepend-icon="mdi-plus"
       color="primary"
-      class="mr-3 text-none"
+      class="mr-3"
       :to="{ name: 'building_new' }"
     >
       Nieuw Gebouw
-    </v-btn>
+    </SimpleButton>
   </div>
   <DashBoardSearch
     :admin="useAuthStore().auth?.admin"
@@ -32,6 +32,7 @@ import { Building } from "@/types/Building";
 import { BuildingQuery, Result } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { ref, Ref } from "vue";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
 
 const buildings: Ref<Array<Result<BuildingQuery>>> = ref([]);
 await getBuildings(false, "");

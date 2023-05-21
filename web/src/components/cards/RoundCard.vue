@@ -52,7 +52,10 @@
             ? "Niet begonnen"
             : progress() === 100
             ? "Klaar"
-            : "Bezig " + filtered.completedBuildings + "/" + filtered.totalBuildings
+            : "Bezig " +
+              filtered.completedBuildings +
+              "/" +
+              filtered.totalBuildings
         }}
       </v-chip>
     </template>
