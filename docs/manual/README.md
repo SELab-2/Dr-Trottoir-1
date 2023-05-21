@@ -1,6 +1,6 @@
 # Manual
 
-Deze map bevat alles omtrend de handleiding.
+Deze map bevat alles omtrent de handleiding.
 
 ## Structuur handleiding
 De handleiding heeft een [hoofdpagina](./manual_home.md).
@@ -12,7 +12,7 @@ linken op hun beurt door naar de handleidingen voor elke pagina van de applicati
 ### Weergeven
 De handleiding bevat afbeeldingen om de gebruiker door middel van illustraties op weg te helpen.
 Deze afbeeldingen zijn in `docs/manual/assets` terug te vinden. Gebruik voor het toevoegen
-van een afbeelding in de handleiding het volgende template:
+van een afbeelding in de handleiding de volgende template:
 
 ```markdown
 |          Titel afbeelding           |
