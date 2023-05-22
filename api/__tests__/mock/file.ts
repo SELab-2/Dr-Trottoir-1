@@ -41,7 +41,7 @@ export const manualDeBrug = {
     original_name: "manual_de_brug.pdf",
     size_in_bytes: 18296,
     mime: "application/pdf",
-    path: "manuals/manual_de_brug.pdf",
+    path: "manual_de_brug.pdf",
     createdAt: new Date("2023-05-20T18:57:05Z"),
     updatedAt: new Date("2023-05-20T18:57:05Z"),
 };
@@ -51,7 +51,7 @@ export const manualDunant = {
     original_name: "manual_dunant.pdf",
     size_in_bytes: 17590,
     mime: "application/pdf",
-    path: "manuals/manual_dunant.pdf",
+    path: "manual_dunant.pdf",
     createdAt: new Date("2023-05-20T18:57:05Z"),
     updatedAt: new Date("2023-05-20T18:57:05Z"),
 };
@@ -61,7 +61,7 @@ export const manualSterre = {
     original_name: "manual_sterre.pdf",
     size_in_bytes: 17872,
     mime: "application/pdf",
-    path: "manuals/manual_sterre.pdf",
+    path: "manual_sterre.pdf",
     createdAt: new Date("2023-05-20T18:57:05Z"),
     updatedAt: new Date("2023-05-20T18:57:05Z"),
 };
