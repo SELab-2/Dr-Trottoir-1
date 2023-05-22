@@ -77,7 +77,7 @@ services:
     environment:
       DATABASE_URL: $DATABASE_URL
       FILE_STORAGE_DIRECTORY: "/files"
-      CORS: "https://api.jenspots.com"
+      CORS: "https://sel2-1.ugent.be"
       DISABLE_AUTH: "false"
       ERROR_LOGGER: "false"
       SMTP_HOST: ""
