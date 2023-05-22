@@ -1,8 +1,8 @@
 import { prisma } from "./prisma";
 
 export async function initialiseGarbage() {
-    const timestamp1: Date = new Date(Date.UTC(2023, 4, 4, 18, 0, 0));
-    const timestamp2: Date = new Date(Date.UTC(2023, 4, 4, 12, 0, 0));
+    const timestamp1: Date = new Date(Date.UTC(2023, 4, 22, 16, 0, 0));
+    const timestamp2: Date = new Date(Date.UTC(2023, 4, 23, 10, 0, 0));
     const g1 = {
         pickup_time: timestamp1,
         description: "PMD buiten zetten",
