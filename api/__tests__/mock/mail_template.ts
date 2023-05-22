@@ -4,7 +4,7 @@ export async function initialiseMailTemplate() {
     const mailTemplate1 = {
         name: "Vuilnis",
         mail_subject: "Vuilnis in $(gebouw_naam)",
-        content: "In $(gebouw_naam) ligt er vuilnis op de grond",
+        content: `Geachte $(syndicus), \nIn $(gebouw_naam) ligt er vuilnis op de grond.\n\nMet vriendelijke groet, Dr Trottoir `,
     };
 
     const mailTemplate2 = {
