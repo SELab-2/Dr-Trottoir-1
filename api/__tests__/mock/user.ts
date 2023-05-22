@@ -172,10 +172,6 @@ export async function initialiseUserRegion() {
 }
 
 export async function initialiseSyndicus() {
-    const syndicus1 = {
-        user_id: 4,
-    };
-
     const syndicus2 = {
         user_id: 1,
     };
@@ -186,6 +182,6 @@ export async function initialiseSyndicus() {
     };
 
     await prisma.syndicus.createMany({
-        data: [syndicus1, syndicus2, ugent],
+        data: [syndicus2, ugent],
     });
 }
