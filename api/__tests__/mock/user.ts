@@ -140,7 +140,7 @@ export async function initialiseUser() {
     await prisma.user.create({
         data: {
             email: "ugent@trottoir.be",
-            first_name: "De Universiteit",
+            first_name: "Universiteit",
             last_name: "Gent",
             date_added: timestamp,
             last_login: timestamp,
