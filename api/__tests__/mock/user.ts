@@ -13,7 +13,7 @@ export async function initialiseUser() {
     // create student
     await prisma.user.create({
         data: {
-            email: "student@trottoir.be",
+            email: "dirk@trottoir.be",
             first_name: "Dirk",
             last_name: "De Student",
             date_added: timestamp,
@@ -110,15 +110,15 @@ export async function initialiseUser() {
     const student_salt2 = crypto.randomBytes(32).toString("hex");
     const student_hash2 = crypto
         .createHash("sha256")
-        .update("student" + student_salt)
+        .update("student" + student_salt2)
         .digest("hex");
 
-    // create  second student
+    // create second student
     await prisma.user.create({
         data: {
-            email: "student2@trottoir.be",
-            first_name: "Dirk",
-            last_name: "De Student",
+            email: "denise@trottoir.be",
+            first_name: "Denise",
+            last_name: "De Studente",
             date_added: timestamp,
             last_login: timestamp,
             phone: "0123456789",
@@ -128,6 +128,29 @@ export async function initialiseUser() {
             salt: student_salt2,
             hash: student_hash2,
             address_id: 1,
+        },
+    });
+
+    // UGent as example syndicus
+    const ugentSalt = crypto.randomBytes(32).toString("hex");
+    const ugentHash = crypto
+        .createHash("sha256")
+        .update("ugent" + ugentSalt)
+        .digest("hex");
+    await prisma.user.create({
+        data: {
+            email: "ugent@trottoir.be",
+            first_name: "De Universiteit",
+            last_name: "Gent",
+            date_added: timestamp,
+            last_login: timestamp,
+            phone: "0123456789",
+            student: false,
+            super_student: false,
+            admin: false,
+            salt: ugentSalt,
+            hash: ugentHash,
+            address_id: 2,
         },
     });
 }
@@ -157,7 +180,12 @@ export async function initialiseSyndicus() {
         user_id: 1,
     };
 
+    // UGent syndicus for demo
+    const ugent = {
+        user_id: 7,
+    };
+
     await prisma.syndicus.createMany({
-        data: [syndicus1, syndicus2],
+        data: [syndicus1, syndicus2, ugent],
     });
 }
