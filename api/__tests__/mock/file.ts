@@ -37,7 +37,7 @@ export const image = {
 
 // manuals for demo
 export const manualDeBrug = {
-    user_id: 7,
+    user_id: 6,
     original_name: "manual_de_brug.pdf",
     size_in_bytes: 18296,
     mime: "application/pdf",
@@ -47,7 +47,7 @@ export const manualDeBrug = {
 };
 
 export const manualDunant = {
-    user_id: 7,
+    user_id: 6,
     original_name: "manual_dunant.pdf",
     size_in_bytes: 17590,
     mime: "application/pdf",
@@ -57,7 +57,7 @@ export const manualDunant = {
 };
 
 export const manualSterre = {
-    user_id: 7,
+    user_id: 6,
     original_name: "manual_sterre.pdf",
     size_in_bytes: 17872,
     mime: "application/pdf",
