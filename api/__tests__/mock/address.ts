@@ -53,8 +53,8 @@ export async function initialiseAddress() {
         number: 2,
         city: "Ghent",
         zip_code: 9000,
-        latitude: 50.75342,
-        longitude: 5.09142,
+        latitude: 51.04881,
+        longitude: 3.70405,
     };
 
     const sterre = {
