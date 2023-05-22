@@ -16,7 +16,7 @@ export async function initialiseBuilding() {
         address_id: 1,
         manual_id: 1,
 
-        deleted: false,
+        deleted: true,
         syndicus_id: 1,
 
         hash: "aaaa",
@@ -29,7 +29,7 @@ export async function initialiseBuilding() {
         expected_time: 200,
         address_id: 2,
         manual_id: 1,
-        deleted: false,
+        deleted: true,
         syndicus_id: 2,
 
         hash: "abcd",
