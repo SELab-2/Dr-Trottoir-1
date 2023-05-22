@@ -41,8 +41,11 @@
               icon="mdi-map-marker"
               :text="
                 building.address.street +
+                ' ' +
                 building.address.number +
+                ' ' +
                 building.address.zip_code +
+                ' ' +
                 building.address.city
               "
             />
