@@ -16,7 +16,7 @@ export async function initialiseBuilding() {
         address_id: 1,
         manual_id: 1,
 
-        deleted: true,
+        deleted: false,
         syndicus_id: 1,
 
         hash: "aaaa",
