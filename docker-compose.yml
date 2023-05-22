@@ -134,7 +134,8 @@ services:
       - "traefik.http.routers.imgproxy.entrypoints=websecure"
       - "traefik.http.routers.imgproxy.tls.certresolver=letsencrypt"
       - "traefik.http.services.imgproxy.loadbalancer.server.port=8081"
-      - "traefik.http.middlewares.imgproxy.stripprefix.prefixes=/imgproxy/"
+      - "traefik.http.middlewares.imgproxy-stripprefix.stripprefix.prefixes=/imgproxy/"
+      - "traefik.http.routers.imgproxy.middlewares=imgproxy-stripprefix"
 
 networks:
   main:
