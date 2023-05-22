@@ -16,7 +16,7 @@ export async function initialiseBuilding() {
         address_id: 1,
         manual_id: 1,
 
-        deleted: true,
+        deleted: false,
         syndicus_id: 1,
 
         hash: "aaaa",
@@ -56,7 +56,7 @@ export async function initialiseBuilding() {
         expected_time: 100,
         address_id: 5,
         manual_id: 3,
-        syndicus_id: 3,
+        syndicus_id: 2,
         hash: "visitor-de-brug",
         deleted: false,
     };
@@ -68,7 +68,7 @@ export async function initialiseBuilding() {
         expected_time: 200,
         address_id: 6,
         manual_id: 4,
-        syndicus_id: 3,
+        syndicus_id: 2,
         hash: "visitor-dunant",
     };
 
@@ -79,7 +79,7 @@ export async function initialiseBuilding() {
         expected_time: 300,
         address_id: 7,
         manual_id: 5,
-        syndicus_id: 3,
+        syndicus_id: 2,
         hash: "visitor-sterre",
     };
 
