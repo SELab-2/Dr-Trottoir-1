@@ -206,7 +206,13 @@ const syndicusBuildings: Ref<Result<BuildingQuery>[]> = ref([]);
 
 tryOrAlertAsync(async () => {
   for (const building of useAuthStore().auth!.syndicus) {
-    syndicusBuildings.value.push(await new BuildingQuery().getOne(building.id));
+    const buildings = await new BuildingQuery().getAll({
+      syndicus_id: building.id,
+    });
+
+    for (const b of buildings) {
+      syndicusBuildings.value.push(b);
+    }
   }
 });
 
