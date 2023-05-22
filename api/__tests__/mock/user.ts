@@ -182,7 +182,7 @@ export async function initialiseSyndicus() {
 
     // UGent syndicus for demo
     const ugent = {
-        user_id: 7,
+        user_id: 6,
     };
 
     await prisma.syndicus.createMany({
