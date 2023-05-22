@@ -30,7 +30,7 @@ export async function initialiseBuilding() {
         address_id: 2,
         manual_id: 1,
         deleted: true,
-        syndicus_id: 2,
+        syndicus_id: 1,
 
         hash: "abcd",
     };
