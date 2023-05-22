@@ -24,11 +24,7 @@ export async function initialiseUser() {
             admin: false,
             salt: student_salt,
             hash: student_hash,
-            address: {
-                connect: {
-                    id: 1,
-                },
-            },
+            address_id: 1,
         },
     });
 
@@ -54,11 +50,7 @@ export async function initialiseUser() {
             salt: ss_salt,
             hash: ss_hash,
 
-            address: {
-                connect: {
-                    id: 2,
-                },
-            },
+            address_id: 2,
         },
     });
 
@@ -85,11 +77,7 @@ export async function initialiseUser() {
             salt: admin_salt,
             hash: admin_hash,
 
-            address: {
-                connect: {
-                    id: 3,
-                },
-            },
+            address_id: 3,
         },
     });
 
@@ -115,11 +103,7 @@ export async function initialiseUser() {
             salt: syndicus_salt,
             hash: syndicus_hash,
 
-            address: {
-                connect: {
-                    id: 3,
-                },
-            },
+            address_id: 3,
         },
     });
 
@@ -143,11 +127,7 @@ export async function initialiseUser() {
             admin: false,
             salt: student_salt2,
             hash: student_hash2,
-            address: {
-                connect: {
-                    id: 1,
-                },
-            },
+            address_id: 1,
         },
     });
 

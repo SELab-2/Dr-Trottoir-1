@@ -38,10 +38,17 @@ describe("Mail Template tests", () => {
                 content: "new content for $(gebouw_naam)",
             };
 
+            const expected = {
+                id: 4,
+                name: "new mail template",
+                mail_subject: "new mail template subject $(gebouw_naam)",
+                content: "new content for $(gebouw_naam)",
+            };
+
             await runner.post({
                 url: "/mail_template",
                 data: newMailTemplate,
-                expectedResponse: newMailTemplate,
+                expectedResponse: expected,
             });
         });
 

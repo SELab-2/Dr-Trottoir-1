@@ -1,4 +1,4 @@
-import { Prisma, File, Building } from "@selab-2/groep-1-orm";
+import { Prisma } from "@selab-2/groep-1-orm";
 import { Query } from "./query";
 import { includeUserWithoutAddress } from "./include";
 import { QueryError } from "./query_error";
@@ -27,7 +27,9 @@ type Element = Prisma.BuildingGetPayload<{
         expected_time: true;
         deleted: true;
         hash: boolean;
-        address: true;
+        address_id: true;
+        syndicus_id: true;
+        manual_id: true;
     };
 }>;
 
@@ -54,12 +56,6 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
         };
     };
 }>;
-
-type BuildingAnalytics = {
-    name: string;
-    expected: number | null;
-    total: number;
-};
 
 export class BuildingQuery extends Query<
     BuildingQueryParameters,
@@ -105,46 +101,29 @@ export class BuildingQuery extends Query<
         return this.fetchJSON(imageEndpoint, "DELETE", { hardDelete: hard });
     }
 
-    async getAnalytics(
-        startdate: Date,
-        enddate: Date,
-    ): Promise<Array<BuildingAnalytics>> {
-        const analytics = [];
-        const buildings: Array<BuildingAllInfo> = await this.fetchJSON(
-            this.server + this.endpoint,
-        );
+    async totalTimeSpent(
+        building: number,
+        startDate: Date,
+        endDate: Date,
+    ): Promise<number> {
+        let time = 0;
 
-        for (const building of buildings) {
-            // bereken de totaal gespendeerde tijd
-            let time = 0;
+        const progressItems = await new ProgressQuery().getAll({
+            arrived_after: startDate,
+            left_before: endDate,
+            building,
+        });
 
-            const parameters = {
-                arrived_after: startdate,
-                left_before: enddate,
-                building: building.id,
-            };
-
-            const progresses = await new ProgressQuery().getAll(parameters);
-            for (const progress of progresses) {
-                if (progress.arrival !== null && progress.departure != null) {
-                    const departure = new Date(progress.departure);
-                    const arrival = new Date(progress.arrival);
-                    const hours = departure.getHours() - arrival.getHours();
-                    const minutes =
-                        departure.getMinutes() - arrival.getMinutes();
-
-                    time += 60 * hours + minutes;
-                }
+        for (const progress of progressItems) {
+            if (progress.arrival !== null && progress.departure != null) {
+                const departure = new Date(progress.departure);
+                const arrival = new Date(progress.arrival);
+                time +=
+                    (departure.getTime() - arrival.getTime()) /
+                    (1000 * 60 * 60);
             }
-
-            const analysis = {
-                name: building.name,
-                expected: building.expected_time,
-                total: time,
-            };
-            analytics.push(analysis);
         }
 
-        return analytics;
+        return time;
     }
 }

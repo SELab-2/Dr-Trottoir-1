@@ -13,60 +13,69 @@
         style="min-width: 100px; max-width: 100%"
         class="flex-grow-1 flex-shrink-0 py-0 my-0"
       >
-        <BorderCard
-          class="mt-5 "
-        >
-          <v-row class="py-0 my-0 mx-0 mt-5">
-            <v-col
-              cols="1"
-              style="min-width: 100px; max-width: 100%"
-              class="flex-grow-1 flex-shrink-0 py-0 my-0 mx-3"
-              ><v-text-field
-                v-model="templateName"
-                prepend-inner-icon="mdi-file-document-outline"
-                label="Template naam"
+        <v-form v-model="valid" @submit.prevent="saveTemplate()">
+          <BorderCard class="mt-5">
+            <v-row class="py-0 my-0 mx-0 mt-5">
+              <v-col
+                cols="1"
+                style="min-width: 100px; max-width: 100%"
+                class="flex-grow-1 flex-shrink-0 py-0 my-0 mx-3"
+                ><v-text-field
+                  type="text"
+                  v-model="templateName"
+                  prepend-inner-icon="mdi-file-document-outline"
+                  label="Template naam"
+                  required
+                  :rules="inptufieldRules"
+                >
+                </v-text-field>
+              </v-col>
+            </v-row>
+            <v-row class="py-0 my-0 mx-3">
+              <v-col
+                cols="1"
+                style="min-width: 100px; max-width: 100%"
+                class="flex-grow-1 flex-shrink-0 py-0 my-0"
               >
-              </v-text-field>
-            </v-col>
-          </v-row>
-          <v-row class="py-0 my-0 mx-3">
-            <v-col
-              cols="1"
-              style="min-width: 100px; max-width: 100%"
-              class="flex-grow-1 flex-shrink-0 py-0 my-0"
-            >
-              <v-text-field
-                prepend-inner-icon="mdi-text-short"
-                label="Template onderwerp"
-                v-model="subject"
-              >
-              </v-text-field>
-            </v-col>
-          </v-row>
+                <v-text-field
+                  type="text"
+                  required
+                  prepend-inner-icon="mdi-text-short"
+                  label="Template onderwerp"
+                  v-model="subject"
+                  :rules="inptufieldRules"
+                >
+                </v-text-field>
+              </v-col>
+            </v-row>
 
-          <v-row class="py-0 my-0 mx-3"
-            ><v-col
-              cols="1"
-              style="min-width: 100px; max-width: 100%"
-              class="flex-grow-1 flex-shrink-0 py-0 my-0"
+            <v-row class="py-0 mt-2 mx-3"
+              ><v-col
+                cols="1"
+                style="min-width: 100px; max-width: 100%"
+                class="flex-grow-1 flex-shrink-0 py-0 my-0"
+              >
+                <v-textarea
+                  type="text"
+                  required
+                  rows="17"
+                  label="Template inhoud"
+                  prepend-inner-icon="mdi-text"
+                  v-model="body"
+                  :rules="inptufieldRules"
+                ></v-textarea
+              ></v-col>
+            </v-row>
+            <SimpleButton
+              color="primary"
+              prepend-icon="mdi-content-save"
+              variant="tonal"
+              class="mb-6 mt-3 ml-6"
+              type="submit"
+              >Opslaan</SimpleButton
             >
-              <v-textarea
-                rows="17"
-                label="Template inhoud"
-                prepend-inner-icon="mdi-text"
-                v-model="body"
-              ></v-textarea
-            ></v-col>
-          </v-row>
-          <v-btn
-            color="primary"
-            prepend-icon="mdi-content-save"
-            variant="tonal"
-            class="mb-6 ml-6"
-            @click="saveTemplate()"
-            >Opslaan</v-btn
-          >
-        </BorderCard> </v-col
+          </BorderCard>
+        </v-form> </v-col
       ><v-col
         cols="3"
         style="min-width: 250px; max-width: 100%"
@@ -99,10 +108,23 @@ import { ref } from "vue";
 import { Result, MailTemplateQuery } from "@selab-2/groep-1-query";
 import { tryOrAlertAsync } from "@/try";
 import { useRoute } from "vue-router";
+import SimpleButton from "@/components/buttons/SimpleButton.vue";
+import { useRouter } from "vue-router";
 
 const templateName = ref<string>("");
 const subject = ref<string>("");
 const body = ref<string>("");
+const router = useRouter();
+
+const valid = ref(false);
+
+// first name rules
+const inptufieldRules = [
+  // check if a name was given
+  (name: string) => {
+    return name ? true : "Vul dit veld in.";
+  },
+];
 
 const route = useRoute();
 const templateId: number = Number(route.params.id);
@@ -131,32 +153,32 @@ const variables: { name: string; description: string }[] = [
 ];
 
 function saveTemplate() {
-  if (!templateId) {
-    tryOrAlertAsync(async () => {
-      await new MailTemplateQuery().createOne({
-        name: templateName.value,
-        mail_subject: subject.value,
-        content: body.value,
+  if (valid.value) {
+    if (!templateId) {
+      tryOrAlertAsync(async () => {
+        await new MailTemplateQuery().createOne({
+          name: templateName.value,
+          mail_subject: subject.value,
+          content: body.value,
+        });
       });
-    });
-    clearForm();
-  } else {
-    tryOrAlertAsync(async () => {
-      await new MailTemplateQuery().updateOne({
-        id: templateId,
-        name: templateName.value,
-        mail_subject: subject.value,
-        content: body.value,
+      routeToAdmin();
+    } else {
+      tryOrAlertAsync(async () => {
+        await new MailTemplateQuery().updateOne({
+          id: templateId,
+          name: templateName.value,
+          mail_subject: subject.value,
+          content: body.value,
+        });
       });
-    });
-    clearForm();
+      routeToAdmin();
+    }
   }
 }
 
-function clearForm() {
-  templateName.value = "";
-  subject.value = "";
-  body.value = "";
+async function routeToAdmin() {
+  await router.push({ name: "template_overview" });
 }
 </script>
 

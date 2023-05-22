@@ -148,16 +148,7 @@ describe("User tests", () => {
                 date_added: "2020-01-01T00:00:00.000Z",
                 last_login: "2020-01-01T00:00:00.000Z",
                 phone: "23457890",
-                address: {
-                    create: {
-                        city: "Gent",
-                        latitude: 90,
-                        longitude: 100.0,
-                        number: 1,
-                        street: "street",
-                        zip_code: 1000,
-                    },
-                },
+                address_id: 4,
                 student: false,
                 super_student: true,
                 admin: false,
@@ -165,25 +156,26 @@ describe("User tests", () => {
             };
 
             const expected = {
+                id: 6,
                 email: "foo@bar.com",
                 first_name: "Foo",
                 last_name: "Bar",
                 last_login: "2020-01-01T00:00:00.000Z",
                 date_added: "2020-01-01T00:00:00.000Z",
                 phone: "23457890",
-                address_id: 5,
+                address_id: 4,
                 student: false,
                 super_student: true,
                 admin: false,
                 deleted: false,
                 address: {
-                    id: 5,
-                    street: "street",
-                    number: 1,
-                    city: "Gent",
-                    zip_code: 1000,
-                    latitude: 90,
-                    longitude: 100,
+                    id: 4,
+                    street: "Krijgslaan",
+                    number: 282,
+                    city: "Ghent",
+                    zip_code: 9000,
+                    latitude: 51.02776,
+                    longitude: 3.71847,
                 },
                 regions: [],
             };
@@ -512,16 +504,7 @@ describe("User tests", () => {
             date_added: "2020-01-01T00:00:00.000Z",
             last_login: "2020-01-01T00:00:00.000Z",
             phone: "23457890",
-            address: {
-                create: {
-                    city: "Gent",
-                    latitude: 90,
-                    longitude: 100.0,
-                    number: 1,
-                    street: "street",
-                    zip_code: 1000,
-                },
-            },
+            address_id: 4,
             student: false,
             super_student: true,
             admin: false,
@@ -640,16 +623,7 @@ describe("User tests", () => {
                 date_added: "2020-01-01T00:00:00.000Z",
                 last_login: "2020-01-01T00:00:00.000Z",
                 phone: "516135485312",
-                address: {
-                    create: {
-                        city: "Gent",
-                        latitude: 90,
-                        longitude: 100.0,
-                        number: 1,
-                        street: "street",
-                        zip_code: 1000,
-                    },
-                },
+                address_id: 4,
                 student: false,
                 super_student: false,
                 admin: true,
@@ -853,6 +827,85 @@ describe("User tests", () => {
                 url: "/user/1",
                 data: { password: "Sp3cial.Chars.Present!" },
                 expectedResponse: expected,
+            });
+        });
+    });
+
+    describe("Bugs", () => {
+        describe("Issue 491: Student is able to make himself Admin", () => {
+            describe("Requests to change permissions from users without administrator priviledges must be rejected", () => {
+                test("Student's request must be rejected", async () => {
+                    runner.authLevel(AuthenticationLevel.STUDENT);
+                    await runner.patch({
+                        url: "/user/1",
+                        data: { admin: true },
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
+
+                test("Superstudent's request must be rejected", async () => {
+                    runner.authLevel(AuthenticationLevel.SUPER_STUDENT);
+                    await runner.patch({
+                        url: "/user/1",
+                        data: { admin: true },
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
+
+                test("Syndicus' request must be rejected", async () => {
+                    runner.authLevel(AuthenticationLevel.SYNDICUS);
+                    await runner.patch({
+                        url: "/user/1",
+                        data: { admin: true },
+                        expectedResponse: forbiddenResponse,
+                        statusCode: 403,
+                    });
+                });
+            });
+        });
+
+        test("Administrator must be allowed to perform permission change", async () => {
+            runner.authLevel(AuthenticationLevel.ADMINISTRATOR);
+            await runner.patch({
+                url: "/user/1",
+                data: { super_student: true },
+                expectedResponse: {
+                    id: 1,
+                    email: "student@trottoir.be",
+                    first_name: "Dirk",
+                    last_name: "De Student",
+                    last_login: "2023-05-04T12:00:00.000Z",
+                    date_added: "2023-05-04T12:00:00.000Z",
+                    phone: "0123456789",
+                    address_id: 1,
+                    student: true,
+                    super_student: true,
+                    admin: false,
+                    deleted: false,
+                    address: {
+                        id: 1,
+                        street: "Wallaby Way",
+                        number: 42,
+                        city: "Sydney",
+                        zip_code: 2000,
+                        latitude: -33.865143,
+                        longitude: 151.2099,
+                    },
+                    regions: [
+                        {
+                            id: 1,
+                            user_id: 1,
+                            region_id: 1,
+                            region: {
+                                id: 1,
+                                name: "Region 1",
+                                deleted: false,
+                            },
+                        },
+                    ],
+                },
             });
         });
     });

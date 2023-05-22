@@ -251,6 +251,7 @@ describe("Schedule tests", () => {
             };
 
             const expectedResponse = {
+                id: 3,
                 day: "2023-06-04T12:00:00.000Z",
                 start: "2023-05-04T12:10:00.000Z",
                 end: "2023-05-04T12:20:00.000Z",

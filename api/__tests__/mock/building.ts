@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import { prisma } from "./prisma";
 import {
     image,
@@ -9,45 +8,32 @@ import {
 } from "./file";
 
 export async function initialiseBuilding() {
-    const passwordB1 = crypto
-        .createHash("sha256")
-        .update("password_building1")
-        .digest("hex");
     const building1 = {
         name: "Building 1",
         ivago_id: "ivago-1",
         description: "Description of building 1",
         expected_time: 100,
         address_id: 1,
-        manual_id: manual.id,
+        manual_id: 1,
 
         deleted: false,
         syndicus_id: 1,
 
-        hash: passwordB1,
+        hash: "aaaa",
     };
 
-    const passwordB2 = crypto
-        .createHash("sha256")
-        .update("password_building2")
-        .digest("hex");
     const building2 = {
         name: "Building 2",
         ivago_id: "ivago-2",
         description: "Description of building 2",
         expected_time: 200,
         address_id: 2,
-        manual_id: manual.id,
+        manual_id: 1,
         deleted: false,
         syndicus_id: 2,
 
-        hash: passwordB2,
+        hash: "abcd",
     };
-
-    const passwordB3 = crypto
-        .createHash("sha256")
-        .update("password_building3")
-        .digest("hex");
 
     const building3 = {
         name: "Building 3",
@@ -55,11 +41,11 @@ export async function initialiseBuilding() {
         description: "Description of building 3",
         expected_time: 150,
         address_id: 3,
-        manual_id: manual.id,
+        manual_id: 1,
         syndicus_id: 1,
         deleted: true,
 
-        hash: passwordB3,
+        hash: "klmno",
     };
 
     // buildings for demo
@@ -105,17 +91,17 @@ export async function initialiseBuilding() {
 export async function initialiseBuildingImages() {
     const e1 = {
         building_id: 1,
-        image_id: image.id,
+        image_id: 3,
     };
 
     const e2 = {
         building_id: 2,
-        image_id: image.id,
+        image_id: 3,
     };
 
     const e3 = {
         building_id: 3,
-        image_id: image.id,
+        image_id: 3,
     };
 
     await prisma.buildingImages.createMany({

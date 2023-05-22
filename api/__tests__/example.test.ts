@@ -1,6 +1,6 @@
 /**
  * File showing off the usage of Testrunner
- * action.test.js is taken as a template for this test suite
+ * mail_template.test.js is taken as a template for this test suite
  */
 import { AuthenticationLevel, Testrunner } from "./utilities/Testrunner";
 import request from "supertest";
@@ -32,28 +32,51 @@ describe("Example test suite", () => {
     });
 
     test("Example GET", async () => {
-        // define values that are expected from GET /action
+        // define values that are expected from GET /mail_template
         const expected = [
-            { id: 1, description: "action 1" },
-            { id: 2, description: "action 2" },
+            {
+                content: "In $(gebouw_naam) ligt er vuilnis op de grond",
+                id: 1,
+                mail_subject: "Vuilnis in $(gebouw_naam)",
+                name: "Vuilnis",
+            },
+            {
+                content: "In $(gebouw_naam) werkt de code niet meer",
+                id: 2,
+                mail_subject: "Code werkt niet in $(gebouw_naam)",
+                name: "Code",
+            },
+            {
+                content:
+                    "Ivago heeft de ingeplande container niet meegenomen bij $(gebouw_naam)",
+                id: 3,
+                mail_subject: "Ivago is niet langs $(gebouw_naam) gekomen",
+                name: "Ivago",
+            },
         ];
 
         // let the runner run
-        await testRunner.get({
-            url: "/action",
-            expectedData: expected,
-        });
+        await testRunner.get({ url: "/mail_template", expectedData: expected });
     });
 
     test("Example POST", async () => {
-        const newAction = {
-            description: "new action",
+        const newMailTemplate = {
+            name: "new mail template",
+            mail_subject: "new mail template subject $(gebouw_naam)",
+            content: "new content for $(gebouw_naam)",
+        };
+
+        const expected = {
+            id: 4,
+            name: "new mail template",
+            mail_subject: "new mail template subject $(gebouw_naam)",
+            content: "new content for $(gebouw_naam)",
         };
 
         await testRunner.post({
-            url: "/action",
-            data: newAction,
-            expectedResponse: newAction,
+            url: "/mail_template",
+            data: newMailTemplate,
+            expectedResponse: expected,
         });
 
         // clean up after ourselves
@@ -61,26 +84,28 @@ describe("Example test suite", () => {
     });
 
     test("Example PATCH", async () => {
-        const updatedAction = {
-            description: "Update!",
+        const newMailTemplate = {
+            name: "Updated name mail template",
+        };
+
+        const expected = {
+            id: 1,
+            name: "Updated name mail template",
+            mail_subject: "Vuilnis in $(gebouw_naam)",
+            content: "In $(gebouw_naam) ligt er vuilnis op de grond",
         };
 
         await testRunner.patch({
-            url: "/action/1",
-            data: updatedAction,
+            url: "/mail_template/1",
+            data: newMailTemplate,
             // for succesful PATCH requests, expectedResponse should be equal to data
             // for PATCH requests that are expected to fail, provide the expected response
-            expectedResponse: { id: 1, description: "Update!" },
+            expectedResponse: expected,
         });
     });
 
     test("Example DELETE", async () => {
-        // first delete garbage that is connected to this action, then action itself
-        await testRunner.delete({
-            url: "/garbage/2",
-        });
-
-        await testRunner.delete({ url: "/action/2" });
+        await testRunner.delete({ url: "/mail_template/1" });
     });
 
     afterEach(async () => {
