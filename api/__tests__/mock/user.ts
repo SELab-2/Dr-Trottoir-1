@@ -13,7 +13,7 @@ export async function initialiseUser() {
     // create student
     await prisma.user.create({
         data: {
-            email: "dirk@trottoir.be",
+            email: "dirk@drtrottoir.be",
             first_name: "Dirk",
             last_name: "De Student",
             date_added: timestamp,
@@ -37,7 +37,7 @@ export async function initialiseUser() {
     // create super student
     await prisma.user.create({
         data: {
-            email: "superstudent@trottoir.be",
+            email: "superstudent@drtrottoir.be",
             first_name: "Toon",
             last_name: "De Superstudent",
             date_added: timestamp,
@@ -63,7 +63,7 @@ export async function initialiseUser() {
     // create admin
     await prisma.user.create({
         data: {
-            email: "administrator@trottoir.be",
+            email: "administrator@drtrottoir.be",
             first_name: "Mario",
             last_name: "De Administrator",
             date_added: timestamp,
@@ -89,7 +89,7 @@ export async function initialiseUser() {
         .digest("hex");
     await prisma.user.create({
         data: {
-            email: "syndicus@trottoir.be",
+            email: "syndicus@drtrottoir.be",
             first_name: "Simon",
             last_name: "De Syndicus",
             date_added: timestamp,
@@ -116,7 +116,7 @@ export async function initialiseUser() {
     // create second student
     await prisma.user.create({
         data: {
-            email: "denise@trottoir.be",
+            email: "denise@drtrottoir.be",
             first_name: "Denise",
             last_name: "De Studente",
             date_added: timestamp,
@@ -139,7 +139,7 @@ export async function initialiseUser() {
         .digest("hex");
     await prisma.user.create({
         data: {
-            email: "ugent@trottoir.be",
+            email: "ugent@drtrottoir.be",
             first_name: "Universiteit",
             last_name: "Gent",
             date_added: timestamp,
