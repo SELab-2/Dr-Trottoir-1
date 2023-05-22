@@ -262,6 +262,7 @@ import RemovedCard from "@/components/cards/RemovedCard.vue";
 import router from "@/router";
 import { ImgProxy } from "@/imgproxy";
 import BuildingAnalyticCard from "@/components/cards/BuildingAnalyticCard.vue";
+import * as process from "process";
 
 const showRemovePopup = ref(false);
 

@@ -55,7 +55,7 @@ export async function initialiseBuilding() {
         description: "Resto De Brug van Universiteit Gent",
         expected_time: 100,
         address_id: 5,
-        manual_id: manualDeBrug.id,
+        manual_id: 3,
         syndicus_id: 3,
         hash: "visitor-de-brug",
         deleted: false,
@@ -67,7 +67,7 @@ export async function initialiseBuilding() {
         description: "Resto Dunant van Universiteit Gent",
         expected_time: 200,
         address_id: 6,
-        manual_id: manualDunant.id,
+        manual_id: 4,
         syndicus_id: 3,
         hash: "visitor-dunant",
     };
@@ -78,7 +78,7 @@ export async function initialiseBuilding() {
         description: "Resto Sterre van Universiteit Gent",
         expected_time: 300,
         address_id: 7,
-        manual_id: manualSterre.id,
+        manual_id: 5,
         syndicus_id: 3,
         hash: "visitor-sterre",
     };

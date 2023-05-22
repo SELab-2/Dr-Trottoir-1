@@ -8,6 +8,7 @@ import { APIError } from "../errors/api_error";
 import { APIErrorCode } from "../errors/api_error_code";
 import fs from "fs";
 import { File } from "@selab-2/groep-1-orm";
+import path from "path";
 
 export class FileRouting extends Routing {
     private storage = multer.diskStorage({
@@ -49,8 +50,13 @@ export class FileRouting extends Routing {
             },
         });
 
+        console.log(process.env.FILE_STORAGE_DIRECTORY);
+        console.log(path.resolve());
+
         return res.sendFile(
-            `${process.env.FILE_STORAGE_DIRECTORY}/${result.path}`,
+            `${path.resolve()}/${process.env.FILE_STORAGE_DIRECTORY}/${
+                result.path
+            }`,
         );
     }
 
