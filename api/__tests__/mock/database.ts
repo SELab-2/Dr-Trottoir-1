@@ -1,10 +1,6 @@
 import { initialiseRegion } from "./region";
 import { initialiseAddress } from "./address";
-import {
-    initialiseSyndicus,
-    initialiseUser,
-    initialiseUserRegion,
-} from "./user";
+import { initialiseUser, initialiseUserRegion } from "./user";
 import { initialiseBuilding, initialiseBuildingImages } from "./building";
 import {
     initialiseProgress,
@@ -28,7 +24,6 @@ const initialiseFunctions: { [name: string]: () => Promise<any> } = {
     files: initialiseFiles,
     region: initialiseRegion,
     user_region: initialiseUserRegion,
-    syndicus: initialiseSyndicus,
     building: initialiseBuilding,
     building_image: initialiseBuildingImages,
     garbage: initialiseGarbage,

@@ -15,7 +15,7 @@ export class Building implements TableEntity<Result<BuildingQuery>> {
         name: "",
         fit: true,
         get: (e: Result<BuildingQuery>) =>
-          e.syndicus?.user.first_name + " " + e.syndicus?.user.last_name,
+          e.syndicus?.first_name + " " + e.syndicus?.last_name,
         type: RowType.AVATAR,
         sortable: false,
       },
@@ -24,7 +24,7 @@ export class Building implements TableEntity<Result<BuildingQuery>> {
         name: "Syndicus",
         fit: false,
         get: (e: Result<BuildingQuery>) =>
-          e.syndicus?.user.first_name + " " + e.syndicus?.user.last_name,
+          e.syndicus?.first_name + " " + e.syndicus?.last_name,
         type: RowType.TEXT,
         sortable: true,
       },

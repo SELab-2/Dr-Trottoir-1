@@ -40,11 +40,7 @@ export class BuildingRouting extends Routing {
         deleted: true,
         hash: false,
         address: true,
-        syndicus: {
-            include: {
-                user: includeUser(false),
-            },
-        },
+        syndicus: includeUser(false),
         manual: true,
         images: {
             include: {
@@ -194,11 +190,8 @@ export class BuildingRouting extends Routing {
                 deleted: true,
                 hash: false,
                 address: true,
-                syndicus: {
-                    include: {
-                        user: includeUser(false),
-                    },
-                },
+                syndicus_id: true,
+                syndicus: includeUser(false),
                 manual: true,
                 images: {
                     include: {

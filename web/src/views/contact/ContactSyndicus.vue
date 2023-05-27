@@ -145,7 +145,7 @@ function updateFields() {
 function sendMail() {
   tryOrAlertAsync(async () => {
     await new MailQuery().createOne({
-      to: building.value?.syndicus.user.email,
+      to: building.value?.syndicus.email,
       subject: subject.value,
       content: content.value,
     });

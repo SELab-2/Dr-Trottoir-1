@@ -51,9 +51,9 @@ model User {
 
     // Relaties
     regions  UserRegion[]
-    syndicus Syndicus[]
     schedule Schedule[]
     files    File[]
+    syndicus Building[]
 
     @@map("user")
 }
@@ -142,7 +142,7 @@ model Building {
     expected_time Int?
 
     syndicus_id Int
-    syndicus    Syndicus @relation(fields: [syndicus_id], references: [id], onDelete: Restrict)
+    syndicus    User @relation(fields: [syndicus_id], references: [id], onDelete: Restrict)
 
     address_id Int
     address    Address @relation(fields: [address_id], references: [id], onDelete: Restrict)
@@ -161,18 +161,6 @@ model Building {
     progress Progress[]
 
     @@map("building")
-}
-
-// Dit model houdt alle gebruikers bij die de rol van syndicus hebben.
-model Syndicus {
-    id Int @id @default(autoincrement())
-
-    user_id Int
-    user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-    building Building[]
-
-    @@map("syndicus")
 }
 
 // Dit model bevat een gebouw, het tijdstip dat het afval daar opgehaald wordt en

@@ -140,13 +140,8 @@ const progressItems: Ref<Array<Result<ProgressQuery>>> = ref([]);
 
 // We compute the name of the syndicus once.
 const syndicusName: string | null = (() => {
-  const syndicus = props.building?.syndicus.user;
-
-  if (syndicus === undefined) {
-    return null;
-  }
-
-  return `${syndicus.first_name} ${syndicus.last_name}`;
+  const syndicus = props.building?.syndicus;
+  return syndicus ? `${syndicus.first_name} ${syndicus.last_name}` : null;
 })();
 
 // We compute the full address once.

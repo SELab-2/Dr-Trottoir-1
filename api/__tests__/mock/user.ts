@@ -147,17 +147,3 @@ export async function initialiseUserRegion() {
         data: [entry, entry2],
     });
 }
-
-export async function initialiseSyndicus() {
-    const syndicus1 = {
-        user_id: 4,
-    };
-
-    const syndicus2 = {
-        user_id: 1,
-    };
-
-    await prisma.syndicus.createMany({
-        data: [syndicus1, syndicus2],
-    });
-}

@@ -21,10 +21,7 @@ export class GarbageRouting extends Routing {
             !req.user?.super_student &&
             !req.user?.admin &&
             !req.user?.student &&
-            req.user?.syndicus.every(
-                (element) =>
-                    element.id !== Parser.number(req.query["syndicus_id"]),
-            )
+            req.user?.id !== Parser.number(req.query["syndicus_id"])
         ) {
             throw new APIError(APIErrorCode.FORBIDDEN);
         }

@@ -7,15 +7,15 @@ export function parseTemplate(
   const variables: { name: string; description: string }[] = [
     {
       name: "\\$\\(syndicus_voornaam\\)",
-      description: building.syndicus.user.first_name,
+      description: building.syndicus.first_name,
     },
     {
       name: "\\$\\(syndicus_achternaam\\)",
-      description: building.syndicus.user.last_name,
+      description: building.syndicus.last_name,
     },
     {
       name: "\\$\\(syndicus_naam\\)",
-      description: `${building.syndicus.user.first_name} ${building.syndicus.user.last_name}`,
+      description: `${building.syndicus.first_name} ${building.syndicus.last_name}`,
     },
     { name: "\\$\\(gebouw_naam\\)", description: building.name },
     {

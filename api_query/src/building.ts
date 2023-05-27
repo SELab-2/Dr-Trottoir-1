@@ -43,11 +43,7 @@ type BuildingAllInfo = Prisma.BuildingGetPayload<{
         deleted: true;
         hash: false;
         address: true;
-        syndicus: {
-            include: {
-                user: typeof includeUserWithoutAddress;
-            };
-        };
+        syndicus: typeof includeUserWithoutAddress;
         manual: true;
         images: {
             include: {

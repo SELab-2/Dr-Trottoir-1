@@ -43,8 +43,7 @@ const filter_data = ref<Filterdata>({
 let buildings: Ref<Result<BuildingQuery>[]> = ref([]);
 
 function full_syndicus_name(building: Result<BuildingQuery>) {
-  const user = building.syndicus?.user;
-  return user?.first_name + " " + user?.last_name;
+  return `${building.syndicus.first_name} ${building.syndicus.last_name}`;
 }
 
 function full_address(building: Result<BuildingQuery>) {

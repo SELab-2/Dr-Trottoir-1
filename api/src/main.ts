@@ -8,7 +8,6 @@ import "express-async-errors";
 import { ErrorHandler } from "./errors/error_handler";
 import { ScheduleRouting } from "./routes/schedule";
 import { AuthRouting } from "./routes/auth";
-import { SyndicusRouting } from "./routes/syndicus";
 import { RoundRouting } from "./routes/round";
 import passport from "passport";
 import crypto from "crypto";
@@ -126,7 +125,6 @@ app.use("/building", new BuildingRouting().toRouter());
 app.use("/schedule", new ScheduleRouting().toRouter());
 app.use("/region", new RegionRouting().toRouter());
 app.use("/garbage", new GarbageRouting().toRouter());
-app.use("/syndicus", new SyndicusRouting().toRouter());
 app.use("/round", new RoundRouting().toRouter());
 
 app.use("/file", new FileRouting().toRouter());

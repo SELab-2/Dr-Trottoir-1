@@ -8,7 +8,6 @@ import { RoundQuery } from "./round";
 import { MailTemplateQuery } from "./mail_template";
 import { RoundBuildingQuery } from "./round_building";
 import { ScheduleQuery } from "./schedule";
-import { SyndicusQuery } from "./syndicus";
 import { UserQuery } from "./user";
 import { UserRegionQuery } from "./user_region";
 import { QueryError } from "./query_error";
@@ -51,7 +50,6 @@ export {
     RoundQuery,
     RoundBuildingQuery,
     ScheduleQuery,
-    SyndicusQuery,
     UserQuery,
     UserRegionQuery,
     QueryError,

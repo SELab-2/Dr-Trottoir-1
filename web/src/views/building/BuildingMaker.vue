@@ -233,7 +233,6 @@ import {
   AddressQuery,
   BuildingQuery,
   UserQuery,
-  SyndicusQuery,
   FileQuery,
 } from "@selab-2/groep-1-query";
 import { File, BuildingImages } from "@selab-2/groep-1-orm";
@@ -250,8 +249,6 @@ const possibleUsers = await new UserQuery().getAll({
   student: false,
   super_student: false,
 });
-
-const syndici = await new SyndicusQuery().getAll();
 
 const address = ref({
   street: "",
@@ -318,7 +315,7 @@ if (edit) {
 }
 
 async function setFields(requestedBuilding: Result<BuildingQuery>) {
-  tryOrAlertAsync(async () => {
+  await tryOrAlertAsync(async () => {
     const thisSyndicus = requestedBuilding.syndicus;
     const thisAddress = requestedBuilding.address;
 
@@ -327,8 +324,8 @@ async function setFields(requestedBuilding: Result<BuildingQuery>) {
     building.value.ivago_id = requestedBuilding.ivago_id;
     building.value.syndicus = {
       id: thisSyndicus.id,
-      first_name: thisSyndicus.user.first_name,
-      last_name: thisSyndicus.user.last_name,
+      first_name: thisSyndicus.first_name,
+      last_name: thisSyndicus.last_name,
     };
     building.value.description = requestedBuilding.description
       ? requestedBuilding.description
@@ -357,7 +354,7 @@ async function addSoloImage() {
   if (fullBuilding.value) {
     const newBuilding: Result<BuildingQuery> =
       await new BuildingQuery().createImage(fullBuilding.value, "soloImage");
-    setFields(newBuilding);
+    await setFields(newBuilding);
   }
 }
 
@@ -386,21 +383,8 @@ const submit = () => {
     };
 
     if (!edit) {
-      const isNewSyndicus: boolean = syndici.some(
-        (s: Result<SyndicusQuery>) => {
-          return s.user_id === buildingUnwrapped.syndicus.id;
-        },
-      );
-
       // Create address
       const newAddress = await new AddressQuery().createOne(formattedAddress);
-
-      if (isNewSyndicus) {
-        let { id: syndicusId } = await new SyndicusQuery().createOne({
-          user_id: buildingUnwrapped.syndicus.id,
-        });
-        buildingUnwrapped.syndicus.id = syndicusId;
-      }
 
       const file = await new FileQuery().createOne("manual-id");
 
@@ -433,18 +417,6 @@ const submit = () => {
         ...formattedAddress,
       });
 
-      let syndicus = (
-        await new SyndicusQuery().getAll({
-          user: buildingUnwrapped.syndicus.id,
-        })
-      ).pop();
-
-      if (!syndicus) {
-        syndicus = await new SyndicusQuery().createOne({
-          user_id: buildingUnwrapped.syndicus.id,
-        });
-      }
-
       const newBuilding = await new BuildingQuery().updateOne({
         id: buildingId.value,
         name: buildingUnwrapped.name,
@@ -453,7 +425,7 @@ const submit = () => {
         ivago_id: buildingUnwrapped.ivago_id,
         expected_time: buildingUnwrapped.expectedTimeInHours * 60,
         manual_id: building.value.manual_id,
-        syndicus_id: syndicus.id,
+        syndicus_id: buildingUnwrapped.syndicus.id,
       });
 
       await router.push(`/gebouw/${newBuilding.id}`);

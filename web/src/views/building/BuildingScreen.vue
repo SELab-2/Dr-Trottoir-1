@@ -98,9 +98,9 @@
           <div style="gap: 16px; flex-wrap: wrap" class="d-flex flex-row">
             <Avatar
               :name="
-                building.syndicus?.user.first_name +
+                building.syndicus?.first_name +
                 ' ' +
-                building.syndicus?.user.last_name
+                building.syndicus?.last_name
               "
             />
             <div>
@@ -109,9 +109,9 @@
               </p>
               <p style="font-weight: 500">
                 {{
-                  building.syndicus?.user.first_name +
+                  building.syndicus?.first_name +
                   " " +
-                  building.syndicus?.user.last_name
+                  building.syndicus?.last_name
                 }}
               </p>
             </div>
@@ -121,9 +121,9 @@
         <div class="grid-right">
           <SyndicusButtons
             v-if="!syndicus"
-            :email="building.syndicus.user.email"
+            :email="building.syndicus.email"
             :click-email="mail"
-            :phone="building.syndicus.user.phone"
+            :phone="building.syndicus.phone"
             :click-phone="call"
           />
         </div>

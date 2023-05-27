@@ -1,5 +1,4 @@
 import { prisma } from "./prisma";
-import { image, manual } from "./file";
 
 export async function initialiseBuilding() {
     const building1 = {
@@ -11,7 +10,7 @@ export async function initialiseBuilding() {
         manual_id: 1,
 
         deleted: false,
-        syndicus_id: 1,
+        syndicus_id: 4,
 
         hash: "aaaa",
     };
@@ -24,7 +23,7 @@ export async function initialiseBuilding() {
         address_id: 2,
         manual_id: 1,
         deleted: false,
-        syndicus_id: 2,
+        syndicus_id: 1,
 
         hash: "abcd",
     };
@@ -36,7 +35,7 @@ export async function initialiseBuilding() {
         expected_time: 150,
         address_id: 3,
         manual_id: 1,
-        syndicus_id: 1,
+        syndicus_id: 4,
         deleted: true,
 
         hash: "klmno",

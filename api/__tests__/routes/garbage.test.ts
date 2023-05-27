@@ -126,7 +126,7 @@ describe("Garbage tests", () => {
                 ];
 
                 await runner.get({
-                    url: "/garbage?syndicus_id=1",
+                    url: "/garbage?syndicus_id=4",
                     expectedData: expectedData,
                 });
             });
