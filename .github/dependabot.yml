@@ -18,8 +18,6 @@ updates:
     directory: "/web"
     schedule:
       interval: "weekly"
-    assignees:
-      - "themessik"
     registries:
         - npm-gh
     versioning-strategy: increase
@@ -29,8 +27,6 @@ updates:
     directory: "/api"
     schedule:
       interval: "weekly"
-    assignees:
-      - "themessik"
     registries:
         - npm-gh
     versioning-strategy: increase
@@ -40,8 +36,6 @@ updates:
     directory: "/orm"
     schedule:
       interval: "weekly"
-    assignees:
-      - "themessik"
     registries:
         - npm-gh
     versioning-strategy: increase
@@ -51,8 +45,6 @@ updates:
     directory: "/api_query"
     schedule:
       interval: "weekly"
-    assignees:
-      - "themessik"
     registries:
         - npm-gh
     versioning-strategy: increase
