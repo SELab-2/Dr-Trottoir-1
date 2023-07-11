@@ -23,6 +23,7 @@ updates:
     registries:
         - npm-gh
     versioning-strategy: increase
+    allow: false
 
   # API
   - package-ecosystem: "npm"
@@ -34,8 +35,10 @@ updates:
     registries:
         - npm-gh
     versioning-strategy: increase
+    allow: false
 
-      # ORM
+
+  # ORM
   - package-ecosystem: "npm"
     directory: "/orm"
     schedule:
@@ -45,6 +48,8 @@ updates:
     registries:
         - npm-gh
     versioning-strategy: increase
+    allow: false
+
 
     # Query Builder
   - package-ecosystem: "npm"
@@ -56,3 +61,5 @@ updates:
     registries:
         - npm-gh
     versioning-strategy: increase
+    allow: false
+
