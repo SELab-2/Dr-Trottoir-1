@@ -4,6 +4,7 @@
     <v-col>
       <v-checkbox
         v-model="roles"
+        id="student"
         label="Student"
         value="Student"
         color="primary"
@@ -13,6 +14,7 @@
       />
       <v-checkbox
         v-model="roles"
+        id="superstudent"
         label="Superstudent"
         value="Superstudent"
         color="primary"
@@ -24,6 +26,7 @@
     <v-col>
       <v-checkbox
         v-model="roles"
+        id="administrator"
         label="Admin"
         value="Admin"
         color="primary"

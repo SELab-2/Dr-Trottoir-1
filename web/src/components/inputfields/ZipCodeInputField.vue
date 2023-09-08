@@ -1,6 +1,7 @@
 <template>
   <!-- Text input field for the house number -->
   <v-text-field
+    id="zipcode"
     v-model="homeNumber"
     label="Post code"
     :type="readonly ? 'text' : 'number'"

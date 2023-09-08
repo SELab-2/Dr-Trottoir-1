@@ -1,7 +1,8 @@
 <template>
   <!-- TODO: Container around the card to show the edges a bit more, should be removed in the future -->
-  <BorderCard class="mb-3 mx-1 pb-2">
+  <BorderCard id="roundcard" class="mb-3 mx-1 pb-2">
     <v-progress-linear
+      id="progress"
       absolute
       :model-value="progress()"
       :color="
@@ -13,6 +14,7 @@
       {{ filtered.roundName }}
       <v-icon
         end
+        id="comments"
         v-if="filtered.amountOfComments !== 0"
         icon="mdi-comment-alert-outline"
         size="small"
@@ -58,13 +60,13 @@
         }}
       </v-chip>
     </template>
-    <v-chip label color="brown" class="ml-3">
+    <v-chip id="buildings" label color="brown" class="ml-3">
       <v-icon icon="mdi-office-building"></v-icon>
       {{ filtered.totalBuildings }}
     </v-chip>
     <v-chip label color="primary" class="ml-3">
       <v-icon icon="mdi-calendar" class="pr-1" />
-      {{ new Date(filtered.roundDate).toLocaleDateString("nl") }}
+      {{ new Date(filtered.roundDate).toLocaleDateString() }}
     </v-chip>
     <v-chip v-if="filtered.roundStart" label color="primary" class="ml-3">
       <v-icon icon="mdi-clock"></v-icon>

@@ -11,6 +11,7 @@
       >
         <v-list density="compact" nav>
           <v-list-item
+            id="account"
             lines="two"
             :to="{
               name: 'account_settings',
@@ -101,6 +102,7 @@
                 }"
               >
                 <v-list-item
+                  id="building"
                   prepend-icon="mdi-file-cabinet"
                   :title="building.name"
                   value="gebouwen"
@@ -121,6 +123,7 @@
               prepend-icon="mdi-account-supervisor"
               title="Gebruikers"
               value="users"
+              id="users"
             ></v-list-item>
 
             <v-list-item
@@ -128,6 +131,7 @@
               prepend-icon="mdi-office-building-outline"
               title="Gebouwen"
               value="buildings"
+              id="buildings"
             ></v-list-item>
 
             <v-list-item
@@ -135,6 +139,7 @@
               prepend-icon="mdi-map-legend"
               title="Rondes"
               value="rounds"
+              id="rounds"
             ></v-list-item>
             <v-list-item
               :to="{ name: 'template_overview' }"

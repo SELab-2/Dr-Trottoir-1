@@ -7,6 +7,7 @@
         <p>De ronde wordt opgeslagen in onderstaande volgorde.</p>
         <v-text-field
           class="mt-3"
+          id="roundname"
           label="Naam ronde"
           v-model="newRoundName"
           variant="outlined"
@@ -17,6 +18,7 @@
           variant="outlined"
         />
         <v-btn
+          id="createround"
           :disabled="
             newRoundName === '' ||
             description === '' ||

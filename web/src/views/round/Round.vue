@@ -5,6 +5,7 @@
         <h1>{{ round?.name }}</h1>
         <div class="flex-grow-1"></div>
         <SimpleButton
+          id="deleteround"
           prepend-icon="mdi-delete"
           @click="showRemovePopup = true"
           color="error"
@@ -32,6 +33,7 @@
           v-model:end-date="planningEnd"
         />
         <SimpleButton
+          id="schedule"
           prepend-icon="mdi-calendar"
           :to="{ name: 'round_plan', params: { id: round_id } }"
           color="primary"

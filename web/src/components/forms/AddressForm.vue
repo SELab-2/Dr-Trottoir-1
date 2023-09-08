@@ -8,6 +8,7 @@
       >
         <!-- Text input field for the street name -->
         <v-text-field
+          id="street"
           v-model="address.street"
           label="Straat"
           type="text"
@@ -29,6 +30,7 @@
       >
         <!-- Text input field for the house number -->
         <HomeNumberInputField
+          id="streetnrfield"
           :readonly="readonly"
           v-model="address.number"
           @update:model-value="$emit('onUpdate', address)"
@@ -51,6 +53,7 @@
       >
         <!-- Text input field for the city name -->
         <v-text-field
+          id="city"
           v-model="address.city"
           label="Stad"
           type="text"
@@ -72,6 +75,7 @@
       >
         <!-- Text input field for the zip code -->
         <ZipCodeInputField
+          id="zipcodefield"
           :readonly="readonly"
           v-model="address.zip_code"
           @update:model-value="$emit('onUpdate', address)"

@@ -12,6 +12,7 @@
           >
             <!-- Text input field for the first name -->
             <v-text-field
+              id="firstname"
               v-model="first_name"
               label="Voornaam"
               type="text"
@@ -27,6 +28,7 @@
           >
             <!-- Text input field for the last name -->
             <v-text-field
+              id="lastname"
               v-model="last_name"
               label="Achternaam"
               type="text"
@@ -37,6 +39,7 @@
         </v-row>
 
         <ContactForm
+          id="personal"
           :class="spacing"
           :phone="String(contact.phone)"
           :email="String(contact.email)"
@@ -50,6 +53,7 @@
       <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
         <template v-slot:title> Adres </template>
         <AddressForm
+          id="address"
           :class="spacing"
           :street="String(address.street)"
           :city="String(address.city)"
@@ -70,12 +74,13 @@
       <!-- Selection box to determine the roles -->
       <BorderCard class="mt-4" prepend-icon="mdi-account-multiple">
         <template v-slot:title> Rollen </template>
-        <RolesForm v-model="roles" />
+        <RolesForm id="roles" v-model="roles" />
       </BorderCard>
 
       <!-- Account creation button -->
       <div class="d-flex flex-row-reverse my-3">
         <v-btn
+          id="create"
           color="success"
           prepend-icon="mdi-check"
           type="submit"

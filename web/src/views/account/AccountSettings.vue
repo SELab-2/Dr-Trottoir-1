@@ -20,6 +20,7 @@
       >
         <!-- Not mobile edit button -->
         <SimpleButton
+          id="editcancel"
           v-show="!mobile"
           :prepend-icon="!edit ? 'mdi-pencil' : 'mdi-close'"
           @click="
@@ -37,6 +38,7 @@
         </SimpleButton>
         <!-- Mobile edit button -->
         <SimpleButton
+          id="mobileedit"
           v-show="mobile"
           :icon="!edit ? 'mdi-pencil' : 'mdi-close'"
           @click="
@@ -83,6 +85,7 @@
         >
           <!-- Text input field for the first name -->
           <v-text-field
+            id="firstname"
             v-model="user!.first_name"
             label="Voornaam"
             type="text"
@@ -97,6 +100,7 @@
         >
           <!-- Text input field for the last name -->
           <v-text-field
+            id="lastname"
             v-model="user!.last_name"
             label="Achternaam"
             type="text"
@@ -105,6 +109,7 @@
         </v-col>
       </v-row>
       <ContactForm
+        id="personal"
         :class="edit ? 'mx-4' : 'mx-10'"
         :readonly="!edit"
         :phone="user.phone"
@@ -116,7 +121,8 @@
     <!-- Section with the adress -->
     <BorderCard class="mt-4" prepend-icon="mdi-map-marker">
       <template v-slot:title> Adres </template>
-      <AddressFrom
+      <AddressForm
+        id="address"
         :class="edit ? 'mx-4' : 'mx-10'"
         :readonly="!edit"
         :street="user?.address.street"
@@ -124,7 +130,7 @@
         :number="String(user?.address.number)"
         :zip_code="String(user?.address.zip_code)"
         @onUpdate="(newAddress: Address) => handleAddressUpdate(newAddress)"
-      ></AddressFrom>
+      ></AddressForm>
     </BorderCard>
 
     <!-- Section to pick the roles -->
@@ -150,6 +156,7 @@
     <div v-if="edit" class="my-4">
       <div class="d-flex flex-row-reverse">
         <SimpleButton
+          id="save"
           prepend-icon="mdi-check"
           @click="handleSavePopup()"
           color="success"
@@ -162,6 +169,7 @@
           v-if="
             useAuthStore().auth?.admin && user?.id !== useAuthStore().auth?.id
           "
+          id="delete"
           prepend-icon="mdi-delete"
           @click="handleRemovePopup()"
           color="error"
@@ -217,7 +225,7 @@
 import HFillWrapper from "@/layouts/HFillWrapper.vue";
 import BorderCard from "@/layouts/CardLayout.vue";
 import ContactForm from "@/components/forms/ContactForm.vue";
-import AddressFrom from "@/components/forms/AddressForm.vue";
+import AddressForm from "@/components/forms/AddressForm.vue";
 import Avatar from "@/components/Avatar.vue";
 import { Ref, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";

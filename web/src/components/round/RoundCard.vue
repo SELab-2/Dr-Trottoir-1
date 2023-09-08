@@ -1,6 +1,7 @@
 <template>
   <CardLayout
     v-if="schedule"
+    id="buildingcard"
     class="building-card"
     @click="
       router.push({
@@ -10,7 +11,7 @@
     "
   >
     <div>
-      <h3>{{ new Date(schedule?.day).toLocaleDateString("nl") }}</h3>
+      <h3>{{ new Date(schedule?.day).toLocaleDateString() }}</h3>
       <p>{{ schedule.user.first_name }} {{ schedule?.user.last_name }}</p>
     </div>
     <div class="flex-grow-1"></div>
@@ -49,7 +50,6 @@
       <v-icon icon="mdi-check" class="mr-1" />
       Klaar
     </v-chip>
-
     <v-icon
       icon="mdi-chevron-right"
       @click="

@@ -30,3 +30,5 @@ jobs:
                 run: npm run build
             -   name: "Check for linting and errors"
                 run: npm run test
+            -   name: "Cypress component testing"
+                run : npx cypress run --component

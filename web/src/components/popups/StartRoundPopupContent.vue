@@ -6,7 +6,6 @@
         <v-icon icon="mdi-alert" size="large"></v-icon>
         <h2>Start ronde</h2>
       </div>
-
       <p style="opacity: 90%" class="pt-2 pb-4">
         Je staat op het punt een ronde te starten. Het huidige tijdstip zal
         opgeslagen worden als start tijdstip. Ben je zeker dat je de ronde wilt
@@ -21,10 +20,10 @@
           grid-template-columns: repeat(2, minmax(0, 1fr));
         "
       >
-        <v-btn color="success" @click="onsubmit" variant="elevated">
+        <v-btn id="start" color="success" @click="onsubmit" variant="elevated">
           Start ronde
         </v-btn>
-        <v-btn @click="oncancel" color="error" class="mr-3" variant="elevated">
+        <v-btn id="cancel" @click="oncancel" color="error" class="mr-3" variant="elevated">
           Annuleer
         </v-btn>
       </div>

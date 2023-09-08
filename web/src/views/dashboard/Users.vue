@@ -1,6 +1,7 @@
 <template>
   <div class="toprow">
     <SimpleButton
+      id="newuser"
       v-if="useAuthStore().auth?.admin"
       prepend-icon="mdi-plus"
       color="primary"
@@ -15,6 +16,7 @@
     @changed="(a, b) => getUsers(a, b)"
   />
   <Table
+    id="usertable"
     :key="users.length"
     :entries="users"
     :headers="User.headers()"
