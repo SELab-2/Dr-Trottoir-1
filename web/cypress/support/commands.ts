@@ -44,18 +44,3 @@ declare global {
     }
   }
 }
-
-
-Cypress.Commands.add('login' as any, (email: string, password:string) => {
-  cy.session([email, password], () =>
-  {
-    cy.visit('/')
-    cy.get('#email').type('administrator@trottoir.be')
-    cy.get('#password').type('password')
-    cy.get('#login').click()
-    cy.get('#logout').should('be.visible')
-  },
-    {
-      cacheAcrossSpecs: true
-    })
-})

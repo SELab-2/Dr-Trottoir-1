@@ -6,17 +6,20 @@
         <h2>Ronde</h2>
         <p>De ronde wordt opgeslagen in onderstaande volgorde.</p>
         <v-text-field
+          id="roundname"
           class="mt-3"
           label="Naam ronde"
           v-model="newRoundName"
           variant="outlined"
         />
         <v-textarea
+          id="description"
           label="Beschrijving"
           v-model="description"
           variant="outlined"
         />
         <v-btn
+          id="createround"
           :disabled="
             newRoundName === '' ||
             description === '' ||

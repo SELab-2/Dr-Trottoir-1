@@ -1,6 +1,7 @@
 <template>
   <v-list class="ma-0 pa-0">
     <v-text-field
+      id="phone"
       class="mt-2"
       label="Telefoonnummer"
       v-model="contact.phone"
@@ -16,6 +17,7 @@
       </template>
     </v-text-field>
     <v-text-field
+      id="email"
       class="mt-2 mb-1"
       label="e-mail"
       v-model="contact.email"

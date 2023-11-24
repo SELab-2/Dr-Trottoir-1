@@ -23,6 +23,7 @@
       ></v-file-input>
       <v-select
         v-if="isPhoto"
+        id="label"
         variant="outlined"
         :items="ImageTypes"
         @update:model-value="$emit('onUpdate', photo)"
@@ -31,6 +32,7 @@
       ></v-select>
       <v-textarea
         @update:model-value="$emit('onUpdate', photo)"
+        id="comment"
         label="Commentaar"
         rows="3"
         v-model="photo.comments"
@@ -43,6 +45,7 @@
             upload();
             $emit('update', newProgress?.id);
           "
+          id="save"
           color="primary"
           prepend-icon="mdi-check"
           >Opslaan</SimpleButton
@@ -79,7 +82,7 @@ const newProgress = ref<Result<ProgressQuery>>(props.progress);
 
 const photo = ref<Photo>({
   image: [],
-  comments: "geen commentaar",
+  comments: "",
   type: "ARRIVAL",
 });
 

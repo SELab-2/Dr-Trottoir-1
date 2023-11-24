@@ -7,6 +7,7 @@
       </div>
       <div class="flex-grow-1"></div>
       <input
+        id="year"
         type="number"
         min="2020"
         max="2120"

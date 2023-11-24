@@ -4,18 +4,21 @@
     <BorderCard prepend-icon="mdi-home" class="mb-3 px-4" title="Gebouw info">
       <v-text-field
         required
+        id="name"
         type="text"
         v-model="building.name"
         label="Building Name"
       ></v-text-field>
       <v-text-field
         required
+        id="ivagoid"
         type="text"
         v-model="building.ivago_id"
         label="Ivago ID"
       ></v-text-field>
 
       <v-select
+        id="syndicus"
         label="Syndicus"
         :items="possibleUsers"
         v-model="building.syndicus"
@@ -88,6 +91,7 @@
           <v-col>
             <v-text-field
               required
+              id="longitude"
               type="number"
               v-model="latitude"
               label="Latitude"
@@ -96,6 +100,7 @@
           <v-col>
             <v-text-field
               required
+              id="latitude"
               type="number"
               v-model="longitude"
               label="Longitude"
@@ -213,6 +218,7 @@
     </BorderCard>
 
     <v-btn
+      id="submit"
       @click="submit"
       type="submit"
       color="success"

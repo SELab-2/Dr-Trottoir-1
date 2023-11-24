@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex flex-row-reverse toprow">
     <SimpleButton
+      id="newround"
       prepend-icon="mdi-plus"
       color="primary"
       class="mr-3"
@@ -11,6 +12,7 @@
   </div>
   <DashBoardSearch :admin="false" @changed="(_, b) => getRounds(b)" />
   <Table
+    id="roundtable"
     :key="rounds.length"
     :entries="rounds"
     :headers="RoundTable.headers()"

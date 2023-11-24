@@ -148,6 +148,7 @@
               @update:start-date="getTasks()"
             />
             <SimpleButton
+              id="addgarbage"
               v-show="noStudent && !building.deleted"
               class="mx-1 text-none"
               prepend-icon="mdi-plus"
@@ -226,6 +227,7 @@
         >Annuleren</SimpleButton
       >
       <SimpleButton
+        id="delete"
         prepend-icon="mdi-check"
         color="success"
         variant="elevated"

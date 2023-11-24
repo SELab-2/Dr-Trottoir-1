@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex flex-row-reverse toprow">
     <SimpleButton
+      id="newbuilding"
       v-if="useAuthStore().auth?.admin"
       prepend-icon="mdi-plus"
       color="primary"
@@ -15,6 +16,7 @@
     @changed="(a, b) => getBuildings(a, b)"
   />
   <Table
+    id="#buildingtable"
     :key="buildings.length"
     :entries="buildings"
     :headers="Building.headers()"

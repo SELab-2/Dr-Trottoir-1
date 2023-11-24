@@ -55,6 +55,7 @@
                 class="flex-grow-1 flex-shrink-0"
               >
                 <v-text-field
+                  id="action"
                   v-model="actionDescription"
                   label="Beschrijving van de actie"
               /></v-col>
@@ -64,6 +65,7 @@
                 class="flex-grow-1 flex-shrink-0"
               >
                 <v-select
+                  id="frequency"
                   v-model="frequency"
                   :items="frequenties"
                   label="Frequentie"
@@ -75,6 +77,7 @@
               :class="frequency !== 'enkel' ? 'grid-cols-3' : 'grid-cols-2'"
             >
               <v-text-field
+                id="startdate"
                 v-model="startDate"
                 variant="outlined"
                 type="date"
@@ -83,6 +86,7 @@
               ></v-text-field>
 
               <v-text-field
+                id="enddate"
                 v-model="endDate"
                 variant="outlined"
                 type="date"
@@ -92,6 +96,7 @@
               ></v-text-field>
 
               <v-text-field
+                id="starttime"
                 label="Starttijd"
                 variant="outlined"
                 type="time"
@@ -100,11 +105,12 @@
             </div>
 
             <div class="d-flex">
-              <v-btn prepend-icon="mdi-delete" variant="tonal" @click="clearAll"
+              <v-btn id="removeall" prepend-icon="mdi-delete" variant="tonal" @click="clearAll"
                 >Alles verwijderen</v-btn
               >
               <v-spacer></v-spacer>
               <v-btn
+                id="addtoschedule"
                 prepend-icon="mdi-plus-circle"
                 @click="add"
                 variant="tonal"
@@ -112,6 +118,7 @@
                 >Tijdelijk toevoegen</v-btn
               ><v-spacer></v-spacer>
               <v-btn
+                id="schedule"
                 prepend-icon="mdi-check"
                 variant="tonal"
                 @click="submit"
@@ -178,8 +185,7 @@
                 >Pas filter toe</v-btn
               >
             </div>
-          </div></v-expand-transition
-        >
+          </div></v-expand-transition>
       </BorderCard>
 
       <Table

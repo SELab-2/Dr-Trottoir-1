@@ -43,6 +43,7 @@
           />
           <!--Start button-->
           <SimpleButton
+            id="start"
             v-else-if="canEdit"
             prepend-icon="mdi-play"
             color="success"
@@ -65,6 +66,7 @@
           />
           <!--End button-->
           <SimpleButton
+            id="end"
             v-else-if="progress.arrival && canEdit"
             prepend-icon="mdi-stop"
             @click.stop="() => end()"
@@ -124,6 +126,7 @@
       </div>
       <v-icon icon="mdi-chevron-right" />
       <v-btn
+        id="expand"
         @click.stop="expanded = !expanded"
         :icon="expanded ? 'mdi-menu-up' : 'mdi-menu-down'"
         class="dropdown-button"
@@ -134,16 +137,18 @@
     <v-expand-transition v-on:click.stop>
       <div v-show="expanded" class="px-8 pb-8">
         <divider-layout class="mb-4" />
-        <h4 class="mb-2">Opmerkingen</h4>
+        <h4 id="comments" class="mb-2">Opmerkingen</h4>
         <p v-if="!editMode">{{ progress?.report }}</p>
         <!-- eslint-disable-next-line vue/no-mutating-props -->
         <v-text-field
+          id="writecomment"
           type="text"
           v-else
           v-model="progress.report"
           style="margin-bottom: -20px"
         />
         <SimpleButton
+          id="savecomment"
           v-if="editMode"
           prepend-icon="mdi-check"
           class="mt-4"
@@ -154,6 +159,7 @@
           Opslaan
         </SimpleButton>
         <SimpleButton
+          id="editcomment"
           v-else-if="progress?.report !== '' && canEdit"
           prepend-icon="mdi-pencil"
           class="mt-4"
@@ -166,6 +172,7 @@
         <div v-else-if="progress?.report === ''">
           <p style="opacity: 75%">Geen opmerkingen toegevoegd.</p>
           <SimpleButton
+            id="addcomment"
             v-if="canEdit"
             prepend-icon="mdi-plus"
             class="mt-4"
@@ -180,7 +187,7 @@
         <divider-layout class="my-4" />
 
         <div>
-          <h4 class="mb-2">Afbeeldingen</h4>
+          <h4 id="images" class="mb-2">Afbeeldingen</h4>
           <div class="carousel" v-if="progress?.images.length ?? 0 > 0">
             <div
               class="carousel-item"
@@ -196,6 +203,7 @@
           </div>
           <p v-else style="opacity: 75%">Geen foto's toegevoegd.</p>
           <SimpleButton
+            id="addimage"
             v-if="canEdit"
             prepend-icon="mdi-plus"
             class="mt-4"

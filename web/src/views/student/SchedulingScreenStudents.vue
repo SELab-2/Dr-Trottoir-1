@@ -7,11 +7,11 @@
       </SimpleButton>
       <v-spacer />
       <h4 class="mt-4">
-        {{ mondayOfTheWeek.toLocaleDateString("nl") }} tot
+        {{ mondayOfTheWeek.toLocaleDateString() }} tot
         {{
           new Date(
             new Date(mondayOfTheWeek).setDate(mondayOfTheWeek.getDate() + 6),
-          ).toLocaleDateString("nl")
+          ).toLocaleDateString()
         }}
       </h4>
       <v-spacer />
@@ -22,7 +22,7 @@
     </div>
 
     <div v-if="!empty">
-      <div v-for="day in days" :key="day.start.toLocaleDateString('nl')">
+      <div v-for="day in days" :key="day.start.toLocaleDateString()">
         <v-card
           v-if="day.list.length > 0"
           :title="day.name"
@@ -41,6 +41,7 @@
         </v-card>
 
         <BorderCard
+          id="round"
           v-for="item in day.list"
           :key="item.schedule.id"
           class="mb-3 mx-1"

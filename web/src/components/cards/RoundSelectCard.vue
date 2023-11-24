@@ -13,7 +13,7 @@
 
     <div class="flex-grow-1" />
     <RoundedInfoChip icon="mdi-clock-time-two-outline" :text="time" />
-    <v-icon @click="$emit('remove')" color="error" icon="mdi-close" />
+    <v-icon id="remove" @click="$emit('remove')" color="error" icon="mdi-close" />
   </BorderCard>
 </template>
 

@@ -4,8 +4,7 @@
 
     <p>
       Maak hier een nieuwe email sjabloon aan. Aan de rechterkant vindt u codes
-      die u kan gebruiken voor uw email dynamisch in te laden wanneer u deze
-      gebruikt.
+      die u kan gebruiken om uw email dynamisch in te laden wanneer u deze gebruikt.
     </p>
     <v-row class="py-0 my-0 mx-0">
       <v-col
@@ -21,6 +20,7 @@
                 style="min-width: 100px; max-width: 100%"
                 class="flex-grow-1 flex-shrink-0 py-0 my-0 mx-3"
                 ><v-text-field
+                id="templatename"
                   type="text"
                   v-model="templateName"
                   prepend-inner-icon="mdi-file-document-outline"
@@ -38,6 +38,7 @@
                 class="flex-grow-1 flex-shrink-0 py-0 my-0"
               >
                 <v-text-field
+                  id="subject"
                   type="text"
                   required
                   prepend-inner-icon="mdi-text-short"
@@ -56,6 +57,7 @@
                 class="flex-grow-1 flex-shrink-0 py-0 my-0"
               >
                 <v-textarea
+                  id="templatebody"
                   type="text"
                   required
                   rows="17"
@@ -67,6 +69,7 @@
               ></v-col>
             </v-row>
             <SimpleButton
+              id="savetemplate"
               color="primary"
               prepend-icon="mdi-content-save"
               variant="tonal"

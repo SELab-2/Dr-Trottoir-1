@@ -1,5 +1,5 @@
 <template>
-  <BorderCard @click="$emit('clicked')" class="my-2">
+  <BorderCard id="building" @click="$emit('clicked')" class="my-2">
     <template v-slot:prepend>
       <v-icon icon="mdi-office-building"></v-icon>
     </template>

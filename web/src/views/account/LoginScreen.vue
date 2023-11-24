@@ -36,7 +36,7 @@
         <!-- Help text for people who don't have an account yet -->
         <p class="me-auto">
           Nog geen account?
-          <span @click="snackbar = true" class="clickable-text">
+          <span id="contact" @click="snackbar = true" class="clickable-text">
             Contacteer ons.
           </span>
         </p>
@@ -54,7 +54,7 @@
 
   <!-- Popup message containing detailed info about account creation. Will pop up when clicked on the text in the bottom div -->
   <v-snackbar v-model="snackbar" timeout="-1" color="white">
-    <v-card prepend-icon="mdi-help" variant="flat">
+    <v-card id="popup" prepend-icon="mdi-help" variant="flat">
       <template v-slot:title> Help </template>
       <p class="mx-3">
         Indien je nog geen account hebt en graag lid wilt worden van DR.

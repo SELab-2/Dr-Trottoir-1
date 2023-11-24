@@ -5,6 +5,7 @@
         <h1>{{ round?.name }}</h1>
         <div class="flex-grow-1"></div>
         <SimpleButton
+          id="deleteround"
           prepend-icon="mdi-delete"
           @click="showRemovePopup = true"
           color="error"
@@ -32,6 +33,7 @@
           v-model:end-date="planningEnd"
         />
         <SimpleButton
+          id="schedule"
           prepend-icon="mdi-calendar"
           :to="{ name: 'round_plan', params: { id: round_id } }"
           color="primary"
@@ -44,6 +46,7 @@
       </p>
       <div class="space-y-8">
         <RoundCard
+          id="roundcard"
           v-for="schedule in schedules"
           v-bind:key="schedule.id"
           :schedule="schedule"
@@ -77,6 +80,7 @@
       </div>
     </div>
   </HFillWrapper>
+
   <CardPopup v-model="showRemovePopup">
     <div class="pa-4" style="max-width: 400px">
       <div class="d-flex align-center" style="gap: 12px">
@@ -96,6 +100,7 @@
         "
       >
         <v-btn
+          id="cancel"
           prepend-icon="mdi-close"
           color="error"
           @click="showRemovePopup = false"
@@ -105,6 +110,7 @@
           Annuleer
         </v-btn>
         <v-btn
+          id="submit"
           prepend-icon="mdi-check"
           color="success"
           @click="deleteRound()"

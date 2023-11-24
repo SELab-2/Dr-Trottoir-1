@@ -6,6 +6,7 @@
     </template>
     <template v-slot:title v-if="search_by_labels.length != 0">
       <v-text-field
+        id="searchtype"
         :label="search_placeholder()"
         v-model="filter_data.query"
         @update:model-value="$emit('onUpdate', filter_data)"
@@ -14,6 +15,7 @@
     </template>
     <template v-slot:append>
       <SimpleButton
+        id="showfilters"
         prepend-icon="mdi-filter"
         :append-icon="dropdown ? 'mdi-menu-up' : 'mdi-menu-down'"
         @click="dropdown = !dropdown"
@@ -23,7 +25,7 @@
       </SimpleButton>
     </template>
     <v-expand-transition>
-      <div v-show="dropdown">
+      <div id="dropdown" v-show="dropdown">
         <DividerLayout class="mb-3" />
         <v-row class="mx-0">
           <v-col>
@@ -169,9 +171,9 @@ const e_day = ref<string>(props.end_date.toISOString().substring(0, 10));
 
 // The filter data is emitted with the 'onUpdate' tag
 const filter_data = ref<FilterData>({
-  // The search querry in the main search bar
+  // The search query in the main search bar
   query: "",
-  // The selcted value to seach by
+  // The selected value to search by
   search_label: props.search_by_labels[0],
   // The currently selected sort option
   sort_by: props.sort_items[0],
